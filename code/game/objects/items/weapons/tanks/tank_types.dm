@@ -4,6 +4,7 @@
  *		Anesthetic
  *		Air
  *		Phoron
+ *		Hydrogen
  *		Phorosian Phoron
  *		Emergency Oxygen
  */
@@ -28,7 +29,6 @@
 /obj/item/weapon/tank/oxygen/red
 	desc = "A tank of oxygen. This one is red."
 	icon_state = "oxygen_fr"
-
 
 /*
  * Anesthetic
@@ -77,6 +77,27 @@
 		forceMove(F)
 
 /*
+ * Hydrogen
+ */
+/obj/item/weapon/tank/hydrogen
+	name = "hydrogen tank"
+	desc = "Contains hydrogen. Warning: flammable."
+	icon_state = "hydrogen"
+	gauge_icon = null
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	slot_flags = null
+	starting_pressure = list("hydrogen" = 3*ONE_ATMOSPHERE)
+
+/obj/item/weapon/tank/hydrogen/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
+	if (istype(W, /obj/item/weapon/flamethrower))
+		var/obj/item/weapon/flamethrower/F = W
+		if (!F.status || F.ptank || user.unEquip(src, F))
+			return
+		master = F
+		F.ptank = src
+
+/*
  * Phorosian Phoron
  */
 /obj/item/weapon/tank/phoron/phorosian
@@ -99,6 +120,8 @@
 	slot_flags = SLOT_BELT
 	w_class = ITEM_SIZE_SMALL
 	force = 4
+	attack_cooldown = DEFAULT_WEAPON_COOLDOWN
+	melee_accuracy_bonus = -10
 	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
 	volume = 40
 	matter = list(MATERIAL_STEEL = 250)
@@ -113,16 +136,16 @@
 /obj/item/weapon/tank/emergency/oxygen/engi
 	name = "extended-capacity emergency oxygen tank"
 	icon_state = "emergency_engi"
-	volume = 55
+	volume = 60
 	matter = list(MATERIAL_STEEL = 350)
 
 /obj/item/weapon/tank/emergency/oxygen/double
 	name = "double emergency oxygen tank"
 	icon_state = "emergency_double"
 	gauge_icon = "indicator_emergency_double"
-	volume = 70
+	volume = 90
+	w_class = ITEM_SIZE_NORMAL
 	matter = list(MATERIAL_STEEL = 500)
-
 
 /obj/item/weapon/tank/emergency/nitrogen
 	name = "emergency nitrogen tank"

@@ -40,26 +40,24 @@
 	else
 		src.connected_area = get_area(src)
 	if(name == initial(name))
-		name = "light switch ([connected_area.name])"
+		SetName("light switch ([connected_area.name])")
 
 	if(!isnull(connected_area))
 		connected_area.set_lightswitch(on)
 	update_icon()
 
-/obj/machinery/light_switch/update_icon()
+/obj/machinery/light_switch/on_update_icon()
+	pixel_x = 0
+	pixel_y = 0
 	switch(dir)
 		if(NORTH)
-			src.pixel_x = 0
-			src.pixel_y = -22
+			pixel_y = -30
 		if(SOUTH)
-			src.pixel_x = 0
-			src.pixel_y = 30
+			pixel_y = 22
 		if(EAST)
-			src.pixel_x = 22
-			src.pixel_y = 0
+			pixel_x = -22
 		if(WEST)
-			src.pixel_x = -22
-			src.pixel_y = 0
+			pixel_x = 22
 
 	if(!overlay)
 		overlay = image(icon, "light1-overlay")
@@ -74,7 +72,7 @@
 		icon_state = "light[on]"
 		overlay.icon_state = "light[on]-overlay"
 		overlays += overlay
-		set_light(2, 0.3, on ? "#82ff4c" : "#f86060")
+		set_light(0.1, 0.1, 1, 2, on ? "#82ff4c" : "#f86060")
 
 /obj/machinery/light_switch/examine(mob/user)
 	if(..(user, 1))
@@ -95,7 +93,16 @@
 /obj/machinery/light_switch/attack_hand(mob/user)
 	playsound(src, "switch", 30)
 	set_state(!on)
-	use_power(active_power_usage)
+	use_power_oneoff(active_power_usage)
+
+/obj/machinery/light_switch/attackby(obj/item/weapon/W as obj, mob/user as mob, params)
+	if(istype(W, /obj/item/device/scanner/reagent))
+		return FALSE
+	if(isWrench(W))
+		to_chat(user, SPAN_NOTICE("You detach \the [src] from the wall."))
+		dismantle()
+		return TRUE
+	return src.attack_hand(user)
 
 /obj/machinery/light_switch/powered()
 	. = ..(power_channel, connected_area) //tie our powered status to the connected area
@@ -113,11 +120,3 @@
 	power_change()
 	..(severity)
 
-/obj/machinery/light_switch/attackby(obj/item/weapon/W as obj, mob/user as mob, params)
-	if(istype(W, /obj/item/device/reagent_scanner))
-		return FALSE
-	if(isWrench(W))
-		to_chat(user, SPAN_NOTICE("You detach \the [src] from the wall."))
-		dismantle()
-		return TRUE
-	return src.attack_hand(user)

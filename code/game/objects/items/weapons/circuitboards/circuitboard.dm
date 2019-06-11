@@ -22,7 +22,7 @@
 	var/board_type = "computer"
 	var/list/req_components = null
 	var/contain_parts = 1
-	var/frame_desc = null
+
 //Called when the circuitboard is used to contruct a new machine.
 /obj/item/weapon/circuitboard/proc/construct(var/obj/machinery/M)
 	if (istype(M, build_path))
@@ -35,4 +35,3 @@
 	if (istype(M, build_path))
 		return 1
 	return 0
-

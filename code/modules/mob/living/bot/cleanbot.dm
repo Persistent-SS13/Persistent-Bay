@@ -1,6 +1,7 @@
 /mob/living/bot/cleanbot
 	name = "Cleanbot"
 	desc = "A little cleaning robot, he looks so excited!"
+	icon = 'icons/mob/bot/cleanbot.dmi'
 	icon_state = "cleanbot0"
 	req_one_access = list(access_janitor, core_access_science_programs)
 	botcard_access = list(access_janitor, access_maint_tunnels)
@@ -36,9 +37,10 @@
 			ignore_list -= g
 
 /mob/living/bot/cleanbot/lookForTargets()
-	for(var/obj/effect/decal/cleanable/D in view(world.view, src)) // There was some odd code to make it start with nearest decals, it's unnecessary, this works
+	for(var/obj/effect/decal/cleanable/D in view(world.view + 1, src))
 		if(confirmTarget(D))
 			target = D
+			playsound(src, 'sound/machines/boop1.ogg', 30)
 			return
 
 /mob/living/bot/cleanbot/confirmTarget(var/obj/effect/decal/cleanable/D)
@@ -76,6 +78,7 @@
 		qdel(D)
 		if(D == target)
 			target = null
+	playsound(src, 'sound/machines/boop2.ogg', 30)
 	busy = 0
 	update_icons()
 
@@ -149,6 +152,8 @@
 	target_types += /obj/effect/decal/cleanable/liquid_fuel
 	target_types += /obj/effect/decal/cleanable/mucus
 	target_types += /obj/effect/decal/cleanable/dirt
+	target_types += /obj/effect/decal/cleanable/filth
+	target_types += /obj/effect/decal/cleanable/spiderling_remains
 
 	if(blood)
 		target_types += /obj/effect/decal/cleanable/blood
@@ -158,7 +163,7 @@
 /obj/item/weapon/bucket_sensor
 	desc = "It's a bucket. With a sensor attached."
 	name = "proxy bucket"
-	icon = 'icons/obj/aibots.dmi'
+	icon = 'icons/mob/bot/cleanbot.dmi'
 	icon_state = "bucket_proxy"
 	force = 3.0
 	throwforce = 10.0
@@ -170,13 +175,11 @@
 /obj/item/weapon/bucket_sensor/attackby(var/obj/item/O, var/mob/user)
 	..()
 	if(istype(O, /obj/item/robot_parts/l_arm) || istype(O, /obj/item/robot_parts/r_arm))
-		user.drop_item()
 		qdel(O)
 		var/turf/T = get_turf(loc)
 		var/mob/living/bot/cleanbot/A = new /mob/living/bot/cleanbot(T)
-		A.name = created_name
+		A.SetName(created_name)
 		to_chat(user, "<span class='notice'>You add the robot arm to the bucket and sensor assembly. Beep boop!</span>")
-		user.drop_from_inventory(src)
 		qdel(src)
 
 	else if(istype(O, /obj/item/weapon/pen))

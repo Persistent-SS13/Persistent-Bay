@@ -29,6 +29,8 @@
 	mob_swap_flags = HUMAN|SIMPLE_ANIMAL|SLIME|MONKEY
 	mob_push_flags = ALLMOBS
 
+	bleed_colour = "#331111"
+
 	var/list/construct_spells = list()
 
 /mob/living/simple_animal/construct/cultify()
@@ -36,10 +38,10 @@
 
 /mob/living/simple_animal/construct/New()
 	..()
-	name = text("[initial(name)] ([rand(1, 1000)])")
+	name = text("[initial(name)] ([random_id(/mob/living/simple_animal/construct, 1000, 9999)])")
 	real_name = name
 	add_language("Cult")
-	add_language("Occult")
+	add_language(LANGUAGE_OCCULT)
 	for(var/spell in construct_spells)
 		src.add_spell(new spell, "const_spell_ready")
 	update_icon()
@@ -50,7 +52,7 @@
 	ghostize()
 	qdel(src)
 
-/mob/living/simple_animal/construct/update_icon()
+/mob/living/simple_animal/construct/on_update_icon()
 	overlays.Cut()
 	..()
 	add_glow()
@@ -112,10 +114,12 @@
 	status_flags = 0
 	resistance = 10
 	construct_spells = list(/spell/aoe_turf/conjure/forcewall/lesser)
+	can_escape = 1
 
 /mob/living/simple_animal/construct/armoured/Life()
 	weakened = 0
-	..()
+	if ((. = ..()))
+		return 
 
 /mob/living/simple_animal/construct/armoured/bullet_act(var/obj/item/projectile/P)
 	if(istype(P, /obj/item/projectile/energy) || istype(P, /obj/item/projectile/beam))
@@ -218,6 +222,7 @@
 	var/energy = 0
 	var/max_energy = 1000
 	construct_spells = list(/spell/aoe_turf/conjure/forcewall/lesser)
+	can_escape = 1
 
 ////////////////////////Harvester////////////////////////////////
 
@@ -251,7 +256,7 @@
 	eye_glow.plane = EFFECTS_ABOVE_LIGHTING_PLANE
 	eye_glow.layer = EYE_GLOW_LAYER
 	overlays += eye_glow
-	set_light(3, -10, l_color = "#ffffff")
+	set_light(-10, 0.1, 3, l_color = "#ffffff")
 
 ////////////////HUD//////////////////////
 
@@ -272,7 +277,7 @@
 		silence_spells(purge)
 
 /mob/living/simple_animal/construct/armoured/Life()
-	..()
+	. = ..()
 	if(healths)
 		switch(health)
 			if(250 to INFINITY)		healths.icon_state = "juggernaut_health0"
@@ -286,7 +291,7 @@
 
 
 /mob/living/simple_animal/construct/behemoth/Life()
-	..()
+	. = ..()
 	if(healths)
 		switch(health)
 			if(750 to INFINITY)		healths.icon_state = "juggernaut_health0"
@@ -299,7 +304,7 @@
 			else					healths.icon_state = "juggernaut_health7"
 
 /mob/living/simple_animal/construct/builder/Life()
-	..()
+	. = ..()
 	if(healths)
 		switch(health)
 			if(50 to INFINITY)		healths.icon_state = "artificer_health0"
@@ -314,7 +319,7 @@
 
 
 /mob/living/simple_animal/construct/wraith/Life()
-	..()
+	. = ..()
 	if(healths)
 		switch(health)
 			if(75 to INFINITY)		healths.icon_state = "wraith_health0"
@@ -328,7 +333,7 @@
 
 
 /mob/living/simple_animal/construct/harvester/Life()
-	..()
+	. = ..()
 	if(healths)
 		switch(health)
 			if(150 to INFINITY)		healths.icon_state = "harvester_health0"

@@ -7,9 +7,6 @@
 	var/stored_charge = 0
 	var/effect_id = ""
 
-/obj/item/weapon/anobattery/New()
-	battery_effect = new()
-
 /obj/item/weapon/anobattery/proc/UpdateSprite()
 	var/p = (stored_charge/capacity)*100
 	p = min(p, 100)
@@ -39,9 +36,9 @@
 /obj/item/weapon/anodevice/attackby(var/obj/I as obj, var/mob/user as mob)
 	if(istype(I, /obj/item/weapon/anobattery))
 		if(!inserted_battery)
+			if(!user.unEquip(I, src))
+				return
 			to_chat(user, "<span class='notice'>You insert the battery.</span>")
-			user.drop_item()
-			I.loc = src
 			inserted_battery = I
 			UpdateSprite()
 	else
@@ -56,7 +53,7 @@
 		if(activated)
 			dat += "Device active.<br>"
 
-		dat += "[inserted_battery] inserted, anomaly ID: [inserted_battery.battery_effect.artifact_id ? inserted_battery.battery_effect.artifact_id : "NA"]<BR>"
+		dat += "[inserted_battery] inserted, anomaly ID: [(inserted_battery.battery_effect?.artifact_id) ? inserted_battery.battery_effect.artifact_id : "NA"]<BR>"
 		dat += "<b>Charge:</b> [inserted_battery.stored_charge] / [inserted_battery.capacity]<BR>"
 		dat += "<b>Time left activated:</b> [round(max((time_end - last_process) / 10, 0))]<BR>"
 		if(activated)
@@ -145,9 +142,13 @@
 		activated = 0
 		if(inserted_battery.battery_effect.activated)
 			inserted_battery.battery_effect.ToggleActivate(1)
+		if(inserted_battery.stored_charge <= 0)
+			inserted_battery.battery_effect = null
 
-/obj/item/weapon/anodevice/Topic(href, href_list)
+/obj/item/weapon/anodevice/Topic(user, href_list, state = GLOB.inventory_state)
+	..()
 
+/obj/item/weapon/anodevice/OnTopic(user, href_list)
 	if(href_list["changetime"])
 		var/timedif = text2num(href_list["changetime"])
 		if(href_list["duration"])
@@ -160,26 +161,31 @@
 			interval += timedif
 			//max 10 sec interval
 			interval = min(max(interval, 0), 100)
-	if(href_list["startup"])
+		. = TOPIC_REFRESH
+	else if(href_list["startup"])
 		if(inserted_battery && inserted_battery.battery_effect && (inserted_battery.stored_charge > 0) )
 			activated = 1
+			last_process = world.time
 			src.visible_message("<span class='notice'>\icon[src] [src] whirrs.</span>", "<span class='notice'>\icon[src] You hear something whirr.</span>")
 			if(!inserted_battery.battery_effect.activated)
 				inserted_battery.battery_effect.ToggleActivate(1)
 			time_end = world.time + duration
-	if(href_list["shutdown"])
+		. = TOPIC_REFRESH
+	else if(href_list["shutdown"])
 		activated = 0
-	if(href_list["ejectbattery"])
+		. = TOPIC_REFRESH
+	else if(href_list["ejectbattery"])
 		shutdown_emission()
-		inserted_battery.loc = get_turf(src)
+		inserted_battery.dropInto(loc)
 		inserted_battery = null
 		UpdateSprite()
+		. = TOPIC_REFRESH
 	if(href_list["close"])
-		usr << browse(null, "window=anodevice")
-	else if(ismob(src.loc))
-		var/mob/M = src.loc
-		src.interact(M)
-	..()
+		close_browser(user, "window=anodevice")
+		. = TOPIC_HANDLED
+
+	if(. == TOPIC_REFRESH)
+		interact(user)
 
 /obj/item/weapon/anodevice/proc/UpdateSprite()
 	if(!inserted_battery)

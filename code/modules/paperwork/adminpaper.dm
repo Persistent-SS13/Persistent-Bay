@@ -149,7 +149,7 @@ obj/item/weapon/paper/admin/proc/updateDisplay()
 		footerOn = !footerOn
 		updateDisplay()
 		return
-	
+
 	if(href_list["changelogo"])
 		logo = input(usr, "What logo?", "Choose a logo", "") as null|anything in (logo_list)
 		generateHeader()

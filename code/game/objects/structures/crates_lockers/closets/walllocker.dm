@@ -7,8 +7,8 @@
 	closet_appearance = /decl/closet_appearance/wall
 	density = 0
 	anchored = 1
-	wrenchable = 0 // wall lockers cannot be unanchored with a wrench
 	storage_types = CLOSET_STORAGE_ITEMS
+	setup = 0
 
 /obj/structure/closet/walllocker/update_icon()
 	. = ..()

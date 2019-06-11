@@ -29,7 +29,6 @@
 	Integrated circuits are essentially modular machines.  Each circuit has a specific function, and combining them inside Electronic Assemblies allows
 a creative player the means to solve many problems.  Circuits are held inside an electronic assembly, and are wired using special tools.
 */
-	
 
 /obj/item/integrated_circuit/examine(mob/user)
 	. = ..()
@@ -39,19 +38,6 @@ a creative player the means to solve many problems.  Circuits are held inside an
 
 // This should be used when someone is examining while the case is opened.
 /obj/item/integrated_circuit/proc/internal_examine(mob/user)
-	to_chat(user, "This board has [LAZYLEN(inputs)] input pin\s, [LAZYLEN(outputs)] output pin\s and [LAZYLEN(activators)] activation pin\s.")
-	for(var/k in 1 to LAZYLEN(inputs))
-		var/datum/integrated_io/I = inputs[k]
-		if(I.linked.len)
-			to_chat(user, "The '[I]' is connected to [I.get_linked_to_desc()].")
-	for(var/k in 1 to LAZYLEN(outputs))
-		var/datum/integrated_io/O = outputs[k]
-		if(O.linked.len)
-			to_chat(user, "The '[O]' is connected to [O.get_linked_to_desc()].")
-	for(var/k in 1 to LAZYLEN(activators))
-		var/datum/integrated_io/activate/A = activators[k]
-		if(A.linked.len)
-			to_chat(user, "The '[A]' is connected to [A.get_linked_to_desc()].")
 	any_examine(user)
 	interact(user)
 
@@ -87,7 +73,8 @@ a creative player the means to solve many problems.  Circuits are held inside an
 	setup_io(outputs, /datum/integrated_io, outputs_default, IC_OUTPUT)
 	outputs_default = null
 	setup_io(activators, /datum/integrated_io/activate, null, IC_ACTIVATOR)
-	matter[MATERIAL_STEEL] = w_class * SScircuit.cost_multiplier
+	if(!matter[MATERIAL_STEEL])
+		matter[MATERIAL_STEEL] = w_class * SScircuit.cost_multiplier // Default cost.
 	. = ..()
 
 /obj/item/integrated_circuit/proc/on_data_written() //Override this for special behaviour when new data gets pushed to the circuit.
@@ -97,6 +84,7 @@ a creative player the means to solve many problems.  Circuits are held inside an
 	QDEL_NULL_LIST(inputs)
 	QDEL_NULL_LIST(outputs)
 	QDEL_NULL_LIST(activators)
+	SScircuit_components.dequeue_component(src)
 	. = ..()
 
 /obj/item/integrated_circuit/emp_act(severity)
@@ -142,8 +130,7 @@ a creative player the means to solve many problems.  Circuits are held inside an
 
 	var/table_edge_width = "30%"
 	var/table_middle_width = "40%"
-
-	var/HTML = ""
+	var/list/HTML = list()
 	HTML += "<html><head><title>[src.displayed_name]</title></head><body>"
 	HTML += "<div align='center'>"
 	HTML += "<table border='1' style='undefined;table-layout: fixed; width: 80%'>"
@@ -239,10 +226,11 @@ a creative player the means to solve many problems.  Circuits are held inside an
 	HTML += "<br><font color='0000AA'>[extended_desc]</font>"
 
 	HTML += "</body></html>"
+	var/HTML_merged = jointext(HTML, null)
 	if(assembly)
-		show_browser(user, HTML, "window=assembly-\ref[assembly];size=[window_width]x[window_height];border=1;can_resize=1;can_close=1;can_minimize=1")
+		show_browser(user, HTML_merged, "window=assembly-\ref[assembly];size=[window_width]x[window_height];border=1;can_resize=1;can_close=1;can_minimize=1")
 	else
-		show_browser(user, HTML, "window=circuit-\ref[src];size=[window_width]x[window_height];border=1;can_resize=1;can_close=1;can_minimize=1")
+		show_browser(user, HTML_merged, "window=circuit-\ref[src];size=[window_width]x[window_height];border=1;can_resize=1;can_close=1;can_minimize=1")
 
 	onclose(user, "assembly-\ref[src.assembly]")
 

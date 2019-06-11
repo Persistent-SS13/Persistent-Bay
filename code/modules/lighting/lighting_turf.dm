@@ -33,10 +33,9 @@
 /turf/proc/lighting_build_overlay()
 	if(lighting_overlay)
 		return
-	for(var/atom/movable/lighting_overlay/O in contents)
-		O.loc = null
+
 	var/area/A = loc
-	if(A.dynamic_lighting)
+	if(A.dynamic_lighting && dynamic_lighting)
 		if(!lighting_corners_initialised)
 			generate_missing_corners()
 
@@ -54,7 +53,7 @@
 /turf/proc/get_lumcount(var/minlum = 0, var/maxlum = 1)
 	if(!lighting_overlay)
 		var/area/A = loc
-		if(A.dynamic_lighting)
+		if(A.dynamic_lighting && dynamic_lighting)
 			var/atom/movable/lighting_overlay/O = new /atom/movable/lighting_overlay(src)
 			lighting_overlay = O
 

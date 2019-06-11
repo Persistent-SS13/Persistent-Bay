@@ -64,6 +64,8 @@
 	matter = list(MATERIAL_GLASS = 7500, MATERIAL_STEEL = 3000)
 	attack_verb = list("shoved", "bashed")
 	var/cooldown = 0 //shield bash cooldown. based on world.time
+	var/max_block = 10
+	var/can_block_lasers = FALSE
 
 /obj/item/weapon/shield/riot/handle_shield(mob/user)
 	. = ..()
@@ -73,7 +75,9 @@
 	if(istype(damage_source, /obj/item/projectile))
 		var/obj/item/projectile/P = damage_source
 		//plastic shields do not stop bullets or lasers, even in space. Will block beanbags, rubber bullets, and stunshots just fine though.
-		if((is_sharp(P) && damage > 10) || istype(P, /obj/item/projectile/beam))
+		if(is_sharp(P) && damage >= max_block)
+			return 0
+		if(istype(P, /obj/item/projectile/beam) && (!can_block_lasers || (P.armor_penetration >= max_block)))
 			return 0
 	return base_block_chance
 
@@ -85,6 +89,20 @@
 			cooldown = world.time
 	else
 		..()
+
+/obj/item/weapon/shield/riot/metal
+	name = "plasteel combat shield"
+	icon_state = "metal"
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	slot_flags = SLOT_BACK
+	force = 6.0
+	throwforce = 7.0
+	throw_range = 3
+	w_class = ITEM_SIZE_HUGE
+	matter = list(MATERIAL_PLASTEEL = 8500)
+	max_block = 35
+	can_block_lasers = TRUE
+	slowdown_general = 1.5
 
 /obj/item/weapon/shield/buckler
 	name = "buckler"
@@ -107,7 +125,7 @@
 	if(.) playsound(user.loc, 'sound/weapons/Genhit.ogg', 50, 1)
 
 /obj/item/weapon/shield/buckler/get_block_chance(mob/user, var/damage, atom/damage_source = null, mob/attacker = null)
-	if(istype(damage_source, /obj/item/projectile))
+	if(istype(damage_source, /obj/item/projectile/bullet))
 		return 0 //No blocking bullets, I'm afraid.
 	return base_block_chance
 
@@ -149,7 +167,7 @@
 	return base_block_chance
 
 /obj/item/weapon/shield/energy/attack_self(mob/living/user as mob)
-	if ((CLUMSY in user.mutations) && prob(50))
+	if ((MUTATION_CLUMSY in user.mutations) && prob(50))
 		to_chat(user, "<span class='warning'>You beat yourself in the head with [src].</span>")
 		user.apply_damage(5)
 	active = !active
@@ -175,10 +193,10 @@
 	add_fingerprint(user)
 	return
 
-/obj/item/weapon/shield/energy/update_icon()
+/obj/item/weapon/shield/energy/on_update_icon()
 	icon_state = "eshield[active]"
 	if(active)
-		set_light(1.5, 1.5, "#006aff")
+		set_light(0.4, 0.1, 1, 2, "#006aff")
 	else
 		set_light(0)
 

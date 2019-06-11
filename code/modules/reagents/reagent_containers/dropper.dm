@@ -92,7 +92,7 @@
 	on_reagent_change()
 		update_icon()
 
-	update_icon()
+	on_update_icon()
 		if(reagents.total_volume)
 			icon_state = "dropper1"
 		else

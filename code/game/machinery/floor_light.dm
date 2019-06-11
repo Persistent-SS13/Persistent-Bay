@@ -16,29 +16,24 @@ var/list/floor_light_cache = list()
 	max_health = 10
 	sound_hit = 'sound/effects/Glasshit.ogg'
 	sound_destroyed = "shatter"
-	var/default_light_range = 4
-	var/default_light_power = 2
+	var/default_light_max_bright = 0.75
+	var/default_light_inner_range = 1
+	var/default_light_outer_range = 3
 	var/default_light_colour = "#ffffff"
-	var/flicker = 0 //Used for randomizing the flicker effect
 
 /obj/machinery/floor_light/prebuilt
 	anchored = TRUE
 
+/obj/machinery/floor_light/New()
+	..()
+	testing("created [src]\ref[src] ([x], [y], [z]) loc: [loc]")
+
 /obj/machinery/floor_light/after_load()
 	..()
 	update_brightness()
 
 /obj/machinery/floor_light/Destroy()
-	turn_off()
-	. = ..()
-
-
-/obj/machinery/floor_light/after_load()
-	..()
-	update_brightness()
-
-/obj/machinery/floor_light/Destroy()
-	turn_off()
+	testing("Deleting floor_light from [loc]")
 	. = ..()
 
 /obj/machinery/floor_light/attackby(var/obj/item/W, var/mob/user)
@@ -62,6 +57,13 @@ var/list/floor_light_cache = list()
 		set_broken(FALSE)
 		update_brightness()
 		return TRUE
+	else if(isWrench(W))
+		playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
+		to_chat(user, "<span class='notice'>You dismantle the floor light.</span>")
+		new /obj/item/stack/material/steel(src.loc, 1)
+		new /obj/item/stack/material/glass(src.loc, 1)
+		qdel(src)
+		return TRUE
 	return ..()
 
 /obj/machinery/floor_light/update_use_power(var/new_use_power)
@@ -69,10 +71,10 @@ var/list/floor_light_cache = list()
 	update_brightness()
 
 /obj/machinery/floor_light/proc/toggle()
-	//if(ison())
-	//	turn_off()
-	//else
-	//	turn_on()
+	if(ison())
+		turn_off()
+	else
+		turn_on()
 
 /obj/machinery/floor_light/attack_hand(var/mob/user)
 	if(..())
@@ -92,37 +94,38 @@ var/list/floor_light_cache = list()
 	return TRUE
 
 /obj/machinery/floor_light/proc/update_brightness()
-	//if(ison())
-	//	if(light_range != default_light_range || light_power != default_light_power || light_color != default_light_colour)
-	//		set_light(default_light_range, default_light_power, default_light_colour)
-	//else
-	//	turn_off()
-	//	if(light_range || light_power)
-	//		set_light(0)
+	if(ison())
+		if(light_outer_range != default_light_outer_range || light_max_bright != default_light_max_bright || light_color != default_light_colour)
+			set_light(default_light_max_bright, default_light_inner_range, default_light_outer_range, l_color = default_light_colour)
+	else
+		turn_off()
+		if(light_outer_range || light_max_bright)
+			set_light(0)
 
-	active_power_usage = ((light_range + light_power) * 10)
-	update_icon()
+	change_power_consumption((light_outer_range + light_max_bright) * 20, POWER_USE_ACTIVE)
+	queue_icon_update()
 
-/obj/machinery/floor_light/update_icon()
+/obj/machinery/floor_light/on_update_icon()
 	overlays.Cut()
-	//if(ison() && ispowered())
-	//	if(health >= (max_health * break_threshold))
-	//		var/cache_key = "floorlight-[default_light_colour]"
-	//		if(!floor_light_cache[cache_key])
-	//			var/image/I = image("on")
-	//			I.color = default_light_colour
-	//			I.plane = plane
-	//			I.layer = layer+0.001
-	//			floor_light_cache[cache_key] = I
-	//		overlays |= floor_light_cache[cache_key]
-	//	else
-	//		if(flicker == 0) //Needs init.
-	//			flicker = rand(1,4)
-	//		var/cache_key = "floorlight-broken[flicker]-[default_light_colour]"
-	//		if(!floor_light_cache[cache_key])
-	//			var/image/I = image("flicker[flicker]")
-	//			I.color = default_light_colour
-	//			I.plane = plane
-	//			I.layer = layer+0.001
-	//			floor_light_cache[cache_key] = I
-	//		overlays |= floor_light_cache[cache_key]
+	var/damaged = isdamaged()
+	if(ison() && ispowered())
+		if(!isbroken())
+			var/cache_key = "floorlight-[default_light_colour]"
+			if(!floor_light_cache[cache_key])
+				var/image/I = image("on")
+				I.color = default_light_colour
+				I.plane = plane
+				I.layer = layer+0.001
+				floor_light_cache[cache_key] = I
+			overlays |= floor_light_cache[cache_key]
+		else
+			if(damaged == 0) //Needs init.
+				damaged = rand(1,4)
+			var/cache_key = "floorlight-broken[damaged]-[default_light_colour]"
+			if(!floor_light_cache[cache_key])
+				var/image/I = image("flicker[damaged]")
+				I.color = default_light_colour
+				I.plane = plane
+				I.layer = layer+0.001
+				floor_light_cache[cache_key] = I
+			overlays |= floor_light_cache[cache_key]

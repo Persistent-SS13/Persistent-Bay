@@ -1,3 +1,6 @@
+// large amount of fields creates a heavy load on the server, see updateinfolinks() and addtofield()
+#define MAX_FIELDS 50
+
 /*
  * Paper
  * also scraps of paper
@@ -77,14 +80,14 @@
 
 /obj/item/weapon/paper/proc/set_content(text,title)
 	if(title)
-		name = title
+		SetName(title)
 	info = html_encode(text)
 	info = parsepencode(text)
 	update_icon()
 	update_space(info)
 	updateinfolinks()
 
-/obj/item/weapon/paper/update_icon()
+/obj/item/weapon/paper/on_update_icon()
 	if(icon_state == "paper_talisman")
 		return
 	else if(info)
@@ -118,14 +121,14 @@
 	set category = "Object"
 	set src in usr
 
-	if((CLUMSY in usr.mutations) && prob(50))
+	if((MUTATION_CLUMSY in usr.mutations) && prob(50))
 		to_chat(usr, "<span class='warning'>You cut yourself on the paper.</span>")
 		return
 	var/n_name = sanitizeSafe(input(usr, "What would you like to label the paper?", "Paper Labelling", null)  as text, MAX_NAME_LEN)
 
 	// We check loc one level up, so we can rename in clipboards and such. See also: /obj/item/weapon/photo/rename()
 	if((loc == usr || loc.loc && loc.loc == usr) && usr.stat == 0 && n_name)
-		name = n_name
+		SetName(n_name)
 		add_fingerprint(usr)
 
 /obj/item/weapon/paper/attack_self(mob/living/user as mob)
@@ -175,7 +178,7 @@
 	var/locid = 0
 	var/laststart = 1
 	var/textindex = 1
-	while(1) // I know this can cause infinite loops and fuck up the whole server, but the if(istart==0) should be safe as fuck
+	while(locid < MAX_FIELDS)
 		var/istart = 0
 		if(links)
 			istart = findtext(info_links, "<span class=\"paper_field\">", laststart)
@@ -260,7 +263,7 @@
 
 	//Count the fields
 	var/laststart = 1
-	while(1)
+	while(fields < MAX_FIELDS)
 		var/i = findtext(t, "<span class=\"paper_field\">", laststart)	//</span>
 		if(i==0)
 			break
@@ -285,10 +288,7 @@
 				user.visible_message("<span class='[class]'>[user] burns right through \the [src], turning it to ash. It flutters through the air before settling on the floor in a heap.</span>", \
 				"<span class='[class]'>You burn right through \the [src], turning it to ash. It flutters through the air before settling on the floor in a heap.</span>")
 
-				if(user.get_inactive_hand() == src)
-					user.drop_from_inventory(src)
-
-				new /obj/effect/decal/cleanable/ash(src.loc)
+				new /obj/effect/decal/cleanable/ash(get_turf(src))
 				qdel(src)
 
 			else
@@ -306,6 +306,8 @@
 
 	if(href_list["write"])
 		var/id = href_list["write"]
+		//var/t = strip_html_simple(input(usr, "What text do you wish to add to " + (id=="end" ? "the end of the paper" : "field "+id) + "?", "[name]", null),8192) as message
+
 		if(free_space <= 0)
 			to_chat(usr, "<span class='info'>There isn't enough space left on \the [src] to write anything.</span>")
 			return
@@ -315,7 +317,7 @@
 		if(!t)
 			return
 
-		var/obj/item/i = usr.get_active_hand() // Check to see if he still got that darn pen, also check if he's using a crayon or pen.
+		var/obj/item/i = usr.get_active_hand() // Check to see if he still got that darn pen, also check what type of pen
 		var/iscrayon = 0
 		var/isfancy = 0
 		if(!istype(i, /obj/item/weapon/pen))
@@ -335,8 +337,9 @@
 		if(istype(i, /obj/item/weapon/pen/fancy))
 			isfancy = 1
 
+
 		// if paper is not in usr, then it must be near them, or in a clipboard or folder, which must be in or near usr
-		if(src.loc != usr && !src.Adjacent(usr) && !((istype(src.loc, /obj/item/weapon/clipboard) || istype(src.loc, /obj/item/weapon/folder)) && (src.loc.loc == usr || src.loc.Adjacent(usr)) ) )
+		if(src.loc != usr && !src.Adjacent(usr) && !((istype(src.loc, /obj/item/weapon/material/clipboard) || istype(src.loc, /obj/item/weapon/folder)) && (src.loc.loc == usr || src.loc.Adjacent(usr)) ) )
 			return
 
 		var/last_fields_value = fields
@@ -344,7 +347,7 @@
 		t = parsepencode(t, i, usr, iscrayon, isfancy) // Encode everything from pencode to html
 
 
-		if(fields > 50)//large amount of fields creates a heavy load on the server, see updateinfolinks() and addtofield()
+		if(fields > MAX_FIELDS)
 			to_chat(usr, "<span class='warning'>Too many fields. Sorry, you can't do this.</span>")
 			fields = last_fields_value
 			return
@@ -360,6 +363,7 @@
 		update_space(t)
 
 		usr << browse("<HTML><HEAD><TITLE>[name]</TITLE></HEAD><BODY bgcolor='[color]'>[info_links][stamps]</BODY></HTML>", "window=[name]") // Update the window
+
 		playsound(src, pick('sound/effects/pen1.ogg','sound/effects/pen2.ogg'), 10)
 		update_icon()
 
@@ -369,7 +373,7 @@
 	var/clown = 0
 	if(user.mind && (user.mind.assigned_role == "Clown"))
 		clown = 1
-	
+
 	if(istype(P, /obj/item/weapon/tape_roll))
 		var/obj/item/weapon/tape_roll/tape = P
 		tape.stick(src, user)
@@ -387,12 +391,11 @@
 				to_chat(user, "<span class='notice'>Take off the carbon copy first.</span>")
 				add_fingerprint(user)
 				return
-
 		var/obj/item/weapon/paper_bundle/B = new(src.loc)
 		if (name != "paper")
-			B.name = name
+			B.SetName(name)
 		else if (P.name != "paper" && P.name != "photo")
-			B.name = P.name
+			B.SetName(P.name)
 
 		if(!user.unEquip(P, B) || !user.unEquip(src, B))
 			return
@@ -417,13 +420,14 @@
 		return
 
 	else if(istype(P, /obj/item/weapon/stamp) || istype(P, /obj/item/clothing/ring/seal))
-		if((!in_range(src, usr) && loc != user && !( istype(loc, /obj/item/weapon/clipboard) ) && loc.loc != user && user.get_active_hand() != P))
+		if((!in_range(src, usr) && loc != user && !( istype(loc, /obj/item/weapon/material/clipboard) ) && loc.loc != user && user.get_active_hand() != P))
 			return
 
 		stamps += (stamps=="" ? "<HR>" : "<BR>") + "<i>This paper has been stamped with the [P.name].</i>"
 
-		var/image/stampoverlay = image('icons/obj/items/paper.dmi')
-		var/x; var/y;
+		var/image/stampoverlay = image(icon)
+		var/x
+		var/y
 		if(istype(P, /obj/item/weapon/stamp/captain) || istype(P, /obj/item/weapon/stamp/centcomm))
 			x = rand(-2, 0)
 			y = rand(-1, 2)
@@ -559,7 +563,7 @@
 	name = "paper scrap"
 	icon_state = "scrap"
 
-/obj/item/weapon/paper/crumpled/update_icon()
+/obj/item/weapon/paper/crumpled/on_update_icon()
 	return
 
 /obj/item/weapon/paper/crumpled/bloody

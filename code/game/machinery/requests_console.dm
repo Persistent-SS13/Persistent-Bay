@@ -28,8 +28,8 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 	anchored 		= TRUE
 	icon 			= 'icons/obj/machines/terminals/reqterm.dmi'
 	icon_state 		= "req_comp0"
-	light_range 	= 1
 	frame_type 		= /obj/item/frame/request_console
+	light_outer_range = 0
 
 	var/department = "Unknown" //The list of all departments on the station (Determined from this variable on each unit) Set this to the same thing if you want several consoles in one department
 	var/list/message_log = list() //List of all messages
@@ -50,8 +50,9 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 	var/message = "";
 	var/recipient = ""; //the department which will be receiving the message
 	var/priority = -1 ; //Priority of the message being sent
+	light_outer_range = 0
 	var/datum/announcement/announcement = new
-	
+
 /obj/machinery/requests_console/New()
 	..()
 	allConsoles += src
@@ -86,22 +87,20 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 			req_console_supplies -= department
 		if (departmentType & RC_INFO)
 			req_console_information -= department
-	..()
+	. = ..()
 
 /obj/machinery/requests_console/update_icon()
 	pixel_x = 0
 	pixel_y = 0
-	var/turf/T = get_step(get_turf(src), turn(dir, 180))
-	if(istype(T) && T.density)
-		switch(dir)
-			if(NORTH)
-				pixel_y = -32
-			if(SOUTH)
-				pixel_y = 32
-			if(WEST)
-				pixel_x = 34
-			if(EAST)
-				pixel_x = -34
+	switch(dir)
+		if(NORTH)
+			pixel_y = -32
+		if(SOUTH)
+			pixel_y = 32
+		if(WEST)
+			pixel_x = 34
+		if(EAST)
+			pixel_x = -34
 
 	if(stat & NOPOWER)
 		if(icon_state != "req_comp_off")
@@ -180,15 +179,13 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 
 	if( href_list["department"] && message )
 		var/log_msg = message
-		var/pass = 0
+
 		screen = RCS_SENTFAIL
-		for (var/obj/machinery/message_server/MS in world)
-			if(!MS.active) continue
-			MS.send_rc_message(ckey(href_list["department"]),department,log_msg,msgStamped,msgVerified,priority)
-			pass = 1
-		if(pass)
-			screen = RCS_SENTPASS
-			message_log += "<B>Message sent to [recipient]</B><BR>[message]"
+		var/obj/machinery/message_server/MS = get_message_server(get_z(src))
+		if(MS)
+			if(MS.send_rc_message(ckey(href_list["department"]),department,log_msg,msgStamped,msgVerified,priority))
+				screen = RCS_SENTPASS
+				message_log += "<B>Message sent to [recipient]</B><BR>[message]"
 		else
 			audible_message(text("\icon[src] *The Requests Console beeps: 'NOTICE: No server detected!'"),,4)
 

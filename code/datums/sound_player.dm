@@ -27,7 +27,7 @@ GLOBAL_DATUM_INIT(sound_player, /decl/sound_player, new)
 	var/token_type = isnum(sound.environment) ? /datum/sound_token : /datum/sound_token/static_environment
 	return new token_type(source, sound_id, sound, range, prefer_mute)
 
-/decl/sound_player/proc/PlayLoopingSound(var/atom/source, var/sound_id, var/sound, var/volume, var/range, var/falloff = 1, var/echo, var/frequency, var/prefer_mute)
+/decl/sound_player/proc/PlayLoopingSound(var/atom/source, var/sound_id, var/sound, var/volume, var/range, var/falloff = 1, var/echo, var/frequency, var/prefer_mute, var/channel)
 	var/sound/S = istype(sound, /sound) ? sound : new(sound)
 	S.environment = 0 // Ensures a 3D effect even if x/y offset happens to be 0 the first time it's played
 	S.volume  = volume
@@ -35,6 +35,7 @@ GLOBAL_DATUM_INIT(sound_player, /decl/sound_player, new)
 	S.echo = echo
 	S.frequency = frequency
 	S.repeat = TRUE
+	S.channel = channel
 
 	return PlaySoundDatum(source, sound_id, S, range, prefer_mute)
 
@@ -87,7 +88,7 @@ GLOBAL_DATUM_INIT(sound_player, /decl/sound_player, new)
 	var/datum/proximity_trigger/square/proxy_listener
 	var/list/can_be_heard_from
 
-/datum/sound_token/New(var/atom/source, var/sound_id, var/sound/sound, var/range = 4, var/prefer_mute = FALSE)
+/datum/sound_token/New(var/atom/source, var/sound_id, var/sound/sound, var/range = 4, var/prefer_mute = FALSE, var/channel = null)
 	..()
 	if(!istype(source))
 		CRASH("Invalid sound source: [log_info_line(source)]")
@@ -104,13 +105,14 @@ GLOBAL_DATUM_INIT(sound_player, /decl/sound_player, new)
 	src.sound       = sound
 	src.sound_id    = sound_id
 
-	if(sound.repeat) // Non-looping sounds may not reserve a sound channel due to the risk of not hearing when someone forgets to stop the token
-		var/channel = GLOB.sound_player.PrivGetChannel(src) //Attempt to find a channel
-		if(!isnum(channel))
-			CRASH("All available sound channels are in active use.")
-		sound.channel = channel
-	else
-		sound.channel = 0
+	if(!channel)
+		if(sound.repeat) // Non-looping sounds may not reserve a sound channel due to the risk of not hearing when someone forgets to stop the token
+			channel = GLOB.sound_player.PrivGetChannel(src) //Attempt to find a channel
+			if(!isnum(channel))
+				CRASH("All available sound channels are in active use.")
+		else
+			channel = 0
+	sound.channel = channel //Use the forced channel
 
 	listeners = list()
 	listener_status = list()

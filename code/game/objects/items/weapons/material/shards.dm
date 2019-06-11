@@ -8,7 +8,7 @@
 	randpixel = 8
 	sharpness = 1
 	w_class = ITEM_SIZE_SMALL
-	force_divisor = 0.2 // 6 with hardness 30 (glass)
+	force_divisor = 0.12 // 6 with hardness 30 (glass)
 	thrown_force_divisor = 0.4 // 4 with weight 15 (glass)
 	item_state = "shard-glass"
 	attack_verb = list("stabbed", "slashed", "sliced", "cut")
@@ -27,7 +27,7 @@
 	update_icon()
 
 	if(material.shard_type)
-		name = "[material.display_name] [material.shard_type]"
+		SetName("[material.display_name] [material.shard_type]")
 		desc = "A small piece of [material.display_name]. It looks sharp, you wouldn't want to step on it barefoot. Could probably be used as ... a throwing weapon?"
 		switch(material.shard_type)
 			if(SHARD_SPLINTER, SHARD_SHRAPNEL)
@@ -37,7 +37,7 @@
 	else
 		qdel(src)
 
-/obj/item/weapon/material/shard/update_icon()
+/obj/item/weapon/material/shard/on_update_icon()
 	if(material)
 		color = material.icon_colour
 		// 1-(1-x)^2, so that glass shards with 0.3 opacity end up somewhat visible at 0.51 opacity
@@ -82,7 +82,7 @@
 				if(affecting)
 					if(BP_IS_ROBOTIC(affecting))
 						return
-					affecting.take_damage(5, 0)
+					affecting.take_damage(5, DAM_CUT)
 					H.updatehealth()
 					if(affecting.can_feel_pain())
 						H.Weaken(3)
@@ -91,16 +91,16 @@
 			return
 
 // Preset types - left here for the code that uses them
-/obj/item/weapon/material/shrapnel
+/obj/item/weapon/material/shard/phoron/New(loc)
+	..(loc, MATERIAL_PHORON_GLASS)
+
+/obj/item/weapon/material/shard/shrapnel
 	name = "shrapnel"
 	default_material = MATERIAL_STEEL
 	w_class = ITEM_SIZE_TINY	//it's real small
 
 /obj/item/weapon/material/shard/shrapnel/New(loc)
 	..(loc, MATERIAL_STEEL)
-
-/obj/item/weapon/material/shard/phoron/New(loc)
-	..(loc, MATERIAL_PHORON_GLASS)
 
 /obj/item/weapon/material/shard/fiberglass/New(loc)
 	..(loc, "fiberglass")

@@ -2,6 +2,7 @@
 #define AB_SPELL 2
 #define AB_INNATE 3
 #define AB_GENERIC 4
+#define AB_ITEM_USE_ICON 5
 
 #define AB_CHECK_RESTRAINED 1
 #define AB_CHECK_STUNNED 2
@@ -18,7 +19,7 @@
 /datum/action/lace_storage
 	name = "Access Lace Storage UI"
 	action_type = AB_GENERIC
-	button_icon = 'icons/misc/lace.dmi'
+	button_icon = 'icons/obj/action_buttons/lace.dmi'
 	button_icon_state = "lace"
 	procname = "lace_ui_interact"
 
@@ -31,7 +32,7 @@
 	var/processing = 0
 	var/active = 0
 	var/obj/screen/movable/action_button/button = null
-	var/button_icon = 'icons/mob/actions.dmi'
+	var/button_icon = 'icons/obj/action_buttons/actions.dmi'
 	var/button_icon_state = "default"
 	var/background_icon_state = "bg_default"
 	var/mob/living/owner
@@ -45,6 +46,9 @@
 /datum/action/Destroy()
 	if(owner)
 		Remove(owner)
+
+/datum/action/proc/SetTarget(var/atom/Target)
+	target = Target
 
 /datum/action/proc/Grant(mob/living/T)
 	if(owner)
@@ -71,7 +75,7 @@
 	if(!Checks())
 		return
 	switch(action_type)
-		if(AB_ITEM)
+		if(AB_ITEM, AB_ITEM_USE_ICON)
 			if(target)
 				var/obj/item = target
 				item.ui_action_click()
@@ -169,7 +173,7 @@
 //Hide/Show Action Buttons ... Button
 /obj/screen/movable/action_button/hide_toggle
 	name = "Hide Buttons"
-	icon = 'icons/mob/actions.dmi'
+	icon = 'icons/obj/action_buttons/actions.dmi'
 	icon_state = "bg_default"
 	var/hidden = 0
 
@@ -236,8 +240,18 @@
 /datum/action/item_action/hands_free
 	check_flags = AB_CHECK_ALIVE|AB_CHECK_INSIDE
 
-/datum/action/item_action/lace_action
-	check_flags = AB_CHECK_INSIDE
+/datum/action/item_action/organ
+	action_type = AB_ITEM_USE_ICON
+	button_icon = 'icons/obj/action_buttons/organs.dmi'
+
+/datum/action/item_action/organ/SetTarget(var/atom/Target)
+	. = ..()
+	var/obj/item/organ/O = target
+	if(istype(O))
+		O.refresh_action_button()
+
+/datum/action/item_action/organ/augment
+	button_icon = 'icons/obj/augment.dmi'
 
 #undef AB_WEST_OFFSET
 #undef AB_NORTH_OFFSET

@@ -15,7 +15,7 @@
 
 	action_button_name = "Toggle Helmet Light"
 	light_overlay = "helmet_light"
-	brightness_on = 4
+	brightness_on = 0.8
 	on = 0
 	armor  = list(
 		DAM_BLUNT 	= 60,

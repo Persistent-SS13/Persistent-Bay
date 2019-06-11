@@ -34,7 +34,6 @@
 	adjustFireLoss(0)
 
 /mob/living/silicon/robot/proc/use_power()
-
 	used_power_this_tick = 0
 	for(var/V in components)
 		var/datum/robot_component/C = components[V]
@@ -56,12 +55,16 @@
 
 		src.has_power = 1
 	else
-		if (src.has_power)
-			to_chat(src, "<span class='warning'>You are now running on emergency backup power.</span>")
-		src.has_power = 0
-		if(lights_on) // Light is on but there is no power!
-			lights_on = 0
-			set_light(0)
+		power_down()
+
+/mob/living/silicon/robot/proc/power_down()
+	if (has_power)
+		visible_message("[src] beeps stridently as it begins to run on emergency backup power!", SPAN_WARNING("You beep stridently as you begin to run on emergency backup power!"))
+		has_power = 0
+		set_stat(UNCONSCIOUS)
+	if(lights_on) // Light is on but there is no power!
+		lights_on = 0
+		set_light(0)
 
 /mob/living/silicon/robot/handle_regular_status_updates()
 
@@ -103,7 +106,7 @@
 		else	//Not stunned.
 			src.set_stat(CONSCIOUS)
 
-		confused = max(0, confused - 1)
+		handle_confused()
 
 	else //Dead.
 		src.blinded = 1
@@ -203,7 +206,7 @@
 			src.healths.icon_state = "health7"
 
 	if (src.syndicate && src.client)
-		for(var/datum/mind/tra in traitors.current_antagonists)
+		for(var/datum/mind/tra in GLOB.traitors.current_antagonists)
 			if(tra.current)
 				// TODO: Update to new antagonist system.
 				var/I = image('icons/mob/mob.dmi', loc = tra.current, icon_state = "traitor")
@@ -213,7 +216,7 @@
 			// TODO: Update to new antagonist system.
 			if(!src.mind.special_role)
 				src.mind.special_role = "traitor"
-				traitors.current_antagonists |= src.mind
+				GLOB.traitors.current_antagonists |= src.mind
 
 	if (src.cells)
 		if (src.cell)
@@ -260,7 +263,7 @@
 /mob/living/silicon/robot/handle_vision()
 	..()
 
-	if (src.stat == DEAD || (XRAY in mutations) || (src.sight_mode & BORGXRAY))
+	if (src.stat == DEAD || (MUTATION_XRAY in mutations) || (src.sight_mode & BORGXRAY))
 		set_sight(sight|SEE_TURFS|SEE_MOBS|SEE_OBJS)
 		set_see_in_dark(8)
 		set_see_invisible(SEE_INVISIBLE_LEVEL_TWO)
@@ -325,6 +328,6 @@
 	if(on_fire)
 		overlays += image("icon"='icons/mob/OnFire.dmi', "icon_state"="Standing")
 
-/mob/living/silicon/robot/fire_act()
+/mob/living/silicon/robot/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)
 	if(!on_fire) //Silicons don't gain stacks from hotspots, but hotspots can ignite them
 		IgniteMob()

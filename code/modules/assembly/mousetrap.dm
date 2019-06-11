@@ -6,6 +6,9 @@
 	matter = list(MATERIAL_STEEL = 100)
 	var/armed = 0
 
+	New()
+		. = ..()
+		ADD_SAVED_VAR(armed)
 
 	examine(mob/user)
 		. = ..(user)
@@ -36,7 +39,7 @@
 						affecting = H.get_organ(type)
 						H.Stun(3)
 			if(affecting)
-				affecting.take_damage(1, 0)
+				affecting.take_damage(1, DAM_CUT)
 				H.updatehealth()
 		else if(ismouse(target))
 			var/mob/living/simple_animal/mouse/M = target
@@ -53,7 +56,7 @@
 		if(!armed)
 			to_chat(user, "<span class='notice'>You arm [src].</span>")
 		else
-			if((CLUMSY in user.mutations) && prob(50))
+			if((MUTATION_CLUMSY in user.mutations) && prob(50))
 				var/which_hand = BP_L_HAND
 				if(!user.hand)
 					which_hand = BP_R_HAND
@@ -69,7 +72,7 @@
 
 	attack_hand(mob/living/user as mob)
 		if(armed)
-			if((CLUMSY in user.mutations) && prob(50))
+			if((MUTATION_CLUMSY in user.mutations) && prob(50))
 				var/which_hand = BP_L_HAND
 				if(!user.hand)
 					which_hand = BP_R_HAND

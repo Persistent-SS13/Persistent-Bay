@@ -5,6 +5,10 @@
 	icon_state = "envelope_sealed"
 	var/sealed = 1
 
+/obj/item/weapon/folder/envelope/New()
+	. = ..()
+	ADD_SAVED_VAR(sealed)
+
 /obj/item/weapon/folder/envelope/update_icon()
 	if(sealed)
 		icon_state = "envelope_sealed"

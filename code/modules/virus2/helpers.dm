@@ -1,3 +1,12 @@
+/obj/machinery/disease2
+	core_skill = SKILL_VIROLOGY
+
+/obj/machinery/proc/infect_nearby(datum/disease2/disease/disease, base_chance = 10, skill_threshold = SKILL_BASIC, dist = 2)
+	if(istype(disease) && operator_skill <= skill_threshold)
+		for(var/mob/living/carbon/victim in range(dist, src))
+			if(prob(base_chance * 2**(SKILL_MIN - operator_skill)))
+				infect_virus2(victim, disease)
+
 //Returns 1 if mob can be infected, 0 otherwise.
 proc/infection_chance(var/mob/living/carbon/M, var/vector = "Airborne")
 	if (!istype(M))
@@ -7,8 +16,8 @@ proc/infection_chance(var/mob/living/carbon/M, var/vector = "Airborne")
 	if(istype(H) && H.species.get_virus_immune(H))
 		return 0
 
-	var/protection = M.getarmor(null, DAM_BIO)	//gets the full body bio armour value, weighted by body part coverage.
-	var/score = round(0.06*protection) 			//scales 100% protection to 6.
+	var/protection = M.get_blocked_ratio(null, DAM_BIO, damage_flags = DAM_DISPERSED )	//gets the full body bio armour value, weighted by body part coverage.
+	var/score = round(6 * protection) 			//scales 100% protection to 6.
 
 	switch(vector)
 		if("Airborne")
@@ -17,9 +26,11 @@ proc/infection_chance(var/mob/living/carbon/M, var/vector = "Airborne")
 			var/obj/item/I = M.wear_mask
 			//masks provide a small bonus and can replace overall bio protection
 			if(I)
-				score = max(score, round(0.06*I.armor[DAM_BIO]))
-				if (istype(I, /obj/item/clothing/mask))
-					score += 1 //this should be added after
+				var/datum/extension/armor/armor_datum = get_extension(I, /datum/extension/armor)
+				if(armor_datum)
+					score = max(score, round(0.06*armor_datum.get_value(DAM_BIO)))
+					if (istype(I, /obj/item/clothing/mask))
+						score += 1 //this should be added after
 
 		if("Contact")
 			if(istype(H))
@@ -48,14 +59,14 @@ proc/infection_chance(var/mob/living/carbon/M, var/vector = "Airborne")
 	if (!istype(M))
 		return 0
 
-	var/protection = M.getarmor(null, DAM_BIO)	//gets the full body bio armour value, weighted by body part coverage.
+	var/protection = M.get_blocked_ratio(null, DAM_BIO, damage_flags = DAM_DISPERSED)	//gets the full body bio armour value, weighted by body part coverage.
 
 	if (vector == "Airborne")	//for airborne infections face-covering items give non-weighted protection value.
 		if(M.internal)
 			return 1
-		protection = max(protection, M.getarmor(FACE, DAM_BIO))
+		protection = max(protection, M.get_blocked_ratio(BP_HEAD, DAM_BIO))
 
-	return prob(protection + 15*M.chem_effects[CE_ANTIVIRAL])
+	return prob(100 * protection + 15*M.chem_effects[CE_ANTIVIRAL])
 
 /proc/airborne_can_reach(turf/simulated/source, turf/simulated/target)
 	//Can't ariborne without air

@@ -64,7 +64,7 @@
 	if(!get_active_hand())
 		to_chat(usr, "<span class='warning'>You have nothing to drop in your hand.</span>")
 	else
-		drop_item()
+		unequip_item()
 
 //This gets called when you press the delete button.
 /client/verb/delete_key_pressed()
@@ -106,7 +106,7 @@
 /client/verb/drop_item()
 	set hidden = 1
 	if(!isrobot(mob) && mob.stat == CONSCIOUS && isturf(mob.loc))
-		return mob.drop_item()
+		return mob.unequip_item()
 	return
 
 // check if mob has client, if so restore client view on eject
@@ -218,7 +218,7 @@
 
 //return 1 if slipped, 0 otherwise
 /mob/proc/handle_spaceslipping()
-	if(prob(slip_chance(5)) && !buckled)
+	if(prob(skill_fail_chance(SKILL_EVA, slip_chance(10), SKILL_EXPERT)))
 		to_chat(src, "<span class='warning'>You slipped!</span>")
 		src.inertia_dir = src.last_move
 		step(src, src.inertia_dir)
@@ -228,6 +228,8 @@
 /mob/proc/slip_chance(var/prob_slip = 5)
 	if(stat)
 		return 0
+	if(buckled)
+		return 0
 	if(Check_Shoegrip())
 		return 0
 	if(MOVING_DELIBERATELY(src))
@@ -235,9 +237,6 @@
 	return prob_slip
 
 #define DO_MOVE(this_dir) var/final_dir = turn(this_dir, -dir2angle(dir)); Move(get_step(mob, final_dir), final_dir);
-
-/mob/proc/check_slipmove()
-	return
 
 /client/verb/moveup()
 	set name = ".moveup"

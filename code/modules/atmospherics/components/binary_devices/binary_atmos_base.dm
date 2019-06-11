@@ -15,7 +15,8 @@
 	air2 = new
 	air1.volume = 200
 	air2.volume = 200
-
+	ADD_SAVED_VAR(air1)
+	ADD_SAVED_VAR(air2)
 
 /obj/machinery/atmospherics/binary/setup_initialize_directions()
 	..()
@@ -28,6 +29,13 @@
 			initialize_directions = EAST|WEST
 		if(WEST)
 			initialize_directions = EAST|WEST
+
+/obj/machinery/atmospherics/binary/Process()
+	//Rebuild the networks if something is wrong
+	if( (network1 && !network1.normal_members && !network1.line_members) || (network2 && !network2.normal_members && !network2.line_members) )
+		. = ..()
+	last_power_draw = 0
+	last_flow_rate = 0
 
 // Housekeeping and pipe network stuff below
 /obj/machinery/atmospherics/binary/network_expand(datum/pipe_network/new_network, obj/machinery/atmospherics/pipe/reference)
@@ -64,7 +72,7 @@
 				node2 = target
 				break
 
-	update_icon()
+	queue_icon_update()
 	update_underlays()
 
 /obj/machinery/atmospherics/binary/build_network()
@@ -117,7 +125,7 @@
 		qdel(network2)
 		node2 = null
 
-	update_icon()
+	queue_icon_update()
 	update_underlays()
 
 	return null

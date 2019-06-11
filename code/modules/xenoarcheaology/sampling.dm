@@ -127,7 +127,7 @@
 		else
 			//create a new sample bag which we'll fill with rock samples
 			filled_bag = new /obj/item/weapon/evidencebag(src)
-			filled_bag.name = "sample bag"
+			filled_bag.SetName("sample bag")
 			filled_bag.desc = "a bag for holding research samples."
 
 			icon_state = "sampler1"
@@ -143,6 +143,7 @@
 			filled_bag.overlays += I
 			filled_bag.overlays += "evidence"
 			filled_bag.w_class = ITEM_SIZE_TINY
+			filled_bag.stored_item = R
 
 			to_chat(user, "<span class='notice'>You take a core sample of the [item_to_sample].</span>")
 	else
@@ -156,7 +157,7 @@
 			var/mob/M = src.loc
 			success = M.put_in_inactive_hand(filled_bag)
 		if(!success)
-			filled_bag.forceMove(get_turf(src))
+			filled_bag.dropInto(loc)
 		filled_bag = null
 		icon_state = "sampler0"
 	else

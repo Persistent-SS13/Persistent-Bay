@@ -22,8 +22,8 @@
 				"You hear ratchet.")
 			src.anchored = !src.anchored
 
-	else if(istype(I, /obj/item/stack/rods))
-		var/obj/item/stack/rods/R = I
+	else if(istype(I, /obj/item/stack/material/rods))
+		var/obj/item/stack/material/rods/R = I
 		if(R.get_amount() >= 4)
 			R.use(4)
 			to_chat(user, "<span class='notice'>You add spikes to the frame.</span>")
@@ -81,7 +81,7 @@
 			to_chat(user, "<span class='notice'>You pry the spikes out of the frame.</span>")
 			var/obj/F = new /obj/structure/kitchenspike_frame(src.loc)
 			transfer_fingerprints_to(F)
-			new /obj/item/stack/rods(loc, 4)
+			new /obj/item/stack/material/rods(loc, 4)
 			qdel(src)
 
 /obj/structure/kitchenspike/proc/spike(var/mob/living/victim)

@@ -32,7 +32,11 @@
 
 	var/active = FALSE
 	var/operating = FALSE
-	
+
+/obj/machinery/button/New()
+	. = ..()
+	ADD_SAVED_VAR(_wifi_id)
+	ADD_SAVED_VAR(activate_func)
 
 /obj/machinery/button/Initialize()
 	. = ..()
@@ -70,7 +74,7 @@
 		return FALSE
 	operating = TRUE
 	active = TRUE
-	use_power(active_power_usage)
+	use_power_oneoff(active_power_usage)
 	send_signal()
 	update_icon()
 	if(icon_anim_act)
@@ -295,8 +299,10 @@
 	return ..()
 
 /obj/machinery/button/windowtint/send_signal()
-	for(var/obj/structure/window/reinforced/polarized/W in range(src, tintrange))
-		if (!W.id || W.id == src.id_tag)
+	for(var/obj/structure/window/W in range(src, tintrange))
+		if(!W.polarized)
+			continue
+		if(!W.id_tag || W.id_tag == src.id_tag)
 			spawn(0)
 				W.toggle()
 				return

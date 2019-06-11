@@ -9,6 +9,15 @@
 	initial_reagent_types = list(/datum/reagent/fuel = 1)
 	atom_flags = ATOM_FLAG_CLIMBABLE
 
+/obj/structure/reagent_dispensers/fueltank/empty
+	initial_reagent_types = null
+
+/obj/structure/reagent_dispensers/fueltank/New()
+	. = ..()
+	ADD_SAVED_VAR(modded)
+	ADD_SAVED_VAR(rig)
+	ADD_SKIP_EMPTY(rig)
+
 /obj/structure/reagent_dispensers/fueltank/examine(mob/user)
 	if(!..(user, 2))
 		return
@@ -61,7 +70,7 @@
 	else if(isflamesource(W))
 		log_and_message_admins("triggered a fueltank explosion with \a [W].")
 		user.visible_message("<span class='danger'>\The [user] puts \the [W] to \the [src]!</span>", "<span class='danger'>You put \the [W] to \the [src] and with a moment of lucidity you realize, this might not have been the smartest thing you've ever done.</span>")
-		src.explode()
+		explode()
 		return
 
 	else if(isScrewdriver(W))
@@ -94,25 +103,27 @@
 		if(!istype(Proj ,/obj/item/projectile/beam/lastertag) && !istype(Proj ,/obj/item/projectile/beam/practice) )
 			explode()
 
-/obj/structure/reagent_dispensers/fueltank/ex_act()
-	explode()
+/obj/structure/reagent_dispensers/fueltank/destroyed(damagetype, user)
+	if(IsDamageTypeBurn(damagetype)) //explode only when the damage type is one that burns
+		explode(FALSE)
+	. = ..()
 
-/obj/structure/reagent_dispensers/fueltank/proc/explode()
+/obj/structure/reagent_dispensers/fueltank/proc/explode(var/deleteafter = TRUE)
 	if (reagents.total_volume > 500)
 		explosion(src.loc,1,2,4)
 	else if (reagents.total_volume > 100)
 		explosion(src.loc,0,1,3)
 	else if (reagents.total_volume > 50)
 		explosion(src.loc,-1,1,2)
-	if(src)
+	if(src && deleteafter)
 		qdel(src)
 
 /obj/structure/reagent_dispensers/fueltank/fire_act(datum/gas_mixture/air, temperature, volume)
+	. = ..()
 	if (modded)
 		explode()
 	else if (temperature > T0C+500)
 		explode()
-	return ..()
 
 /obj/structure/reagent_dispensers/fueltank/Move()
 	if (..() && modded)

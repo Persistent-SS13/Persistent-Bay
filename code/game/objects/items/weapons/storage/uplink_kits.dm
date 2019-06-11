@@ -78,7 +78,7 @@
 	name = "clerical kit"
 	desc = "Comes with all you need to fake paperwork. Assumes you have passed basic writing lessons."
 	startswith = list(
-		/obj/item/weapon/packageWrap,
+		/obj/item/stack/package_wrap/twenty_five,
 		/obj/item/weapon/hand_labeler,
 		/obj/item/weapon/stamp/chameleon,
 		/obj/item/weapon/pen/chameleon,
@@ -97,9 +97,9 @@
 	name = "\improper Smooth operator"
 	desc = "9mm with silencer kit and ammunition."
 	startswith = list(
-		/obj/item/weapon/gun/projectile/pistol,
+		/obj/item/weapon/gun/projectile/pistol/holdout,
 		/obj/item/weapon/silencer,
-		/obj/item/ammo_magazine/mc9mm
+		/obj/item/ammo_magazine/box/lap3
 	)
 
 /obj/item/weapon/storage/backpack/satchel/syndie_kit/revolver
@@ -107,7 +107,7 @@
 	desc = ".357 revolver, with ammunition."
 	startswith = list(
 		/obj/item/weapon/gun/projectile/revolver,
-		/obj/item/ammo_magazine/a357
+		/obj/item/ammo_magazine/speedloader/c357
 	)
 
 /obj/item/weapon/storage/backpack/satchel/syndie_kit/revolver2
@@ -115,7 +115,7 @@
 	desc = ".44 magnum revolver, with ammunition."
 	startswith = list(
 		/obj/item/weapon/gun/projectile/revolver/webley,
-		/obj/item/ammo_magazine/c44
+		/obj/item/ammo_magazine/box/c44
 	)
 
 /obj/item/weapon/storage/box/syndie_kit/toxin
@@ -135,17 +135,17 @@
 
 /obj/item/weapon/storage/box/syndie_kit/cigarette
 	name = "\improper Tricky smokes"
-	desc = "Comes with the following brands of cigarettes, in this order: 2xFlash, 2xSmoke, 1xMindBreaker, 1xTricordrazine. Avoid mixing them up."
+	desc = "Smokes so good, you'd think it was a trick!"
 
 /obj/item/weapon/storage/box/syndie_kit/cigarette/New()
 	..()
 	var/obj/item/weapon/storage/fancy/cigarettes/pack
 	pack = new /obj/item/weapon/storage/fancy/cigarettes(src)
-	fill_cigarre_package(pack, list(/datum/reagent/aluminum = 1, /datum/reagent/potassium = 1, /datum/reagent/sulfur = 1))
+	fill_cigarre_package(pack, list(/datum/reagent/aluminium = 1, /datum/reagent/potassium = 1, /datum/reagent/sulfur = 1))
 	pack.desc += " 'F' has been scribbled on it."
 
 	pack = new /obj/item/weapon/storage/fancy/cigarettes(src)
-	fill_cigarre_package(pack, list(/datum/reagent/aluminum = 1, /datum/reagent/potassium = 1, /datum/reagent/sulfur = 1))
+	fill_cigarre_package(pack, list(/datum/reagent/aluminium = 1, /datum/reagent/potassium = 1, /datum/reagent/sulfur = 1))
 	pack.desc += " 'F' has been scribbled on it."
 
 	pack = new /obj/item/weapon/storage/fancy/cigarettes(src)
@@ -182,7 +182,7 @@
 /obj/item/weapon/storage/secure/briefcase/heavysniper
 	startswith = list(
 		/obj/item/weapon/gun/projectile/heavysniper,
-		/obj/item/weapon/storage/box/sniperammo
+		/obj/item/weapon/storage/box/ammo/sniperammo
 	)
 
 /obj/item/weapon/storage/secure/briefcase/heavysniper/Initialize()

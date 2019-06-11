@@ -3,6 +3,7 @@
 	filedesc = "Atmosphere Control"
 	nanomodule_path = /datum/nano_module/atmos_control
 	program_icon_state = "atmos_control"
+	program_key_state = "atmos_key"
 	program_menu_icon = "shuffle"
 	extended_desc = "This program allows remote control of air alarms. This program can not be run on tablet computers."
 	required_access = core_access_engineering_programs
@@ -10,6 +11,7 @@
 	network_destination = "atmospheric control system"
 	requires_ntnet_feature = NTNET_SYSTEMCONTROL
 	usage_flags = PROGRAM_LAPTOP | PROGRAM_CONSOLE
+	category = PROG_ENG
 	size = 17
 
 /datum/nano_module/atmos_control
@@ -82,16 +84,16 @@
 	var/obj/machinery/alarm/air_alarm					= null
 
 /datum/topic_state/air_alarm/can_use_topic(var/src_object, var/mob/user)
-	if(has_access(user))
+	if(alarm_has_access(user))
 		return STATUS_INTERACTIVE
 	return STATUS_UPDATE
 
 /datum/topic_state/air_alarm/href_list(var/mob/user)
 	var/list/extra_href = list()
 	extra_href["remote_connection"] = 1
-	extra_href["remote_access"] = has_access(user)
+	extra_href["remote_access"] = alarm_has_access(user)
 
 	return extra_href
 
-/datum/topic_state/air_alarm/proc/has_access(var/mob/user)
+/datum/topic_state/air_alarm/proc/alarm_has_access(var/mob/user)
 	return user && (isAI(user) || atmos_control.access.allowed(user) || atmos_control.emagged || air_alarm.rcon_setting == RCON_YES || (air_alarm.alarm_area.atmosalm && air_alarm.rcon_setting == RCON_AUTO))

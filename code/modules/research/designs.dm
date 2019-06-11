@@ -278,7 +278,7 @@ other types of metals and chemistry for reagents).
 	id = "mining_scanner"
 	req_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2)
 	materials = list(MATERIAL_STEEL = 1000,MATERIAL_GLASS = 1000)
-	build_path = /obj/item/weapon/mining_scanner
+	build_path = /obj/item/device/scanner/mining/
 	sort_string = "KAAAF"
 
 /datum/design/item/device/depth_scanner
@@ -308,35 +308,35 @@ other types of metals and chemistry for reagents).
 	desc = "A device for analyzing chemicals in blood."
 	id = "mass_spectrometer"
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 2)
-	build_path = /obj/item/device/mass_spectrometer
+	build_path = /obj/item/device/scanner/spectrometer
 	sort_string = "MACAA"
 
 /datum/design/item/medical/adv_mass_spectrometer
 	desc = "A device for analyzing chemicals in blood and their quantities."
 	id = "adv_mass_spectrometer"
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 4)
-	build_path = /obj/item/device/mass_spectrometer/adv
+	build_path = /obj/item/device/scanner/spectrometer/adv
 	sort_string = "MACAB"
 
 /datum/design/item/medical/reagent_scanner
 	desc = "A device for identifying chemicals."
 	id = "reagent_scanner"
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 2)
-	build_path = /obj/item/device/reagent_scanner
+	build_path = /obj/item/device/scanner/reagent
 	sort_string = "MACBA"
 
 /datum/design/item/medical/adv_reagent_scanner
 	desc = "A device for identifying chemicals and their proportions."
 	id = "adv_reagent_scanner"
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 4)
-	build_path = /obj/item/device/reagent_scanner/adv
+	build_path = /obj/item/device/scanner/reagent/adv
 	sort_string = "MACBB"
 
 /datum/design/item/medical/slime_scanner
 	desc = "A device for scanning identified and unidentified lifeforms."
 	id = "slime_scanner"
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 2)
-	build_path = /obj/item/device/slime_scanner
+	build_path = /obj/item/device/scanner/xenobio
 	sort_string = "MACBC"
 
 /datum/design/item/beaker/AssembleDesignName()
@@ -474,29 +474,29 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/ammo_magazine/box/c9mm
 	sort_string = "TAACA"
 
-/datum/design/item/weapon/ammo_emp_38
-	id = "ammo_emp_38"
-	desc = "A .38 round with an integrated EMP charge."
-	materials = list(MATERIAL_STEEL = 2500, MATERIAL_URANIUM = 750)
-	req_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 3)
-	build_path = /obj/item/ammo_magazine/box/emp
-	sort_string = "TAACC"
+// /datum/design/item/weapon/ammo_emp_38
+// 	id = "ammo_emp_38"
+// 	desc = "A .38 round with an integrated EMP charge."
+// 	materials = list(MATERIAL_STEEL = 2500, MATERIAL_URANIUM = 750)
+// 	req_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 3)
+// 	build_path = /obj/item/ammo_magazine/box/c38/emp
+// 	sort_string = "TAACC"
 
 /datum/design/item/weapon/ammo_emp_45
 	id = "ammo_emp_45"
 	desc = "A .45 round with an integrated EMP charge."
 	materials = list(MATERIAL_STEEL = 2500, MATERIAL_URANIUM = 750)
 	req_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 3)
-	build_path = /obj/item/ammo_magazine/box/emp/c45
+	build_path = /obj/item/ammo_magazine/box/c45/emp
 	sort_string = "TAACD"
 
-/datum/design/item/weapon/ammo_emp_10
-	id = "ammo_emp_10"
-	desc = "A .10mm round with an integrated EMP charge."
-	materials = list(MATERIAL_STEEL = 2500, MATERIAL_URANIUM = 750)
-	req_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 3)
-	build_path = /obj/item/ammo_magazine/box/emp/a10mm
-	sort_string = "TAACE"
+// /datum/design/item/weapon/ammo_emp_10
+// 	id = "ammo_emp_10"
+// 	desc = "A .10mm round with an integrated EMP charge."
+// 	materials = list(MATERIAL_STEEL = 2500, MATERIAL_URANIUM = 750)
+// 	req_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 3)
+// 	build_path = /obj/item/ammo_magazine/box/c10mm/emp
+// 	sort_string = "TAACE"
 
 /datum/design/item/weapon/ammo_emp_slug
 	id = "ammo_emp_slug"
@@ -666,13 +666,13 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/device/gps
 	sort_string = "VADAB"
 
-/datum/design/item/beacon_locator
+/datum/design/item/radio_pinpointer
 	name = "Beacon tracking pinpointer"
 	desc = "Used to scan and locate signals on a particular frequency."
-	id = "beacon_locator"
+	id = "radio_pinpointer"
 	req_tech = list(TECH_MAGNET = 3, TECH_ENGINEERING = 2, TECH_BLUESPACE = 3)
 	materials = list(MATERIAL_STEEL = 1000,MATERIAL_GLASS = 500)
-	build_path = /obj/item/device/beacon_locator
+	build_path = /obj/item/weapon/pinpointer/radio
 	sort_string = "VADAC"
 
 /datum/design/item/bag_holding
@@ -873,99 +873,6 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/weapon/tank/jetpack
 	sort_string = "VBABC"
 
-/datum/design/item/pda
-	name = "PDA design"
-	desc = "Cheaper than whiny non-digital assistants."
-	id = "pda"
-	req_tech = list(TECH_ENGINEERING = 2, TECH_POWER = 3)
-	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
-	build_path = /obj/item/device/pda
-	sort_string = "VAAAA"
-
-// Cartridges
-/datum/design/item/pda_cartridge
-	req_tech = list(TECH_ENGINEERING = 2, TECH_POWER = 3)
-	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
-
-/datum/design/item/pda_cartridge/AssembleDesignName()
-	..()
-	name = "PDA accessory ([item_name])"
-
-/datum/design/item/pda_cartridge/cart_basic
-	id = "cart_basic"
-	build_path = /obj/item/weapon/cartridge
-	sort_string = "VBAAA"
-
-/datum/design/item/pda_cartridge/engineering
-	id = "cart_engineering"
-	build_path = /obj/item/weapon/cartridge/engineering
-	sort_string = "VBAAB"
-
-/datum/design/item/pda_cartridge/atmos
-	id = "cart_atmos"
-	build_path = /obj/item/weapon/cartridge/atmos
-	sort_string = "VBAAC"
-
-/datum/design/item/pda_cartridge/medical
-	id = "cart_medical"
-	build_path = /obj/item/weapon/cartridge/medical
-	sort_string = "VBAAD"
-
-/datum/design/item/pda_cartridge/chemistry
-	id = "cart_chemistry"
-	build_path = /obj/item/weapon/cartridge/chemistry
-	sort_string = "VBAAE"
-
-/datum/design/item/pda_cartridge/security
-	id = "cart_security"
-	build_path = /obj/item/weapon/cartridge/security
-	sort_string = "VBAAF"
-
-/datum/design/item/pda_cartridge/janitor
-	id = "cart_janitor"
-	build_path = /obj/item/weapon/cartridge/janitor
-	sort_string = "VBAAG"
-
-/datum/design/item/pda_cartridge/science
-	id = "cart_science"
-	build_path = /obj/item/weapon/cartridge/signal/science
-	sort_string = "VBAAH"
-
-/datum/design/item/pda_cartridge/quartermaster
-	id = "cart_quartermaster"
-	build_path = /obj/item/weapon/cartridge/quartermaster
-	sort_string = "VBAAI"
-
-/datum/design/item/pda_cartridge/hop
-	id = "cart_hop"
-	build_path = /obj/item/weapon/cartridge/hop
-	sort_string = "VBAAJ"
-
-/datum/design/item/pda_cartridge/hos
-	id = "cart_hos"
-	build_path = /obj/item/weapon/cartridge/hos
-	sort_string = "VBAAK"
-
-/datum/design/item/pda_cartridge/ce
-	id = "cart_ce"
-	build_path = /obj/item/weapon/cartridge/ce
-	sort_string = "VBAAL"
-
-/datum/design/item/pda_cartridge/cmo
-	id = "cart_cmo"
-	build_path = /obj/item/weapon/cartridge/cmo
-	sort_string = "VBAAM"
-
-/datum/design/item/pda_cartridge/rd
-	id = "cart_rd"
-	build_path = /obj/item/weapon/cartridge/rd
-	sort_string = "VBAAN"
-
-/datum/design/item/pda_cartridge/captain
-	id = "cart_captain"
-	build_path = /obj/item/weapon/cartridge/captain
-	sort_string = "VBAAO"
-
 /datum/design/item/airlock_brace
 	name = "airlock brace design"
 	desc = "Special door attachment that can be used to provide extra security."
@@ -1068,7 +975,7 @@ other types of metals and chemistry for reagents).
 	id = "rig_plasmacutter"
 	req_tech = list(TECH_MATERIAL = 4, TECH_PHORON = 3, TECH_ENGINEERING = 6)
 	materials = list(MATERIAL_STEEL = 2000, MATERIAL_GLASS = 1000, MATERIAL_PLASTIC = 1000, MATERIAL_GOLD = 700, MATERIAL_PHORON = 500)
-	build_path = /obj/item/rig_module/device/plasmacutter
+	build_path = /obj/item/rig_module/mounted/plasmacutter
 	sort_string = "VCAAH"
 
 /datum/design/item/rig_anomaly_scanner

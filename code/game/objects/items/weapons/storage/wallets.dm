@@ -38,10 +38,14 @@
 		/obj/item/device/paicard,
 		/obj/item/weapon/stamp,
 		/obj/item/weapon/key,
-		/obj/item/clothing/accessory/badge)
+		/obj/item/clothing/accessory/badge,
+		/obj/item/clothing/accessory/medal,
+		/obj/item/clothing/accessory/armor/tag,
+		)
 	slot_flags = SLOT_ID
 
 	var/obj/item/weapon/card/id/front_id = null
+
 /obj/item/weapon/storage/wallet/leather
 	color = COLOR_SEDONA
 	matter = list(MATERIAL_LEATHER = 1000)
@@ -57,7 +61,7 @@
 	if(.)
 		if(W == front_id)
 			front_id = null
-			name = initial(name)
+			SetName(initial(name))
 			update_icon()
 
 /obj/item/weapon/storage/wallet/handle_item_insertion(obj/item/W as obj, prevent_warning = 0)
@@ -65,10 +69,9 @@
 	if(.)
 		if(!front_id && istype(W, /obj/item/weapon/card/id))
 			front_id = W
-			name = "[name] ([front_id])"
 			update_icon()
 
-/obj/item/weapon/storage/wallet/update_icon()
+/obj/item/weapon/storage/wallet/on_update_icon()
 	overlays.Cut()
 	if(front_id)
 		var/tiny_state = "id-generic"

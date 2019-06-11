@@ -52,16 +52,15 @@
 					/obj/item/clothing/shoes/brown,
 					/obj/item/clothing/shoes/workboots,
 					/obj/item/weapon/storage/belt/utility/full,
-					/obj/item/weapon/storage/backpack/satchel_eng,
+					/obj/item/weapon/storage/backpack/satchel/eng,
 					/obj/item/weapon/storage/backpack/industrial,
 					/obj/item/weapon/storage/backpack/dufflebag/eng,
-					/obj/item/weapon/storage/toolbox/mechanical/full,
+					/obj/item/weapon/storage/toolbox/mechanical/filled,
 					/obj/item/weapon/tool/crowbar/brace_jack,
 					/obj/item/weapon/stamp/ce,
-					/obj/item/weapon/cartridge/ce,
 					/obj/item/taperoll/engineering,
 					/obj/item/device/flash,
-					/obj/item/device/pda/heads/ce,
+					/obj/item/modular_computer/pda/heads/ce,
 					/obj/item/device/radio/headset/heads/ce)
 	cost = 50
 	containertype = /obj/structure/closet/secure_closet/engineering_chief
@@ -96,11 +95,11 @@
 					/obj/item/clothing/glasses/material,
 					/obj/item/clothing/gloves/thick,
 					/obj/item/weapon/storage/backpack/industrial,
-					/obj/item/weapon/mining_scanner,
+					/obj/item/device/scanner/mining/,
 					/obj/item/weapon/storage/ore,
 					/obj/item/weapon/shovel,
 					/obj/item/weapon/pickaxe,
-					/obj/item/device/analyzer,
+					/obj/item/device/scanner/gas,
 					/obj/item/device/flashlight/lantern,
 					/obj/item/device/radio/headset/headset_cargo)
 	cost = 10
@@ -119,9 +118,9 @@
 					/obj/item/clothing/shoes/brown,
 					/obj/item/clothing/head/soft,
 					/obj/item/weapon/tank/emergency/oxygen,
-					/obj/item/weapon/clipboard,
+					/obj/item/weapon/material/clipboard,
 					/obj/item/weapon/stamp/qm,
-					/obj/item/device/pda/quartermaster,
+					/obj/item/modular_computer/pda/cargo,
 					/obj/item/device/radio/headset/headset_cargo)
 	cost = 35
 	containertype = /obj/structure/closet/secure_closet/quartermaster
@@ -215,9 +214,9 @@
 					/obj/item/clothing/glasses/sunglasses/sechud,
 					/obj/item/clothing/gloves/thick,
 					/obj/item/clothing/shoes/jackboots,
-					/obj/item/clothing/accessory/holster/waist,
+					/obj/item/clothing/accessory/storage/holster/waist,
 					/obj/item/weapon/storage/belt/security,
-					/obj/item/weapon/storage/backpack/satchel_sec,
+					/obj/item/weapon/storage/backpack/satchel/sec,
 					/obj/item/weapon/melee/telebaton,
 					/obj/item/weapon/cell,
 					/obj/item/weapon/handcuffs,
@@ -226,7 +225,7 @@
 					/obj/item/weapon/book/manual/nt_regs,
 					/obj/item/taperoll/police,
 					/obj/item/device/flash,
-					/obj/item/device/pda/heads/hos,
+					/obj/item/modular_computer/pda/heads/hos,
 					/obj/item/device/radio/headset/heads/hos)
 	cost = 100
 	containertype = /obj/structure/closet/secure_closet/hos
@@ -265,7 +264,7 @@
 					/obj/item/clothing/gloves/thick,
 					/obj/item/clothing/head/det,
 					/obj/item/clothing/shoes/laceup,
-					/obj/item/clothing/accessory/holster/armpit,
+					/obj/item/clothing/accessory/storage/holster/armpit,
 					/obj/item/clothing/glasses/sunglasses,
 					/obj/item/weapon/storage/backpack/security,
 					/obj/item/weapon/handcuffs,
@@ -355,7 +354,7 @@
 					/obj/item/clothing/suit/storage/hooded/wintercoat/medical,
 					/obj/item/clothing/shoes/laceup,
 					/obj/item/weapon/storage/backpack/messenger/med,
-					/obj/item/weapon/clipboard,
+					/obj/item/weapon/material/clipboard,
 					/obj/item/weapon/folder/white,
 					/obj/item/weapon/pen,
 					/obj/item/device/radio/headset/headset_med)
@@ -373,7 +372,7 @@
 					/obj/item/clothing/mask/surgical,
 					/obj/item/clothing/glasses/hud/health,
 					/obj/item/clothing/shoes/white,
-					/obj/item/weapon/storage/backpack/satchel_vir,
+					/obj/item/weapon/storage/backpack/satchel/vir,
 					/obj/item/weapon/reagent_containers/syringe/antiviral,
 					/obj/item/device/radio/headset/headset_med)
 	cost = 6
@@ -398,13 +397,13 @@
 					/obj/item/clothing/mask/surgical,
 					/obj/item/clothing/accessory/stethoscope,
 					/obj/item/weapon/storage/belt/medical,
-					/obj/item/weapon/storage/backpack/satchel_med,
+					/obj/item/weapon/storage/backpack/satchel/med,
 					/obj/item/weapon/storage/firstaid/regular/full,
 					/obj/item/weapon/stamp/cmo,
 					/obj/item/taperoll/medical,
 					/obj/item/device/flashlight/pen,
 					/obj/item/device/flash,
-					/obj/item/device/pda/heads/cmo,
+					/obj/item/modular_computer/pda/heads/cmo,
 					/obj/item/device/radio/headset/heads/cmo)
 	cost = 50
 	containertype = /obj/structure/closet/secure_closet/CMO
@@ -419,7 +418,7 @@
 					/obj/item/clothing/glasses/science,
 					/obj/item/clothing/shoes/white,
 					/obj/item/weapon/storage/box/pillbottles,
-					/obj/item/weapon/storage/backpack/satchel_chem,
+					/obj/item/weapon/storage/backpack/satchel/chem,
 					/obj/item/device/radio/headset/headset_med)
 	cost = 6
 	containertype = /obj/structure/closet/secure_closet/medical3
@@ -437,7 +436,7 @@
 					/obj/item/clothing/gloves/latex,
 					/obj/item/clothing/shoes/white,
 					/obj/item/weapon/storage/backpack/messenger/tox,
-					/obj/item/weapon/clipboard,
+					/obj/item/weapon/material/clipboard,
 					/obj/item/device/radio/headset/headset_sci)
 	cost = 6
 	containertype = /obj/structure/closet/secure_closet/scientist
@@ -451,7 +450,7 @@
 					/obj/item/weapon/storage/belt/utility/full,
 					/obj/item/weapon/storage/backpack/toxins,
 					/obj/item/device/robotanalyzer,
-					/obj/item/device/pda/roboticist,
+					/obj/item/modular_computer/pda/roboticist,
 					/obj/item/device/radio/headset/headset_sci)
 	cost = 6
 	containertype = /obj/structure/closet/secure_closet/scientist
@@ -469,10 +468,10 @@
 					/obj/item/clothing/cloak/rd,
 					/obj/item/clothing/shoes/brown,
 					/obj/item/clothing/shoes/leather,
-					/obj/item/weapon/storage/backpack/satchel_tox,
+					/obj/item/weapon/storage/backpack/satchel/tox,
 					/obj/item/weapon/stamp/rd,
 					/obj/item/taperoll/research,
-					/obj/item/device/pda/heads/rd,
+					/obj/item/modular_computer/pda/heads/rd,
 					/obj/item/device/radio/headset/heads/rd)
 	cost = 50
 	containertype = /obj/structure/closet/secure_closet/RD
@@ -487,7 +486,7 @@
 					/obj/item/clothing/gloves/thick,
 					/obj/item/weapon/reagent_containers/glass/bucket,
 					/obj/item/weapon/mop,
-					/obj/item/device/pda/janitor,
+					/obj/item/modular_computer/pda,
 					/obj/item/device/radio/headset/headset_service)
 	cost = 3
 	containertype = /obj/structure/closet/jcloset
@@ -521,7 +520,7 @@
 	contains = list(/obj/item/clothing/under/rank/hydroponics,
 					/obj/item/clothing/suit/apron/overalls,
 					/obj/item/clothing/suit/storage/hooded/wintercoat/hydro,
-					/obj/item/clothing/head/greenbandana,
+					/obj/item/clothing/head/bandana/green,
 					/obj/item/clothing/gloves/thick/botany,
 					/obj/item/weapon/storage/backpack/hydroponics,
 					/obj/item/weapon/storage/plants,
@@ -537,7 +536,7 @@
 	contains = list(/obj/item/clothing/accessory/badge/press,
 					/obj/item/clothing/accessory/armor/tag/press,
 					/obj/item/clothing/suit/armor/vest/press,
-					/obj/item/device/tvcamera,
+					/obj/item/device/camera/tvcamera,
 					/obj/item/device/taperecorder,
 					/obj/item/device/camera_film = 2,
 					/obj/item/device/camera)
@@ -569,7 +568,7 @@
 					/obj/item/weapon/pen/crayon/rainbow,
 					/obj/item/weapon/bedsheet/clown,
 					/obj/item/weapon/stamp/clown,
-					/obj/item/device/pda/clown)
+					/obj/item/modular_computer/pda)
 	cost = 15
 	containertype = /obj/structure/closet
 	containername = "clown equipment closet"
@@ -585,7 +584,7 @@
 					/obj/item/weapon/storage/backpack/mime,
 					/obj/item/weapon/pen/crayon/mime,
 					/obj/item/weapon/bedsheet/mime,
-					/obj/item/device/pda/mime)
+					/obj/item/modular_computer/pda)
 	cost = 15
 	containertype = /obj/structure/closet
 	containername = "mime equipment closet"
@@ -598,7 +597,7 @@
 					/obj/item/clothing/glasses/sunglasses/big = 2,
 					/obj/item/clothing/shoes/brown = 2,
 					/obj/item/weapon/storage/briefcase,
-					/obj/item/device/pda/lawyer = 2,
+					/obj/item/modular_computer/pda = 2,
 					/obj/item/device/radio/headset/ia = 2)
 	cost = 20
 	containertype = /obj/structure/closet/secure_closet/lawyer
@@ -610,7 +609,7 @@
 	contains = list(/obj/item/clothing/under/suit_jacket/red,
 					/obj/item/clothing/under/librarian,
 					/obj/item/clothing/head/fez,
-					/obj/item/device/pda/librarian)
+					/obj/item/modular_computer/pda)
 	cost = 3
 	containertype = /obj/structure/closet
 	containername = "librarian equipment closet"
@@ -627,7 +626,7 @@
 					/obj/item/clothing/head/turban,
 					/obj/item/clothing/head/taqiyah,
 					/obj/item/weapon/storage/backpack/cultpack,
-					/obj/item/device/pda/chaplain)
+					/obj/item/modular_computer/pda)
 	cost = 6
 	containertype = /obj/structure/closet/wardrobe/chaplain_black
 	containername = "chaplain equipment closet"
@@ -677,7 +676,7 @@
 					/obj/item/weapon/storage/backpack/satchel/pocketbook,
 					/obj/item/weapon/stamp/hop,
 					/obj/item/device/flash,
-					/obj/item/device/pda/heads/hop,
+					/obj/item/modular_computer/pda/heads/hop,
 					/obj/item/device/radio/headset/heads/hop)
 	cost = 50
 	containertype = /obj/structure/closet/secure_closet/hop
@@ -709,7 +708,7 @@
 	contains = list(/obj/item/clothing/under/lawyer/black,
 					/obj/item/clothing/shoes/brown,
 					/obj/item/device/flash,
-					/obj/item/device/pda/heads,
+					/obj/item/modular_computer/pda/heads,
 					/obj/item/device/radio/headset/headset_com)
 	cost = 12
 	containertype = /obj/structure/closet/secure_closet/hop

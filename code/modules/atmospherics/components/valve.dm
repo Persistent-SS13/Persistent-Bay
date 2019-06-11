@@ -16,6 +16,17 @@
 	open = 1
 	icon_state = "map_valve1"
 
+/obj/machinery/atmospherics/valve/New()
+	. = ..()
+	ADD_SAVED_VAR(open)
+
+/obj/machinery/atmospherics/valve/after_load()
+	. = ..()
+	if(open)
+		open()
+	else
+		close()
+
 /obj/machinery/atmospherics/valve/Destroy()
 	loc = null
 
@@ -66,7 +77,7 @@
 
 	build_network()
 
-	update_icon()
+	queue_icon_update()
 	update_underlays()
 
 	if(openDuringInit)
@@ -78,7 +89,7 @@
 	..()
 	return PROCESS_KILL
 
-/obj/machinery/atmospherics/valve/update_icon(animation)
+/obj/machinery/atmospherics/valve/on_update_icon(animation)
 	if(animation)
 		flick("valve[src.open][!src.open]",src)
 	else
@@ -246,7 +257,7 @@
 		return
 	..()
 
-/obj/machinery/atmospherics/valve/digital/update_icon()
+/obj/machinery/atmospherics/valve/digital/on_update_icon()
 	..()
 	if(!powered())
 		icon_state = "valve[open]nopower"

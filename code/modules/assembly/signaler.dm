@@ -19,10 +19,15 @@
 
 /obj/item/device/assembly/signaler/New()
 	..()
-	spawn(40)
-		set_frequency(frequency)
-	return
+	ADD_SAVED_VAR(code)
+	ADD_SAVED_VAR(frequency)
+	ADD_SAVED_VAR(delay)
+	ADD_SAVED_VAR(airlock_wire)
+	ADD_SAVED_VAR(deadman)
 
+/obj/item/device/assembly/signaler/Initialize()
+	. = ..()
+	set_frequency(frequency)
 
 /obj/item/device/assembly/signaler/activate()
 	if(cooldown > 0)	return 0
@@ -33,7 +38,7 @@
 	signal()
 	return 1
 
-/obj/item/device/assembly/signaler/update_icon()
+/obj/item/device/assembly/signaler/on_update_icon()
 	if(holder)
 		holder.update_icon()
 	return

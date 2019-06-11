@@ -17,11 +17,18 @@
 	if(istype(to_attach))
 		target = to_attach
 	else
-		target = locate(/obj/machinery/atmospherics/pipe/simple) in loc
+		target = locate(/obj/machinery/atmospherics/pipe/simple) in get_turf(src)
 	if(target)
 		update_networks()
 		dir = target.dir
-	return 1
+	ADD_SAVED_VAR(open)
+
+/obj/machinery/clamp/LateInitialize()
+	. = ..()
+	if(open)
+		open()
+	else
+		close()
 
 /obj/machinery/clamp/proc/update_networks()
 	if(!target)
@@ -51,7 +58,7 @@
 	. = ..()
 
 /obj/machinery/clamp/proc/open()
-	if(open)
+	if(open || !target)
 		return 0
 
 	target.build_network()
@@ -144,8 +151,8 @@
 	if (istype(A, /obj/machinery/atmospherics/pipe/simple))
 		to_chat(user, "<span class='notice'>You begin to attach \the [src] to \the [A]...</span>")
 		if (do_after(user, 30, src))
+			if(!user.unEquip(src))
+				return
 			to_chat(user, "<span class='notice'>You have attached \the [src] to \the [A].</span>")
 			new/obj/machinery/clamp(A.loc, A)
-			user.drop_from_inventory(src)
 			qdel(src)
-

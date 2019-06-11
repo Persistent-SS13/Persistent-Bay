@@ -1,3 +1,4 @@
+//bizarro alien code for dispenser_cartridges
 /decl/hierarchy/supply_pack/dispenser_cartridges
 	name = "Dispenser Cartridges"
 
@@ -24,7 +25,7 @@
 	name = "Refills - Bar soft drink dispenser refill"
 	contains = list(
 			/obj/item/weapon/reagent_containers/chem_disp_cartridge/water,
-			/obj/item/weapon/reagent_containers/chem_disp_cartridge/icetea,
+			/obj/item/weapon/reagent_containers/chem_disp_cartridge/green_tea,
 			/obj/item/weapon/reagent_containers/chem_disp_cartridge/cola,
 			/obj/item/weapon/reagent_containers/chem_disp_cartridge/smw,
 			/obj/item/weapon/reagent_containers/chem_disp_cartridge/dr_gibb,
@@ -77,7 +78,7 @@ SEC_PACK(carbon,    /obj/item/weapon/reagent_containers/chem_disp_cartridge/carb
 SEC_PACK(ammonia,   /obj/item/weapon/reagent_containers/chem_disp_cartridge/ammonia,    "Reagent refill - Ammonia",       "ammonia reagent cartridge crate",       15, core_access_medical_programs)
 SEC_PACK(oxygen,    /obj/item/weapon/reagent_containers/chem_disp_cartridge/acetone,    "Reagent refill - Acetone",       "acetone reagent cartridge crate",       20, core_access_medical_programs)
 SEC_PACK(sodium,    /obj/item/weapon/reagent_containers/chem_disp_cartridge/sodium,     "Reagent refill - Sodium",        "sodium reagent cartridge crate",        20, core_access_medical_programs)
-SEC_PACK(aluminium, /obj/item/weapon/reagent_containers/chem_disp_cartridge/aluminum,   "Reagent refill - Aluminum",      "aluminum reagent cartridge crate",      20, core_access_medical_programs)
+SEC_PACK(aluminium, /obj/item/weapon/reagent_containers/chem_disp_cartridge/aluminium,   "Reagent refill - Aluminium",      "aluminum reagent cartridge crate",    20, core_access_medical_programs)
 SEC_PACK(silicon,   /obj/item/weapon/reagent_containers/chem_disp_cartridge/silicon,    "Reagent refill - Silicon",       "silicon reagent cartridge crate",       20, core_access_medical_programs)
 SEC_PACK(phosphorus,/obj/item/weapon/reagent_containers/chem_disp_cartridge/phosphorus, "Reagent refill - Phosphorus",    "phosphorus reagent cartridge crate",    20, core_access_medical_programs)
 SEC_PACK(sulfur,    /obj/item/weapon/reagent_containers/chem_disp_cartridge/sulfur,     "Reagent refill - Sulfur",        "sulfur reagent cartridge crate",        20, core_access_medical_programs)
@@ -112,7 +113,7 @@ PACK(water,      /obj/item/weapon/reagent_containers/chem_disp_cartridge/water, 
 PACK(sugar,      /obj/item/weapon/reagent_containers/chem_disp_cartridge/sugar,      "Reagent refill - Sugar",               "sugar reagent cartridge crate",                         2)
 PACK(ice,        /obj/item/weapon/reagent_containers/chem_disp_cartridge/ice,        "Reagent refill - Ice",                 "ice reagent cartridge crate",                           2)
 PACK(tea,        /obj/item/weapon/reagent_containers/chem_disp_cartridge/tea,        "Reagent refill - Tea",                 "tea reagent cartridge crate",                           2)
-PACK(icetea,     /obj/item/weapon/reagent_containers/chem_disp_cartridge/icetea,     "Reagent refill - Iced Tea",            "iced tea reagent cartridge crate",                      2)
+PACK(green_tea,  /obj/item/weapon/reagent_containers/chem_disp_cartridge/green_tea,  "Reagent refill - Green Tea",           "green tea reagent cartridge crate",                     2)
 PACK(cola,       /obj/item/weapon/reagent_containers/chem_disp_cartridge/cola,       "Reagent refill - Space Cola",          "\improper Space Cola reagent cartridge crate",          3)
 PACK(smw,        /obj/item/weapon/reagent_containers/chem_disp_cartridge/smw,        "Reagent refill - Space Mountain Wind", "\improper Space Mountain Wind reagent cartridge crate", 3)
 PACK(dr_gibb,    /obj/item/weapon/reagent_containers/chem_disp_cartridge/dr_gibb,    "Reagent refill - Dr. Gibb",            "\improper Dr. Gibb reagent cartridge crate",            3)

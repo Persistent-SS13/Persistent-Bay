@@ -17,6 +17,7 @@ var/list/department_radio_keys = list(
 	  ":p" = "AI Private",	".p" = "AI Private",
 	  ":z" = "Entertainment",".z" = "Entertainment",
 	  ":y" = "Exploration",		".y" = "Exploration",
+	  ":k" = "Recon",		".k" = "Recon",	//Skrell Recon ship
 
 	  ":R" = "right ear",	".R" = "right ear",
 	  ":L" = "left ear",	".L" = "left ear",
@@ -99,25 +100,29 @@ proc/get_radio_key_from_channel(var/channel)
 
 	. = 0
 
-	if((HULK in mutations) && health >= 25 && length(message))
+	if((MUTATION_HULK in mutations) && health >= 25 && length(message))
 		message = "[uppertext(message)]!!!"
 		verb = pick("yells","roars","hollers")
 		message_data[3] = 0
 		. = 1
-	if(slurring)
+	else if(slurring)
 		message = slur(message)
 		verb = pick("slobbers","slurs")
 		. = 1
-	if(stuttering)
+	else if(stuttering)
 		message = NewStutter(message)
 		verb = pick("stammers","stutters")
+		. = 1
+	else if(has_chem_effect(CE_SQUEAKY, 1))
+		message = "<font face = 'Comic Sans MS'>[message]</font>"
+		verb = "squeaks"
 		. = 1
 
 	message_data[1] = message
 	message_data[2] = verb
 
 /mob/living/proc/handle_message_mode(message_mode, message, verb, speaking, used_radios, alt_name, original_key)
-	if(message_mode == "intercom")
+	if(message_mode == MESSAGE_MODE_INTERCOM)
 		for(var/obj/item/device/radio/intercom/I in view(1, null))
 			I.talk_into(src, message, verb, speaking)
 			used_radios += I
@@ -131,10 +136,22 @@ proc/get_radio_key_from_channel(var/channel)
 
 /mob/living/proc/get_speech_ending(verb, var/ending)
 	if(ending=="!")
-		return "exclaims"//pick("exclaims","shouts","yells")
+		return pick("exclaims","shouts","yells")
 	if(ending=="?")
 		return "asks"
 	return verb
+
+/mob/living/proc/format_say_message(var/message = null)
+	if(!message)
+		return
+
+	message = html_decode(message)
+
+	var/end_char = copytext(message, lentext(message), lentext(message) + 1)
+	if(!(end_char in list(".", "?", "!", "-", "~")))
+		message += "."
+
+	return html_encode(message)
 
 /mob/living/say(var/message, var/datum/language/speaking = null, var/verb="says", var/alt_name="", whispering)
 	if(client)
@@ -143,22 +160,27 @@ proc/get_radio_key_from_channel(var/channel)
 			return
 
 	if(stat)
-		if(stat == 2)
+		if(stat == DEAD)
 			return say_dead(message)
 		return
 
-	switch(copytext(message,1,2))
-		if("*") return emote(copytext(message,2))
-		if("^") return custom_emote(1, copytext(message,2))
+	var/prefix = copytext(message,1,2)
+	if(prefix == get_prefix_key(/decl/prefix/custom_emote))
+		return emote(copytext(message,2))
+	if(prefix == get_prefix_key(/decl/prefix/visible_emote))
+		return custom_emote(1, copytext(message,2))
 
 	//parse the radio code and consume it
-	var/list/parsed = parse_message_mode(message, "headset")
-	var/message_mode
-	if(parsed && parsed.len)
-		message_mode = parsed[1]
-		message = parsed[2]
+	var/message_mode = parse_message_mode(message, MESSAGE_MODE_HEADSET)
+	if (message_mode)
+		if (message_mode == MESSAGE_MODE_HEADSET)
+			message = copytext(message,2)	//it would be really nice if the parse procs could do this for us.
+		else if(message_mode == MESSAGE_MODE_RADIO_CUSTOM)
+			message = copytext(message, 4)
+		else
+			message = copytext(message,3)
 
-		message = trim_left(message)
+	message = trim_left(message)
 
 	//parse the language code and consume it
 	if(!speaking)
@@ -174,7 +196,7 @@ proc/get_radio_key_from_channel(var/channel)
 		speaking.broadcast(src,trim(message))
 		return 1
 
-	if(is_muzzled())
+	if((is_muzzled()) && !(speaking && (speaking.flags & SIGNLANG)))
 		to_chat(src, "<span class='danger'>You're muzzled and cannot speak!</span>")
 		return
 
@@ -185,8 +207,8 @@ proc/get_radio_key_from_channel(var/channel)
 			verb = say_quote(message, speaking)
 
 	message = trim_left(message)
-
 	message = handle_autohiss(message, speaking)
+	message = format_say_message(message)
 
 	if(!(speaking && (speaking.flags & NO_STUTTER)))
 		var/list/message_data = list(message, verb, 0)
@@ -275,7 +297,6 @@ proc/get_radio_key_from_channel(var/channel)
 			if(M.client)
 				speech_bubble_recipients += M.client
 
-	flick_overlay(speech_bubble, speech_bubble_recipients, 30)
 
 	for(var/obj/O in listening_obj)
 		spawn(0)
@@ -291,14 +312,16 @@ proc/get_radio_key_from_channel(var/channel)
 		eavesdroping_obj -= listening_obj
 		for(var/mob/M in eavesdroping)
 			if(M)
-				show_image(M, speech_bubble)
 				M.hear_say(stars(message), verb, speaking, alt_name, italics, src, speech_sound, sound_vol)
+				if(M.client)
+					speech_bubble_recipients |= M.client
 
 		for(var/obj/O in eavesdroping)
 			spawn(0)
 				if(O) //It's possible that it could be deleted in the meantime.
 					O.hear_talk(src, stars(message), verb, speaking)
 
+	flick_overlay(speech_bubble, speech_bubble_recipients, 30)
 
 	if(whispering)
 		log_whisper("[name]/[key] : [message]")

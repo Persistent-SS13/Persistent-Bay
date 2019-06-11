@@ -21,3 +21,12 @@
 	if(loc)
 		update()
 	return
+
+/obj/structure/disposalpipe/segment/corner
+	icon_state = "pipe-c"
+
+/obj/structure/disposalpipe/segment/corner/New()
+	..()
+	dpdir = dir | turn(dir, -90)
+	if(loc)
+		update()

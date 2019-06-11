@@ -1,18 +1,38 @@
 /obj/machinery/embedded_controller
-	var/datum/computer/file/embedded_program/program	//the currently executing program
 	name = "Embedded Controller"
 	anchored = TRUE
 	use_power = POWER_USE_IDLE
 	idle_power_usage = 10
 	var/on = TRUE
+	var/datum/computer/file/embedded_program/program	//the currently executing program
 
+/obj/machinery/embedded_controller/Initialize()
+	if(program)
+		program = new program(src)
+	return ..()
+
+/obj/machinery/embedded_controller/Destroy()
+	if(istype(program))
+		qdel(program) // the program will clear the ref in its Destroy
+	return ..()
+
+/obj/machinery/embedded_controller/post_signal(datum/signal/signal, comm_line)
+	return 0
 
 /obj/machinery/embedded_controller/receive_signal(datum/signal/signal, receive_method, receive_param)
-	if(!..())
-		return
+	if(!signal || signal.encryption) return
 
 	if(program)
 		program.receive_signal(signal, receive_method, receive_param)
+			//spawn(5) program.process() //no, program.process sends some signals and machines respond and we here again and we lag -rastaf0
+
+/obj/machinery/embedded_controller/Topic(href, href_list)
+	if(..())
+		return
+	if(usr)
+		usr.set_machine(src)
+	if(program)
+		return program.receive_user_command(href_list["command"]) // Any further sanitization should be done in here.
 
 /obj/machinery/embedded_controller/Process()
 	if(program)
@@ -21,15 +41,12 @@
 	update_icon()
 
 /obj/machinery/embedded_controller/attack_ai(mob/user as mob)
-	src.ui_interact(user)
+	ui_interact(user)
 
 /obj/machinery/embedded_controller/attack_hand(mob/user as mob)
 	if(!user.IsAdvancedToolUser())
 		return 0
-	src.ui_interact(user)
-
-/obj/machinery/embedded_controller/ui_interact()
-	return
+	ui_interact(user)
 
 //
 // Radio Controller
@@ -50,7 +67,7 @@
 /obj/machinery/embedded_controller/radio/Initialize()
 	. = ..()
 
-/obj/machinery/embedded_controller/radio/update_icon()
+/obj/machinery/embedded_controller/radio/on_update_icon()
 	if(!on || !program)
 		icon_state = "airlock_control_off"
 	else if(program.memory["processing"])

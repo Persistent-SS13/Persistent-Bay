@@ -6,11 +6,19 @@
 	var/ID
 
 /datum/seed_pile/New(var/obj/item/seeds/O, var/ID)
+	..()
 	name = O.name
 	amount = 1
 	seed_type = O.seed
 	seeds += O
 	src.ID = ID
+	ADD_SAVED_VAR(name)
+	ADD_SAVED_VAR(amount)
+	ADD_SAVED_VAR(seed_type)
+	ADD_SAVED_VAR(seeds)
+	ADD_SAVED_VAR(ID)
+
+	ADD_SKIP_EMPTY(seeds)
 
 /datum/seed_pile/proc/matches(var/obj/item/seeds/O)
 	if (O.seed == seed_type)
@@ -24,13 +32,31 @@
 	icon_state = "seeds"
 	density = 1
 	anchored = 1
-	use_power = 1
 	idle_power_usage = 100
 
 	var/seeds_initialized = 0 // Map-placed ones break if seeds are loaded right at the start of the round, so we do it on the first interaction
 	var/list/datum/seed_pile/piles = list()
 	var/list/starting_seeds = list()
-	var/list/scanner = list() // What properties we can view
+	var/list/scanner = list("stats", "produce", "soil", "temperature", "light") // What properties we can view
+
+/obj/machinery/seed_storage/New()
+	. = ..()
+	ADD_SAVED_VAR(piles)
+
+/obj/machinery/seed_storage/after_load()
+	. = ..()
+	seeds_initialized = 1 //Always force this after load, since we don't want it to init again
+
+/obj/machinery/seed_storage/Initialize(var/mapload)
+	. = ..()
+	if(!map_storage_loaded)
+		for(var/typepath in starting_seeds)
+			var/amount = starting_seeds[typepath]
+			if(isnull(amount))
+				amount = 1
+			for (var/i = 1 to amount)
+				var/O = new typepath
+				add(O)
 
 /obj/machinery/seed_storage/random // This is mostly for testing, but I guess admins could spawn it
 	name = "Random seed storage"
@@ -40,6 +66,7 @@
 /obj/machinery/seed_storage/garden
 	name = "Garden seed storage"
 	scanner = list("stats")
+	icon_state = "seeds_generic"
 	starting_seeds = list(
 		/obj/item/seeds/ambrosiavulgarisseed = 30,
 		/obj/item/seeds/appleseed = 30,
@@ -82,10 +109,12 @@
 		/obj/item/seeds/shandseed = 30,
 		/obj/item/seeds/tobaccoseed = 30,
 		/obj/item/seeds/tomatoseed = 30,
+		/obj/item/seeds/bamboo = 30,
 		/obj/item/seeds/towermycelium = 30,
 		/obj/item/seeds/watermelonseed = 30,
 		/obj/item/seeds/wheatseed = 30,
-		/obj/item/seeds/whitebeetseed = 30
+		/obj/item/seeds/whitebeetseed = 30,
+		/obj/item/seeds/algaeseed = 30,
 	)
 
 /obj/machinery/seed_storage/xenobotany
@@ -138,6 +167,7 @@
 		/obj/item/seeds/watermelonseed = 30,
 		/obj/item/seeds/wheatseed = 30,
 		/obj/item/seeds/whitebeetseed = 30,
+		/obj/item/seeds/algaeseed = 30,
 		/obj/item/seeds/random = 10
 	)
 
@@ -265,7 +295,7 @@
 			dat += "</tr>"
 		dat += "</table>"
 
-	user << browse(dat, "window=seedstorage")
+	user << browse(dat, "window=seedstorage;size=800x500")
 	onclose(user, "seedstorage")
 
 /obj/machinery/seed_storage/Topic(var/href, var/list/href_list)
@@ -284,7 +314,8 @@
 					if (N.amount <= 0 || N.seeds.len <= 0)
 						piles -= N
 						qdel(N)
-					O.loc = src.loc
+					flick("[initial(icon_state)]_vend", src)
+					O.dropInto(loc)
 				else
 					piles -= N
 					qdel(N)
@@ -306,7 +337,9 @@
 		var/loaded = 0
 		for(var/obj/item/seeds/G in P.contents)
 			++loaded
-			add(G)
+			P.remove_from_storage(G, src, 1)
+			add(G, 1)
+		P.finish_bulk_removal()
 		if (loaded)
 			user.visible_message("[user] puts the seeds from \the [O.name] into \the [src].", "You put the seeds from \the [O.name] into \the [src].")
 		else
@@ -317,15 +350,17 @@
 		anchored = !anchored
 		to_chat(user, "You [anchored ? "wrench" : "unwrench"] \the [src].")
 
-/obj/machinery/seed_storage/proc/add(var/obj/item/seeds/O as obj)
-	if (istype(O.loc, /mob))
-		var/mob/user = O.loc
-		user.remove_from_mob(O)
-	else if(istype(O.loc,/obj/item/weapon/storage))
-		var/obj/item/weapon/storage/S = O.loc
-		S.remove_from_storage(O, src)
+/obj/machinery/seed_storage/proc/add(var/obj/item/seeds/O, bypass_removal = 0)
+	if(!bypass_removal)
+		if (istype(O.loc, /mob))
+			var/mob/user = O.loc
+			if(!user.unEquip(O, src))
+				return
+		else if(istype(O.loc,/obj/item/weapon/storage))
+			var/obj/item/weapon/storage/S = O.loc
+			S.remove_from_storage(O, src)
 
-	O.loc = src
+	O.forceMove(src)
 	var/newID = 0
 
 	for (var/datum/seed_pile/N in piles)
@@ -337,4 +372,5 @@
 			newID = N.ID + 1
 
 	piles += new /datum/seed_pile(O, newID)
+	flick("[initial(icon_state)]_vend", src)
 	return

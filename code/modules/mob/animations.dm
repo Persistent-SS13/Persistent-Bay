@@ -65,15 +65,15 @@ note dizziness decrements automatically in the mob's Life() proc.
 	is_jittery = 1
 	while(jitteriness > 100)
 		var/amplitude = min(4, jitteriness / 100)
-		pixel_x = default_pixel_x + rand(-amplitude, amplitude)
-		pixel_y = default_pixel_y + rand(-amplitude/3, amplitude/3)
-
+		do_jitter(amplitude)
 		sleep(1)
 	//endwhile - reset the pixel offsets to zero
 	is_jittery = 0
-	pixel_x = default_pixel_x
-	pixel_y = default_pixel_y
+	do_jitter(0)
 
+/mob/proc/do_jitter(amplitude)
+	pixel_x = default_pixel_x + rand(-amplitude, amplitude)
+	pixel_y = default_pixel_y + rand(-amplitude/3, amplitude/3)
 
 //handles up-down floaty effect in space and zero-gravity
 /mob/var/is_floating = 0
@@ -222,10 +222,27 @@ note dizziness decrements automatically in the mob's Life() proc.
 
 	playsound(T, 'sound/effects/phasein.ogg', 25, 1)
 	playsound(T, 'sound/effects/sparks2.ogg', 50, 1)
-	anim(T,src,'icons/mob/mob.dmi',,"phasein",,dir)
+	anim(src,'icons/mob/mob.dmi',,"phasein",,dir)
 
 /mob/proc/phase_out(var/turf/T)
 	if(!T)
 		return
 	playsound(T, "sparks", 50, 1)
-	anim(T,src,'icons/mob/mob.dmi',,"phaseout",,dir)
+	anim(src,'icons/mob/mob.dmi',,"phaseout",,dir)
+
+/mob/New(loc, ...)
+	. = ..()
+	ADD_SAVED_VAR(dizziness)
+	ADD_SAVED_VAR(is_dizzy)
+	ADD_SAVED_VAR(is_jittery)
+	ADD_SAVED_VAR(jitteriness)
+
+	//Since it skips nulls, we can use this to save some perf
+	ADD_SKIP_EMPTY(dizziness)
+	ADD_SKIP_EMPTY(is_dizzy)
+	ADD_SKIP_EMPTY(is_jittery)
+	ADD_SKIP_EMPTY(jitteriness)
+
+/mob/after_load()
+	. = ..()
+	update_floating()

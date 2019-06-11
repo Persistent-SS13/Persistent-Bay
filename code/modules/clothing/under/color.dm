@@ -13,6 +13,7 @@
 	icon_state = "orange"
 	item_state = "o_suit"
 	worn_state = "orange"
+	gender_icons = 1
 	has_sensor = 2
 	sensor_mode = 3
 
@@ -31,6 +32,7 @@
 	icon_state = "jumpsuit"
 	item_state = "jumpsuit"
 	worn_state = "jumpsuit"
+	gender_icons = 1
 
 // legacy colours - these are used somewhere in the game, but aren't available in the loadout
 

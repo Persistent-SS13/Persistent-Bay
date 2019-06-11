@@ -3,6 +3,7 @@
 /datum/nano_module/skill_ui
 	var/datum/skillset/skillset
 	var/template = "skill_ui.tmpl"
+	var/hide_unskilled = FALSE
 
 /datum/nano_module/skill_ui/New(datum/host, topic_manager, datum/skillset/override)
 	skillset = override
@@ -22,7 +23,7 @@
 /datum/nano_module/skill_ui/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.self_state)
 	if(!skillset)
 		return
-	var/list/data = skillset.get_nano_data()
+	var/list/data = skillset.get_nano_data(hide_unskilled)
 	data += get_data()
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
@@ -31,13 +32,24 @@
 		ui.set_initial_data(data)
 		ui.open()
 
+/datum/nano_module/skill_ui/Topic(href, href_list)
+	if(..())
+		return 1
+	if(!skillset || !skillset.owner)
+		return 1 // This probably means that we are being deleted but fielding badly timed user input or similar.
+
+	if(href_list["toggle_hide_unskilled"])
+		hide_unskilled = !hide_unskilled
+		return 1
+	
 /datum/nano_module/skill_ui/proc/get_data()
 	return list()
 
-/datum/skillset/proc/get_nano_data()
+/datum/skillset/proc/get_nano_data(var/hide_unskilled)
 	. = list()
 	.["name"] = owner.real_name
 	.["job"] = owner.mind && owner.mind.assigned_role
+	.["hide_unskilled"] = hide_unskilled
 
 	var/list/skill_data = list()
 	var/decl/hierarchy/skill/skill = decls_repository.get_decl(/decl/hierarchy/skill)
@@ -46,11 +58,15 @@
 		skill_cat["name"] = V.name
 		var/list/skills_in_cat = list()
 		for(var/decl/hierarchy/skill/S in V.children)
+			var/offset = S.prerequisites ? S.prerequisites[S.parent.type] - 1 : 0
+			if(hide_unskilled && (get_value(S.type) + offset == SKILL_MIN))
+				continue
 			skills_in_cat += list(get_nano_row(S))
 			for(var/decl/hierarchy/skill/perk in S.children)
 				skills_in_cat += list(get_nano_row(perk))
-		skill_cat["skills"] = skills_in_cat
-		skill_data += list(skill_cat)
+		if(length(skills_in_cat))
+			skill_cat["skills"] = skills_in_cat
+			skill_data += list(skill_cat)
 	.["skills_by_cat"] = skill_data
 
 /datum/skillset/proc/get_nano_row(var/decl/hierarchy/skill/S)
@@ -69,7 +85,7 @@
 		level["blank"] = 0
 		level["val"] = i
 		level["name"] = S.levels[i]
-		level["selected"] = (i <= value)
+		level["selected"] = (i == value)
 		levels += list(level)
 	for(var/i in (length(levels) + 1) to SKILL_MAX)
 		levels += list(list("blank" = 1))
@@ -118,6 +134,8 @@ The generic antag version.
 /datum/nano_module/skill_ui/antag/Topic(href, href_list)
 	if(..())
 		return 1
+	if(!skillset || !skillset.owner)
+		return 1 // This probably means that we are being deleted but fielding badly timed user input or similar.
 
 	if(href_list["add_skill"])
 		if(!can_choose())
@@ -258,7 +276,7 @@ Admin version, with debugging options.
 		if(!my_client)
 			to_chat(usr, "Mob client not found.")
 			return 1
-		var/datum/job/job = skillset.owner.mind && job_master.GetJob(skillset.owner.mind.assigned_role)
+		var/datum/job/job = skillset.owner.mind && SSjobs.get_by_title(skillset.owner.mind.assigned_role)
 		if(!job)
 			to_chat(usr, "Valid job not found.")
 			return 1
@@ -304,5 +322,4 @@ Admin version, with debugging options.
 /datum/skill_buff/admin/proc/change_value(skill_type, new_value)
 	var/old_value = skillset.get_value(skill_type)
 	buffs[skill_type] = new_value - old_value + buffs[skill_type]
-	skillset.update_verbs()
-	skillset.refresh_uis()
+	skillset.on_levels_change()

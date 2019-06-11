@@ -501,12 +501,12 @@
 
 	if(phoron > 0.1)		// Toxic even in small amounts.
 		status.Add("Phoron contamination.")
-	if(hydrogen > 2.5)
-		status.Add("Hydrogen contamination.")
 	if(reagent > 3)
 		status.Add("Airborne Reagents detected.")
 	if(nitrousoxide > 0.1)	// Probably slightly less dangerous but still.
 		status.Add("N2O contamination.")
+	if(hydrogen > 2.5)	// Not too dangerous, but flammable.
+		status.Add("Hydrogen contamination.")
 	if(carbondioxide > 5)	// Not as dangerous until very large amount is present.
 		status.Add("CO2 concentration high.")
 

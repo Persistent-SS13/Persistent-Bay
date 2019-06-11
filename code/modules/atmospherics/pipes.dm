@@ -1,3 +1,5 @@
+#define SOUND_ID "pipe_leakage"
+
 /obj/machinery/atmospherics/pipe
 	use_power = POWER_USE_OFF
 	can_buckle = TRUE
@@ -7,21 +9,59 @@
 	var/datum/pipeline/parent
 	var/volume = 0
 	var/leaking = FALSE
-	var/alert_pressure = 170*ONE_ATMOSPHERE
+	var/maximum_pressure = 210 * ONE_ATMOSPHERE
+	var/fatigue_pressure = 170 * ONE_ATMOSPHERE
+	var/alert_pressure = 170 * ONE_ATMOSPHERE
 	var/in_stasis = FALSE
 		//minimum pressure before check_pressure(...) should be called
+	var/datum/sound_token/sound_token
 
 /obj/machinery/atmospherics/pipe/drain_power()
 	return -1
 
 /obj/machinery/atmospherics/pipe/New()
+	..()
+	ADD_SAVED_VAR(air_temporary)
+	ADD_SAVED_VAR(leaking)
+	ADD_SAVED_VAR(in_stasis)
+
+	ADD_SKIP_EMPTY(air_temporary)
+
+/obj/machinery/atmospherics/pipe/Initialize()
+	. = ..()
 	if(loc)
 		if(istype(get_turf(src), /turf/simulated/wall) || istype(get_turf(src), /turf/simulated/shuttle/wall) || istype(get_turf(src), /turf/unsimulated/wall))
 			level = 1
-	..()
+
+/obj/machinery/atmospherics/pipe/after_load()
+	. = ..()
+	set_leaking(leaking)
 
 /obj/machinery/atmospherics/pipe/hides_under_flooring()
 	return level != 2
+
+/obj/machinery/atmospherics/pipe/proc/set_leaking(var/new_leaking)
+	if(new_leaking && !leaking)
+		START_PROCESSING(SSmachines, src)
+		leaking = TRUE
+		if(parent)
+			parent.leaks |= src
+			if(parent.network)
+				parent.network.leaks |= src
+	else if (!new_leaking && leaking)
+		update_sound(0)
+		STOP_PROCESSING(SSmachines, src)
+		leaking = FALSE
+		if(parent)
+			parent.leaks -= src
+			if(parent.network)
+				parent.network.leaks -= src
+
+/obj/machinery/atmospherics/pipe/proc/update_sound(var/playing)
+	if(playing && !sound_token)
+		sound_token = GLOB.sound_player.PlayLoopingSound(src, SOUND_ID, "sound/machines/pipeleak.ogg", volume = 8, range = 3, falloff = 1, prefer_mute = TRUE)
+	else if(!playing && sound_token)
+		QDEL_NULL(sound_token)
 
 /obj/machinery/atmospherics/pipe/proc/pipeline_expansion()
 	return null
@@ -31,10 +71,6 @@
 	//Return null if parent should stop checking other pipes. Recall: qdel(src) will by default return null
 
 	return 1
-
-// /obj/machinery/atmospherics/pipe/after_load()
-// 	..()
-// 	build_network()
 
 /obj/machinery/atmospherics/pipe/return_air()
 	if(!parent)
@@ -71,9 +107,9 @@
 
 /obj/machinery/atmospherics/pipe/Destroy()
 	QDEL_NULL(parent)
-	if(air_temporary)
-		if(loc)
-			loc.assume_air(air_temporary)
+	QDEL_NULL(sound_token)
+	if(air_temporary && loc)
+		loc.assume_air(air_temporary)
 	. = ..()
 
 /obj/machinery/atmospherics/pipe/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
@@ -118,21 +154,6 @@
 	pipe_color = new_color
 	update_icon()
 
-/*
-/obj/machinery/atmospherics/pipe/add_underlay(var/obj/machinery/atmospherics/node, var/direction)
-	if(istype(src, /obj/machinery/atmospherics/pipe/tank))	//todo: move tanks to unary devices
-		return ..()
-
-	if(node)
-		var/temp_dir = get_dir(src, node)
-		underlays += icon_manager.get_atmos_icon("pipe_underlay_intact", temp_dir, color_cache_name(node))
-		return temp_dir
-	else if(direction)
-		underlays += icon_manager.get_atmos_icon("pipe_underlay_exposed", direction, pipe_color)
-	else
-		return null
-*/
-
 /obj/machinery/atmospherics/pipe/color_cache_name(var/obj/machinery/atmospherics/node)
 	if(istype(src, /obj/machinery/atmospherics/pipe/tank))
 		return ..()
@@ -146,3 +167,4 @@
 		return node.pipe_color
 	else
 		return pipe_color
+#undef SOUND_ID

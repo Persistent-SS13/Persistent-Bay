@@ -17,15 +17,15 @@
 	var/list/reagent_volumes = list()
 	var/list/reagent_names = list()
 
-/obj/item/weapon/reagent_containers/borghypo/standard
-	desc = "An advanced chemical synthesizer and injection system, this one only appears to dispense inaprovaline."
-	reagent_ids = list(/datum/reagent/inaprovaline)
-
 /obj/item/weapon/reagent_containers/borghypo/surgeon
 	reagent_ids = list(/datum/reagent/bicaridine, /datum/reagent/dexalin, /datum/reagent/tramadol)
 
 /obj/item/weapon/reagent_containers/borghypo/crisis
 	reagent_ids = list(/datum/reagent/tricordrazine, /datum/reagent/inaprovaline, /datum/reagent/tramadol)
+
+/obj/item/weapon/reagent_containers/borghypo/New()
+	. = ..()
+	ADD_SAVED_VAR(mode)
 
 /obj/item/weapon/reagent_containers/borghypo/Initialize()
 	. = ..()

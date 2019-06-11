@@ -16,6 +16,7 @@
 		return
 
 	//add the new taste data
+	LAZYINITLIST(data)
 	for(var/taste in newdata)
 		if(taste in data)
 			data[taste] += newdata[taste]
@@ -52,11 +53,12 @@
 /datum/reagent/nutriment/glucose
 	name = "Glucose"
 	color = "#ffffff"
+	scannable = 1
 
 	injectable = 1
 
 /datum/reagent/nutriment/protein // Bad for Skrell!
-	name = "animal protein"
+	name = "Animal Protein"
 	taste_description = "some sort of protein"
 	color = "#440000"
 
@@ -98,22 +100,12 @@
 	nutriment_factor = 10
 	color = "#ffff00"
 
-/datum/reagent/honey/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
+/datum/reagent/nutriment/honey/affect_ingest(var/mob/living/carbon/human/M, var/alien, var/removed)
 	..()
 
 	if(alien == IS_UNATHI)
-		if(M.chem_doses[type] < 2)
-			if(M.chem_doses[type] == metabolism * 2 || prob(5))
-				M.emote("yawn")
-		else if(M.chem_doses[type] < 5)
-			M.eye_blurry = max(M.eye_blurry, 10)
-		else if(M.chem_doses[type] < 20)
-			if(prob(50))
-				M.Weaken(2)
-			M.drowsyness = max(M.drowsyness, 20)
-		else
-			M.sleeping = max(M.sleeping, 20)
-			M.drowsyness = max(M.drowsyness, 60)
+		var/datum/species/unathi/S = M.species
+		S.handle_sugar(M,src)
 
 /datum/reagent/nutriment/flour
 	name = "flour"
@@ -208,7 +200,6 @@
 	taste_description = "dry sweet apples"
 	color = "#c07c40"
 
-
 /datum/reagent/nutriment/soysauce
 	name = "Soysauce"
 	description = "A salty sauce made from the soy plant."
@@ -250,6 +241,15 @@
 	reagent_state = SOLID
 	nutriment_factor = 1
 	color = "#ffffff"
+
+/datum/reagent/nutriment/rice/chazuke
+	name = "Chazuke"
+	description = "Green tea over rice. How rustic!"
+	taste_description = "green tea and rice"
+	taste_mult = 0.4
+	reagent_state = LIQUID
+	nutriment_factor = 1
+	color = "#f1ffdb"
 
 /datum/reagent/nutriment/cherryjelly
 	name = "Cherry Jelly"
@@ -303,9 +303,9 @@
 /datum/reagent/nutriment/mint
 	name = "Mint"
 	description = "Also known as Mentha."
-	taste_description = "mint"
+	taste_description = "sweet mint"
 	reagent_state = LIQUID
-	color = "#cf3600"
+	color = "#07aab2"
 
 /datum/reagent/lipozine // The anti-nutriment.
 	name = "Lipozine"
@@ -347,10 +347,10 @@
 /datum/reagent/frostoil
 	name = "Frost Oil"
 	description = "A special oil that noticably chills the body. Extracted from Ice Peppers."
-	taste_description = "mint"
+	taste_description = "arctic mint"
 	taste_mult = 1.5
 	reagent_state = LIQUID
-	color = "#b31008"
+	color = "#07aab2"
 
 /datum/reagent/frostoil/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -414,9 +414,12 @@
 /datum/reagent/capsaicin/condensed/affect_touch(var/mob/living/carbon/M, var/alien, var/removed)
 	var/eyes_covered = 0
 	var/mouth_covered = 0
+	var/partial_mouth_covered = 0
+	var/stun_probability = 50
 	var/no_pain = 0
 	var/obj/item/eye_protection = null
 	var/obj/item/face_protection = null
+	var/obj/item/partial_face_protection = null
 
 	var/effective_strength = 5
 
@@ -440,13 +443,16 @@
 			if((I.body_parts_covered & FACE) && !(I.item_flags & ITEM_FLAG_FLEXIBLEMATERIAL))
 				mouth_covered = 1
 				face_protection = I.name
+			else if(I.body_parts_covered & FACE)
+				partial_mouth_covered = 1
+				partial_face_protection = I.name
 
-	var/message = null
 	if(eyes_covered)
 		if(!mouth_covered)
-			message = "<span class='warning'>Your [eye_protection] protects your eyes from the pepperspray!</span>"
+			to_chat(M, "<span class='warning'>Your [eye_protection] protects your eyes from the pepperspray!</span>")
 	else
-		message = "<span class='warning'>The pepperspray gets in your eyes!</span>"
+		to_chat(M, "<span class='warning'>The pepperspray gets in your eyes!</span>")
+		M.confused += 2
 		if(mouth_covered)
 			M.eye_blurry = max(M.eye_blurry, effective_strength * 3)
 			M.eye_blind = max(M.eye_blind, effective_strength)
@@ -455,14 +461,17 @@
 			M.eye_blind = max(M.eye_blind, effective_strength * 2)
 
 	if(mouth_covered)
-		if(!message)
-			message = "<span class='warning'>Your [face_protection] protects you from the pepperspray!</span>"
+		to_chat(M, "<span class='warning'>Your [face_protection] protects you from the pepperspray!</span>")
 	else if(!no_pain)
-		message = "<span class='danger'>Your face and throat burn!</span>"
-		if(prob(25))
+		if(partial_mouth_covered)
+			to_chat(M, "<span class='warning'>Your [partial_face_protection] partially protects you from the pepperspray!</span>")
+			stun_probability *= 0.5
+		to_chat(M, "<span class='danger'>Your face and throat burn!</span>")
+		if(M.stunned > 0  && !M.lying)
+			M.Weaken(4)
+		if(prob(stun_probability))
 			M.custom_emote(2, "[pick("coughs!","coughs hysterically!","splutters!")]")
-		M.Weaken(5)
-		M.Stun(6)
+			M.Stun(3)
 
 /datum/reagent/capsaicin/condensed/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
 	if(ishuman(M))
@@ -472,9 +481,11 @@
 	if(M.chem_doses[type] == metabolism)
 		to_chat(M, "<span class='danger'>You feel like your insides are burning!</span>")
 	else
-		M.apply_effect(4, PAIN, 0)
+		M.apply_effect(6, PAIN, 0)
 		if(prob(5))
-			M.visible_message("<span class='warning'>[M] [pick("dry heaves!","coughs!","splutters!")]</span>", "<span class='danger'>You feel like your insides are burning!</span>")
+			M.visible_message("<span class='danger'>You feel like your insides are burning!</span>")
+			M.custom_emote(2, "[pick("coughs.","gags.","retches.")]")
+			M.Stun(2)
 	if(istype(M, /mob/living/carbon/slime))
 		M.bodytemperature += rand(15, 30)
 	holder.remove_reagent(/datum/reagent/frostoil, 5)
@@ -523,23 +534,12 @@
 		M.bodytemperature = min(310, M.bodytemperature - (adj_temp * TEMPERATURE_DAMAGE_COEFFICIENT))
 
 // Juices
-/datum/reagent/drink/juice/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
+/datum/reagent/drink/juice/affect_ingest(var/mob/living/carbon/human/M, var/alien, var/removed)
 	..()
 	M.immunity = min(M.immunity + 0.25, M.immunity_norm*1.5)
-	var/effective_dose = M.chem_doses[type]/2
 	if(alien == IS_UNATHI)
-		if(effective_dose < 2)
-			if(effective_dose == metabolism * 2 || prob(5))
-				M.emote("yawn")
-		else if(effective_dose < 5)
-			M.eye_blurry = max(M.eye_blurry, 10)
-		else if(effective_dose < 20)
-			if(prob(50))
-				M.Weaken(2)
-			M.drowsyness = max(M.drowsyness, 20)
-		else
-			M.sleeping = max(M.sleeping, 20)
-			M.drowsyness = max(M.drowsyness, 60)
+		var/datum/species/unathi/S = M.species
+		S.handle_sugar(M,src,0.5)
 
 /datum/reagent/drink/juice/banana
 	name = "Banana Juice"
@@ -640,7 +640,7 @@
 /datum/reagent/drink/juice/potato
 	name = "Potato Juice"
 	description = "Juice of the potato. Bleh."
-	taste_description = "irish sadness"
+	taste_description = "irish sadness and potatoes"
 	nutrition = 2
 	color = "#302000"
 
@@ -719,7 +719,6 @@
 	glass_name = "pear juice"
 	glass_desc = "Delicious juice made from pears."
 
-
 // Everything else
 
 /datum/reagent/drink/milk
@@ -765,37 +764,6 @@
 	glass_name = "soy milk"
 	glass_desc = "White and nutritious soy goodness!"
 
-/datum/reagent/drink/tea
-	name = "Tea"
-	description = "Tasty black tea, it has antioxidants, it's good for you!"
-	taste_description = "tart black tea"
-	color = "#101000"
-	adj_dizzy = -2
-	adj_drowsy = -1
-	adj_sleepy = -3
-	adj_temp = 20
-
-	glass_name = "tea"
-	glass_desc = "Tasty black tea, it has antioxidants, it's good for you!"
-	glass_special = list(DRINK_VAPOR)
-
-/datum/reagent/drink/tea/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
-	..()
-	if(alien == IS_DIONA)
-		return
-	M.adjustToxLoss(-0.5 * removed)
-
-/datum/reagent/drink/tea/icetea
-	name = "Iced Tea"
-	description = "No relation to a certain rap artist/ actor."
-	taste_description = "sweet tea"
-	color = "#104038" // rgb: 16, 64, 56
-	adj_temp = -5
-
-	glass_name = "iced tea"
-	glass_desc = "No relation to a certain rap artist/ actor."
-	glass_special = list(DRINK_ICE)
-
 /datum/reagent/drink/coffee
 	name = "Coffee"
 	description = "Coffee is a brewed drink prepared from roasted seeds, commonly called coffee beans, of the coffee plant."
@@ -806,7 +774,7 @@
 	adj_drowsy = -3
 	adj_sleepy = -2
 	adj_temp = 25
-	overdose = 45
+	overdose = 60
 
 	glass_name = "coffee"
 	glass_desc = "Don't drop it, or you'll send scalding liquid and glass shards everywhere."
@@ -816,9 +784,12 @@
 	if(alien == IS_DIONA)
 		return
 	..()
+
 	if(adj_temp > 0)
 		holder.remove_reagent(/datum/reagent/frostoil, 10 * removed)
 	if(volume > 15)
+		M.add_chemical_effect(CE_PULSE, 1)
+	if(volume > 45)
 		M.add_chemical_effect(CE_PULSE, 1)
 
 /datum/reagent/nutriment/coffee/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
@@ -829,7 +800,7 @@
 	if(alien == IS_DIONA)
 		return
 	M.make_jittery(5)
-	M.add_chemical_effect(CE_PULSE, 2)
+	M.add_chemical_effect(CE_PULSE, 1)
 
 /datum/reagent/drink/coffee/icecoffee
 	name = "Iced Coffee"
@@ -962,23 +933,12 @@
 	glass_name = "milkshake"
 	glass_desc = "Glorious brainfreezing mixture."
 
-/datum/reagent/milkshake/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
+/datum/reagent/milkshake/affect_ingest(var/mob/living/carbon/human/M, var/alien, var/removed)
 	..()
 
-	var/effective_dose = M.chem_doses[type]/2
 	if(alien == IS_UNATHI)
-		if(effective_dose < 2)
-			if(effective_dose == metabolism * 2 || prob(5))
-				M.emote("yawn")
-		else if(effective_dose < 5)
-			M.eye_blurry = max(M.eye_blurry, 10)
-		else if(effective_dose < 20)
-			if(prob(50))
-				M.Weaken(2)
-			M.drowsyness = max(M.drowsyness, 20)
-		else
-			M.sleeping = max(M.sleeping, 20)
-			M.drowsyness = max(M.drowsyness, 60)
+		var/datum/species/unathi/S = M.species
+		S.handle_sugar(M,src,0.5)
 
 /datum/reagent/drink/rewriter
 	name = "Rewriter"
@@ -1136,19 +1096,6 @@
 		return
 	M.bodytemperature += 10 * TEMPERATURE_DAMAGE_COEFFICIENT
 
-/datum/reagent/drink/ice
-	name = "Ice"
-	description = "Frozen water, your dentist wouldn't like you chewing this."
-	taste_description = "ice"
-	taste_mult = 1.5
-	reagent_state = SOLID
-	color = "#619494"
-	adj_temp = -5
-
-	glass_name = "ice"
-	glass_desc = "Generally, you're supposed to put something else in there too..."
-	glass_icon = DRINK_ICON_NOISY
-
 /datum/reagent/drink/nothing
 	name = "Nothing"
 	description = "Absolutely nothing."
@@ -1180,7 +1127,7 @@
 	strength = 50
 
 	glass_name = "ale"
-	glass_desc = "A freezing pint of delicious ale"
+	glass_desc = "A freezing container of delicious ale"
 
 /datum/reagent/ethanol/beer
 	name = "Beer"
@@ -1191,7 +1138,11 @@
 	nutriment_factor = 1
 
 	glass_name = "beer"
-	glass_desc = "A freezing pint of beer"
+	glass_desc = "A freezing container of beer"
+
+/datum/reagent/ethanol/beer/good
+
+	taste_description = "beer"
 
 /datum/reagent/ethanol/beer/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
 	..()
@@ -1260,9 +1211,6 @@
 	M.sleeping = max(0, M.sleeping - 2)
 	if(M.bodytemperature > 310)
 		M.bodytemperature = max(310, M.bodytemperature - (5 * TEMPERATURE_DAMAGE_COEFFICIENT))
-
-/datum/reagent/ethanol/coffee/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
-	..()
 
 /datum/reagent/ethanol/coffee/overdose(var/mob/living/carbon/M, var/alien)
 	if(alien == IS_DIONA)
@@ -1355,7 +1303,7 @@
 
 /datum/reagent/ethanol/vodka
 	name = "Vodka"
-	description = "Number one drink AND fueling choice for Russians galaxywide."
+	description = "Number one drink AND fueling choice for Independents around the galaxy."
 	taste_description = "grain alcohol"
 	color = "#0064c8" // rgb: 0, 100, 200
 	strength = 15
@@ -1363,9 +1311,12 @@
 	glass_name = "vodka"
 	glass_desc = "The glass contain wodka. Xynta."
 
-/datum/reagent/ethanol/vodka/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
-	..()
-	M.apply_effect(max(M.radiation - 1 * removed, 0), IRRADIATE, blocked = 0)
+/datum/reagent/ethanol/vodka/premium
+	name = "Premium Vodka"
+	description = "Premium distilled vodka imported directly from the Gilgamesh Colonial Confederation."
+	taste_description = "clear kvass"
+	color = "#aaddff" // rgb: 170, 221, 255 - very light blue.
+	strength = 10
 
 /datum/reagent/ethanol/whiskey
 	name = "Whiskey"
@@ -1386,6 +1337,13 @@
 
 	glass_name = "wine"
 	glass_desc = "A very classy looking drink."
+
+/datum/reagent/ethanol/wine/premium
+	name = "White Wine"
+	description = "An exceptionally expensive alchoholic beverage made from distilled white grapes."
+	taste_description = "white velvet"
+	color = "#ffddaa" // rgb: 255, 221, 170 - a light cream
+	strength = 20
 
 /datum/reagent/ethanol/herbal
 	name = "Herbal Liquor"
@@ -1890,52 +1848,6 @@
 	glass_name = "moonshine"
 	glass_desc = "You've really hit rock bottom now... your liver packed its bags and left last night."
 
-/datum/reagent/ethanol/bluebird
-	name = "Blue Bird"
-	description = "A classy drink that you know only the prettiest of birds have."
-	taste_description = "fluttering sourness"
-	reagent_state = LIQUID
-	color = "#5a92ed"
-	strength = 15
-
-	glass_name = "Blue Bird"
-	glass_desc = "A classy drink that you know only the prettiest of birds have."
-
-/datum/reagent/ethanol/bj
-	name = "BJ"
-	description = "Nothing like a good BJ to get you started."
-	taste_description = "creamy chocolate alcohol"
-	reagent_state = LIQUID
-	color = "#ccb280"
-	strength = 15
-
-	glass_name = "BJ"
-	glass_desc = "Nothing like a good BJ to get you started."
-
-/datum/reagent/ethanol/starrycola
-	name = "Starry Cola"
-	description = "Looking at it, you'd think you're looking at space."
-	taste_description = "sweet twinkling fizz with a bite"
-	reagent_state = LIQUID
-	color = "#1c2168"
-	strength = 12
-
-	glass_name = "Starry Cola"
-	glass_desc = "Looking at it, you'd think you're looking at space."
-	glass_special = list(DRINK_FIZZ)
-
-/datum/reagent/ethanol/calvincraig
-	name = "Calvin Craig"
-	description = "A sweet something-or-other for that special someone."
-	taste_description = "sweet and sour melon candies"
-	reagent_state = LIQUID
-	color = "#6dcea2"
-	strength = 18
-
-	glass_name = "Calvin Craig"
-	glass_desc = "A sweet something-or-other for that special someone."
-	glass_special = list(DRINK_FIZZ)
-
 /datum/reagent/ethanol/neurotoxin
 	name = "Neurotoxin"
 	description = "A strong neurotoxin that puts the subject into a death-like state."
@@ -1985,9 +1897,9 @@
 		var/obj/item/organ/internal/heart/L = H.internal_organs_by_name[BP_HEART]
 		if (L && istype(L))
 			if(M.chem_doses[type] < 120)
-				L.take_damage(10 * removed)
+				L.take_internal_damage(10 * removed, silent = 0)
 			else
-				L.take_damage(100)
+				L.take_internal_damage(100, silent = 0)
 
 /datum/reagent/ethanol/red_mead
 	name = "Red Mead"
@@ -2179,3 +2091,129 @@
 
 	glass_name = "special blend whiskey"
 	glass_desc = "Just when you thought regular whiskey was good... This silky, amber goodness has to come along and ruin everything."
+
+//black tea
+/datum/reagent/drink/tea
+	name = "Black Tea"
+	description = "Tasty black tea, it has antioxidants, it's good for you!"
+	taste_description = "tart black tea"
+	color = "#101000"
+	adj_dizzy = -2
+	adj_drowsy = -1
+	adj_sleepy = -3
+	adj_temp = 20
+
+	glass_name = "black tea"
+	glass_desc = "Tasty black tea, it has antioxidants, it's good for you!"
+	glass_special = list(DRINK_VAPOR)
+
+/datum/reagent/drink/tea/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
+	..()
+	if(alien == IS_DIONA)
+		return
+	M.adjustToxLoss(-0.5 * removed)
+
+/datum/reagent/drink/tea/icetea
+	name = "Iced Black Tea"
+	description = "It's the black tea you know and love, but now it's cold."
+	taste_description = "cold black tea"
+	adj_temp = -5
+
+	glass_name = "iced black tea"
+	glass_desc = "It's the black tea you know and love, but now it's cold."
+	glass_special = list(DRINK_ICE)
+
+/datum/reagent/drink/tea/icetea/sweet
+	name = "Sweet Black Tea"
+	description = "It's the black tea you know and love, but now it's cold. And sweet."
+	taste_description = "sweet tea"
+
+	glass_name = "sweet black tea"
+	glass_desc = "It's the black tea you know and love, but now it's cold. And sweet."
+
+/datum/reagent/drink/tea/barongrey
+	name = "Baron Grey Tea"
+	description = "Black tea prepared with standard orange flavoring. Much less fancy than the bergamot in Earl Grey, but the chances of you getting any of that stuff out here is pretty slim."
+	taste_description = "tangy black tea"
+
+	glass_name = "Baron Grey tea"
+	glass_desc = "Black tea prepared with standard orange flavoring. Much less fancy than the bergamot in Earl Grey, but the chances of you getting any of that stuff out here is pretty slim."
+
+//green tea
+/datum/reagent/drink/tea/green
+	name = "Green Tea"
+	description = "Subtle green tea, it has antioxidants, it's good for you!"
+	taste_description = "subtle green tea"
+	color = "#b4cd94"
+	glass_name = "green tea"
+	glass_desc = "Subtle green tea, it has antioxidants, it's good for you!"
+
+/datum/reagent/drink/tea/icetea/green
+	name = "Iced Green Tea"
+	description = "It's the green tea you know and love, but now it's cold."
+	taste_description = "cold green tea"
+	color = "#b4cd94"
+	glass_name = "iced green tea"
+	glass_desc = "It's the green tea you know and love, but now it's cold."
+
+/datum/reagent/drink/tea/icetea/green/sweet
+	name = "Sweet Green Tea"
+	description = "It's the green tea you know and love, but now it's cold. And sweet."
+	taste_description = "sweet green tea"
+	color = "#b4cd94"
+	glass_name = "sweet green tea"
+	glass_desc = "It's the green tea you know and love, but now it's cold. And sweet."
+
+/datum/reagent/drink/tea/icetea/green/sweet/mint
+	name = "Maghrebi Tea"
+	description = "Iced green tea prepared with mint and sugar. Refreshing!"
+	taste_description = "refreshing mint tea"
+
+	glass_name = "Maghrebi mint tea"
+	glass_desc = "Iced green tea prepared with mint and sugar. Refreshing!"
+
+/datum/reagent/ethanol/bluebird
+	name = "Blue Bird"
+	description = "A classy drink that you know only the prettiest of birds have."
+	taste_description = "fluttering sourness"
+	reagent_state = LIQUID
+	color = "#5a92ed"
+	strength = 15
+
+	glass_name = "Blue Bird"
+	glass_desc = "A classy drink that you know only the prettiest of birds have."
+
+/datum/reagent/ethanol/bj
+	name = "BJ"
+	description = "Nothing like a good BJ to get you started."
+	taste_description = "creamy chocolate alcohol"
+	reagent_state = LIQUID
+	color = "#ccb280"
+	strength = 15
+
+	glass_name = "BJ"
+	glass_desc = "Nothing like a good BJ to get you started."
+
+/datum/reagent/ethanol/starrycola
+	name = "Starry Cola"
+	description = "Looking at it, you'd think you're looking at space."
+	taste_description = "sweet twinkling fizz with a bite"
+	reagent_state = LIQUID
+	color = "#1c2168"
+	strength = 12
+
+	glass_name = "Starry Cola"
+	glass_desc = "Looking at it, you'd think you're looking at space."
+	glass_special = list(DRINK_FIZZ)
+
+/datum/reagent/ethanol/calvincraig
+	name = "Calvin Craig"
+	description = "A sweet something-or-other for that special someone."
+	taste_description = "sweet and sour melon candies"
+	reagent_state = LIQUID
+	color = "#6dcea2"
+	strength = 18
+
+	glass_name = "Calvin Craig"
+	glass_desc = "A sweet something-or-other for that special someone."
+	glass_special = list(DRINK_FIZZ)

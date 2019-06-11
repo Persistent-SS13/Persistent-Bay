@@ -1,6 +1,11 @@
 /datum/wires/radio
 	holder_type = /obj/item/device/radio
 	wire_count = 3
+	descriptions = list(
+		new /datum/wire_description(WIRE_SIGNAL, "This wire connects several radio components."),
+		new /datum/wire_description(WIRE_RECEIVE, "This wire runs to the radio reciever.", SKILL_EXPERT),
+		new /datum/wire_description(WIRE_TRANSMIT, "This wire runs to the radio transmitter.")
+	)
 
 var/const/WIRE_SIGNAL = 1
 var/const/WIRE_RECEIVE = 2
@@ -11,6 +16,12 @@ var/const/WIRE_TRANSMIT = 4
 	if(R.b_stat)
 		return 1
 	return 0
+
+/datum/wires/radio/GetInteractWindow(mob/user)
+	var/obj/item/device/radio/R = holder
+	. += ..()
+	if(R.cell)
+		. += "<BR><A href='?src=\ref[R];remove_cell=1'>Remove cell</A><BR>"
 
 /datum/wires/radio/UpdatePulsed(var/index)
 	var/obj/item/device/radio/R = holder

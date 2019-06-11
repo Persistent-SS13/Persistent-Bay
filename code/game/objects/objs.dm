@@ -1,12 +1,12 @@
 /obj
 	layer 			 = OBJ_LAYER //Determine over what the object's sprite will be drawn
 	animate_movement = 2	//
-	mass 			 = 5	//Kg or something
+	mass 			 = 0.05	//Kg Used for calculating throw force, inertia, and possibly more things..
 	//Properties
 	var/obj_flags		//Flags changing the behavior of the object.
 	var/list/matter		//Used to store information about the contents of the object.
 	var/w_class 		// Size of the object.
-	var/sharpness	= 0	// whether this object cuts, mainly used for tools
+	var/sharpness	= 0	// A measure of how much this item cuts, mainly used for tools. 0 = Doesn't cut, 1 = Cuts, 2 = Cuts things that sharpness 1 wouldn't, and so on
 
 	//Damage effects
 	var/throwforce 			= 1			//Damage power this object has on impact when thrown
@@ -18,6 +18,7 @@
 	var/health 					= null	//Current health
 	var/max_health 				= 0		//Maximum health
 	var/min_health 				= 0 	//Minimum health. If you want negative health numbers, change this to a negative number! Used to determine at what health something "dies"
+	var/broken_threshold		= -1 	//If the object's health goes under this value, its considered "broken", and the broken() proc is called.
 	var/const/MaxArmorValue 	= 100	//Maximum armor resistance possible for objects (Was hardcoded to 100 for mobs..)
 	var/list/armor						//Resistance to damage types
 	var/damthreshold_brute 		= 0		//Minimum amount of brute damages required to damage the object. Damages of that type below this value have no effect.
@@ -37,15 +38,21 @@
 	var/burning 	= FALSE			//Whether the object is on fire
 
 	//Interaction State
-	var/in_use		= FALSE // If we have a user using us, this will be set on. We will check if the user has stopped using us, and thus stop updating and LAGGING EVERYTHING!
+	var/tmp/in_use	= FALSE // If we have a user using us, this will be set on. We will check if the user has stopped using us, and thus stop updating and LAGGING EVERYTHING!
 	var/anchor_fall = FALSE
+	var/holographic = FALSE //if the obj is a holographic object spawned by the holodeck
 
 /obj/New()
 	..()
-	if(!health)
-		health = max_health
-	ADD_SAVED_VAR(health)
+	if(obj_flags & OBJ_FLAG_DAMAGEABLE && max_health) //save health only when its relevant
+		ADD_SAVED_VAR(health)
+		ADD_SKIP_EMPTY(health) //Skip null health
 	ADD_SAVED_VAR(burning)
+
+/obj/Initialize()
+	if(!map_storage_loaded)
+		health = max_health
+	. = ..()
 
 /obj/Destroy()
 	STOP_PROCESSING(SSobj, src)
@@ -128,7 +135,10 @@
 			return SPAN_NOTICE("It looks moderately damaged.")
 		else
 			return SPAN_DANGER("It looks heavily damaged.")
+	if(isbroken())
+		return SPAN_WARNING("It seems broken.")
 
+//The minimum health is not included in this.
 /obj/proc/health_percentage()
 	if(!isdamageable())
 		return 100
@@ -177,19 +187,8 @@
 /obj/proc/show_message(msg, type, alt, alt_type)//Message, type of message (1 or 2), alternative message, alt message type (1 or 2)
 	return
 
-/obj/proc/default_wrench_floor_bolts(mob/user, obj/item/weapon/tool/W, delay=20)
-	if(!isWrench(W))
-		return FALSE
-	playsound(loc, 'sound/items/Ratchet.ogg', vol=50, vary=1, extrarange=4, falloff=2)
-	if(anchored)
-		user.visible_message("\The [user] begins unsecuring \the [src] from the floor.", "You start unsecuring \the [src] from the floor.")
-	else
-		user.visible_message("\The [user] begins securing \the [src] to the floor.", "You start securing \the [src] to the floor.")
-	if(do_after(user, delay, src))
-		if(!src) return
-		to_chat(user, SPAN_NOTICE("You [anchored? "un" : ""]secured \the [src]!"))
-		set_anchored(!anchored)
-	return TRUE
+/obj/proc/damage_flags()
+	return 0
 
 /obj/proc/set_anchored(var/new_anchored)
 	anchored = new_anchored
@@ -207,12 +206,6 @@
 	return (IsDamageTypeBrute(damtype)   && damage > damthreshold_brute) || \
 		   (IsDamageTypeBurn(damtype)    && damage > damthreshold_burn)
 
-/obj/proc/pass_damage_threshold_list(var/list/damlist)
-	for(var/key in damlist)
-		if(pass_damage_threshold(damlist[key], key))
-			return TRUE
-	return FALSE
-
 //Return whether the entity is vulenrable to the specified damage type
 // override to change what damage will be rejected on take_damage
 /obj/proc/vulnerable_to_damtype(var/damtype)
@@ -229,7 +222,7 @@
 //Used to calculate armor damage reduction. Returns the integer percentage of the damage absorbed
 /obj/proc/armor_absorb(var/damage, var/ap, var/damagetype)
 	if(!damagetype)
-		log_warning("Null damage type was passed to armor_absorb for \the [src] object! With damage = [damage], and ap = [ap]!")
+		log_warning("Null damage type was passed to armor_absorb for \the [src] \ref[src] object! With damage = [damage], and ap = [ap]!")
 		return 0
 	if(ap >= MaxArmorValue || !armor)
 		return 0 //bypass armor
@@ -245,7 +238,7 @@
 			if(ap >= resist)
 				return 0 //bypass armor
 			var/effective_armor = (resist - ap)/MaxArmorValue
-			var/fullblock = (effective_armor*effective_armor) * ARMOR_BLOCK_CHANCE_MULT
+			var/fullblock = (effective_armor*effective_armor)
 
 			if(fullblock >= 1 || prob(fullblock * MaxArmorValue))
 				. = MaxArmorValue
@@ -259,38 +252,50 @@
 //Called whenever the object is receiving damages
 // returns the amount of damages that was applied to the object
 // - armorbypass: how much armor is bypassed for the damage specified. Usually a number from 0 to 100
-// - damsrc: A string or object reference to what caused the damage.
-/obj/proc/take_damage(var/damage = 0 as num, var/damtype = DAM_BLUNT, var/armorbypass = 0, var/damsrc = null)
+// - used_weapon: A string or object reference to what caused the damage.
+/obj/proc/take_damage(var/damage = 0 as num, var/damtype = DAM_BLUNT, var/armorbypass = 0, var/used_weapon = null, var/damflags = null)
+	if(!isnum(damage))
+		log_warning(" obj.proc.take_damage(): damage is not a number! [damage]")
+		return 0
+	if(!istext(damtype))
+		log_warning(" obj.proc.take_damage(): damtype is not a string! [damtype]")
+		return 0
+	if(!isnum(armorbypass))
+		log_warning(" obj.proc.take_damage(): armorbypass is not a number! [armorbypass]")
+		return 0
 	if(!isdamageable() || !vulnerable_to_damtype(damtype))
 		return 0
 	var/resultingdmg = max(0, damage * blocked_mult(armor_absorb(damage, armorbypass, damtype)))
-	rem_health(resultingdmg)
-	update_health(damtype)
-	. = resultingdmg
-	log_debug("[src] took [resultingdmg] [damtype] damages from [damsrc]! Before armor: [damage] damages.")
-	return .
+	//var/name_ref = "\The \"[src]\" (\ref[src])([x], [y], [z])"
 
-//Handles several damage types as a list
-//It simply does multiple calls to take_damage for each damage specified in the list.
-// - damage : list in the format {DAM_TYPE = n, DAM_TYPE2 = i} where DAM_TYPE are the damage types inflicted, and n and i the damage values.
-// - armorbypass: how much armor is bypassed for all the damage specified. Usually a number from 0 to 100
-// - damsrc: A string or object reference to what caused the damage.
-/obj/proc/take_multi_damage(var/list/damage, var/armorbypass = 0 as num, var/damsrc = null)
-	if(!isdamageable())
-		return 0
-	log_debug("Multi-damage: [src]")
-	for(var/dam in damage)
-		. += take_damage(damage[dam], dam, armorbypass, damsrc)
+	//Dispersed affect contents
+	if(damflags & DAM_DISPERSED && resultingdmg)
+		for(var/atom/movable/A as mob|obj in src)
+			if(isobj(A))
+				var/obj/O = A
+				O.take_damage(resultingdmg, damtype, armorbypass, used_weapon)
+			if(isliving(A))
+				var/mob/living/M = A
+				M.apply_damage(resultingdmg, damtype, null, damflags, used_weapon, armorbypass)
+
+	rem_health(resultingdmg, damtype)
+	. = resultingdmg
+	//testing("[name_ref] took [resultingdmg] \"[damtype]\" damages from \"[used_weapon]\"! Before armor: [damage] damages.")
 	return .
-	
 
 //Like take damage, but meant to instantly destroy the object from an external source.
 // Call this if you want to instantly destroy something and have its damage effects, debris and etc to trigger as it would from take_damage.
 /obj/proc/kill(var/damagetype = DAM_BLUNT)
 	if(!isdamageable())
 		return
-	set_health(min_health)
-	update_health(damagetype)
+	set_health(min_health, damagetype)
+
+/obj/proc/isbroken()
+	return health <= broken_threshold
+
+//Called when the health of the object goes below the broken_threshold, and while the health is higher than min_health
+/obj/proc/broken(var/damagetype, var/user)
+	//do stuff
 
 //Handles checking if the object is destroyed and etc..
 // - damagetype : is the damage type that triggered the health update.
@@ -303,6 +308,8 @@
 			melt(user)
 		else
 			destroyed(damagetype,user)
+	else if(health <= broken_threshold)
+		broken(damagetype, user)
 	update_icon()
 
 //Called when the object's health reaches 0, with the last damage type that hit it
@@ -318,17 +325,17 @@
 	qdel(src)
 
 //Directly sets health, without updating object state
-/obj/proc/set_health(var/newhealth)
+/obj/proc/set_health(var/newhealth, var/dtype = DAM_BLUNT)
 	health = between(min_health, round(newhealth, 0.1), get_max_health()) //round(max(0, min(newhealth, max_health)), 0.1)
-	update_health()
+	update_health(dtype, usr)
 
 //Convenience proc to handle adding health to the object
-/obj/proc/add_health(var/addhealth)
-	set_health(addhealth + get_health())
+/obj/proc/add_health(var/addhealth, var/dtype = DAM_BLUNT)
+	set_health(addhealth + get_health(), dtype)
 
 //Convenience proc to handle removing health from the object
-/obj/proc/rem_health(var/remhealth)
-	set_health(get_health() - remhealth)
+/obj/proc/rem_health(var/remhealth, var/dtype = DAM_BLUNT)
+	set_health(get_health() - remhealth, dtype)
 
 /obj/proc/get_health()
 	return health
@@ -382,7 +389,7 @@
 	var/hitsoundoverride = sound_hit //So we can override the sound for special cases
 	var/damoverride = damtype
 	var/mob/living/carbon/human/H = user
-	if(HULK in user.mutations)
+	if(MUTATION_HULK in user.mutations)
 		user.say(pick(";RAAAAAAAARGH!", ";HNNNNNNNNNGGGGGGH!", ";GWAAAAAAAARRRHHH!", "NNNNNNNNGGGGGGGGHH!", ";AAAAAAARRRGH!"))
 		user.visible_message(SPAN_DANGER("[user] smashes through [src]!"))
 	else if(H && H.species.can_shred(user))
@@ -422,7 +429,7 @@
 	if(!pass_damage_threshold(W.force, W.damtype))
 		hit_deflected_by_armor(W, user)
 		return 0
-	take_damage(W.force, W.damtype, armorbypass = W.armor_penetration, damsrc = W)
+	take_damage(W.force, W.damtype, armorbypass = W.armor_penetration, used_weapon = W)
 	playsound(loc, sound_hit, vol=40, vary=1, extrarange=4, falloff=1)
 	return ..()
 
@@ -439,7 +446,7 @@
 		return
 	if(!force)
 		force = (explosion_base_damage ** (4 - severity)) //Severity is a value from 1 to 3, with 1 being the strongest. So each severity level is
-	take_damage(force, DAM_BOMB)
+	take_damage(force, DAM_BOMB, 0, "Explosion", DAM_DISPERSED)
 
 //Called when under effect of a emp weapon
 /obj/emp_act(var/severity, var/force = 0)
@@ -568,3 +575,23 @@
 //callback used by objects to react to incoming radio signals
 /obj/proc/receive_signal(var/datum/signal/signal, var/receive_method = TRANSMISSION_RADIO, var/receive_param = null)
 	return null
+
+/obj/is_fluid_pushable(var/amt)
+	return ..() && w_class <= round(amt/20)
+
+/obj/proc/can_embed()
+	return is_sharp(src)
+
+//Handles anchoring and un-anchoring the obj to the floor with a wrench
+/obj/proc/default_wrench_floor_bolts(mob/user, obj/item/weapon/tool/wrench/W, delay=2 SECONDS)
+	if(!istype(W))
+		return FALSE
+	if(anchored)
+		user.visible_message("\The [user] begins unsecuring \the [src] from the floor.", "You start unsecuring \the [src] from the floor.")
+	else
+		user.visible_message("\The [user] begins securing \the [src] to the floor.", "You start securing \the [src] to the floor.")
+	if(W.use_tool(user, src, delay))
+		if(!src) return
+		to_chat(user, SPAN_NOTICE("You [anchored? "un" : ""]secured \the [src]!"))
+		set_anchored(!anchored)
+	return TRUE

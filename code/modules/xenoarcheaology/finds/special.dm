@@ -85,12 +85,12 @@
 		var/obj/effect/decal/cleanable/blood/B = locate() in range(2,src)
 		if(B)
 			last_eat = world.time
-			B.loc = null
 			if(istype(B, /obj/effect/decal/cleanable/blood/drip))
 				charges += 0.25
 			else
 				charges += 1
 				playsound(src.loc, 'sound/effects/splat.ogg', 50, 1, -3)
+			qdel(B)
 
 	//use up stored charges
 	if(charges >= 10)

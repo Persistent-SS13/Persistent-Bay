@@ -53,13 +53,9 @@
 			if(!H || !src || !H.organs_by_name[BP_HEAD] || !H.has_eyes() || H.glasses || (H.head && (H.head.body_parts_covered & FACE)))
 				return
 
-			if(!use_tape(DUCTTAPE_NEEDED_BLINDFOLD))
-				to_chat(user, "<span class='warning'>You need [DUCTTAPE_NEEDED_BLINDFOLD] strips of tape to blindfold \the [H]!</span>")
-				return
-
+			playsound(src, 'sound/effects/tape.ogg',25)
 			user.visible_message("<span class='danger'>\The [user] has taped up \the [H]'s eyes!</span>")
 			H.equip_to_slot_or_del(new /obj/item/clothing/glasses/sunglasses/blindfold/tape(H), slot_glasses)
-
 
 		else if(user.zone_sel.selecting == BP_MOUTH || user.zone_sel.selecting == BP_HEAD)
 			if(!has_enough_tape_left(DUCTTAPE_NEEDED_GAG))
@@ -77,6 +73,7 @@
 			if(H.head && (H.head.body_parts_covered & FACE))
 				to_chat(user, "<span class='warning'>Remove their [H.head] first.</span>")
 				return
+			playsound(src, 'sound/effects/tape.ogg',25)
 			user.visible_message("<span class='danger'>\The [user] begins taping up \the [H]'s mouth!</span>")
 
 			if(!do_mob(user, H, 30))
@@ -85,6 +82,7 @@
 			// Repeat failure checks.
 			if(!H || !src || !H.organs_by_name[BP_HEAD] || !H.check_has_mouth() || H.wear_mask || (H.head && (H.head.body_parts_covered & FACE)))
 				return
+			playsound(src, 'sound/effects/tape.ogg',25)
 
 			if(!use_tape(DUCTTAPE_NEEDED_GAG))
 				to_chat(user, "<span class='warning'>You need [DUCTTAPE_NEEDED_GAG] strips of tape to gag \the [H]!</span>")
@@ -95,6 +93,7 @@
 
 
 		else if(user.zone_sel.selecting == BP_R_HAND || user.zone_sel.selecting == BP_L_HAND)
+			playsound(src, 'sound/effects/tape.ogg',25)
 			var/obj/item/weapon/handcuffs/cable/tape/T = new(user)
 			if(!T.place_handcuffs(H, user))
 				user.unEquip(T)
@@ -106,6 +105,7 @@
 		else if(user.zone_sel.selecting == BP_CHEST)
 			if(H.wear_suit && istype(H.wear_suit, /obj/item/clothing/suit/space))
 				if(H == user || do_mob(user, H, 10))	//Skip the time-check if patching your own suit, that's handled in attackby()
+					playsound(src, 'sound/effects/tape.ogg',25)
 					H.wear_suit.attackby(src, user)
 			else
 				to_chat(user, "<span class='warning'>\The [H] isn't wearing a spacesuit for you to reseal.</span>")
@@ -115,15 +115,13 @@
 		return 1
 
 /obj/item/weapon/tape_roll/proc/stick(var/obj/item/weapon/W, mob/user)
-	if(!istype(W, /obj/item/weapon/paper))
+	if(!istype(W, /obj/item/weapon/paper) || istype(W, /obj/item/weapon/paper/sticky) || !user.unEquip(W))
 		return
 	if(!use_tape(1))
 		return
-	user.drop_from_inventory(W)
 	var/obj/item/weapon/ducttape/tape = new(get_turf(src))
 	tape.attach(W)
 	user.put_in_hands(tape)
-
 
 /obj/item/weapon/ducttape
 	name = "piece of tape"
@@ -136,6 +134,10 @@
 
 	var/obj/item/weapon/stuck = null
 
+/obj/item/weapon/ducttape/attack_hand(var/mob/user)
+	anchored = FALSE // Unattach it from whereever it's on, if anything.
+	return ..()
+
 /obj/item/weapon/ducttape/Initialize()
 	. = ..()
 	item_flags |= ITEM_FLAG_NO_BLUDGEON
@@ -145,6 +147,7 @@
 
 /obj/item/weapon/ducttape/proc/attach(var/obj/item/weapon/W)
 	stuck = W
+	anchored = TRUE
 	W.forceMove(src)
 	icon_state = W.icon_state + "_taped"
 	name = W.name + " (taped)"
@@ -159,7 +162,7 @@
 	stuck.forceMove(get_turf(src))
 	user.put_in_hands(stuck)
 	stuck = null
-	overlays = null
+	overlays.Cut()
 	qdel(src)
 
 /obj/item/weapon/ducttape/afterattack(var/A, mob/user, flag, params)
@@ -177,8 +180,9 @@
 			to_chat(user, "You cannot reach that from here.")// can only place stuck papers in cardinal directions, to
 			return											// reduce papers around corners issue.
 
-	user.drop_from_inventory(src)
-	forceMove(source_turf)
+	if(!user.unEquip(src, source_turf))
+		return
+	playsound(src, 'sound/effects/tape.ogg',25)
 
 	if(params)
 		var/list/mouse_control = params2list(params)

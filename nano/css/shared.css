@@ -243,6 +243,10 @@ div.notice {
     clear: both;
 }
 
+.notice.info {
+    background: url(uiInfoBackground.jpg) 50% 50%;
+}
+
 .itemGroup {
     border: 1px solid #e9c183;
     background: #2c2c2c;
@@ -294,6 +298,11 @@ div.notice {
     width: 100%;
 }
 
+.itemContentWide {
+    float: left;
+    width: 79%;
+}
+
 .itemContentSmall {
     float: left;
     width: 33%;
@@ -302,11 +311,6 @@ div.notice {
 .itemContentMedium {
     float: left;
     width: 55%;
-}
-
-.itemContentWide {
-    float: left;
-    width: 79%;
 }
 
 .statusDisplay {

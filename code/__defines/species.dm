@@ -6,9 +6,10 @@
 #define SPECIES_FLAG_NO_SLIP             0x0010  // Cannot fall over.
 #define SPECIES_FLAG_NO_POISON           0x0020  // Cannot not suffer toxloss.
 #define SPECIES_FLAG_NO_EMBED            0x0040  // Can step on broken glass with no ill-effects and cannot have shrapnel embedded in it.
-#define SPECIES_FLAG_CAN_NAB             0x0080  // Uses the special set of grab rules.
+#define SPECIES_FLAG_NO_TANGLE           0x0080  // This species wont get tangled up in weeds
 #define SPECIES_FLAG_NO_BLOCK            0x0100  // Unable to block or defend itself from attackers.
 #define SPECIES_FLAG_NEED_DIRECT_ABSORB  0x0200  // This species can only have their DNA taken by direct absorption.
+#define SPECIES_FLAG_NO_HUNGER           0x0400  // This species doesn't need to eat or feels hunger
 
 // unused: 0x8000 - higher than this will overflow
 
@@ -19,7 +20,6 @@
 #define SPECIES_NO_FBP_CONSTRUCTION 0x8    // FBP of this species can't be made in-game.
 #define SPECIES_NO_FBP_CHARGEN      0x10   // FBP of this species can't be selected at chargen.
 #define SPECIES_NO_LACE             0x20   // This species can't have a neural lace.
-#define SPECIES_HAS_VATCHIP         0x30   // This species starts with a vat chip instead of a lace.
 
 // Species appearance flags
 #define HAS_SKIN_TONE_NORMAL                                                      0x1    // Skin tone selectable in chargen for baseline humans (0-220)
@@ -31,9 +31,16 @@
 #define RADIATION_GLOWS                                                           0x40   // Radiation causes this character to glow.
 #define HAS_SKIN_TONE_GRAV                                                        0x80   // Skin tone selectable in chargen for grav-adapted humans (0-100)
 #define HAS_SKIN_TONE_SPCR                                                        0x100  // Skin tone selectable in chargen for spacer humans (0-165)
-#define HAS_A_SKIN_TONE (HAS_SKIN_TONE_NORMAL | HAS_SKIN_TONE_GRAV | HAS_SKIN_TONE_SPCR) // Species has a numeric skintone
-#define IS_VATGROWN                                                               0x200  // Has vatgrown default traits in creation
+#define HAS_SKIN_TONE_TRITON                                                      0x200
+#define HAS_BASE_SKIN_COLOURS                                                     0x400  // Has multiple base skin sprites to go off of
+#define HAS_A_SKIN_TONE (HAS_SKIN_TONE_NORMAL | HAS_SKIN_TONE_GRAV | HAS_SKIN_TONE_SPCR | HAS_SKIN_TONE_TRITON) // Species has a numeric skintone
 
 // Skin Defines
 #define SKIN_NORMAL 0
 #define SKIN_THREAT 1
+
+// Darkvision Levels these are inverted from normal so pure white is the darkest
+// possible and pure black is none
+#define DARKTINT_NONE      "#ffffff"
+#define DARKTINT_MODERATE  "#f9f9f5"
+#define DARKTINT_GOOD      "#ebebe6"

@@ -46,7 +46,7 @@ obj/structure/windoor_assembly/Destroy()
 	update_nearby_tiles()
 	..()
 
-/obj/structure/windoor_assembly/update_icon()
+/obj/structure/windoor_assembly/on_update_icon()
 	icon_state = "[facing]_[secure]windoor_assembly[state]"
 
 /obj/structure/windoor_assembly/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
@@ -82,7 +82,7 @@ obj/structure/windoor_assembly/Destroy()
 						to_chat(user, "<span class='notice'>You dissasembled the windoor assembly!</span>")
 						new /obj/item/stack/material/glass/reinforced(get_turf(src), 5)
 						if(secure)
-							new /obj/item/stack/rods(get_turf(src), 4)
+							new /obj/item/stack/material/rods(get_turf(src), 4)
 						qdel(src)
 				else
 					to_chat(user, "<span class='notice'>You need more welding fuel to dissassemble the windoor assembly.</span>")
@@ -98,9 +98,9 @@ obj/structure/windoor_assembly/Destroy()
 					to_chat(user, "<span class='notice'>You've secured the windoor assembly!</span>")
 					src.anchored = 1
 					if(src.secure)
-						src.name = "Secure Anchored Windoor Assembly"
+						src.SetName("Secure Anchored Windoor Assembly")
 					else
-						src.name = "Anchored Windoor Assembly"
+						src.SetName("Anchored Windoor Assembly")
 
 			//Unwrenching an unsecure assembly un-anchors it. Step 4 undone
 			else if(isWrench(W) && anchored)
@@ -112,13 +112,13 @@ obj/structure/windoor_assembly/Destroy()
 					to_chat(user, "<span class='notice'>You've unsecured the windoor assembly!</span>")
 					src.anchored = 0
 					if(src.secure)
-						src.name = "Secure Windoor Assembly"
+						src.SetName("Secure Windoor Assembly")
 					else
-						src.name = "Windoor Assembly"
+						src.SetName("Windoor Assembly")
 
 			//Adding plasteel makes the assembly a secure windoor assembly. Step 2 (optional) complete.
-			else if(istype(W, /obj/item/stack/rods) && !secure)
-				var/obj/item/stack/rods/R = W
+			else if(istype(W, /obj/item/stack/material/rods) && !secure)
+				var/obj/item/stack/material/rods/R = W
 				if(R.get_amount() < 4)
 					to_chat(user, "<span class='warning'>You need more rods to do this.</span>")
 					return
@@ -129,9 +129,9 @@ obj/structure/windoor_assembly/Destroy()
 						to_chat(user, "<span class='notice'>You reinforce the windoor.</span>")
 						src.secure = "secure_"
 						if(src.anchored)
-							src.name = "Secure Anchored Windoor Assembly"
+							src.SetName("Secure Anchored Windoor Assembly")
 						else
-							src.name = "Secure Windoor Assembly"
+							src.SetName("Secure Windoor Assembly")
 
 			//Adding cable to the assembly. Step 5 complete.
 			else if(istype(W, /obj/item/stack/cable_coil) && anchored)
@@ -143,9 +143,9 @@ obj/structure/windoor_assembly/Destroy()
 						to_chat(user, "<span class='notice'>You wire the windoor!</span>")
 						src.state = "02"
 						if(src.secure)
-							src.name = "Secure Wired Windoor Assembly"
+							src.SetName("Secure Wired Windoor Assembly")
 						else
-							src.name = "Wired Windoor Assembly"
+							src.SetName("Wired Windoor Assembly")
 			else
 				..()
 
@@ -163,9 +163,9 @@ obj/structure/windoor_assembly/Destroy()
 					new/obj/item/stack/cable_coil(get_turf(user), 1)
 					src.state = "01"
 					if(src.secure)
-						src.name = "Secure Anchored Windoor Assembly"
+						src.SetName("Secure Anchored Windoor Assembly")
 					else
-						src.name = "Anchored Windoor Assembly"
+						src.SetName("Anchored Windoor Assembly")
 
 			//Adding airlock electronics for access. Step 6 complete.
 			else if(istype(W, /obj/item/weapon/airlock_electronics) && W:icon_state != "door_electronics_smoked")
@@ -174,14 +174,13 @@ obj/structure/windoor_assembly/Destroy()
 
 				if(do_after(user, 40,src))
 					if(!src) return
-
-					user.drop_item()
-					W.loc = src
+					if(!user.unEquip(W, src))
+						return
 					to_chat(user, "<span class='notice'>You've installed the airlock electronics!</span>")
-					src.name = "Near finished Windoor Assembly"
+					src.SetName("Near finished Windoor Assembly")
 					src.electronics = W
 				else
-					W.loc = src.loc
+					W.dropInto(loc)
 
 			//Screwdriver to remove airlock electronics. Step 6 undone.
 			else if(isScrewdriver(W) && src.electronics)
@@ -192,12 +191,12 @@ obj/structure/windoor_assembly/Destroy()
 					if(!src || !src.electronics) return
 					to_chat(user, "<span class='notice'>You've removed the airlock electronics!</span>")
 					if(src.secure)
-						src.name = "Secure Wired Windoor Assembly"
+						src.SetName("Secure Wired Windoor Assembly")
 					else
-						src.name = "Wired Windoor Assembly"
+						src.SetName("Wired Windoor Assembly")
 					var/obj/item/weapon/airlock_electronics/ae = electronics
 					electronics = null
-					ae.loc = src.loc
+					ae.dropInto(loc)
 
 			//Crowbar to complete the assembly, Step 7 complete.
 			else if(isCrowbar(W))
@@ -215,9 +214,10 @@ obj/structure/windoor_assembly/Destroy()
 					set_density(1) //Shouldn't matter but just incase
 					to_chat(user, "<span class='notice'>You finish the windoor!</span>")
 
+					var/obj/machinery/door/window/windoor
 					if(secure)
-						var/obj/machinery/door/window/brigdoor/windoor = new /obj/machinery/door/window/brigdoor(src.loc)
-						if(src.facing == "l")
+						windoor = new /obj/machinery/door/window/brigdoor(loc, src)
+						if(facing == "l")
 							windoor.icon_state = "leftsecureopen"
 							windoor.base_state = "leftsecure"
 						else
@@ -244,7 +244,7 @@ obj/structure/windoor_assembly/Destroy()
 							src.electronics.loc = windoor
 							windoor.req_access_faction = electronics.req_access_faction
 					else
-						var/obj/machinery/door/window/windoor = new /obj/machinery/door/window(src.loc)
+						windoor = new (loc, src)
 						if(src.facing == "l")
 							windoor.icon_state = "leftopen"
 							windoor.base_state = "left"

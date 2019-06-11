@@ -1,7 +1,7 @@
 //Phorosian suits
 /obj/item/clothing/suit/space/phorosian
 	name = "Phorosian containment suit"
-	icon = 'icons/obj/clothing/species/phorosian/suits.dmi'
+	icon = 'icons/obj/clothing/species/phorosian/obj_suit_phorosian.dmi'
 	icon_state = "phorosiansuit"
 	item_state = "phorosiansuit"
 	item_flags = ITEM_FLAG_STOPPRESSUREDAMAGE | ITEM_FLAG_THICKMATERIAL | ITEM_FLAG_PHORONGUARD
@@ -9,7 +9,7 @@
 	desc = "A special containment suit designed to protect a phorosians volatile body from outside exposure."
 	species_restricted = list(SPECIES_PHOROSIAN)
 	sprite_sheets = list(
-		SPECIES_PHOROSIAN = 'icons/mob/species/phorosian/suit.dmi'
+		SPECIES_PHOROSIAN = 'icons/mob/species/phorosian/onmob_suit_phorosian.dmi'
 		)
 	breach_threshold = 6
 	can_breach = 1
@@ -20,7 +20,7 @@
 /obj/item/clothing/head/helmet/space/phorosian
 	name = "Phorosian helmet"
 	desc = "A helmet made to connect with a Phorosian containment suit. Has a plasma-glass visor."
-	icon = 'icons/obj/clothing/species/phorosian/hats.dmi'
+	icon = 'icons/obj/clothing/species/phorosian/obj_head_phorosian.dmi'
 	icon_state = "phorosian_helmet0"
 	item_state = "phorosian_helmet0"
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|BLOCKHAIR
@@ -28,7 +28,7 @@
 	species_restricted = list(SPECIES_PHOROSIAN)
 	light_overlay = "helmet_light"
 	sprite_sheets = list(
-		SPECIES_PHOROSIAN = 'icons/mob/species/phorosian/helmet.dmi'
+		SPECIES_PHOROSIAN = 'icons/mob/species/phorosian/onmob_head_phorosian.dmi'
 		)
 	armor  = list(DAM_BIO = 100, DAM_RADS = 20)
 

@@ -21,12 +21,13 @@
 	attack_sound = 'sound/weapons/bladeslice.ogg'
 	min_gas = null
 	max_gas = null
-	unsuitable_atoms_damage = 15
+	unsuitable_atmos_damage = 15
 	faction = "alien"
 	environment_smash = 2
 	status_flags = CANPUSH
 	minbodytemp = 0
 	heat_damage_per_tick = 20
+	can_escape = 1
 
 
 /mob/living/simple_animal/hostile/alien/drone
@@ -37,6 +38,7 @@
 	health = 60
 	melee_damage_lower = 15
 	melee_damage_upper = 15
+	can_escape = 0
 
 /mob/living/simple_animal/hostile/alien/sentinel
 	name = "alien sentinel"
@@ -49,6 +51,7 @@
 	ranged = 1
 	projectiletype = /obj/item/projectile/neurotox
 	projectilesound = 'sound/weapons/pierce.ogg'
+	can_escape = 0
 
 
 /mob/living/simple_animal/hostile/alien/queen
@@ -82,5 +85,5 @@
 	icon_state = "toxin"
 
 /mob/living/simple_animal/hostile/alien/death(gibbed, deathmessage, show_dead_message)
-	..(gibbed, deathmessage = "lets out a waning guttural screech, green blood bubbling from its maw...", show_dead_message)
+	..(gibbed, "lets out a waning guttural screech, green blood bubbling from its maw...", show_dead_message)
 	playsound(src, 'sound/voice/hiss6.ogg', 100, 1)

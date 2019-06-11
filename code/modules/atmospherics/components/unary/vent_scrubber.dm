@@ -38,9 +38,6 @@
 	ADD_SAVED_VAR(scrubbing_gas)
 	ADD_SAVED_VAR(scrubbing)
 
-/obj/machinery/atmospherics/unary/vent_scrubber/after_load()
-	..()
-
 /obj/machinery/atmospherics/unary/vent_scrubber/Initialize()
 	if(loc)
 		initial_loc = get_area(loc)
@@ -66,7 +63,7 @@
 		initial_loc.air_scrub_names -= id_tag
 	return ..()
 
-/obj/machinery/atmospherics/unary/vent_scrubber/update_icon(var/safety = 0)
+/obj/machinery/atmospherics/unary/vent_scrubber/on_update_icon(var/safety = 0)
 	if(!check_icon_cache())
 		return
 	overlays.Cut()
@@ -120,7 +117,7 @@
 	if(!initial_loc.air_scrub_names[id_tag])
 		var/new_name = "[initial_loc.name] Air Scrubber #[initial_loc.air_scrub_names.len+1]"
 		initial_loc.air_scrub_names[id_tag] = new_name
-		src.name = new_name
+		src.SetName(new_name)
 	initial_loc.air_scrub_info[id_tag] = data
 
 	if(!id_tag) //Don't broadcast when you're not initialized!
@@ -136,7 +133,7 @@
 		return 1
 
 	if (!node)
-		use_power = 0
+		update_use_power(POWER_USE_OFF)
 	//broadcast_status()
 	if(!use_power || inoperable())
 		return 0
@@ -146,9 +143,13 @@
 	var/datum/gas_mixture/environment = loc.return_air()
 
 	var/power_draw = -1
-	if(scrubbing)
+	var/transfer_moles = 0
+	if(scrubbing == SCRUBBER_SIPHON) //Just siphon all air
 		//limit flow rate from turfs
-		var/transfer_moles = min(environment.total_moles, environment.total_moles*MAX_SCRUBBER_FLOWRATE/environment.volume)	//group_multiplier gets divided out here
+		transfer_moles = min(environment.total_moles, environment.total_moles*MAX_SIPHON_FLOWRATE/environment.volume)	//group_multiplier gets divided out here
+		power_draw = pump_gas(src, environment, air_contents, transfer_moles, power_rating)
+	else  //limit flow rate from turfs
+		transfer_moles = min(environment.total_moles, environment.total_moles*MAX_SCRUBBER_FLOWRATE/environment.volume)	//group_multiplier gets divided out here
 		//checking what reagent gases need to be filtered
 		var/list/scrubbed_gases_final
 		if(GAS_REAGENTS in scrubbing_gas)
@@ -156,21 +157,18 @@
 			for(var/g in environment.gas)
 				if(gas_data.flags[g] & XGM_GAS_REAGENT_GAS)
 					scrubbed_gases_final += g
+		power_draw = scrub_gas(src, scrubbed_gases_final, environment, air_contents, transfer_moles, power_rating)
 
-		power_draw = scrub_gas(src, scrubbed_gases_final ? scrubbed_gases_final : scrubbing_gas, environment, air_contents, transfer_moles, power_rating)
-	else //Just siphon all air
-		//limit flow rate from turfs
-		var/transfer_moles = min(environment.total_moles, environment.total_moles*MAX_SIPHON_FLOWRATE/environment.volume)	//group_multiplier gets divided out here
-
-		power_draw = pump_gas(src, environment, air_contents, transfer_moles, power_rating)
-
-	if(scrubbing && power_draw <= 0)	//99% of all scrubbers
+	if(scrubbing != SCRUBBER_SIPHON && power_draw <= 0)	//99% of all scrubbers
 		//Fucking hibernate because you ain't doing shit.
 		hibernate = world.time + (rand(100,200))
+	else if(scrubbing == SCRUBBER_EXCHANGE) // after sleep check so it only does an exchange if there are bad gasses that have been scrubbed
+		transfer_moles = min(environment.total_moles, environment.total_moles*MAX_SCRUBBER_FLOWRATE/environment.volume)
+		power_draw += pump_gas(src, environment, air_contents, transfer_moles / 4, power_rating)
 
 	if (power_draw >= 0)
 		last_power_draw = power_draw
-		use_power(power_draw)
+		use_power_oneoff(power_draw)
 
 	if(network)
 		network.update = 1
@@ -178,7 +176,7 @@
 	return 1
 
 /obj/machinery/atmospherics/unary/vent_scrubber/hide(var/i) //to make the little pipe section invisible, the icon changes.
-	update_icon()
+	queue_icon_update()
 	update_underlays()
 
 /obj/machinery/atmospherics/unary/vent_scrubber/OnSignal(datum/signal/signal)
@@ -187,32 +185,32 @@
 		return
 
 	if(signal.data["power"] != null)
-		use_power = text2num(signal.data["power"])
+		update_use_power(sanitize_integer(text2num(signal.data["power"]), POWER_USE_OFF, POWER_USE_ACTIVE, use_power))
 	if(signal.data["power_toggle"] != null)
-		use_power = !use_power
+		update_use_power(!use_power)
 
 	if(signal.data["panic_siphon"]) //must be before if("scrubbing" thing
 		panic = text2num(signal.data["panic_siphon"])
 		if(panic)
 			update_use_power(POWER_USE_IDLE)
-			scrubbing = FALSE
+			scrubbing = SCRUBBER_SIPHON
 		else
-			scrubbing = TRUE
+			scrubbing = SCRUBBER_EXCHANGE
 	if(signal.data["toggle_panic_siphon"] != null)
 		panic = !panic
 		if(panic)
 			update_use_power(POWER_USE_IDLE)
-			scrubbing = FALSE
+			scrubbing = SCRUBBER_SIPHON
 		else
-			scrubbing = TRUE
+			scrubbing = SCRUBBER_EXCHANGE
 
 	if(signal.data["scrubbing"] != null)
-		scrubbing = text2num(signal.data["scrubbing"])
-		if(scrubbing)
+		scrubbing = signal.data["scrubbing"]
+		if(scrubbing != SCRUBBER_SIPHON)
 			panic = FALSE
 	if(signal.data["toggle_scrubbing"])
-		scrubbing = !scrubbing
-		if(scrubbing)
+		scrubbing = (scrubbing == SCRUBBER_EXCHANGE)? SCRUBBER_SIPHON : SCRUBBER_EXCHANGE
+		if(scrubbing != SCRUBBER_SIPHON)
 			panic = FALSE
 
 	var/list/toggle = list()
@@ -250,7 +248,7 @@
 	scrubbing_gas ^= toggle
 
 	if(signal.data["init"] != null)
-		name = signal.data["init"]
+		SetName(signal.data["init"])
 		return
 
 	if(signal.data["status"] != null)
@@ -261,7 +259,7 @@
 //			log_admin("DEBUG \[[world.timeofday]\]: vent_scrubber/receive_signal: unknown command \"[signal.data["command"]]\"\n[signal.debug_print()]")
 	spawn(2)
 		broadcast_status()
-	update_icon()
+	queue_icon_update()
 	return
 
 /obj/machinery/atmospherics/unary/vent_scrubber/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)

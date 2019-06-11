@@ -1,5 +1,5 @@
 /mob/living/simple_animal/lizard
-	name = "Lizard"
+	name = "lizard"
 	desc = "A cute tiny lizard."
 	icon = 'icons/mob/critter.dmi'
 	icon_state = "lizard"
@@ -17,6 +17,7 @@
 	response_harm   = "stomps on"
 	mob_size = MOB_MINISCULE
 	possession_candidate = 1
+	can_escape = 1
 	meat_type = /obj/item/weapon/reagent_containers/food/snacks/meat
 	pass_flags = PASS_FLAG_TABLE
 	density = 0
@@ -24,4 +25,4 @@
 	maxbodytemp = T0C + 50	//Above 50 Degrees Celcius
 	can_pull_size = ITEM_SIZE_TINY
 	can_pull_mobs = MOB_PULL_NONE
-	holder_type =/obj/item/weapon/holder/lizard
+//	holder_type =/obj/item/weapon/holder/lizard

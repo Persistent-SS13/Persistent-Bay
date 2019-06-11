@@ -28,7 +28,7 @@
 
 	if(user.a_intent != I_HELP)
 		if(user.zone_sel.selecting == BP_HEAD || user.zone_sel.selecting == BP_EYES)
-			if((CLUMSY in user.mutations) && prob(50))
+			if((MUTATION_CLUMSY in user.mutations) && prob(50))
 				M = user
 			return eyestab(M,user)
 		else
@@ -84,6 +84,7 @@
 /obj/item/weapon/material/kitchen/utensil/knife
 	name = "knife"
 	desc = "A knife for eating with. Can cut through any food."
+	icon = 'icons/obj/knife.dmi'
 	icon_state = "knife"
 	force_divisor = 0.1 // 6 when wielded with hardness 60 (steel)
 	scoop_food = 0
@@ -97,7 +98,7 @@
 /obj/item/weapon/material/kitchen/utensil/knife/boot
 	name = "small knife"
 	desc = "A small, easily concealed knife."
-	icon = 'icons/obj/weapons.dmi'
+	icon = 'icons/obj/knife.dmi'
 	icon_state = "pocketknife_open"
 	item_state = "knife"
 	applies_material_colour = 0
@@ -106,7 +107,7 @@
 	mass = 0.3
 
 /obj/item/weapon/material/kitchen/utensil/knife/attack(target as mob, mob/living/user as mob)
-	if ((CLUMSY in user.mutations) && prob(50))
+	if ((MUTATION_CLUMSY in user.mutations) && prob(50))
 		to_chat(user, "<span class='warning'>You accidentally cut yourself with \the [src].</span>")
 		user.apply_damage(20, DAM_CUT)
 		return
@@ -131,9 +132,8 @@
 	mass = 0.5
 
 /obj/item/weapon/material/kitchen/rollingpin/attack(mob/living/M as mob, mob/living/user as mob)
-	if ((CLUMSY in user.mutations) && prob(50))
+	if ((MUTATION_CLUMSY in user.mutations) && prob(50) && user.unEquip(src))
 		to_chat(user, "<span class='warning'>\The [src] slips out of your hand and hits your head.</span>")
-		user.drop_from_inventory(src)
 		user.apply_damage(10)
 		user.Paralyse(2)
 		return

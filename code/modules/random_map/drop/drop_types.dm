@@ -34,6 +34,9 @@ var/global/list/datum/supply_drop_loot/supply_drop
 /datum/supply_drop_loot/lasers/New()
 	..()
 	contents = list(
+		/obj/item/weapon/gun/energy/laser,
+		/obj/item/weapon/gun/energy/laser,
+		/obj/item/weapon/gun/energy/sniperrifle,
 		/obj/item/weapon/gun/energy/ionrifle)
 
 /datum/supply_drop_loot/ballistics
@@ -42,7 +45,7 @@ var/global/list/datum/supply_drop_loot/supply_drop
 /datum/supply_drop_loot/ballistics/New()
 	..()
 	contents = list(
-		/obj/item/weapon/gun/projectile/sec,
+		/obj/item/weapon/gun/projectile/pistol/sec,
 		/obj/item/weapon/gun/projectile/shotgun/doublebarrel,
 		/obj/item/weapon/gun/projectile/automatic/wt550)
 
@@ -52,7 +55,7 @@ var/global/list/datum/supply_drop_loot/supply_drop
 /datum/supply_drop_loot/ballistics/New()
 	..()
 	contents = list(
-		/obj/item/weapon/gun/projectile/sec,
+		/obj/item/weapon/gun/projectile/pistol/sec,
 		/obj/item/weapon/gun/projectile/shotgun/doublebarrel,
 		/obj/item/weapon/gun/projectile/automatic/wt550)
 
@@ -138,6 +141,7 @@ var/global/list/datum/supply_drop_loot/supply_drop
 	..()
 	contents = list(
 		/obj/item/weapon/storage/firstaid/regular,
+		/obj/item/weapon/storage/firstaid/trauma,
 		/obj/item/weapon/storage/firstaid/fire,
 		/obj/item/weapon/storage/firstaid/toxin,
 		/obj/item/weapon/storage/firstaid/o2,

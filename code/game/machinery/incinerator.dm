@@ -288,7 +288,7 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 		to_chat(usr, SPAN_WARNING("The hatch is locked."))
 	src.add_fingerprint(user)
 
-/obj/machinery/incinerator/crematorium/attackby(P as obj, mob/living/user)
+/obj/machinery/incinerator/crematorium/attackby(var/obj/item/P, mob/living/user)
 	if(incinerating && isCrowbar(P))
 		user.visible_message(SPAN_WARNING("You begin forcing \the [src]'s hatch open!"),SPAN_WARNING("[user] begins forcing \the [src]'s hatch open!"))
 		if(do_after(user, 10 SECONDS, src))

@@ -13,7 +13,7 @@
 	icon_state 			= "map_vent"
 	use_power 			= POWER_USE_IDLE
 	idle_power_usage 	= 150		//internal circuitry, friction losses and stuff
-	power_rating 		= 7500			//7500 W ~ 10 HP
+	power_rating 		= 30000			// 30000 W ~ 40 HP//7500			//7500 W ~ 10 HP
 	level 				= 1
 	connect_types 		= CONNECT_TYPE_REGULAR|CONNECT_TYPE_SUPPLY //connects to regular and supply pipes
 
@@ -71,9 +71,6 @@
 	..()
 	air_contents.volume = ATMOS_DEFAULT_VOLUME_PUMP
 	icon = null
-	if(loc)
-		initial_loc = get_area(loc)
-		area_uid = initial_loc.uid
 	ADD_SAVED_VAR(pump_direction)
 	ADD_SAVED_VAR(welded)
 	ADD_SAVED_VAR(external_pressure_bound)
@@ -81,6 +78,9 @@
 	ADD_SAVED_VAR(pressure_checks)
 
 /obj/machinery/atmospherics/unary/vent_pump/Initialize()
+	if(loc)
+		initial_loc = get_area(loc)
+		area_uid = initial_loc.uid
 	.=..()
 	if(!id_tag)
 		set_radio_id(make_loc_string_id("AVP"))
@@ -105,7 +105,7 @@
 /obj/machinery/atmospherics/unary/vent_pump/high_volume
 	name = "Large Air Vent"
 	power_channel = EQUIP
-	power_rating = 15000	//15 kW ~ 20 HP
+	power_rating = 45000
 
 /obj/machinery/atmospherics/unary/vent_pump/high_volume/New()
 	..()
@@ -124,7 +124,7 @@
 	. = ..()
 	update_use_power(POWER_USE_OFF)
 
-/obj/machinery/atmospherics/unary/vent_pump/update_icon(var/safety = 0)
+/obj/machinery/atmospherics/unary/vent_pump/on_update_icon(var/safety = 0)
 	if(!check_icon_cache())
 		return
 	overlays.Cut()
@@ -162,7 +162,7 @@
 				add_underlay(T,, dir)
 
 /obj/machinery/atmospherics/unary/vent_pump/hide()
-	update_icon()
+	queue_icon_update()
 	update_underlays()
 
 /obj/machinery/atmospherics/unary/vent_pump/proc/can_pump()
@@ -215,7 +215,7 @@
 
 	if (power_draw >= 0)
 		last_power_draw = power_draw
-		use_power(power_draw)
+		use_power_oneoff(power_draw)
 		if(network)
 			network.update = TRUE
 
@@ -258,7 +258,7 @@
 	if(!initial_loc.air_vent_names[id_tag])
 		var/new_name = "[initial_loc.name] Vent Pump #[initial_loc.air_vent_names.len+1]"
 		initial_loc.air_vent_names[id_tag] = new_name
-		src.name = new_name
+		src.SetName(new_name)
 	initial_loc.air_vent_info[id_tag] = data
 
 	if(!id_tag) //No points in emitting signal when no tag assigned
@@ -279,10 +279,10 @@
 		pump_direction = 1
 
 	if(signal.data["power"] != null)
-		use_power = text2num(signal.data["power"])
+		update_use_power(sanitize_integer(text2num(signal.data["power"]), POWER_USE_OFF, POWER_USE_ACTIVE, use_power))
 
 	if(signal.data["power_toggle"] != null)
-		use_power = !use_power
+		update_use_power(!use_power)
 
 	if(signal.data["direction_toggle"] != null)
 		pump_direction = !pump_direction
@@ -334,7 +334,7 @@
 		)
 
 	if(signal.data["init"] != null)
-		name = signal.data["init"]
+		SetName(signal.data["init"])
 		return
 
 	if(signal.data["status"] != null)
@@ -345,29 +345,19 @@
 		//log_admin("DEBUG \[[world.timeofday]\]: vent_pump/receive_signal: unknown command \"[signal.data["command"]]\"\n[signal.debug_print()]")
 	spawn(2)
 		broadcast_status()
-	update_icon()
+	queue_icon_update()
 	return
 
 /obj/machinery/atmospherics/unary/vent_pump/attackby(obj/item/W, mob/user)
 	if(isWelder(W))
 		var/obj/item/weapon/tool/weldingtool/WT = W
 		to_chat(user, SPAN_NOTICE("Now welding \the [src]."))
-		if(!WT.use_tool(user, src, 2 SECONDS))
-			to_chat(user, SPAN_NOTICE("You must remain close to finish this task."))
-			return 1
-
-		// if(!src)
-		// 	return 1
-
-		if(!WT.isOn())
-			to_chat(user, SPAN_NOTICE("The welding tool needs to be on to finish this task."))
-			return 1
-
-		welded = !welded
-		update_icon()
-		user.visible_message(SPAN_NOTICE("\The [user] [welded ? "welds \the [src] shut" : "unwelds \the [src]"]."), \
-			SPAN_NOTICE("You [welded ? "weld \the [src] shut" : "unweld \the [src]"]."), \
-			"You hear welding.")
+		if(WT.use_tool(user, src, 2 SECONDS))
+			welded = !welded
+			update_icon()
+			user.visible_message(SPAN_NOTICE("\The [user] [welded ? "welds \the [src] shut" : "unwelds \the [src]"]."), \
+				SPAN_NOTICE("You [welded ? "weld \the [src] shut" : "unweld \the [src]"]."), \
+				"You hear welding.")
 		return 1
 
 	if(isMultitool(W))
@@ -408,17 +398,18 @@
 			to_chat(user, SPAN_WARNING("You cannot unwrench \the [src], it is too exerted due to internal pressure."))
 			add_fingerprint(user)
 			return 1
-		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
+		var/obj/item/weapon/tool/TO = W
 		to_chat(user, SPAN_WARNING("You begin to unfasten \the [src]..."))
-		if (do_after(user, 40, src))
+		if (TO.use_tool(user, src, 4 SECONDS))
 			user.visible_message( \
 				SPAN_NOTICE("\The [user] unfastens \the [src]."), \
 				SPAN_NOTICE("You have unfastened \the [src]."), \
 				"You hear a ratchet.")
 			new /obj/item/pipe(loc, make_from=src)
 			qdel(src)
+			return 1
 	else
-		..()
+		return ..()
 
 /obj/machinery/atmospherics/unary/vent_pump/examine(mob/user)
 	if(..(user, 1))

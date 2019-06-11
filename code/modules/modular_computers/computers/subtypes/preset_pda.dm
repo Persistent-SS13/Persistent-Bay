@@ -15,8 +15,11 @@
 
 	hard_drive.store_file(new /datum/computer_file/program/chatclient())
 	hard_drive.store_file(new /datum/computer_file/program/email_client())
+	hard_drive.store_file(new /datum/computer_file/program/crew_manifest())
 	hard_drive.store_file(new /datum/computer_file/program/wordprocessor())
 	hard_drive.store_file(new /datum/computer_file/program/records())
+	if(prob(50)) //harmless tax software
+		hard_drive.store_file(new /datum/computer_file/program/uplink())
 	set_autorun("emailc")
 
 /obj/item/modular_computer/pda/medical/install_default_hardware()
@@ -62,6 +65,14 @@
 /obj/item/modular_computer/pda/cargo/install_default_hardware()
 	..()
 	scanner = new /obj/item/weapon/computer_hardware/scanner/paper(src)
+
+/obj/item/modular_computer/pda/mining/install_default_hardware()
+	..()
+	scanner = new /obj/item/weapon/computer_hardware/scanner/atmos(src)
+
+/obj/item/modular_computer/pda/explorer/install_default_hardware()
+	..()
+	scanner = new /obj/item/weapon/computer_hardware/scanner/atmos(src)
 
 /obj/item/modular_computer/pda/captain/install_default_hardware()
 	..()

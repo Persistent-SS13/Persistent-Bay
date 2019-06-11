@@ -42,7 +42,6 @@
 			F:annihilation(F.fuel)
 
 /obj/item/weapon/fuel/antiH/proc/annihilation(var/mass)
-
 	var/strength = convert2energy(mass)
 
 	if (strength < 773.0)
@@ -81,20 +80,20 @@
 	qdel(src)
 	return
 
-/obj/item/weapon/fuel/attack(mob/M as mob, mob/user as mob)
-	if (user != M)
-		var/obj/effect/equip_e/human/O = new /obj/effect/equip_e/human(  )
-		O.source = user
-		O.target = M
-		O.item = src
-		O.s_loc = user.loc
-		O.t_loc = M.loc
-		O.place = "fuel"
-		M.requests += O
-		spawn( 0 )
-			O.process()
-			return
-	else
-		for(var/mob/O in viewers(M, null))
-			O.show_message(text("<span class='warning'>[M] ate the [content ? content : "empty canister"]!</span>"), 1)
-		src.injest(M)
+// /obj/item/weapon/fuel/attack(mob/M as mob, mob/user as mob)
+// 	if (user != M)
+// 		var/obj/effect/equip_e/human/O = new /obj/effect/equip_e/human(  )
+// 		O.source = user
+// 		O.target = M
+// 		O.item = src
+// 		O.s_loc = user.loc
+// 		O.t_loc = M.loc
+// 		O.place = "fuel"
+// 		M.requests += O
+// 		spawn( 0 )
+// 			O.process()
+// 			return
+// 	else
+// 		for(var/mob/O in viewers(M, null))
+// 			O.show_message(text("<span class='warning'>[M] ate the [content ? content : "empty canister"]!</span>"), 1)
+// 		src.injest(M)

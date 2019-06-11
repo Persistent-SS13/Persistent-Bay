@@ -40,7 +40,7 @@
 	installed = 1
 	install()
 
-/datum/robot_component/proc/take_damage(var/damage, var/damtype = DAM_BLUNT, var/armor_bypass = 0, var/damsrc = null)
+/datum/robot_component/proc/take_damage(var/damage, var/damtype = DAM_BLUNT, var/armor_bypass = 0, var/used_weapon = null)
 	if(installed != 1 || damage == 0) 
 		return
 
@@ -72,15 +72,13 @@
 	else
 		powered = 0
 
-
 // ARMOUR
 // Protects the cyborg from damage. Usually first module to be hit
 // No power usage
 /datum/robot_component/armour
 	name = "armour plating"
 	external_type = /obj/item/robot_parts/robot_component/armour
-	max_damage = 60
-
+	max_damage = 150
 
 // ACTUATOR
 // Enables movement.

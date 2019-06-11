@@ -5,6 +5,7 @@
 	reagent_state = LIQUID
 	color = "#808080"
 	metabolism = REM * 0.2
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/acetone/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_NABBER)
@@ -29,6 +30,15 @@
 		to_chat(usr, "<span class='notice'>The solution dissolves the ink on the book.</span>")
 	return
 
+/datum/reagent/aluminium
+	name = "Aluminium"
+	taste_description = "metal"
+	taste_mult = 1.1
+	description = "A silvery white and ductile member of the boron group of chemical elements."
+	reagent_state = SOLID
+	color = "#a8a8a8"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
+
 /datum/reagent/ammonia
 	name = "Ammonia"
 	taste_description = "mordant"
@@ -37,12 +47,18 @@
 	reagent_state = LIQUID
 	color = "#404030"
 	metabolism = REM * 0.5
+	overdose = 5
+	gas_id = GAS_AMONIA
 
 /datum/reagent/ammonia/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_VOX)
 		M.adjustOxyLoss(-removed * 10)
 	else if(alien != IS_DIONA)
 		M.adjustToxLoss(removed * 1.5)
+
+/datum/reagent/ammonia/overdose(var/mob/living/carbon/M, var/alien)
+	if(alien != IS_VOX || volume > overdose*6)
+		..()
 
 /datum/reagent/carbon
 	name = "Carbon"
@@ -56,12 +72,13 @@
 /datum/reagent/carbon/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
 		return
-	if(M.ingested && M.ingested.reagent_list.len > 1) // Need to have at least 2 reagents - cabon and something to remove
-		var/effect = 1 / (M.ingested.reagent_list.len - 1)
-		for(var/datum/reagent/R in M.ingested.reagent_list)
+	var/datum/reagents/ingested = M.get_ingested_reagents()
+	if(ingested && ingested.reagent_list.len > 1) // Need to have at least 2 reagents - cabon and something to remove
+		var/effect = 1 / (ingested.reagent_list.len - 1)
+		for(var/datum/reagent/R in ingested.reagent_list)
 			if(R == src)
 				continue
-			M.ingested.remove_reagent(R.type, removed * effect)
+			ingested.remove_reagent(R.type, removed * effect)
 
 /datum/reagent/carbon/touch_turf(var/turf/T)
 	if(!istype(T, /turf/space))
@@ -71,6 +88,13 @@
 			dirtoverlay.alpha = volume * 30
 		else
 			dirtoverlay.alpha = min(dirtoverlay.alpha + volume * 30, 255)
+
+/datum/reagent/copper
+	name = "Copper"
+	description = "A highly ductile metal."
+	taste_description = "copper"
+	color = "#6e3b08"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/ethanol
 	name = "Ethanol" //Parent class for all alcoholic reagents.
@@ -90,6 +114,9 @@
 
 	glass_name = "ethanol"
 	glass_desc = "A well-known alcohol with a variety of applications."
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_FUEL | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
+	gas_specific_heat = 15
 
 /datum/reagent/ethanol/touch_mob(var/mob/living/L, var/amount)
 	if(istype(L))
@@ -100,7 +127,7 @@
 	return
 
 /datum/reagent/ethanol/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
-	M.nutrition += (nutriment_factor + strength / 2) * removed
+	M.nutrition += nutriment_factor * removed
 	var/strength_mod = 1
 	if(alien == IS_SKRELL)
 		strength_mod *= 5
@@ -166,6 +193,7 @@
 	color = "#808080"
 	metabolism = REM * 0.2
 	touch_met = 5
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_FUEL | XGM_GAS_OXIDIZER | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/hydrazine/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	M.adjustToxLoss(4 * removed)
@@ -179,12 +207,99 @@
 	remove_self(volume)
 	return
 
+/datum/reagent/iron
+	name = "Iron"
+	description = "Pure iron is a metal."
+	taste_description = "metal"
+	reagent_state = SOLID
+	color = "#353535"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
+
+/datum/reagent/iron/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
+	if(alien != IS_DIONA)
+		M.add_chemical_effect(CE_BLOODRESTORE, 8 * removed)
+
+/datum/reagent/lithium
+	name = "Lithium"
+	description = "A chemical element, used as antidepressant."
+	taste_description = "metal"
+	reagent_state = SOLID
+	color = "#808080"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
+
+/datum/reagent/lithium/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+	if(alien != IS_DIONA)
+		if(istype(M.loc, /turf/space))
+			M.SelfMove(pick(GLOB.cardinal))
+		if(prob(5))
+			M.emote(pick("twitch", "drool", "moan"))
+
+/datum/reagent/mercury
+	name = "Mercury"
+	description = "A chemical element."
+	taste_mult = 0 //mercury apparently is tasteless. IDK
+	reagent_state = LIQUID
+	color = "#484848"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
+
+/datum/reagent/mercury/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+	if(alien != IS_DIONA)
+		if(istype(M.loc, /turf/space))
+			M.SelfMove(pick(GLOB.cardinal))
+		if(prob(5))
+			M.emote(pick("twitch", "drool", "moan"))
+		M.adjustBrainLoss(0.1)
+
 /datum/reagent/phosphorus
 	name = "Phosphorus"
 	description = "A chemical element, the backbone of biological energy carriers."
 	taste_description = "vinegar"
 	reagent_state = SOLID
 	color = "#832828"
+
+/datum/reagent/potassium
+	name = "Potassium"
+	description = "A soft, low-melting solid that can easily be cut with a knife. Reacts violently with water."
+	taste_description = "sweetness" //potassium is bitter in higher doses but sweet in lower ones.
+	reagent_state = SOLID
+	color = "#a0a0a0"
+
+/datum/reagent/potassium/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+	if(volume > 3)
+		M.add_chemical_effect(CE_PULSE, 1)
+	if(volume > 10)
+		M.add_chemical_effect(CE_PULSE, 1)
+
+/datum/reagent/radium
+	name = "Radium"
+	description = "Radium is an alkaline earth metal. It is extremely radioactive."
+	taste_description = "the color blue, and regret"
+	reagent_state = SOLID
+	color = "#c7c7c7"
+
+/datum/reagent/radium/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+	M.apply_damage(10 * removed, DAM_RADS, armor_pen = 100) // Radium may increase your chances to cure a disease
+	if(M.virus2.len)
+		for(var/ID in M.virus2)
+			var/datum/disease2/disease/V = M.virus2[ID]
+			if(prob(5))
+				M.antibodies |= V.antigen
+				if(prob(50))
+					M.apply_damage(50, DAM_RADS, armor_pen = 100) // curing it that way may kill you instead
+					var/absorbed = 0
+					var/obj/item/organ/internal/diona/nutrients/rad_organ = locate() in M.internal_organs
+					if(rad_organ && !rad_organ.is_broken())
+						absorbed = 1
+					if(!absorbed)
+						M.adjustToxLoss(100)
+
+/datum/reagent/radium/touch_turf(var/turf/T)
+	if(volume >= 3)
+		if(!istype(T, /turf/space))
+			var/obj/effect/decal/cleanable/greenglow/glow = locate(/obj/effect/decal/cleanable/greenglow, T)
+			if(!glow)
+				new /obj/effect/decal/cleanable/greenglow(T)
+			return
 
 /datum/reagent/silicon
 	name = "Silicon"
@@ -206,27 +321,18 @@
 	taste_mult = 1.8
 	reagent_state = SOLID
 	color = "#ffffff"
+	scannable = 1
 
 	glass_name = "sugar"
 	glass_desc = "The organic compound commonly known as table sugar and sometimes called saccharose. This white, odorless, crystalline powder has a pleasing, sweet taste."
 	glass_icon = DRINK_ICON_NOISY
 
-/datum/reagent/sugar/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+/datum/reagent/sugar/affect_blood(var/mob/living/carbon/human/M, var/alien, var/removed)
 	M.nutrition += removed * 3
 
 	if(alien == IS_UNATHI)
-		if(M.chem_doses[type] < 2)
-			if(M.chem_doses[type] == metabolism * 2 || prob(5))
-				M.emote("yawn")
-		else if(M.chem_doses[type] < 5)
-			M.eye_blurry = max(M.eye_blurry, 10)
-		else if(M.chem_doses[type] < 20)
-			if(prob(50))
-				M.Weaken(2)
-			M.drowsyness = max(M.drowsyness, 20)
-		else
-			M.sleeping = max(M.sleeping, 20)
-			M.drowsyness = max(M.drowsyness, 60)
+		var/datum/species/unathi/S = M.species
+		S.handle_sugar(M,src)
 
 /datum/reagent/sulfur
 	name = "Sulfur"
@@ -234,3 +340,13 @@
 	taste_description = "old eggs"
 	reagent_state = SOLID
 	color = "#bf8c00"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
+
+/datum/reagent/tungsten
+	name = "Tungsten"
+	description = "A chemical element, and a strong oxidising agent."
+	taste_mult = 0 //no taste
+	reagent_state = SOLID
+	color = "#dcdcdc"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_OXIDIZER | XGM_GAS_REAGENT_GAS
+

@@ -5,7 +5,7 @@
 	desc = "It's a table, for putting things on. Or standing on, if you really want to."
 	density = 1
 	anchored = 1
-	atom_flags = ATOM_FLAG_CLIMBABLE
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
 	layer = TABLE_LAYER
 	throwpass = 1
 	var/flipped = 0
@@ -18,7 +18,6 @@
 	var/can_plate = 1
 
 	var/manipulating = 0
-	var/material/material = null
 	var/material/reinforced = null
 
 	// Gambling tables. I'd prefer reinforced with carpet/felt/cloth/whatever, but AFAIK it's either harder or impossible to get /obj/item/stack/material of those.
@@ -34,9 +33,30 @@
 		reinforced = SSmaterials.get_material_by_name(reinforced)
 	..()
 
+/obj/structure/table/proc/update_material()
+	var/old_maxhealth = max_health
+	if(!material)
+		max_health = 10
+	else
+		max_health = material.integrity / 2
+
+		if(reinforced)
+			max_health += reinforced.integrity / 2
+
+	health += max_health - old_maxhealth
+
+/obj/structure/table/take_damage(amount)
+	// If the table is made of a brittle material, and is *not* reinforced with a non-brittle material, damage is multiplied by TABLE_BRITTLE_MATERIAL_MULTIPLIER
+	if(material && material.is_brittle())
+		if(reinforced)
+			if(reinforced.is_brittle())
+				amount *= TABLE_BRITTLE_MATERIAL_MULTIPLIER
+		else
+			amount *= TABLE_BRITTLE_MATERIAL_MULTIPLIER
+	return ..()
+
 /obj/structure/table/Initialize()
 	. = ..()
-
 	// One table per turf.
 	for(var/obj/structure/table/T in loc)
 		if(T != src)
@@ -61,32 +81,6 @@
 		T.update_icon()
 	. = ..()
 
-/obj/structure/table/proc/update_material()
-	var/old_max_health = max_health
-	if(!material)
-		max_health = 10
-	else
-		max_health = material.integrity / 2
-
-		if(reinforced)
-			max_health += reinforced.integrity / 2
-
-	health += max_health - old_max_health
-
-/obj/structure/table/take_damage(damage, damtype, armorbypass, damsrc)
-	// If the table is made of a brittle material, and is *not* reinforced with a non-brittle material, damage is multiplied by TABLE_BRITTLE_MATERIAL_MULTIPLIER
-	if(material && material.is_brittle())
-		if(reinforced)
-			if(reinforced.is_brittle())
-				damage *= TABLE_BRITTLE_MATERIAL_MULTIPLIER
-		else
-			damage *= TABLE_BRITTLE_MATERIAL_MULTIPLIER
-	..(damage, damtype, armorbypass, damsrc)
-
-/obj/structure/table/destroyed()
-	visible_message("<span class='warning'>\The [src] breaks down!</span>")
-	break_to_parts() // if we break and form shards, return them to the caller to do !FUN! things with
-
 /obj/structure/table/examine(mob/user)
 	. = ..()
 	if(health < max_health)
@@ -99,7 +93,7 @@
 				to_chat(user, "<span class='notice'>It has a few scrapes and dents.</span>")
 
 /obj/structure/table/attackby(obj/item/weapon/W, mob/user)
-	if(reinforced && istype(W, /obj/item/weapon/tool/screwdriver))
+	if(reinforced && isScrewdriver(W))
 		remove_reinforced(W, user)
 		if(!reinforced)
 			update_desc()
@@ -110,13 +104,13 @@
 	if(carpeted && isCrowbar(W))
 		user.visible_message("<span class='notice'>\The [user] removes the carpet from \the [src].</span>",
 		                              "<span class='notice'>You remove the carpet from \the [src].</span>")
-		new /obj/item/stack/tile/carpetgreen(loc)
+		new /obj/item/stack/tile/carpet(loc)
 		carpeted = 0
 		update_icon()
 		return 1
 
-	if(!carpeted && material && istype(W, /obj/item/stack/tile/carpetgreen))
-		var/obj/item/stack/tile/carpetgreen/C = W
+	if(!carpeted && material && istype(W, /obj/item/stack/tile/carpet))
+		var/obj/item/stack/tile/carpet/C = W
 		if(C.use(1))
 			user.visible_message("<span class='notice'>\The [user] adds \the [C] to \the [src].</span>",
 			                              "<span class='notice'>You add \the [C] to \the [src].</span>")
@@ -125,7 +119,7 @@
 			return 1
 		else
 			to_chat(user, "<span class='warning'>You don't have enough carpet!</span>")
-	if(!reinforced && !carpeted && material && istype(W, /obj/item/weapon/tool/wrench))
+	if(!reinforced && !carpeted && material && isWrench(W) && user.a_intent == I_HURT) //robots dont have disarm so it's harm
 		remove_material(W, user)
 		if(!material)
 			update_connections(1)
@@ -136,7 +130,7 @@
 			update_material()
 		return 1
 
-	if(!carpeted && !reinforced && !material && istype(W, /obj/item/weapon/tool/wrench))
+	if(!carpeted && !reinforced && !material && isWrench(W) && user.a_intent == I_HURT)
 		dismantle(W, user)
 		return 1
 
@@ -287,7 +281,7 @@
 			S = material.place_shard(loc)
 			if(S) shards += S
 	if(carpeted && (full_return || prob(50))) // Higher chance to get the carpet back intact, since there's no non-intact option
-		new /obj/item/stack/tile/carpetgreen(src.loc)
+		new /obj/item/stack/tile/carpet(src.loc)
 	if(full_return || prob(20))
 		new /obj/item/stack/material/steel(src.loc)
 	else
@@ -297,7 +291,7 @@
 	qdel(src)
 	return shards
 
-/obj/structure/table/update_icon()
+/obj/structure/table/on_update_icon()
 	if(flipped != 1)
 		icon_state = "blank"
 		overlays.Cut()
@@ -312,7 +306,7 @@
 		// Standard table image
 		if(material)
 			for(var/i = 1 to 4)
-				I = image(icon, "[material.icon_table]_[connections[i]]", dir = 1<<(i-1))
+				I = image(icon, "[material.table_icon_base]_[connections[i]]", dir = 1<<(i-1))
 				if(material.icon_colour) I.color = material.icon_colour
 				I.alpha = 255 * material.opacity
 				overlays += I
@@ -320,7 +314,7 @@
 		// Reinforcements
 		if(reinforced)
 			for(var/i = 1 to 4)
-				I = image(icon, "reinf_over_[connections[i]]", dir = 1<<(i-1))
+				I = image(icon, "[reinforced.table_reinf]_[connections[i]]", dir = 1<<(i-1))
 				I.color = reinforced.icon_colour
 				I.alpha = 255 * reinforced.opacity
 				overlays += I
@@ -348,7 +342,7 @@
 
 		icon_state = "flip[type]"
 		if(material)
-			var/image/I = image(icon, "[material.icon_base]_flip[type]")
+			var/image/I = image(icon, "[material.table_icon_base]_flip[type]")
 			I.color = material.icon_colour
 			I.alpha = 255 * material.opacity
 			overlays += I
@@ -357,7 +351,7 @@
 			name = "table frame"
 
 		if(reinforced)
-			var/image/I = image(icon, "[reinforced.icon_reinf]_flip[type]")
+			var/image/I = image(icon, "[reinforced.table_reinf]_flip[type]")
 			I.color = reinforced.icon_colour
 			I.alpha = 255 * reinforced.opacity
 			overlays += I

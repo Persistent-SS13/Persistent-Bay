@@ -17,7 +17,7 @@
 			verb = speaking.get_spoken_verb(ending)
 		else
 			if(ending=="!")
-				verb="exclaims"//pick("exclaims","shouts","yells")
+				verb=pick("exclaims","shouts","yells")
 			if(ending=="?")
 				verb="asks"
 

@@ -43,11 +43,9 @@ Thus, the two variables affect pump operation are set in New():
 	..()
 	air1.volume = ATMOS_DEFAULT_VOLUME_PUMP
 	air2.volume = ATMOS_DEFAULT_VOLUME_PUMP
+	ADD_SAVED_VAR(target_pressure)
 
-/obj/machinery/atmospherics/binary/pump/Initialize()
-	. = ..()
-
-/obj/machinery/atmospherics/binary/pump/update_icon()
+/obj/machinery/atmospherics/binary/pump/on_update_icon()
 	if(!powered() || isoff())
 		icon_state = "off"
 	else
@@ -66,8 +64,10 @@ Thus, the two variables affect pump operation are set in New():
 	update_underlays()
 
 /obj/machinery/atmospherics/binary/pump/Process()
-	last_power_draw = 0
-	last_flow_rate = 0
+	. = ..()
+	//Those are done in the base class
+	// last_power_draw = 0
+	// last_flow_rate = 0
 
 	if(inoperable() || isoff())
 		return
@@ -82,7 +82,7 @@ Thus, the two variables affect pump operation are set in New():
 
 	if (power_draw >= 0)
 		last_power_draw = power_draw
-		use_power(power_draw)
+		use_power_oneoff(power_draw)
 
 		if(network1)
 			network1.update = 1
@@ -177,7 +177,7 @@ Thus, the two variables affect pump operation are set in New():
 	if((. = ..())) return
 
 	if(href_list["power"])
-		use_power = !use_power
+		update_use_power(!use_power)
 		. = TOPIC_REFRESH
 
 	switch(href_list["set_press"])

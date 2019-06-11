@@ -12,17 +12,10 @@
 
 /obj/item/weapon/storage/fancy
 	item_state = "syringe_kit" //placeholder, many of these don't have inhands
+	opened = 0 //if an item has been removed from this container
 	var/obj/item/key_type //path of the key item that this "fancy" container is meant to store
-	var/opened = 0 //if an item has been removed from this container
 
-/obj/item/weapon/storage/fancy/remove_from_storage()
-	. = ..()
-	if(!opened && .)
-		opened = 1
-		update_icon()
-
-
-/obj/item/weapon/storage/fancy/update_icon()
+/obj/item/weapon/storage/fancy/on_update_icon()
 	if(!opened)
 		src.icon_state = initial(icon_state)
 	else
@@ -63,6 +56,20 @@
 /obj/item/weapon/storage/fancy/egg_box/empty
 	startswith = null
 
+/*
+ * Cracker Packet
+ */
+
+/obj/item/weapon/storage/fancy/crackers
+	name = "\improper Getmore Crackers"
+	icon = 'icons/obj/food.dmi'
+	icon_state = "crackerbag"
+	storage_slots = 6
+	max_w_class = ITEM_SIZE_TINY
+	w_class = ITEM_SIZE_SMALL
+	key_type = /obj/item/weapon/reagent_containers/food/snacks/cracker
+	can_hold = list(/obj/item/weapon/reagent_containers/food/snacks/cracker)
+	startswith = list(/obj/item/weapon/reagent_containers/food/snacks/cracker = 6)
 
 /*
  * Candle Box
@@ -109,7 +116,7 @@
 		/obj/item/weapon/pen/crayon/purple,
 		)
 
-/obj/item/weapon/storage/fancy/crayons/update_icon()
+/obj/item/weapon/storage/fancy/crayons/on_update_icon()
 	overlays = list() //resets list
 	overlays += image('icons/obj/crayons.dmi',"crayonbox")
 	for(var/obj/item/weapon/pen/crayon/crayon in contents)
@@ -253,6 +260,32 @@
 /obj/item/weapon/storage/fancy/cigarettes/professionals/blank
 	startswith = list()
 
+//cigarellos
+/obj/item/weapon/storage/fancy/cigarettes/cigarello
+	name = "pack of Trident Original cigars"
+	desc = "The Trident brand's wood tipped little cigar, favored by the Sol corps diplomatique for their pleasant aroma. Machine made on Mars for over 100 years."
+	icon_state = "CRpacket"
+	item_state = "Dpacket"
+	max_storage_space = 5
+	key_type = /obj/item/clothing/mask/smokable/cigarette/trident
+	startswith = list(/obj/item/clothing/mask/smokable/cigarette/trident = 5)
+
+/obj/item/weapon/storage/fancy/cigarettes/cigarello/variety
+	name = "pack of Trident Fruit cigars"
+	desc = "The Trident brand's wood tipped little cigar, favored by the Sol corps diplomatique for their pleasant aroma. Machine made on Mars for over 100 years. This is a fruit variety pack."
+	icon_state = "CRFpacket"
+	startswith = list(	/obj/item/clothing/mask/smokable/cigarette/trident/watermelon,
+						/obj/item/clothing/mask/smokable/cigarette/trident/orange,
+						/obj/item/clothing/mask/smokable/cigarette/trident/grape,
+						/obj/item/clothing/mask/smokable/cigarette/trident/cherry,
+						/obj/item/clothing/mask/smokable/cigarette/trident/berry)
+
+/obj/item/weapon/storage/fancy/cigarettes/cigarello/mint
+	name = "pack of Trident Menthol cigars"
+	desc = "The Trident brand's wood tipped little cigar, favored by the Sol corps diplomatique for their pleasant aroma. Machine made on Mars for over 100 years. These are the menthol variety."
+	icon_state = "CRMpacket"
+	startswith = list(/obj/item/clothing/mask/smokable/cigarette/trident/mint = 5)
+
 /obj/item/weapon/storage/fancy/cigar
 	name = "cigar case"
 	desc = "A case for holding your cigars when you are not smoking them."
@@ -290,15 +323,16 @@
 
 /obj/item/weapon/storage/fancy/vials
 	icon = 'icons/obj/items/storage/vialbox.dmi'
-	icon_state = "vialbox0"
+	icon_state = "vialbox"
 	name = "vial storage box"
 	w_class = ITEM_SIZE_NORMAL
 	max_w_class = ITEM_SIZE_TINY
 	storage_slots = 12
 
 	key_type = /obj/item/weapon/reagent_containers/glass/beaker/vial
+	startswith = list(/obj/item/weapon/reagent_containers/glass/beaker/vial = 12)
 
-/obj/item/weapon/storage/fancy/vials/update_icon()
+/obj/item/weapon/storage/fancy/vials/on_update_icon()
 	var/key_count = count_by_type(contents, key_type)
 	src.icon_state = "[initial(icon_state)][Floor(key_count/2)]"
 
@@ -324,7 +358,7 @@
 	..()
 	update_icon()
 
-/obj/item/weapon/storage/lockbox/vials/update_icon()
+/obj/item/weapon/storage/lockbox/vials/on_update_icon()
 	var/total_contents = count_by_type(contents, /obj/item/weapon/reagent_containers/glass/beaker/vial)
 	src.icon_state = "vialbox[Floor(total_contents/2)]"
 	src.overlays.Cut()

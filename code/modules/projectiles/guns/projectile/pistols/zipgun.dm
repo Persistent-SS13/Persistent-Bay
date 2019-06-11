@@ -2,7 +2,7 @@
 /obj/item/weapon/gun/projectile/pirate
 	name = "zip gun"
 	desc = "Little more than a barrel, handle, and firing mechanism, cheap makeshift firearms like this one are not uncommon in frontier systems."
-	icon = 'icons/obj/weapons/zipgun.dmi'
+	icon = 'icons/obj/weapons/guns/zipgun.dmi'
 	icon_state = "zipgun"
 	item_state = "sawnshotgun"
 	handle_casings = CYCLE_CASINGS //player has to take the old casing out manually before reloading
@@ -10,18 +10,17 @@
 	max_shells = 1 //literally just a barrel
 
 	var/global/list/ammo_types = list(
-		/obj/item/ammo_casing/a357              = ".357",
+		/obj/item/ammo_casing/c357              = ".357",
 		/obj/item/ammo_casing/shotgun           = "12 gauge",
 		/obj/item/ammo_casing/shotgun           = "12 gauge",
 		/obj/item/ammo_casing/shotgun/pellet    = "12 gauge",
 		/obj/item/ammo_casing/shotgun/pellet    = "12 gauge",
 		/obj/item/ammo_casing/shotgun/pellet    = "12 gauge",
 		/obj/item/ammo_casing/shotgun/beanbag   = "12 gauge",
-		/obj/item/ammo_casing/shotgun/rubber    = "12 gauge",
 		/obj/item/ammo_casing/shotgun/stunshell = "12 gauge",
 		/obj/item/ammo_casing/shotgun/flash     = "12 gauge",
-		/obj/item/ammo_casing/a762              = "7.62mm",
-		/obj/item/ammo_casing/a556              = "5.56mm"
+		/obj/item/ammo_casing/c762              = "7.62mm",
+		/obj/item/ammo_casing/c556              = "5.56mm"
 		)
 
 /obj/item/weapon/gun/projectile/pirate/New()
@@ -36,10 +35,14 @@
 /obj/item/weapon/zipgunframe
 	name = "zip gun frame"
 	desc = "A half-finished zip gun."
-	icon = 'icons/obj/weapons/zipgun.dmi'
+	icon = 'icons/obj/weapons/guns/zipgun.dmi'
 	icon_state = "zipgun0"
 	item_state = "zipgun-solid"
 	var/buildstate = 0
+
+/obj/item/weapon/zipgunframe/New()
+	..()
+	ADD_SAVED_VAR(buildstate)
 
 /obj/item/weapon/zipgunframe/update_icon()
 	icon_state = "zipgun[buildstate]"

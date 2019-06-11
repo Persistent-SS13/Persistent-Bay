@@ -18,25 +18,38 @@ Small, little HP, poisonous.
 	speed = 10 // May return back to 3, we'll see if 2 is enough.
 	move_to_delay = 10
 	density = 0
+	min_gas = null
+	max_gas = null
 	mob_size = MOB_MINISCULE
+	can_escape = 1
 	pass_flags = PASS_FLAG_TABLE
-	holder_type = /obj/item/weapon/holder/voxslug
-
 	melee_damage_lower = 3
 	melee_damage_upper = 6
-	attacktext = "bitten"
-	attack_sound = 'sound/weapons/bite.ogg'
-
-	min_gas = null // Immune to space
-	max_gas = null
-	minbodytemp = 0
-
+	holder_type = /obj/item/weapon/holder/voxslug
 	faction = "asteroid"
-
+	attack_sound = 'sound/weapons/bite.ogg'
+	attacktext = "bitten"
+	minbodytemp = 0
 	should_save = 0
 
-/mob/living/simple_animal/hostile/voxslug/New()
-	..()
+/mob/living/simple_animal/hostile/voxslug/ListTargets(var/dist = 7)
+	var/list/L = list()
+	for(var/a in hearers(src, dist))
+		if(istype(a,/mob/living/carbon/human))
+			var/mob/living/carbon/human/H = a
+			if(H.species.get_bodytype() == SPECIES_VOX)
+				continue
+		if(isliving(a))
+			var/mob/living/M = a
+			if(M.faction == faction)
+				continue
+		L += a
+
+	for (var/obj/mecha/M in mechas_list)
+		if (M.z == src.z && get_dist(src, M) <= dist)
+			L += M
+
+	return L
 
 /mob/living/simple_animal/hostile/voxslug/Move()
 	. = ..()
@@ -67,7 +80,12 @@ Small, little HP, poisonous.
 	else return ..()
 
 /mob/living/simple_animal/hostile/voxslug/proc/attach(var/mob/living/carbon/human/H)
-	var/obj/item/organ/external/chest = H.organs_by_name["chest"]
+	var/obj/item/clothing/suit/space/S = H.get_covering_equipped_item_by_zone(BP_CHEST)
+	if(istype(S) && !length(S.breaches))
+		S.create_breaches(DAM_PIERCE, 20)
+		if(!length(S.breaches)) //unable to make a hole
+			return
+	var/obj/item/organ/external/chest = H.organs_by_name[BP_CHEST]
 	var/obj/item/weapon/holder/voxslug/holder = new(get_turf(src))
 	src.forceMove(holder)
 	chest.embed(holder,0,"\The [src] latches itself onto \the [H]!")

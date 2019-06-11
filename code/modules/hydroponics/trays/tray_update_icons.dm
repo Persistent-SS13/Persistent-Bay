@@ -1,5 +1,5 @@
 //Refreshes the icon and sets the luminosity
-/obj/machinery/portable_atmospherics/hydroponics/update_icon()
+/obj/machinery/portable_atmospherics/hydroponics/on_update_icon()
 	// Update name.
 	if(seed)
 		if(mechanical)
@@ -7,10 +7,10 @@
 		else
 			name = "[seed.seed_name]"
 	else
-		name = initial(name)
+		SetName(initial(name))
 
 	if(labelled)
-		name += " ([labelled])"
+		SetName(name + " ([labelled])")
 
 	overlays.Cut()
 	var/new_overlays = list()
@@ -30,7 +30,7 @@
 				log_error("<span class='danger'>Seed type [seed.get_trait(TRAIT_PLANT_ICON)] cannot find a growth stage value.</span>")
 				return
 			var/overlay_stage = get_overlay_stage()
-			
+
 			var/ikey = "\ref[seed]-plant-[overlay_stage]"
 			if(!SSplants.plant_icon_cache[ikey])
 				SSplants.plant_icon_cache[ikey] = seed.get_icon(overlay_stage)
@@ -49,7 +49,7 @@
 	if(mechanical)
 		//Draw the cover.
 		if(closed_system)
-			new_overlays += "hydrocover"
+			new_overlays += "hydrocover2"
 		if(seed && health <= (seed.get_trait(TRAIT_ENDURANCE) / 2))
 			new_overlays += "over_lowhealth3"
 		if(waterlevel <= 10)
@@ -62,17 +62,19 @@
 			new_overlays += "over_harvest3"
 
 	if((!density || !opacity) && seed && seed.get_trait(TRAIT_LARGE))
-		set_density(1)
+		if(!mechanical)
+			set_density(1)
 		set_opacity(1)
 	else
-		set_density(0)
+		if(!mechanical)
+			set_density(0)
 		set_opacity(0)
 
 	overlays |= new_overlays
 
 	// Update bioluminescence.
 	if(seed && seed.get_trait(TRAIT_BIOLUM))
-		set_light(round(seed.get_trait(TRAIT_POTENCY)/10), l_color = seed.get_trait(TRAIT_BIOLUM_COLOUR))
+		set_light(0.5, 0.1, 3, l_color = seed.get_trait(TRAIT_BIOLUM_COLOUR))
 	else
 		set_light(0)
 

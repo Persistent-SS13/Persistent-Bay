@@ -1,28 +1,84 @@
 /mob/living/carbon/New()
-	//setup reagent holders
-	bloodstr = new/datum/reagents/metabolism(1000, src, CHEM_BLOOD)
-	ingested = new/datum/reagents/metabolism(1000, src, CHEM_INGEST)
-	touching = new/datum/reagents/metabolism(1000, src, CHEM_TOUCH)
-	reagents = bloodstr
+	..()
+	//Restore any saved species before any sub-classes run its New() proc.
+	if(saved_species)
+		species = all_species[saved_species]
+		saved_species = null //no need to keep this around after load
+
+	ADD_SAVED_VAR(immunity) //defined in viruses.dm
+	ADD_SAVED_VAR(saved_species)
+	ADD_SAVED_VAR(virus2)
+	ADD_SAVED_VAR(antibodies)
+	ADD_SAVED_VAR(handcuffed)
+	ADD_SAVED_VAR(surgeries_in_progress)
+	ADD_SAVED_VAR(touching)
+	ADD_SAVED_VAR(nutrition)
+	ADD_SAVED_VAR(internal_organs_by_name) //Save only organs by name, since we don't want useless duplicate lists of organs
+	ADD_SAVED_VAR(organs_by_name)
+	ADD_SAVED_VAR(losebreath)
+
+	ADD_SKIP_EMPTY(saved_species)
+	ADD_SKIP_EMPTY(virus2)
+	ADD_SKIP_EMPTY(antibodies)
+	ADD_SKIP_EMPTY(handcuffed)
+	ADD_SKIP_EMPTY(surgeries_in_progress)
+	ADD_SKIP_EMPTY(internal_organs_by_name)
+	ADD_SKIP_EMPTY(organs_by_name)
+
+/mob/living/carbon/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		//setup reagent holders
+		bloodstr = new/datum/reagents/metabolism(120, src, CHEM_BLOOD)
+		touching = new/datum/reagents/metabolism(1000, src, CHEM_TOUCH)
+		reagents = bloodstr
 
 	if (!default_language && species_language)
 		default_language = all_languages[species_language]
-	..()
+
+/mob/living/carbon/after_load()
+	. = ..()
+	bloodstr = reagents //Since reagents is saved, but not bloodstream
+
+	//Rebuild organ list, from saved organs
+	organs = list()
+	internal_organs = list()
+	for(var/name in organs_by_name)
+		organs |= organs_by_name[name]
+	for(var/name in internal_organs_by_name)
+		internal_organs |= internal_organs_by_name[name]
+
+/mob/living/carbon/human/before_save()
+	. = ..()
+	//Put the specie name as species type during saving
+	saved_species = species?.name
+
+/mob/living/carbon/human/after_save()
+	. = ..()
+	//Clear the saved species var to save some memory
+	saved_species = null
 
 /mob/living/carbon/Destroy()
-	QDEL_NULL(ingested)
 	QDEL_NULL(touching)
 	bloodstr = null // We don't qdel(bloodstr) because it's the same as qdel(reagents)
 	QDEL_NULL_LIST(internal_organs)
-	QDEL_NULL_LIST(stomach_contents)
 	QDEL_NULL_LIST(hallucinations)
+	if(loc)
+		for(var/mob/M in contents)
+			M.dropInto(loc)
+	else
+		for(var/mob/M in contents)
+			qdel(M)
 	return ..()
 
 /mob/living/carbon/rejuvenate()
 	bloodstr.clear_reagents()
-	ingested.clear_reagents()
 	touching.clear_reagents()
-	nutrition = 400
+	var/datum/reagents/R = get_ingested_reagents()
+	if(istype(R)) 
+		R.clear_reagents()
+	if(!(src.species.species_flags & SPECIES_FLAG_NO_HUNGER))
+		nutrition = 400
 	..()
 
 /mob/living/carbon/Move(NewLoc, direct)
@@ -30,11 +86,11 @@
 	if(!.)
 		return
 
-	if (src.nutrition && src.stat != 2)
+	if (src.nutrition && src.stat != DEAD && !(src.species.species_flags & SPECIES_FLAG_NO_HUNGER))
 		src.nutrition -= DEFAULT_HUNGER_FACTOR/10
 		if (move_intent.flags & MOVE_INTENT_EXERTIVE)
 			src.nutrition -= DEFAULT_HUNGER_FACTOR/10
-	if((FAT in src.mutations) && (move_intent.flags & MOVE_INTENT_EXERTIVE) && src.bodytemperature <= 360)
+	if((MUTATION_FAT in src.mutations) && (move_intent.flags & MOVE_INTENT_EXERTIVE) && src.bodytemperature <= 360)
 		src.bodytemperature += 2
 
 	// Moving around increases germ_level faster
@@ -42,7 +98,7 @@
 		germ_level++
 
 /mob/living/carbon/relaymove(var/mob/living/user, direction)
-	if((user in src.stomach_contents) && istype(user))
+	if((user in contents) && istype(user))
 		if(user.last_special <= world.time)
 			user.last_special = world.time + 50
 			src.visible_message("<span class='danger'>You hear something rumbling inside [src]'s stomach...</span>")
@@ -61,19 +117,12 @@
 				playsound(user.loc, 'sound/effects/attackblob.ogg', 50, 1)
 
 				if(prob(src.getBruteLoss() - 50))
-					for(var/atom/movable/A in stomach_contents)
-						A.loc = loc
-						stomach_contents.Remove(A)
-					src.gib()
+					gib()
 
 /mob/living/carbon/gib()
-	for(var/mob/M in src)
-		if(M in src.stomach_contents)
-			src.stomach_contents.Remove(M)
-		M.loc = src.loc
-		for(var/mob/N in viewers(src, null))
-			if(N.client)
-				N.show_message(text("<span class='danger'>[M] bursts out of [src]!</span>"), 2)
+	for(var/mob/M in contents)
+		M.dropInto(loc)
+		visible_message(SPAN_DANGER("\The [M] bursts out of \the [src]!"))
 	..()
 
 /mob/living/carbon/attack_hand(mob/M as mob)
@@ -123,6 +172,8 @@
 		if(31 to INFINITY)
 			Weaken(10) //This should work for now, more is really silly and makes you lay there forever
 
+	make_jittery(min(shock_damage*5, 200))
+
 	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 	s.set_up(5, 1, loc)
 	s.start()
@@ -142,7 +193,7 @@
 	return
 
 /mob/living/carbon/swap_hand()
-	src.hand = !( src.hand )
+	hand = !hand
 	if(hud_used.l_hand_hud_object && hud_used.r_hand_hud_object)
 		if(hand)	//This being 1 means the left hand is in use
 			hud_used.l_hand_hud_object.icon_state = "l_hand_active"
@@ -150,7 +201,9 @@
 		else
 			hud_used.l_hand_hud_object.icon_state = "l_hand_inactive"
 			hud_used.r_hand_hud_object.icon_state = "r_hand_active"
-	return
+	var/obj/item/I = get_active_hand()
+	if(istype(I))
+		I.on_active_hand()
 
 /mob/living/carbon/proc/activate_hand(var/selhand) //0 or "r" or "right" for right hand; 1 or "l" or "left" for left hand.
 
@@ -203,11 +256,12 @@
 			var/show_ssd
 			var/mob/living/carbon/human/H = src
 			if(istype(H)) show_ssd = H.species.show_ssd
-			if(show_ssd && !client && !teleop)
+			if(show_ssd && ssd_check())
 				M.visible_message("<span class='notice'>[M] shakes [src] trying to wake [t_him] up!</span>", \
 				"<span class='notice'>You shake [src], but they do not respond... Maybe they have S.S.D?</span>")
-			else if(lying || src.sleeping)
-				src.sleeping = max(0,src.sleeping-5)
+			else if(lying || src.sleeping || player_triggered_sleeping)
+				src.player_triggered_sleeping = 0
+				src.sleeping = max(0,src.sleeping - 5)
 				if(src.sleeping == 0)
 					src.resting = 0
 				M.visible_message("<span class='notice'>[M] shakes [src] trying to wake [t_him] up!</span>", \
@@ -231,9 +285,6 @@
 				AdjustWeakened(-3)
 
 			playsound(src.loc, 'sound/weapons/thudswoosh.ogg', 50, 1, -1)
-
-/mob/living/carbon/proc/eyecheck()
-	return 0
 
 /mob/living/carbon/flash_eyes(intensity = FLASH_PROTECTION_MODERATE, override_blindness_check = FALSE, affect_silicon = FALSE, visual = FALSE, type = /obj/screen/fullscreen/flash)
 	if(eyecheck() < intensity || override_blindness_check)
@@ -271,7 +322,7 @@
 
 /mob/living/carbon/throw_item(atom/target)
 	src.throw_mode_off()
-	if(usr.stat || !target)
+	if(src.stat || !target)
 		return
 	if(target.type == /obj/screen) return
 
@@ -292,7 +343,7 @@
 			itemsize = round(M.mob_size/4)
 			var/turf/start_T = get_turf(loc) //Get the start and target tile for the descriptors
 			var/turf/end_T = get_turf(target)
-			if(start_T && end_T)
+			if(start_T && end_T && usr == src)
 				var/start_T_descriptor = "<font color='#6b5d00'>[start_T] \[[start_T.x],[start_T.y],[start_T.z]\] ([start_T.loc])</font>"
 				var/end_T_descriptor = "<font color='#6b4400'>[start_T] \[[end_T.x],[end_T.y],[end_T.z]\] ([end_T.loc])</font>"
 				admin_attack_log(usr, M, "Threw the victim from [start_T_descriptor] to [end_T_descriptor].", "Was from [start_T_descriptor] to [end_T_descriptor].", "threw, from [start_T_descriptor] to [end_T_descriptor], ")
@@ -301,27 +352,34 @@
 		var/obj/item/I = item
 		itemsize = I.w_class
 
-	src.drop_from_inventory(item)
+	if(!unEquip(item))
+		return
 	if(!item || !isturf(item.loc))
 		return
+
+	var/message = "\The [src] has thrown \the [item]."
+	var/skill_mod = 0.2
+	if(!skill_check(SKILL_HAULING, min(round(itemsize - ITEM_SIZE_HUGE) + 2, SKILL_MAX)))
+		if(prob(30))
+			Weaken(2)
+			message = "\The [src] barely manages to throw \the [item], and is knocked off-balance!"
+	else
+		skill_mod += 0.2
+
+	skill_mod += 0.8 * (get_skill_value(SKILL_HAULING) - SKILL_MIN)/(SKILL_MAX - SKILL_MIN)
+	throw_range *= skill_mod
+
 	//actually throw it!
-	src.visible_message("<span class='warning'>[src] has thrown [item].</span>", range = min(itemsize*2,world.view))
+	src.visible_message("<span class='warning'>[message]</span>", range = min(itemsize*2,world.view))
 
 	if(!src.lastarea)
 		src.lastarea = get_area(src.loc)
 	if((istype(src.loc, /turf/space)) || (src.lastarea.has_gravity == 0))
-		src.inertia_dir = get_dir(target, src)
-		step(src, inertia_dir)
+		if(prob((itemsize * itemsize * 10) * MOB_MEDIUM/src.mob_size))
+			src.inertia_dir = get_dir(target, src)
+			step(src, inertia_dir)
 
-
-/*
-	if(istype(src.loc, /turf/space) || (src.flags & NOGRAV)) //they're in space, move em one space in the opposite direction
-		src.inertia_dir = get_dir(target, src)
-		step(src, inertia_dir)
-*/
-
-
-	item.throw_at(target, throw_range, item.throw_speed, src)
+	item.throw_at(target, throw_range, item.throw_speed * skill_mod, src)
 
 /mob/living/carbon/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)
 	..()
@@ -357,11 +415,8 @@
 	set name = "Sleep"
 	set category = "IC"
 
-	if(usr.sleeping)
-		to_chat(usr, "<span class='warning'>You are already sleeping</span>")
-		return
-	if(alert(src,"You sure you want to sleep for a while?","Sleep","Yes","No") == "Yes")
-		usr.sleeping = 20 //Short nap
+	if(alert("Are you sure you want to [player_triggered_sleeping ? "wake up?" : "sleep for a while? Use 'sleep' again to wake up"]", "Sleep", "No", "Yes") == "Yes")
+		player_triggered_sleeping = !player_triggered_sleeping
 
 /mob/living/carbon/Bump(var/atom/movable/AM, yes)
 	if(now_pushing || !yes)
@@ -395,10 +450,6 @@
 	if(default_language && can_speak(default_language))
 		return default_language
 
-	if(!species)
-		return null
-	return species.default_language ? all_languages[species.default_language] : null
-
 /mob/living/carbon/show_inv(mob/user as mob)
 	user.set_machine(src)
 	var/dat = {"
@@ -421,21 +472,8 @@
  *  Return FALSE if victim can't be devoured, DEVOUR_FAST if they can be devoured quickly, DEVOUR_SLOW for slow devour
  */
 /mob/living/carbon/proc/can_devour(atom/movable/victim)
-	if((FAT in mutations) && issmall(victim))
-		return DEVOUR_FAST
-
 	return FALSE
 
-/mob/living/carbon/onDropInto(var/atom/movable/AM)
-	for(var/e in stomach_contents)
-		var/atom/movable/stomach_content = e
-		if(stomach_content.contains(AM))
-			if(can_devour(AM))
-				stomach_contents += AM
-				return null
-			src.visible_message("<span class='warning'>\The [src] regurgitates \the [AM]!</span>")
-			return loc
-	return ..()
 /mob/living/carbon/proc/should_have_organ(var/organ_check)
 	return 0
 
@@ -455,17 +493,15 @@
 	// behavior of this proc for humans is overridden in human.dm
 	return 1
 
+/mob/living/carbon/proc/check_mouth_coverage()
+	// carbon mobs do not have blocked mouths by default
+	// overridden in human_defense.dm
+	return null
+
 /mob/living/carbon/proc/SetStasis(var/factor, var/source = "misc")
 	if((species && (species.species_flags & SPECIES_FLAG_NO_SCAN)) || isSynthetic())
 		return
 	stasis_sources[source] = factor
-
-/mob/living/carbon/proc/GetStasis()
-	if((species && (species.species_flags & SPECIES_FLAG_NO_SCAN)) || isSynthetic())
-		return 0
-	. = 0
-	for(var/source in stasis_sources)
-		. += stasis_sources[source]
 
 /mob/living/carbon/proc/InStasis()
 	if(!stasis_value)
@@ -483,3 +519,9 @@
 
 /mob/living/carbon/has_chem_effect(chem, threshold)
 	return (chem_effects[chem] >= threshold)
+
+/mob/living/carbon/get_sex()
+	return species.get_sex(src)
+
+/mob/living/carbon/proc/get_ingested_reagents()
+	return reagents

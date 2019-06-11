@@ -13,18 +13,21 @@
 	mass = 0.1
 	var/obj/item/weapon/reagent_containers/syringe/syringe
 
-/obj/item/weapon/syringe_cartridge/update_icon()
+/obj/item/weapon/syringe_cartridge/New()
+	..()
+	ADD_SAVED_VAR(syringe)
+	ADD_SKIP_EMPTY(syringe)
+
+/obj/item/weapon/syringe_cartridge/on_update_icon()
 	underlays.Cut()
 	if(syringe)
 		underlays += image(syringe.icon, src, syringe.icon_state)
 		underlays += syringe.filling
 
 /obj/item/weapon/syringe_cartridge/attackby(obj/item/I, mob/user)
-	if(istype(I, /obj/item/weapon/reagent_containers/syringe))
+	if(istype(I, /obj/item/weapon/reagent_containers/syringe) && user.unEquip(I, src))
 		syringe = I
 		to_chat(user, "<span class='notice'>You carefully insert [syringe] into [src].</span>")
-		user.remove_from_mob(syringe)
-		syringe.loc = src
 		sharpness = 1
 		name = "syringe dart"
 		update_icon()
@@ -35,7 +38,7 @@
 		user.put_in_hands(syringe)
 		syringe = null
 		sharpness = initial(sharpness)
-		name = initial(name)
+		SetName(initial(name))
 		update_icon()
 
 /obj/item/weapon/syringe_cartridge/proc/prime()
@@ -64,7 +67,8 @@
 
 /obj/item/weapon/gun/launcher/syringe
 	name = "syringe gun"
-	desc = "A spring loaded rifle designed to fit syringe cartridges and to incapacitate unruly patients from a distance."
+	desc = "A spring loaded rifle designed to fit syringes, designed to incapacitate unruly patients from a distance."
+	icon = 'icons/obj/guns/syringegun.dmi'
 	icon_state = "syringegun"
 	item_state = "syringegun"
 	w_class = ITEM_SIZE_LARGE
@@ -82,6 +86,14 @@
 	var/list/darts = list()
 	var/max_darts = 1
 	var/obj/item/weapon/syringe_cartridge/next
+
+/obj/item/weapon/gun/launcher/syringe/New()
+	..()
+	ADD_SAVED_VAR(next)
+	ADD_SAVED_VAR(darts)
+
+	ADD_SKIP_EMPTY(next)
+	ADD_SKIP_EMPTY(darts)
 
 /obj/item/weapon/gun/launcher/syringe/consume_next_projectile()
 	if(next)
@@ -125,8 +137,8 @@
 		if(darts.len >= max_darts)
 			to_chat(user, "<span class='warning'>[src] is full!</span>")
 			return
-		user.remove_from_mob(C)
-		C.loc = src
+		if(!user.unEquip(C, src))
+			return
 		darts += C //add to the end
 		user.visible_message("[user] inserts \a [C] into [src].", "<span class='notice'>You insert \a [C] into [src].</span>")
 	else

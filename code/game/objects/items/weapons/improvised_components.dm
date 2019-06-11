@@ -9,7 +9,7 @@
 /obj/item/weapon/material/butterflyconstruction/attackby(obj/item/W as obj, mob/user as mob)
 	if(isScrewdriver(W))
 		to_chat(user, "You finish the concealed blade weapon.")
-		user.put_in_hands(new /obj/item/weapon/material/butterfly(user.loc, material.name))
+		user.put_in_hands(new /obj/item/weapon/material/knife/folding/combat/balisong(user.loc, material.name))
 		qdel(src)
 		return
 
@@ -64,8 +64,6 @@
 		finished = new /obj/item/weapon/melee/baton/cattleprod(get_turf(user))
 		to_chat(user, "<span class='notice'>You fasten the wirecutters to the top of the rod with the cable, prongs outward.</span>")
 	if(finished)
-		user.drop_from_inventory(src)
-		user.drop_from_inventory(I)
 		qdel(I)
 		qdel(src)
 		user.put_in_hands(finished)

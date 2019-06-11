@@ -47,6 +47,7 @@
 	name = "fake moustache"
 	desc = "Warning: moustache is fake."
 	icon_state = "fake-moustache"
+	item_state = "fake-moustache"
 	flags_inv = HIDEFACE
 	body_parts_covered = 0
 	visible_name = "Scoundrel"
@@ -55,6 +56,7 @@
 	name = "Snorkel"
 	desc = "For the Swimming Savant."
 	icon_state = "snorkel"
+	item_state = "snorkel"
 	flags_inv = HIDEFACE
 	body_parts_covered = 0
 
@@ -196,7 +198,7 @@
 
 /obj/item/clothing/mask/rubber/trasen
 	name = "Jack Trasen mask"
-	desc = "CEO of Nanotrasen corporation. Perfect for scaring the unionizing children."
+	desc = "CEO of NanoTrasen corporation. Perfect for scaring the unionizing children."
 	icon_state = "trasen"
 	visible_name = "Jack Trasen"
 
@@ -229,7 +231,9 @@
 	visible_name = species
 	var/datum/species/S = all_species[species]
 	if(istype(S))
-		visible_name = S.get_random_name(pick(MALE,FEMALE))
+		var/decl/cultural_info/C = SSculture.get_culture(S.default_cultural_info[TAG_CULTURE])
+		if(istype(C))
+			visible_name = C.get_random_name(pick(MALE,FEMALE))
 
 /obj/item/clothing/mask/rubber/species/cat
 	name = "cat mask"
@@ -255,3 +259,76 @@
 	item_state = "spirit_mask"
 	flags_inv = HIDEFACE
 	body_parts_covered = FACE|EYES
+
+// Bandanas below
+/obj/item/clothing/mask/bandana
+	name = "black bandana"
+	desc = "A fine bandana with nanotech lining. Can be worn on the head or face."
+	flags_inv = HIDEFACE
+	slot_flags = SLOT_MASK|SLOT_HEAD
+	body_parts_covered = FACE
+	icon_state = "bandblack"
+	item_state = "bandblack"
+	item_flags = ITEM_FLAG_FLEXIBLEMATERIAL
+	w_class = ITEM_SIZE_SMALL
+
+/obj/item/clothing/mask/bandana/equipped(var/mob/user, var/slot)
+	switch(slot)
+		if(slot_wear_mask) //Mask is the default for all the settings
+			flags_inv = initial(flags_inv)
+			body_parts_covered = initial(body_parts_covered)
+			icon_state = initial(icon_state)
+		if(slot_head)
+			flags_inv = 0
+			body_parts_covered = HEAD
+			icon_state = "[initial(icon_state)]_up"
+			sprite_sheets = list()
+
+	return ..()
+
+/obj/item/clothing/mask/bandana/red
+	name = "red bandana"
+	icon_state = "bandred"
+	item_state = "bandred"
+
+/obj/item/clothing/mask/bandana/blue
+	name = "blue bandana"
+	icon_state = "bandblue"
+	item_state = "bandblue"
+
+/obj/item/clothing/mask/bandana/green
+	name = "green bandana"
+	icon_state = "bandgreen"
+	item_state = "bandgreen"
+
+/obj/item/clothing/mask/bandana/gold
+	name = "gold bandana"
+	icon_state = "bandgold"
+	item_state = "bandgold"
+
+/obj/item/clothing/mask/bandana/orange
+	name = "orange bandana"
+	icon_state = "bandorange"
+	item_state = "bandorange"
+
+/obj/item/clothing/mask/bandana/purple
+	name = "purple bandana"
+	icon_state = "bandpurple"
+	item_state = "bandpurple"
+
+/obj/item/clothing/mask/bandana/botany
+	name = "botany bandana"
+	icon_state = "bandbotany"
+	item_state = "bandbotany"
+
+/obj/item/clothing/mask/bandana/camo
+	name = "camo bandana"
+	icon_state = "bandcamo"
+	item_state = "bandcamo"
+
+/obj/item/clothing/mask/bandana/skull
+	name = "skull bandana"
+	desc = "A fine black bandana with nanotech lining and a skull emblem. Can be worn on the head or face."
+	icon_state = "bandskull"
+	item_state = "bandskull"
+

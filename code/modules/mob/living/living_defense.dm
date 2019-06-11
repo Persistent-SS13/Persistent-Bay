@@ -1,63 +1,25 @@
+/mob/living/proc/modify_damage_by_armor(def_zone, damage, damage_type, damage_flags, mob/living/victim, armor_pen, silent = FALSE)
+	var/list/armors = get_armors_by_zone(def_zone, damage_type, damage_flags)
+	. = args.Copy(2)
+	for(var/armor in armors)
+		var/datum/extension/armor/armor_datum = armor
+		. = armor_datum.apply_damage_modifications(arglist(.))
 
-/*
-	run_armor_check() args
-	def_zone - What part is getting hit, if null will check entire body
-	attack_flag - The type of armour to be checked
-	armour_pen - reduces the effectiveness of armour
-	absorb_text - shown if the armor check is 100% successful
-	soften_text - shown if the armor check is more than 0% successful and less than 100%
+/mob/living/proc/get_blocked_ratio(def_zone, damage_type, damage_flags, armor_pen)
+	var/list/armors = get_armors_by_zone(def_zone, damage_type, damage_flags)
+	. = 0
+	for(var/armor in armors)
+		var/datum/extension/armor/armor_datum = armor
+		. = 1 - (1 - .) * (1 - armor_datum.get_blocked(damage_type, damage_flags, armor_pen)) // multiply the amount we let through
+	. = min(1, .)
 
-	Returns
-	a blocked amount between 0 - 100, representing the success of the armor check.
-*/
-/mob/living/proc/run_armor_check(var/def_zone = null, var/attack_flag = DAM_BLUNT, var/armour_pen = 0, var/absorb_text = null, var/soften_text = null)
-	if(armour_pen >= 100)
-		return 0 //might as well just skip the processing
-
-	var/armor = getarmor(def_zone, attack_flag)
-
-	if(armour_pen >= armor)
-		return 0 //effective_armor is going to be 0, fullblock is going to be 0, blocked is going to 0, let's save ourselves the trouble
-
-	var/effective_armor = (armor - armour_pen)/100
-	var/fullblock = (effective_armor*effective_armor) * ARMOR_BLOCK_CHANCE_MULT
-
-	if(fullblock >= 1 || prob(fullblock*100))
-		if(absorb_text)
-			show_message("<span class='warning'>[absorb_text]</span>")
-		else
-			show_message("<span class='warning'>Your armor absorbs the blow!</span>")
-		return 100
-
-	//this makes it so that X armour blocks X% damage, when including the chance of hard block.
-	//I double checked and this formula will also ensure that a higher effective_armor
-	//will always result in higher (non-fullblock) damage absorption too, which is also a nice property
-	//In particular, blocked will increase from 0 to 50 as effective_armor increases from 0 to 0.999 (if it is 1 then we never get here because ofc)
-	//and the average damage absorption = (blocked/100)*(1-fullblock) + 1.0*(fullblock) = effective_armor
-	var/blocked = (effective_armor - fullblock)/(1 - fullblock)*100
-
-	if(blocked > 20)
-		//Should we show this every single time?
-		if(soften_text)
-			show_message("<span class='warning'>[soften_text]</span>")
-		else
-			show_message("<span class='warning'>Your armor softens the blow!</span>")
-
-	return round(blocked, 1)
-
-//Adds two armor values together.
-//If armor_a and armor_b are between 0-100 the result will always also be between 0-100.
-/proc/add_armor(var/armor_a, var/armor_b)
-	if(armor_a >= 100 || armor_b >= 100)
-		return 100 //adding to infinite protection doesn't make it any bigger
-
-	var/protection_a = 1/(blocked_mult(armor_a)) - 1
-	var/protection_b = 1/(blocked_mult(armor_b)) - 1
-	return 100 - 1/(protection_a + protection_b + 1)*100
-
-//if null is passed for def_zone, then this should return something appropriate for all zones (e.g. area effect damage)
-/mob/living/proc/getarmor(var/def_zone, var/type)
-	return 0
+/mob/living/proc/get_armors_by_zone(def_zone, damage_type, damage_flags)
+	. = list()
+	var/natural_armor = get_extension(src, /datum/extension/armor)
+	if(natural_armor)
+		. += natural_armor
+	if(psi)
+		. += get_extension(psi, /datum/extension/armor)
 
 /mob/living/bullet_act(var/obj/item/projectile/P, var/def_zone)
 
@@ -75,18 +37,36 @@
 
 	//Armor
 	var/damage = P.force
-	var/absorb = run_armor_check(def_zone, P.damtype, P.armor_penetration)
-	var/damtype = HandleArmorDamTypeConversion(P.damtype, absorb)
-	if (prob(absorb) && ISDAMTYPE(damtype, DAM_LASER))
-		//the armour causes the heat energy to spread out, which reduces the damage (and the blood loss)
-		//this is mostly so that armour doesn't cause people to lose MORE fluid from lasers than they would otherwise
-		damage *= FLUIDLOSS_CONC_BURN/FLUIDLOSS_WIDE_BURN
-
+	var/flags = P.damage_flags()
+	var/damaged
 	if(!P.nodamage)
-		apply_damage(damage, damtype, def_zone, absorb, 0, used_weapon = P)
-	P.on_hit(src, absorb, def_zone)
+		damaged = apply_damage(damage, P.damtype, def_zone, flags, P, P.armor_penetration)
+	if(damaged || P.nodamage) // Run the block computation if we did damage or if we only use armor for effects (nodamage)
+		. = get_blocked_ratio(def_zone, P.damtype, flags, P.armor_penetration)
+	P.on_hit(src, ., def_zone)
 
-	return absorb
+/mob/living/proc/aura_check(var/type)
+	if(!auras)
+		return TRUE
+	. = TRUE
+	var/list/newargs = args - args[1]
+	for(var/a in auras)
+		var/obj/aura/aura = a
+		var/result = 0
+		switch(type)
+			if(AURA_TYPE_WEAPON)
+				result = aura.attackby(arglist(newargs))
+			if(AURA_TYPE_BULLET)
+				result = aura.bullet_act(arglist(newargs))
+			if(AURA_TYPE_THROWN)
+				result = aura.hitby(arglist(newargs))
+			if(AURA_TYPE_LIFE)
+				result = aura.life_tick()
+		if(result & AURA_FALSE)
+			. = FALSE
+		if(result & AURA_CANCEL)
+			break
+
 
 //Handles the effects of "stun" weapons
 /mob/living/proc/stun_effect_act(var/stun_amount, var/agony_amount, var/def_zone, var/used_weapon=null)
@@ -95,13 +75,13 @@
 	if (stun_amount)
 		Stun(stun_amount)
 		Weaken(stun_amount)
-		apply_effect(STUTTER, stun_amount)
-		apply_effect(EYE_BLUR, stun_amount)
+		apply_effect(stun_amount, STUTTER)
+		apply_effect(stun_amount, EYE_BLUR)
 
 	if (agony_amount)
-		apply_damage(agony_amount, DAM_PAIN, def_zone, 0, used_weapon)
-		apply_effect(STUTTER, agony_amount/10)
-		apply_effect(EYE_BLUR, agony_amount/10)
+		apply_damage(agony_amount, DAM_PAIN, def_zone, used_weapon = used_weapon)
+		apply_effect(agony_amount/10, STUTTER)
+		apply_effect(agony_amount/10, EYE_BLUR)
 
 /mob/living/proc/electrocute_act(var/shock_damage, var/obj/source, var/siemens_coeff = 1.0)
 	  return 0 //only carbon liveforms have this proc
@@ -118,32 +98,30 @@
 //Called when the mob is hit with an item in combat. Returns the blocked result
 /mob/living/hit_with_weapon(obj/item/I, mob/living/user, var/effective_force, var/hit_zone)
 	..()
-	var/blocked = run_armor_check(hit_zone, I.damtype, istype(I)? I.armor_penetration : 0)
-	standard_weapon_hit_effects(I, user, effective_force, blocked, hit_zone)
+	. = standard_weapon_hit_effects(I, user, effective_force, hit_zone)
 
 	if(IsDamageTypeBrute(I.damtype) && prob(33)) // Added blood for whacking non-humans too
 		var/turf/simulated/location = get_turf(src)
 		if(istype(location)) location.add_blood_floor(src)
 
-	return blocked
-
 //returns 0 if the effects failed to apply for some reason, 1 otherwise.
-/mob/living/proc/standard_weapon_hit_effects(obj/item/I, mob/living/user, var/effective_force, var/blocked, var/hit_zone)
-	if(!effective_force || blocked >= 100)
+/mob/living/proc/standard_weapon_hit_effects(obj/item/I, mob/living/user, var/effective_force, var/hit_zone)
+	if(!effective_force)
 		return 0
 
 	//Hulk modifier
-	if(HULK in user.mutations)
+	if(MUTATION_HULK in user.mutations)
 		effective_force *= 2
 
 	//Apply weapon damage
-	var/damtype = HandleArmorDamTypeConversion(I.damtype, blocked) //armour provides a chance to turn sharp/edge weapon attacks into blunt ones
-	apply_damage(effective_force, damtype, hit_zone, blocked, used_weapon=I)
+	var/damage_flags = I.damage_flags()
 
-	return 1
+	return apply_damage(effective_force, I.damtype, hit_zone, damage_flags, used_weapon=I)
 
 //this proc handles being hit by a thrown atom
 /mob/living/hitby(atom/movable/AM as mob|obj,var/speed = THROWFORCE_SPEED_DIVISOR)//Standardization and logging -Sieve
+	if(!aura_check(AURA_TYPE_THROWN, AM, speed))
+		return
 	if(istype(AM,/obj/))
 		var/obj/O = AM
 		var/dtype = O.damtype
@@ -159,10 +137,7 @@
 			return
 
 		src.visible_message("<span class='warning'>\The [src] has been hit by \the [O]</span>.")
-		var/armor = run_armor_check(null, dtype)
-		if(armor < 100)
-			dtype = HandleArmorDamTypeConversion(dtype, armor)
-			apply_damage(throw_damage, dtype, null, armor, 0, used_weapon = O)
+		apply_damage(throw_damage, dtype, null, O.damage_flags(), used_weapon = O)
 
 		O.throwing = 0		//it hit, so stop moving
 
@@ -187,20 +162,20 @@
 
 			if(!O || !src) return
 
-			if(O.sharpness || ISDAMTYPE(O.damtype, DAM_PIERCE) ) //Projectile is suitable for pinning.
+			if(O.can_embed()) //Projectile is suitable for pinning.
 				//Handles embedding for non-humans and simple_animals.
 				embed(O)
 
 				var/turf/T = near_wall(dir,2)
 
 				if(T)
-					src.loc = T
+					forceMove(T)
 					visible_message("<span class='warning'>[src] is pinned to the wall by [O]!</span>","<span class='warning'>You are pinned to the wall by [O]!</span>")
 					src.anchored = 1
 					src.pinned += O
 
 /mob/living/proc/embed(var/obj/O, var/def_zone=null, var/datum/wound/supplied_wound)
-	O.loc = src
+	O.forceMove(src)
 	src.embedded += O
 	src.verbs += /mob/proc/yank_out_object
 
@@ -216,7 +191,7 @@
 	var/i = 1
 
 	while(i>0 && i<=distance)
-		if(T.density) //Turf is a wall!
+		if(!T || T.density) //Turf is a wall or map edge.
 			return last_turf
 		i++
 		last_turf = T
@@ -234,24 +209,22 @@
 	//adjustBruteLoss(damage)
 	admin_attack_log(user, src, "Attacked", "Was attacked", "attacked")
 
-	src.visible_message("<span class='danger'>[user] has [attack_message] [src]!</span>")
+	src.visible_message("<span class='danger'>\The [user] has [attack_message] \the [src]!</span>")
 	user.do_attack_animation(src)
-	//spawn(1)
-	//	updatehealth()
 	apply_damage(damage, DAM_BLUNT)
 	return 1
 
 /mob/living/proc/IgniteMob()
 	if(fire_stacks > 0 && !on_fire)
 		on_fire = 1
-		set_light(light_range + 3)
+		set_light(0.6, 0.1, 4, l_color = COLOR_ORANGE)
 		update_fire()
 
 /mob/living/proc/ExtinguishMob()
 	if(on_fire)
 		on_fire = 0
 		fire_stacks = 0
-		set_light(max(0, light_range - 3))
+		set_light(0)
 		update_fire()
 
 /mob/living/proc/update_fire()
@@ -280,10 +253,10 @@
 	var/turf/location = get_turf(src)
 	location.hotspot_expose(fire_burn_temperature(), 50, 1)
 
-/mob/living/fire_act(datum/gas_mixture/air, temperature, volume)
+/mob/living/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)
 	//once our fire_burn_temperature has reached the temperature of the fire that's giving fire_stacks, stop adding them.
 	//allow fire_stacks to go up to 4 for fires cooler than 700 K, since are being immersed in flame after all.
-	if(fire_stacks <= 4 || fire_burn_temperature() < temperature)
+	if(fire_stacks <= 4 || fire_burn_temperature() < exposed_temperature)
 		adjust_fire_stacks(2)
 	IgniteMob()
 
@@ -313,18 +286,25 @@
 	for(var/obj/item/I in src)
 		if(I.action_button_name)
 			if(!I.action)
-				if(I.action_button_is_hands_free)
-					I.action = new/datum/action/item_action/hands_free
-				else
-					I.action = new/datum/action/item_action
-				I.action.name = I.action_button_name
-				I.action.target = I
-				if(I.action_button_icon)
-					I.action.icon_override = I.action_button_icon
-					I.action.override_state = I.action_button_state
-
+				I.action = new I.default_action_type
+			I.action.name = I.action_button_name
+			I.action.SetTarget(I)
 			I.action.Grant(src)
 	return
+
+
+//				if(I.action_button_is_hands_free)
+//					I.action = new/datum/action/item_action/hands_free
+//				else
+//					I.action = new/datum/action/item_action
+//				I.action.name = I.action_button_name
+//				I.action.SetTarget(I)
+//				if(I.action_button_icon)
+//					I.action.icon_override = I.action_button_icon
+//					I.action.override_state = I.action_button_state
+//
+//			I.action.Grant(src)
+//	return
 
 /mob/living/update_action_buttons()
 	if(!hud_used) return
@@ -333,10 +313,10 @@
 	if(hud_used.hud_shown != 1)	//Hud toggled to minimal
 		return
 
-//	client.screen -= hud_used.hide_actions_toggle
-//	for(var/datum/action/A in actions)
-//		if(A.button)
-//			client.screen -= A.button
+	client.screen -= hud_used.hide_actions_toggle
+	for(var/datum/action/A in actions)
+		if(A.button)
+			client.screen -= A.button
 
 	if(hud_used.action_buttons_hidden)
 		if(!hud_used.hide_actions_toggle)
@@ -362,7 +342,7 @@
 
 		B.UpdateIcon()
 
-		B.name = A.UpdateName()
+		B.SetName(A.UpdateName())
 
 		client.screen += B
 
@@ -378,3 +358,35 @@
 			hud_used.hide_actions_toggle.screen_loc = hud_used.ButtonNumberToScreenCoords(button_number+1)
 			//hud_used.SetButtonCoords(hud_used.hide_actions_toggle,button_number+1)
 		client.screen += hud_used.hide_actions_toggle
+
+/mob/living/lava_act(datum/gas_mixture/air, temperature, pressure)
+	fire_act(air, temperature)
+	FireBurn(0.4*vsc.fire_firelevel_multiplier, temperature, pressure)
+	. =  (health <= 0) ? ..() : FALSE
+
+//Convenience proc to handle adding health to the object
+/mob/living/proc/add_health(var/addhealth)
+	set_health(addhealth + get_health())
+
+//Convenience proc to handle removing health from the object
+/mob/living/proc/rem_health(var/remhealth)
+	set_health(get_health() - remhealth)
+
+//Directly sets health, without updating object state
+/mob/living/proc/set_health(var/newhealth)
+	health = between(minHealth, round(newhealth, 0.1), get_max_health()) //round(max(0, min(newhealth, max_health)), 0.1)
+	update_health()
+
+
+
+/mob/living/proc/update_health()
+	return
+
+/mob/living/proc/get_health()
+	return health
+
+/mob/living/proc/get_max_health()
+	return maxHealth
+
+/mob/living/proc/get_min_health()
+	return minHealth

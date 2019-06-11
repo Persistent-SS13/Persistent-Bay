@@ -55,10 +55,10 @@
 	switch(dir)
 		if(NORTH)
 			src.pixel_x = 0
-			src.pixel_y = -30
+			src.pixel_y = -24
 		if(SOUTH)
 			src.pixel_x = 0
-			src.pixel_y = 30
+			src.pixel_y = 28
 		if(EAST)
 			src.pixel_x = -30
 			src.pixel_y = 0
@@ -175,7 +175,7 @@
 	var/decl/security_level/sl = security_state.current_security_level
 
 	var/image/alert = image(sl.icon, sl.overlay_status_display)
-	set_light(l_range = sl.light_outer_range, l_power = sl.light_max_bright, l_color = sl.light_color_status_display)
+	set_light(sl.light_max_bright, sl.light_inner_range, sl.light_outer_range, 2, sl.light_color_alarm)
 	overlays |= alert
 
 /obj/machinery/status_display/proc/set_picture(state)
@@ -184,13 +184,13 @@
 		picture_state = state
 		picture = image(icon, icon_state=picture_state)
 	overlays |= picture
-	set_light(1.5, 1, COLOR_WHITE)
+	set_light(0.5, 0.1, 1, 2, COLOR_WHITE)
 
 /obj/machinery/status_display/proc/update_display(line1, line2)
 	var/new_text = {"<div [SD_TEXT_STYLE]>[line1]<br>[line2]</div>"}
 	if(maptext != new_text)
 		maptext = new_text
-	set_light(1.5, 1, COLOR_WHITE)
+	set_light(0.5, 0.1, 1, 2, COLOR_WHITE)
 
 /obj/machinery/status_display/proc/get_shuttle_timer()
 	var/timeleft = evacuation_controller.get_eta()
@@ -199,7 +199,7 @@
 	return "[add_zero(num2text((timeleft / 60) % 60),2)]:[add_zero(num2text(timeleft % 60), 2)]"
 
 /obj/machinery/status_display/proc/get_supply_shuttle_timer()
-	var/datum/shuttle/autodock/ferry/supply/shuttle = supply_controller.shuttle
+	var/datum/shuttle/autodock/ferry/supply/shuttle = SSsupply.shuttle
 	if (!shuttle)
 		return "Error"
 

@@ -4,12 +4,24 @@
 	item_flags = ITEM_FLAG_NO_PRINT
 	w_class = ITEM_SIZE_TINY
 	var/list/evidence = list()
+	var/object
 
 /obj/item/weapon/sample/New(var/newloc, var/atom/supplied)
-	..(newloc)
+	..()
+	ADD_SAVED_VAR(evidence)
+	ADD_SAVED_VAR(object)
+
+/obj/item/weapon/sample/Initialize(mapload, var/atom/supplied)
+	. = ..()
 	if(supplied)
 		copy_evidence(supplied)
 		name = "[initial(name)] (\the [supplied])"
+		object = "[supplied], [get_area(supplied)]"
+
+/obj/item/weapon/sample/examine(var/user)
+	. = ..(user, 1)
+	if(. && object)
+		to_chat(user, "The label says: '[object]'")
 
 /obj/item/weapon/sample/print/New(var/newloc, var/atom/supplied)
 	..(newloc, supplied)
@@ -25,7 +37,8 @@
 	if(!supplied.evidence || !supplied.evidence.len)
 		return 0
 	evidence |= supplied.evidence
-	name = "[initial(name)] (combined)"
+	SetName("[initial(name)] (combined)")
+	object = supplied.object + ", " + object
 	to_chat(user, "<span class='notice'>You transfer the contents of \the [supplied] into \the [src].</span>")
 	return 1
 
@@ -37,7 +50,8 @@
 			evidence[print] = stringmerge(evidence[print],supplied.evidence[print])
 		else
 			evidence[print] = supplied.evidence[print]
-	name = "[initial(name)] (combined)"
+	SetName("[initial(name)] (combined)")
+	object = supplied.object + ", " + object
 	to_chat(user, "<span class='notice'>You overlay \the [src] and \the [supplied], combining the print records.</span>")
 	return 1
 
@@ -47,8 +61,7 @@
 
 /obj/item/weapon/sample/attackby(var/obj/O, var/mob/user)
 	if(O.type == src.type)
-		user.unEquip(O)
-		if(merge_evidence(O, user))
+		if(user.unEquip(O) && merge_evidence(O, user))
 			qdel(O)
 		return 1
 	return ..()
@@ -78,7 +91,7 @@
 	to_chat(user, "<span class='notice'>You firmly press your fingertips onto the card.</span>")
 	var/fullprint = H.get_full_print()
 	evidence[fullprint] = fullprint
-	name = "[initial(name)] (\the [H])"
+	SetName("[initial(name)] (\the [H])")
 	icon_state = "fingerprint1"
 
 /obj/item/weapon/sample/print/attack(var/mob/living/M, var/mob/user)
@@ -115,7 +128,7 @@
 		var/fullprint = H.get_full_print()
 		evidence[fullprint] = fullprint
 		copy_evidence(src)
-		name = "[initial(name)] (\the [H])"
+		SetName("[initial(name)] (\the [H])")
 		icon_state = "fingerprint1"
 		return 1
 	return 0
@@ -147,13 +160,12 @@
 /obj/item/weapon/forensics/sample_kit/afterattack(var/atom/A, var/mob/user, var/proximity)
 	if(!proximity)
 		return
-	if(can_take_sample(user, A))
+	if(user.skill_check(SKILL_FORENSICS, SKILL_ADEPT) && can_take_sample(user, A))
 		take_sample(user,A)
 		. = 1
 	else
 		to_chat(user, "<span class='warning'>You are unable to locate any [evidence_type]s on \the [A].</span>")
 		. = ..()
-	A.add_fingerprint(user)
 
 /obj/item/weapon/forensics/sample_kit/MouseDrop(atom/over)
 	if(ismob(src.loc) && CanMouseDrop(over))
@@ -161,7 +173,7 @@
 
 /obj/item/weapon/forensics/sample_kit/powder
 	name = "fingerprint powder"
-	desc = "A jar containing aluminum powder and a specialized brush."
+	desc = "A jar containing alumiinum powder and a specialized brush."
 	icon_state = "dust"
 	evidence_type = "fingerprint"
 	evidence_path = /obj/item/weapon/sample/print

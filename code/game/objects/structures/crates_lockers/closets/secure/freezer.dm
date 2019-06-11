@@ -7,6 +7,7 @@
 
 /obj/structure/closet/secure_closet/freezer/meat
 	name = "meat fridge"
+	icon = 'icons/obj/closets/fridge.dmi'
 	closet_appearance = null
 
 /obj/structure/closet/secure_closet/freezer/fridge

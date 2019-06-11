@@ -1,3 +1,4 @@
+
 /obj/item/weapon/material/twohanded/baseballbat
 	name = "bat"
 	desc = "HOME RUN!"
@@ -8,16 +9,15 @@
 	throwforce = 7
 	attack_verb = list("smashed", "beaten", "slammed", "smacked", "struck", "battered", "bonked")
 	sound_hit = 'sound/weapons/genhit3.ogg'
-	default_material = MATERIAL_WOOD
+	default_material = MATERIAL_MAPLE
 	force_divisor = 1.1           // 22 when wielded with weight 20 (steel)
 	unwielded_force_divisor = 0.7 // 15 when unwielded based on above.
-	slot_flags = SLOT_BACK
-	damtype = DAM_BLUNT
-	mass = 2
+	attack_cooldown_modifier = 1
+	melee_accuracy_bonus = -10
 
 //Predefined materials go here.
 /obj/item/weapon/material/twohanded/baseballbat/metal/New(var/newloc)
-	..(newloc,MATERIAL_STEEL)
+	..(newloc,MATERIAL_ALUMINIUM)
 
 /obj/item/weapon/material/twohanded/baseballbat/uranium/New(var/newloc)
 	..(newloc,MATERIAL_URANIUM)

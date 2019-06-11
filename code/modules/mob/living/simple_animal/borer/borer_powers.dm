@@ -113,11 +113,11 @@ GLOBAL_LIST_INIT(borer_reagent_types_by_name, setup_borer_reagents())
 
 		src.host = M
 		src.host.status_flags |= PASSEMOTES
-		src.loc = M
+		src.forceMove(M)
 
 		//Update their traitor status.
-		if(host.mind)
-			borers.add_antagonist_mind(host.mind, 1, borers.faction_role_text, borers.faction_welcome)
+		// if(host.mind)
+		// 	GLOB.borers.add_antagonist_mind(host.mind, 1, borers.faction_role_text, borers.faction_welcome)
 
 		if(istype(M,/mob/living/carbon/human))
 			var/mob/living/carbon/human/H = M
@@ -315,7 +315,7 @@ GLOBAL_LIST_INIT(borer_reagent_types_by_name, setup_borer_reagents())
 
 			host_brain.ckey = host.ckey
 
-			host_brain.name = host.name
+			host_brain.SetName(host.name)
 
 			if(!host_brain.computer_id)
 				host_brain.computer_id = h2b_id

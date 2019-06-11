@@ -49,15 +49,15 @@
 /obj/item/weapon/material/sword/officersword/marine
 	name = "marine NCO's sword"
 	desc = "A polished sword issued to SCG Marine NCOs."
-	icon_state = "marinesword"
+	icon_state = "armysword"
 	damtype = DAM_CUT
 	mass = 2
 
 /obj/item/weapon/material/sword/officersword/marineofficer
 	name = "marine officer's sword"
 	desc = "A curved sword issued to SCG Marine officers."
-	icon_state = "marineofficersword"
-	item_state = "marineofficersword"
+	icon_state = "armyofficersword"
+	item_state = "armyofficersword"
 	damtype = DAM_CUT
 	mass = 2
 

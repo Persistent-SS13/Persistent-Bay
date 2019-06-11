@@ -44,8 +44,9 @@
 		return
 
 	if(istype(W, /obj/item/stack/tile))
+		if(!user.unEquip(W, T))
+			return
 		to_chat(user, "<span class='notice'>\The [W] successfully loaded.</span>")
-		user.drop_item(T)
 		TakeTile(T)
 		return
 
@@ -56,7 +57,7 @@
 			var/obj/item/stack/tile/E = input("Choose remove tile type.", "Tiles") as null|anything in contents
 			if(E)
 				to_chat(user, "<span class='notice'>You remove the [E] from /the [src].</span>")
-				E.loc = src.loc
+				E.dropInto(loc)
 				T = null
 		return
 
@@ -103,7 +104,7 @@
 
 /obj/machinery/floorlayer/proc/TakeTile(var/obj/item/stack/tile/tile)
 	if(!T)	T = tile
-	tile.loc = src
+	tile.forceMove(src)
 
 	SortStacks()
 

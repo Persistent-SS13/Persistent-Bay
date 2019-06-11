@@ -23,6 +23,17 @@
 	icon_state = "map_tvalve1"
 	state = 1
 
+/obj/machinery/atmospherics/tvalve/New()
+	. = ..()
+	ADD_SAVED_VAR(state)
+
+/obj/machinery/atmospherics/tvalve/Initialize()
+	. = ..()
+	if(state)
+		go_to_side() // 1
+	else
+		go_straight() // 2
+
 /obj/machinery/atmospherics/tvalve/Destroy()
 	loc = null
 
@@ -69,7 +80,7 @@
 				node3 = target
 				break
 
-	update_icon()
+	queue_icon_update()
 	update_underlays()
 
 /obj/machinery/atmospherics/tvalve/setup_initialize_directions()
@@ -83,7 +94,7 @@
 		if(WEST)
 			initialize_directions = EAST|WEST|NORTH
 
-/obj/machinery/atmospherics/tvalve/update_icon(animation)
+/obj/machinery/atmospherics/tvalve/on_update_icon(animation)
 	if(animation)
 		flick("tvalve[src.state][!src.state]",src)
 	else
@@ -288,7 +299,7 @@
 	icon_state = "map_tvalve1"
 	state = 1
 
-/obj/machinery/atmospherics/tvalve/digital/update_icon()
+/obj/machinery/atmospherics/tvalve/digital/on_update_icon()
 	..()
 	if(!powered())
 		icon_state = "tvalvenopower"
@@ -326,9 +337,9 @@
 /obj/machinery/atmospherics/tvalve/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
 	if(!isWrench(W))
 		return ..()
-	if (istype(src, /obj/machinery/atmospherics/tvalve/digital))
-		to_chat(user, "<span class='warning'>You cannot unwrench \the [src], it's too complicated.</span>")
-		return 1
+	// if (istype(src, /obj/machinery/atmospherics/tvalve/digital))
+	// 	to_chat(user, "<span class='warning'>You cannot unwrench \the [src], it's too complicated.</span>")
+	// 	return 1
 	var/datum/gas_mixture/int_air = return_air()
 	var/datum/gas_mixture/env_air = loc.return_air()
 	if ((int_air.return_pressure()-env_air.return_pressure()) > 2*ONE_ATMOSPHERE)
@@ -407,7 +418,7 @@
 	radio_filter_in 	= RADIO_ATMOSIA
 	radio_filter_out 	= RADIO_ATMOSIA
 	radio_check_id 		= TRUE
-	mirrored = TRUE
+	mirrored 			= TRUE
 
 /obj/machinery/atmospherics/tvalve/mirrored/digital/bypass
 	icon_state = "map_tvalvem1"

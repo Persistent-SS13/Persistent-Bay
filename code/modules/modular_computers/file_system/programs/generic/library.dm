@@ -11,10 +11,11 @@ The answer was five and a half years -ZeroBits
 	filedesc = "Library"
 	extended_desc = "This program can be used to view e-books from an external archive."
 	program_icon_state = "word"
+	program_key_state = "atmos_key"
 	program_menu_icon = "note"
 	size = 6
-	requires_ntnet = TRUE
-	available_on_ntnet = TRUE
+	requires_ntnet = 1
+	available_on_ntnet = 1
 
 	nanomodule_path = /datum/nano_module/library
 
@@ -93,7 +94,7 @@ The answer was five and a half years -ZeroBits
 			error_message = "Interface Error: Cached book is copy-protected."
 			return 1
 
-		B.name = input(usr, "Enter Book Title", "Title", B.name) as text|null
+		B.SetName(input(usr, "Enter Book Title", "Title", B.name) as text|null)
 		B.author = input(usr, "Enter Author Name", "Author", B.author) as text|null
 
 		if(!B.author)
@@ -143,7 +144,7 @@ The answer was five and a half years -ZeroBits
 			var/obj/machinery/bookbinder/bndr = locate(/obj/machinery/bookbinder, get_step(nano_host(), d))
 			if(bndr && bndr.anchored)
 				var/obj/item/weapon/book/B = new(bndr.loc)
-				B.name = current_book["title"]
+				B.SetName(current_book["title"])
 				B.title = current_book["title"]
 				B.author = current_book["author"]
 				B.dat = current_book["content"]

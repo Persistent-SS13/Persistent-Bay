@@ -4,6 +4,7 @@
 	icon_state = "analyser"
 	anchored = 1
 	density = 1
+	circuit_type = /obj/item/weapon/circuitboard/diseaseanalyser
 	var/scanning = FALSE
 	var/obj/item/weapon/virusdish/dish = null
 	var/time_scan_end
@@ -16,16 +17,6 @@
 
 	ADD_SKIP_EMPTY(dish)
 	ADD_SKIP_EMPTY(time_scan_end)
-
-/obj/machinery/disease2/diseaseanalyser/Initialize()
-	. = ..()
-	if(!map_storage_loaded)
-		component_parts = list()
-		component_parts += new /obj/item/weapon/circuitboard/diseaseanalyser(src)
-		component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
-		component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-		component_parts += new /obj/item/weapon/computer_hardware/hard_drive/portable(src)
-	RefreshParts()
 
 /obj/machinery/disease2/diseaseanalyser/before_save()
 	. = ..()
@@ -91,25 +82,38 @@
 		finish_scan()
 	return
 
+/obj/machinery/disease2/diseaseanalyser/proc/get_fake_effects()
+	. = list()
+	for(var/datum/disease2/effect/E in dish.virus2.effects)
+		if((operator_skill <= SKILL_BASIC && prob(60)) || (operator_skill == SKILL_ADEPT && prob(80)) || (operator_skill > SKILL_ADEPT))
+			. += E //Passed skill check, use real effect
+		else
+			. += get_random_virus2_effect(E.stage, VIRUS_ENGINEERED) //Failed check, get a fake effect
+
 /obj/machinery/disease2/diseaseanalyser/proc/finish_scan()
 	if(!dish || (dish && !dish.virus2))
 		return
 	if (dish.virus2.addToDB())
 		ping("\The [src] pings, \"New pathogen added to data bank.\"")
+	operator_skill = usr.get_skill_value(core_skill)
 
 	var/obj/item/weapon/paper/P = new /obj/item/weapon/paper(src.loc)
 	P.name = "paper - [dish.virus2.name()]"
 
-	var/r = dish.virus2.get_info()
-	P.info = {"
+	var/list/effects = get_fake_effects(dish.virus2)
+	var/r = dish.virus2.get_info(operator_skill, 1, effects)
+	var/title = "paper - [dish.virus2.name()]"
+	var/info = {"
 		[virology_letterhead("Post-Analysis Memo")]
 		[r]
 		<hr>
 		<u>Additional Notes:</u>&nbsp;
 "}
-	dish.basic_info = dish.virus2.get_basic_info()
+	new /obj/item/weapon/paper(loc, info, title)
+	dish.basic_info = dish.virus2.get_info(operator_skill, 0, effects)
 	dish.info = r
-	dish.name = "[initial(dish.name)] ([dish.virus2.name()])"
+	dish.SetName("[initial(dish.name)] ([dish.virus2.name()])")
 	dish.analysed = 1
 	eject_dish()
+	operator_skill = null
 	src.state("\The [src] prints a sheet of paper.")

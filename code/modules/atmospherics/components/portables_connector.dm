@@ -15,6 +15,11 @@
 	var/datum/pipe_network/network
 	var/on = FALSE
 
+/obj/machinery/atmospherics/portables_connector/New()
+	. = ..()
+	ADD_SAVED_VAR(connected_device)
+	ADD_SAVED_VAR(on)
+
 /obj/machinery/atmospherics/portables_connector/Destroy()
 	loc = null
 	if(connected_device)
@@ -46,7 +51,7 @@
 /obj/machinery/atmospherics/portables_connector/setup_initialize_directions()
 	initialize_directions = dir
 
-/obj/machinery/atmospherics/portables_connector/update_icon()
+/obj/machinery/atmospherics/portables_connector/on_update_icon()
 	icon_state = "connector"
 
 /obj/machinery/atmospherics/portables_connector/update_underlays()

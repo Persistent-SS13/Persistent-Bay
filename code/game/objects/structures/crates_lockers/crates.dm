@@ -1,7 +1,8 @@
 /obj/structure/closet/crate
 	name = "crate"
 	desc = "A rectangular steel crate."
-	atom_flags = ATOM_FLAG_CLIMBABLE
+	closet_appearance = /decl/closet_appearance/crate
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
 	setup = 0
 	storage_types = CLOSET_STORAGE_ITEMS
 	mass = 12
@@ -17,7 +18,6 @@
 		DAM_BOMB 	= 15,
 		DAM_EMP 	= 0)
 	matter = list(MATERIAL_STEEL = 2*SHEET_MATERIAL_AMOUNT)
-	closet_appearance = /decl/closet_appearance/crate
 	var/points_per_crate = 5
 	var/rigged = 0
 
@@ -46,7 +46,7 @@
 /obj/structure/closet/crate/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(opened)
 		return ..()
-	else if(istype(W, /obj/item/weapon/packageWrap))
+	else if(istype(W, /obj/item/stack/package_wrap))
 		return
 	else if(istype(W, /obj/item/stack/cable_coil))
 		var/obj/item/stack/cable_coil/C = W
@@ -59,9 +59,9 @@
 			return
 	else if(istype(W, /obj/item/device/assembly_holder) || istype(W, /obj/item/device/assembly))
 		if(rigged)
+			if(!user.unEquip(W, src))
+				return
 			to_chat(user, "<span class='notice'>You attach [W] to [src].</span>")
-			user.drop_item()
-			W.forceMove(src)
 			return
 	else if(isWirecutter(W))
 		if(rigged)
@@ -75,6 +75,7 @@
 /obj/structure/closet/crate/secure
 	desc = "A secure crate."
 	name = "Secure crate"
+	closet_appearance = /decl/closet_appearance/crate/secure
 	mass = 17
 	max_health = 400
 	damthreshold_brute 	= 10
@@ -89,7 +90,6 @@
 		DAM_EMP 	= 80)
 	setup = CLOSET_HAS_LOCK
 	locked = TRUE
-	closet_appearance = /decl/closet_appearance/crate/secure
 
 /obj/structure/closet/crate/secure/Initialize()
 	. = ..()
@@ -118,6 +118,13 @@
 	name = "internals crate"
 	desc = "A internals crate."
 	closet_appearance = /decl/closet_appearance/crate/oxygen
+
+/obj/structure/closet/crate/internals/fuel
+	name = "\improper Fuel tank crate"
+	desc = "A fuel tank crate."
+
+/obj/structure/closet/crate/internals/fuel/WillContain()
+	return list(/obj/item/weapon/tank/hydrogen = 4)
 
 /obj/structure/closet/crate/trashcart
 	name = "trash cart"
@@ -170,14 +177,34 @@
 /obj/structure/closet/crate/freezer
 	name = "freezer"
 	desc = "A freezer."
+	temperature = -16 CELSIUS
 	closet_appearance = /decl/closet_appearance/crate/freezer
+
+	var/target_temp = T0C - 40
+	var/cooling_power = 40
+
+/obj/structure/closet/crate/freezer/return_air()
+	var/datum/gas_mixture/gas = (..())
+	if(!gas)	return null
+	var/datum/gas_mixture/newgas = new/datum/gas_mixture()
+	newgas.copy_from(gas)
+	if(newgas.temperature <= target_temp)	return
+
+	if((newgas.temperature - cooling_power) > target_temp)
+		newgas.temperature -= cooling_power
+	else
+		newgas.temperature = target_temp
+	return newgas
+
+/obj/structure/closet/crate/freezer/ProcessAtomTemperature()
+	return PROCESS_KILL
 
 /obj/structure/closet/crate/freezer/rations //Fpr use in the escape shuttle
 	name = "emergency rations"
 	desc = "A crate of emergency rations."
 
 /obj/structure/closet/crate/freezer/rations/WillContain()
-	return list(/obj/item/weapon/reagent_containers/food/snacks/liquidfood = 4)
+	return list(/obj/random/mre = 6)
 
 /obj/structure/closet/crate/bin
 	name = "large bin"
@@ -280,6 +307,8 @@
 /obj/structure/closet/crate/secure/large
 	name = "large crate"
 	desc = "A hefty metal crate with an electronic locking system."
+	closet_appearance = /decl/closet_appearance/large_crate/secure
+
 	storage_capacity = 2 * MOB_LARGE
 	storage_types = CLOSET_STORAGE_ITEMS|CLOSET_STORAGE_STRUCTURES
 	mass = 30
@@ -293,7 +322,6 @@
 		DAM_ENERGY 	= 40,
 		DAM_BURN 	= 30,
 		DAM_BOMB 	= 40)
-	closet_appearance = /decl/closet_appearance/large_crate/secure
 
 /obj/structure/closet/crate/secure/large/phoron
 	closet_appearance = /decl/closet_appearance/large_crate/secure/hazard
@@ -327,7 +355,7 @@
 		/obj/item/weapon/storage/plants = 2,
 		/obj/item/weapon/material/hatchet = 2,
 		/obj/item/weapon/tool/wirecutters/clippers = 2,
-		/obj/item/device/analyzer/plant_analyzer = 2
+		/obj/item/device/scanner/plant = 2
 	)
 
 /obj/structure/closet/crate/secure/biohazard
@@ -336,12 +364,18 @@
 	open_sound = 'sound/items/Deconstruct.ogg'
 	close_sound = 'sound/items/Deconstruct.ogg'
 	req_access = list(core_access_science_programs)
+	closet_appearance = /decl/closet_appearance/cart/biohazard
 	storage_capacity = 2 * MOB_LARGE
 	storage_types = CLOSET_STORAGE_ITEMS|CLOSET_STORAGE_MOBS|CLOSET_STORAGE_STRUCTURES
-	closet_appearance = /decl/closet_appearance/cart/biohazard
 
 /obj/structure/closet/crate/secure/biohazard/blanks/WillContain()
-	return list(/mob/living/carbon/human/blank, /obj/item/usedcryobag)
+	return list(/obj/structure/closet/body_bag/cryobag/blank)
+
+/obj/structure/closet/crate/secure/biohazard/blanks/can_close()
+	for(var/obj/structure/closet/closet in get_turf(src))
+		if(closet != src && !(istype(closet, /obj/structure/closet/body_bag/cryobag)))
+			return 0
+	return 1
 
 /obj/structure/closet/crate/paper_refill
 	name = "paper refill crate"

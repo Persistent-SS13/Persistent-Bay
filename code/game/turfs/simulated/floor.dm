@@ -12,6 +12,7 @@
 	var/base_desc = "The naked hull."
 	var/base_icon = 'icons/turf/flooring/plating.dmi'
 	var/base_icon_state = "plating"
+	var/base_color = COLOR_WHITE
 
 	// Flooring data.
 	var/flooring_override
@@ -27,14 +28,12 @@
 	var/lava = 0
 
 /turf/simulated/floor/Initialize()
-	levelupdate()
-	if(!map_storage_loaded)
-		set_flooring(get_flooring_data(initial_flooring))
+	if(!map_storage_loaded && initial_flooring)
+		set_flooring(decls_repository.get_decl(initial_flooring))
 	else if(flooring)
 		set_flooring(flooring)
 	else
 		make_plating()
-
 	. = ..()
 
 /turf/simulated/floor/ReplaceWithLattice()
@@ -53,6 +52,21 @@
 /turf/simulated/floor/protects_atom(var/atom/A)
 	return (A.level <= 1 && !is_plating()) || ..()
 
+/turf/simulated/floor/New(var/newloc, var/floortype)
+	..(newloc)
+//	if(!floortype && initial_flooring)
+//		floortype = initial_flooring
+	if(floortype)
+		set_flooring(decls_repository.get_decl(floortype))
+	
+	ADD_SAVED_VAR(broken)
+	ADD_SAVED_VAR(burnt)
+	ADD_SAVED_VAR(flooring)
+	ADD_SAVED_VAR(mineral)
+
+	ADD_SKIP_EMPTY(flooring)
+	ADD_SKIP_EMPTY(mineral)
+
 /turf/simulated/floor/proc/set_flooring(var/decl/flooring/newflooring)
 	make_plating(defer_icon_update = 1)
 	flooring = newflooring
@@ -65,12 +79,15 @@
 
 	overlays.Cut()
 
-	name = base_name
+	for(var/obj/effect/decal/writing/W in src)
+		qdel(W)
+
+	SetName(base_name)
 	desc = base_desc
 	icon = base_icon
 	icon_state = base_icon_state
+	color = base_color
 	plane = PLATING_PLANE
-	color = initial(color)
 
 	if(flooring)
 		flooring.on_remove()
@@ -95,3 +112,15 @@
 		plane = TURF_PLANE
 	else
 		plane = PLATING_PLANE
+
+/turf/simulated/floor/can_engrave()
+	return (!flooring || flooring.can_engrave)
+
+/turf/simulated/floor/shuttle_ceiling
+	name = "hull plating"
+	icon = 'icons/turf/flooring/tiles.dmi'
+	icon_state = "reinforced_light"
+	initial_gas = null
+
+/turf/simulated/floor/shuttle_ceiling/air
+	initial_gas = list("oxygen" = MOLES_O2STANDARD, "nitrogen" = MOLES_N2STANDARD)

@@ -1,5 +1,9 @@
 // Attempts to install the hardware into apropriate slot.
 /obj/item/modular_computer/proc/try_install_component(var/mob/living/user, var/obj/item/weapon/computer_hardware/H, var/found = 0)
+	if(!(H.usage_flags & hardware_flag))
+		to_chat(user, "This computer isn't compatible with [H].")
+		return
+
 	// "USB" flash drive.
 	if(istype(H, /obj/item/weapon/computer_hardware/hard_drive/portable))
 		if(portable_drive)
@@ -68,11 +72,9 @@
 		found = 1
 		scanner = H
 		scanner.do_after_install(user, src)
-	if(found)
+	if(found && user.unEquip(H, src))
 		to_chat(user, "You install \the [H] into \the [src]")
 		H.holder2 = src
-		user.drop_from_inventory(H)
-		H.forceMove(src)
 		update_verbs()
 
 // Uninstalls component. Found and Critical vars may be passed by parent types, if they have additional hardware.
@@ -120,8 +122,9 @@
 		H.forceMove(get_turf(src))
 		if(Adjacent(user) && !issilicon(user))
 			user.put_in_hands(H)
+		else
+			H.dropInto(loc)
 		H.holder2 = null
-
 		update_verbs()
 	if(critical && enabled)
 		if(user)

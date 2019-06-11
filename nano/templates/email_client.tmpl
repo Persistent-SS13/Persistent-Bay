@@ -29,7 +29,17 @@
 	{{:helper.link('New Message', 'mail-closed', {'new_message' : 1})}}
 	{{:helper.link('Change Password', 'locked', {'changepassword' : 1})}}
 	{{:helper.link('Log Out', 'key', {'logout' : 1})}}<br><br>
-	{{if data.new_message}}
+	{{if data.addressbook}}
+		{{:helper.link('Back', null, {'close_addressbook' : 1})}}
+		{{:helper.link('Enter Email', 'pencil', {'edit_recipient' : 1})}}
+		<br><br>
+		<table>
+		<tr><td>Address book:
+		{{for data.accounts}}
+			<tr class="candystripe"><td>{{:helper.link(value.login, null, {'set_recipient' : value.login})}}
+		{{/for}}
+		</table>
+	{{else data.new_message}}
 		<div class="item">
 			<div class="itemLabel">
 				{{:helper.link('', 'pencil', {'edit_title' : 1})}} Title: 
@@ -42,7 +52,7 @@
 		</div>
 		<div class="item">
 			<div class="itemLabel">
-				{{:helper.link('', 'pencil', {'edit_recipient' : 1})}} Recipient:
+				{{:helper.link('', 'plusthick', {'addressbook' : 1})}} Recipient:
 			</div>
 			<div class="itemContent">
 				<div class="statusDisplayComm" style="width:100%;min-height:1.7em;padding-bottom: 0;">

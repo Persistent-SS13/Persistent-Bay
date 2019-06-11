@@ -88,6 +88,8 @@
 	var/lying_prev = 0
 	var/riding = 0
 
+	var/radio_interrupt_cooldown = 0
+
 	var/unacidable = 0
 	var/list/pinned = list()            // List of things pinning this creature to walls (see living_defense.dm)
 	var/list/embedded = list()          // Embedded items, since simple mobs don't have organs.
@@ -119,7 +121,7 @@
 	var/obj/item/weapon/storage/s_active = null//Carbon
 	var/obj/item/clothing/mask/wear_mask = null//Carbon
 
-	var/list/grabbed_by = list(  )
+	var/list/grabbed_by = list()
 
 	var/in_throw_mode = 0
 
@@ -135,12 +137,12 @@
 	var/list/mutations = list() //Carbon -- Doohl
 	//see: setup.dm for list of mutations
 
-	var/radiation = 0.0 // Carbon
+	var/radiation = 0.0//Carbon
 	var/phoronation = 0.0 // Sanity meter related to phoron exposure which carbons can have - more is scarier
 
 	var/voice_name = "unidentifiable voice"
 
-	var/faction = "neutral" //Used for checking whether hostile simple animals will attack you, possibly more stuff later
+	var/faction = MOB_FACTION_NEUTRAL //Used for checking whether hostile simple animals will attack you, possibly more stuff later
 	var/blinded = null
 	var/ear_deaf = null		//Carbon
 
@@ -181,13 +183,12 @@
 	var/memory = ""
 	var/flavor_text = ""
 
-	var/nabbing = 0  // Whether a creature with a CAN_NAB tag is grabbing normally or in nab mode.
-	
 	var/oxyburn = 0 //used to check if phorosians are already burning from exposure to the air
 	
-	var/spawn_type = 1 // 1 = cryobed, 2 = newplayer spawn... this should be set to 2 for new players
+	var/spawn_type = CHARACTER_SPAWN_TYPE_CRYONET // 1 = cryobed, 2 = newplayer spawn, 3 = lace storage... this should be set to 2 for new players
 	var/spawn_loc // set to a faction_uid to have them spawn in that factions spawners
 	var/spawn_loc_2 // this is used for secondary cryobed networks
 	
 	var/datum/skillset/skillset = /datum/skillset
-	
+
+	var/last_radio_sound = -INFINITY

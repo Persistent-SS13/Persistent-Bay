@@ -17,6 +17,8 @@
 	name = "patient's closet"
 /obj/structure/closet/secure_closet/personal/patient/WillContain()
 	return
+/obj/structure/closet/secure_closet/personal/patient/filled/WillContain()
+	return list(/obj/item/clothing/suit/hospital/blue, /obj/item/clothing/suit/hospital/green, /obj/item/clothing/suit/hospital/pink)
 
 /obj/structure/closet/secure_closet/personal/cabinet
 	closet_appearance = /decl/closet_appearance/cabinet/secure
@@ -27,28 +29,27 @@
 /obj/structure/closet/secure_closet/personal/cabinet/empty/WillContain()
 	return
 
-/obj/structure/closet/secure_closet/personal/attackby(var/obj/item/weapon/W, var/mob/user)
-	if (src.opened)
-		..()
-	else if(W.GetIdCard())
-		var/obj/item/weapon/card/id/I = W.GetIdCard()
-
-		if(!I || !I.registered_name)
-			return
-		if(togglelock(user, I))
-			if(!src.registered_name)
-				src.registered_name = I.registered_name
-				if(I.GetFaction())
-					req_access_faction = I.GetFaction()
-				src.name += " ([I.registered_name])"
-				src.desc = "Owned by [I.registered_name]."
-		else
-			to_chat(user, "<span class='warning'>Access Denied</span>")
-	else
-		..()
-
 /obj/structure/closet/secure_closet/personal/CanToggleLock(var/mob/user, var/obj/item/weapon/card/id/id_card)
 	return ((req_access_faction = "") && ..()) || (user.GetFaction() == req_access_faction && ..()) || (istype(id_card) && id_card.registered_name && (!registered_name || (registered_name == id_card.registered_name)))
+
+/obj/structure/closet/secure_closet/personal/togglelock(var/mob/user, var/obj/item/weapon/card/id/id_card)
+	if (..() && !src.registered_name)
+		id_card = istype(id_card) ? id_card : user.GetIdCard()
+		if (id_card)
+			set_owner(id_card.registered_name)
+
+/obj/structure/closet/secure_closet/personal/proc/set_owner(var/registered_name, var/faction)
+	if (registered_name)
+		src.registered_name = registered_name
+		src.SetName(name + " ([registered_name])")
+		src.desc = "Owned by [registered_name]."
+		if(faction)
+			src.req_access_faction = faction
+	else
+		src.registered_name = null
+		src.req_access_faction = initial(req_access_faction)
+		src.SetName(initial(name))
+		src.desc = initial(desc)
 
 /obj/structure/closet/secure_closet/personal/verb/reset()
 	set src in oview(1) // One square distance
@@ -68,8 +69,4 @@
 					return
 			locked = TRUE
 			queue_icon_update()
-			src.registered_name = null
-			src.name = initial(name)
-			src.desc = initial(desc)
-			req_access_faction = ""
-
+			set_owner(null, null)

@@ -32,7 +32,7 @@
 					state = 1
 			if(isWelder(P))
 				var/obj/item/weapon/tool/weldingtool/WT = P
-				if(WT.use_tool(user, src, 20))
+				if(WT.use_tool(user, src, 2 SECONDS))
 					if(!src) return
 					to_chat(user, "<span class='notice'>You deconstruct the frame.</span>")
 					new /obj/item/stack/material/plasteel( loc, 4)
@@ -45,13 +45,11 @@
 					to_chat(user, "<span class='notice'>You unfasten the frame.</span>")
 					anchored = 0
 					state = 0
-			if(istype(P, /obj/item/weapon/circuitboard/aicore) && !circuit)
+			if(istype(P, /obj/item/weapon/circuitboard/aicore) && !circuit && user.unEquip(P, src))
 				playsound(loc, 'sound/items/Deconstruct.ogg', 50, 1)
 				to_chat(user, "<span class='notice'>You place the circuit board inside the frame.</span>")
 				icon_state = "1"
 				circuit = P
-				user.drop_item()
-				P.loc = src
 			if(isScrewdriver(P) && circuit)
 				playsound(loc, 'sound/items/Screwdriver.ogg', 50, 1)
 				to_chat(user, "<span class='notice'>You screw the circuit board into place.</span>")
@@ -62,7 +60,7 @@
 				to_chat(user, "<span class='notice'>You remove the circuit board.</span>")
 				state = 1
 				icon_state = "0"
-				circuit.loc = loc
+				circuit.dropInto(loc)
 				circuit = null
 		if(2)
 			if(isScrewdriver(P) && circuit)
@@ -95,18 +93,19 @@
 					var/obj/item/stack/cable_coil/A = new /obj/item/stack/cable_coil( loc )
 					A.amount = 5
 
-			if(istype(P, /obj/item/stack/material) && P.get_material_name() == MATERIAL_REINFORCED_GLASS)
-				var/obj/item/stack/RG = P
-				if (RG.get_amount() < 2)
-					to_chat(user, "<span class='warning'>You need two sheets of glass to put in the glass panel.</span>")
-					return
-				to_chat(user, "<span class='notice'>You start to put in the glass panel.</span>")
-				playsound(loc, 'sound/items/Deconstruct.ogg', 50, 1)
-				if (do_after(user, 20,src) && state == 3)
-					if(RG.use(2))
-						to_chat(user, "<span class='notice'>You put in the glass panel.</span>")
-						state = 4
-						icon_state = "4"
+			if(istype(P, /obj/item/stack/material))
+				var/obj/item/stack/material/RG = P
+				if(RG.material.name == MATERIAL_GLASS && RG.reinf_material)
+					if (RG.get_amount() < 2)
+						to_chat(user, "<span class='warning'>You need two sheets of glass to put in the glass panel.</span>")
+						return
+					to_chat(user, "<span class='notice'>You start to put in the glass panel.</span>")
+					playsound(loc, 'sound/items/Deconstruct.ogg', 50, 1)
+					if (do_after(user, 20,src) && state == 3)
+						if(RG.use(2))
+							to_chat(user, "<span class='notice'>You put in the glass panel.</span>")
+							state = 4
+							icon_state = "4"
 
 			if(istype(P, /obj/item/weapon/aiModule/asimov))
 				laws.add_inherent_law("You may not injure a human being or, through inaction, allow a human being to come to harm.")
@@ -130,24 +129,29 @@
 				laws.add_inherent_law(M.newFreeFormLaw)
 				to_chat(usr, "Added a freeform law.")
 
-			if(istype(P, /obj/item/device/mmi))
-				var/obj/item/device/mmi/M = P
-				if(!M.brainmob)
+			if(istype(P, /obj/item/device/mmi) || istype(P, /obj/item/organ/internal/posibrain))
+				var/mob/living/carbon/brain/B
+				if(istype(P, /obj/item/device/mmi))
+					var/obj/item/device/mmi/M = P
+					B = M.brainmob
+				else
+					var/obj/item/organ/internal/posibrain/PB = P
+					B = PB.brainmob
+				if(!B)
 					to_chat(user, "<span class='warning'>Sticking an empty [P] into the frame would sort of defeat the purpose.</span>")
 					return
-				if(M.brainmob.stat == 2)
+				if(B.stat == DEAD)
 					to_chat(user, "<span class='warning'>Sticking a dead [P] into the frame would sort of defeat the purpose.</span>")
 					return
 
-				if(jobban_isbanned(M.brainmob, "AI"))
+				if(jobban_isbanned(B, "AI"))
 					to_chat(user, "<span class='warning'>This [P] does not seem to fit.</span>")
 					return
+				if(!user.unEquip(P, src))
+					return
+				if(B.mind)
+					clear_antag_roles(B.mind, 1)
 
-				if(M.brainmob.mind)
-					clear_antag_roles(M.brainmob.mind, 1)
-
-				user.drop_item()
-				P.loc = src
 				brain = P
 				to_chat(usr, "Added [P].")
 				icon_state = "3b"
@@ -155,7 +159,7 @@
 			if(isCrowbar(P) && brain)
 				playsound(loc, 'sound/items/Crowbar.ogg', 50, 1)
 				to_chat(user, "<span class='notice'>You remove the brain.</span>")
-				brain.loc = loc
+				brain.dropInto(loc)
 				brain = null
 				icon_state = "3"
 
@@ -188,7 +192,7 @@
 					if(A) //if there's no brain, the mob is deleted and a structure/AIcore is created
 						A.on_mob_init()
 						A.rename_self("ai", 1)
-				feedback_inc("cyborg_ais_created",1)
+				SSstatistics.add_field("cyborg_ais_created",1)
 				qdel(src)
 
 /obj/structure/AIcore/deactivated
@@ -210,7 +214,7 @@
 	transfer.aiRestorePowerRoutine = 0
 	transfer.control_disabled = 0
 	transfer.ai_radio.disabledAi = 0
-	transfer.loc = get_turf(src)
+	transfer.dropInto(src)
 	transfer.create_eyeobj()
 	transfer.cancel_camera()
 	to_chat(user, "<span class='notice'>Transfer successful:</span> [transfer.name] ([rand(1000,9999)].exe) downloaded to host terminal. Local copy wiped.")
@@ -223,7 +227,7 @@
 
 /obj/structure/AIcore/deactivated/proc/check_malf(var/mob/living/silicon/ai/ai)
 	if(!ai) return
-	for (var/datum/mind/malfai in malf.current_antagonists)
+	for (var/datum/mind/malfai in GLOB.malf.current_antagonists)
 		if (ai.mind == malfai)
 			return 1
 
@@ -237,7 +241,7 @@
 		else
 			to_chat(user, "<span class='danger'>ERROR:</span> Unable to locate artificial intelligence.")
 		return
-	else if(istype(W, /obj/item/weapon/tool/wrench))
+	else if(isWrench(W))
 		if(anchored)
 			user.visible_message("<span class='notice'>\The [user] starts to unbolt \the [src] from the plating...</span>")
 			if(!do_after(user,40,src))

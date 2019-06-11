@@ -21,7 +21,7 @@
 	offline_slowdown = 0
 	offline_vision_restriction = 0
 
-	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/device/suit_cooling_unit,/obj/item/weapon/storage/briefcase,/obj/item/weapon/storage/secure/briefcase)
+	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/device/suit_cooling_unit,/obj/item/weapon/storage/briefcase, /obj/item/weapon/storage/secure/briefcase)
 
 	req_access = list()
 	req_one_access = list()
@@ -33,15 +33,13 @@
 	hides_uniform = 0
 
 /obj/item/weapon/rig/light/internalaffairs/equipped
-
-	req_access = list(access_lawyer)
-
 	initial_modules = list(
 		/obj/item/rig_module/ai_container,
 		/obj/item/rig_module/device/flash,
 		/obj/item/rig_module/device/paperdispenser,
 		/obj/item/rig_module/device/pen,
-		/obj/item/rig_module/device/stamp
+		/obj/item/rig_module/device/stamp,
+		/obj/item/rig_module/cooling_unit
 		)
 
 	glove_type = null
@@ -99,11 +97,12 @@
 /obj/item/weapon/rig/industrial/equipped
 
 	initial_modules = list(
-		/obj/item/rig_module/device/plasmacutter,
+		/obj/item/rig_module/mounted/plasmacutter,
 		/obj/item/rig_module/device/drill,
 		/obj/item/rig_module/device/orescanner,
 		/obj/item/rig_module/device/rcd,
-		/obj/item/rig_module/vision/meson
+		/obj/item/rig_module/vision/meson,
+		/obj/item/rig_module/cooling_unit
 		)
 
 /obj/item/weapon/rig/eva
@@ -137,29 +136,46 @@
 
 	req_access = list()
 	req_one_access = list()
+	sprite_sheets = list(
+		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_rig_back_unathi.dmi'
+		)
 
 /obj/item/clothing/head/helmet/space/rig/eva
 	light_overlay = "helmet_light_dual"
 	camera = /obj/machinery/camera/network/engineering
-	species_restricted = list(SPECIES_HUMAN)
+	species_restricted = list(SPECIES_HUMAN,SPECIES_IPC)
+	sprite_sheets = list(
+		SPECIES_SKRELL = 'icons/mob/species/skrell/onmob_head_skrell.dmi',
+		SPECIES_UNATHI = 'icons/mob/species/unathi/onmob_head_helmet_unathi.dmi'
+		)
 
 /obj/item/clothing/suit/space/rig/eva
-	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL)
+	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI,SPECIES_IPC)
+	sprite_sheets = list(
+		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_suit_unathi.dmi'
+		)
 
 /obj/item/clothing/shoes/magboots/rig/eva
-	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL)
+	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI,SPECIES_IPC)
+	sprite_sheets = list(
+		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_feet_unathi.dmi'
+		)
 
 /obj/item/clothing/gloves/rig/eva
-	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL)
+	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI,SPECIES_IPC)
 	siemens_coefficient = 0
+	sprite_sheets = list(
+		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_hands_unathi.dmi'
+		)
 
 /obj/item/weapon/rig/eva/equipped
 
 	initial_modules = list(
-		/obj/item/rig_module/device/plasmacutter,
+		/obj/item/rig_module/mounted/plasmacutter,
 		/obj/item/rig_module/maneuvering_jets,
 		/obj/item/rig_module/device/rcd,
-		/obj/item/rig_module/vision/meson
+		/obj/item/rig_module/vision/meson,
+		/obj/item/rig_module/cooling_unit
 		)
 
 /obj/item/weapon/rig/ce
@@ -184,25 +200,27 @@
 	online_slowdown = 0
 	offline_slowdown = 0
 	offline_vision_restriction = TINT_HEAVY
+	max_heat_protection_temperature = FIRESUIT_MAX_HEAT_PROTECTION_TEMPERATURE // this is passed to the rig suit components when deployed, including the helmet.
 
 	helm_type = /obj/item/clothing/head/helmet/space/rig/ce
 	glove_type = /obj/item/clothing/gloves/rig/ce
 
-	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/device/suit_cooling_unit,/obj/item/weapon/storage/ore,/obj/item/weapon/storage/toolbox,/obj/item/weapon/storage/briefcase/inflatable,/obj/item/weapon/inflatable_dispenser,/obj/item/device/t_scanner,/obj/item/weapon/pickaxe,/obj/item/weapon/rcd)
+	allowed = list(/obj/item/weapon/gun,/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/device/suit_cooling_unit,/obj/item/weapon/storage/ore,/obj/item/weapon/storage/toolbox,/obj/item/weapon/storage/briefcase/inflatable,/obj/item/weapon/inflatable_dispenser,/obj/item/device/t_scanner,/obj/item/weapon/pickaxe,/obj/item/weapon/rcd)
 
-	req_access = list()
+	req_access = list(access_ce)
 	req_one_access = list()
 
 /obj/item/weapon/rig/ce/equipped
 
-	req_access = list(access_ce)
-
 	initial_modules = list(
 		/obj/item/rig_module/ai_container,
 		/obj/item/rig_module/maneuvering_jets,
-		/obj/item/rig_module/device/plasmacutter,
+		/obj/item/rig_module/mounted/plasmacutter,
 		/obj/item/rig_module/device/rcd,
-		/obj/item/rig_module/vision/meson
+		/obj/item/rig_module/device/flash,
+		/obj/item/rig_module/vision/meson,
+		/obj/item/rig_module/grenade_launcher/mfoam,
+		/obj/item/rig_module/cooling_unit
 		)
 
 /obj/item/clothing/head/helmet/space/rig/ce
@@ -212,10 +230,9 @@
 	siemens_coefficient = 0
 
 /obj/item/weapon/rig/hazmat
-
-	name = "AMI control module"
+	name = "\improper AMI control module"
 	suit_type = "hazmat hardsuit"
-	desc = "An Anomalous Material Interaction hardsuit, a prototype Nanotrasen design, protects the wearer against the strangest energies the universe can throw at it."
+	desc = "An Anomalous Material Interaction hardsuit, a cutting-edge NanoTrasen design, protects the wearer against the strangest energies the universe can throw at it."
 	icon_state = "science_rig"
 	armor  = list(
 		DAM_BLUNT 	= 45,
@@ -238,7 +255,7 @@
 	boot_type = /obj/item/clothing/shoes/magboots/rig/hazmat
 	glove_type = /obj/item/clothing/gloves/rig/hazmat
 
-	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/device/suit_cooling_unit,/obj/item/stack/flag,/obj/item/weapon/storage/excavation,/obj/item/weapon/pickaxe,/obj/item/device/healthanalyzer,/obj/item/device/measuring_tape,/obj/item/device/ano_scanner,/obj/item/device/depth_scanner,/obj/item/device/core_sampler,/obj/item/device/gps,/obj/item/device/beacon_locator,/obj/item/device/radio/beacon,/obj/item/weapon/pickaxe/hand,/obj/item/weapon/storage/bag/fossils)
+	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/device/suit_cooling_unit,/obj/item/stack/flag,/obj/item/weapon/storage/excavation,/obj/item/weapon/pickaxe,/obj/item/device/scanner/health,/obj/item/device/measuring_tape,/obj/item/device/ano_scanner,/obj/item/device/depth_scanner,/obj/item/device/core_sampler,/obj/item/device/gps,/obj/item/weapon/pinpointer/radio,/obj/item/device/radio/beacon,/obj/item/weapon/pickaxe/xeno,/obj/item/weapon/storage/bag/fossils)
 
 	req_access = list()
 	req_one_access = list()
@@ -264,7 +281,8 @@
 	initial_modules = list(
 		/obj/item/rig_module/ai_container,
 		/obj/item/rig_module/maneuvering_jets,
-		/obj/item/rig_module/device/anomaly_scanner
+		/obj/item/rig_module/device/anomaly_scanner,
+		/obj/item/rig_module/cooling_unit,
 		)
 
 /obj/item/weapon/rig/medical
@@ -294,23 +312,36 @@
 	boot_type = /obj/item/clothing/shoes/magboots/rig/medical
 	glove_type = /obj/item/clothing/gloves/rig/medical
 
-	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/device/suit_cooling_unit,/obj/item/weapon/storage/firstaid,/obj/item/device/healthanalyzer,/obj/item/stack/medical,/obj/item/roller )
+	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/device/suit_cooling_unit,/obj/item/weapon/storage/firstaid,/obj/item/device/scanner/health,/obj/item/stack/medical,/obj/item/roller )
 
 	req_access = list()
 	req_one_access = list()
 
 /obj/item/clothing/head/helmet/space/rig/medical
 	camera = /obj/machinery/camera/network/medbay
-	species_restricted = list(SPECIES_HUMAN)
+	species_restricted = list(SPECIES_HUMAN, SPECIES_UNATHI, SPECIES_SKRELL)
+	sprite_sheets = list(
+		SPECIES_UNATHI = 'icons/mob/species/unathi/onmob_head_helmet_unathi.dmi',
+		SPECIES_SKRELL = 'icons/mob/species/skrell/onmob_head_skrell.dmi',
+		)
 
 /obj/item/clothing/suit/space/rig/medical
-	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL)
+	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL, SPECIES_UNATHI)
+	sprite_sheets = list(
+		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_suit_unathi.dmi'
+		)
 
 /obj/item/clothing/shoes/magboots/rig/medical
-	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL)
+	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL, SPECIES_UNATHI)
+	sprite_sheets = list(
+		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_feet_unathi.dmi'
+		)
 
 /obj/item/clothing/gloves/rig/medical
-	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL)
+	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL, SPECIES_UNATHI)
+	sprite_sheets = list(
+		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_hands_unathi.dmi'
+		)
 
 /obj/item/weapon/rig/medical/equipped
 
@@ -320,13 +351,14 @@
 		/obj/item/rig_module/chem_dispenser/injector,
 		/obj/item/rig_module/maneuvering_jets,
 		/obj/item/rig_module/device/healthscanner,
-		/obj/item/rig_module/vision/medhud
+		/obj/item/rig_module/vision/medhud,
+		/obj/item/rig_module/cooling_unit
 		)
 
 /obj/item/weapon/rig/hazard
 	name = "hazard hardsuit control module"
 	suit_type = "hazard hardsuit"
-	desc = "A Nanotrasen security hardsuit designed for prolonged EVA in dangerous environments."
+	desc = "A security hardsuit designed for prolonged EVA in dangerous environments."
 	icon_state = "hazard_rig"
 	armor  = list(
 		DAM_BLUNT 	= 60,
@@ -375,5 +407,56 @@
 		/obj/item/rig_module/vision/sechud,
 		/obj/item/rig_module/maneuvering_jets,
 		/obj/item/rig_module/grenade_launcher,
-		/obj/item/rig_module/mounted/taser
+		/obj/item/rig_module/mounted/taser,
+		/obj/item/rig_module/cooling_unit
 		)
+
+/obj/item/weapon/rig/zero
+	name = "null suit control module"
+	suit_type = "null hardsuit"
+	desc = "A very lightweight suit designed to allow use inside mechs and starfighters. It feels like you're wearing nothing at all."
+	icon_state = "null_rig"
+	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 100, rad = 20)
+	online_slowdown = 0
+	offline_slowdown = 1
+	offline_vision_restriction = TINT_HEAVY //You're wearing a flash protective space suit without light compensation, think it makes sense
+
+	chest_type = /obj/item/clothing/suit/space/rig/zero
+	helm_type = /obj/item/clothing/head/helmet/space/rig/zero
+	boot_type = null
+	glove_type = null
+
+
+	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/device/suit_cooling_unit)
+	//Bans the most common combat items, idea is that this isn't a mass built shouldergun rig.
+	banned_modules = list(/obj/item/rig_module/grenade_launcher,/obj/item/rig_module/mounted,/obj/item/rig_module/fabricator )
+	req_access = list()
+
+/obj/item/clothing/head/helmet/space/rig/zero
+	camera = null
+	species_restricted = list(SPECIES_HUMAN, SPECIES_UNATHI, SPECIES_SKRELL)
+	light_overlay = "null_light"
+	desc = "A bubble helmet that maximizes the field of view. A state of the art holographic display provides a stream of information"
+
+//All in one suit
+/obj/item/clothing/suit/space/rig/zero
+	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL, SPECIES_UNATHI)
+	sprite_sheets = list(
+		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_suit_unathi.dmi'
+		)
+	breach_threshold = 18
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
+
+/obj/item/weapon/rig/zero/on_update_icon(var/update_mob_icon)
+	..()
+	//Append the f for female states
+	if(!ishuman(loc))
+		return
+	var/mob/living/carbon/human/user = loc
+	if(!chest) return
+	//If there's a better way to do this with current rig setup tell me
+	//Do not further append if current state already indicates gender
+	if(user.gender == FEMALE && !findtext(chest.icon_state,"_f", -2))
+		chest.icon_state = "[chest.icon_state]_f"
+	chest.update_icon(1)
+

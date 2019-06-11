@@ -37,9 +37,8 @@
 	icon 				= 'icons/obj/monitors.dmi'
 	icon_state 			= "alarm0"
 	anchored 			= TRUE
-	use_power 			= POWER_USE_IDLE
 	idle_power_usage 	= 80
-	active_power_usage 	= 1000 //For heating/cooling rooms. 1000 joules equates to about 1 degree every 2 seconds for a single tile of air.
+	active_power_usage 	= 1 KILOWATTS //For heating/cooling rooms. 1000 joules equates to about 1 degree every 2 seconds for a single tile of air.
 	power_channel 		= ENVIRON
 	req_one_access 		= list(core_access_engineering_programs, core_access_engineering_programs)
 	clicksound 			= "button"
@@ -79,7 +78,6 @@
 	var/pressure_dangerlevel = 0
 	var/oxygen_dangerlevel = 0
 	var/co2_dangerlevel = 0
-
 	var/temperature_dangerlevel = 0
 	var/other_dangerlevel = 0
 
@@ -101,6 +99,13 @@
 	TLV["temperature"] =	list(T0C-26, T0C, T0C+30, T0C+40) // K
 	target_temperature = T0C+10
 
+/obj/machinery/alarm/Destroy()
+	QDEL_NULL(wires)
+	if(alarm_area && alarm_area.master_air_alarm == src)
+		alarm_area.master_air_alarm = null
+		elect_master(exclude_self = TRUE)
+	return ..()
+
 /obj/machinery/alarm/New(var/loc, var/dir, atom/frame)
 	..(loc)
 
@@ -112,7 +117,7 @@
 		wiresexposed = 1
 		pixel_x = (dir & 3)? 0 : (dir == 4 ? -21 : 21)
 		pixel_y = (dir & 3)? (dir ==1 ? -21 : 21) : 0
-		update_icon()
+		queue_icon_update()
 		frame.transfer_fingerprints_to(src)
 	
 	ADD_SAVED_VAR(remote_control)
@@ -132,9 +137,12 @@
 	. = ..()
 	alarm_area = get_area(src)
 	if(!alarm_area)
-		log_debug(" /obj/machinery/alarm/after_load() : Alarm is in null area after load!!")
+		log_debug(" /obj/machinery/alarm/after_load() : [src]\ref[src]'s area is null area after load!!")
 		return
 	area_uid = alarm_area.uid
+	if(!TLV)
+		log_warning(" obj/machinery/alarm/after_load(): TLV for [src]\ref[src] after loading was null!!")
+		TLV = list()
 // 	if (name == "alarm")
 // 		name = "[alarm_area.name] Air Alarm"
 
@@ -154,12 +162,12 @@
 		return
 	area_uid = alarm_area.uid
 	if (name == initial(name))
-		name = "[alarm_area.name] Air Alarm"
+		SetName("[alarm_area.name] Air Alarm")
 
 	if(!wires)
 		wires = new(src)
 
-	if(!map_storage_loaded)
+	if(!TLV?.len)
 		TLV[GAS_OXYGEN] =		list(16, 19, 135, 140) // Partial pressure, kpa
 		TLV[GAS_CO2] = 			list(-1.0, -1.0, 5, 10) // Partial pressure, kpa
 		TLV[GAS_PHORON] =		list(-1.0, -1.0, 0.2, 0.5) // Partial pressure, kpa
@@ -173,12 +181,7 @@
 
 	if (!master_is_operating())
 		elect_master()
-
-	update_icon()
-
-/obj/machinery/alarm/Destroy()
-	QDEL_NULL(wires)
-	return ..()
+	queue_icon_update()
 
 /obj/machinery/alarm/Process()
 	if(inoperable() || shorted || buildstage != 2 || isnull(loc))
@@ -190,7 +193,8 @@
 	var/datum/gas_mixture/environment = location.return_air()
 
 	//Handle temperature adjustment here.
-	handle_heating_cooling(environment)
+	if(environment.return_pressure() > ONE_ATMOSPHERE*0.05)
+		handle_heating_cooling(environment)
 
 	var/old_level = danger_level
 	var/old_pressurelevel = pressure_dangerlevel
@@ -253,7 +257,6 @@
 				var/energy_used = min( gas.get_thermal_energy_change(target_temperature) , active_power_usage)
 
 				gas.add_thermal_energy(energy_used)
-				//use_power(energy_used, ENVIRON) //handle by update_use_power instead
 			else	//gas cooling
 				var/heat_transfer = min(abs(gas.get_thermal_energy_change(target_temperature)), active_power_usage)
 
@@ -265,8 +268,6 @@
 				heat_transfer = min(heat_transfer, cop * active_power_usage)	//this ensures that we don't use more than active_power_usage amount of power
 
 				heat_transfer = -gas.add_thermal_energy(-heat_transfer)	//get the actual heat transfer
-
-				//use_power(heat_transfer / cop, ENVIRON)	//handle by update_use_power instead
 
 			environment.merge(gas)
 
@@ -289,7 +290,6 @@
 		pressure_dangerlevel,
 		oxygen_dangerlevel,
 		co2_dangerlevel,
-
 		other_dangerlevel,
 		temperature_dangerlevel
 		)
@@ -313,9 +313,11 @@
 	return alarm_area.master_air_alarm && alarm_area.master_air_alarm.operable()
 
 
-/obj/machinery/alarm/proc/elect_master()
+/obj/machinery/alarm/proc/elect_master(exclude_self = FALSE)
 	for (var/obj/machinery/alarm/AA in alarm_area)
-		if (AA.operable())
+		if(exclude_self && AA == src)
+			continue
+		if (!(AA.stat & (NOPOWER|BROKEN)))
 			alarm_area.master_air_alarm = AA
 			return 1
 	return 0
@@ -327,7 +329,7 @@
 		return 1
 	return 0
 
-/obj/machinery/alarm/update_icon()
+/obj/machinery/alarm/on_update_icon()
 	if(wiresexposed)
 		icon_state = "alarmx"
 		set_light(0)
@@ -366,16 +368,25 @@
 		else if(dir == EAST)
 			pixel_x = -21
 
-	set_light(l_range = 2, l_power = 0.6, l_color = new_color)
+	set_light(0.25, 0.1, 1, 2, new_color)
 
 /obj/machinery/alarm/OnSignal(datum/signal/signal)
 	. = ..()
+	if(!alarm_area)
+		log_warning("\"[src]\"(\ref[src]) ([x], [y], [z]): has invalid alarm area \"[alarm_area]\", and receiving a signal..")
+		return 
 	if (alarm_area.master_air_alarm != src)
 		if (master_is_operating())
 			return
 		//elect_master()
 		if (alarm_area.master_air_alarm != src)
 			return
+
+	if(id_tag == signal.data["alarm_id"] && signal.data["command"] == "shutdown")
+		mode = AALARM_MODE_OFF
+		apply_mode()
+		return
+
 	if (signal.data["area"] != area_uid)
 		return
 	if (signal.data["sigtype"] != "status")
@@ -435,7 +446,7 @@
 	switch(mode)
 		if(AALARM_MODE_SCRUBBING)
 			for(var/device_id in alarm_area.air_scrub_names)
-				send_signal(device_id, list("power"= 1, "co2_scrub"= 1, "scrubbing"= 1, "panic_siphon"= 0) )
+				send_signal(device_id, list("power"= 1, "co2_scrub"= 1, "scrubbing"= SCRUBBER_SCRUB, "panic_siphon"= 0) )
 			for(var/device_id in alarm_area.air_vent_names)
 				send_signal(device_id, list("power"= 1, "checks"= "default", "set_external_pressure"= "default") )
 
@@ -466,7 +477,8 @@
 /obj/machinery/alarm/proc/apply_danger_level(var/new_danger_level)
 	if (report_danger_level && alarm_area.atmosalert(new_danger_level, src))
 		post_alert(new_danger_level)
-	update_icon()
+
+	queue_icon_update()
 
 /obj/machinery/alarm/proc/post_alert(alert_level)
 	if(!has_transmitter())
@@ -711,6 +723,10 @@
 					send_signal(device_id, list(href_list["command"] = text2num(href_list["val"]) ) )
 					return TOPIC_HANDLED
 
+				if("scrubbing")
+					send_signal(device_id, list(href_list["command"] = href_list["scrub_mode"]) )
+					return TOPIC_REFRESH
+
 				if("set_threshold")
 					var/env = href_list["env"]
 					var/threshold = text2num(href_list["var"])
@@ -819,7 +835,7 @@
 				update_icon()
 				return
 
-			if (istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/device/pda))// trying to unlock the interface with an ID card
+			if (istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/modular_computer))// trying to unlock the interface with an ID card
 				if(inoperable())
 					to_chat(user, "It does nothing")
 					return
@@ -846,13 +862,12 @@
 			else if(isCrowbar(W))
 				to_chat(user, "You start prying out the circuit.")
 				playsound(src.loc, 'sound/items/Crowbar.ogg', 50, 1)
-				if(do_after(user,20))
-					if(buildstage == 1) //Prevents circuit duplication
-						to_chat(user, "You pry out the circuit!")
-						var/obj/item/weapon/airalarm_electronics/circuit = new /obj/item/weapon/airalarm_electronics()
-						circuit.dropInto(user.loc)
-						buildstage = 0
-						update_icon()
+				if(do_after(user,20) && buildstage == 1)
+					to_chat(user, "You pry out the circuit!")
+					var/obj/item/weapon/airalarm_electronics/circuit = new /obj/item/weapon/airalarm_electronics()
+					circuit.dropInto(user.loc)
+					buildstage = 0
+					update_icon()
 				return
 		if(0)
 			if(istype(W, /obj/item/weapon/airalarm_electronics))
@@ -887,3 +902,5 @@ Just a object used in constructing air alarms
 	desc = "Looks like a circuit. Probably is."
 	w_class = ITEM_SIZE_SMALL
 	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
+
+

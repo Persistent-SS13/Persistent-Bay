@@ -1,8 +1,8 @@
 //-------------------------------
 // Buttons
-//	Sender: intended to be used by buttons, when the button is pressed it will call activate() on all connected /button
+//	Sender: intended to be used by buttons, when the button is pressed it will call activate() on all connected /button 
 //			receivers.
-//	Receiver: does whatever the subtype does. deactivate() by default calls activate(), so you will have to override in
+//	Receiver: does whatever the subtype does. deactivate() by default calls activate(), so you will have to override in 
 //			  it in a subtype if you want it to do something.
 //-------------------------------
 /datum/wifi/sender/button/activate(mob/living/user)
@@ -28,7 +28,7 @@
 
 //-------------------------------
 // Doors
-//	Sender: sends an open/close request to all connected /door receivers. Utilises spawn_sync to trigger all doors to
+//	Sender: sends an open/close request to all connected /door receivers. Utilises spawn_sync to trigger all doors to 
 //			open at approximately the same time. Waits until all doors have finished opening before returning.
 //	Receiver: will try to open/close the parent door when activate/deactivate is called.
 //-------------------------------
@@ -105,7 +105,7 @@
 	var/obj/machinery/power/emitter/E = parent
 	if(istype(E) && !E.active)
 		E.activate(user)	//if the emitter is not active, trigger the activate proc to toggle it
-
+		
 /datum/wifi/receiver/button/emitter/deactivate(mob/living/user)
 	var/obj/machinery/power/emitter/E = parent
 	if(istype(E) && E.active)

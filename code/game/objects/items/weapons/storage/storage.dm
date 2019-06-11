@@ -26,25 +26,25 @@
 	//the assoc value can either be the quantity, or a list whose first value is the quantity and the rest are args.
 	var/list/startswith
 	var/datum/storage_ui/storage_ui = /datum/storage_ui/default
+	var/opened = null
+	var/open_sound = null
 
 /obj/item/weapon/storage/Destroy()
-	QDEL_NULL(storage_ui)
+	if(isobj(storage_ui)) //Don't try to delete a type path
+		QDEL_NULL(storage_ui)
 	. = ..()
 
 /obj/item/weapon/storage/MouseDrop(obj/over_object as obj)
 	if(!canremove)
 		return
 
-	if (ishuman(usr) || issmall(usr)) //so monkeys can take off their backpacks -- Urist
+	if ((ishuman(usr) || isrobot(usr) || issmall(usr)) && !usr.incapacitated())
 		if(over_object == usr && Adjacent(usr)) // this must come before the screen objects only block
 			src.open(usr)
-			return
+			return TRUE
 
 		if (!( istype(over_object, /obj/screen) ))
 			return ..()
-
-		if (usr.incapacitated())
-			return
 
 		//makes sure that the storage is equipped, so that we can't drag it into our hand from miles away.
 		if (!usr.contains(src))
@@ -74,14 +74,24 @@
 	return L
 
 /obj/item/weapon/storage/proc/show_to(mob/user as mob)
-	storage_ui.show_to(user)
+	if(istype(storage_ui))
+		storage_ui.show_to(user)
 
 /obj/item/weapon/storage/proc/hide_from(mob/user as mob)
-	storage_ui.hide_from(user)
+	if(istype(storage_ui))
+		storage_ui.hide_from(user)
 
 /obj/item/weapon/storage/proc/open(mob/user as mob)
+	if(!opened)
+		playsound(src.loc, src.open_sound, 50, 0, -5)
+		opened = 1
+		queue_icon_update()
 	if (src.use_sound)
-		playsound(src.loc, src.use_sound, 50, 1, -5)
+		playsound(src.loc, src.use_sound, 50, 0, -5)
+	if (isrobot(user) && user.hud_used)
+		var/mob/living/silicon/robot/robot = user
+		if(robot.shown_robot_modules) //The robot's inventory is open, need to close it first.
+			robot.hud_used.toggle_show_robot_modules()
 
 	prepare_ui()
 	storage_ui.on_open(user)
@@ -96,10 +106,12 @@
 
 /obj/item/weapon/storage/proc/close(mob/user as mob)
 	hide_from(user)
-	storage_ui.after_close(user)
+	if(storage_ui)
+		storage_ui.after_close(user)
 
 /obj/item/weapon/storage/proc/close_all()
-	storage_ui.close_all()
+	if(storage_ui)
+		storage_ui.close_all()
 
 /obj/item/weapon/storage/proc/storage_space_used()
 	. = 0
@@ -175,7 +187,8 @@
 		return 0
 	if(istype(W.loc, /mob))
 		var/mob/M = W.loc
-		M.remove_from_mob(W)
+		if(!M.unEquip(W))
+			return
 	W.forceMove(src)
 	W.on_enter_storage(src)
 	if(usr)
@@ -185,10 +198,10 @@
 			for(var/mob/M in viewers(usr, null))
 				if (M == usr)
 					to_chat(usr, "<span class='notice'>You put \the [W] into [src].</span>")
-				else if (M in range(1)) //If someone is standing close enough, they can tell what it is... TODO replace with distance check
-					M.show_message("<span class='notice'>\The [usr] puts [W] into [src].</span>")
+				else if (M in range(1, src)) //If someone is standing close enough, they can tell what it is... TODO replace with distance check
+					M.show_message("<span class='notice'>\The [usr] puts [W] into [src].</span>", VISIBLE_MESSAGE)
 				else if (W && W.w_class >= ITEM_SIZE_NORMAL) //Otherwise they can only see large or normal items from a distance...
-					M.show_message("<span class='notice'>\The [usr] puts [W] into [src].</span>")
+					M.show_message("<span class='notice'>\The [usr] puts [W] into [src].</span>", VISIBLE_MESSAGE)
 
 		if(!NoUpdate)
 			update_ui_after_item_insertion()
@@ -197,18 +210,21 @@
 
 /obj/item/weapon/storage/proc/update_ui_after_item_insertion()
 	prepare_ui()
-	storage_ui.on_insertion(usr)
+	if(storage_ui)
+		storage_ui.on_insertion(usr)
 
 /obj/item/weapon/storage/proc/update_ui_after_item_removal()
 	prepare_ui()
-	storage_ui.on_post_remove(usr)
+	if(storage_ui)
+		storage_ui.on_post_remove(usr)
 
 //Call this proc to handle the removal of an item from the storage item. The item will be moved to the atom sent as new_target
 /obj/item/weapon/storage/proc/remove_from_storage(obj/item/W as obj, atom/new_location, var/NoUpdate = 0)
 	if(!istype(W)) return 0
 	new_location = new_location || get_turf(src)
 
-	storage_ui.on_pre_remove(usr, W)
+	if(storage_ui)
+		storage_ui.on_pre_remove(usr, W)
 
 	if(ismob(loc))
 		W.dropped(usr)
@@ -223,15 +239,28 @@
 	if(W.maptext)
 		W.maptext = ""
 	W.on_exit_storage(src)
-	update_icon()
+	if(!NoUpdate)
+		update_icon()
 	return 1
+
+// Only do ui functions for now; the obj is responsible for anything else.
+/obj/item/weapon/storage/proc/on_item_deletion(obj/item/W)
+	if(storage_ui)
+		storage_ui.on_pre_remove(null, W) // Supposed to be able to handle null user.
+		update_ui_after_item_removal()
+	queue_icon_update()
+
+//Run once after using remove_from_storage with NoUpdate = 1
+/obj/item/weapon/storage/proc/finish_bulk_removal()
+	update_ui_after_item_removal()
+	update_icon()
 
 //This proc is called when you want to place an item into the storage item.
 /obj/item/weapon/storage/attackby(obj/item/W as obj, mob/user as mob)
 	..()
 
-	if(isrobot(user))
-		return //Robots can't interact with storage items.
+	if(isrobot(user) && (W == user.get_active_hand()))
+		return //Robots can't store their modules.
 
 	if(istype(W, /obj/item/device/lightreplacer))
 		var/obj/item/device/lightreplacer/LP = W
@@ -324,7 +353,7 @@
 	hide_from(usr)
 	for(var/obj/item/I in contents)
 		remove_from_storage(I, T, 1)
-	update_ui_after_item_removal()
+	finish_bulk_removal()
 
 /obj/item/weapon/storage/Initialize()
 	. = ..()
@@ -342,24 +371,22 @@
 		max_storage_space = storage_slots*base_storage_cost(max_w_class)
 
 	prepare_ui()
-	if(!map_storage_loaded)
-		if(startswith)
-			for(var/item_path in startswith)
-				var/list/data = startswith[item_path]
-				if(islist(data))
-					var/qty = data[1]
-					var/list/argsl = data.Copy()
-					argsl[1] = src
-					for(var/i in 1 to qty)
-						new item_path(arglist(argsl))
-				else
-					for(var/i in 1 to (isnull(data)? 1 : data))
-						new item_path(src)
-			update_icon()
+	if(!map_storage_loaded && startswith)
+		for(var/item_path in startswith)
+			var/list/data = startswith[item_path]
+			if(islist(data))
+				var/qty = data[1]
+				var/list/argsl = data.Copy()
+				argsl[1] = src
+				for(var/i in 1 to qty)
+					new item_path(arglist(argsl))
+			else
+				for(var/i in 1 to (isnull(data)? 1 : data))
+					new item_path(src)
+	queue_icon_update()
 
 /obj/item/weapon/storage/after_load()
 	. = ..()
-	prepare_ui()
 
 /obj/item/weapon/storage/emp_act(severity)
 	if(!istype(src.loc, /mob/living))

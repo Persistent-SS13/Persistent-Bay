@@ -1,13 +1,13 @@
 /obj/machinery/r_n_d/protolathe
-	name = "\improper Protolathe"
+	name = "protolathe"
+	desc = "Accessed by a connected core fabricator console, it produces items from various materials."
 	icon_state = "protolathe"
-	atom_flags = ATOM_FLAG_OPEN_CONTAINER
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_OPEN_CONTAINER
 
-	use_power = 1
 	idle_power_usage = 30
 	active_power_usage = 5000
 
-	var/max_material_storage = 100000
+	var/max_material_storage = 250000
 
 	var/list/datum/design/queue = list()
 	var/progress = 0
@@ -69,7 +69,7 @@
 	speed = T / 2
 
 
-/obj/machinery/r_n_d/protolathe/update_icon()
+/obj/machinery/r_n_d/protolathe/on_update_icon()
 	if(panel_open)
 		icon_state = "protolathe_t"
 	else if(busy)
@@ -91,7 +91,7 @@
 	if(default_part_replacement(user, O))
 		return
 	if(O.is_open_container())
-		return 0
+		return 1
 	if(panel_open)
 		to_chat(user, "<span class='notice'>You can't load \the [src] while it's opened.</span>")
 		return 1
@@ -111,31 +111,32 @@
 		return 1
 
 	var/obj/item/stack/material/stack = O
+
 	var/amount = min(stack.get_amount(), round((max_material_storage - TotalMaterials()) / SHEET_MATERIAL_AMOUNT))
 
-	var/t = stack.material.name
-	overlays += "protolathe_[t]"
+	var/image/I = image(icon, "protolathe_stack")
+	I.color = stack.material.icon_colour
+	overlays += I
 	spawn(10)
-		overlays -= "protolathe_[t]"
+		overlays -= I
 
 	busy = 1
-	use_power(max(1000, (SHEET_MATERIAL_AMOUNT * amount / 10)))
-	if(t)
-		if(do_after(user, 16,src))
-			if(stack.use(amount))
-				to_chat(user, "<span class='notice'>You add [amount] sheet\s to \the [src].</span>")
-				materials[t] += amount * SHEET_MATERIAL_AMOUNT
+	use_power_oneoff(max(1000, (SHEET_MATERIAL_AMOUNT * amount / 10)))
+	if(do_after(user, 16,src))
+		if(stack.use(amount))
+			to_chat(user, "<span class='notice'>You add [amount] sheet\s to \the [src].</span>")
+			materials[stack.material.name] += amount * SHEET_MATERIAL_AMOUNT
 	busy = 0
 	updateUsrDialog()
-	return
 
 /obj/machinery/r_n_d/protolathe/proc/addToQueue(var/datum/design/D)
 	queue += D
 	return
 
 /obj/machinery/r_n_d/protolathe/proc/removeFromQueue(var/index)
+	if(!is_valid_index(index, queue))
+		return
 	queue.Cut(index, index + 1)
-	return
 
 /obj/machinery/r_n_d/protolathe/proc/canBuild(var/datum/design/D)
 	for(var/M in D.materials)
@@ -151,15 +152,14 @@
 	for(var/M in D.materials)
 		power += round(D.materials[M] / 5)
 	power = max(active_power_usage, power)
-	use_power(power)
+	use_power_oneoff(power)
 	for(var/M in D.materials)
 		materials[M] = max(0, materials[M] - D.materials[M] * mat_efficiency)
 	for(var/C in D.chemicals)
 		reagents.remove_reagent(C, D.chemicals[C] * mat_efficiency)
 
 	if(D.build_path)
-		var/obj/new_item = D.Fabricate(src, src)
-		new_item.loc = loc
+		var/obj/new_item = D.Fabricate(loc, src)
 		if(mat_efficiency != 1) // No matter out of nowhere
 			if(new_item.matter && new_item.matter.len > 0)
 				for(var/i in new_item.matter)

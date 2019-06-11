@@ -1,7 +1,7 @@
 /obj/item/clothing/accessory
 	name = "tie"
 	desc = "A neosilk clip-on tie."
-	icon = 'icons/obj/clothing/ties.dmi'
+	icon = 'icons/obj/clothing/obj_accessories.dmi'
 	icon_state = "tie"
 	item_state = ""	//no inhands
 	slot_flags = SLOT_TIE
@@ -11,11 +11,19 @@
 	var/image/inv_overlay = null	//overlay used when attached to clothing.
 	var/list/mob_overlay = list()
 	var/overlay_state = null
-	var/list/accessory_icons = list(slot_w_uniform_str = 'icons/mob/ties.dmi', slot_wear_suit_str = 'icons/mob/ties.dmi')
+	var/list/accessory_icons = list(slot_w_uniform_str = 'icons/mob/onmob/onmob_accessories.dmi', slot_wear_suit_str = 'icons/mob/onmob/onmob_accessories.dmi')
 	sprite_sheets = list(
-		SPECIES_NABBER = 'icons/mob/species/nabber/ties.dmi'
+		SPECIES_NABBER = 'icons/mob/species/nabber/onmob_accessories_gas.dmi',
+		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_accessories_unathi.dmi'
 		)
 	var/list/on_rolled = list()	//used when jumpsuit sleevels are rolled ("rolled" entry) or it's rolled down ("down"). Set to "none" to hide in those states.
+	var/high_visibility	//if it should appear on examine without detailed view
+	var/slowdown //used when an accessory is meant to slow the wearer down when attached to clothing
+	var/removable = TRUE
+
+/obj/item/clothing/accessory/New()
+	. = ..()
+	ADD_SAVED_VAR(has_suit)
 
 /obj/item/clothing/accessory/Destroy()
 	on_removed()
@@ -81,7 +89,7 @@
 		usr.put_in_hands(src)
 		src.add_fingerprint(user)
 	else
-		src.forceMove(get_turf(src))
+		dropInto(loc)
 
 //default attackby behaviour
 /obj/item/clothing/accessory/attackby(obj/item/I, mob/user)

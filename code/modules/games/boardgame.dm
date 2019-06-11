@@ -27,7 +27,7 @@ obj/item/weapon/board/attackby(obj/item/I as obj, mob/user as mob)
 		..()
 
 /obj/item/weapon/board/proc/addPiece(obj/item/I as obj, mob/user as mob, var/tile = 0)
-	if(I.w_class != ITEM_SIZE_SMALL) //only small stuff
+	if(I.w_class != ITEM_SIZE_TINY) //only small stuff
 		user.show_message("<span class='warning'>\The [I] is too big to be used as a board piece.</span>")
 		return 0
 	if(num == 64)
@@ -38,9 +38,8 @@ obj/item/weapon/board/attackby(obj/item/I as obj, mob/user as mob)
 		return 0
 	if(!user.Adjacent(src))
 		return 0
-
-	user.drop_from_inventory(I)
-	I.forceMove(src)
+	if(!user.unEquip(I, src))
+		return 0
 	num++
 
 
@@ -164,63 +163,65 @@ obj/item/weapon/board/attackby(obj/item/I as obj, mob/user as mob)
 
 //Checkers
 
-/obj/item/weapon/checker
+/obj/item/weapon/reagent_containers/food/snacks/checker
 	name = "checker"
 	desc = "It is plastic and shiny."
 	icon = 'icons/obj/pieces.dmi'
 	icon_state = "checker_black"
 	w_class = ITEM_SIZE_TINY
 	center_of_mass = "x=16;y=16"
+	nutriment_desc = list("a choking hazard" = 4)
+	nutriment_amt = 1
 	var/piece_color ="black"
 
-/obj/item/weapon/checker/New()
+/obj/item/weapon/reagent_containers/food/snacks/checker/New()
 	..()
 	icon_state = "[name]_[piece_color]"
 	name = "[piece_color] [name]"
 
-/obj/item/weapon/checker/red
+/obj/item/weapon/reagent_containers/food/snacks/checker/red
 	piece_color ="red"
 
 //Chess
 
-/obj/item/weapon/checker/pawn
+/obj/item/weapon/reagent_containers/food/snacks/checker/pawn
 	name = "pawn"
 	desc = "How many pawns will die in your war?"
 
-/obj/item/weapon/checker/pawn/red
+/obj/item/weapon/reagent_containers/food/snacks/checker/pawn/red
 	piece_color ="red"
 
-/obj/item/weapon/checker/knight
+/obj/item/weapon/reagent_containers/food/snacks/checker/knight
 	name = "knight"
 	desc = "The piece chess deserves, and needs to actually play."
 
-/obj/item/weapon/checker/knight/red
+/obj/item/weapon/reagent_containers/food/snacks/checker/knight/red
 	piece_color ="red"
 
-/obj/item/weapon/checker/bishop
+/obj/item/weapon/reagent_containers/food/snacks/checker/bishop
 	name = "bishop"
 	desc = "What corruption occured, urging holy men to fight?"
 
-/obj/item/weapon/checker/bishop/red
+/obj/item/weapon/reagent_containers/food/snacks/checker/bishop/red
 	piece_color ="red"
 
-/obj/item/weapon/checker/rook
+/obj/item/weapon/reagent_containers/food/snacks/checker/rook
 	name = "rook"
 	desc = "Representing ancient moving towers. So powerful and fast they were banned from wars, forever."
 
-/obj/item/weapon/checker/rook/red
+/obj/item/weapon/reagent_containers/food/snacks/checker/rook/red
 	piece_color ="red"
 
-/obj/item/weapon/checker/queen
+/obj/item/weapon/reagent_containers/food/snacks/checker/queen
 	name = "queen"
 	desc = "A queen of battle and pain. She dances across the battlefield."
 
-/obj/item/weapon/checker/queen/red
+/obj/item/weapon/reagent_containers/food/snacks/checker/queen/red
 	piece_color ="red"
 
-/obj/item/weapon/checker/king
+/obj/item/weapon/reagent_containers/food/snacks/checker/king
 	name = "king"
 	desc = "Why does a chess game end when the king dies?"
 
-/obj/item/weapon/checker/king/red
+/obj/item/weapon/reagent_containers/food/snacks/checker/king/red
 	piece_color ="red"

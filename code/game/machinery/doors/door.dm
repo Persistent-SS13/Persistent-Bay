@@ -1,6 +1,5 @@
 //This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:31
 #define DOOR_REPAIR_AMOUNT 50	//amount of health regained per stack amount used
-#define BLEND_OBJECTS 	   list(/obj/structure/wall_frame, /obj/structure/window, /obj/structure/grille, /obj/machinery/door) // Objects which to blend with
 
 /obj/machinery/door
 	name 				= "Door"
@@ -45,8 +44,9 @@
 	var/block_air_zones = TRUE 	//If set, air zones cannot merge across the door even when it is opened.
 	var/close_door_at 	= 0 	//When to automatically close the door, if possible
 	var/destroy_hits 	= 10 	//How many strong hits it takes to destroy the door
-
+	var/autoset_access = TRUE // Determines whether the door will automatically set its access from the areas surrounding it. Can be used for mapping.
 	var/list/connections = list("0", "0", "0", "0")
+	var/list/blend_objects = list(/obj/structure/wall_frame, /obj/structure/window, /obj/structure/grille) // Objects which to blend with
 	var/air_properties_vary_with_direction = 0
 	var/obj/item/stack/material/repairing
 	// turf animation
@@ -57,6 +57,13 @@
 
 /obj/machinery/door/New()
 	. = ..()
+	if(density)
+		layer = closed_layer
+		update_heat_protection(get_turf(src))
+	else
+		layer = open_layer
+
+
 	if(width > 1)
 		if(dir in list(EAST, WEST))
 			bound_width = width * world.icon_size
@@ -64,15 +71,25 @@
 		else
 			bound_width = world.icon_size
 			bound_height = width * world.icon_size
-	if(density)
-		layer = closed_layer
-		update_heat_protection(get_turf(src))
-	else
-		layer = open_layer
+
 	update_connections(TRUE)
-	update_icon()
+	queue_icon_update()
 	update_nearby_tiles(need_rebuild = TRUE)
 
+/obj/machinery/door/Initialize()
+	set_extension(src, /datum/extension/penetration, /datum/extension/penetration/proc_call, .proc/CheckPenetration)
+	. = ..()
+	if(autoset_access)
+#ifdef UNIT_TEST
+		if(length(req_access))
+			crash_with("A door with mapped access restrictions was set to autoinitialize access.")
+#endif
+		return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/door/LateInitialize()
+	..()
+	if(autoset_access) // Delayed because apparently the dir is not set by mapping and we need to wait for nearby walls to init and turn us.
+		inherit_access_from_area()
 
 /obj/machinery/door/Destroy()
 	set_density(FALSE)
@@ -112,7 +129,7 @@
 		var/mob/M = AM
 		if(world.time - M.last_bumped <= 10) return	//Can bump-open one airlock per second. This is to prevent shock spam.
 		M.last_bumped = world.time
-		if(!M.restrained() && (!issmall(M) || ishuman(M)))
+		if(!M.restrained() && (!issmall(M) || ishuman(M) || issilicon(M)))
 			bumpopen(M)
 		return
 	else if(istype(AM, /mob/living/bot))
@@ -170,7 +187,7 @@
 /obj/machinery/door/destroyed(damtype)
 	if(!IsDamageTypeBurn(damtype))
 		new /obj/item/stack/material/steel(src.loc, 2)
-		new /obj/item/stack/rods(src.loc, 3)
+		new /obj/item/stack/material/rods(src.loc, 3)
 	return ..()
 
 /obj/machinery/door/melt()
@@ -225,7 +242,7 @@
 		else
 			repairing = stack.split(amount_needed, force=TRUE)
 			if (repairing)
-				repairing.loc = src
+				repairing.dropInto(loc)
 				transfer = repairing.amount
 				repairing.uses_charge = FALSE //for clean robot door repair - stacks hint immortal if true
 
@@ -284,6 +301,7 @@
 		sleep(6)
 		open()
 		operating = -1
+		return 1
 
 //psa to whoever coded this, there are plenty of objects that need to call attack() on doors without bludgeoning them.
 /obj/machinery/door/proc/check_force(obj/item/I as obj, mob/user as mob)
@@ -299,12 +317,12 @@
 			playsound(src.loc, sound_hit, 100, 1)
 			take_damage(W.force, W.damtype, W.armor_penetration, W)
 
-/obj/machinery/door/take_damage(damage, damtype, armorbypass, damsrc)
+/obj/machinery/door/take_damage(damage, damtype, armorbypass, used_weapon)
 	var/initialhealth = src.health
 	//cap projectile damage so that there's still a minimum number of hits required to break the door
 	if(damage)
 		damage = min(damage, 100)
-	..(damage, damtype, armorbypass, damsrc)
+	..(damage, damtype, armorbypass, used_weapon)
 	if(src.health <= 0 && initialhealth > 0)
 		src.set_broken()
 	else if(src.health < src.max_health / 4 && initialhealth >= src.max_health / 4)
@@ -315,17 +333,7 @@
 		visible_message("\The [src] shows signs of damage!" )
 	update_icon()
 
-/obj/machinery/door/set_broken(var/state)
-	..(state)
-	if(state)
-		visible_message(SPAN_WARNING("\The [src.name] breaks!"))
 
-/obj/machinery/door/ex_act(severity)
-	if(severity == 3 && prob(80))
-		var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
-		s.set_up(2, 1, src)
-		s.start()
-	..(severity)
 
 /obj/machinery/door/examine(mob/user)
 	. = ..()
@@ -338,7 +346,21 @@
 	else if(src.health < src.max_health * 3/4)
 		to_chat(user, "\The [src] shows signs of damage!")
 
-/obj/machinery/door/update_icon()
+/obj/machinery/door/set_broken(var/new_state)
+	. = ..()
+	if(. && new_state)
+		visible_message(SPAN_WARNING("\The [src.name] breaks!"))
+
+/obj/machinery/door/ex_act(severity)
+	if(severity == 3 && prob(80))
+		var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
+		s.set_up(2, 1, src)
+		s.start()
+	..(severity)
+
+
+/obj/machinery/door/on_update_icon()
+	//Don't do that. It does weird shit with multi-tile doors and some wall placements, and its generally uneeded
 	// if(connections in list(NORTH, SOUTH, NORTH|SOUTH))
 	// 	if(connections in list(WEST, EAST, EAST|WEST))
 	// 		set_dir(SOUTH)
@@ -483,7 +505,7 @@
 			success = TRUE
 		else
 			for(var/obj/O in T)
-				for(var/b_type in BLEND_OBJECTS)
+				for(var/b_type in blend_objects)
 					if( istype(O, b_type))
 						success = TRUE
 					if(success)
@@ -494,3 +516,33 @@
 		if(success)
 			dirs |= direction
 	connections = dirs
+
+/obj/machinery/door/CanFluidPass(var/coming_from)
+	return !density
+
+// Most doors will never be deconstructed over the course of a round,
+// so as an optimization defer the creation of electronics until
+// the airlock is deconstructed
+/obj/machinery/door/proc/create_electronics(var/electronics_type = /obj/item/weapon/airlock_electronics)
+	var/obj/item/weapon/airlock_electronics/electronics = new electronics_type(loc)
+	electronics.set_access(src)
+	electronics.autoset = autoset_access
+	return electronics
+
+/obj/machinery/door/proc/access_area_by_dir(direction)
+	var/turf/T = get_turf(get_step(src, direction))
+	if (T && !T.density)
+		return get_area(T)
+
+/obj/machinery/door/proc/inherit_access_from_area()
+	var/area/fore = access_area_by_dir(dir)
+	var/area/aft = access_area_by_dir(GLOB.reverse_dir[dir])
+	fore = fore || aft
+	aft = aft || fore
+	
+	if (!fore && !aft)
+		req_access = list()
+	else if (fore.secure || aft.secure)
+		req_access = req_access_union(fore, aft)
+	else
+		req_access = req_access_diff(fore, aft)

@@ -113,12 +113,13 @@
 		else
 			make_payment(user, account)
 
-	else if(istype(W, /obj/item/device/pda))
+	else if(istype(W, /obj/item/modular_computer/pda))
 		if(!selected)
 			return
-		var/obj/item/device/pda/PDA = W
-		if(PDA.id)
-			var/datum/money_account/account = get_card_account(PDA.id)
+		var/obj/item/modular_computer/pda/PDA = W
+		var/obj/item/weapon/card/id/I = PDA.GetIdCard()
+		if(I)
+			var/datum/money_account/account = get_card_account(I)
 			if(!account)
 				to_chat(user, "No account associated with the ID")
 				return

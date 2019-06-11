@@ -151,23 +151,26 @@
 				d.analysed = analysed
 				if(analysed)
 					if (memorybank)
-						d.name = "[memorybank.name] GNA disk (Stage: [memorybank.stage])"
+						d.SetName("[memorybank.name] GNA disk (Stage: [memorybank.stage])")
 						d.effect = memorybank
 					else if (species_buffer)
-						d.name = "[jointext(species_buffer, ", ")] GNA disk"
+						d.SetName("[jointext(species_buffer, ", ")] GNA disk")
 						d.species = species_buffer
 				else
 					if (memorybank)
-						d.name = "Unknown GNA disk (Stage: [memorybank.stage])"
+						d.SetName("Unknown GNA disk (Stage: [memorybank.stage])")
 						d.effect = memorybank
 					else if (species_buffer)
-						d.name = "Unknown Species GNA disk"
+						d.SetName("Unknown Species GNA disk")
 						d.species = species_buffer
 
 				ping("\The [src] pings, \"Backup disk saved.\"")
 				SSnano.update_uis(src)
+	if(busy_state && dish && dish.virus2)
+		infect_nearby(dish.virus2, 40, SKILL_PROF)
 
-/obj/machinery/computer/diseasesplicer/OnTopic(user, href_list)
+/obj/machinery/computer/diseasesplicer/OnTopic(mob/user, href_list)
+	operator_skill = user.get_skill_value(core_skill)
 	if (href_list["close"])
 		SSnano.close_user_uis(user, src, "main")
 		return TOPIC_HANDLED

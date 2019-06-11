@@ -22,7 +22,7 @@
 	new /obj/item/clothing/under/rank/miner(src)
 	new /obj/item/clothing/gloves/thick(src)
 	new /obj/item/clothing/shoes/black(src)
-	new /obj/item/device/analyzer(src)
+	new /obj/item/device/scanner/gas(src)
 	new /obj/item/weapon/storage/ore(src)
 	new /obj/item/device/flashlight/lantern(src)
 	new /obj/item/weapon/shovel(src)
@@ -36,17 +36,17 @@
 	icon_state = "lantern"
 	desc = "A mining lantern."
 
-/*****************************Pickaxe********************************/
+/**********'pickaxes' but theyre drills actually***************/
 
 /obj/item/weapon/pickaxe
 	name = "mining drill"
 	desc = "The most basic of mining drills, for short excavations and small mineral extractions."
-	icon = 'icons/obj/items/tools.dmi'
+	icon = 'icons/obj/tools.dmi'
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT
 	force = 15.0
 	throwforce = 4.0
-	icon_state = "pickaxe"
+	icon_state = "drill"
 	item_state = "jackhammer"
 	w_class = ITEM_SIZE_HUGE
 	matter = list(MATERIAL_STEEL = 3750)
@@ -58,20 +58,19 @@
 	damtype = DAM_PIERCE
 
 	var/excavation_amount = 200
+	var/build_from_parts = FALSE
+	var/hardware_color
+
+/obj/item/weapon/pickaxe/Initialize()
+	if(build_from_parts)
+		icon_state = "pick_hardware"
+		color = hardware_color
+		overlays += overlay_image(icon, "pick_handle", flags=RESET_COLOR)
+	. = ..()
 
 /obj/item/weapon/pickaxe/hammer
 	name = "sledgehammer"
-	//icon_state = "sledgehammer" Waiting on sprite
-	desc = "A mining hammer made of reinforced metal."
-	damtype = DAM_BLUNT
-
-/obj/item/weapon/pickaxe/silver
-	name = "silver pickaxe"
-	icon_state = "spickaxe"
-	item_state = "spickaxe"
-	digspeed = 30
-	origin_tech = list(TECH_MATERIAL = 3)
-	desc = "This makes no metallurgic sense."
+	desc = "A mining hammer made of reinforced metal. You feel like smashing your boss in the face with this."
 
 /obj/item/weapon/pickaxe/drill
 	name = "advanced mining drill" // Can dig sand as well!
@@ -91,25 +90,6 @@
 	desc = "Cracks rocks with sonic blasts, perfect for killing cave lizards."
 	drill_verb = "hammering"
 
-/obj/item/weapon/pickaxe/gold
-	name = "golden pickaxe"
-	icon_state = "gpickaxe"
-	item_state = "gpickaxe"
-	digspeed = 20
-	origin_tech = list(TECH_MATERIAL = 4)
-	desc = "This makes no metallurgic sense."
-	drill_verb = "picking"
-
-
-/obj/item/weapon/pickaxe/diamond
-	name = "diamond pickaxe"
-	icon_state = "dpickaxe"
-	item_state = "dpickaxe"
-	digspeed = 10
-	origin_tech = list(TECH_MATERIAL = 6, TECH_ENGINEERING = 4)
-	desc = "A pickaxe with a diamond pick head."
-	drill_verb = "picking"
-
 /obj/item/weapon/pickaxe/diamonddrill //When people ask about the badass leader of the mining tools, they are talking about ME!
 	name = "diamond mining drill"
 	icon_state = "diamonddrill"
@@ -127,12 +107,49 @@
 	desc = ""
 	drill_verb = "drilling"
 
+//****************************actual pickaxes***********************
+/obj/item/weapon/pickaxe/silver
+	name = "silver pickaxe"
+	desc = "This makes no metallurgic sense."
+	icon_state = "pick_preview"
+	item_state = "pickaxe"
+	digspeed = 30
+	origin_tech = list(TECH_MATERIAL = 3)
+	drill_verb = "picking"
+	sharpness = 2
+	build_from_parts = TRUE
+	hardware_color = COLOR_SILVER
+
+/obj/item/weapon/pickaxe/gold
+	name = "golden pickaxe"
+	desc = "This makes no metallurgic sense."
+	icon_state = "pick_preview"
+	item_state = "pickaxe"
+	digspeed = 20
+	origin_tech = list(TECH_MATERIAL = 4)
+	drill_verb = "picking"
+	sharpness = 1
+	build_from_parts = TRUE
+	hardware_color = COLOR_GOLD
+
+/obj/item/weapon/pickaxe/diamond
+	name = "diamond pickaxe"
+	desc = "A pickaxe with a diamond pick head."
+	icon_state = "pick_preview"
+	item_state = "pickaxe"
+	digspeed = 10
+	origin_tech = list(TECH_MATERIAL = 6, TECH_ENGINEERING = 4)
+	drill_verb = "picking"
+	sharpness = 3
+	build_from_parts = TRUE
+	hardware_color = COLOR_DIAMOND
+
 /*****************************Shovel********************************/
 
 /obj/item/weapon/shovel
 	name = "shovel"
 	desc = "A large tool for digging and moving dirt."
-	icon = 'icons/obj/items/tools.dmi'
+	icon = 'icons/obj/tools.dmi'
 	icon_state = "shovel"
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT
@@ -160,7 +177,7 @@
 	name = "flags"
 	desc = "Some colourful flags."
 	singular_name = "flag"
-	amount = 1
+	amount = 10
 	max_amount = 10
 	icon = 'icons/obj/mining.dmi'
 
@@ -195,6 +212,20 @@
 	fringe = "solgovflag_fringe"
 	desc = "A portable flag with the Sol Government symbol on it. I claim this land for Sol!"
 	light_color = COLOR_BLUE
+	
+/obj/item/stack/flag/blue
+	name = "blue flags"
+	singular_name = "blue flag"
+	icon_state = "blueflag"
+	fringe = "blueflag_fringe"
+	light_color = COLOR_BLUE
+	
+/obj/item/stack/flag/teal
+	name = "teal flags"
+	singular_name = "teal flag"
+	icon_state = "tealflag"
+	fringe = "tealflag_fringe"
+	light_color = COLOR_TEAL
 
 /obj/item/stack/flag/attackby(var/obj/item/W, var/mob/user)
 	if(upright)
@@ -212,19 +243,22 @@
 /obj/item/stack/flag/attack_self(var/mob/user)
 	var/turf/T = get_turf(src)
 
-	if(!istype(T, /turf/simulated/asteroid) && !istype(T, /turf/simulated/floor/exoplanet))
-		to_chat(user, "The flag won't stand up in this terrain.")
+	if(istype(T, /turf/space) || istype(T, /turf/simulated/open))
+		to_chat(user, "<span class='warning'>There's no solid surface to plant the flag on.</span>")
 		return
 
 	for(var/obj/item/stack/flag/F in T)
 		if(F.upright)
-			to_chat(user, "\The [F] is already planted here.")
+			to_chat(user, "<span class='warning'>\The [F] is already planted here.</span>")
 			return
 
 	if(use(1)) // Don't skip use() checks even if you only need one! Stacks with the amount of 0 are possible, e.g. on synthetics!
 		var/obj/item/stack/flag/newflag = new src.type(T, 1)
 		newflag.set_up()
-		user.visible_message("\The [user] plants \the [newflag.singular_name] firmly in the ground.")
+		if(istype(T, /turf/simulated/floor/asteroid) || istype(T, /turf/simulated/floor/exoplanet))
+			user.visible_message("\The [user] plants \the [newflag.singular_name] firmly in the ground.")
+		else
+			user.visible_message("\The [user] attaches \the [newflag.singular_name] firmly to the ground.")
 
 /obj/item/stack/flag/proc/set_up()
 	pixel_x = 0
@@ -233,7 +267,7 @@
 	anchored = 1
 	icon_state = "[initial(icon_state)]_open"
 	if(fringe)
-		set_light(2, 0.1) // Very dim so the rest of the flag is barely visible - if the turf is completely dark, you can't see anything on it, no matter what
+		set_light(0.2, 0.1, 1) // Very dim so the rest of the flag is barely visible - if the turf is completely dark, you can't see anything on it, no matter what
 		var/image/addon = image(icon = src.icon, icon_state = fringe) // Bright fringe
 		addon.layer = ABOVE_LIGHTING_LAYER
 		addon.plane = EFFECTS_ABOVE_LIGHTING_PLANE

@@ -9,18 +9,18 @@
 
 /obj/item/weapon/circuitboard/aiupload
 	name = T_BOARD("AI upload console")
-	build_path = /obj/machinery/computer/aiupload
+	build_path = /obj/machinery/computer/upload/ai
 	origin_tech = list(TECH_DATA = 4)
 
 /obj/item/weapon/circuitboard/borgupload
 	name = T_BOARD("cyborg upload console")
-	build_path = /obj/machinery/computer/borgupload
+	build_path = /obj/machinery/computer/upload/robot
 	origin_tech = list(TECH_DATA = 4)
 
 /obj/item/weapon/circuitboard/teleporter
 	name = T_BOARD("teleporter control console")
 	build_path = /obj/machinery/computer/teleporter
-	origin_tech = list(TECH_DATA = 2, TECH_BLUESPACE = 2)
+	origin_tech = list(TECH_DATA = 2, TECH_BLUESPACE = 4)
 
 /obj/item/weapon/circuitboard/atmos_alert
 	name = T_BOARD("atmospheric alert console")
@@ -107,11 +107,23 @@
 
 /obj/item/weapon/circuitboard/helm
 	name = T_BOARD("helm control console")
-	build_path = /obj/machinery/computer/helm
+	build_path = /obj/machinery/computer/ship/helm
+
+/obj/item/weapon/circuitboard/engine
+	name = T_BOARD("engine control console")
+	build_path = /obj/machinery/computer/ship/engines
 
 /obj/item/weapon/circuitboard/nav
 	name = T_BOARD("navigation console")
-	build_path = /obj/machinery/computer/navigation
+	build_path = /obj/machinery/computer/ship/navigation
+
+/obj/item/weapon/circuitboard/sensors
+	name = T_BOARD("sensors console")
+	build_path = /obj/machinery/computer/ship/sensors
+
+/obj/item/weapon/circuitboard/bsa_console
+	name = T_BOARD("BSA console")
+	build_path = /obj/machinery/computer/ship/bsa
 
 /obj/item/weapon/circuitboard/mining_shuttle
 	name = T_BOARD("mining shuttle console")

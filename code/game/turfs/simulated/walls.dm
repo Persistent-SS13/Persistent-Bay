@@ -11,12 +11,15 @@
 
 	var/integrity = 150 // Placeholder until assigned
 	var/damage_overlay = 0
+	var/global/damage_overlays[16]
+	var/active
 	var/can_open = FALSE
-	var/reinf_material		// Material to be updated to the latest
-	var/material/material	// Material the girder is made out of
-	var/material/r_material	// Material used to reinforce the girder
-	var/material/p_material	// Material used to plate the girder
-	var/state
+	var/material/material
+	var/material/reinf_material
+	var/material/girder_material
+	var/material/girder_reinf_material
+	var/last_state
+	var/construction_stage
 	var/hitsound = 'sound/weapons/Genhit.ogg'
 	var/list/wall_connections = list("0", "0", "0", "0")
 	var/list/other_connections = list("0", "0", "0", "0")
@@ -24,57 +27,55 @@
 	var/paint_color
 	var/stripe_color
 	var/global/list/wall_stripe_cache = list()
+	var/list/blend_turfs = list(/turf/simulated/wall/cult, /turf/simulated/wall/wood, /turf/simulated/wall/walnut, /turf/simulated/wall/maple, /turf/simulated/wall/mahogany, /turf/simulated/wall/ebony)
+	var/list/blend_objects = list(/obj/machinery/door, /obj/structure/wall_frame, /obj/structure/grille, /obj/structure/window/reinforced/full, /obj/structure/window/reinforced/polarized/full, /obj/structure/window/shuttle, ,/obj/structure/window/phoronbasic/full, /obj/structure/window/phoronreinforced/full) // Objects which to blend with
+	var/list/noblend_objects = list(/obj/machinery/door/window) //Objects to avoid blending with (such as children of listed blend objects.
 
-	var/global/damage_overlays[16]
-
-/turf/simulated/wall/r_wall/after_load()
+/turf/simulated/wall/New(var/newloc, var/materialtype, var/rmaterialtype, var/girder_mat, var/girder_reinf_mat)
 	..()
-	var/mat = material
-	var/r_mat = r_material
-	var/p_mat = p_material
-	ChangeTurf(/turf/simulated/wall)
-	material = mat
-	r_material = r_mat
-	p_material = p_mat
+	//icon_state = "blank"
+	ADD_SAVED_VAR(paint_color)
+	ADD_SAVED_VAR(stripe_color)
+	ADD_SAVED_VAR(construction_stage)
+	ADD_SAVED_VAR(integrity)
+	ADD_SAVED_VAR(material)
+	ADD_SAVED_VAR(reinf_material)
+	ADD_SAVED_VAR(girder_material)
+	ADD_SAVED_VAR(girder_reinf_material)
+	ADD_SAVED_VAR(can_open) //For hidden doors
+	ADD_SAVED_VAR(blocks_air) //For hidden doors
 
-/turf/simulated/wall/New(var/newloc, var/material/mat, var/material/r_mat, var/material/p_mat)
-	..(newloc)
+	ADD_SKIP_EMPTY(reinf_material)
+	ADD_SKIP_EMPTY(girder_reinf_material)
 
-	//Since people keep passing strings for some reasons lets double check
-	if(istext(mat))
-		material = SSmaterials.get_material_by_name(mat)
-	else if(istype(mat, /material))
-		material = mat
-
-	if(istext(r_mat))
-		r_material = SSmaterials.get_material_by_name(r_mat)
-	else if(istype(r_mat, /material))
-		r_material = r_mat
-
-	if(istext(p_mat))
-		p_material = SSmaterials.get_material_by_name(p_mat)
-	else if(istype(p_mat, /material))
-		p_material = p_mat
-	
-/turf/simulated/wall/after_load()
-	..()
-	if(reinf_material)
-		p_material = reinf_material
-		r_material = reinf_material
-	reinf_material = null
-
-/turf/simulated/wall/Initialize(mapload, ...)
+/turf/simulated/wall/Initialize(mapload, var/materialtype, var/rmaterialtype, var/girder_mat, var/girder_reinf_mat)
+	//testing("wall/initialize([mapload], [materialtype], [rmaterialtype], [girder_mat], [girder_reinf_mat])")
+	set_extension(src, /datum/extension/penetration, /datum/extension/penetration/proc_call, .proc/CheckPenetration)
 	. = ..()
+	if(!map_storage_loaded)
+		if(!materialtype)
+			materialtype = DEFAULT_WALL_MATERIAL
+		material = (istext(materialtype))?  SSmaterials.get_material_by_name(materialtype) : materialtype
+		if(!isnull(rmaterialtype))
+			reinf_material = (istext(rmaterialtype))? SSmaterials.get_material_by_name(rmaterialtype) : rmaterialtype
+		if(!isnull(girder_mat))
+			girder_material = (istext(girder_mat))? SSmaterials.get_material_by_name(girder_mat) : girder_mat
+		if(!isnull(girder_reinf_mat))
+			girder_reinf_material = (istext(girder_reinf_mat))? SSmaterials.get_material_by_name(girder_reinf_mat) : girder_reinf_mat
 	return INITIALIZE_HINT_LATELOAD
 
 /turf/simulated/wall/LateInitialize()
 	. = ..()
-	update_full(TRUE, TRUE)
+	if(!map_storage_loaded)
+		update_full(TRUE, TRUE)
+	else
+		update_full(FALSE, FALSE) //Don't propagate on load
+	hitsound = material.hitsound
 	START_PROCESSING(SSturf, src) //Used for radiation.
 
 /turf/simulated/wall/Destroy()
 	STOP_PROCESSING(SSturf, src)
-	dismantle_wall(TRUE)
+	dismantle_wall(null,null,1)
 	. = ..()
 
 // Walls always hide the stuff below them.
@@ -87,19 +88,40 @@
 	return (istype(O) && O.hides_under_flooring()) || ..()
 
 /turf/simulated/wall/Process(wait, times_fired)
-	var/how_often = max(round(2 SECONDS / wait), 1)
-
+	var/how_often = max(round(2 SECONDS/wait), 1)
 	if(times_fired % how_often)
 		return //We only work about every 2 seconds
-
 	if(!radiate())
 		return PROCESS_KILL
 
+/turf/simulated/wall/proc/get_material()
+	return material
+
+/turf/simulated/wall/bullet_act(var/obj/item/projectile/Proj)
+	if(istype(Proj,/obj/item/projectile/beam))
+		burn(2500)
+	else if(istype(Proj,/obj/item/projectile/ion))
+		burn(500)
+
+	var/proj_damage = Proj.get_structure_damage()
+
+	if(reinf_material)
+		if(IsDamageTypeBurn(Proj.damtype))
+			proj_damage /= reinf_material.burn_armor
+		else if(IsDamageTypeBrute(Proj.damtype))
+			proj_damage /= reinf_material.brute_armor
+
+	//cap the amount of damage, so that things like emitters can't destroy walls in one hit.
+	var/damage = min(proj_damage, 100)
+
+	take_damage(damage, Proj.damtype)
+	return
 
 /turf/simulated/wall/hitby(AM as mob|obj, var/speed=THROWFORCE_SPEED_DIVISOR)
 	..()
 	if(ismob(AM))
 		return
+
 	var/obj/O = AM
 	var/tforce = O.throwforce * (speed/THROWFORCE_SPEED_DIVISOR)
 	take_damage(tforce, DAM_BLUNT)
@@ -142,7 +164,7 @@
 
 //Damage
 
-/turf/simulated/wall/proc/take_damage(damage, damtype, armorbypass, damsrc)
+/turf/simulated/wall/proc/take_damage(damage, damtype, armorbypass, used_weapon)
 	playsound(src, hitsound, 80, 1)
 	if(locate(/obj/effect/overlay/wallrot) in src)
 		damage *= 3
@@ -165,31 +187,25 @@
 		return TRUE
 	return FALSE
 
+/turf/simulated/wall/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)//Doesn't fucking work because walls don't interact with air :(
+	burn(exposed_temperature)
+
 /turf/simulated/wall/adjacent_fire_act(turf/simulated/floor/adj_turf, datum/gas_mixture/adj_air, adj_temp, adj_volume)
 	burn(adj_temp)
+	if(adj_temp > material.melting_point)
+		take_damage(log(RAND_F(0.9, 1.1) * (adj_temp - material.melting_point)))
+
 	return ..()
 
-/turf/simulated/wall/proc/dismantle_wall(var/devastated)
-	if(!devastated)
-		playsound(src, 'sound/items/Welder.ogg', 100, 1)
-		var/obj/structure/girder/G
-		if(r_material)
-			G = new(src, material, r_material)
-			G.state = 7
-			new /obj/item/stack/rods(src, 4)
-		else
-			G = new(src, material)
-			G.state = 2
-		G.anchored = 1
-		G.update_icon()
-		new p_material.stack_type(src, 2)
-		src.ChangeTurf(floor_type)
-	//else
-		//Put destroyed wall sound here
+/turf/simulated/wall/proc/dismantle_wall(var/devastated, var/explode, var/no_product)
 
-	for(var/turf/simulated/wall/W in orange(src, 1))
-		W.update_connections()
-		W.update_icon()
+	playsound(src, 'sound/items/Welder.ogg', 100, 1)
+	if(!no_product)
+		if(reinf_material)
+			reinf_material.place_dismantled_girder(src, girder_material, girder_reinf_material)
+		else
+			material.place_dismantled_girder(src)
+		material.place_dismantled_product(src,devastated)
 
 	for(var/obj/O in src.contents) //Eject contents!
 		if(istype(O,/obj/structure/sign/poster))
@@ -199,9 +215,8 @@
 			O.forceMove(src)
 
 	clear_plants()
-	material = null
-	r_material = null
-	p_material = null
+	material = SSmaterials.get_material_by_name("placeholder")
+	reinf_material = null
 	update_connections(TRUE)
 
 	ChangeTurf(floor_type)
@@ -229,9 +244,16 @@
 	for(var/i=0, i<number_rots, i++)
 		new/obj/effect/overlay/wallrot(src)
 
+/turf/simulated/wall/proc/can_melt()
+	if(material.flags & MATERIAL_UNMELTABLE)
+		return 0
+	return 1
+
 /turf/simulated/wall/proc/thermitemelt(mob/user as mob)
+	if(!can_melt())
+		return
 	var/obj/effect/overlay/O = new/obj/effect/overlay( src )
-	O.name = "Thermite"
+	O.SetName("Thermite")
 	O.desc = "Looks hot."
 	O.icon = 'icons/effects/fire.dmi'
 	O.icon_state = "2"
@@ -240,20 +262,21 @@
 	O.plane = LIGHTING_PLANE
 	O.layer = FIRE_LAYER
 
-	to_chat(user, "<span class='warning'>The thermite starts burning the wall.</span>")
-	var/endtime = world.time + 100
-	while (world.time < endtime)
-		burn(2500)
-		sleep(1)
+	src.ChangeTurf(/turf/simulated/floor/plating)
 
-	if(O)
-		qdel(O)
+	var/turf/simulated/floor/F = src
+	F.burn_tile()
+	F.icon_state = "wall_thermite"
+	to_chat(user, "<span class='warning'>The thermite starts melting through the wall.</span>")
 
+	spawn(100)
+		if(O)
+			qdel(O)
 //	F.sd_LumReset()		//TODO: ~Carn
 	return
 
 /turf/simulated/wall/proc/radiate()
-	var/total_radiation = p_material.radioactivity + (r_material ? r_material.radioactivity / 4 : 0) + (material.radioactivity / 16)
+	var/total_radiation = material.radioactivity + (reinf_material ? reinf_material.radioactivity / 2 : 0)
 	if(!total_radiation)
 		return
 
@@ -261,14 +284,11 @@
 	return total_radiation
 
 /turf/simulated/wall/proc/burn(temperature)
-	// This looks like it is performance intensive, however combustion_effect
-	// returns 0 instantly if the temperature is not hot enough, making this
-	// actually performance friendly
-	if(p_material.combustion_effect(src, temperature, 6))
+	if(material.combustion_effect(src, temperature, 0.7))
 		spawn(2)
-			new /obj/structure/girder(src, material, r_material)
-			if(r_material)
-				new /obj/item/stack/rods(src, 4)
+			new /obj/structure/girder(src, material, reinf_material)
+			if(reinf_material)
+				new /obj/item/stack/material/rods(src, 4)
 			src.ChangeTurf(floor_type)
 			for(var/turf/simulated/wall/W in range(3,src))
 				W.burn((temperature/4))
@@ -276,13 +296,13 @@
 				D.ignite(temperature/4)
 			var/turf/simulated/floor/F = src
 			F.burn_tile()
-	else if(r_material && r_material.combustion_effect(src, temperature, 2))
+	else if(reinf_material && reinf_material.combustion_effect(src, temperature, 2))
 		spawn(2)
 			visible_message("<span class='danger' \The [src] explodes apart!")
 			playsound(src, 'sound/effects/Explosion1.ogg', 50, 1)
-			new /obj/structure/girder(src, material)
-			new p_material.stack_type(src, 4)
-			new /obj/item/stack/rods(src, 8)
+			new /obj/structure/girder(src, girder_material, girder_reinf_material)
+			new material.stack_type(src, 4)
+			new /obj/item/stack/material/rods(src, 8)
 			src.ChangeTurf(floor_type)
 			for(var/turf/simulated/wall/W in range(3,src))
 				W.burn((temperature/4))
@@ -294,12 +314,12 @@
 		spawn(2)
 			visible_message("<span class='danger' \The [src] explodes apart!")
 			playsound(src, 'sound/effects/Explosion1.ogg', 50, 1)
-			new p_material.stack_type(src, 4)
-			if(r_material)
-				new r_material.stack_type(6)
-				new /obj/item/stack/rods(src, 8)
+			new material.stack_type(src, 4)
+			if(reinf_material)
+				new reinf_material.stack_type(6)
+				new /obj/item/stack/material/rods(src, 8)
 			else
-				new /obj/item/stack/rods(src, 4)
+				new /obj/item/stack/material/rods(src, 4)
 			src.ChangeTurf(floor_type)
 			for(var/turf/simulated/wall/W in range(3,src))
 				W.burn((temperature/4))
@@ -308,35 +328,40 @@
 			var/turf/simulated/floor/F = src
 			F.burn_tile()
 	else
-		if(p_material.melting_point < temperature)
-			take_damage(temperature / p_material.melting_point)
-		if(r_material && r_material.melting_point < temperature)
-			take_damage(temperature / r_material.melting_point)
+		if(material.melting_point < temperature)
+			take_damage(temperature / material.melting_point)
+		if(reinf_material && reinf_material.melting_point < temperature)
+			take_damage(temperature / reinf_material.melting_point)
 		if(material.melting_point < temperature)
 			take_damage(temperature / material.melting_point)
 
 /turf/simulated/wall/proc/MaxIntegrity()
-	return p_material.integrity + (r_material ? r_material.integrity + (p_material.integrity * r_material.integrity / 100) : 0) + (material.integrity / 2)
+	return material.integrity + (reinf_material ? reinf_material.integrity + (material.integrity * reinf_material.integrity / 100) : 0) + (material.integrity / 2)
 
 /turf/simulated/wall/proc/BruteArmor()
-	return p_material.brute_armor + (r_material ? r_material.brute_armor + (p_material.brute_armor * r_material.brute_armor / 100) : 0) + (material.brute_armor / 2)
+	return material.brute_armor + (reinf_material ? reinf_material.brute_armor + (material.brute_armor * reinf_material.brute_armor / 100) : 0) + (material.brute_armor / 2)
 
 /turf/simulated/wall/proc/BurnArmor()
-	return p_material.burn_armor + (r_material ? r_material.burn_armor + (p_material.burn_armor * r_material.burn_armor / 100) : 0) + (material.burn_armor / 2)
+	return material.burn_armor + (reinf_material ? reinf_material.burn_armor + (material.burn_armor * reinf_material.burn_armor / 100) : 0) + (material.burn_armor / 2)
 
 /turf/simulated/wall/proc/ExplosionArmor()
-	return p_material.hardness + (r_material ? r_material.hardness + (p_material.integrity * r_material.hardness / 100) : 0) + (material.hardness / 2)
+	return material.hardness + (reinf_material ? reinf_material.hardness + (material.integrity * reinf_material.hardness / 100) : 0) + (material.hardness / 2)
 
 /turf/simulated/wall/get_color()
 	return paint_color
 
+/turf/simulated/wall/proc/CheckPenetration(var/base_chance, var/damage)
+	return round(damage/material.integrity*180)
+
+/turf/simulated/wall/can_engrave()
+	return (material && material.hardness >= 10 && material.hardness <= 100)
+
 //Tungsten rwalls!
 /turf/simulated/wall/r_wall/tungsten
-	reinf_material 	= new /material/tungsten
-	material 		= new /material/tungsten
-	r_material 		= new /material/tungsten
-	p_material 		= new /material/tungsten
+	reinf_material 			= new /material/tungsten
+	material 				= new /material/tungsten
+	girder_material 		= new /material/tungsten
+	girder_reinf_material 	= new /material/tungsten
 
 /turf/simulated/wall/r_wall/tungsten/New(newloc, material/mat, material/r_mat, material/p_mat)
-	. = ..(newloc, src.material, src.r_material, src.p_material) //Keeps the base ctor from being a dipshit
-	
+	. = ..(newloc, src.material, src.reinf_material, src.material) //Keeps the base ctor from being a dipshit

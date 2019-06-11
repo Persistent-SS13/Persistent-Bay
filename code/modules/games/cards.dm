@@ -218,7 +218,7 @@
 	H.update_icon()
 	src.update_icon()
 	usr.visible_message("\The [usr] plays \the [discarding].")
-	H.loc = get_step(usr,usr.dir)
+	H.forceMove(loc = get_step(usr,usr.dir))
 
 	if(!cards.len)
 		qdel(src)
@@ -235,7 +235,7 @@
 		for(var/datum/playingcard/P in cards)
 			to_chat(user, "The [P.name].")
 
-/obj/item/weapon/hand/update_icon(var/direction = 0)
+/obj/item/weapon/hand/on_update_icon(var/direction = 0)
 
 	if(!cards.len)
 		qdel(src)

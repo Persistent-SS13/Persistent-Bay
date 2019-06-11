@@ -33,6 +33,8 @@ var/list/admin_datums = list()
 
 /datum/admins/proc/associate(client/C)
 	if(istype(C))
+		if(admin_datums[C.ckey] != src)
+			return
 		owner = C
 		owner.holder = src
 		owner.add_admin_verbs()	//TODO
@@ -143,7 +145,7 @@ NOTE: It checks usr by default. Supply the "user" argument if you wish to check 
 	else
 		to_chat(src, "<span class='notice'>You are no longer stealthed.</span>")
 	log_and_message_admins("has turned stealth mode [holder.stealthy_ ? "ON" : "OFF"]")
-	feedback_add_details("admin_verb","SM") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	SSstatistics.add_field_details("admin_verb","SM") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 #undef STEALTH_OFF
 #undef STEALTH_MANUAL

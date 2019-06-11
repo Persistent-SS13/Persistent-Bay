@@ -1,12 +1,15 @@
 /obj/item/weapon/gun/magnetic
 	name = "improvised coilgun"
 	desc = "A coilgun hastily thrown together out of a basic frame and advanced power storage components. Is it safe for it to be duct-taped together like that?"
+	icon = 'icons/obj/weapons/guns/coilgun.dmi'
 	icon_state = "coilgun"
 	item_state = "coilgun"
-	icon = 'icons/obj/railgun.dmi'
-	one_hand_penalty = 1
+	one_hand_penalty = 5
+	fire_delay = 20
 	origin_tech = list(TECH_COMBAT = 5, TECH_MATERIAL = 4, TECH_ILLEGAL = 2, TECH_MAGNET = 4)
 	w_class = ITEM_SIZE_LARGE
+	bulk = GUN_BULK_RIFLE
+	combustion = 1
 
 	var/obj/item/weapon/cell/cell                              // Currently installed powercell.
 	var/obj/item/weapon/stock_parts/capacitor/capacitor        // Installed capacitor. Higher rating == faster charge between shots.
@@ -14,7 +17,8 @@
 	var/gun_unreliable = 15                                    // Percentage chance of detonating in your hands.
 
 	var/obj/item/loaded                                        // Currently loaded object, for retrieval/unloading.
-	var/load_type = /obj/item/stack/rods                       // Type of stack to load with.
+	var/load_type = /obj/item/stack/material/rods                       // Type of stack to load with.
+	var/load_sheet_max = 1									   // Maximum number of "sheets" you can load from a stack.
 	var/projectile_type = /obj/item/projectile/bullet/magnetic // Actual fire type, since this isn't throw_at rod launcher.
 
 	var/power_cost = 950                                       // Cost per fire, should consume almost an entire basic cell.
@@ -34,6 +38,9 @@
 	QDEL_NULL(capacitor)
 	. = ..()
 
+/obj/item/weapon/gun/magnetic/get_cell()
+	return cell
+
 /obj/item/weapon/gun/magnetic/Process()
 	if(capacitor)
 		if(cell)
@@ -43,7 +50,8 @@
 			capacitor.use(capacitor.charge * 0.05)
 	update_icon()
 
-/obj/item/weapon/gun/magnetic/update_icon()
+/obj/item/weapon/gun/magnetic/on_update_icon()
+	. = ..()
 	var/list/overlays_to_add = list()
 	if(removable_components)
 		if(cell)
@@ -58,9 +66,12 @@
 		overlays_to_add += image(icon, "[icon_state]_green")
 	if(loaded)
 		overlays_to_add += image(icon, "[icon_state]_loaded")
-
-	overlays = overlays_to_add
-	..()
+		var/obj/item/weapon/magnetic_ammo/mag = loaded
+		if(istype(mag))
+			if(mag.remaining)
+				overlays_to_add += image(icon, "[icon_state]_ammo")
+				
+	overlays += overlays_to_add
 
 /obj/item/weapon/gun/magnetic/proc/show_ammo(var/mob/user)
 	if(loaded)
@@ -92,9 +103,9 @@
 			if(cell)
 				to_chat(user, "<span class='warning'>\The [src] already has \a [cell] installed.</span>")
 				return
+			if(!user.unEquip(cell, src))
+				return
 			cell = thing
-			user.drop_from_inventory(cell)
-			cell.forceMove(src)
 			playsound(loc, 'sound/machines/click.ogg', 10, 1)
 			user.visible_message("<span class='notice'>\The [user] slots \the [cell] into \the [src].</span>")
 			update_icon()
@@ -104,7 +115,6 @@
 			if(!capacitor)
 				to_chat(user, "<span class='warning'>\The [src] has no capacitor installed.</span>")
 				return
-			capacitor.forceMove(get_turf(src))
 			user.put_in_hands(capacitor)
 			user.visible_message("<span class='notice'>\The [user] unscrews \the [capacitor] from \the [src].</span>")
 			playsound(loc, 'sound/items/Screwdriver.ogg', 50, 1)
@@ -116,9 +126,9 @@
 			if(capacitor)
 				to_chat(user, "<span class='warning'>\The [src] already has \a [capacitor] installed.</span>")
 				return
+			if(!user.unEquip(capacitor, src))
+				return
 			capacitor = thing
-			user.drop_from_inventory(capacitor)
-			capacitor.forceMove(src)
 			playsound(loc, 'sound/machines/click.ogg', 10, 1)
 			power_per_tick = (power_cost*0.15) * capacitor.rating
 			user.visible_message("<span class='notice'>\The [user] slots \the [capacitor] into \the [src].</span>")
@@ -127,18 +137,41 @@
 
 	if(istype(thing, load_type))
 
-		if(loaded)
-			to_chat(user, "<span class='warning'>\The [src] already has \a [loaded] loaded.</span>")
-			return
-
 		// This is not strictly necessary for the magnetic gun but something using
 		// specific ammo types may exist down the track.
 		var/obj/item/stack/ammo = thing
 		if(!istype(ammo))
+			if(loaded)
+				to_chat(user, "<span class='warning'>\The [src] already has \a [loaded] loaded.</span>")
+				return
+			var/obj/item/weapon/magnetic_ammo/mag = thing
+			if(istype(mag))
+				if(!(load_type == mag.basetype))
+					to_chat(user, "<span class='warning'>\The [src] doesn't seem to accept \a [mag].</span>")
+					return
+				projectile_type = mag.projectile_type
+			if(!user.unEquip(thing, src))
+				return
+				
 			loaded = thing
-			user.drop_from_inventory(thing)
-			thing.forceMove(src)
+		else if(load_sheet_max > 1)
+			var ammo_count = 0
+			var/obj/item/stack/loaded_ammo = loaded
+			if(!istype(loaded_ammo))
+				ammo_count = min(load_sheet_max,ammo.amount)
+				loaded = new load_type(src, ammo_count)
+			else
+				ammo_count = min(load_sheet_max-loaded_ammo.amount,ammo.amount)
+				loaded_ammo.amount += ammo_count
+			if(ammo_count <= 0)
+				// This will also display when someone tries to insert a stack of 0, but that shouldn't ever happen anyway.
+				to_chat(user, "<span class='warning'>\The [src] is already fully loaded.</span>")
+				return
+			ammo.use(ammo_count)
 		else
+			if(loaded)
+				to_chat(user, "<span class='warning'>\The [src] already has \a [loaded] loaded.</span>")
+				return
 			loaded = new load_type(src, 1)
 			ammo.use(1)
 
@@ -160,7 +193,6 @@
 			cell = null
 
 		if(removing)
-			removing.forceMove(get_turf(src))
 			user.put_in_hands(removing)
 			user.visible_message("<span class='notice'>\The [user] removes \the [removing] from \the [src].</span>")
 			playsound(loc, 'sound/machines/click.ogg', 10, 1)

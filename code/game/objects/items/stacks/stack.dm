@@ -14,6 +14,9 @@
 	origin_tech = list(TECH_MATERIAL = 1)
 	var/list/datum/stack_recipe/recipes
 	var/singular_name
+	var/base_state
+	var/plural_icon_state
+	var/max_icon_state
 	var/amount = 1
 	var/max_amount //also see stack recipes initialisation, param "max_res_amount" must be equal to this max_amount
 	var/stacktype //determines whether different stack types can merge
@@ -24,13 +27,18 @@
 	var/list/materials_per_unit = list() //The materials a single unit of the stack contains. Used to calculate total material value
 
 /obj/item/stack/New(var/loc, var/amount=null)
-	..()
 	if (!stacktype)
 		stacktype = type
-	if (amount)
+	if (amount >= 1)
 		src.amount = amount
+	..()
+	ADD_SAVED_VAR(amount)
+
+/obj/item/stack/Initialize()
+	. = ..()
 	update_material_value()
-	update_icon()
+	base_state = icon_state
+	queue_icon_update()
 
 /obj/item/stack/Destroy()
 	if(uses_charge)
@@ -68,30 +76,32 @@
 	if (recipes_sublist && recipe_list[recipes_sublist] && istype(recipe_list[recipes_sublist], /datum/stack_recipe_list))
 		var/datum/stack_recipe_list/srl = recipe_list[recipes_sublist]
 		recipe_list = srl.recipes
-	var/t1 = text("<HTML><HEAD><title>Constructions from []</title></HEAD><body><TT>Amount Left: []<br>", src, src.get_amount())
+	var/t1 = list()
+	t1 += "<HTML><HEAD><title>Constructions from [src]</title></HEAD><body><TT>Amount Left: [src.get_amount()]<br>"
 	for(var/i=1;i<=recipe_list.len,i++)
 		var/E = recipe_list[i]
 		if (isnull(E))
 			t1 += "<hr>"
 			continue
 
-		if (i>1 && !isnull(recipe_list[i-1]))
-			t1+="<br>"
-
 		if (istype(E, /datum/stack_recipe_list))
+			t1+="<br>"
 			var/datum/stack_recipe_list/srl = E
 			t1 += "<a href='?src=\ref[src];sublist=[i]'>[srl.title]</a>"
 
 		if (istype(E, /datum/stack_recipe))
 			var/datum/stack_recipe/R = E
+			if(!user.skill_check(SKILL_CONSTRUCTION, R.difficulty))
+				continue
+			t1+="<br>"
 			var/max_multiplier = round(src.get_amount() / R.req_amount)
 			var/title
 			var/can_build = 1
 			can_build = can_build && (max_multiplier>0)
 			if (R.res_amount>1)
-				title+= "[R.res_amount]x [R.title]\s"
+				title+= "[R.res_amount]x [R.display_name()]\s"
 			else
-				title+= "[R.title]"
+				title+= "[R.display_name()]"
 			title+= " ([R.req_amount] [src.singular_name]\s)"
 			if (can_build)
 				t1 += text("<A href='?src=\ref[src];sublist=[recipes_sublist];make=[i];multiplier=1'>[title]</A>  ")
@@ -109,50 +119,35 @@
 					t1 += " <A href='?src=\ref[src];make=[i];multiplier=[max_multiplier]'>[max_multiplier*R.res_amount]x</A>"
 
 	t1 += "</TT></body></HTML>"
-	user << browse(t1, "window=stack")
+	user << browse(JOINTEXT(t1), "window=stack")
 	onclose(user, "stack")
-	return
 
 /obj/item/stack/proc/produce_recipe(datum/stack_recipe/recipe, var/quantity, mob/user)
 	var/required = quantity*recipe.req_amount
 	var/produced = min(quantity*recipe.res_amount, recipe.max_res_amount)
+	if(!user.skill_check(SKILL_CONSTRUCTION, recipe.difficulty))
+		return
 
 	if (!can_use(required))
 		if (produced>1)
-			to_chat(user, "<span class='warning'>You haven't got enough [src] to build \the [produced] [recipe.title]\s!</span>")
+			to_chat(user, "<span class='warning'>You haven't got enough [src] to build \the [produced] [recipe.display_name()]\s!</span>")
 		else
-			to_chat(user, "<span class='warning'>You haven't got enough [src] to build \the [recipe.title]!</span>")
+			to_chat(user, "<span class='warning'>You haven't got enough [src] to build \the [recipe.display_name()]!</span>")
 		return
 
-	if (recipe.one_per_turf && (locate(recipe.result_type) in user.loc))
-		to_chat(user, "<span class='warning'>There is another [recipe.title] here!</span>")
-		return
-
-	if (recipe.on_floor && !isfloor(user.loc))
-		to_chat(user, "<span class='warning'>\The [recipe.title] must be constructed on the floor!</span>")
+	if(!recipe.can_make(user))
 		return
 
 	if (recipe.time)
-		to_chat(user, "<span class='notice'>Building [recipe.title] ...</span>")
-		if (!do_after(user, recipe.time))
+		to_chat(user, "<span class='notice'>Building [recipe.display_name()] ...</span>")
+		if (!user.do_skilled(recipe.time, SKILL_CONSTRUCTION))
 			return
 
 	if (use(required))
-		var/atom/O
-		if(recipe.use_material)
-			O = new recipe.result_type(user.loc, recipe.use_material)
-		else
-			O = new recipe.result_type(user.loc)
-		O.set_dir(user.dir)
+		var/atom/O = recipe.spawn_result(user, user.loc, produced)
 		O.add_fingerprint(user)
 
-		if (recipe.goes_in_hands)
-			user.put_in_hands(O)
-
-		if (istype(O, /obj/item/stack))
-			var/obj/item/stack/S = O
-			S.amount = produced
-			S.add_to_stacks(user, recipe.goes_in_hands)
+		user.put_in_hands(O)
 
 /obj/item/stack/Topic(href, href_list)
 	..()
@@ -199,8 +194,9 @@
 			if(usr)
 				usr.remove_from_mob(src)
 			qdel(src) //should be safe to qdel immediately since if someone is still using this stack it will persist for a little while longer
-		src.update_icon()
-		src.update_material_value()
+		else
+			src.update_icon()
+			src.update_material_value()
 		return 1
 	else
 		if(get_amount() < used)
@@ -222,6 +218,8 @@
 			return 0
 		else
 			amount += extra
+			update_icon()
+		return 1
 	else if(!synths || synths.len < uses_charge)
 		return 0
 	else
@@ -296,6 +294,8 @@
 		return newstack
 	return null
 
+/obj/item/stack/proc/copy_from(var/obj/item/stack/other)
+	color = other.color
 
 /obj/item/stack/proc/set_amount(var/newamount)
 	amount = max(1, min(newamount, max_amount))
@@ -377,8 +377,8 @@
 	if (user.get_inactive_hand() == src)
 		var/N = input("How many stacks of [src] would you like to split off?", "Split stacks", 1) as num|null
 		if(N)
-			var/obj/item/stack/F = split(N)
-			if(F)
+			var/obj/item/stack/F = src.split(N)
+			if (F)
 				user.put_in_hands(F)
 				src.add_fingerprint(user)
 				F.add_fingerprint(user)
@@ -427,19 +427,44 @@
 	var/one_per_turf = 0
 	var/on_floor = 0
 	var/use_material
-	var/goes_in_hands = 1
+	var/use_reinf_material
+	var/difficulty = 1 // higher difficulty requires higher skill level to make.
+	var/send_material_data = 0 //Whether the recipe will send the material name as an argument when creating product.
+	var/apply_material_name = 1 //Whether the recipe will prepend a material name to the title - 'steel clipboard' vs 'clipboard'
 
-	New(title, result_type, req_amount = 1, res_amount = 1, max_res_amount = 1, time = 0, one_per_turf = 0, on_floor = 0, supplied_material = null, goes_in_hands = 1)
-		src.title = title
-		src.result_type = result_type
-		src.req_amount = req_amount
-		src.res_amount = res_amount
-		src.max_res_amount = max_res_amount
-		src.time = time
-		src.one_per_turf = one_per_turf
-		src.on_floor = on_floor
-		src.use_material = supplied_material
-		src.goes_in_hands = goes_in_hands
+/datum/stack_recipe/New(material/material, var/reinforce_material)
+	if(material)
+		use_material = material.name
+		difficulty += material.construction_difficulty
+	if(reinforce_material)
+		use_reinf_material = reinforce_material
+
+/datum/stack_recipe/proc/display_name()
+	if(!use_material || !apply_material_name)
+		return title
+	. = "[material_display_name(use_material)] [title]"
+	if(use_reinf_material)
+		. = "[material_display_name(use_reinf_material)]-reinforced [.]"
+
+/datum/stack_recipe/proc/spawn_result(mob/user, location, amount)
+	var/atom/O
+	if(send_material_data && use_material)
+		O = new result_type(location, use_material, use_reinf_material)
+	else
+		O = new result_type(location)
+	O.set_dir(user.dir)
+	return O
+
+/datum/stack_recipe/proc/can_make(mob/user)
+	if (one_per_turf && (locate(result_type) in user.loc))
+		to_chat(user, "<span class='warning'>There is another [display_name()] here!</span>")
+		return FALSE
+
+	if (on_floor && !isfloor(user.loc))
+		to_chat(user, "<span class='warning'>\The [display_name()] must be constructed on the floor!</span>")
+		return FALSE
+	
+	return TRUE
 
 /*
  * Recipe list datum
@@ -447,6 +472,7 @@
 /datum/stack_recipe_list
 	var/title = "ERROR"
 	var/list/recipes = null
-	New(title, recipes)
-		src.title = title
-		src.recipes = recipes
+
+/datum/stack_recipe_list/New(title, recipes)
+	src.title = title
+	src.recipes = recipes

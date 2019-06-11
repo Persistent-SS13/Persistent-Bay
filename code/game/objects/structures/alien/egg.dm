@@ -35,7 +35,7 @@
 		STOP_PROCESSING(SSobj, src)
 		update_icon()
 
-/obj/structure/alien/egg/update_icon()
+/obj/structure/alien/egg/on_update_icon()
 	if(progress == -1)
 		icon_state = "egg_hatched"
 	else if(progress < MAX_PROGRESS)
@@ -83,7 +83,7 @@
 	// Create the mob, transfer over key.
 	var/mob/living/carbon/alien/larva/larva = new(get_turf(src))
 	larva.ckey = user.ckey
-	xenomorphs.add_antagonist(larva.mind, 1)
+	GLOB.xenomorphs.add_antagonist(larva.mind, 1)
 	spawn(-1)
 		if(user) qdel(user) // Remove the keyless ghost if it exists.
 

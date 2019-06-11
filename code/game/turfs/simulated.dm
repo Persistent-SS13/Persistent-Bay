@@ -6,10 +6,8 @@
 	//Mining resources (for the large drills).
 	var/has_resources
 	var/has_gas_resources
-
 	var/list/resources
 	var/list/gas_resources
-
 	var/thermite = 0
 	initial_gas = list(GAS_OXYGEN = MOLES_O2STANDARD, GAS_NITROGEN = MOLES_N2STANDARD)
 	var/to_be_destroyed = 0 //Used for fire, if a melting temperature was reached, it will be destroyed
@@ -57,7 +55,28 @@
 	..()
 	if(istype(loc, /area/chapel))
 		holy = 1
+	ADD_SAVED_VAR(wet)
+	ADD_SAVED_VAR(dirt)
+	ADD_SAVED_VAR(has_resources)
+	ADD_SAVED_VAR(has_gas_resources)
+	ADD_SAVED_VAR(resources)
+	ADD_SAVED_VAR(gas_resources)
+
+	ADD_SKIP_EMPTY(resources)
+	ADD_SKIP_EMPTY(gas_resources)
+
+/turf/simulated/Initialize()
+	. = ..()
+	if(GAME_STATE >= RUNLEVEL_SETUP)
+		fluid_update()
+	return INITIALIZE_HINT_LATELOAD
+
+/turf/simulated/LateInitialize()
+	. = ..()
+	if(map_storage_loaded && wet)
+		wet_floor(wet)
 	levelupdate()
+	queue_icon_update()
 
 /turf/simulated/Destroy()
 	deltimer(timer_id)
@@ -70,7 +89,7 @@
 	tracks.AddTracks(bloodDNA,comingdir,goingdir,bloodcolor)
 
 /turf/simulated/proc/update_dirt()
-	dirt = min(dirt+1, 101)
+	dirt = min(dirt+0.5, 101)
 	var/obj/effect/decal/cleanable/dirt/dirtoverlay = locate(/obj/effect/decal/cleanable/dirt, src)
 	if (dirt > 50)
 		if (!dirtoverlay)
@@ -84,8 +103,6 @@
 /turf/simulated/Entered(atom/A, atom/OL)
 	if (istype(A,/mob/living))
 		var/mob/living/M = A
-		if(M.lying)
-			return ..()
 
 		// Dirt overlays.
 		update_dirt()
@@ -101,7 +118,7 @@
 					S.handle_movement(src, MOVING_QUICKLY(H))
 					if(S.track_blood && S.blood_DNA)
 						bloodDNA = S.blood_DNA
-						bloodcolor=S.blood_color
+						bloodcolor = S.blood_color
 						S.track_blood--
 			else
 				if(H.track_blood && H.feet_blood_DNA)
@@ -109,7 +126,7 @@
 					bloodcolor = H.feet_blood_color
 					H.track_blood--
 
-			if (bloodDNA)
+			if (bloodDNA && H.species.get_move_trail(H))
 				src.AddTracks(H.species.get_move_trail(H),bloodDNA,H.dir,0,bloodcolor) // Coming
 				var/turf/simulated/from = get_step(H,reverse_direction(H.dir))
 				if(istype(from) && from)
@@ -117,9 +134,16 @@
 
 				bloodDNA = null
 
+		if(M.lying)
+			return ..()
+
 		if(src.wet)
 
 			if(M.buckled || (MOVING_DELIBERATELY(M) && prob(min(100, 100/(wet/10))) ) )
+				return
+
+			// skillcheck for slipping
+			if(!prob(min(100, M.skill_fail_chance(SKILL_HAULING, 100, SKILL_MAX+1)/(3/wet))))
 				return
 
 			var/slip_dist = 1
@@ -176,3 +200,4 @@
 		coil.turf_place(src, user)
 		return
 	return ..()
+

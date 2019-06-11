@@ -2,7 +2,7 @@
 /var/list/gender_datums = list()
 
 /hook/startup/proc/populate_gender_datum_list()
-	for(var/type in typesof(/datum/gender))
+	for(var/type in subtypesof(/datum/gender))
 		var/datum/gender/G = new type
 		gender_datums[G.key] = G
 		if(!G.formal_term)
@@ -10,7 +10,7 @@
 	return 1
 
 /datum/gender
-	var/key  = "plural"
+	var/key
 	var/formal_term
 
 	var/He   = "They"

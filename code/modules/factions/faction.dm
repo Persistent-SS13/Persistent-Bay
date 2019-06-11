@@ -847,7 +847,7 @@ var/PriorityQueue/all_feeds
 	var/default_telepad_x
 	var/default_telepad_y
 	var/default_telepad_z
-
+	var/decl/hierarchy/outfit/starter_outfit = /decl/hierarchy/outfit/nexus/starter //Outfit members of this faction spawn with by default
 
 	var/list/service_medical_business = list() // list of all organizations linked into the medical service for this business
 
@@ -1068,6 +1068,8 @@ var/PriorityQueue/all_feeds
 			return ballot
 
 /datum/world_faction/democratic/proc/is_governor(var/real_name)
+	if(!gov)
+		return null
 	if(gov.real_name == real_name)
 		return gov
 
@@ -2158,6 +2160,11 @@ var/PriorityQueue/all_feeds
 		return governor_assignment
 	return ..()
 
+//Just a way to customize the starting money for new characters joining a specific faction on spawn
+// Can be expanded to check the specie and origins and etc too
+/datum/world_faction/proc/get_new_character_money(var/mob/living/carbon/human/H)
+	return DEFAULT_NEW_CHARACTER_MONEY //By default just throw the default amount at them
+
 /datum/records_holder
 	var/use_standard = 1
 	var/list/custom_records = list() // format-- list("")
@@ -2353,10 +2360,16 @@ var/PriorityQueue/all_feeds
 	var/network_uid = "network_uid"
 	var/network_password
 	var/network_invisible = FALSE
+	var/decl/hierarchy/outfit/starter_outfit = /decl/hierarchy/outfit/job //Faction's base outfit, is overriden by creation screen
 
-/obj/faction_spawner/New()
-	if(!GLOB.all_world_factions)
-		GLOB.all_world_factions = list()
+//Psy_commando:
+//In order to reliably have the faction spawn and not be deleted, we need to have the faction spawned in LateInitialize().
+//Otherwise, when globabl variables are initialized, the all_world_faction list may or may not be overwritten on startup, when not loading a save.
+/obj/faction_spawner/Initialize()
+	..()
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/faction_spawner/LateInitialize()
 	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
 		if(existing_faction.uid == uid)
 			qdel(src)
@@ -2373,16 +2386,15 @@ var/PriorityQueue/all_feeds
 		fact.network.secured = 1
 		fact.network.password = network_password
 	fact.network.invisible = network_invisible
-	GLOB.all_world_factions |= fact
+	fact.starter_outfit = starter_outfit
+	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
 	qdel(src)
 	return
 
 /obj/faction_spawner/democratic
 	var/purpose = ""
 
-/obj/faction_spawner/democratic/New()
-	if(!GLOB.all_world_factions)
-		GLOB.all_world_factions = list()
+/obj/faction_spawner/democratic/LateInitialize()
 	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
 		if(existing_faction.uid == uid)
 			qdel(src)
@@ -2400,7 +2412,8 @@ var/PriorityQueue/all_feeds
 		fact.network.secured = 1
 		fact.network.password = network_password
 	fact.network.invisible = network_invisible
-	GLOB.all_world_factions |= fact
+	fact.starter_outfit = starter_outfit
+	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
 	qdel(src)
 	return
 
@@ -3336,5 +3349,3 @@ var/PriorityQueue/all_feeds
 	var/list/connected_orgs = list()
 	var/list/connected_orgs_uids = list()
 	var/completed_objectives = 0
-
-

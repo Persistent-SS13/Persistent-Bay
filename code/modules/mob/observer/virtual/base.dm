@@ -18,10 +18,6 @@ var/list/all_virtual_listeners = list()
 
 /mob/observer/virtual/New(var/location, var/atom/movable/host)
 	..()
-	if(!host)
-		loc = null
-		qdel(src)
-		return
 	if(!istype(host, host_type))
 		CRASH("Received an unexpected host type. Expected [host_type], was [log_info_line(host)].")
 	src.host = host
@@ -41,7 +37,7 @@ var/list/all_virtual_listeners = list()
 	host = null
 	return ..()
 
-/mob/observer/virtual/update_icon()
+/mob/observer/virtual/on_update_icon()
 	if(!overlay_icons)
 		overlay_icons = list()
 		for(var/i_state in icon_states(icon))

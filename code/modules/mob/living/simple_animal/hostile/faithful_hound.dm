@@ -10,7 +10,7 @@
 	melee_damage_upper = 30
 	attacktext = "bites"
 	attack_sound = 'sound/weapons/bite.ogg'
-	faction = "neutral"
+	faction = MOB_FACTION_NEUTRAL
 	density = 0
 	stop_automated_movement = 1
 	wander = 0
@@ -19,6 +19,7 @@
 	var/list/allowed_mobs = list() //Who we allow past us
 	var/last_check = 0
 	faction = "cute ghost dogs"
+	supernatural = 1
 
 /mob/living/simple_animal/faithful_hound/death()
 	new /obj/item/weapon/ectoplasm (get_turf(src))

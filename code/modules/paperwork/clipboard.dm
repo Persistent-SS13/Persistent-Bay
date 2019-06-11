@@ -1,5 +1,6 @@
-/obj/item/weapon/clipboard
+/obj/item/weapon/material/clipboard
 	name = "clipboard"
+	desc = "It's a board with a clip used to organise papers."
 	icon = 'icons/obj/items/clipboard.dmi'
 	icon_state = "clipboard"
 	item_state = "clipboard"
@@ -10,12 +11,23 @@
 	var/obj/item/weapon/pen/haspen		//The stored pen.
 	var/obj/item/weapon/toppaper	//The topmost piece of paper.
 	slot_flags = SLOT_BELT
-	matter = list(MATERIAL_STEEL = 70)
+	default_material = MATERIAL_WOOD
+	applies_material_name = FALSE
+	matter = list(MATERIAL_WOOD = 70)
 
-/obj/item/weapon/clipboard/New()
-	update_icon()
+/obj/item/weapon/material/clipboard/New(newloc, material_key)
+	..()
+	ADD_SAVED_VAR(haspen)
+	ADD_SAVED_VAR(toppaper)
 
-/obj/item/weapon/clipboard/MouseDrop(obj/over_object as obj) //Quick clipboard fix. -Agouri
+/obj/item/weapon/material/clipboard/Initialize()
+	. = ..()
+	if(material)
+		desc = initial(desc)
+		desc += " It's made of [material.use_name]."
+	queue_icon_update()
+
+/obj/item/weapon/material/clipboard/MouseDrop(obj/over_object as obj) //Quick clipboard fix. -Agouri
 	if(ishuman(usr))
 		var/mob/M = usr
 		if(!(istype(over_object, /obj/screen) ))
@@ -33,21 +45,21 @@
 			add_fingerprint(usr)
 			return
 
-/obj/item/weapon/clipboard/update_icon()
-	overlays.Cut()
+/obj/item/weapon/material/clipboard/on_update_icon()
+	..()
 	if(toppaper)
-		overlays += toppaper.icon_state
+		overlays += overlay_image(toppaper.icon, toppaper.icon_state, flags=RESET_COLOR)
 		overlays += toppaper.overlays
 	if(haspen)
-		overlays += "clipboard_pen"
-	overlays += "clipboard_over"
+		overlays += overlay_image(icon, "clipboard_pen", flags=RESET_COLOR)
+	overlays += overlay_image(icon, "clipboard_over", flags=RESET_COLOR)
 	return
 
-/obj/item/weapon/clipboard/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/item/weapon/material/clipboard/attackby(obj/item/weapon/W as obj, mob/user as mob)
 
 	if(istype(W, /obj/item/weapon/paper) || istype(W, /obj/item/weapon/photo))
-		user.drop_item()
-		W.loc = src
+		if(!user.unEquip(W, src))
+			return
 		if(istype(W, /obj/item/weapon/paper))
 			toppaper = W
 		to_chat(user, "<span class='notice'>You clip the [W] onto \the [src].</span>")
@@ -59,7 +71,7 @@
 
 	return
 
-/obj/item/weapon/clipboard/attack_self(mob/user as mob)
+/obj/item/weapon/material/clipboard/attack_self(mob/user as mob)
 	var/dat = "<title>Clipboard</title>"
 	if(haspen)
 		dat += "<A href='?src=\ref[src];pen=1'>Remove Pen</A><BR><HR>"
@@ -83,7 +95,7 @@
 	add_fingerprint(usr)
 	return
 
-/obj/item/weapon/clipboard/Topic(href, href_list)
+/obj/item/weapon/material/clipboard/Topic(href, href_list)
 	..()
 	if((usr.stat || usr.restrained()))
 		return
@@ -92,7 +104,6 @@
 
 		if(href_list["pen"])
 			if(istype(haspen) && (haspen.loc == src))
-				haspen.loc = usr.loc
 				usr.put_in_hands(haspen)
 				haspen = null
 
@@ -100,8 +111,8 @@
 			if(!haspen)
 				var/obj/item/weapon/pen/W = usr.get_active_hand()
 				if(istype(W, /obj/item/weapon/pen))
-					usr.drop_item()
-					W.loc = src
+					if(!usr.unEquip(W, src))
+						return
 					haspen = W
 					to_chat(usr, "<span class='notice'>You slot the pen into \the [src].</span>")
 
@@ -120,8 +131,6 @@
 			var/obj/item/P = locate(href_list["remove"])
 
 			if(P && (P.loc == src) && (istype(P, /obj/item/weapon/paper) || istype(P, /obj/item/weapon/photo)) )
-
-				P.loc = usr.loc
 				usr.put_in_hands(P)
 				if(P == toppaper)
 					toppaper = null
@@ -170,3 +179,22 @@
 		attack_self(usr)
 		update_icon()
 	return
+
+/obj/item/weapon/material/clipboard/ebony
+	default_material = MATERIAL_EBONY
+
+/obj/item/weapon/material/clipboard/steel
+	default_material = MATERIAL_STEEL
+	matter = list(MATERIAL_STEEL = 70)
+
+/obj/item/weapon/material/clipboard/aluminium
+	default_material = MATERIAL_ALUMINIUM
+	matter = list(MATERIAL_ALUMINIUM = 70)
+
+/obj/item/weapon/material/clipboard/glass
+	default_material = MATERIAL_GLASS
+	matter = list(MATERIAL_GLASS = 70)
+
+/obj/item/weapon/material/clipboard/plastic
+	default_material = MATERIAL_PLASTIC
+	matter = list(MATERIAL_PLASTIC = 70)

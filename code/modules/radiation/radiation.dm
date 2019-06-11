@@ -8,6 +8,11 @@
 	var/flat = FALSE			// True for power falloff with distance.
 	var/range					// Cached maximum range, used for quick checks against mobs.
 
+/datum/radiation_source/New(var/source_turf, rad_power, decay = TRUE)
+	src.source_turf = source_turf
+	src.rad_power = rad_power
+	src.decay = decay
+
 /datum/radiation_source/Destroy()
 	SSradiation.sources -= src
 	if(SSradiation.sources_assoc[src.source_turf] == src)
@@ -54,6 +59,6 @@
 
 /mob/living/rad_act(var/severity)
 	if(severity)
-		src.apply_effect(severity, IRRADIATE, src.getarmor(null, DAM_RADS))
+		src.apply_damage(severity, IRRADIATE, damage_flags = DAM_DISPERSED)
 		for(var/atom/I in src)
 			I.rad_act(severity)

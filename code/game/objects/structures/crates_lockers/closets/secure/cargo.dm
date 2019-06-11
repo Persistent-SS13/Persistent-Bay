@@ -17,6 +17,7 @@
 		/obj/item/clothing/shoes/black,
 		/obj/item/device/radio/headset/headset_cargo,
 		/obj/item/clothing/gloves/thick,
+		/obj/item/weapon/storage/belt/general,
 		/obj/item/clothing/head/soft
 	)
 
@@ -43,5 +44,5 @@
 		/obj/item/weapon/tank/emergency/oxygen,
 		/obj/item/clothing/mask/gas,
 		/obj/item/clothing/glasses/meson,
-		/obj/item/clothing/head/soft
+		/obj/item/clothing/head/soft,
 	)

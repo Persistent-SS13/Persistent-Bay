@@ -7,7 +7,6 @@ FIRE ALARM
 	icon = 'icons/obj/monitors.dmi'
 	icon_state = "fire0"
 	anchored = TRUE
-	use_power = POWER_USE_IDLE
 	idle_power_usage = 2
 	active_power_usage = 6
 	power_channel = ENVIRON
@@ -32,30 +31,30 @@ FIRE ALARM
 		wiresexposed = TRUE
 		frame.transfer_fingerprints_to(src)
 
-/obj/machinery/firealarm/Initialize()
-	. = ..()
-	update_icon()
-
 /obj/machinery/firealarm/examine(mob/user)
 	. = ..(user)
 	var/decl/security_state/security_state = decls_repository.get_decl(GLOB.using_map.security_state)
 	to_chat(user, "The current alert level is [security_state.current_security_level.name].")
 
-/obj/machinery/firealarm/update_icon()
+/obj/machinery/firealarm/Initialize()
+	. = ..()
+	if(z in GLOB.using_map.contact_levels)
+		queue_icon_update()
+
+/obj/machinery/firealarm/on_update_icon()
 	overlays.Cut()
+
+	pixel_x = 0
+	pixel_y = 0
 	switch(dir)
 		if(NORTH)
-			src.pixel_x = 0
-			src.pixel_y = -21
+			pixel_y = -21
 		if(SOUTH)
-			src.pixel_x = 0
-			src.pixel_y = 21
+			pixel_y = 21
 		if(EAST)
-			src.pixel_x = -21
-			src.pixel_y = 0
+			pixel_x = -21
 		if(WEST)
-			src.pixel_x = 21
-			src.pixel_y = 0
+			pixel_x = 21
 
 	if(wiresexposed)
 		switch(buildstage)
@@ -77,18 +76,18 @@ FIRE ALARM
 	else
 		if(!src.detecting)
 			icon_state = "fire1"
-			set_light(l_range = 4, l_power = 2, l_color = COLOR_RED)
+			set_light(0.25, 0.1, 1, 2, COLOR_RED)
 		else if(z in GLOB.using_map.contact_levels)
 			icon_state = "fire0"
 			var/decl/security_state/security_state = decls_repository.get_decl(GLOB.using_map.security_state)
 			var/decl/security_level/sl = security_state.current_security_level
 
-			set_light(sl.light_outer_range, sl.light_max_bright, sl.light_color_alarm)
+			set_light(sl.light_max_bright, sl.light_inner_range, sl.light_outer_range, 2, sl.light_color_alarm)
 			src.overlays += image(sl.icon, sl.overlay_alarm)
 
-/obj/machinery/firealarm/fire_act(datum/gas_mixture/air, temperature, volume)
+/obj/machinery/firealarm/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)
 	if(src.detecting)
-		if(temperature > T0C+200)
+		if(exposed_temperature > T0C+200)
 			src.alarm()			// added check of detector status here
 	return
 
@@ -104,8 +103,6 @@ FIRE ALARM
 	..()
 
 /obj/machinery/firealarm/attackby(obj/item/W as obj, mob/user as mob)
-	src.add_fingerprint(user)
-
 	if(isScrewdriver(W) && buildstage == 2)
 		wiresexposed = !wiresexposed
 		update_icon()
@@ -132,14 +129,15 @@ FIRE ALARM
 					if (C.use(5))
 						to_chat(user, "<span class='notice'>You wire \the [src].</span>")
 						buildstage = 2
+						update_icon()
 						return
 					else
 						to_chat(user, "<span class='warning'>You need 5 pieces of cable to wire \the [src].</span>")
 						return
 				else if(isCrowbar(W))
-					to_chat(user, "You pry out the circuit!")
+					to_chat(user, "You start prying out the circuit.")
 					playsound(src.loc, 'sound/items/Crowbar.ogg', 50, 1)
-					spawn(20)
+					if (do_after(user,20))
 						if(buildstage == 1) //Prevents circuit duplication
 							var/obj/item/weapon/firealarm_electronics/circuit = new /obj/item/weapon/firealarm_electronics()
 							circuit.dropInto(user.loc)
@@ -268,6 +266,7 @@ FIRE ALARM
 	for(var/obj/machinery/firealarm/FA in area)
 		fire_alarm.triggerAlarm(loc, FA, duration)
 	update_icon()
+	playsound(src, 'sound/machines/fire_alarm.ogg', 75, 0)
 	return
 
 /*

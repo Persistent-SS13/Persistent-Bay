@@ -127,11 +127,11 @@
 			if(selected_assignment.accesses.len)
 				if(selected_assignment.accesses[1] && !istype(selected_assignment.accesses[1], /datum/accesses))
 					var/datum/accesses/copy = new()
-					selected_assignment.accesses[1] = copy
+					selected_assignment.accesses |= copy
 					message_admins("Broken assignment [selected_assignment.uid]")
 			else
 				var/datum/accesses/copy = new()
-				selected_assignment.accesses[1] = copy
+				selected_assignment.accesses |= copy
 
 			var/list/all_access = list()
 			var/expense_limit = 0
@@ -461,6 +461,13 @@
 					new_assignment.uid = select_name
 					new_assignment.cryo_net = "Last Known Cryonet"
 					selected_assignmentcategory.assignments |= new_assignment
+					var/datum/accesses/access = new()
+					access.name = select_title
+					access.pay = 0
+					access.auth_level = 0
+					access.auth_req = 0
+					access.expense_limit = 0
+					new_assignment.accesses |= access
 					to_chat(usr, "Assignment successfully created.")
 		if("create_assignment_two")
 			var/datum/assignment_category/selected_assignmentcategory2 = locate(href_list["selected_ref"])
@@ -484,6 +491,13 @@
 					new_assignment.uid = select_name
 					new_assignment.cryo_net = "Last Known Cryonet"
 					selected_assignmentcategory2.assignments |= new_assignment
+					var/datum/accesses/access = new()
+					access.name = select_title
+					access.pay = 0
+					access.auth_level = 0
+					access.auth_req = 0
+					access.expense_limit = 0
+					new_assignment.accesses |= access
 					to_chat(usr, "Assignment successfully created.")
 		if("edit_assignmentcategory")
 			var/curr_name = selected_assignmentcategory.name
@@ -494,15 +508,6 @@
 					SSnano.update_uis(src)
 					return 1
 				selected_assignmentcategory.name = select_name
-		if("edit_assignment")
-			var/curr_name = selected_assignment.name
-			var/select_name = sanitizeName(input(usr,"Enter new rank 1 title.","Rank 1 Title", "") as null|text, MAX_NAME_LEN, 1, 0)
-			if(select_name)
-				if(curr_name != selected_assignment.name)
-					to_chat(usr, "Your inputs expired because someone used the terminal first.")
-					SSnano.update_uis(src)
-					return 1
-				selected_assignment.name = select_name
 
 		if("delete_assignmentcategory")
 			if(selected_assignmentcategory.assignments.len)
@@ -535,6 +540,8 @@
 				if(!new_pay && new_pay != 0) return 1
 				var/datum/accesses/copy2 = selected_assignment.accesses[selected_assignment.accesses.len]
 				var/datum/accesses/copy = new()
+				copy.name = select_name
+				copy.pay = new_pay
 				selected_assignment.accesses |= copy
 				if(copy2)
 					copy.expense_limit = copy2.expense_limit
@@ -561,16 +568,48 @@
 			else
 				all_access |= x
 
-		if("edit_assignment_pay")
+		if("change_rank_wage")
 			var/datum/accesses/copy = selected_assignment.accesses[selected_rank]
 			if(istype(copy))
 				var/new_pay = input("Enter new wage. This wage is paid every thirty minutes.","Rank 1 Wage") as null|num
 				if(!new_pay && new_pay != 0) return 1
 				copy.pay = new_pay
 			else
-				selected_assignment.accesses[selected_rank] = new /datum/accesses()
+				selected_assignment.accesses |= new /datum/accesses()
+		
+		
+		if("change_auth_level")
+			var/datum/accesses/copy = selected_assignment.accesses[selected_rank]
+			if(istype(copy))
+				var/new_pay = input("Enter new authority level. This assignment can modify those with the same or lower authority requirement.","Authority Requirement", copy.auth_level) as null|num
+				if(!new_pay && new_pay != 0) return 1
+				copy.auth_level = new_pay
+			else
+				selected_assignment.accesses |= new /datum/accesses()
+		
+		if("change_auth_req")
+			var/datum/accesses/copy = selected_assignment.accesses[selected_rank]
+			if(istype(copy))
+				var/new_pay = input("Enter new authority level. This assignment can modify those with the same or lower authority requirement.","Authority Requirement", copy.auth_req) as null|num
+				if(!new_pay && new_pay != 0) return 1
+				copy.auth_req = new_pay
+			else
+				selected_assignment.accesses |= new /datum/accesses()
 
-
+		
+		if("edit_rank_title")
+			var/datum/accesses/copy = selected_assignment.accesses[selected_rank]
+			if(istype(copy))
+				var/curr_name = copy.name
+				var/select_name = sanitize(input(usr,"Enter new title.","New Title", curr_name) as null|text, MAX_NAME_LEN)
+				if(select_name)
+					if(curr_name != copy.name)
+						to_chat(usr, "Your inputs expired because someone used the terminal first.")
+						SSnano.update_uis(src)
+						return 1
+					copy.name = select_name
+			else
+				selected_assignment.accesses |= new /datum/accesses()
 
 
 		if("change_expense_limit")

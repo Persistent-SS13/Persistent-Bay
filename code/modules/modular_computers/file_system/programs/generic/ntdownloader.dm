@@ -162,7 +162,7 @@
 	data["disk_used"] = my_computer.hard_drive.used_capacity
 	var/list/all_entries[0]
 	for(var/datum/computer_file/program/P in ntnet_global.available_station_software)
-		if(!P.can_run(user, 0))
+		if(!P.can_run(user, 0, null, program.computer))
 			continue
 		all_entries.Add(list(list(
 		"filename" = P.filename,

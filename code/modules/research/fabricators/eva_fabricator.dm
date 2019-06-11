@@ -184,7 +184,7 @@
 // EVA Equipment
 /datum/design/item/genfab/eva
 	category = "EVA Equipment"
-
+	time = 10
 /datum/design/item/genfab/eva/adv
 
 ///////////////////////////////////////////////////////////////
@@ -272,7 +272,7 @@
 //MINING EQUIPMENT
 /datum/design/item/genfab/miningtools
 	category = "Mining Equipment"
-
+	time = 10
 /datum/design/item/genfab/miningtools/adv
 
 

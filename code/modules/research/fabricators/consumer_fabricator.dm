@@ -163,8 +163,16 @@
 	name = "ecigarette"
 	build_path = /obj/item/clothing/mask/smokable/ecig/lathed
 	materials = list(MATERIAL_STEEL = 0.1 SHEETS)
+
 /datum/design/item/consumerfab/consumer/cleaning
 	category = "Cleaning Supplies"
+	build_type = list(CONSUMERFAB, SERVICEFAB)
+
+
+/datum/design/item/consumerfab/consumer/cleaning/trashcart
+	build_path = /obj/structure/closet/crate/trashcart
+	materials = list(MATERIAL_STEEL = 2 SHEETS)
+
 
 /datum/design/item/consumerfab/consumer/cleaning/mop
 	name = "mop"

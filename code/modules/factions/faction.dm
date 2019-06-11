@@ -2143,6 +2143,12 @@ var/PriorityQueue/all_feeds
 	for(var/datum/assignment/assignmentt in all_assignments)
 		if(assignmentt.uid == assignment) return assignmentt
 
+/datum/world_faction/business/get_assignment(var/assignment, var/real_name)
+	if(real_name == leader_name)
+		return CEO
+	return ..()
+
+
 /datum/world_faction/democratic/get_assignment(var/assignment, var/real_name)
 	if(is_judge(real_name))
 		return judge_assignment

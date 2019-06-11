@@ -311,9 +311,12 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 	var/list/potential[0]
 	for(var/datum/world_faction/fact in GLOB.all_world_factions)
-		var/datum/computer_file/report/crew_record/record = fact.get_record(owner.real_name)
-		if(record)
+		if(owner && fact.get_leadername() == owner.real_name)
 			potential |= fact
+		else
+			var/datum/computer_file/report/crew_record/record = fact.get_record(owner.real_name)
+			if(record)
+				potential |= fact
 
 	return potential
 
@@ -322,9 +325,12 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	if(istype(loc, /obj/item/device/lmi))
 		if(istype(loc.loc, /mob/living/silicon/robot))
 			robot = loc.loc
+
 	if((!owner || !faction) && !robot)
 		duty_status = 0
 		return "No owner found.."
+	if(owner && faction && owner.real_name == faction.get_leadername())
+		return 1
 	var/datum/computer_file/report/crew_record/records
 	if(!robot)
 		records = faction.get_record(owner.real_name)

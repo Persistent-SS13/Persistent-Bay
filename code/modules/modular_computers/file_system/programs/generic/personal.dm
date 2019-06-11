@@ -7,7 +7,6 @@
 	extended_desc = "Used by individuals to control things about their Nexus Account and personal holdings."
 	requires_ntnet = 1
 	size = 12
-	business = 1
 
 /datum/nano_module/program/personal
 	name = "Personal Options"
@@ -16,16 +15,16 @@
 
 /datum/nano_module/program/personal/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/list/data = host.initial_data()
-	data["name"] = usr.real_name
+	data["name"] = user.real_name
 	data["menu"] = menu
-	var/datum/computer_file/report/crew_record/R = Retrieve_Record(usr.real_name)
+	var/datum/computer_file/report/crew_record/R = Retrieve_Record(user.real_name)
 	data["account_balance"] = R.linked_account.money
 	var/datum/personal_limits/limits = R.get_limits()
 	if(menu == 1)
 		var/list/formatted_orgs[0]
 		for(var/datum/world_faction/faction in GLOB.all_world_factions)
-			var/datum/computer_file/report/crew_record/faction_record = faction.get_record(usr.real_name)
-			if(faction_record)
+			var/datum/computer_file/report/crew_record/faction_record = faction.get_record(user.real_name)
+			if(faction_record  || faction.get_leadername() == user.real_name)
 				var/selected = 0
 				if(faction.uid in R.subscribed_orgs)
 					selected = 1
@@ -35,7 +34,7 @@
 		var/list/holdings = list()
 		var/total = 0
 		for(var/datum/world_faction/business/faction in GLOB.all_world_factions)
-			var/holding = faction.get_stockholder(usr.real_name)
+			var/holding = faction.get_stockholder(user.real_name)
 			if(holding)
 				total += holding
 				holdings[faction] = holding
@@ -59,7 +58,7 @@
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
-		ui = new(user, src, ui_key, "management.tmpl", name, 750, 650, state = state)
+		ui = new(user, src, ui_key, "personal.tmpl", name, 750, 650, state = state)
 		ui.auto_update_layout = 1
 		ui.set_initial_data(data)
 		ui.open()

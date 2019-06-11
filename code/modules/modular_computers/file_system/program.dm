@@ -129,7 +129,7 @@
 // Check if the user can run program. Only humans can operate computer. Automatically called in run_program()
 // User has to wear their ID or have it inhand for ID Scan to work.
 // Can also be called manually, with optional parameter being access_to_check to scan the user's ID
-/datum/computer_file/program/proc/can_run(var/mob/living/user, var/loud = 0, var/access_to_check)
+/datum/computer_file/program/proc/can_run(var/mob/living/user, var/loud = 0, var/access_to_check, var/alt_computer)
 	// Defaults to required_access
 	if(!access_to_check)
 		access_to_check = required_access
@@ -140,6 +140,8 @@
 
 	if(!istype(user))
 		return 0
+	if(!computer)
+		computer = alt_computer
 	if(democratic)
 		if(!(computer && computer.network_card && computer.network_card.connected_network && istype(computer.network_card.connected_network.holder, /datum/world_faction/democratic)))
 			if(loud)

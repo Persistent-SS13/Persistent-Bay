@@ -3,6 +3,13 @@
 	req_one_access = list(core_access_science_programs)
 	closet_appearance = /decl/closet_appearance/secure_closet/expedition/science
 
+/obj/structure/closet/secure_closet/empty/scientist
+	name = "scientist's locker"
+	req_one_access = list(core_access_science_programs)
+	closet_appearance = /decl/closet_appearance/secure_closet/expedition/science
+
+
+
 /obj/structure/closet/secure_closet/scientist/filled/WillContain()
 	return list(
 		new /datum/atom_creator/weighted(list(/obj/item/weapon/storage/backpack/messenger/tox, /obj/item/weapon/storage/backpack/satchel_tox)),
@@ -31,6 +38,12 @@
 		/obj/item/clothing/gloves/latex,
 		/obj/item/weapon/clipboard
 	)
+
+/obj/structure/closet/secure_closet/empty/RD
+	name = "research director's locker"
+	req_access = list(core_access_science_programs)
+	closet_appearance = /decl/closet_appearance/secure_closet/rd
+
 
 /obj/structure/closet/secure_closet/RD
 	name = "research director's locker"

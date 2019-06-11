@@ -305,10 +305,23 @@
 			playsound(src.loc, 'sound/weapons/blade1.ogg', 50, 1)
 			playsound(src.loc, "sparks", 50, 1)
 			open()
+
+	else if(isMultitool(W))
+		if(locked)
+			to_chat(user, "You cannot reprogram a locked container.")
+			return
+		
+		user.visible_message("<span class='notice'>\The [user] begins reprogramming \the [src].</span>", "<span class='notice'>You begin reprogramming \the [src].</span>")
+		if(do_after(usr, 40, src))
+			ui_interact(user)
+
 	else if(isWrench(W))
 		var/obj/item/weapon/tool/T = W
 		if (src.wrenchable==0)
 			// Do not allow wrench interactions with things that aren't wrenchable.
+			return
+		if(locked)
+			to_chat(user, "You cannot wrench a locked container.")
 			return
 		if (src.anchored==1)
 			to_chat(user, "<span class='notice'>You begin to unsecure \the [src] from the floor...</span>")
@@ -318,7 +331,7 @@
 					"<span class='notice'>You have unsecured \the [src]. Now it can be pulled somewhere else.</span>", \
 					"You hear ratchet.")
 				src.anchored = 0
-		else /*if (src.anchored==0)*/
+		else
 			to_chat(user, "<span class='notice'>You begin to secure \the [src] to the floor...</span>")
 			if (T.use_tool(user, src, 20))
 				user.visible_message( \
@@ -570,3 +583,74 @@
 	locked = FALSE
 	desc += " It appears to be broken."
 	return TRUE
+
+
+/obj/structure/closet/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
+	var/list/data = list()
+	data["name"] = name
+	if(locked)
+		return (SSnano && SSnano.close_uis(src))
+	if(req_access_faction && req_access_faction != "")
+		var/datum/world_faction/faction = get_faction(req_access_faction)
+		data["connected_faction"] = faction.name
+		var/datum/access_category/core/core = new()
+		var/list/all_categories = list()
+		all_categories |= core
+		all_categories |= faction.access_categories
+		var/list/access_categories[0]
+		for(var/datum/access_category/category in all_categories)
+			access_categories[++access_categories.len] = list("name" = category.name, "accesses" = list(), "ref" = "\ref[category]")
+			for(var/x in category.accesses)
+				var/name = category.accesses[x]
+				if(!name) continue
+				access_categories[access_categories.len]["accesses"] += list(list(
+				"name" = sanitize("([x]) [name]"),
+				"access" = x,
+				"selected" = (text2num(x) in req_access)
+				))
+		data["access_categories"] = access_categories
+		var/list/personal_access[0]
+		for(var/x in req_access_personal_list)
+			personal_access[++personal_access.len] = list("name" = x)
+		data["personal_access"] = personal_access
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
+	if (!ui)
+		ui = new(user, src, ui_key, "closet.tmpl", "Container Programming", 800, 500, state = state)
+		ui.set_initial_data(data)
+		ui.open()
+
+
+/obj/structure/closet/Topic(href, href_list)
+	if(..())
+		return 1
+	. = SSnano.update_uis(src)
+	if(locked)
+		to_chat(usr, "The container is locked.")
+		return
+	switch(href_list["action"])
+		if("change_name")
+			var/chose_name = sanitize(input("Enter a new name for the container.", "Container Name", name), MAX_NAME_LEN)
+			if(chose_name && usr.Adjacent(src) && !locked)
+				name = chose_name
+		if("add_name")
+			var/chose_name = sanitize(input("Enter a new name to have personal access.", "Personal Access"), MAX_NAME_LEN)
+			if(chose_name && usr.Adjacent(src) && !locked)
+				req_access_personal_list |= chose_name
+		if("remove_name")
+			if(usr.Adjacent(src))
+				var/chose_name = href_list["target"]
+				req_access_personal_list -= chose_name
+		if("remove_faction")
+			if(usr.Adjacent(src))
+				req_access_faction = ""
+				req_access = list()
+		if("pick_access")
+			if(usr.Adjacent(src))
+				if(text2num(href_list["selected_access"]) in req_access)
+					req_access -= text2num(href_list["selected_access"])
+				else
+					req_access |= text2num(href_list["selected_access"])
+		if("select_faction")
+			var/obj/item/weapon/card/id/id_card = usr.get_idcard()
+			if(id_card)
+				req_access_faction = id_card.selected_faction

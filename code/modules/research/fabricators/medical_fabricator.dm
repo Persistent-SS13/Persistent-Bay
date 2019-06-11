@@ -57,6 +57,17 @@
 
 //////////////////////////////////////////////////////////////////////////
 
+
+/datum/design/item/medicalfab/meditools/bodybag
+	build_path = /obj/item/bodybag
+	materials = list(MATERIAL_CLOTH = 2 SHEETS)
+
+/datum/design/item/medicalfab/meditools/adv/cryobag
+	build_path = /obj/item/bodybag/cryobag
+	materials = list(MATERIAL_CLOTH = 2 SHEETS, MATERIAL_PHORON = 1 SHEET)
+
+
+
 /datum/design/item/medicalfab/meditools/penlight
 	build_path = /obj/item/device/flashlight/pen
 	materials = list(MATERIAL_STEEL = 0.1 SHEETS)
@@ -298,6 +309,10 @@
 /datum/design/item/medicalfab/meditools/implants/implantcase
 	materials = list(MATERIAL_GLASS = 1 SHEET)
 	build_path = /obj/item/weapon/implantcase
+
+/datum/design/item/medicalfab/meditools/coffin
+	build_path = /obj/structure/closet/coffin
+	materials = list(MATERIAL_WOOD = 2 SHEETS, MATERIAL_CLOTH = 1 SHEET)
 
 
 /datum/design/item/medicalfab/restaint

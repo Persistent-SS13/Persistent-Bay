@@ -1,5 +1,5 @@
 //=======================================================================================
-
+/*
 /datum/unit_test/cargo_crates_containment_test
 	name = "CARGO: Supply crates containment"
 
@@ -53,3 +53,4 @@
 	else
 		pass("All supply packs cost sufficiently.")
 	return 1
+*/

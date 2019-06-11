@@ -1,3 +1,10 @@
+/obj/structure/closet/secure_closet/empty/engineering_chief
+	name = "chief engineer's locker"
+	req_access = list(core_access_engineering_programs, core_access_leader)
+	closet_appearance = /decl/closet_appearance/secure_closet/engineering/ce
+
+
+
 /obj/structure/closet/secure_closet/engineering_chief
 	name = "chief engineer's locker"
 	req_access = list(core_access_engineering_programs, core_access_leader)
@@ -24,6 +31,12 @@
 		/obj/item/weapon/tool/crowbar/brace_jack
 	)
 
+/obj/structure/closet/secure_closet/empty/engineering_electrical
+	name = "electrical supplies"
+	req_access = list(core_access_engineering_programs)
+	closet_appearance = /decl/closet_appearance/secure_closet/engineering/electrical
+
+
 /obj/structure/closet/secure_closet/engineering_electrical
 	name = "electrical supplies"
 	req_access = list(core_access_engineering_programs)
@@ -38,6 +51,13 @@
 		/obj/item/device/multitool = 3
 	)
 
+/obj/structure/closet/secure_closet/empty/engineering_welding
+	name = "welding supplies"
+	req_access = list(core_access_engineering_programs)
+	closet_appearance = /decl/closet_appearance/secure_closet/engineering/welding
+
+
+
 /obj/structure/closet/secure_closet/engineering_welding
 	name = "welding supplies"
 	req_access = list(core_access_engineering_programs)
@@ -51,6 +71,12 @@
 		/obj/item/clothing/glasses/welding = 3,
 		/obj/item/weapon/welder_tank = 6
 	)
+
+/obj/structure/closet/secure_closet/empty/engineering_personal
+	name = "engineer's locker"
+	req_access = list(core_access_engineering_programs)
+	closet_appearance = /decl/closet_appearance/secure_closet/engineering
+
 
 /obj/structure/closet/secure_closet/engineering_personal
 	name = "engineer's locker"
@@ -69,6 +95,12 @@
 		/obj/item/clothing/glasses/meson,
 		/obj/item/taperoll/engineering
 	)
+
+/obj/structure/closet/secure_closet/empty/atmos_personal
+	name = "technician's locker"
+	req_access = list(core_access_engineering_programs)
+	closet_appearance = /decl/closet_appearance/secure_closet/engineering/atmos
+
 
 /obj/structure/closet/secure_closet/atmos_personal
 	name = "technician's locker"

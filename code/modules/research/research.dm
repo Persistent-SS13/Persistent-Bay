@@ -65,7 +65,7 @@ research holder datum.
 	var/list/circuit_fab = list()
 	var/list/consumer_fab = list()
 	var/list/service_fab = list()
-
+	var/list/storage_fab = list()
 
 /datum/research/New()		//Insert techs into possible_tech here. Known_tech automatically updated.
 	for(var/T in typesof(/datum/tech) - /datum/tech)
@@ -107,6 +107,8 @@ research holder datum.
 						consumer_fab |= D
 					if(SERVICEFAB)
 						service_fab |= D
+					if(STORAGEFAB)
+						storage_fab |= D
 		else
 			switch(D.build_type)
 				if(GENERALFAB)
@@ -137,6 +139,8 @@ research holder datum.
 					consumer_fab |= D
 				if(SERVICEFAB)
 					service_fab |= D
+				if(STORAGEFAB)
+					storage_fab |= D
 	RefreshResearch()
 
 /datum/research/proc/get_tech_entry(var/uid)
@@ -174,7 +178,8 @@ research holder datum.
 			return consumer_fab
 		if(SERVICEFAB)
 			return service_fab
-			
+		if(STORAGEFAB)
+			return storage_fab
 /datum/research/techonly
 
 /datum/research/techonly/New()

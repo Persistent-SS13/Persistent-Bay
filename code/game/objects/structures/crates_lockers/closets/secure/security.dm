@@ -3,6 +3,12 @@
 	req_access = list(core_access_leader)
 	closet_appearance = /decl/closet_appearance/secure_closet/command
 
+/obj/structure/closet/secure_closet/empty/captains
+	name = "captain's locker"
+	closet_appearance = /decl/closet_appearance/secure_closet/command
+	req_access = list(core_access_leader)
+
+
 /obj/structure/closet/secure_closet/captains/filled/WillContain() //Add the contents to Supply Crate.
 	return list(
 		new/datum/atom_creator/weighted(list(/obj/item/weapon/storage/backpack/captain, /obj/item/weapon/storage/backpack/satchel/cap)),
@@ -23,6 +29,12 @@
 		/obj/item/clothing/head/caphat/formal,
 		/obj/item/clothing/under/captainformal,
 	)
+
+/obj/structure/closet/secure_closet/empty/hop
+	name = "head of personnel's locker"
+	req_access = list(core_access_command_programs)
+	closet_appearance = /decl/closet_appearance/secure_closet/command/hop
+
 
 /obj/structure/closet/secure_closet/hop
 	name = "head of personnel's locker"
@@ -62,6 +74,12 @@
 		/obj/item/clothing/head/caphat/hop
 	)
 
+/obj/structure/closet/secure_closet/empty/hos
+	name = "head of security's locker"
+	req_access = list(core_access_security_programs)
+	closet_appearance = /decl/closet_appearance/secure_closet/security/hos
+
+
 /obj/structure/closet/secure_closet/hos
 	name = "head of security's locker"
 	req_access = list(core_access_security_programs)
@@ -94,6 +112,12 @@
 		/obj/item/device/holowarrant
 	)
 
+/obj/structure/closet/secure_closet/empty/warden
+	name = "warden's locker"
+	req_access = list(core_access_security_programs)
+	closet_appearance = /decl/closet_appearance/secure_closet/security/warden
+
+
 /obj/structure/closet/secure_closet/warden
 	name = "warden's locker"
 	req_access = list(core_access_security_programs)
@@ -123,6 +147,12 @@
 		/obj/item/clothing/head/beret/sec/corporate/warden,
 		/obj/item/device/holowarrant
 	)
+
+/obj/structure/closet/secure_closet/empty/security
+	name = "security officer's locker"
+	req_access = list(core_access_security_programs)
+	closet_appearance = /decl/closet_appearance/secure_closet/security
+
 
 /obj/structure/closet/secure_closet/security
 	name = "security officer's locker"

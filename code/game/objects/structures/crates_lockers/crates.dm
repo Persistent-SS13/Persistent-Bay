@@ -111,7 +111,9 @@
 		DAM_BURN 	= 0,
 		DAM_BOMB 	= 0)
 	closet_appearance = /decl/closet_appearance/crate/plastic
-
+	matter = list(MATERIAL_PLASTIC = 2*SHEET_MATERIAL_AMOUNT)
+	
+	
 /obj/structure/closet/crate/internals
 	name = "internals crate"
 	desc = "A internals crate."

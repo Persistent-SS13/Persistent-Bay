@@ -11,6 +11,14 @@
 			) \
 		)
 
+
+/obj/structure/closet/secure_closet/empty/medical1
+	name = "medical equipment closet"
+	desc = "Filled with medical junk."
+	req_access = list(core_access_medical_programs)
+	closet_appearance = /decl/closet_appearance/secure_closet/medical
+
+
 /obj/structure/closet/secure_closet/medical1
 	name = "medical equipment closet"
 	desc = "Filled with medical junk."
@@ -40,6 +48,12 @@
 		/obj/item/weapon/tank/anesthetic = 3,
 		/obj/item/clothing/mask/breath/medical = 3
 	)
+
+/obj/structure/closet/secure_closet/empty/medical3
+	name = "medical doctor's locker"
+	req_access = list(core_access_medical_programs)
+	closet_appearance = /decl/closet_appearance/secure_closet/medical/alt
+
 
 /obj/structure/closet/secure_closet/medical3
 	name = "medical doctor's locker"
@@ -93,6 +107,12 @@
 	    /obj/item/weapon/storage/box/freezer,
 	    /obj/item/clothing/accessory/storage/white_vest,
 	)
+
+/obj/structure/closet/secure_closet/empty/CMO
+	name = "chief medical officer's locker"
+	req_access = list(core_access_medical_programs)
+	closet_appearance = /decl/closet_appearance/secure_closet/cmo
+
 
 /obj/structure/closet/secure_closet/CMO
 	name = "chief medical officer's locker"
@@ -170,6 +190,12 @@
 		/obj/item/toy/therapy_blue,
 		/obj/item/weapon/storage/belt/general
 	)
+
+/obj/structure/closet/secure_closet/empty/virology
+	name = "virologist's locker"
+	req_access = list(core_access_medical_programs)
+	closet_appearance = /decl/closet_appearance/secure_closet/medical/virology
+
 
 /obj/structure/closet/secure_closet/virology
 	name = "virologist's locker"

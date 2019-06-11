@@ -1,0 +1,50 @@
+<h2>Container Programming</h2><br>
+<div class='item'>
+	<div class='itemLabel'>
+		Container Name:
+	</div>
+	<div class='itemContent'>
+		{{:helper.link(data.name, '', {'action' : 'change_name'})}}
+	</div>
+</div>
+<br><hr><br>
+<h4>Personal Access</h4>
+Any ID with a name from this list will always have access.<br>
+{{:helper.link('Add new name', '', {'action' : 'add_name'})}}
+<div class="statusDisplay" style="overflow: auto;">
+	{{for data.personal_access}}
+		{{:value.name}}{{:helper.link('X', '', {'action' : 'remove_name', 'target' : value.name})}}<br><br>
+	{{/for}}
+</div>
+<br><hr><br>
+<h4>Organization Access</h4>
+{{if data.connected_faction}}
+	An ID with all selected accesses will be permitted.
+	<div class='item'>
+		<div class='itemLabel'>
+			Connected Faction
+		</div>
+		<div class='itemContent'>
+			{{:data.connected_faction}}{{:helper.link('X', '', {'action' : 'remove_faction'})}}
+		</div>
+	</div>
+	{{for data.access_categories}}
+		{{:value.name}}:<br><br>
+		<div class="statusDisplay" style="overflow: auto;">
+			{{for value.accesses :accessValue:accessIndex}}
+				{{:helper.link(accessValue.name, '', {'action' : 'pick_access', 'selected_access' : accessValue.access}, null, accessValue.selected ? 'selected' : null)}}
+			{{/for}}
+		</div>
+		<br><br>
+	{{/for}}
+{{else}}
+	You must link an organization to select accesses from.
+	<div class='item'>
+		<div class='itemLabel'>
+			Connected Faction
+		</div>
+		<div class='itemContent'>
+			{{:helper.link('Connect', '', {'action' : 'select_faction'})}}
+		</div>
+	</div>
+{{/if}}

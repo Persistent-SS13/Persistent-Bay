@@ -4,8 +4,9 @@
 	icon_state = "wingrille"
 	density = 1
 	anchored = 1.0
-	var/win_path = /obj/structure/window/basic
+	var/win_path = /obj/structure/window/basic/full
 	var/frame_path = /obj/structure/wall_frame/standard
+	var/grille_path = /obj/structure/grille
 	var/activated = FALSE
 	var/fulltile = TRUE
 
@@ -25,28 +26,29 @@
 	. = ..()
 	if(!win_path)
 		return
-		
-	if(mapload || GAME_STATE < RUNLEVEL_GAME)
+	var/auto_activate = mapload || (GAME_STATE < RUNLEVEL_GAME)
+	if(auto_activate)
 		activate()
 		return INITIALIZE_HINT_QDEL
 
 /obj/effect/wallframe_spawn/proc/activate()
 	if(activated) return
 
-	if(locate(/obj/structure/wall_frame) in loc)
+	if(locate(frame_path) in loc)
 		warning("Frame Spawner: A frame structure already exists at [loc.x]-[loc.y]-[loc.z]")
 	else
 		var/obj/structure/wall_frame/F = new frame_path(loc)
 		handle_frame_spawn(F)
 
-	if(locate(/obj/structure/window) in loc)
+	if(locate(win_path) in loc)
 		warning("Frame Spawner: A window structure already exists at [loc.x]-[loc.y]-[loc.z]")
 
-	if(locate(/obj/structure/grille) in loc)
-		warning("Frame Spawner: A grille already exists at [loc.x]-[loc.y]-[loc.z]")
-	else
-		var/obj/structure/grille/G = new /obj/structure/grille(loc)
-		handle_grille_spawn(G)
+	if(grille_path)
+		if(locate(grille_path) in loc)
+			warning("Frame Spawner: A grille already exists at [loc.x]-[loc.y]-[loc.z]")
+		else
+			var/obj/structure/grille/G = new grille_path (loc)
+			handle_grille_spawn(G)
 
 	var/list/neighbours = list()
 	if(fulltile)
@@ -93,6 +95,10 @@
 	icon_state = "r-wingrille"
 	win_path = /obj/structure/window/reinforced/full
 
+/obj/effect/wallframe_spawn/reinforced/no_grille
+	name = "reinforced wall frame window spawner (no grille)"
+	grille_path = null
+
 /obj/effect/wallframe_spawn/reinforced/titanium
 	name = "reinforced titanium wall frame window spawner"
 	frame_path = /obj/structure/wall_frame/titanium
@@ -131,10 +137,14 @@
 	win_path = /obj/structure/window/reinforced/polarized/full
 	var/id
 
+/obj/effect/wallframe_spawn/reinforced/polarized/no_grille
+	name = "polarized wall frame window spawner (no grille)"
+	grille_path = null
+
 /obj/effect/wallframe_spawn/reinforced/polarized/full
 	name = "polarized wall frame window spawner - full tile"
 	win_path = /obj/structure/window/reinforced/polarized/full
 
 /obj/effect/wallframe_spawn/reinforced/polarized/handle_window_spawn(var/obj/structure/window/reinforced/polarized/P)
 	if(id)
-		P.id = id
+		P.id_tag = id

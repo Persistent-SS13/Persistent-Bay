@@ -8,11 +8,11 @@ Note: Must be placed within 3 tiles of the R&D Console
 
 /obj/machinery/r_n_d/destructive_analyzer
 	name = "destructive analyzer"
+	desc = "Accessed by a connected core fabricator console, it destroys and analyzes items and materials, recycling materials to any connected protolathe, and progressing the learning matrix of the connected core fabricator console."
 	icon_state = "d_analyzer"
 	var/obj/item/weapon/loaded_item = null
 	var/decon_mod = 0
 
-	use_power = 1
 	idle_power_usage = 30
 	active_power_usage = 2500
 
@@ -31,7 +31,7 @@ Note: Must be placed within 3 tiles of the R&D Console
 		T += S.rating
 	decon_mod = T * 0.1
 
-/obj/machinery/r_n_d/destructive_analyzer/update_icon()
+/obj/machinery/r_n_d/destructive_analyzer/on_update_icon()
 	if(panel_open)
 		icon_state = "d_analyzer_t"
 	else if(loaded_item)
@@ -67,14 +67,13 @@ Note: Must be placed within 3 tiles of the R&D Console
 		if(!O.origin_tech)
 			to_chat(user, "<span class='notice'>This doesn't seem to have a tech origin.</span>")
 			return
-		if(O.origin_tech.len == 0)
+		if(O.origin_tech.len == 0 || O.holographic)
 			to_chat(user, "<span class='notice'>You cannot deconstruct this item.</span>")
 			return
-
+		if(!user.unEquip(O, src))
+			return
 		busy = 1
 		loaded_item = O
-		user.drop_item()
-		O.loc = src
 		to_chat(user, "<span class='notice'>You add \the [O] to \the [src].</span>")
 		flick("d_analyzer_la", src)
 		spawn(10)

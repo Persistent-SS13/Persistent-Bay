@@ -1,5 +1,6 @@
 /decl/hierarchy/supply_pack/atmospherics
 	name = "Atmospherics"
+	containertype = /obj/structure/closet/crate/internals
 
 //gear
 /decl/hierarchy/supply_pack/atmospherics/internals
@@ -22,6 +23,7 @@
 	name = "Equipment - Inflatable barriers"
 	contains = list(/obj/item/weapon/storage/briefcase/inflatable/full = 3)
 	cost = 20
+	containertype = /obj/structure/closet/crate
 	containername = "inflatable barrier crate"
 
 /decl/hierarchy/supply_pack/atmospherics/airpump
@@ -145,4 +147,12 @@
 	cost = 150
 	containername = "heavy-duty atmospherics voidsuit crate"
 	containertype = /obj/structure/closet/crate/secure/large
+	access = core_access_engineering_programs
+
+/decl/hierarchy/supply_pack/atmospherics/scanner_module
+	name = "Electronics - Atmospherics scanner modules"
+	contains = list(/obj/item/weapon/computer_hardware/scanner/atmos = 4)
+	cost = 20
+	containername = "atmospherics scanner module crate"
+	containertype = /obj/structure/closet/crate/secure
 	access = core_access_engineering_programs

@@ -9,13 +9,18 @@
 
 	#include "nexus.dmm"
 
+	#include "_nexus_macros.dm"
+	#include "nexus_access.dm"
 	#include "nexus_areas.dm"
 	#include "nexus_elevator.dm"
 	#include "nexus_factions.dm"
 	#include "nexus_presets.dm"
+	#include "nexus_outfits.dm"
+	#include "nexus_frontier_beacons.dm"
+	#include "obj/nexus_headsets.dm"
+	#include "obj/nexus_ids.dm"
 	#define using_map_DATUM /datum/map/nexus
 
 #elif !defined(MAP_OVERRIDE)
 	#warn A map has already been included, ignoring Nexus
-
 #endif

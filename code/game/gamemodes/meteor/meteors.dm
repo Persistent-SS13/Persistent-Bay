@@ -70,22 +70,13 @@
 //Meteor spawning global procs
 ///////////////////////////////
 
-/proc/pick_meteor_start(var/startSide = pick(GLOB.cardinal))
-	var/startLevel = pick(GLOB.using_map.station_levels)
-	var/pickedstart = spaceDebrisStartLoc(startSide, startLevel)
-
-	return list(startLevel, pickedstart)
-
-/proc/spawn_meteors(var/number = 10, var/list/meteortypes, var/startSide)
+/proc/spawn_meteors(var/number = 10, var/list/meteortypes, var/startSide, var/zlevel)
 	for(var/i = 0; i < number; i++)
-		spawn_meteor(meteortypes, startSide)
+		spawn_meteor(meteortypes, startSide, zlevel)
 
-/proc/spawn_meteor(var/list/meteortypes, var/startSide)
-	var/start = pick_meteor_start(startSide)
-
-	var/startLevel = start[1]
-	var/turf/pickedstart = start[2]
-	var/turf/pickedgoal = spaceDebrisFinishLoc(startSide, startLevel)
+/proc/spawn_meteor(var/list/meteortypes, var/startSide, var/zlevel)
+	var/turf/pickedstart = spaceDebrisStartLoc(startSide, zlevel)
+	var/turf/pickedgoal = spaceDebrisFinishLoc(startSide, zlevel)
 
 	var/Me = pickweight(meteortypes)
 	var/obj/effect/meteor/M = new Me(pickedstart)
@@ -151,6 +142,7 @@
 	var/z_original
 	var/meteordrop = /obj/item/stack/ore/iron
 	var/dropamt = 1
+	var/ismissile //missiles don't spin
 
 	var/move_count = 0
 
@@ -177,7 +169,8 @@
 
 /obj/effect/meteor/New()
 	..()
-	SpinAnimation()
+	if(!ismissile)
+		SpinAnimation()
 
 /obj/effect/meteor/Bump(atom/A)
 	..()
@@ -348,3 +341,49 @@
 
 /obj/effect/meteor/supermatter/get_shield_damage()
 	return ..() * rand(80, 120)
+
+//Missiles, for events and so on
+/obj/effect/meteor/supermatter/missile
+	name = "photon torpedo"
+	desc = "An advanded warhead designed to tactically destroy space installations."
+	icon = 'icons/obj/missile.dmi'
+	icon_state = "photon"
+	meteordrop = null
+	ismissile = TRUE
+	dropamt = 0
+
+/obj/effect/meteor/medium/missile
+	name = "missile"
+	desc = "Some kind of missile."
+	icon = 'icons/obj/missile.dmi'
+	icon_state = "missile"
+	meteordrop = null
+	ismissile = TRUE
+	dropamt = 0
+
+/obj/effect/meteor/big/missile
+	name = "high-yield missile"
+	desc = "Some kind of missile."
+	icon = 'icons/obj/missile.dmi'
+	icon_state = "missile"
+	meteordrop = null
+	ismissile = TRUE
+	dropamt = 0
+
+/obj/effect/meteor/flaming/missile
+	name = "incendiary missile"
+	desc = "Some kind of missile."
+	icon = 'icons/obj/missile.dmi'
+	icon_state = "missile"
+	meteordrop = null
+	ismissile = TRUE
+	dropamt = 0
+
+/obj/effect/meteor/emp/missile
+	name = "ion torpedo"
+	desc = "Some kind of missile."
+	icon = 'icons/obj/missile.dmi'
+	icon_state = "torpedo"
+	meteordrop = null
+	ismissile = TRUE
+	dropamt = 0

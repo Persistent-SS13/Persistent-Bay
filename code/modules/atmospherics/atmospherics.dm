@@ -45,6 +45,7 @@ Pipelines + Other Objects -> Pipe network
 	if(!pipe_color_check(pipe_color))
 		pipe_color = null
 	..()
+	ADD_SAVED_VAR(pipe_color)
 
 /obj/machinery/atmospherics/after_load()
 	. = ..()
@@ -66,7 +67,7 @@ Pipelines + Other Objects -> Pipe network
 /obj/machinery/atmospherics/attackby(atom/A, mob/user as mob)
 	if(istype(A, /obj/item/device/pipe_painter))
 		return
-	if(istype(A, /obj/item/device/analyzer))
+	if(istype(A, /obj/item/device/scanner/gas))
 		return
 	return ..()
 
@@ -147,5 +148,5 @@ obj/machinery/atmospherics/proc/check_connect_types(obj/machinery/atmospherics/a
 /obj/machinery/atmospherics/proc/atmos_scan()
 	return null
 
-/obj/machinery/atmospherics/update_icon()
+/obj/machinery/atmospherics/on_update_icon()
 	return null

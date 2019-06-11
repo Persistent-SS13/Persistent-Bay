@@ -5,6 +5,7 @@
 	icon_state = "base"
 	density = TRUE
 	w_class = ITEM_SIZE_NO_CONTAINER
+	obj_flags = OBJ_FLAG_ANCHORABLE | OBJ_FLAG_DAMAGEABLE
 	anchored = FALSE
 	mass = 15 //kg
 	max_health = 200
@@ -25,13 +26,12 @@
 		DAM_CLONE   = MaxArmorValue)
 	var/welded = FALSE
 	var/large = 1
-	var/wrenchable = TRUE
 	var/wall_mounted = FALSE //never solid (You can always pass over it)
 	var/breakout = 0 //if someone is currently breaking out. mutex
 	var/storage_capacity = 2 * MOB_MEDIUM //This is so that someone can't pack hundreds of items in a locker/crate
 							  //then open it in a populated area to crash clients.
-	var/open_sound = 'sound/effects/locker_open.ogg'
-	var/close_sound = 'sound/effects/locker_close.ogg'
+	var/open_sound = 'sound/effects/closet_open.ogg'
+	var/close_sound = 'sound/effects/closet_close.ogg'
 
 	var/storage_types = CLOSET_STORAGE_ALL
 	var/setup = CLOSET_CAN_BE_WELDED
@@ -284,19 +284,19 @@
 			var/obj/item/weapon/storage/laundry_basket/LB = W
 			var/turf/T = get_turf(src)
 			for(var/obj/item/I in LB.contents)
-				LB.remove_from_storage(I, T)
+				LB.remove_from_storage(I, T, 1)
+			LB.finish_bulk_removal()
 			user.visible_message("<span class='notice'>[user] empties \the [LB] into \the [src].</span>", \
 								 "<span class='notice'>You empty \the [LB] into \the [src].</span>", \
 								 "<span class='notice'>You hear rustling of clothes.</span>")
 			return
 
-		if(usr.drop_item())
-			W.forceMove(loc)
+		if(user.unEquip(W, loc))
 			W.pixel_x = 0
 			W.pixel_y = 0
 			W.pixel_z = 0
 			W.pixel_w = 0
-		return
+		return 1
 	else if(istype(W, /obj/item/weapon/melee/energy/blade))
 		if(emag_act(INFINITY, user, "<span class='danger'>The locker has been sliced open by [user] with \an [W]</span>!", "<span class='danger'>You hear metal being sliced and sparks flying.</span>"))
 			var/datum/effect/effect/system/spark_spread/spark_system = new /datum/effect/effect/system/spark_spread()
@@ -305,10 +305,20 @@
 			playsound(src.loc, 'sound/weapons/blade1.ogg', 50, 1)
 			playsound(src.loc, "sparks", 50, 1)
 			open()
+
+	else if(isMultitool(W))
+		if(locked)
+			to_chat(user, "You cannot reprogram a locked container.")
+			return
+
+		user.visible_message("<span class='notice'>\The [user] begins reprogramming \the [src].</span>", "<span class='notice'>You begin reprogramming \the [src].</span>")
+		if(do_after(usr, 40, src))
+			ui_interact(user)
+
 	else if(isWrench(W))
 		var/obj/item/weapon/tool/T = W
-		if (src.wrenchable==0)
-			// Do not allow wrench interactions with things that aren't wrenchable.
+		if(locked)
+			to_chat(user, "You cannot wrench a locked container.")
 			return
 		if (src.anchored==1)
 			to_chat(user, "<span class='notice'>You begin to unsecure \the [src] from the floor...</span>")
@@ -318,7 +328,7 @@
 					"<span class='notice'>You have unsecured \the [src]. Now it can be pulled somewhere else.</span>", \
 					"You hear ratchet.")
 				src.anchored = 0
-		else /*if (src.anchored==0)*/
+		else
 			to_chat(user, "<span class='notice'>You begin to secure \the [src] to the floor...</span>")
 			if (T.use_tool(user, src, 20))
 				user.visible_message( \
@@ -327,15 +337,16 @@
 					"You hear ratchet.")
 				src.anchored = 1
 		return
-	else if(istype(W, /obj/item/weapon/packageWrap))
-		return
 	else if(isWelder(W) && (setup & CLOSET_CAN_BE_WELDED))
 		var/obj/item/weapon/tool/T = W
 		if(T.use_tool(user, src, 3 SECONDS))
 			src.welded = !src.welded
 			src.update_icon()
 			user.visible_message("<span class='warning'>\The [src] has been [welded?"welded shut":"unwelded"] by \the [user].</span>", blind_message = "You hear welding.", range = 3)
-		return
+		return 1
+	else if(setup & CLOSET_HAS_LOCK)
+		src.togglelock(user, W)
+		return 1
 	return ..()
 
 /obj/structure/closet/proc/slice_into_parts(var/obj/item/weapon/tool/weldingtool/WT, mob/user)
@@ -409,7 +420,7 @@
 	else
 		to_chat(usr, "<span class='warning'>This mob type can't use this verb.</span>")
 
-/obj/structure/closet/update_icon()
+/obj/structure/closet/on_update_icon()
 	if(opened)
 		icon_state = "open"
 		overlays.Cut()
@@ -454,7 +465,7 @@
 			return
 
 		playsound(src.loc, 'sound/effects/grillehit.ogg', 100, 1)
-		animate_shake()
+		shake_animation()
 		add_fingerprint(escapee)
 
 	//Well then break it!
@@ -463,7 +474,7 @@
 	visible_message("<span class='danger'>\The [escapee] successfully broke out of \the [src]!</span>")
 	playsound(src.loc, 'sound/effects/grillehit.ogg', 100, 1)
 	break_open()
-	animate_shake()
+	shake_animation()
 
 /obj/structure/closet/proc/break_open()
 	welded = 0
@@ -476,12 +487,6 @@
 		var/obj/structure/bigDelivery/BD = loc
 		BD.unwrap()
 	open()
-
-/obj/structure/closet/proc/animate_shake()
-	var/init_px = pixel_x
-	var/shake_dir = pick(-1, 1)
-	animate(src, transform=turn(matrix(), 8*shake_dir), pixel_x=init_px + 2*shake_dir, time=1)
-	animate(transform=null, pixel_x=init_px, time=6, easing=ELASTIC_EASING)
 
 /obj/structure/closet/onDropInto(var/atom/movable/AM)
 	return
@@ -511,6 +516,9 @@
 
 	add_fingerprint(user)
 
+	if(!id_card)
+		id_card = user.GetIdCard()
+
 	if(!user.IsAdvancedToolUser())
 		to_chat(user, FEEDBACK_YOU_LACK_DEXTERITY)
 		return FALSE
@@ -521,7 +529,7 @@
 		update_icon()
 		return TRUE
 	else
-		to_chat(user, "<span class='warning'>Access Denied</span>")
+		to_chat(user, "<span class='warning'>Access denied!</span>")
 		return FALSE
 
 /obj/structure/closet/proc/CanToggleLock(var/mob/user, var/obj/item/weapon/card/id/id_card)
@@ -532,6 +540,9 @@
 		togglelock(user)
 	else
 		return ..()
+
+/obj/structure/closet/CtrlAltClick(var/mob/user)
+	verb_toggleopen()
 
 /obj/structure/closet/emp_act(severity)
 	for(var/obj/O in src)
@@ -570,3 +581,74 @@
 	locked = FALSE
 	desc += " It appears to be broken."
 	return TRUE
+
+
+/obj/structure/closet/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
+	var/list/data = list()
+	data["name"] = name
+	if(locked)
+		return (SSnano && SSnano.close_uis(src))
+	if(req_access_faction && req_access_faction != "")
+		var/datum/world_faction/faction = get_faction(req_access_faction)
+		data["connected_faction"] = faction.name
+		var/datum/access_category/core/core = new()
+		var/list/all_categories = list()
+		all_categories |= core
+		all_categories |= faction.access_categories
+		var/list/access_categories[0]
+		for(var/datum/access_category/category in all_categories)
+			access_categories[++access_categories.len] = list("name" = category.name, "accesses" = list(), "ref" = "\ref[category]")
+			for(var/x in category.accesses)
+				var/name = category.accesses[x]
+				if(!name) continue
+				access_categories[access_categories.len]["accesses"] += list(list(
+				"name" = sanitize("([x]) [name]"),
+				"access" = x,
+				"selected" = (text2num(x) in req_access)
+				))
+		data["access_categories"] = access_categories
+		var/list/personal_access[0]
+		for(var/x in req_access_personal_list)
+			personal_access[++personal_access.len] = list("name" = x)
+		data["personal_access"] = personal_access
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
+	if (!ui)
+		ui = new(user, src, ui_key, "closet.tmpl", "Container Programming", 800, 500, state = state)
+		ui.set_initial_data(data)
+		ui.open()
+
+
+/obj/structure/closet/Topic(href, href_list)
+	if(..())
+		return 1
+	. = SSnano.update_uis(src)
+	if(locked)
+		to_chat(usr, "The container is locked.")
+		return
+	switch(href_list["action"])
+		if("change_name")
+			var/chose_name = sanitize(input("Enter a new name for the container.", "Container Name", name), MAX_NAME_LEN)
+			if(chose_name && usr.Adjacent(src) && !locked)
+				name = chose_name
+		if("add_name")
+			var/chose_name = sanitize(input("Enter a new name to have personal access.", "Personal Access"), MAX_NAME_LEN)
+			if(chose_name && usr.Adjacent(src) && !locked)
+				req_access_personal_list |= chose_name
+		if("remove_name")
+			if(usr.Adjacent(src))
+				var/chose_name = href_list["target"]
+				req_access_personal_list -= chose_name
+		if("remove_faction")
+			if(usr.Adjacent(src))
+				req_access_faction = ""
+				req_access = list()
+		if("pick_access")
+			if(usr.Adjacent(src))
+				if(text2num(href_list["selected_access"]) in req_access)
+					req_access -= text2num(href_list["selected_access"])
+				else
+					req_access |= text2num(href_list["selected_access"])
+		if("select_faction")
+			var/obj/item/weapon/card/id/id_card = usr.get_idcard()
+			if(id_card)
+				req_access_faction = id_card.selected_faction

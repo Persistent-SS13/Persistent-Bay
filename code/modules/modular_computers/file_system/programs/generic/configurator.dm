@@ -7,14 +7,16 @@
 	filedesc = "Computer Configuration Tool"
 	extended_desc = "This program allows configuration of computer's hardware"
 	program_icon_state = "generic"
+	program_key_state = "generic_key"
 	program_menu_icon = "gear"
-	unsendable = TRUE
-	undeletable = TRUE
+	unsendable = 1
+	undeletable = 1
 	size = 4
-	available_on_ntnet = FALSE
-	requires_ntnet = FALSE
+	available_on_ntnet = 0
+	requires_ntnet = 0
 	nanomodule_path = /datum/nano_module/program/computer_configurator/
 	usage_flags = PROGRAM_ALL
+	category = PROG_UTIL
 
 /datum/nano_module/program/computer_configurator
 	name = "NTOS Computer Configuration Tool"
@@ -56,6 +58,9 @@
 		)))
 
 	data["hardware"] = all_entries
+
+	data["receives_updates"] = movable.receives_updates
+
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "laptop_configuration.tmpl", "NTOS Configuration Utility", 575, 700, state = state)

@@ -6,7 +6,7 @@
 /mob/living/bot/farmbot
 	name = "Farmbot"
 	desc = "The botanist's best friend."
-	icon = 'icons/obj/aibots.dmi'
+	icon = 'icons/mob/bot/farmbot.dmi'
 	icon_state = "farmbot0"
 	health = 50
 	maxHealth = 50
@@ -119,7 +119,7 @@
 				target = tray
 				return
 		if(!target && refills_water && tank && tank.reagents.total_volume < tank.reagents.maximum_volume)
-			for(var/obj/structure/sink/source in view(7, src))
+			for(var/obj/structure/hygiene/sink/source in view(7, src))
 				target = source
 				return
 
@@ -190,7 +190,7 @@
 		action = ""
 		update_icons()
 		T.update_icon()
-	else if(istype(A, /obj/structure/sink))
+	else if(istype(A, /obj/structure/hygiene/sink))
 		if(!tank || tank.reagents.total_volume >= tank.reagents.maximum_volume)
 			return
 		action = "water"
@@ -231,10 +231,10 @@
 	new /obj/item/weapon/material/minihoe(Tsec)
 	new /obj/item/weapon/reagent_containers/glass/bucket(Tsec)
 	new /obj/item/device/assembly/prox_sensor(Tsec)
-	new /obj/item/device/analyzer/plant_analyzer(Tsec)
+	new /obj/item/device/scanner/plant(Tsec)
 
 	if(tank)
-		tank.loc = Tsec
+		tank.forceMove(Tsec)
 
 	if(prob(50))
 		new /obj/item/robot_parts/l_arm(Tsec)
@@ -254,7 +254,7 @@
 			return 1
 		return 0
 
-	if(istype(targ, /obj/structure/sink))
+	if(istype(targ, /obj/structure/hygiene/sink))
 		if(!tank || tank.reagents.total_volume >= tank.reagents.maximum_volume)
 			return 0
 		return 1
@@ -285,7 +285,7 @@
 /obj/item/weapon/farmbot_arm_assembly
 	name = "water tank/robot arm assembly"
 	desc = "A water tank with a robot arm permanently grafted to it."
-	icon = 'icons/obj/aibots.dmi'
+	icon = 'icons/mob/bot/farmbot.dmi'
 	icon_state = "water_arm"
 	var/build_step = 0
 	var/created_name = "Farmbot"
@@ -307,39 +307,34 @@
 		return
 
 	to_chat(user, "You add the robot arm to [src].")
-	user.drop_from_inventory(S)
 	qdel(S)
 	new /obj/item/weapon/farmbot_arm_assembly(loc, src)
 
 /obj/item/weapon/farmbot_arm_assembly/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	..()
-	if((istype(W, /obj/item/device/analyzer/plant_analyzer)) && (build_step == 0))
+	if((istype(W, /obj/item/device/scanner/plant)) && (build_step == 0))
 		build_step++
 		to_chat(user, "You add the plant analyzer to [src].")
-		name = "farmbot assembly"
-		user.remove_from_mob(W)
+		SetName("farmbot assembly")
 		qdel(W)
 
 	else if((istype(W, /obj/item/weapon/reagent_containers/glass/bucket)) && (build_step == 1))
 		build_step++
 		to_chat(user, "You add a bucket to [src].")
-		name = "farmbot assembly with bucket"
-		user.remove_from_mob(W)
+		SetName("farmbot assembly with bucket")
 		qdel(W)
 
 	else if((istype(W, /obj/item/weapon/material/minihoe)) && (build_step == 2))
 		build_step++
 		to_chat(user, "You add a minihoe to [src].")
-		name = "farmbot assembly with bucket and minihoe"
-		user.remove_from_mob(W)
+		SetName("farmbot assembly with bucket and minihoe")
 		qdel(W)
 
 	else if((isprox(W)) && (build_step == 3))
 		build_step++
 		to_chat(user, "You complete the Farmbot! Beep boop.")
 		var/mob/living/bot/farmbot/S = new /mob/living/bot/farmbot(get_turf(src), tank)
-		S.name = created_name
-		user.remove_from_mob(W)
+		S.SetName(created_name)
 		qdel(W)
 		qdel(src)
 

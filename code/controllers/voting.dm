@@ -189,7 +189,7 @@ datum/controller/vote
 		if(restart)
 			to_world("World restarting due to vote...")
 
-			feedback_set_details("end_error","restart vote")
+			SSstatistics.set_field_details("end_error","restart vote")
 			if(blackbox)	blackbox.save_all_data_to_sql()
 			sleep(50)
 			log_game("Rebooting due to restart vote")
@@ -273,7 +273,7 @@ datum/controller/vote
 
 					if(!config.allow_extra_antags)
 						return 0
-					var/list/all_antag_types = all_antag_types()
+					var/list/all_antag_types = GLOB.all_antag_types()
 					for(var/antag_type in all_antag_types)
 						var/datum/antagonist/antag = all_antag_types[antag_type]
 						if(!(antag.id in additional_antag_types) && antag.is_votable())
@@ -305,7 +305,7 @@ datum/controller/vote
 			log_vote(text)
 			to_world("<font color='purple'><b>[text]</b>\nType <b>vote</b> or click <a href='?src=\ref[src]'>here</a> to place your votes.\nYou have [config.vote_period/10] seconds to vote.</font>")
 
-			to_world(sound('sound/ambience/alarm4.ogg', repeat = 0, wait = 0, volume = 50, channel = 3))
+			to_world(sound('sound/ambience/alarm4.ogg', repeat = 0, wait = 0, volume = 50, channel = GLOB.vote_sound_channel))
 
 			if(mode == "gamemode" && round_progressing)
 				round_progressing = 0

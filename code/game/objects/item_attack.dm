@@ -91,6 +91,6 @@ avoid code duplication. This includes items that may sometimes act as a standard
 		playsound(src.loc, src.sound_hit, vol=75, vary=1, extrarange=8, falloff=4)
 
 	var/power = src.force
-	if(HULK in user.mutations)
+	if(MUTATION_HULK in user.mutations)
 		power *= 2
 	return target.hit_with_weapon(src, user, power, hit_zone)

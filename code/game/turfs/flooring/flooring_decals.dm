@@ -9,14 +9,22 @@ var/list/floor_decals = list()
 	plane = ABOVE_TURF_PLANE
 	layer = DECAL_LAYER
 	appearance_flags = RESET_COLOR
+	anchored = TRUE
 	var/supplied_dir
 
 /obj/effect/floor_decal/New(var/newloc, var/newdir, var/newcolour)
-	supplied_dir = newdir
+	if(!isnull(newdir))
+		supplied_dir = newdir
 	if(newcolour) color = newcolour
 	..(newloc)
+	ADD_SAVED_VAR(supplied_dir)
 
 /obj/effect/floor_decal/Initialize()
+	. = ..()
+	return INITIALIZE_HINT_LATELOAD //Gotta lateload since floors sometimes default to plating during init
+
+/obj/effect/floor_decal/LateInitialize()
+	. = ..()
 	if(supplied_dir) set_dir(supplied_dir)
 	var/turf/T = get_turf(src)
 	if(istype(T, /turf/simulated/floor) || istype(T, /turf/unsimulated/floor))
@@ -693,7 +701,7 @@ var/list/floor_decals = list()
 
 /obj/effect/floor_decal/corner/research
 	name = "research corner"
-	color = COLOR_PURPLE
+	color = COLOR_RESEARCH
 
 /obj/effect/floor_decal/corner/research/diagonal
 	icon_state = "corner_white_diagonal"
@@ -1022,6 +1030,10 @@ var/list/floor_decals = list()
 /obj/effect/floor_decal/ntlogo
 	icon_state = "ntlogo"
 
+/obj/effect/floor_decal/torchltdlogo
+	alpha = 230
+	icon = 'icons/turf/flooring/corp_floor.dmi'
+	icon_state = "bottomleft"
 
 //Techfloor
 

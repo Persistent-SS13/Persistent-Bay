@@ -37,6 +37,6 @@
 				error("Hook '[P]' failed or runtimed.")
 				status = 0
 		catch(var/exception/e)
-			log_error("Caught exception in hook '[P]'! '[e]' on [e.file]:[e.line]")
+			log_warning("Caught exception in hook '[P]'! '[e]' on [e.file]:[e.line]")
 
 	return status

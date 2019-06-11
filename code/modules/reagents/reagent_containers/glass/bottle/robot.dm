@@ -5,7 +5,9 @@
 	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 	volume = 60
 	var/reagent = ""
-
+/obj/item/weapon/reagent_containers/glass/bottle/robot/New()
+	. = ..()
+	ADD_SAVED_VAR(reagent)
 
 /obj/item/weapon/reagent_containers/glass/bottle/robot/inaprovaline
 	name = "internal inaprovaline bottle"
@@ -13,12 +15,7 @@
 	icon = 'icons/obj/chemical.dmi'
 	icon_state = "bottle-4"
 	reagent = /datum/reagent/inaprovaline
-
-	New()
-		..()
-		reagents.add_reagent(/datum/reagent/inaprovaline, 60)
-		update_icon()
-
+	starts_with = list(/datum/reagent/inaprovaline, 60)
 
 /obj/item/weapon/reagent_containers/glass/bottle/robot/antitoxin
 	name = "internal anti-toxin bottle"
@@ -26,9 +23,5 @@
 	icon = 'icons/obj/chemical.dmi'
 	icon_state = "bottle-4"
 	reagent = /datum/reagent/dylovene
-
-	New()
-		..()
-		reagents.add_reagent(/datum/reagent/dylovene, 60)
-		update_icon()
+	starts_with = list(/datum/reagent/dylovene, 60)
 

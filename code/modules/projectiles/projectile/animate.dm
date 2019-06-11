@@ -4,6 +4,7 @@
 	force = 0
 	damtype = DAM_ENERGY
 	nodamage = 1
+	damage_flags = 0
 
 /obj/item/projectile/animate/Bump(var/atom/change)
 	if((istype(change, /obj/item) || istype(change, /obj/structure)) && !is_type_in_list(change, protected_objects))

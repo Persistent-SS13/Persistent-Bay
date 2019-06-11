@@ -3,6 +3,7 @@
 	icon_state = "spark"
 	force = 0
 	damtype = DAM_ENERGY
+	distance_falloff = 2.5
 
 //releases a burst of light on impact or after travelling a distance
 /obj/item/projectile/energy/flash
@@ -14,7 +15,7 @@
 	kill_count = 15 //if the shell hasn't hit anything after travelling this far it just explodes.
 	muzzle_type = /obj/effect/projectile/bullet/muzzle
 	damtype = DAM_BULLET
-	var/flash_range = 0
+	var/flash_range = 1
 	var/brightness = 7
 	var/light_colour = "#ffffff"
 
@@ -22,10 +23,12 @@
 	var/turf/T = flash_range? src.loc : get_turf(A)
 	if(!istype(T)) return
 
-	//blind adjacent people
+	//blind and confuse adjacent people
 	for (var/mob/living/carbon/M in viewers(T, flash_range))
-		if(M.eyecheck() < FLASH_PROTECTION_MODERATE)
+		if(M.eyecheck() < FLASH_PROTECTION_MAJOR)
 			M.flash_eyes()
+			M.eye_blurry += (brightness / 2)
+			M.confused += (brightness / 2)
 
 	//snap pop
 	playsound(src, 'sound/effects/snap.ogg', 50, 1)
@@ -36,32 +39,35 @@
 	sparks.start()
 
 	new /obj/effect/decal/cleanable/ash(src.loc) //always use src.loc so that ash doesn't end up inside windows
-	new /obj/effect/effect/smoke/illumination(T, 5, brightness, brightness, light_colour)
+	new /obj/effect/effect/smoke/illumination(T, 5, 4, 1, light_colour)
 
-//blinds people like the flash round, but in a small area and can also be used for temporary illumination
+//blinds people like the flash round, but in a larger area and can also be used for temporary illumination
 /obj/item/projectile/energy/flash/flare
 	force = 10
+	agony = 25
 	fire_sound = 'sound/weapons/gunshot/shotgun.ogg'
 	flash_range = 2
 	brightness = 15
 
 /obj/item/projectile/energy/flash/flare/on_impact(var/atom/A)
 	light_colour = pick("#e58775", "#ffffff", "#90ff90", "#a09030")
-
+	set_light(1, 1, 4, 2, light_colour)
 	..() //initial flash
 
 	//residual illumination
-	new /obj/effect/effect/smoke/illumination(src.loc, rand(190,240) SECONDS, range=8, power=3, color=light_colour) //same lighting power as flare
+	new /obj/effect/effect/smoke/illumination(src.loc, rand(190,240), range=8, power=1, color=light_colour) //same lighting power as flare
 
 /obj/item/projectile/energy/electrode
 	name = "electrode"
 	icon_state = "spark"
 	fire_sound = 'sound/weapons/Taser.ogg'
 	nodamage = 1
-	taser_effect = 1
 	agony = 30
-	damtype = DAM_PAIN
-	//Damage will be handled on the MOB side, to prevent window shattering.
+	damtype = DAM_PAIN //Damage will be handled on the MOB side, to prevent window shattering.
+	step_delay = 0.7
+
+/obj/item/projectile/energy/electrode/green
+	icon_state = "spark_green"
 
 /obj/item/projectile/energy/electrode/stunshot
 	nodamage = 0
@@ -138,7 +144,7 @@
 		if(ishuman(M))
 			if(istype(H.l_ear, /obj/item/clothing/ears/earmuffs) || istype(H.r_ear, /obj/item/clothing/ears/earmuffs))
 				ear_safety += 2
-			if(HULK in M.mutations)
+			if(MUTATION_HULK in M.mutations)
 				ear_safety += 1
 			if(istype(H.head, /obj/item/clothing/head/helmet))
 				ear_safety += 1
@@ -154,7 +160,7 @@
 		to_chat(M, "<span class='danger'>Your ears start to ring badly!</span>")
 		if (prob(M.ear_damage - 5))
 			to_chat(M, "<span class='danger'>You can't hear anything!</span>")
-			M.sdisabilities |= DEAF
+			M.set_sdisability(DEAF)
 	else
 		if (M.ear_damage >= 5)
 			to_chat(M, "<span class='danger'>Your ears start to ring!</span>")

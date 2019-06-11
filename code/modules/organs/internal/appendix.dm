@@ -5,15 +5,15 @@
 	organ_tag = BP_APPENDIX
 	var/inflamed = 0
 
-/obj/item/organ/internal/appendix/update_icon()
+/obj/item/organ/internal/appendix/on_update_icon()
 	..()
 	if(inflamed)
 		icon_state = "appendixinflamed"
-		name = "inflamed appendix"
+		SetName("inflamed appendix")
 
 /obj/item/organ/internal/appendix/Process()
 	..()
-	if((inflamed || scarred > 2) && owner)
+	if(inflamed && owner)
 		inflamed++
 		if(prob(5))
 			if(owner.can_feel_pain())
@@ -22,7 +22,7 @@
 					owner.visible_message("<B>\The [owner]</B> winces slightly.")
 		if(inflamed > 200)
 			if(prob(3))
-				take_damage(0.1)
+				take_internal_damage(0.1)
 				if(owner.can_feel_pain())
 					owner.visible_message("<B>\The [owner]</B> winces painfully.")
 				owner.adjustToxLoss(1)

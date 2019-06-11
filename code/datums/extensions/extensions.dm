@@ -26,8 +26,8 @@
 			if(!islist(extension))
 				var/datum/extension/ext = extension
 				ext.set_holder(src) //Ensure the holder is set properly
-			else
-				log_debug(" /datum/after_load(): found a list extension.. Not setting holder.")
+			// else
+			// 	log_debug(" /datum/after_load(): found a list extension \"[key]\".. Not setting holder.")
 
 /datum/Destroy()
 	if(extensions)
@@ -86,3 +86,10 @@
 /proc/construct_extension_instance(var/extension_type, var/datum/source, var/list/arguments)
 	arguments = list(source) + arguments
 	return new extension_type(arglist(arguments))
+
+/proc/remove_extension(var/datum/source, var/base_type)
+	if(!source.extensions || !source.extensions[base_type])
+		return
+	if(!islist(source.extensions[base_type]))
+		qdel(source.extensions[base_type])
+	LAZYREMOVE(source.extensions, base_type)

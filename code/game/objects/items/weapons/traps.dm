@@ -38,7 +38,7 @@
 			"You hear the slow creaking of a spring."
 			)
 
-		if (do_after(user, 60, src))
+		if (do_after(user, 60, src) && user.unEquip(src))
 			user.visible_message(
 				"<span class='danger'>\The [user] has deployed \the [src].</span>",
 				"<span class='danger'>You have deployed \the [src]!</span>",
@@ -46,7 +46,6 @@
 				)
 
 			deployed = 1
-			user.drop_from_inventory(src)
 			update_icon()
 			anchored = 1
 
@@ -78,12 +77,6 @@
 	else
 		target_zone = pick(BP_L_FOOT, BP_R_FOOT, BP_L_LEG, BP_R_LEG)
 
-	//armour
-	var/blocked = L.run_armor_check(target_zone, DAM_PIERCE)
-
-	if(blocked >= 100)
-		return
-
 	if(!L.apply_damage(30, DAM_PIERCE, target_zone, blocked, used_weapon=src))
 		return 0
 
@@ -109,7 +102,7 @@
 			update_icon()
 	..()
 
-/obj/item/weapon/beartrap/update_icon()
+/obj/item/weapon/beartrap/on_update_icon()
 	..()
 
 	if(!deployed)

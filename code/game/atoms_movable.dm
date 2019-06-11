@@ -4,6 +4,7 @@
 	appearance_flags = TILE_BOUND
 	glide_size = 8
 
+	var/waterproof = TRUE
 	var/movable_flags
 
 	var/last_move = null
@@ -20,6 +21,7 @@
 	var/moved_recently = 0
 	var/mob/pulledby = null
 	var/item_state = null // Used to specify the item state for the on-mob overlays.
+	var/does_spin = TRUE // Does the atom spin when thrown (of course it does :P)
 	var/mass = 1.5
 
 /atom/movable/Destroy()
@@ -38,13 +40,10 @@
 		src.throw_impact(A)
 		src.throwing = 0
 
-	spawn(0)
-		if (A && yes)
-			A.last_bumped = world.time
-			A.Bumped(src)
-		return
+	if (A && yes)
+		A.last_bumped = world.time
+		INVOKE_ASYNC(A, /atom/proc/Bumped, src) // Avoids bad actors sleeping or unexpected side effects, as the legacy behavior was to spawn here
 	..()
-	return
 
 /atom/movable/proc/forceMove(atom/destination)
 	if(loc == destination)
@@ -117,8 +116,12 @@
 	src.throw_source = get_turf(src)	//store the origin turf
 	src.pixel_z = 0
 	if(usr)
-		if(HULK in usr.mutations)
+		if(MUTATION_HULK in usr.mutations)
 			src.throwing = 2 // really strong throw!
+
+	var/dist_travelled = 0
+	var/dist_since_sleep = 0
+	var/area/a = get_area(src.loc)
 
 	var/dist_x = abs(target.x - src.x)
 	var/dist_y = abs(target.y - src.y)
@@ -128,96 +131,56 @@
 		dx = EAST
 	else
 		dx = WEST
-	if(istype(src, /obj/item))
-		var/obj/item/I = src
-		I.randomize_pixel_offset()
+
 	var/dy
 	if (target.y > src.y)
 		dy = NORTH
 	else
 		dy = SOUTH
-	var/dist_travelled = 0
-	var/dist_since_sleep = 0
-	var/area/a = get_area(src.loc)
-	var/firstStep	//only a flag to prevent splashing contents on the first step
+
+	var/error
+	var/major_dir
+	var/major_dist
+	var/minor_dir
+	var/minor_dist
 	if(dist_x > dist_y)
-		var/error = dist_x/2 - dist_y
-
-
-
-		while(src && target &&((((src.x < target.x && dx == EAST) || (src.x > target.x && dx == WEST)) && dist_travelled < range) || (a && a.has_gravity == 0)  || istype(src.loc, /turf/space)) && src.throwing && istype(src.loc, /turf))
-			// only stop when we've gone the whole distance (or max throw range) and are on a non-space tile, or hit something, or hit the end of the map, or someone picks it up
-			if(error < 0)
-				var/atom/step = get_step(src, dy)
-				if(!step) // going off the edge of the map makes get_step return null, don't let things go off the edge
-					break
-				src.Move(step)
-				if (istype(src, /obj/item/weapon/reagent_containers) && src.is_open_container())
-					if(!firstStep) //i figured i wanted to start splashing one turf ahead and not directly next to the player
-						firstStep = 1
-					else src.reagents.splash(loc, src.reagents.maximum_volume/4)
-				hit_check(speed)
-				error += dist_x
-				dist_travelled++
-				dist_since_sleep++
-				if(dist_since_sleep >= speed)
-					dist_since_sleep = 0
-					sleep(1)
-			else
-				var/atom/step = get_step(src, dx)
-				if(!step) // going off the edge of the map makes get_step return null, don't let things go off the edge
-					break
-				src.Move(step)
-				if (istype(src, /obj/item/weapon/reagent_containers) && src.is_open_container())
-					if(!firstStep) //i figured i wanted to start splashing one turf ahead and not directly next to the player
-						firstStep = 1
-					else src.reagents.splash(loc, src.reagents.maximum_volume/4)
-				hit_check(speed)
-				error -= dist_y
-				dist_travelled++
-				dist_since_sleep++
-				if(dist_since_sleep >= speed)
-					dist_since_sleep = 0
-					sleep(1)
-			a = get_area(src.loc)
+		error = dist_x/2 - dist_y
+		major_dir = dx
+		major_dist = dist_x
+		minor_dir = dy
+		minor_dist = dist_y
 	else
-		var/error = dist_y/2 - dist_x
-		while(src && target &&((((src.y < target.y && dy == NORTH) || (src.y > target.y && dy == SOUTH)) && dist_travelled < range) || (a && a.has_gravity == 0)  || istype(src.loc, /turf/space)) && src.throwing && istype(src.loc, /turf))
-			// only stop when we've gone the whole distance (or max throw range) and are on a non-space tile, or hit something, or hit the end of the map, or someone picks it up
-			if(error < 0)
-				var/atom/step = get_step(src, dx)
-				if(!step) // going off the edge of the map makes get_step return null, don't let things go off the edge
-					break
-				src.Move(step)
-				if (istype(src, /obj/item/weapon/reagent_containers) && src.is_open_container())
-					if(!firstStep) //i figured i wanted to start splashing one turf ahead and not directly next to the player
-						firstStep = 1
-					else src.reagents.splash(loc, src.reagents.maximum_volume/4)
-				hit_check(speed)
-				error += dist_y
-				dist_travelled++
-				dist_since_sleep++
-				if(dist_since_sleep >= speed)
-					dist_since_sleep = 0
-					sleep(1)
-			else
-				var/atom/step = get_step(src, dy)
-				if(!step) // going off the edge of the map makes get_step return null, don't let things go off the edge
-					break
-				src.Move(step)
-				if (istype(src, /obj/item/weapon/reagent_containers) && src.is_open_container())
-					if(!firstStep) //i figured i wanted to start splashing one turf ahead and not directly next to the player
-						firstStep = 1
-					else src.reagents.splash(loc, src.reagents.maximum_volume/4)
-				hit_check(speed)
-				error -= dist_x
-				dist_travelled++
-				dist_since_sleep++
-				if(dist_since_sleep >= speed)
-					dist_since_sleep = 0
-					sleep(1)
+		error = dist_y/2 - dist_x
+		major_dir = dy
+		major_dist = dist_y
+		minor_dir = dx
+		minor_dist = dist_x
 
-			a = get_area(src.loc)
+	while(src && target && src.throwing && istype(src.loc, /turf) \
+		  && ((abs(target.x - src.x)+abs(target.y - src.y) > 0 && dist_travelled < range) \
+		  	   || (a && a.has_gravity == 0) \
+			   || istype(src.loc, /turf/space)))
+		// only stop when we've gone the whole distance (or max throw range) and are on a non-space tile, or hit something, or hit the end of the map, or someone picks it up
+		var/atom/step
+		if(error >= 0)
+			step = get_step(src, major_dir)
+			error -= minor_dist
+		else
+			step = get_step(src, minor_dir)
+			error += major_dist
+		if(!step) // going off the edge of the map makes get_step return null, don't let things go off the edge
+			break
+		src.Move(step)
+		hit_check(speed)
+		dist_travelled++
+		dist_since_sleep++
+		if(dist_since_sleep >= speed)
+			dist_since_sleep = 0
+			sleep(1)
+		a = get_area(src.loc)
+		// and yet it moves
+		if(src.does_spin)
+			src.SpinAnimation(speed = 4, loops = 1)
 
 	//done throwing, either because it hit something or it finished moving
 	if(isobj(src)) src.throw_impact(get_turf(src),speed)
@@ -232,29 +195,49 @@
 //Overlays
 /atom/movable/overlay
 	var/atom/master = null
-	anchored = 1
+	var/follow_proc = /atom/movable/proc/move_to_loc_or_null
+	anchored = TRUE
+	simulated = FALSE
 
 /atom/movable/overlay/New()
 	src.verbs.Cut()
 	..()
 
+/atom/movable/overlay/Initialize()
+	if(!loc)
+		crash_with("[type] created in nullspace.")
+		return INITIALIZE_HINT_QDEL
+	master = loc
+	SetName(master.name)
+	set_dir(master.dir)
+
+	if(istype(master, /atom/movable))
+		GLOB.moved_event.register(master, src, follow_proc)
+		SetInitLoc()
+
+	GLOB.destroyed_event.register(master, src, /datum/proc/qdel_self)
+	GLOB.dir_set_event.register(master, src, /atom/proc/recursive_dir_set)
+
+	. = ..()
+
+/atom/movable/overlay/proc/SetInitLoc()
+	forceMove(master.loc)
+
 /atom/movable/overlay/Destroy()
+	if(istype(master, /atom/movable))
+		GLOB.moved_event.unregister(master, src)
+	GLOB.destroyed_event.unregister(master, src)
+	GLOB.dir_set_event.unregister(master, src)
 	master = null
 	. = ..()
 
-/atom/movable/overlay/attackby(a, b)
-	if (src.master)
-		return src.master.attackby(a, b)
-	return
+/atom/movable/overlay/attackby(obj/item/I, mob/user)
+	if (master)
+		return master.attackby(I, user)
 
-/atom/movable/overlay/attack_hand(a, b, c)
-	if (src.master)
-		return src.master.attack_hand(a, b, c)
-	return
-
-/mob/touch_map_edge()
-	..()
-	inertia_dir = last_move
+/atom/movable/overlay/attack_hand(mob/user)
+	if (master)
+		return master.attack_hand(user)
 
 /atom/movable/proc/touch_map_edge()
 	#define worldWidth 5

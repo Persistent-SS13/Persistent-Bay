@@ -62,6 +62,37 @@
 	var/datum/robot_component/picked = pick(parts)
 	picked.heal_damage(brute,burn)
 
+///mob/living/silicon/robot/take_organ_damage(var/brute = 0, var/burn = 0, var/sharp = 0, var/edge = 0, var/emp = 0)
+//	var/list/components = get_damageable_components()
+//	if(!components.len)
+//		return
+//
+//	 //Combat shielding absorbs a percentage of damage directly into the cell.
+//	if(module_active && istype(module_active,/obj/item/borg/combat/shield))
+//		var/obj/item/borg/combat/shield/shield = module_active
+//		//Shields absorb a certain percentage of damage based on their power setting.
+//		var/absorb_brute = brute*shield.shield_level
+//		var/absorb_burn = burn*shield.shield_level
+//		var/cost = (absorb_brute+absorb_burn)*100
+//
+//		cell.charge -= cost
+//		if(cell.charge <= 0)
+//			cell.charge = 0
+//			to_chat(src, "<span class='warning'>Your shield has overloaded!</span>")
+//		else
+//			brute -= absorb_brute
+//			burn -= absorb_burn
+//			to_chat(src, "<span class='warning'>Your shield absorbs some of the impact!</span>")
+//
+//	if(!emp)
+//		var/datum/robot_component/armour/A = get_armour()
+//		if(A)
+//			A.take_damage(brute,burn,sharp,edge)
+//			return
+//
+//	var/datum/robot_component/C = pick(components)
+//	C.take_damage(brute,burn,sharp,edge)
+
 /mob/living/silicon/robot/heal_overall_damage(var/brute, var/burn)
 	var/list/datum/robot_component/parts = get_damaged_components(brute,burn)
 

@@ -53,12 +53,11 @@
 /obj/item/weapon/computer_hardware/proc/diagnostics(var/mob/user)
 	to_chat(user, "Hardware Integrity Test... (Integrity: [health]/[max_health]) [isfailing() ? "FAIL" : ismalfunctioning() ? "WARN" : "PASS"]")
 
-/obj/item/weapon/computer_hardware/New(var/obj/L)
-	..()
+/obj/item/weapon/computer_hardware/Initialize()
+	. = ..()
 	w_class = hardware_size
-	if(istype(L, /obj/item/modular_computer))
-		holder2 = L
-		return
+	if(istype(loc, /obj/item/modular_computer))
+		holder2 = loc
 
 /obj/item/weapon/computer_hardware/Destroy()
 	holder2 = null

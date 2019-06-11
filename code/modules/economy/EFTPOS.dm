@@ -21,7 +21,7 @@
 
 		//create a short manual as well
 		var/obj/item/weapon/paper/R = new(src.loc)
-		R.name = "Steps to success: Correct EFTPOS Usage"
+		R.SetName("Steps to success: Correct EFTPOS Usage")
 		/*
 		R.info += "<b>When first setting up your EFTPOS device:</b>"
 		R.info += "1. Memorise your EFTPOS command code (provided with all EFTPOS devices).<br>"
@@ -64,7 +64,7 @@
 
 /obj/item/device/eftpos/proc/print_reference()
 	var/obj/item/weapon/paper/R = new(src.loc)
-	R.name = "Reference: [eftpos_name]"
+	R.SetName("Reference: [eftpos_name]")
 	R.info = "<b>[eftpos_name] reference</b><br><br>"
 	R.info += "Access code: [access_code]<br><br>"
 	R.info += "<b>Do not lose or misplace this code.</b><br>"
@@ -78,9 +78,9 @@
 	R.overlays += stampoverlay
 	R.stamps += "<HR><i>This paper has been stamped by the EFTPOS device.</i>"
 	var/obj/item/smallDelivery/D = new(R.loc)
-	R.loc = D
+	R.forceMove(D)
 	D.wrapped = R
-	D.name = "small parcel - 'EFTPOS access code'"
+	D.SetName("small parcel - 'EFTPOS access code'")
 
 /obj/item/device/eftpos/attack_self(mob/user as mob)
 	if(get_dist(src,user) <= 1)
@@ -230,7 +230,7 @@
 				if(!linked_account.suspended)
 					var/attempt_pin = ""
 					var/datum/money_account/D = get_account(C.associated_account_number)
-					if(D.security_level)
+					if(D && D.security_level)
 						attempt_pin = input("Enter pin code", "EFTPOS transaction") as num
 						D = null
 					D = attempt_account_access(C.associated_account_number, attempt_pin, 2)

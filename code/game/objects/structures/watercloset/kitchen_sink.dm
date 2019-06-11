@@ -1,19 +1,19 @@
-/obj/structure/sink/kitchen
+/obj/structure/hygiene/sink/kitchen
 	name = "kitchen sink"
 	icon_state = "sink_alt"
 	frame_type = /obj/item/frame/plastic/kitchensink/
 
-/obj/structure/sink/kitchen/New(loc, dir, atom/frame)
+/obj/structure/hygiene/sink/kitchen/New(loc, dir, atom/frame)
 	..(loc)
 
 	if(dir)
 		src.set_dir(dir)
 
-/obj/structure/sink/kitchen/Initialize()
+/obj/structure/hygiene/sink/kitchen/Initialize()
 	. = ..()
 	queue_icon_update()
 
-/obj/structure/sink/kitchen/update_icon()
+/obj/structure/hygiene/sink/kitchen/update_icon()
 	. = ..()
 	switch(dir)
 		if(NORTH)

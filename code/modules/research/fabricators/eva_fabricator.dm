@@ -2,7 +2,7 @@
 	// Things that must be adjusted for each fabricator
 	name = "EVA Equipment Fabricator" // Self-explanatory
 	desc = "A machine used for the production of voidsuits and other spacesuits and any other EVA related equipment, plus mining equipment.." // Self-explanatory
-	circuit = /obj/item/weapon/circuitboard/fabricator/evafab // Circuit for the machine. These, as well as their designs, should be defined in fabricator_circuits.dm
+	circuit_type = /obj/item/weapon/circuitboard/fabricator/evafab // Circuit for the machine. These, as well as their designs, should be defined in fabricator_circuits.dm
 	build_type = VOIDFAB // The identifer for what gets built in what fabricator. A new one *MUST* be defined in _defines/research.dm for each fabricator.
 						 					 // More than one can be assigned per design, however, if you want something to be able to be built in more than one fabricator eg. Power Cells
 
@@ -184,7 +184,7 @@
 // EVA Equipment
 /datum/design/item/genfab/eva
 	category = "EVA Equipment"
-
+	time = 10
 /datum/design/item/genfab/eva/adv
 
 ///////////////////////////////////////////////////////////////
@@ -228,7 +228,7 @@
 	name = "Beacon tracking pinpointer"
 	req_tech = list(TECH_MAGNET = 3, TECH_ENGINEERING = 2, TECH_BLUESPACE = 3)
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_COPPER = 0.5 SHEETS)
-	build_path = /obj/item/device/beacon_locator
+	build_path = /obj/item/weapon/pinpointer/radio
 
 /datum/design/item/genfab/eva/adv/marshalling_wand
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_COPPER = 0.5 SHEETS)
@@ -272,7 +272,7 @@
 //MINING EQUIPMENT
 /datum/design/item/genfab/miningtools
 	category = "Mining Equipment"
-
+	time = 10
 /datum/design/item/genfab/miningtools/adv
 
 
@@ -344,7 +344,7 @@
 /datum/design/item/genfab/miningtools/adv/mining_scanner
 	req_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2)
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS,MATERIAL_GLASS = 0.5 SHEETS)
-	build_path = /obj/item/weapon/mining_scanner
+	build_path = /obj/item/device/scanner/mining/
 
 /datum/design/item/genfab/miningtools/adv/depth_scanner
 	req_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2, TECH_BLUESPACE = 2)
@@ -386,7 +386,7 @@
 
 /datum/design/item/genfab/miningtools/adv/arch/hand
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_CLOTH = 0.5 SHEETS)
-	build_path = /obj/item/weapon/pickaxe/hand
+	build_path = /obj/item/weapon/pickaxe/xeno/hand
 **/
 
 

@@ -19,7 +19,7 @@
 
 /obj/item/weapon/spacecash/after_load()
 	..()
-	update_icon()
+	queue_icon_update()
 
 /obj/item/weapon/spacecash/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W, /obj/item/weapon/spacecash))
@@ -43,6 +43,10 @@
 			h_user.put_in_hands(bundle)
 		to_chat(user, "<span class='notice'>You add [src.worth] Ethericoins worth of money to the bundles.<br>It holds [bundle.worth] Ethericoins now.</span>")
 		qdel(src)
+
+	else if(istype(W, /obj/item/weapon/gun/launcher/money))
+		var/obj/item/weapon/gun/launcher/money/L = W
+		L.absorb_cash(src, user)
 
 /obj/item/weapon/spacecash/proc/getMoneyImages()
 	if(icon_state)
@@ -68,7 +72,7 @@
 	if(num == 0) // Less than one ethericoin, let's just make it look like 1 for ease
 		. += "spacecash1"
 
-/obj/item/weapon/spacecash/bundle/update_icon()
+/obj/item/weapon/spacecash/bundle/on_update_icon()
 	overlays.Cut()
 	var/list/images = src.getMoneyImages()
 
@@ -82,9 +86,9 @@
 
 	src.desc = "They are worth [worth] Ethericoins."
 	if(worth in denominations)
-		src.name = "[worth] Ethericoin"
+		src.SetName("[worth] Ethericoin")
 	else
-		src.name = "pile of [worth] ethericoins"
+		src.SetName("pile of [worth] ethericoins")
 
 	if(overlays.len <= 2)
 		w_class = ITEM_SIZE_TINY

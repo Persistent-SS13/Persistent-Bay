@@ -32,7 +32,7 @@
 	var/kit_desc
 	var/kit_icon
 	var/additional_data
-	
+
 /datum/custom_item/proc/is_valid(var/checker)
 	if(!item_path)
 		to_chat(checker, "<span class='warning'>The given item path, [item_path_as_string], is invalid and does not exist.</span>")
@@ -51,7 +51,7 @@
 	if(!item)
 		return
 	if(name)
-		item.name = name
+		item.SetName(name)
 	if(item_desc)
 		item.desc = item_desc
 	if(item_icon)
@@ -104,10 +104,10 @@
 	//This has to be done before we touch any of item's vars
 	if(!("[item_icon]_l" in available_states))
 		new_item_state_slots[slot_l_hand_str] = get_state(item, slot_l_hand_str, "_l")
-		new_item_icons[slot_l_hand_str] = get_icon(item, slot_l_hand_str, 'icons/mob/items/lefthand.dmi')
+		new_item_icons[slot_l_hand_str] = get_icon(item, slot_l_hand_str, 'icons/mob/onmob/items/lefthand.dmi')
 	if(!("[item_icon]_r" in available_states))
 		new_item_state_slots[slot_r_hand_str] = get_state(item, slot_r_hand_str, "_r")
-		new_item_icons[slot_r_hand_str] = get_icon(item, slot_r_hand_str, 'icons/mob/items/righthand.dmi')
+		new_item_icons[slot_r_hand_str] = get_icon(item, slot_r_hand_str, 'icons/mob/onmob/items/righthand.dmi')
 
 	item.item_state_slots = new_item_state_slots
 	item.item_icons = new_item_icons
@@ -140,7 +140,7 @@
 /hook/startup/proc/load_custom_items()
 
 	var/datum/custom_item/current_data
-	for(var/line in splittext(file2text("config/custom_items.txt"), "\n"))
+	for(var/line in splittext(file2text(CUSTOM_ITEM_CONFIG), "\n"))
 
 		line = trim(line)
 		if(line == "" || !line || findtext(line, "#", 1, 2))
@@ -206,7 +206,7 @@
 		// Check for requisite ckey and character name.
 		if((lowertext(citem.assoc_key) != lowertext(M.ckey)) || (lowertext(citem.character_name) != lowertext(M.real_name)))
 			continue
-			
+
 		// Once we've decided that the custom item belongs to this player, validate it
 		if(!citem.is_valid(M))
 			return
@@ -232,8 +232,8 @@
 		var/obj/item/existing_item
 		if(citem.item_path == /obj/item/weapon/card/id && istype(current_id)) //Set earlier.
 			existing_item = M.wear_id
-		else if(citem.item_path == /obj/item/device/pda)
-			existing_item = locate(/obj/item/device/pda) in M.contents
+		else if(citem.item_path == /obj/item/modular_computer/pda)
+			existing_item = locate(/obj/item/modular_computer/pda) in M.contents
 
 		// Spawn and equip the item.
 		if(existing_item)

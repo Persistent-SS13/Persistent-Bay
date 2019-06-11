@@ -217,7 +217,7 @@
 	return
 
 /mob/living/silicon/robot/proc/activate_module(var/obj/item/O)
-	if(!(locate(O) in src.module.modules) && O != src.module.emag)
+	if(!(locate(O) in module.equipment) && O != src.module.emag)
 		return
 	if(activated(O))
 		to_chat(src, "<span class='notice'>Already activated</span>")
@@ -248,4 +248,12 @@
 
 /mob/living/silicon/robot/put_in_hands(var/obj/item/W) // No hands.
 	W.forceMove(get_turf(src))
+	return 1
+
+//Robots don't use inventory slots, so we need to override this.
+/mob/living/silicon/robot/canUnEquip(obj/item/I)
+	if(!I)
+		return 1
+	if((I in module) || (I in src)) //Includes all modules and installed components.
+		return I.canremove          //Will be 0 for modules, but items held by grippers will also be checked here.
 	return 1

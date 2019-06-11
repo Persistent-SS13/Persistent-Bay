@@ -27,14 +27,14 @@
 			return 0
 	else if(istype(used_atom, /obj/item/stack))
 		var/obj/item/stack/S = used_atom
-		if(S.get_amount() < 5)
+		if(!S.can_use(5))
 			to_chat(user, ("There's not enough material in this stack."))
 			return 0
 		else
 			S.use(5)
 	return 1
 
-/datum/construction/reversible/mecha/custom_action(index as num, diff as num, atom/used_atom, mob/user as mob)
+/datum/construction/reversible/mecha/custom_action(var/index, var/diff, var/atom/used_atom, var/mob/user)
 	if(isWelder(used_atom))
 		var/obj/item/weapon/tool/weldingtool/W = used_atom
 		if (W.remove_fuel(0, user))
@@ -59,7 +59,7 @@
 			return 0
 	else if(istype(used_atom, /obj/item/stack))
 		var/obj/item/stack/S = used_atom
-		if(S.get_amount() < 5)
+		if(!S.can_use(5))
 			to_chat(user, ("There's not enough material in this stack."))
 			return 0
 		else
@@ -272,7 +272,7 @@
 
 	spawn_result()
 		..()
-		feedback_inc("mecha_ripley_created",1)
+		SSstatistics.add_field("mecha_ripley_created",1)
 		return
 
 
@@ -554,7 +554,7 @@
 
 	spawn_result()
 		..()
-		feedback_inc("mecha_gygax_created",1)
+		SSstatistics.add_field("mecha_gygax_created",1)
 		return
 
 /datum/construction/mecha/firefighter_chassis
@@ -778,7 +778,7 @@
 
 	spawn_result()
 		..()
-		feedback_inc("mecha_firefighter_created",1)
+		SSstatistics.add_field("mecha_firefighter_created",1)
 		return
 
 /datum/construction/mecha/durand_chassis
@@ -1058,7 +1058,7 @@
 
 	spawn_result()
 		..()
-		feedback_inc("mecha_durand_created",1)
+		SSstatistics.add_field("mecha_durand_created",1)
 		return
 
 
@@ -1291,5 +1291,5 @@
 
 	spawn_result()
 		..()
-		feedback_inc("mecha_odysseus_created",1)
+		SSstatistics.add_field("mecha_odysseus_created",1)
 		return

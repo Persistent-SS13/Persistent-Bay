@@ -4,10 +4,11 @@
 		verbs |= /obj/item/modular_computer/verb/eject_ai
 	if(portable_drive)
 		verbs |= /obj/item/modular_computer/verb/eject_usb
-	if(card_slot)
+	if(card_slot && card_slot.stored_card)
 		verbs |= /obj/item/modular_computer/verb/eject_id
 	if(stores_pen && istype(stored_pen))
 		verbs |= /obj/item/modular_computer/verb/remove_pen
+
 	verbs |= /obj/item/modular_computer/verb/emergency_shutdown
 
 // Forcibly shut down the device. To be used when something bugs out and the UI is nonfunctional.
@@ -29,6 +30,17 @@
 		update_icon()
 		shutdown_computer()
 		to_chat(usr, "You press a hard-reset button on \the [src]. It displays a brief debug screen before shutting down.")
+		if(updating)
+			updating = FALSE
+			updates = 0
+			update_progress = 0
+			if(prob(10))
+				visible_message("<span class='warning'>[src] emits some ominous clicks.</span>")
+				hard_drive.take_damage(hard_drive.malfunction_threshold * hard_drive.get_max_health())
+			else if(prob(5))
+				visible_message("<span class='warning'>[src] emits some ominous clicks.</span>")
+				hard_drive.take_damage(hard_drive.break_threshold * hard_drive.get_max_health())
+		shutdown_computer(FALSE)
 		spawn(2 SECONDS)
 			bsod = 0
 			update_icon()
@@ -36,7 +48,7 @@
 
 // Eject ID card from computer, if it has ID slot with card inside.
 /obj/item/modular_computer/verb/eject_id()
-	set name = "Eject ID"
+	set name = "Remove ID"
 	set category = "Object"
 	set src in view(1)
 
@@ -118,14 +130,11 @@
 	for(var/datum/computer_file/program/P in idle_threads)
 		P.event_idremoved(1)
 
-	card_slot.stored_card.forceMove(get_turf(src))
-	if(Adjacent(user) && !issilicon(user))
-		user.put_in_hands(card_slot.stored_card)
+	user.put_in_hands(card_slot.stored_card)
+	to_chat(user, "You remove [card_slot.stored_card] from [src].")
 	card_slot.stored_card = null
-
 	update_uis()
-	to_chat(user, "You remove the card from \the [src]")
-
+	update_verbs()
 
 /obj/item/modular_computer/proc/proc_eject_usb(mob/user)
 	if(!user)
@@ -150,7 +159,6 @@
 	if(Adjacent(user) && !issilicon(user))
 		user.put_in_hands(ai_slot)
 	ai_slot.stored_card = null
-
 	ai_slot.update_power_usage()
 	update_uis()
 
@@ -178,8 +186,9 @@
 		turn_on(user)
 
 /obj/item/modular_computer/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
-	if(active_program?.handleInteraction(W, user))
-		return
+	//Tell the program
+	if(active_program && active_program.event_item_used(W, user))
+		return 1
 	if(istype(W, /obj/item/weapon/card/id)) // ID Card, try to insert it.
 		var/obj/item/weapon/card/id/I = W
 		if(!card_slot)
@@ -189,11 +198,14 @@
 		if(card_slot.stored_card)
 			to_chat(user, "You try to insert \the [I] into \the [src], but it's ID card slot is occupied.")
 			return
-		user.drop_from_inventory(I)
+
+		if(!user.unEquip(I, src))
+			return
 		card_slot.stored_card = I
-		I.forceMove(src)
 		update_uis()
-		to_chat(user, "You insert \the [I] into \the [src].")
+		update_verbs()
+		to_chat(user, "You insert [I] into [src].")
+
 		return
 	if(istype(W, /obj/item/weapon/pen) && stores_pen)
 		if(istype(stored_pen))
@@ -218,14 +230,22 @@
 		to_chat(user, "\The [src] reports that it successfully stored a readng from \the [W].")
 		update_uis()
 		return
-	if(istype(W, /obj/item/weapon/paper) || istype(W, /obj/item/weapon/paper_bundle) || istype(W, /obj/item/weapon/shreddedp))
-		if(!nano_printer)
+	if(istype(W, /obj/item/weapon/paper))
+		var/obj/item/weapon/paper/paper = W
+		if(scanner && paper.info)
+			scanner.do_on_attackby(user, W)
 			return
-		nano_printer.attackby(W, user)
+	if(istype(W, /obj/item/weapon/paper) || istype(W, /obj/item/weapon/paper_bundle) || istype(W, /obj/item/weapon/shreddedp))
+		if(nano_printer)
+			nano_printer.attackby(W, user)
 	if(istype(W, /obj/item/weapon/aicard))
 		if(!ai_slot)
 			return
 		ai_slot.attackby(W, user)
+
+	if(!modifiable)
+		return ..()
+
 	if(istype(W, /obj/item/weapon/computer_hardware))
 		var/obj/item/weapon/computer_hardware/C = W
 		if(C.hardware_size <= max_hardware_size)

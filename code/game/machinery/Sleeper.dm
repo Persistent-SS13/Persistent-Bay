@@ -22,6 +22,8 @@
 	var/pump = FALSE
 	var/list/stasis_settings = list(SLEEPER_LOWEST_STASIS,SLEEPER_LOW_STASIS, SLEEPER_MID_STASIS, SLEEPER_MAX_STASIS)
 	var/stasis = SLEEPER_LOW_STASIS
+	var/synth_modifier = 1
+	var/pump_speed
 
 	var/efficiency
 	var/initial_bin_rating = 1
@@ -83,7 +85,7 @@
 			if(beaker.reagents.total_volume < beaker.reagents.maximum_volume)
 				var/pumped = 0
 				for(var/datum/reagent/x in occupant.reagents.reagent_list)
-					occupant.reagents.trans_to_obj(beaker, 3)
+					occupant.reagents.trans_to_obj(beaker, pump_speed)
 					pumped++
 				if(ishuman(occupant))
 					occupant.vessel.trans_to_obj(beaker, pumped + 1)
@@ -93,8 +95,10 @@
 	if(pump > 0)
 		if(beaker && istype(occupant))
 			if(beaker.reagents.total_volume < beaker.reagents.maximum_volume)
-				for(var/datum/reagent/x in occupant.ingested.reagent_list)
-					occupant.ingested.trans_to_obj(beaker, 3)
+				var/datum/reagents/ingested = occupant.get_ingested_reagents()
+				if(ingested)
+					for(var/datum/reagent/x in ingested.reagent_list)
+						ingested.trans_to_obj(beaker, pump_speed)
 				active_power_usage += 100
 		else
 			toggle_pump()
@@ -103,8 +107,7 @@
 		occupant.SetStasis(stasis)
 		active_power_usage += stasis * 10
 
-
-/obj/machinery/sleeper/update_icon()
+/obj/machinery/sleeper/on_update_icon()
 	icon_state = "sleeper_[occupant ? "1" : "0"]"
 
 /obj/machinery/sleeper/attack_hand(var/mob/user)
@@ -127,10 +130,10 @@
 	data["chemicals"] = chemicals
 
 	if(occupant)
-		var/scan = medical_scan_results(occupant,TRUE)
-		scan = replacetext(scan,"'notice'","'white'")
-		scan = replacetext(scan,"'warning'","'average'")
-		scan = replacetext(scan,"'danger'","'bad'")
+		var/scan = user.skill_check(SKILL_MEDICAL, SKILL_ADEPT) ? medical_scan_results(occupant) : "<span class='white'><b>Contains: \the [occupant]</b></span>"
+		scan = replacetext(scan,"'scan_notice'","'white'")
+		scan = replacetext(scan,"'scan_warning'","'average'")
+		scan = replacetext(scan,"'scan_danger'","'bad'")
 		data["occupant"] =scan
 	else
 		data["occupant"] = 0
@@ -141,6 +144,7 @@
 	data["filtering"] = filtering
 	data["pump"] = pump
 	data["stasis"] = stasis
+	data["skill_check"] = user.skill_check(SKILL_MEDICAL, SKILL_BASIC)
 	data["stasis_modes"] = stasis_settings.Copy()
 	data["amount_injectable"] = amount_injectable
 	data["amount_injected"] = amount_injected
@@ -156,7 +160,7 @@
 	if(user == occupant)
 		to_chat(usr, "<span class='warning'>You can't reach the controls from the inside.</span>")
 		return STATUS_CLOSE
-	return ..()
+	. = ..()
 
 /obj/machinery/sleeper/OnTopic(user, href_list)
 	add_fingerprint(user)
@@ -190,6 +194,7 @@
 		var/stasis_index = text2num(href_list["stasis_index"]) + 1 //nano ui indices begin at 0 for some reasons
 		if(stasis_index <= stasis_settings.len && stasis_index > 0)
 			stasis = stasis_settings[stasis_index]
+			change_power_consumption(initial(active_power_usage) + 5 KILOWATTS * (stasis_index-1), POWER_USE_ACTIVE)
 			return TOPIC_REFRESH
 
 /obj/machinery/sleeper/attack_ai(var/mob/user)
@@ -199,6 +204,12 @@
 	if(!CanMouseDrop(target, user))
 		return
 	if(!istype(target))
+		return
+	if(target.buckled)
+		to_chat(user, "<span class='warning'>Unbuckle the subject before attempting to move them.</span>")
+		return
+	if(panel_open)
+		to_chat(user, "<span class='warning'>Close the maintenance panel before attempting to place the subject in the sleeper.</span>")
 		return
 	go_in(target, user)
 
@@ -253,24 +264,11 @@
 	else
 		visible_message("\The [user] starts putting [M] into \the [src].")
 
-	if(do_after(user, 20, M))
+	if(do_after(user, 20, src))
 		if(occupant)
 			to_chat(user, "<span class='warning'>\The [src] is already occupied.</span>")
 			return FALSE
-		if (M.buckled)
-			M.buckled.user_unbuckle_mob(user)
-			if (M.buckled)
-				return FALSE
-		if(M.pulledby == user)
-			user.stop_pulling()
-		M.stop_pulling()
-		if(M.client)
-			M.client.perspective = EYE_PERSPECTIVE
-			M.client.eye = src
-		M.forceMove(src)
-		update_use_power(2)
-		occupant = M
-		update_icon()
+		set_occupant(M)
 		return TRUE
 	return FALSE
 
@@ -281,7 +279,7 @@
 		occupant.client.eye = occupant.client.mob
 		occupant.client.perspective = MOB_PERSPECTIVE
 	occupant.dropInto(loc)
-	occupant = null
+	set_occupant(null)
 	var/list/ejectable_content = InsertedContents()
 	for(var/key in cartridges)
 		ejectable_content -= cartridges[key]
@@ -292,6 +290,21 @@
 	update_use_power(1)
 	update_icon()
 	toggle_filter()
+
+/obj/machinery/sleeper/proc/set_occupant(var/mob/living/carbon/occupant)
+	src.occupant = occupant
+	update_icon()
+	if(!occupant)
+		SetName(initial(name))
+		update_use_power(POWER_USE_IDLE)
+		return
+	occupant.forceMove(src)
+	occupant.stop_pulling()
+	if(occupant.client)
+		occupant.client.perspective = EYE_PERSPECTIVE
+		occupant.client.eye = src
+	SetName("[name] ([occupant])")
+	update_use_power(POWER_USE_ACTIVE)
 
 /obj/machinery/sleeper/proc/remove_beaker()
 	if(beaker)
@@ -372,7 +385,15 @@
 
 /obj/machinery/sleeper/examine(mob/user)
 	. = ..()
-	to_chat(user, "It has [cartridges.len] cartridges installed, and has space for [SLEEPER_MAX_CARTRIDGES - cartridges.len] more.")
+	if (. && user.Adjacent(src))
+		to_chat(user, "It has [cartridges.len] cartridges installed, and has space for [SLEEPER_MAX_CARTRIDGES - cartridges.len] more.")
+		if (beaker)
+			to_chat(user, "It is loaded with a beaker.")
+		if(occupant)
+			occupant.examine(user)
+		if (emagged && user.skill_check(SKILL_MEDICAL, SKILL_EXPERT))
+			to_chat(user, "The sleeper chemical synthesis controls look tampered with.")
+
 
 /obj/machinery/sleeper/proc/add_cartridge(obj/item/weapon/reagent_containers/chem_disp_cartridge/C, mob/user)
 	if(!istype(C))

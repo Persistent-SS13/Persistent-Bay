@@ -50,6 +50,7 @@
 			return
 		data["selected_stock"] = selected_stock.uid
 		data["stock_name"] = selected_stock.name
+		data["holdings"] = selected_stock.get_stockholder(usr.real_name)
 		var/bestbuy = selected_stock.get_best_buy()
 		if(isnull(bestbuy)) bestbuy = "none"
 		var/bestsell = selected_stock.get_best_sell()
@@ -79,6 +80,8 @@
 			formatted_sellorders[++formatted_sellorders.len] = list("price" = order.price, "volume" = order.volume)
 		data["sell_orders"] = formatted_sellorders
 	if(menu == 4)
+		data["selected_stock"] = selected_stock.uid
+		data["stock_name"] = selected_stock.name		
 		data["ceo_name"] = selected_stock.get_ceo()
 		data["ceo_wage"] = selected_stock.get_ceo_wage()
 		data["ceo_revenue"] = "[selected_stock.ceo_tax]%"
@@ -88,7 +91,7 @@
 	data["menu"] = menu
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
-		ui = new(user, src, ui_key, "materialmarket.tmpl", name, 600, 800, state = state)
+		ui = new(user, src, ui_key, "stockmarket.tmpl", name, 600, 800, state = state)
 		ui.auto_update_layout = 1
 		ui.set_initial_data(data)
 		ui.open()

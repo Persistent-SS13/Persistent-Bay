@@ -105,9 +105,19 @@
 	var/last_configurator = null
 	var/locked = 1
 	var/lockable = 1
+	var/autoset = FALSE // Whether the door should inherit access from surrounding areas
 	var/datum/world_faction/connected_faction
 	var/business_name = ""
 	var/list/business_access = list()
+
+/obj/item/weapon/airlock_electronics/New()
+	..()
+	ADD_SAVED_VAR(conf_access)
+	ADD_SAVED_VAR(one_access)
+	ADD_SAVED_VAR(locked)
+	ADD_SAVED_VAR(connected_faction)
+	ADD_SAVED_VAR(business_name)
+	ADD_SAVED_VAR(business_access)
 
 /obj/item/weapon/airlock_electronics/attack_self(mob/user as mob)
 	if (!ishuman(user) && !istype(user,/mob/living/silicon/robot))
@@ -148,6 +158,7 @@
 	data["oneAccess"] = one_access
 	data["locked"] = locked
 	data["lockable"] = lockable
+	data["autoset"] = autoset
 
 	return data
 
@@ -161,6 +172,9 @@
 			return TRUE
 		if("one_access")
 			one_access = !one_access
+			return TRUE
+		if("autoset")
+			autoset = !autoset
 			return TRUE
 		if("set")
 			var/access = text2num(params["access"])
@@ -219,6 +233,20 @@
 	if(!ui)
 		ui = new(user, src, ui_key, "airlock_electronics", src.name, 1000, 500, master_ui, state)
 		ui.open()
+
+/obj/item/weapon/airlock_electronics/proc/set_access(var/obj/object)
+	if(!object.req_access || !object.req_one_access || !object.req_access_faction)
+		object.check_access()
+	if(object.req_one_access.len)
+		for(var/entry in object.req_one_access)
+			req_one_access |= entry
+	if(object.req_access.len)
+		conf_access = list()
+		for(var/entry in object.req_access)
+			conf_access |= entry // This flattens the list, turning everything into AND
+			// Can be reworked to have the electronics inherit a precise access set, but requires UI changes.
+	if(object.req_access_faction)
+		src.req_access_faction = object.req_access_faction
 
 /obj/item/weapon/airlock_electronics/keypad_electronics
  	name = "keypad airlock electronics"

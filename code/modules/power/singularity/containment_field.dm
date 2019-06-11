@@ -8,8 +8,8 @@
 	anchored = 1
 	density = 0
 	unacidable = 1
-	use_power = 0
-	light_range = 4
+	use_power = POWER_USE_OFF
+	light_outer_range = 4
 	movable_flags = MOVABLE_FLAG_PROXMOVE
 	var/obj/machinery/field_generator/FG1 = null
 	var/obj/machinery/field_generator/FG2 = null
@@ -20,7 +20,7 @@
 		FG1.cleanup()
 	if(FG2 && !FG2.clean_up)
 		FG2.cleanup()
-	..()
+	. = ..()
 
 /obj/machinery/containment_field/attack_hand(mob/user as mob)
 	if(get_dist(src, user) > 1)

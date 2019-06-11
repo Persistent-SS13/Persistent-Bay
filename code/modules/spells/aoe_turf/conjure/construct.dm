@@ -47,6 +47,18 @@
 
 	hud_state = "const_wall"
 
+/spell/aoe_turf/conjure/wall/reinforced
+	name = "Greater Construction"
+	desc = "This spell constructs a reinforced metal wall"
+
+	charge_max = 300
+	spell_flags = Z2NOCAST
+	invocation = "none"
+	invocation_type = SpI_NONE
+	range = 0
+	cast_delay = 50
+
+	summon_type = list(/turf/simulated/wall/r_wall)
 
 /spell/aoe_turf/conjure/soulstone
 	name = "Summon Soulstone"
@@ -107,4 +119,4 @@
 	icon = 'icons/effects/effects.dmi'
 	icon_state = "m_shield_cult"
 	light_color = "#b40000"
-	light_range = 2
+	light_outer_range = 2

@@ -3,6 +3,7 @@
 	filedesc = "Supermatter Monitoring"
 	nanomodule_path = /datum/nano_module/supermatter_monitor/
 	program_icon_state = "smmon_0"
+	program_key_state = "tech_key"
 	program_menu_icon = "notice"
 	extended_desc = "This program connects to specially calibrated supermatter sensors to provide information on the status of supermatter-based engines."
 	ui_header = "smmon_0.gif"
@@ -10,6 +11,7 @@
 	requires_ntnet = TRUE
 	network_destination = "supermatter monitoring system"
 	size = 5
+	category = PROG_ENG
 	var/last_status = 0
 
 /datum/computer_file/program/supermatter_monitor/process_tick()
@@ -58,8 +60,20 @@
 	for(var/obj/machinery/power/supermatter/S in supermatters)
 		. = max(., S.get_status())
 
+/datum/nano_module/supermatter_monitor/proc/process_data_output(skill, value)
+	switch(skill)
+		if(SKILL_NONE)
+			return (0.6 + 0.8 * rand()) * value
+		if(SKILL_BASIC)
+			return (0.8 + 0.4 * rand()) * value
+		if(SKILL_ADEPT)
+			return (0.95 + 0.1 * rand()) * value
+		else
+			return value
+
 /datum/nano_module/supermatter_monitor/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/list/data = host.initial_data()
+	var/engine_skill = user.get_skill_value(SKILL_ENGINES)
 
 	if(istype(active))
 		var/turf/T = get_turf(active)
@@ -72,11 +86,11 @@
 			return
 
 		data["active"] = 1
-		data["SM_integrity"] = active.get_integrity()
-		data["SM_power"] = active.power
-		data["SM_ambienttemp"] = air.temperature
-		data["SM_ambientpressure"] = air.return_pressure()
-		data["SM_EPR"] = active.get_epr()
+		data["SM_integrity"] = min(process_data_output(engine_skill, active.get_integrity()), 100)
+		data["SM_power"] = process_data_output(engine_skill, active.power)
+		data["SM_ambienttemp"] = process_data_output(engine_skill, air.temperature)
+		data["SM_ambientpressure"] = process_data_output(engine_skill, air.return_pressure())
+		data["SM_EPR"] = process_data_output(engine_skill, active.get_epr())
 		if(air.total_moles)
 			data["SM_gas_O2"] = round(100*air.gas[GAS_OXYGEN]/air.total_moles,0.01)
 			data["SM_gas_CO2"] = round(100*air.gas[GAS_CO2]/air.total_moles,0.01)
@@ -90,7 +104,7 @@
 			data["SM_gas_N2"] = 0
 			data["SM_gas_PH"] = 0
 			data["SM_gas_N2O"] = 0
-			data["SM_gas_PH"] = 0
+			data["SM_gas_H2"] = 0
 	else
 		var/list/SMS = list()
 		for(var/obj/machinery/power/supermatter/S in supermatters)
@@ -100,7 +114,7 @@
 
 			SMS.Add(list(list(
 			"area_name" = A.name,
-			"integrity" = S.get_integrity(),
+			"integrity" = process_data_output(engine_skill, S.get_integrity()),
 			"uid" = S.uid
 			)))
 

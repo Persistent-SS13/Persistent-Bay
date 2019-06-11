@@ -6,7 +6,7 @@ jdk: openjdk8
 env:
   global:
     BYOND_MAJOR="512"
-    BYOND_MINOR="1463"
+    BYOND_MINOR="1467"
 
 # ALL MAPS MUST BE PRESENT HERE
 # IF THEY ARE NOT, YOUR BUILD WILL FAIL
@@ -18,6 +18,10 @@ matrix:
       env: TEST=WEB
     - name: "Map - Nexus"
       env: TEST=MAP MAP_PATH=nexus
+    - name: "Map - Example"
+      env: TEST=MAP MAP_PATH=example
+    - name: "Map - Away Site Testing"
+      env: TEST=MAP MAP_PATH=away_sites_testing
 
 cache:
   directories:
@@ -32,6 +36,7 @@ addons:
       - libstdc++6:i386
       - python
       - python-pip
+      - uchardet
 
 script:
   - test/run-test.sh

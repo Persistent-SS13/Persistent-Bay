@@ -7,9 +7,9 @@
 	icon = 'icons/obj/machines/rechargers.dmi'
 	icon_state = "recharger0"
 	anchored = TRUE
-	use_power = POWER_USE_IDLE
 	idle_power_usage = 4
 	active_power_usage = 30 KILOWATTS
+	circuit_type = /obj/item/weapon/circuitboard/machinery/recharger
 	var/obj/item/charging = null
 	var/icon_state_charged = "recharger2"
 	var/icon_state_charging = "recharger1"
@@ -23,16 +23,7 @@
 
 /obj/machinery/recharger/Initialize()
 	. = ..()
-	//Create parts for Machine
-	if(!map_storage_loaded)
-		component_parts = list()
-		component_parts += new /obj/item/weapon/circuitboard/machinery/recharger(src)
-		component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-		component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-		component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-		component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	RefreshParts()
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/recharger/Destroy()
 	if(charging)
@@ -173,6 +164,15 @@ obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 	else
 		icon_state = icon_state_idle
 
+obj/machinery/recharger/examine(mob/user)
+	. = ..()
+	if(!. || isnull(charging))
+		return
+
+	else
+		var/obj/item/weapon/cell/C = charging.get_cell()
+		if(!isnull(C))
+			to_chat(user, "Item's charge at [round(C.percent())]%.")
 
 /obj/machinery/recharger/wallcharger
 	name = "wall recharger"
@@ -183,6 +183,7 @@ obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 	icon_state_charging = "wrecharger1"
 	icon_state_idle = "wrecharger0"
 	portable = 0
+	circuit_type = /obj/item/weapon/circuitboard/machinery/rechargerwall
 
 /obj/machinery/recharger/wallcharger/update_icon()
 	..()
@@ -192,7 +193,7 @@ obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 			src.pixel_y = -24
 		if(SOUTH)
 			src.pixel_x = 0
-			src.pixel_y = 28
+			src.pixel_y = 24
 		if(EAST)
 			src.pixel_x = -32
 			src.pixel_y = 0

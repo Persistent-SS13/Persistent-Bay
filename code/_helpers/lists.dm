@@ -10,7 +10,7 @@
  */
 
 //Returns a list in plain english as a string
-/proc/english_list(var/list/input, nothing_text = "nothing", and_text = " and ", comma_text = ", ", final_comma_text = "" )
+/proc/english_list(var/list/input, nothing_text = "nothing", and_text = " and ", comma_text = ", ", final_comma_text = "," )
 	switch(input.len)
 		if(0) return nothing_text
 		if(1) return "[input[1]]"
@@ -102,7 +102,6 @@ This actually tests if they have the same entries and values.
 		if(!(entry in second) || (first[entry] != second[entry]))
 			return 0
 	return 1
-
 /*
 Checks if a list has the same entries and values as an element of big.
 */
@@ -113,7 +112,6 @@ Checks if a list has the same entries and values as an element of big.
 		if(same_entries(little, element))
 			return 1
 	return 0
-
 /*
  * Returns list containing entries that are in either list but not both.
  * If skipref = 1, repeated elements are treated as one.
@@ -629,8 +627,6 @@ proc/dd_sortedTextList(list/incoming)
 /datum/alarm/dd_SortValue()
 	return "[sanitize_old(last_name)]"
 
-#define subtypesof(prototype) (typesof(prototype) - prototype)
-
 //creates every subtype of prototype (excluding prototype) and adds it to list L.
 //if no list/L is provided, one is created.
 /proc/init_subtypes(prototype, list/L)
@@ -662,7 +658,7 @@ proc/dd_sortedTextList(list/incoming)
 		group_list[key] = values
 
 	values += value
-	
+
 /proc/duplicates(var/list/L)
 	. = list()
 	var/list/checked = list()

@@ -13,14 +13,6 @@
 
 	circuit = /obj/item/weapon/circuitboard/account_database
 
-	proc/get_access_level()
-		if (!held_card)
-			return 0
-		if(access_cent_captain in held_card.access)
-			return 2
-		else if(access_hop in held_card.access || access_captain in held_card.access)
-			return 1
-
 	proc/create_transation(target, reason, amount)
 		var/datum/transaction/T = new()
 		T.target_name = target
@@ -48,8 +40,8 @@
 		return ..()
 
 	if(!held_card)
-		user.drop_item()
-		O.loc = src
+		if(!user.unEquip(O, src))
+			return
 		held_card = O
 
 		SSnano.update_uis(src)
@@ -67,7 +59,7 @@
 	data["src"] = "\ref[src]"
 	data["id_inserted"] = !!held_card
 	data["id_card"] = held_card ? text("[held_card.registered_name], [held_card.assignment]") : "-----"
-	data["access_level"] = get_access_level()
+	data["access_level"] = check_access(held_card)
 	data["machine_id"] = machine_id
 	data["creating_new_account"] = creating_new_account
 	data["detailed_account_view"] = !!detailed_account_view
@@ -160,7 +152,7 @@
 				creating_new_account = 0
 			if("insert_card")
 				if(held_card)
-					held_card.loc = src.loc
+					held_card.dropInto(loc)
 
 					if(ishuman(usr) && !usr.get_active_hand())
 						usr.put_in_hands(held_card)
@@ -169,10 +161,9 @@
 				else
 					var/obj/item/I = usr.get_active_hand()
 					if (istype(I, /obj/item/weapon/card/id))
-						var/obj/item/weapon/card/id/C = I
-						usr.drop_item()
-						C.loc = src
-						held_card = C
+						if(!usr.unEquip(I, src))
+							return
+						held_card = I
 
 			if("view_account_detail")
 				var/index = text2num(href_list["account_index"])
@@ -200,7 +191,7 @@
 				var/text
 				var/obj/item/weapon/paper/P = new(loc)
 				if (detailed_account_view)
-					P.name = "account #[detailed_account_view.account_number] details"
+					P.SetName("account #[detailed_account_view.account_number] details")
 					var/title = "Account #[detailed_account_view.account_number] Details"
 					text = {"
 						[accounting_letterhead(title)]
@@ -238,7 +229,7 @@
 						"}
 
 				else
-					P.name = "financial account list"
+					P.SetName("financial account list")
 					text = {"
 						[accounting_letterhead("Financial Account List")]
 

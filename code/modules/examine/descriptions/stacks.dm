@@ -1,4 +1,4 @@
-/obj/item/stack/rods
+/obj/item/stack/material/rods
 	description_info = "Made from metal sheets.  You can build a grille by using it in your hand. \
 	Clicking on a floor without any tiles will reinforce the floor.  You can make reinforced glass by combining rods and normal glass sheets."
 

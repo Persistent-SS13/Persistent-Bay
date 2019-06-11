@@ -60,14 +60,14 @@
 				construct_op ++
 				var/obj/item/stack/cable_coil/A = new /obj/item/stack/cable_coil( user.loc )
 				A.amount = 5
-				stat |= BROKEN // the machine's been borked!
+				set_broken(TRUE, TRUE) // the machine's been borked!
 		if(3)
 			if(isCoil(P))
 				var/obj/item/stack/cable_coil/A = P
 				if (A.use(5))
 					to_chat(user, "<span class='notice'>You insert the cables.</span>")
 					construct_op--
-					stat &= ~BROKEN // the machine's not borked anymore!
+					set_broken(FALSE, TRUE) // the machine's not borked anymore!
 				else
 					to_chat(user, "<span class='warning'>You need five coils of wire for this.</span>")
 			if(isCrowbar(P))
@@ -79,7 +79,7 @@
 					// Drop all the component stuff
 					if(contents.len > 0)
 						for(var/obj/x in src)
-							x.loc = user.loc
+							x.dropInto(loc)
 					else
 
 						// If the machine wasn't made during runtime, probably doesn't have components:
@@ -88,17 +88,17 @@
 						for(var/I in C.req_components)
 							for(var/i = 1, i <= C.req_components[I], i++)
 								var/obj/item/s = new I
-								s.loc = user.loc
-								if(istype(P, /obj/item/stack/cable_coil))
-									var/obj/item/stack/cable_coil/A = P
+								s.dropInto(user.loc)
+								if(istype(s, /obj/item/stack/cable_coil))
+									var/obj/item/stack/cable_coil/A = s
 									A.amount = 1
 
 						// Drop a circuit board too
-						C.loc = user.loc
+						C.dropInto(user.loc)
 
 					// Create a machine frame and delete the current machine
 					var/obj/machinery/constructable_frame/machine_frame/F = new
-					F.loc = src.loc
+					F.dropInto(loc)
 					qdel(src)
 
 
@@ -119,8 +119,8 @@
 	var/obj/item/device/multitool/P = get_multitool(user)
 
 	user.set_machine(src)
-	var/dat
-	dat = "<font face = \"Courier\"><HEAD><TITLE>[src.name]</TITLE></HEAD><center><H3>[src.name] Access</H3></center>"
+	var/list/dat = list()
+	dat += "<font face = \"Courier\"><HEAD><TITLE>[src.name]</TITLE></HEAD><center><H3>[src.name] Access</H3></center>"
 	dat += "<br>[temp]<br>"
 	dat += "<br>Power Status: <a href='?src=\ref[src];input=toggle'>[src.toggled ? "On" : "Off"]</a>"
 	if(overloaded_for)
@@ -182,9 +182,10 @@
 
 	dat += "</font>"
 	temp = ""
-	user << browse(dat, "window=tcommachine;size=520x500;can_resize=0")
-	onclose(user, "dormitory")
-
+	
+	var/datum/browser/popup = new(user, "tcommmachine", "Telecommunications Machine Configuration Panel", 520, 600)
+	popup.set_content(JOINTEXT(dat))
+	popup.open()
 
 // Off-Site Relays
 //
@@ -448,7 +449,6 @@
 	src.Options_Topic(href, href_list)
 
 	usr.set_machine(src)
-	src.add_fingerprint(usr)
 
 	updateUsrDialog()
 

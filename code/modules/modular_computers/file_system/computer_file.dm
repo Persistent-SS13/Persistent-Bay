@@ -17,17 +17,26 @@ var/global/file_uid = 0
 	file_uid++
 	if(islist(md))
 		metadata = md.Copy()
+	ADD_SAVED_VAR(filename)
+	ADD_SAVED_VAR(filetype)
+	ADD_SAVED_VAR(size)
+	ADD_SAVED_VAR(holder)
+	ADD_SAVED_VAR(unsendable)
+	ADD_SAVED_VAR(undeletable)
+	ADD_SAVED_VAR(uid)
+	ADD_SAVED_VAR(metadata)
+	ADD_SAVED_VAR(papertype)
 
 /datum/computer_file/Destroy()
+	. = ..()
 	if(!holder)
-		return ..()
+		return
 
 	holder.remove_file(src)
 	// holder.holder is the computer that has drive installed. If we are Destroy()ing program that's currently running kill it.
 	if(holder.holder2 && holder.holder2.active_program == src)
 		holder.holder2.kill_program(1)
 	holder = null
-	..()
 
 // Returns independent copy of this file.
 /datum/computer_file/proc/clone(var/rename = 0)

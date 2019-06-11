@@ -23,7 +23,8 @@
 		if(stat & (BROKEN|NOPOWER))
 			return
 		user.set_machine(src)
-		var/dat = "<TITLE>Telecommunications Monitor</TITLE><center><b>Telecommunications Monitor</b></center>"
+		var/list/dat = list()
+		dat += "<TITLE>Telecommunications Monitor</TITLE><center><b>Telecommunications Monitor</b></center>"
 
 		switch(screen)
 
@@ -57,9 +58,9 @@
 				dat += "</ol>"
 
 
-
-		user << browse(dat, "window=comm_monitor;size=575x400")
-		onclose(user, "server_control")
+		var/datum/browser/popup = new(user, "comm_monitor", "Autholathe", 575, 400)
+		popup.set_content(JOINTEXT(dat))
+		popup.open()
 
 		temp = ""
 		return
@@ -131,7 +132,7 @@
 					new /obj/item/weapon/material/shard( src.loc )
 					var/obj/item/weapon/circuitboard/comm_monitor/M = new /obj/item/weapon/circuitboard/comm_monitor( A )
 					for (var/obj/C in src)
-						C.loc = src.loc
+						C.dropInto(loc)
 					A.circuit = M
 					A.state = 3
 					A.icon_state = "3"
@@ -142,7 +143,7 @@
 					var/obj/structure/computerframe/A = new /obj/structure/computerframe( src.loc )
 					var/obj/item/weapon/circuitboard/comm_monitor/M = new /obj/item/weapon/circuitboard/comm_monitor( A )
 					for (var/obj/C in src)
-						C.loc = src.loc
+						C.dropInto(loc)
 					A.circuit = M
 					A.state = 4
 					A.icon_state = "4"

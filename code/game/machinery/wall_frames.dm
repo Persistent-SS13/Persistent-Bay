@@ -3,13 +3,13 @@
 	desc = "Used for building machines."
 	icon = 'icons/obj/monitors.dmi'
 	icon_state = "fire_bitem"
-	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	obj_flags = OBJ_FLAG_CONDUCTIBLE | OBJ_FLAG_DAMAGEABLE
 	var/build_machine_type
 	var/reverse = 0 //if resulting object faces opposite its dir (like light fixtures)
 	matter = list(MATERIAL_STEEL = 2 * SHEET_MATERIAL_AMOUNT)
 
 /obj/item/frame/plastic
-	obj_flags = 0
+	obj_flags = OBJ_FLAG_DAMAGEABLE
 	matter = list(MATERIAL_PLASTIC = 2 * SHEET_MATERIAL_AMOUNT)
 
 /obj/item/frame/attackby(obj/item/weapon/W as obj, mob/user as mob)
@@ -46,7 +46,7 @@
 	if (!istype(loc, /turf/simulated/floor))
 		to_chat(usr, SPAN_DANGER("\The [src] cannot be placed on this spot."))
 		return
-	if (A.requires_power == 0 || A.name == "Space")
+	if (A.requires_power == 0 || A.name == "Space" && !isLightFrame())
 		to_chat(usr, SPAN_DANGER("\The [src] cannot be placed in this area."))
 		return
 
@@ -57,6 +57,9 @@
 	new build_machine_type(loc, ndir, src)
 	qdel(src)
 
+/obj/item/frame/proc/isLightFrame()
+	return FALSE
+
 /obj/item/frame/fire_alarm
 	name = "fire alarm frame"
 	desc = "Used for building fire alarms."
@@ -66,9 +69,9 @@
 
 /obj/item/frame/air_alarm
 	name = "air alarm frame"
-	desc = "Used for building air alarms."
 	icon = 'icons/obj/monitors.dmi'
-	icon_state = "alarmx"
+	icon_state = "alarm_bitem"
+	desc = "Used for building air alarms."
 	build_machine_type = /obj/machinery/alarm
 
 /obj/item/frame/light
@@ -78,6 +81,9 @@
 	icon_state = "tube-construct-item"
 	build_machine_type = /obj/machinery/light_construct
 	reverse = 1
+
+/obj/item/frame/light/isLightFrame()
+	return TRUE
 
 /obj/item/frame/light/small
 	name = "small light fixture frame"
@@ -141,14 +147,14 @@
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "mirror"
 	matter = list(MATERIAL_SILVER = 2 * SHEET_MATERIAL_AMOUNT)
-	build_machine_type = /obj/structure/mirror
+	build_machine_type = /obj/item/weapon/storage/mirror
 
 /obj/item/frame/plastic/shower
 	name = "Shower Frame"
 	desc = "Used for building Showers"
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "shower"
-	build_machine_type = /obj/machinery/shower
+	build_machine_type = /obj/structure/hygiene/shower
 
 /obj/item/frame/wallflash
 	name = "Wall Flash Frame"
@@ -186,21 +192,21 @@
 	desc = "Used for building Sinks"
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "sink"
-	build_machine_type = /obj/structure/sink
+	build_machine_type = /obj/structure/hygiene/sink
 
 /obj/item/frame/plastic/urinal
 	name = "Urinal Frame"
 	desc = "Used for building urinals"
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "urinal"
-	build_machine_type = /obj/structure/urinal
+	build_machine_type = /obj/structure/hygiene/urinal
 
 /obj/item/frame/plastic/kitchensink
 	name = "Kitchen Sink Frame"
 	desc = "Used for building Kitchen Sinks"
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "sink_alt"
-	build_machine_type = /obj/structure/sink/kitchen
+	build_machine_type = /obj/structure/hygiene/sink/kitchen
 
 /obj/item/frame/plastic/virusfoodtank
 	name = "Virus Food Dispenser Frame"
@@ -327,3 +333,47 @@
 	icon = 'icons/obj/closet.dmi'
 	icon_state = "extinguisher_empty"
 	build_machine_type = /obj/item/weapon/storage/secure/safe
+
+
+/obj/item/frame/light/small/floor
+	name = "small floor light fixture frame"
+	icon = 'icons/obj/lighting.dmi'
+	icon_state = "floor-construct-stage1"
+	build_machine_type = /obj/machinery/light_construct/small/floor
+
+/obj/item/frame/light/small/floor/try_build(turf/on_wall)
+	if(!build_machine_type)
+		log_debug("[name]([type]) was placed but has no resulting machine type set..")
+		return
+	if (get_dist(on_wall,usr)>1)
+		return
+	var/turf/T = get_turf(usr)
+	var/area/A = get_area(on_wall)
+	if (!istype(on_wall, /turf/simulated/floor))
+		to_chat(usr, SPAN_DANGER("\The [src] cannot be placed on this spot."))
+		return
+	if (A.requires_power == 0 || A.name == "Space" && !isLightFrame())
+		to_chat(usr, SPAN_DANGER("\The [src] cannot be placed in this area."))
+		return
+	new build_machine_type(T, dir, src)
+	qdel(src)
+
+/obj/item/frame/light/nav
+	name = "navigation light fixture frame"
+	icon = 'icons/obj/lighting_nav.dmi'
+	icon_state = "nav-construct-item"
+	matter = list(MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
+	build_machine_type = /obj/machinery/light_construct/nav
+
+/obj/item/frame/light/nav/try_build(turf/on_wall)
+	if(!build_machine_type)
+		log_debug("[name]([type]) was placed but has no resulting machine type set..")
+		return
+	if (get_dist(on_wall,usr)>1)
+		return
+	var/turf/T = get_turf(usr)
+	if (!istype(on_wall, /turf/simulated/floor))
+		to_chat(usr, SPAN_DANGER("\The [src] cannot be placed on this spot."))
+		return
+	new build_machine_type(T, src.dir, src)
+	qdel(src)

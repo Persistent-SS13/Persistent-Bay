@@ -19,6 +19,10 @@
 		return
 	if(!owner.canClick())
 		return
+	if(prob(owner.skill_fail_chance(SKILL_WEAPONS, 30, SKILL_ADEPT, 3)))
+		to_chat(owner, "<span class='warning'>You fumble with the gun, throwing your aim off!</span>")
+		owner.stop_aiming(aiming_with)
+		return
 	owner.setClickCooldown(DEFAULT_QUICK_COOLDOWN) // Spam prevention, essentially.
 	if(owner.a_intent == I_HELP)
 		to_chat(owner, "<span class='warning'>You refrain from firing \the [aiming_with] as your intent is set to help.</span>")

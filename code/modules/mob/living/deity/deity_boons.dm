@@ -2,16 +2,21 @@
 	if(current_boon)
 		qdel(current_boon)
 	current_boon = boon
+	to_chat(src,"<span class='notice'>You now have the boon [boon]</span>")
 	if(istype(boon, /atom/movable))
 		var/atom/movable/A = boon
+		nano_data["boon_name"] = A.name
 		A.forceMove(src)
+	else if(istype(boon, /spell))
+		var/spell/S = boon
+		nano_data["boon_name"] = S.name
 
 /mob/living/deity/proc/grant_boon(var/mob/living/L)
 	if(istype(current_boon, /spell) && !grant_spell(L, current_boon))
 		return
 	else if(istype(current_boon, /obj/item))
 		var/obj/item/I = current_boon
-		I.forceMove(get_turf(L))
+		I.dropInto(L.loc)
 		var/origin_text = "on the floor"
 		if(L.equip_to_appropriate_slot(I))
 			origin_text = "on your body"
@@ -27,6 +32,7 @@
 	to_chat(src, "<span class='notice'>You give \the [L] a boon of [current_boon].</span>")
 	log_and_message_admins("gave [key_name(L)] the boon [current_boon]")
 	current_boon = null
+	nano_data["boon_name"] = null
 	return
 
 /mob/living/deity/proc/grant_spell(var/mob/living/target, var/spell/spell)

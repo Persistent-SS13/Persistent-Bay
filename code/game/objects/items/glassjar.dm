@@ -43,14 +43,14 @@
 	switch(contains)
 		if(1)
 			for(var/obj/O in src)
-				O.loc = user.loc
+				O.dropInto(user.loc)
 			to_chat(user, "<span class='notice'>You take money out of \the [src].</span>")
 			contains = 0
 			update_icon()
 			return
 		if(2)
 			for(var/mob/M in src)
-				M.loc = user.loc
+				M.dropInto(user.loc)
 				user.visible_message("<span class='notice'>[user] releases [M] from \the [src].</span>", "<span class='notice'>You release [M] from \the [src].</span>")
 			contains = 0
 			update_icon()
@@ -70,21 +70,21 @@
 			contains = 1
 		if(contains != 1)
 			return
+		if(!user.unEquip(W, src))
+			return
 		var/obj/item/weapon/spacecash/S = W
 		user.visible_message("<span class='notice'>[user] puts [S.worth] [S.worth > 1 ? "ethericoins" : "ethericoin"] into \the [src].</span>")
-		user.drop_from_inventory(S)
-		S.forceMove(src)
 		update_icon()
 
-/obj/item/glass_jar/update_icon() // Also updates name and desc
+/obj/item/glass_jar/on_update_icon() // Also updates name and desc
 	underlays.Cut()
 	overlays.Cut()
 	switch(contains)
 		if(0)
-			name = initial(name)
+			SetName(initial(name))
 			desc = initial(desc)
 		if(1)
-			name = "tip jar"
+			SetName("tip jar")
 			desc = "A small jar with money inside."
 			for(var/obj/item/weapon/spacecash/S in src)
 				var/list/moneyImages = S.getMoneyImages()
@@ -99,12 +99,12 @@
 				var/image/victim = image(M.icon, M.icon_state)
 				victim.pixel_y = 6
 				underlays += victim
-				name = "glass jar with [M]"
+				SetName("glass jar with [M]")
 				desc = "A small jar with [M] inside."
 		if(3)
 			for(var/obj/effect/spider/spiderling/S in src)
 				var/image/victim = image(S.icon, S.icon_state)
 				underlays += victim
-				name = "glass jar with [S]"
+				SetName("glass jar with [S]")
 				desc = "A small jar with [S] inside."
 	return

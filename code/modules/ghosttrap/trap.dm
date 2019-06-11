@@ -22,7 +22,7 @@ var/list/ghost_traps
 /datum/ghosttrap
 	var/object = "positronic brain"
 	var/minutes_since_death = 0     // If non-zero the ghost must have been dead for this many minutes to be allowed to spawn
-	var/list/ban_checks = list("AI","Cyborg")
+	var/list/ban_checks = list("AI","Robot")
 	var/pref_check = BE_SYNTH
 	var/ghost_trap_message = "They are occupying a positronic brain now."
 	var/ghost_trap_role = "Positronic Brain"
@@ -37,7 +37,7 @@ var/list/ghost_traps
 
 // Check for bans, proper atom types, etc.
 /datum/ghosttrap/proc/assess_candidate(var/mob/observer/ghost/candidate, var/mob/target, var/feedback = TRUE)
-	if(!candidate.MayRespawn(1, minutes_since_death))
+	if(!candidate.MayRespawn(feedback, minutes_since_death))
 		return 0
 	if(islist(ban_checks))
 		for(var/bantype in ban_checks)
@@ -112,7 +112,7 @@ var/list/ghost_traps
 	if(!istype(P)) //wat
 		return
 	P.searching = 0
-	P.name = "positronic brain ([P.brainmob.name])"
+	P.SetName("positronic brain ([P.brainmob.name])")
 	P.update_icon()
 
 // Allows people to set their own name. May or may not need to be removed for posibrains if people are dumbasses.
@@ -123,7 +123,7 @@ var/list/ghost_traps
 	var/newname = sanitizeSafe(input(target,"Enter a name, or leave blank for the default name.", "Name change",target.real_name) as text, MAX_NAME_LEN)
 	if (newname && newname != "")
 		target.real_name = newname
-		target.name = target.real_name
+		target.SetName(target.real_name)
 
 /***********************************
 * Diona pods and walking mushrooms *
@@ -225,7 +225,7 @@ datum/ghosttrap/pai/transfer_personality(var/mob/candidate, var/mob/living/silic
 	var/obj/item/device/soulstone/S = target.loc
 	if(istype(S))
 		if(S.is_evil)
-			cult.add_antagonist(target.mind)
+			GLOB.cult.add_antagonist(target.mind)
 			to_chat(target, "<b>Remember, you serve the one who summoned you first, and the cult second.</b>")
 		else
 			to_chat(target, "<b>This soultone has been purified. You do not belong to the cult.</b>")

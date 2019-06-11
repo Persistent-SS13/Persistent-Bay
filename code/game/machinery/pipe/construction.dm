@@ -248,7 +248,7 @@ Buildable meters
 		"binary vent",\
 		"passive vent",\
 	)
-	name = nlist[pipe_type+1] + " fitting"
+	SetName(nlist[pipe_type+1] + " fitting")
 	var/list/islist = list( \
 		"simple", \
 		"simple", \
@@ -315,8 +315,8 @@ Buildable meters
 //called when a turf is attacked with a pipe item
 /obj/item/pipe/afterattack(var/turf/simulated/floor/target, mob/user, proximity)
 	if(!proximity) return
-	if(istype(target) || istype(target, /turf/simulated/asteroid))
-		user.drop_from_inventory(src, target)
+	if(istype(target) || istype(target, /turf/simulated/floor/asteroid))
+		user.unEquip(src, target)
 	else
 		return ..()
 
@@ -329,13 +329,7 @@ Buildable meters
 	set name = "Rotate Pipe"
 	set src in view(1)
 
-	if(!usr || !Adjacent(usr))
-		return
-	
-	if(usr.incapacitated())
-		return
-
-	if ( usr.stat || usr.restrained() )
+	if (usr.stat || usr.restrained() || !Adjacent(usr) || usr.incapacitated())
 		return
 
 	src.set_dir(turn(src.dir, -90))
@@ -349,6 +343,9 @@ Buildable meters
 		set_dir(2)
 	//src.pipe_set_dir(get_pipe_dir())
 	return
+
+/obj/item/pipe/AltClick()
+	rotate()
 
 /obj/item/pipe/Move()
 	..()
@@ -589,7 +586,7 @@ Buildable meters
 			C.set_dir(dir)
 			C.initialize_directions = pipe_dir
 			if (pipename)
-				C.name = pipename
+				C.SetName(pipename)
 			var/turf/T = C.loc
 			C.level = !T.is_plating() ? 2 : 1
 			C.atmos_init()
@@ -821,7 +818,7 @@ Buildable meters
 			V.set_dir(dir)
 			V.initialize_directions = pipe_dir
 			if (pipename)
-				V.name = pipename
+				V.SetName(pipename)
 			var/turf/T = V.loc
 			V.level = !T.is_plating() ? 2 : 1
 			V.atmos_init()
@@ -869,7 +866,7 @@ Buildable meters
 			V.set_dir(dir)
 			V.initialize_directions = pipe_dir
 			if (pipename)
-				V.name = pipename
+				V.SetName(pipename)
 			var/turf/T = V.loc
 			V.level = !T.is_plating() ? 2 : 1
 			V.atmos_init()
@@ -888,7 +885,7 @@ Buildable meters
 			D.set_dir(dir)
 			D.initialize_directions = pipe_dir
 			if (pipename)
-				D.name = pipename
+				D.SetName(pipename)
 			var/turf/T = D.loc
 			D.level = !T.is_plating() ? 2 : 1
 			D.atmos_init()
@@ -905,7 +902,7 @@ Buildable meters
 			S.set_dir(dir)
 			S.initialize_directions = pipe_dir
 			if (pipename)
-				S.name = pipename
+				S.SetName(pipename)
 			var/turf/T = S.loc
 			S.level = !T.is_plating() ? 2 : 1
 			S.atmos_init()
@@ -923,7 +920,7 @@ Buildable meters
 			P.set_dir(dir)
 			P.initialize_directions = pipe_dir
 			if (pipename)
-				P.name = pipename
+				P.SetName(pipename)
 			var/turf/T = P.loc
 			P.level = !T.is_plating() ? 2 : 1
 			P.atmos_init()
@@ -940,7 +937,7 @@ Buildable meters
 			P.set_dir(dir)
 			P.initialize_directions = pipe_dir
 			if (pipename)
-				P.name = pipename
+				P.SetName(pipename)
 			var/turf/T = P.loc
 			P.level = !T.is_plating() ? 2 : 1
 			P.atmos_init()
@@ -960,7 +957,7 @@ Buildable meters
 			P.set_dir(dir)
 			P.initialize_directions = pipe_dir
 			if (pipename)
-				P.name = pipename
+				P.SetName(pipename)
 			var/turf/T = P.loc
 			P.level = !T.is_plating() ? 2 : 1
 			P.atmos_init()
@@ -980,7 +977,7 @@ Buildable meters
 			P.set_dir(dir)
 			P.initialize_directions = pipe_dir
 			if (pipename)
-				P.name = pipename
+				P.SetName(pipename)
 			var/turf/T = P.loc
 			P.level = !T.is_plating() ? 2 : 1
 			P.atmos_init()
@@ -1000,7 +997,7 @@ Buildable meters
 			P.set_dir(dir)
 			P.initialize_directions = pipe_dir
 			if (pipename)
-				P.name = pipename
+				P.SetName(pipename)
 			var/turf/T = P.loc
 			P.level = !T.is_plating() ? 2 : 1
 			P.atmos_init()
@@ -1020,7 +1017,7 @@ Buildable meters
 			P.set_dir(dir)
 			P.initialize_directions = pipe_dir
 			if (pipename)
-				P.name = pipename
+				P.SetName(pipename)
 			var/turf/T = P.loc
 			P.level = !T.is_plating() ? 2 : 1
 			P.atmos_init()
@@ -1040,7 +1037,7 @@ Buildable meters
 			S.set_dir(dir)
 			S.initialize_directions = pipe_dir
 			if (pipename)
-				S.name = pipename
+				S.SetName(pipename)
 			var/turf/T = S.loc
 			S.level = !T.is_plating() ? 2 : 1
 			S.atmos_init()
@@ -1054,7 +1051,7 @@ Buildable meters
 			V.set_dir(dir)
 			V.initialize_directions = pipe_dir
 			if (pipename)
-				V.name = pipename
+				V.SetName(pipename)
 			var/turf/T = V.loc
 			V.level = !T.is_plating() ? 2 : 1
 			V.atmos_init()
@@ -1074,7 +1071,7 @@ Buildable meters
 			V.set_dir(dir)
 			V.initialize_directions = pipe_dir
 			if (pipename)
-				V.name = pipename
+				V.SetName(pipename)
 			var/turf/T = V.loc
 			V.level = !T.is_plating() ? 2 : 1
 			V.atmos_init()
@@ -1134,7 +1131,7 @@ Buildable meters
 			P.set_dir(dir)
 			P.initialize_directions = pipe_dir
 			if (pipename)
-				P.name = pipename
+				P.SetName(pipename)
 			var/turf/T = P.loc
 			P.level = !T.is_plating() ? 2 : 1
 			P.atmos_init()
@@ -1151,7 +1148,7 @@ Buildable meters
 			P.set_dir(dir)
 			P.initialize_directions = pipe_dir
 			if (pipename)
-				P.name = pipename
+				P.SetName(pipename)
 			var/turf/T = P.loc
 			P.level = !T.is_plating() ? 2 : 1
 			P.atmos_init()
@@ -1168,7 +1165,7 @@ Buildable meters
 			C.set_dir(dir)
 			C.initialize_directions = pipe_dir
 			if (pipename)
-				C.name = pipename
+				C.SetName(pipename)
 			var/turf/T = C.loc
 			C.level = !T.is_plating() ? 2 : 1
 			C.atmos_init()
@@ -1182,7 +1179,7 @@ Buildable meters
 			P.set_dir(dir)
 			P.initialize_directions = pipe_dir
 			if (pipename)
-				P.name = pipename
+				P.SetName(pipename)
 			var/turf/T = P.loc
 			P.level = !T.is_plating() ? 2 : 1
 			P.atmos_init()
@@ -1198,7 +1195,7 @@ Buildable meters
 			P.set_dir(dir)
 			P.initialize_directions = pipe_dir
 			if (pipename)
-				P.name = pipename
+				P.SetName(pipename)
 			var/turf/T = P.loc
 			P.level = !T.is_plating() ? 2 : 1
 			P.atmos_init()
@@ -1214,7 +1211,7 @@ Buildable meters
 			P.set_dir(dir)
 			P.initialize_directions = pipe_dir
 			if (pipename)
-				P.name = pipename
+				P.SetName(pipename)
 			var/turf/T = P.loc
 			P.level = !T.is_plating() ? 2 : 1
 			P.atmos_init()
@@ -1230,7 +1227,7 @@ Buildable meters
 			P.set_dir(dir)
 			P.initialize_directions = pipe_dir
 			if (pipename)
-				P.name = pipename
+				P.SetName(pipename)
 			var/turf/T = P.loc
 			P.level = !T.is_plating() ? 2 : 1
 			P.atmos_init()
@@ -1246,7 +1243,7 @@ Buildable meters
 			P.set_dir(dir)
 			P.initialize_directions = pipe_dir
 			if (pipename)
-				P.name = pipename
+				P.SetName(pipename)
 			var/turf/T = P.loc
 			P.level = !T.is_plating() ? 2 : 1
 			P.atmos_init()
@@ -1262,7 +1259,7 @@ Buildable meters
 			P.set_dir(dir)
 			P.initialize_directions = pipe_dir
 			if (pipename)
-				P.name = pipename
+				P.SetName(pipename)
 			var/turf/T = P.loc
 			P.level = !T.is_plating() ? 2 : 1
 			P.atmos_init()
@@ -1279,7 +1276,7 @@ Buildable meters
 			P.set_dir(dir)
 			P.initialize_directions = pipe_dir
 			if (pipename)
-				P.name = pipename
+				P.SetName(pipename)
 			var/turf/T = P.loc
 			P.level = !T.is_plating() ? 2 : 1
 			P.atmos_init()
@@ -1295,7 +1292,7 @@ Buildable meters
 			P.set_dir(dir)
 			P.initialize_directions = pipe_dir
 			if (pipename)
-				P.name = pipename
+				P.SetName(pipename)
 			var/turf/T = P.loc
 			P.level = !T.is_plating() ? 2 : 1
 			P.atmos_init()

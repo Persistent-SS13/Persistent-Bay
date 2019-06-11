@@ -23,6 +23,7 @@
 	holder_type = /obj/item/weapon/holder/corgi
 	var/obj/item/inventory_head
 	var/obj/item/inventory_back
+	pass_flags = PASS_FLAG_TABLE
 
 //IAN! SQUEEEEEEEEE~
 /mob/living/simple_animal/corgi/Ian
@@ -37,10 +38,12 @@
 	response_harm   = "kicks"
 
 /mob/living/simple_animal/corgi/Ian/Life()
-	..()
+	. = ..()
+	if(!.)
+		return FALSE
 
 	//Feeding, chasing food, FOOOOODDDD
-	if(!stat && !resting && !buckled)
+	if(!resting && !buckled)
 		turns_since_scan++
 		if(turns_since_scan > 5)
 			turns_since_scan = 0
@@ -164,9 +167,11 @@
 	..()
 
 /mob/living/simple_animal/corgi/Lisa/Life()
-	..()
+	. = ..()
+	if(!.)
+		return FALSE
 
-	if(!stat && !resting && !buckled)
+	if(!resting && !buckled)
 		turns_since_scan++
 		if(turns_since_scan > 15)
 			turns_since_scan = 0

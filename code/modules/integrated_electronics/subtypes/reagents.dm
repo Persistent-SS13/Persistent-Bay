@@ -155,8 +155,8 @@
 		return
 	var/atom/movable/acting_object = get_object()
 
-	C.visible_message("<span class='warning'>\The [acting_object] draws blood from you.</span>",
-					"<span class='warning'>\The [acting_object] draws blood from \the [C]</span>"
+	C.visible_message("<span class='warning'>\The [acting_object] draws blood from \the [C]</span>",
+					"<span class='warning'>\The [acting_object] draws blood from you.</span>"
 					)
 	C.take_blood(src, amount)
 	activate_pin(2)
@@ -176,13 +176,14 @@
 		return
 
 	if(direction_mode == IC_REAGENTS_INJECT)
-		if(!reagents.total_volume || !AM.is_open_container() || !AM.reagents || !AM.reagents.get_free_space())
+		if(!reagents.total_volume || !AM.reagents || !AM.reagents.get_free_space())
 			activate_pin(3)
 			return
 
 		if(isliving(AM))
 			var/mob/living/L = AM
 			var/injection_status = L.can_inject(null, BP_CHEST)
+			log_world("Injection status? [injection_status]")
 			if(!injection_status)
 				activate_pin(3)
 				return
@@ -191,11 +192,14 @@
 			L.visible_message("<span class='danger'>\The [acting_object] is trying to inject [L]!</span>", \
 								"<span class='danger'>\The [acting_object] is trying to inject you!</span>")
 			busy = TRUE
-			spawn(injection_status * 3 SECONDS)
-				inject_after(weakref(L))
+			addtimer(CALLBACK(src, .proc/inject_after, weakref(L)), injection_status * 3 SECONDS)
 			return
-
 		else
+			if(!AM.is_open_container())
+				activate_pin(3)
+				return
+
+
 			reagents.trans_to(AM, transfer_amount)
 
 	if(direction_mode == IC_REAGENTS_DRAW)
@@ -215,8 +219,7 @@
 			C.visible_message("<span class='danger'>\The [acting_object] is trying to take a blood sample from [C]!</span>", \
 								"<span class='danger'>\The [acting_object] is trying to take a blood sample from you!</span>")
 			busy = TRUE
-			spawn(injection_status * 3 SECONDS)
-				draw_after(weakref(C), tramount)
+			addtimer(CALLBACK(src, .proc/draw_after, weakref(C), tramount), injection_status * 3 SECONDS)
 			return
 
 		else
@@ -302,7 +305,7 @@
 		"volume used" = IC_PINTYPE_NUMBER,
 		"self reference" = IC_PINTYPE_REF
 		)
-	activators = list("push ref" = IC_PINTYPE_PULSE_OUT)
+	activators = list("push ref" = IC_PINTYPE_PULSE_IN)
 	spawn_flags = IC_SPAWN_DEFAULT|IC_SPAWN_RESEARCH
 
 
@@ -330,7 +333,7 @@
 	icon_state = "reagent_storage_cryo"
 	extended_desc = "This is effectively an internal cryo beaker."
 
-	atom_flags = ATOM_FLAG_OPEN_CONTAINER | ATOM_FLAG_NO_REACT
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_OPEN_CONTAINER | ATOM_FLAG_NO_REACT
 	complexity = 8
 	spawn_flags = IC_SPAWN_RESEARCH
 
@@ -371,12 +374,18 @@
 		activate_pin(3)
 		return FALSE
 	var/obj/item/I = get_pin_data_as_type(IC_INPUT, 1, /obj/item)
+
+	if(isnull(I))
+		return FALSE
+
 	if(!I.reagents || !I.reagents.total_volume)
 		activate_pin(3)
 		return FALSE
+	
 	I.reagents.trans_to(src,I.reagents.total_volume)
 	if(!I.reagents.total_volume)
 		qdel(I)
+
 	activate_pin(2)
 	return FALSE
 

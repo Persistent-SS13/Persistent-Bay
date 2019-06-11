@@ -25,6 +25,9 @@
 	var/allowed_circuit_action_flags = IC_ACTION_COMBAT | IC_ACTION_LONG_RANGE //which circuit flags are allowed
 	var/creator // circuit creator if any
 	var/static/next_assembly_id = 0
+	var/interact_page = 0
+	var/components_per_page = 5
+	health = 30
 	pass_flags = 0
 	armor = list(DAM_BLUNT = 50, DAM_BULLET = 70, DAM_LASER = 70, DAM_ENERGY = 100, DAM_BOMB = 10, DAM_BIO = 100, DAM_RADS = 100, DAM_BURN = 0)
 	anchored = FALSE
@@ -61,7 +64,7 @@
 		to_chat(user, "You can <a href='?src=\ref[src];ghostscan=1'>scan</a> this circuit.");
 
 /obj/item/device/electronic_assembly/proc/check_interactivity(mob/user)
-	return CanUseTopic(user)
+	return (!user.incapacitated() && CanUseTopic(user))
 
 /obj/item/device/electronic_assembly/GetAccess()
 	. = list()
@@ -84,6 +87,9 @@
 
 /obj/item/device/electronic_assembly/Destroy()
 	STOP_PROCESSING(SScircuit, src)
+	for(var/circ in assembly_components)
+		remove_component(circ)
+		qdel(circ)
 	return ..()
 
 /obj/item/device/electronic_assembly/Process()
@@ -91,12 +97,22 @@
 	for(var/obj/item/integrated_circuit/passive/power/P in assembly_components)
 		P.make_energy()
 
+	var/power_failure = FALSE
+	if(health < (get_max_health() / 2) && prob(5))
+		visible_message("<span class='warning'>\The [src] shudders and sparks</span>")
+		power_failure = TRUE
 	// Now spend it.
 	for(var/I in assembly_components)
 		var/obj/item/integrated_circuit/IC = I
 		if(IC.power_draw_idle)
-			if(!draw_power(IC.power_draw_idle))
+			if(power_failure || !draw_power(IC.power_draw_idle))
 				IC.power_fail()
+
+/obj/item/device/electronic_assembly/MouseDrop_T(atom/dropping, mob/user)
+	if(user == dropping)
+		interact(user)
+	else
+		..()
 
 /obj/item/device/electronic_assembly/interact(mob/user)
 	if(!check_interactivity(user))
@@ -139,56 +155,45 @@
 
 	var/total_part_size = return_total_size()
 	var/total_complexity = return_total_complexity()
-	var/HTML = ""
+	var/list/HTML = list()
 
 	HTML += "<html><head><title>[name]</title></head><body>"
 
 	HTML += "<a href='?src=\ref[src]'>\[Refresh\]</a>  |  <a href='?src=\ref[src];rename=1'>\[Rename\]</a><br>"
-	HTML += "[total_part_size]/[max_components] ([round((total_part_size / max_components) * 100, 0.1)]%) space taken up in the assembly.<br>"
-	HTML += "[total_complexity]/[max_complexity] ([round((total_complexity / max_complexity) * 100, 0.1)]%) maximum complexity.<br>"
+	HTML += "[total_part_size]/[max_components] space taken up in the assembly.<br>"
+	HTML += "[total_complexity]/[max_complexity] complexity in the assembly.<br>"
 	if(battery)
 		HTML += "[round(battery.charge, 0.1)]/[battery.maxcharge] ([round(battery.percent(), 0.1)]%) cell charge. <a href='?src=\ref[src];remove_cell=1'>\[Remove\]</a>"
 	else
 		HTML += "<span class='danger'>No power cell detected!</span>"
-	HTML += "<br><br>"
 
+	if(length(assembly_components))
+		HTML += "<br><br>"
+		HTML += "Components:<br>"
 
-
-	HTML += "Components:"
-
-	var/builtin_components = ""
-
-	for(var/c in assembly_components)
-		var/obj/item/integrated_circuit/circuit = c
-		if(!circuit.removable)
-			builtin_components += "<a href='?src=\ref[circuit];rename=1'>\[R\]</a> | "
-			builtin_components += "<a href='?src=\ref[circuit];interact=1'>[circuit.displayed_name]</a>"
-			builtin_components += "<br>"
-
-	// Put removable circuits (if any) in separate categories from non-removable
-	if(builtin_components)
-		HTML += "<hr>"
-		HTML += "Built in:<br>"
-		HTML += builtin_components
-		HTML += "<hr>"
-		HTML += "Removable:"
-
-	HTML += "<br>"
-
-	for(var/c in assembly_components)
-		var/obj/item/integrated_circuit/circuit = c
-		if(circuit.removable)
-			HTML += "<a href='?src=\ref[src];component=\ref[circuit];up=1' style='text-decoration:none;'>&#8593;</a> "
-			HTML += "<a href='?src=\ref[src];component=\ref[circuit];down=1' style='text-decoration:none;'>&#8595;</a>  "
-			HTML += "<a href='?src=\ref[src];component=\ref[circuit];top=1' style='text-decoration:none;'>&#10514;</a> "
-			HTML += "<a href='?src=\ref[src];component=\ref[circuit];bottom=1' style='text-decoration:none;'>&#10515;</a> | "
+		var/start_index = ((components_per_page * interact_page) + 1)
+		for(var/i = start_index to min(length(assembly_components), start_index + (components_per_page - 1)))
+			var/obj/item/integrated_circuit/circuit = assembly_components[i]
+			HTML += "\[ <a href='?src=\ref[src];component=\ref[circuit];set_slot=1'>[i]</a> \] | "
 			HTML += "<a href='?src=\ref[circuit];component=\ref[circuit];rename=1'>\[R\]</a> | "
-			HTML += "<a href='?src=\ref[src];component=\ref[circuit];remove=1'>\[-\]</a> | "
+			if(circuit.removable)
+				HTML += "<a href='?src=\ref[src];component=\ref[circuit];remove=1'>\[-\]</a> | "
+			else
+				HTML += "\[-\] | "
 			HTML += "<a href='?src=\ref[circuit];examine=1'>[circuit.displayed_name]</a>"
 			HTML += "<br>"
 
+		if(length(assembly_components) > components_per_page)
+			HTML += "<br>\["
+			for(var/i = 1 to ceil(length(assembly_components)/components_per_page))
+				if((i-1) == interact_page)
+					HTML += " [i]"
+				else
+					HTML += " <a href='?src=\ref[src];select_page=[i-1]'>[i]</a>"
+			HTML += " \]"
+
 	HTML += "</body></html>"
-	show_browser(user, HTML, "window=assembly-\ref[src];size=655x350;border=1;can_resize=1;can_close=1;can_minimize=1")
+	show_browser(user, jointext(HTML, null), "window=assembly-\ref[src];size=655x350;border=1;can_resize=1;can_close=1;can_minimize=1")
 
 /obj/item/device/electronic_assembly/Topic(href, href_list)
 	if(href_list["ghostscan"])
@@ -198,10 +203,16 @@
 				show_browser(usr, saved, "window=circuit_scan;size=500x600;border=1;can_resize=1;can_close=1;can_minimize=1")
 			else
 				to_chat(usr, "<span class='warning'>The circuit is empty!</span>")
+		return 0
+
+	if(isobserver(usr))
 		return
 
 	if(!check_interactivity(usr))
-		return
+		return 0
+
+	if(href_list["select_page"])
+		interact_page = text2num(href_list["select_page"])
 
 	if(href_list["rename"])
 		rename(usr)
@@ -210,7 +221,7 @@
 		if(!battery)
 			to_chat(usr, "<span class='warning'>There's no power cell to remove from \the [src].</span>")
 		else
-			battery.forceMove(get_turf(src))
+			battery.dropInto(loc)
 			playsound(src, 'sound/items/Crowbar.ogg', 50, 1)
 			to_chat(usr, "<span class='notice'>You pull \the [battery] out of \the [src]'s power supplier.</span>")
 			battery = null
@@ -220,42 +231,27 @@
 		if(component)
 			// Builtin components are not supposed to be removed or rearranged
 			if(!component.removable)
-				return
+				return 0
 
 			add_allowed_scanner(usr.ckey)
 
 			var/current_pos = assembly_components.Find(component)
-
-			// Find the position of a first removable component
-			var/first_removable_pos
-			for(var/i in 1 to assembly_components.len)
-				var/obj/item/integrated_circuit/temp_component = assembly_components[i]
-				if(temp_component.removable)
-					first_removable_pos = i
-					break
 
 			if(href_list["remove"])
 				try_remove_component(component, usr)
 
 			else
 				// Adjust the position
-				if(href_list["up"])
-					current_pos--
-				else if(href_list["down"])
-					current_pos++
-				else if(href_list["top"])
-					current_pos = first_removable_pos
-				else if(href_list["bottom"])
-					current_pos = assembly_components.len
+				if(href_list["set_slot"])
+					var/selected_slot = input("Select a new slot", "Select slot", current_pos) as null|num
+					if(!check_interactivity(usr))
+						return 0
+					if(selected_slot < 1 || selected_slot > length(assembly_components))
+						return 0
 
-				// Wrap around nicely
-				if(current_pos < first_removable_pos)
-					current_pos = assembly_components.len
-				else if(current_pos > assembly_components.len)
-					current_pos = first_removable_pos
+					assembly_components.Remove(component)
+					assembly_components.Insert(selected_slot, component)
 
-				assembly_components.Remove(component)
-				assembly_components.Insert(current_pos, component)
 
 	interact(usr) // To refresh the UI.
 
@@ -277,7 +273,7 @@
 /obj/item/device/electronic_assembly/proc/can_move()
 	return FALSE
 
-/obj/item/device/electronic_assembly/update_icon()
+/obj/item/device/electronic_assembly/on_update_icon()
 	if(opened)
 		icon_state = initial(icon_state) + "-open"
 	else
@@ -298,6 +294,12 @@
 			IC.internal_examine(user)
 	if(opened)
 		interact(user)
+
+//This only happens when this EA is loaded via the printer
+/obj/item/device/electronic_assembly/proc/post_load()
+	for(var/I in assembly_components)
+		var/obj/item/integrated_circuit/IC = I
+		IC.on_data_written()
 
 /obj/item/device/electronic_assembly/proc/return_total_complexity()
 	. = 0
@@ -372,12 +374,15 @@
 		user.put_in_hands(IC)
 	add_allowed_scanner(user.ckey)
 
+	// Make sure we're not on an invalid page
+	interact_page = Clamp(interact_page, 0, ceil(length(assembly_components)/components_per_page)-1)
+
 	return TRUE
 
 // Actually removes the component, doesn't perform any checks.
 /obj/item/device/electronic_assembly/proc/remove_component(obj/item/integrated_circuit/component)
 	component.disconnect_all()
-	component.forceMove(get_turf(src))
+	component.dropInto(loc)
 	component.assembly = null
 	assembly_components.Remove(component)
 
@@ -397,7 +402,8 @@
 		if(istype(loc, /turf) && (IC_FLAG_ANCHORABLE & circuit_flags))
 			user.visible_message("\The [user] wrenches \the [src]'s anchoring bolts [anchored ? "back" : "into position"].")
 			playsound(get_turf(user), 'sound/items/Ratchet.ogg',50)
-			anchored = !anchored
+			if(user.do_skilled(5 SECONDS, SKILL_CONSTRUCTION, src))
+				anchored = !anchored
 	else if(istype(I, /obj/item/integrated_circuit))
 		if(!user.canUnEquip(I))
 			return FALSE
@@ -445,15 +451,22 @@
 		opened = !opened
 		to_chat(user, "<span class='notice'>You [opened ? "open" : "close"] the maintenance hatch of [src].</span>")
 		update_icon()
+	else if(isCoil(I))
+		var/obj/item/stack/cable_coil/C = I
+		if(health != initial(health) && do_after(user, 10, src) && C.use(1))
+			user.visible_message("\The [user] patches up \the [src]")
+			health = min(initial(health), health + 5)
 	else
-		for(var/obj/item/integrated_circuit/input/S in assembly_components)
-			S.attackby_react(I,user,user.a_intent)
-		if(user.a_intent != I_HELP)
-			return ..()
-
+		if(user.a_intent == I_HURT) // Kill it
+			to_chat(user, "<span class='danger'>\The [user] hits \the [src] with \the [I]</span>")
+			take_damage(I.force)
+		else
+			for(var/obj/item/integrated_circuit/input/S in assembly_components)
+				S.attackby_react(I,user,user.a_intent)
 
 /obj/item/device/electronic_assembly/attack_self(mob/user)
 	interact(user)
+
 
 /obj/item/device/electronic_assembly/emp_act(severity)
 	. = ..()
@@ -511,12 +524,20 @@
 /obj/item/device/electronic_assembly/hook
 	name = "type-e electronic assembly"
 	icon_state = "setup_small_hook"
-	desc = "It's a case, for building small electronics with. This one looks like it has a belt clip, but it's purely decorative."
+	desc = "It's a case, for building small electronics with. This one looks like it has a belt clip."
+	slot_flags = SLOT_BELT
 
 /obj/item/device/electronic_assembly/pda
 	name = "type-f electronic assembly"
 	icon_state = "setup_small_pda"
 	desc = "It's a case, for building small electronics with. This one resembles a PDA."
+	slot_flags = SLOT_BELT | SLOT_ID
+
+/obj/item/device/electronic_assembly/augment
+	name = "augment electronic assembly"
+	icon_state = "setup_augment"
+	desc = "It's a case, for building small electronics with. This one is designed to go inside a cybernetic augment."
+	circuit_flags = IC_FLAG_CAN_FIRE
 
 /obj/item/device/electronic_assembly/medium
 	name = "electronic mechanism"
@@ -525,6 +546,7 @@
 	w_class = ITEM_SIZE_NORMAL
 	max_components = IC_MAX_SIZE_BASE * 2
 	max_complexity = IC_COMPLEXITY_BASE * 2
+	max_health = 20
 
 /obj/item/device/electronic_assembly/medium/default
 	name = "type-a electronic mechanism"
@@ -549,6 +571,10 @@
 	icon_state = "setup_medium_gun"
 	item_state = "circuitgun"
 	desc = "It's a case, for building medium-sized electronics with. This one resembles a gun, or some type of tool, if you're feeling optimistic. It can fire guns and throw items while the user is holding it."
+	item_icons = list(
+		icon_l_hand = 'icons/mob/onmob/items/lefthand_guns.dmi',
+		icon_r_hand = 'icons/mob/onmob/items/righthand_guns.dmi'
+		)
 	circuit_flags = IC_FLAG_CAN_FIRE | IC_FLAG_ANCHORABLE
 
 /obj/item/device/electronic_assembly/medium/radio
@@ -563,6 +589,7 @@
 	w_class = ITEM_SIZE_LARGE
 	max_components = IC_MAX_SIZE_BASE * 4
 	max_complexity = IC_COMPLEXITY_BASE * 4
+	max_health = 30
 
 /obj/item/device/electronic_assembly/large/default
 	name = "type-a electronic machine"
@@ -601,6 +628,7 @@
 	max_complexity = IC_COMPLEXITY_BASE * 3
 	allowed_circuit_action_flags = IC_ACTION_MOVEMENT | IC_ACTION_COMBAT | IC_ACTION_LONG_RANGE
 	circuit_flags = 0
+	max_health = 50
 
 /obj/item/device/electronic_assembly/drone/can_move()
 	return TRUE
@@ -640,6 +668,7 @@
 	w_class = ITEM_SIZE_NORMAL
 	max_components = IC_MAX_SIZE_BASE * 2
 	max_complexity = IC_COMPLEXITY_BASE * 2
+	max_health = 10
 
 /obj/item/device/electronic_assembly/wallmount/afterattack(var/atom/a, var/mob/user, var/proximity)
 	if(proximity && istype(a ,/turf) && a.density)

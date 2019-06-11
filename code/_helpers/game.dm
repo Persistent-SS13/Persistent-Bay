@@ -17,6 +17,16 @@
 		max_z = max(z, max_z)
 	return max_z
 
+/proc/living_observers_present(var/list/zlevels)
+	if(LAZYLEN(zlevels))
+		for(var/A in GLOB.player_list) //if a tree ticks on the empty zlevel does it really tick
+			var/mob/M = A
+			if(M.stat != DEAD) //(no it doesn't)
+				var/turf/T = get_turf(M)
+				if(T && (T.z in zlevels))
+					return TRUE
+	return FALSE
+
 /proc/get_area(O)
 	var/turf/loc = get_turf(O)
 	if(loc)
@@ -546,4 +556,4 @@ datum/projectile_data
 	return seconds * 10
 
 /proc/round_is_spooky(var/spookiness_threshold = config.cult_ghostwriter_req_cultists)
-	return (cult.current_antagonists.len > spookiness_threshold)
+	return (GLOB.cult.current_antagonists.len > spookiness_threshold)

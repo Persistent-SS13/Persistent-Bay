@@ -63,6 +63,7 @@
 	display_name = "blueberry bush"
 	mutants = list("berries","poisonberries","glowberries")
 	chems = list(/datum/reagent/nutriment = list(1,10), /datum/reagent/drink/juice/berry = list(10,10))
+	kitchen_tag = "blueberries"
 
 /datum/seed/berry/blue/New()
 	..()
@@ -262,7 +263,7 @@
 	seed_name = "apple"
 	display_name = "apple tree"
 	mutants = list("poisonapple","goldapple")
-	chems = list(/datum/reagent/nutriment = list(1,10))
+	chems = list(/datum/reagent/nutriment = list(1,10), /datum/reagent/drink/juice/apple = list(10,10))
 	kitchen_tag = "apple"
 
 /datum/seed/apple/New()
@@ -384,13 +385,15 @@
 
 /datum/seed/mushroom/plump/New()
 	..()
+	set_trait(TRAIT_HARVEST_REPEAT,1)
 	set_trait(TRAIT_MATURATION,8)
-	set_trait(TRAIT_YIELD,4)
-	set_trait(TRAIT_POTENCY,0)
+	set_trait(TRAIT_YIELD,2)
+	set_trait(TRAIT_POTENCY,2)
 	set_trait(TRAIT_PRODUCT_ICON,"mushroom10")
 	set_trait(TRAIT_PRODUCT_COLOUR,"#b57bb0")
 	set_trait(TRAIT_PLANT_COLOUR,"#9e4f9d")
 	set_trait(TRAIT_PLANT_ICON,"mushroom2")
+	set_trait(TRAIT_NUTRIENT_CONSUMPTION, 0.35)
 
 /datum/seed/mushroom/plump/walking
 	name = "walkingmushroom"
@@ -512,7 +515,7 @@
 	set_trait(TRAIT_PLANT_ICON,"mushroom7")
 
 /datum/seed/mushroom/plastic
-	name = MATERIAL_PLASTIC
+	name = "plastic"
 	seed_name = "plastellium"
 	display_name = "plastellium"
 	mutants = null
@@ -864,7 +867,7 @@
 	set_trait(TRAIT_YIELD,5)
 	set_trait(TRAIT_POTENCY,10)
 	set_trait(TRAIT_PRODUCT_ICON,"carrot")
-	set_trait(TRAIT_PRODUCT_COLOUR,"#ffdb4a")
+	set_trait(TRAIT_PRODUCT_COLOUR,"#ff9900")
 	set_trait(TRAIT_PLANT_ICON,"carrot")
 	set_trait(TRAIT_WATER_CONSUMPTION, 6)
 
@@ -1156,7 +1159,7 @@
 	name = "tobacco"
 	seed_name = "tobacco"
 	display_name = "tobacco leaves"
-	mutants = list("finetobacco", "puretobacco")
+	mutants = list("finetobacco", "puretobacco", "badtobacco")
 	chems = list(/datum/reagent/tobacco = list(1,10))
 
 /datum/seed/tobacco/New()
@@ -1200,6 +1203,13 @@
 	set_trait(TRAIT_PLANT_COLOUR,"#b7c61a")
 	set_trait(TRAIT_NUTRIENT_CONSUMPTION, 0.30)
 
+/datum/seed/tobacco/bad
+	name = "badtobacco"
+	seed_name = "low-grade tobacco"
+	display_name = "low-grade tobacco leaves"
+	mutants = list("tobacco")
+	chems = list(/datum/reagent/tobacco/bad = list(1,10))
+
 // Alien weeds.
 /datum/seed/xenomorph
 	name = "xenomorph"
@@ -1219,3 +1229,50 @@
 	set_trait(TRAIT_YIELD,-1)
 	set_trait(TRAIT_SPREAD,2)
 	set_trait(TRAIT_POTENCY,50)
+
+/datum/seed/algae
+	name = "algae"
+	seed_name = "algae"
+	display_name = "algae"
+	chems = list(
+		/datum/reagent/nutriment = list(2,12),
+		/datum/reagent/toxin/bromide = list(3,8)
+	)
+	kitchen_tag = "algae"
+	exude_gasses = list("methyl_bromide" = 3)
+
+/datum/seed/algae/New()
+	..()
+	set_trait(TRAIT_HARVEST_REPEAT,1)
+	set_trait(TRAIT_MATURATION,3)
+	set_trait(TRAIT_PRODUCTION,5)
+	set_trait(TRAIT_YIELD,4)
+	set_trait(TRAIT_POTENCY,10)
+	set_trait(TRAIT_PRODUCT_ICON,"algae")
+	set_trait(TRAIT_PRODUCT_COLOUR,"#84bd82")
+	set_trait(TRAIT_PLANT_COLOUR,"#6d9c6b")
+	set_trait(TRAIT_PLANT_ICON,"algae")
+	set_trait(TRAIT_IDEAL_LIGHT, 6)
+	set_trait(TRAIT_WATER_CONSUMPTION, 6)
+	set_trait(TRAIT_NUTRIENT_CONSUMPTION, 0.15)
+
+/datum/seed/bamboo
+	name = "bamboo"
+	seed_name = "bamboo"
+	display_name = "bamboo"
+	chems = list(/datum/reagent/bamboo = list(6,1))
+	mutants = null
+
+/datum/seed/bamboo/New()
+	..()
+	set_trait(TRAIT_MATURATION,5)
+	set_trait(TRAIT_PRODUCTION,1)
+	set_trait(TRAIT_YIELD,5)
+	set_trait(TRAIT_POTENCY,1)
+	set_trait(TRAIT_PRODUCT_ICON,"stalk")
+	set_trait(TRAIT_PRODUCT_COLOUR, WOOD_COLOR_GENERIC)
+	set_trait(TRAIT_PLANT_COLOUR,"#99bc20")
+	set_trait(TRAIT_PLANT_ICON,"stalk3")
+	set_trait(TRAIT_IDEAL_HEAT, 298)
+	set_trait(TRAIT_IDEAL_LIGHT, 6)
+	set_trait(TRAIT_WATER_CONSUMPTION, 6)

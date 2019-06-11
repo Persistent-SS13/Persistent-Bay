@@ -1,12 +1,12 @@
 "a" = (/turf/space,/area/space)
 "b" = (/turf/simulated/wall,/area/space)
-"c" = (/obj/machinery/floor_light/prebuilt,/turf/simulated/floor,/area/space)
-"d" = (/obj/machinery/resleever,/obj/machinery/floor_light/prebuilt,/turf/simulated/floor,/area/space)
+"c" = (/turf/simulated/floor,/area/space)
+"d" = (/obj/machinery/resleever,/turf/simulated/floor,/area/space)
 "e" = (/turf/simulated/floor/greengrid,/area/space)
-"f" = (/obj/machinery/resleever{dir = 4},/obj/machinery/floor_light/prebuilt,/turf/simulated/floor,/area/space)
+"f" = (/obj/machinery/resleever{dir = 4},/turf/simulated/floor,/area/space)
 "g" = (/obj/machinery/door/airlock/supernorn/glass,/turf/simulated/wall,/area/space)
 "h" = (/turf/simulated/floor,/area/space)
-"i" = (/obj/machinery/resleever{dir = 1},/obj/machinery/floor_light/prebuilt,/turf/simulated/floor,/area/space)
+"i" = (/obj/machinery/resleever{dir = 1},/turf/simulated/floor,/area/space)
 
 (1,1,1) = {"
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa

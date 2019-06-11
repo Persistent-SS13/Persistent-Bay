@@ -12,24 +12,15 @@
 	var/department = COM
 	var/location
 
-/obj/machinery/pager/sec
-	department = SEC
-
-/obj/machinery/pager/medical
-	department = MED
-
-/obj/machinery/pager/cargo //supply
-	department = SUP
-
-/obj/machinery/pager/command
-	department = COM
-
 /obj/machinery/pager/Initialize()
 	. = ..()
 	if(!location)
 		var/area/A = get_area(src)
-		location = A.name
-	update_icon()
+		if(A)
+			location = A.name
+		else if(QDELETED(src) || !loc)
+			return INITIALIZE_HINT_QDEL //If there's no area its in nullspace
+	queue_icon_update()
 
 /obj/machinery/pager/update_icon()
 	..()
@@ -100,3 +91,21 @@
 		if(!MS)
 			return
 		MS.send_to_department(department,"Page to <b>[location]</b> was acknowledged.", "*ack*")
+
+/obj/machinery/pager/medical
+	department = MED
+
+/obj/machinery/pager/cargo //supply
+	department = SUP
+
+/obj/machinery/pager/security
+	department = SEC
+
+/obj/machinery/pager/science
+	department = SCI
+
+/obj/machinery/pager/engineering
+	department = ENG
+
+/obj/machinery/pager/command
+	department = COM

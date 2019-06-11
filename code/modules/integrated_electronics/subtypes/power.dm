@@ -1,7 +1,6 @@
 /obj/item/integrated_circuit/power/
 	category_text = "Power - Active"
 
-/*
 /obj/item/integrated_circuit/power/transmitter
 	name = "power transmission circuit"
 	desc = "This can wirelessly transmit electricity from an assembly's battery towards a nearby machine."
@@ -45,7 +44,6 @@
 		return FALSE
 	if(!assembly)
 		return FALSE // Pointless to do everything else if there's no battery to draw from.
-
 	var/obj/item/weapon/cell/cell = O.get_cell()
 	if(cell)
 		var/transfer_amount = amount_to_move
@@ -54,8 +52,12 @@
 		if(A.Adjacent(B))
 			if(O.loc != assembly)
 				transfer_amount *= 0.8 // Losses due to distance.
-			var/list/U=A.GetAllContents(/obj/item/integrated_circuit/power/transmitter)
-			transfer_amount *= 1 / U.len
+			var/transmitter_count = 0
+			for(var/obj/item/integrated_circuit/power/transmitter in A.GetAllContents())
+				transmitter_count++
+			if(!transmitter_count)
+				return FALSE
+			transfer_amount /= transmitter_count
 			set_pin_data(IC_OUTPUT, 1, cell.charge)
 			set_pin_data(IC_OUTPUT, 2, cell.maxcharge)
 			set_pin_data(IC_OUTPUT, 3, cell.percent())
@@ -86,4 +88,3 @@
 			s.start()
 			acting_object.visible_message("<span class='warning'>\The [acting_object] makes some sparks!</span>")
 		return TRUE
-*/

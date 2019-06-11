@@ -4,17 +4,27 @@
 GLOBAL_LIST_EMPTY(neural_laces)
 /mob/var/perma_dead = 0
 
-/mob/living/carbon/human/proc/create_stack()
+/mob/living/carbon/human/proc/create_stack(var/faction_uid, var/silent = FALSE)
 	set waitfor=0
-	sleep(10)
-	internal_organs_by_name[BP_STACK] = new /obj/item/organ/internal/stack(src,1)
-	to_chat(src, "<span class='notice'>You feel a faint sense of vertigo as your neural lace boots.</span>")
+	if(internal_organs_by_name && internal_organs_by_name[BP_STACK])
+		log_debug(" /mob/living/carbon/human/proc/create_stack(): Tried adding another stack to [src]\ref[src]. Skipping..")
+		return //We don't want multiple stacks
+//	sleep(10)
+	//testing("create_stack(): made a lace for [src]\ref[src], with faction [faction_uid]")
+	var/obj/item/organ/internal/stack/stack = new species.stack_type(src, faction_uid = faction_uid)
+	if(faction_uid && stack)
+		stack.try_connect()
+	internal_organs_by_name[BP_STACK] = stack
+	update_action_buttons()
+	if(!silent)
+		to_chat(src, "<span class='notice'>You feel a faint sense of vertigo as your neural lace boots.</span>")
 
 /obj/item/organ/internal/stack
 	name = "neural lace"
 	parent_organ = BP_HEAD
 	icon_state = "cortical-stack"
 	organ_tag = BP_STACK
+	status = ORGAN_ROBOTIC
 	vital = 1
 	origin_tech = list(TECH_BIO = 4, TECH_MATERIAL = 4, TECH_MAGNET = 2, TECH_DATA = 3)
 	relative_size = 10
@@ -25,9 +35,11 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	var/save_slot
 	var/list/languages = list()
 	var/datum/mind/backup
+	var/prompting = FALSE // Are we waiting for a user prompt?
+	default_action_type =  /datum/action/lace
 	action_button_name = "Access Neural Lace UI"
 	action_button_is_hands_free = 1
-	action_button_icon = 'icons/misc/lace.dmi'
+	action_button_icon = 'icons/obj/action_buttons/lace.dmi'
 	action_button_state = "lace"
 	var/connected_faction = ""
 	var/duty_status = 1
@@ -47,11 +59,29 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 	var/time
 
-/obj/item/organ/internal/stack/New()
+/obj/item/organ/internal/stack/New(var/loc, var/faction_uid)
 	..()
 	GLOB.neural_laces |= src
 	do_backup()
 	robotize()
+	if(faction_uid)
+		connected_faction = faction_uid
+	
+	ADD_SAVED_VAR(ownerckey)
+	ADD_SAVED_VAR(connected_business)
+	ADD_SAVED_VAR(connected_faction)
+
+/obj/item/organ/internal/stack/Initialize()
+	. = ..()
+	if(owner)
+		owner.internal_organs_by_name[BP_STACK] = src
+		owner.update_action_buttons()
+
+/obj/item/organ/internal/stack/after_load()
+	..()
+	try_connect()
+	if(duty_status)
+		try_duty()
 
 /obj/item/organ/internal/stack/Destroy()
 	if(lacemob && ((lacemob.key && lacemob.key != "") || (lacemob.key && lacemob.key != "")))
@@ -148,8 +178,9 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		if("die")
 			var/choice = input(usr,"THIS WILL PERMANENTLY KILL YOUR CHARACTER! YOU WILL NOT BE ALLOWED TO REMAKE THE SAME CHARACTER.") in list("Kill my character, return to character creation", "Cancel")
 			if(choice == "Kill my character, return to character creation")
-				if(input("Are you SURE you want to delete [CharacterName(save_slot, lacemob.ckey)]? THIS IS PERMANENT. enter the character\'s full name to confirm.", "DELETE A CHARACTER", "") == CharacterName(save_slot, lacemob.ckey))
-					fdel(load_path(lacemob.ckey, "[save_slot].sav"))
+				var/charname = SScharacter_setup.peek_character_name(save_slot, lacemob.ckey)
+				if(input("Are you SURE you want to delete [charname]? THIS IS PERMANENT. enter the character\'s full name to confirm.", "DELETE A CHARACTER", "") == charname)
+					SScharacter_setup.delete_character(save_slot, lacemob.ckey)
 					var/mob/new_player/M = new /mob/new_player()
 					M.loc = null
 					M.key = lacemob.key
@@ -311,9 +342,12 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 	var/list/potential[0]
 	for(var/datum/world_faction/fact in GLOB.all_world_factions)
-		var/datum/computer_file/report/crew_record/record = fact.get_record(owner.real_name)
-		if(record)
+		if(owner && fact.get_leadername() == owner.real_name)
 			potential |= fact
+		else
+			var/datum/computer_file/report/crew_record/record = fact.get_record(owner.real_name)
+			if(record)
+				potential |= fact
 
 	return potential
 
@@ -322,9 +356,12 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	if(istype(loc, /obj/item/device/lmi))
 		if(istype(loc.loc, /mob/living/silicon/robot))
 			robot = loc.loc
+
 	if((!owner || !faction) && !robot)
 		duty_status = 0
 		return "No owner found.."
+	if(owner && faction && owner.real_name == faction.get_leadername())
+		return 1
 	var/datum/computer_file/report/crew_record/records
 	if(!robot)
 		records = faction.get_record(owner.real_name)
@@ -383,19 +420,14 @@ GLOBAL_LIST_EMPTY(neural_laces)
 			ownerckey = owner.ckey ? owner.ckey : owner.stored_ckey
 
 
-
-/obj/item/organ/internal/stack/after_load()
-	..()
-	try_connect()
-	if(duty_status)
-		try_duty()
-
 /obj/item/organ/internal/stack/proc/backup_inviable()
 	return 	(!istype(backup) || backup == owner.mind || (backup.current && backup.current.stat != DEAD))
 
 /obj/item/organ/internal/stack/replaced(var/mob/living/carbon/human/target, var/obj/item/organ/external/affected)
 	if(!..(target, affected))
 		message_admins("stack replace() failed")
+		return 0
+	if(prompting) // Don't spam the player with twenty dialogs because someone doesn't know what they're doing or panicking.
 		return 0
 
 	if(lacemob)
@@ -406,11 +438,12 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 	if(owner && !backup_inviable())
 		var/current_owner = owner
+		prompting = TRUE
 		var/response = input(find_dead_player(ownerckey, 1), "Your neural backup has been placed into a new body. Do you wish to return to life?", "Resleeving") as anything in list("Yes", "No")
+		prompting = FALSE
 		if(src && response == "Yes" && owner == current_owner)
 			overwrite()
 	sleep(-1)
-
 	do_backup()
 
 	return 1
@@ -439,6 +472,8 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 /obj/item/organ/internal/stack/proc/overwrite()
 	if(owner.mind && owner.ckey) //Someone is already in this body!
+		if(owner.mind == backup) // Oh, it's the same mind in the backup. Someone must've spammed the 'Start Procedure' button in a panic.
+			return
 		owner.visible_message("<span class='danger'>\The [owner] spasms violently!</span>")
 		to_chat(owner, "<span class='danger'>You fight off the invading tendrils of another mind, holding onto your own body!</span>")
 		return 0	// People should not be able to overwrite someone else.

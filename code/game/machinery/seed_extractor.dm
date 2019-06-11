@@ -5,7 +5,7 @@
 	icon_state = "sextractor"
 	density = 1
 	anchored = 1
-	use_power = 2
+	use_power = POWER_USE_ACTIVE
 	idle_power_usage = 10
 	active_power_usage = 2000
 
@@ -16,15 +16,15 @@
 	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/device/analyzer/plant_analyzer(src)
+	component_parts += new /obj/item/device/scanner/plant(src)
 	RefreshParts()
 
 obj/machinery/seed_extractor/attackby(var/obj/item/O as obj, var/mob/user as mob)
 
 	// Fruits and vegetables.
 	if(istype(O, /obj/item/weapon/reagent_containers/food/snacks/grown) || istype(O, /obj/item/weapon/grown))
-
-		user.remove_from_mob(O)
+		if(!user.unEquip(O))
+			return
 
 		var/datum/seed/new_seed_type
 		if(istype(O, /obj/item/weapon/grown))

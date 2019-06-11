@@ -52,7 +52,7 @@
 		return 0
 	return 1
 
-/obj/machinery/ntnet_relay/update_icon()
+/obj/machinery/ntnet_relay/on_update_icon()
 	if(operable())
 		icon_state = "bus"
 	else
@@ -60,9 +60,9 @@
 
 /obj/machinery/ntnet_relay/Process()
 	if(operable())
-		use_power = POWER_USE_ACTIVE
+		update_use_power(POWER_USE_ACTIVE)
 	else
-		use_power = POWER_USE_IDLE
+		update_use_power(POWER_USE_IDLE)
 
 	if(dos_overload)
 		dos_overload = max(0, dos_overload - dos_dissipate)

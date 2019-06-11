@@ -26,12 +26,15 @@
 	item_flags = ITEM_FLAG_NO_BLUDGEON
 	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 	unacidable = 0
-
-	var/on_fire = 0
+	burning = 0
 	var/burn_time = 20 //if the rag burns for too long it turns to ashes
 
 /obj/item/weapon/reagent_containers/glass/rag/New()
-	..()
+	. = ..()
+	ADD_SAVED_VAR(burn_time)
+
+/obj/item/weapon/reagent_containers/glass/rag/Initialize()
+	. = ..()
 	update_name()
 
 /obj/item/weapon/reagent_containers/glass/rag/Destroy()
@@ -39,19 +42,18 @@
 	. = ..()
 
 /obj/item/weapon/reagent_containers/glass/rag/attack_self(mob/user as mob)
-	if(on_fire)
+	if(burning && user.unEquip(src))
 		user.visible_message("<span class='warning'>\The [user] stamps out [src].</span>", "<span class='warning'>You stamp out [src].</span>")
-		user.unEquip(src)
 		extinguish()
 	else
 		remove_contents(user)
 
 /obj/item/weapon/reagent_containers/glass/rag/attackby(obj/item/W, mob/user)
-	if(!on_fire && istype(W, /obj/item/weapon/flame))
+	if(!burning && istype(W, /obj/item/weapon/flame))
 		var/obj/item/weapon/flame/F = W
 		if(F.lit)
 			ignite()
-			if(on_fire)
+			if(burning)
 				visible_message("<span class='warning'>\The [user] lights [src] with [W].</span>")
 			else
 				to_chat(user, "<span class='warning'>You manage to singe [src], but fail to light it.</span>")
@@ -60,15 +62,15 @@
 	update_name()
 
 /obj/item/weapon/reagent_containers/glass/rag/proc/update_name()
-	if(on_fire)
-		name = "burning [initial(name)]"
+	if(burning)
+		SetName("burning [initial(name)]")
 	else if(reagents.total_volume)
-		name = "damp [initial(name)]"
+		SetName("damp [initial(name)]")
 	else
-		name = "dry [initial(name)]"
+		SetName("dry [initial(name)]")
 
-/obj/item/weapon/reagent_containers/glass/rag/update_icon()
-	if(on_fire)
+/obj/item/weapon/reagent_containers/glass/rag/on_update_icon()
+	if(burning)
 		icon_state = "raglit"
 	else
 		icon_state = "rag"
@@ -100,14 +102,18 @@
 		user.visible_message("\The [user] starts to wipe down [A] with [src]!")
 		reagents.splash(A, 1) //get a small amount of liquid on the thing we're wiping.
 		update_name()
-		if(do_after(user,30, progress = 0))
+		if(do_after(user,30, progress = 1))
 			user.visible_message("\The [user] finishes wiping off the [A]!")
-			A.clean_blood()
+			if(isturf(A))
+				var/turf/T = A
+				T.clean(src, user)
+			else
+				A.clean_blood()
 
 /obj/item/weapon/reagent_containers/glass/rag/attack(atom/target as obj|turf|area, mob/user as mob , flag)
 	if(isliving(target))
 		var/mob/living/M = target
-		if(on_fire)
+		if(burning)
 			user.visible_message("<span class='danger'>\The [user] hits [target] with [src]!</span>",)
 			user.do_attack_animation(src)
 			M.IgniteMob()
@@ -143,7 +149,7 @@
 			update_name()
 		return
 
-	if(!on_fire && istype(A) && (src in user))
+	if(!burning && istype(A) && (src in user))
 		if(A.is_open_container() && !(A in user))
 			remove_contents(user, A)
 		else if(!ismob(A)) //mobs are handled in attack() - this prevents us from wiping down people while smothering them.
@@ -164,7 +170,7 @@
 	return (fuel >= 2 && fuel >= reagents.total_volume*0.8)
 
 /obj/item/weapon/reagent_containers/glass/rag/ignite()
-	if(on_fire)
+	if(burning)
 		return
 	if(!can_ignite())
 		return
@@ -179,15 +185,15 @@
 		return
 
 	START_PROCESSING(SSobj, src)
-	set_light(2, null, "#e38f46")
-	on_fire = 1
+	set_light(0.5, 0.1, 2, 2, "#e38f46")
+	burning = 1
 	update_name()
 	update_icon()
 
 /obj/item/weapon/reagent_containers/glass/rag/extinguish()
 	STOP_PROCESSING(SSobj, src)
 	set_light(0)
-	on_fire = 0
+	burning = 0
 
 	//rags sitting around with 1 second of burn time left is dumb.
 	//ensures players always have a few seconds of burn time left when they light their rag

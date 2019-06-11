@@ -8,18 +8,24 @@
 	available_on_ntnet = 1
 	nanomodule_path = /datum/nano_module/program/research
 
-/datum/computer_file/program/research/handleInteraction(var/obj/item/weapon/W, var/mob/user)
-	var/datum/world_faction/faction = ConnectedFaction()
+//Event callback
+// /datum/computer_file/program/research/event_item_used(var/obj/item/I, var/mob/user)
+// 	return do_on_afterattack(user, I)
+
+//Hijack the paper scanner instead
+/obj/item/weapon/computer_hardware/scanner/paper/do_on_afterattack(mob/user, obj/item/weapon/paper/researchTheorem/target, proximity)
+	if(!..())
+		return
+	if(!holder2?.active_program)
+		return
+	var/datum/world_faction/faction = holder2.active_program.ConnectedFaction()
 	if(!faction /*|| !faction.ModuleResearch*/)
 		return
-
-	if(istype(W, /obj/item/weapon/researchTheorem))
-		var/obj/item/weapon/researchTheorem/T = W
-		// faction.ModuleResearch.AddResearch(T)
-		user.drop_from_inventory(T)
-		qdel(T)
+	if(istype(target))
+		// faction.ModuleResearch.AddResearch(target)
+		user.drop_from_inventory(target)
+		qdel(target)
 		return 1
-
 
 /datum/nano_module/program/research
 	name = "Research Program"
@@ -40,5 +46,5 @@
 		return 1
 
 	if(href_list["print"])
-		new /obj/item/weapon/researchTheorem(get_turf(program.computer))
+		new /obj/item/weapon/paper/researchTheorem(get_turf(program.computer))
 		return 1

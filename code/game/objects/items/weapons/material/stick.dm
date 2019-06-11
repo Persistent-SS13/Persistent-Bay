@@ -1,5 +1,5 @@
 /obj/item/weapon/material/stick
-	name = "staff"
+	name = "stick"
 	desc = "You feel the urge to poke someone with this."
 	icon_state = "stick"
 	item_state = "stickmat"
@@ -14,14 +14,14 @@
 
 /obj/item/weapon/material/stick/attack_self(mob/user as mob)
 	user.visible_message("<span class='warning'>\The [user] snaps [src].</span>", "<span class='warning'>You snap [src].</span>")
-	shatter(0)
+	kill()
 
 
 /obj/item/weapon/material/stick/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(W.sharpness && !sharpness)
 		user.visible_message("<span class='warning'>[user] sharpens [src] with [W].</span>", "<span class='warning'>You sharpen [src] using [W].</span>")
 		sharpness = 1 //Sharpen stick
-		name = "sharpened " + name
+		SetName("sharpened " + name)
 		update_force()
 	return ..()
 

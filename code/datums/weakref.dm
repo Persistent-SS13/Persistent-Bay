@@ -18,6 +18,7 @@
 	return D.weakref
 
 /weakref
+	should_save = FALSE
 	var/ref
 
 	// Handy info for debugging
@@ -28,6 +29,9 @@
 	ref = "\ref[D]"
 	ref_name = "[D]"
 	ref_type = D.type
+
+/weakref/after_load()
+	qdel_self() //do not load weakrefs ever, they're only valid at runtime
 
 /weakref/Destroy()
 	// A weakref datum should not be manually destroyed as it is a shared resource,

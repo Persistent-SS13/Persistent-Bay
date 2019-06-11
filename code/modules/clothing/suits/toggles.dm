@@ -32,7 +32,7 @@
 	update_icon()
 	if(ishuman(hood.loc))
 		var/mob/living/carbon/H = hood.loc
-		H.unEquip(hood, 1)
+		H.drop_from_inventory(hood)
 		H.update_inv_wear_suit()
 	hood.forceMove(src)
 
@@ -57,7 +57,7 @@
 	else
 		RemoveHood()
 
-/obj/item/clothing/suit/storage/hooded/update_icon()
+/obj/item/clothing/suit/storage/hooded/on_update_icon()
 	if(suittoggled)
 		icon_state = "[initial(icon_state)]_t"
 	else
@@ -199,6 +199,12 @@
 		DAM_BIO 	= 0,
 		DAM_RADS 	= 0,
 		DAM_STUN 	= 0)
+
+/obj/item/clothing/suit/storage/hooded/wintercoat/dais
+	name = "\improper DAIS winter coat"
+	icon_state = "coat_dais"
+	siemens_coefficient = 0.5
+	desc = "A hooded winter coat colored blue and white and bearing the logo of Deimos Advanced Information Systems."
 
 /obj/item/clothing/suit/storage/hooded/wintercoat/hydro
 	name = "hydroponics winter coat"

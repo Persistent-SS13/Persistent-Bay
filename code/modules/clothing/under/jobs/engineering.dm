@@ -5,8 +5,6 @@
 	icon_state = "chiefengineer"
 	item_state = "g_suit"
 	worn_state = "chief"
-	heat_protection = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
-	max_heat_protection_temperature = 1000
 	armor  = list(
 		DAM_BLUNT 	= 0,
 		DAM_PIERCE 	= 2,
@@ -27,8 +25,7 @@
 	icon_state = "atmos"
 	item_state = "atmos_suit"
 	worn_state = "atmos"
-	heat_protection = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
-	max_heat_protection_temperature = 1000
+	gender_icons = 1
 	armor  = list(
 		DAM_BLUNT 	= 0,
 		DAM_PIERCE 	= 2,
@@ -49,8 +46,7 @@
 	icon_state = "engine"
 	item_state = "engi_suit"
 	worn_state = "engine"
-	heat_protection = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
-	max_heat_protection_temperature = 800
+	gender_icons = 1
 	armor  = list(
 		DAM_BLUNT 	= 0,
 		DAM_PIERCE 	= 2,
@@ -71,9 +67,11 @@
 	icon_state = "robotics"
 	item_state = "bl_suit"
 	worn_state = "robotics"
+	gender_icons = 1
 
 /obj/item/clothing/under/rank/roboticist/skirt
 	desc = "It's a slimming black jumpskirt with reinforced seams; great for industrial work."
 	name = "roboticist's jumpskirt"
 	icon_state = "roboticsf"
 	worn_state = "roboticsf"
+	gender_icons = 1

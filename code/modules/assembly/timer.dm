@@ -12,6 +12,11 @@
 	var/timing = 0
 	var/time = 10
 
+/obj/item/device/assembly/timer/New()
+	. = ..()
+	ADD_SAVED_VAR(timing)
+	ADD_SAVED_VAR(time)
+
 /obj/item/device/assembly/timer/proc/timer_end()
 
 
@@ -49,6 +54,7 @@
 /obj/item/device/assembly/timer/Process()
 	if(timing && (time > 0))
 		time--
+		playsound(loc, 'sound/items/timer.ogg', 50)
 	if(timing && time <= 0)
 		timing = 0
 		timer_end()
@@ -56,7 +62,7 @@
 	return
 
 
-/obj/item/device/assembly/timer/update_icon()
+/obj/item/device/assembly/timer/on_update_icon()
 	overlays.Cut()
 	attached_overlays = list()
 	if(timing)

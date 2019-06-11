@@ -105,8 +105,8 @@
 							assignment = job.ranks[R.rank-1]
 							rank = R.rank
 				all_records.Add(list(list(
-					"name" = R.get_name(),
-					"rank" = R.get_job(),
+					"name" = assignment,
+					"rank" = rank,
 					"milrank" = R.get_rank(),
 					"id" = R.uid
 				)))

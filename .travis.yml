@@ -18,6 +18,10 @@ matrix:
       env: TEST=WEB
     - name: "Map - Nexus"
       env: TEST=MAP MAP_PATH=nexus
+    - name: "Map - Example"
+      env: TEST=MAP MAP_PATH=example
+    - name: "Map - Away Site Testing"
+      env: TEST=MAP MAP_PATH=away_sites_testing
 
 cache:
   directories:

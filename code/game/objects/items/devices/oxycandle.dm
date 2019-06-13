@@ -15,15 +15,27 @@
 	light_max_bright = 1
 	var/brightness_on = 1 // Moderate-low bright.
 	action_button_name = null
+	matter = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_IRON = 0.5 SHEET, MATERIAL_ROCK_SALT = 1) //An actual oxy candle uses iron powder and sodium cholorate, then heated to 300c to generate oxygen
 
 /obj/item/device/oxycandle/New()
 	..()
-	update_icon()
+	ADD_SAVED_VAR(air_contents)
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(volume) //Used to store burning duration really..
+	ADD_SAVED_VAR(target_pressure)
+
+	ADD_SKIP_EMPTY(air_contents)
+
+/obj/item/device/oxycandle/Initialize()
+	. = ..()
+	if(on == 2)
+		matter = list(MATERIAL_STEEL = 1 SHEET) //if its burnt remove the rest
+	queue_icon_update()
 
 /obj/item/device/oxycandle/afterattack(var/obj/O, var/mob/user, var/proximity)
 	if(proximity && istype(O) && on)
 		O.HandleObjectHeating(src, user, 500)
-	..()
+	. = ..()
 
 /obj/item/device/oxycandle/attack_self(mob/user)
 	if(!on)
@@ -46,10 +58,11 @@
 	if(volume <= 0 || !pos || (pos.turf_flags & TURF_IS_WET)) //Now uses turf flags instead of whatever aurora did
 		STOP_PROCESSING(SSprocessing, src)
 		on = 2
-		update_icon()
+		queue_icon_update()
 		update_held_icon()
 		SetName("burnt oxygen candle")
 		desc += "This tube has exhausted its chemicals."
+		matter = list(MATERIAL_STEEL = 1 SHEET) //if its burnt remove the rest
 		return
 	if(pos)
 		pos.hotspot_expose(1500, 5)

@@ -6,9 +6,13 @@
 	use_power = POWER_USE_OFF
 	mechanical = 0
 	tray_light = 0
+	matter = list(MATERIAL_SANDSTONE = 3 SHEETS)
 
 /obj/machinery/portable_atmospherics/hydroponics/soil/attackby(var/obj/item/O as obj, var/mob/user as mob)
 	if(istype(O,/obj/item/weapon/tank))
+		return
+	if(isShovel(O))
+		dismantle()
 		return
 	else
 		return ..()
@@ -41,7 +45,6 @@
 	seed = newseed
 	dead = 0
 	age = start_mature ? seed.get_trait(TRAIT_MATURATION) : 1
-	health = seed.get_trait(TRAIT_ENDURANCE)
 	lastcycle = world.time
 	pixel_y = rand(-12,12)
 	pixel_x = rand(-12,12)
@@ -52,6 +55,19 @@
 /obj/machinery/portable_atmospherics/hydroponics/soil/invisible/Initialize()
 	. = ..()
 	connected_zlevels = GetConnectedZlevels(z)
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/portable_atmospherics/hydroponics/soil/invisible/LateInitialize()
+	. = ..()
+	age = start_mature ? seed.get_trait(TRAIT_MATURATION) : 1
+	max_health = seed.get_trait(TRAIT_ENDURANCE)
+	health = max_health
+	check_health()
+
+/obj/machinery/portable_atmospherics/hydroponics/soil/invisible/after_load()
+	. = ..()
+	if(seed)
+		name = seed.display_name
 
 /obj/machinery/portable_atmospherics/hydroponics/soil/invisible/Process()
 	if(z in GLOB.using_map.station_levels) //plants on station always tick

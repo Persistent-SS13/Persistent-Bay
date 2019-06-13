@@ -10,8 +10,17 @@
 	max_health = 60
 	var/open = 1
 
+/obj/structure/pit/New()
+	. = ..()
+	ADD_SAVED_VAR(open)
+
+/obj/structure/pit/Initialize()
+	. = ..()
+	if(!open)
+		close()
+
 /obj/structure/pit/attackby(obj/item/W, mob/user)
-	if( istype(W,/obj/item/weapon/shovel) )
+	if(isShovel(W))
 		visible_message("<span class='notice'>\The [user] starts [open ? "filling" : "digging open"] \the [src]</span>")
 		if( do_after(user, 50) )
 			visible_message("<span class='notice'>\The [user] [open ? "fills" : "digs open"] \the [src]!</span>")
@@ -35,7 +44,7 @@
 			else
 				to_chat(user, "<span class='notice'>You stop making a grave marker.</span>")
 		return
-	..()
+	return ..()
 
 /obj/structure/pit/on_update_icon()
 	icon_state = "pit[open]"
@@ -100,10 +109,6 @@
 	desc = "Some things are better left buried."
 	open = 0
 
-/obj/structure/pit/closed/Initialize()
-	. = ..()
-	close()
-
 //invisible until unearthed first
 /obj/structure/pit/closed/hidden
 	invisibility = INVISIBILITY_OBSERVER
@@ -139,6 +144,10 @@
 /obj/structure/gravemarker/cross
 	icon_state = "cross"
 
+/obj/structure/gravemarker/New()
+	. = ..()
+	ADD_SAVED_VAR(message)
+
 /obj/structure/gravemarker/examine()
 	..()
 	to_chat(usr,"It says: '[message]'")
@@ -159,7 +168,7 @@
 	message = "Here lies [nam], [born] - [died]."
 
 /obj/structure/gravemarker/attackby(obj/item/W, mob/user)
-	if(istype(W,/obj/item/weapon/material/hatchet))
+	if(isHatchet(W))
 		visible_message("<span class = 'warning'>\The [user] starts hacking away at \the [src] with \the [W].</span>")
 		if(!do_after(user, 30))
 			visible_message("<span class = 'warning'>\The [user] hacks \the [src] apart.</span>")

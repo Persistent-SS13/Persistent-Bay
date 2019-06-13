@@ -35,6 +35,7 @@
 	name = "lantern"
 	icon_state = "lantern"
 	desc = "A mining lantern."
+	matter = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_GLASS = 0.25 SHEETS)
 
 /**********'pickaxes' but theyre drills actually***************/
 
@@ -226,6 +227,16 @@
 	icon_state = "tealflag"
 	fringe = "tealflag_fringe"
 	light_color = COLOR_TEAL
+
+/obj/item/stack/flag/New(loc, amount)
+	. = ..()
+	ADD_SAVED_VAR(upright)
+	ADD_SAVED_VAR(fringe)
+	ADD_SKIP_EMPTY(fringe)
+	
+/obj/item/stack/flag/after_load()
+	. = ..()
+	queue_icon_update()
 
 /obj/item/stack/flag/attackby(var/obj/item/W, var/mob/user)
 	if(upright)

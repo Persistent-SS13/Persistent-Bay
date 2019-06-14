@@ -938,7 +938,52 @@ var/PriorityQueue/all_feeds
 	special_category.parent = src
 	special_category.command_faction = 1
 	limits = new /datum/machine_limits/democracy()
+	
+	name = "Nexus City Government"
+	abbreviation = "NEXUS"
+	short_tag = "NEX"
+	purpose = "To represent the citizenship of Nexus and keep the station operating."
+	uid = "nexus"
+	gov = new()
+	var/datum/election/gov/gov_elect = new()
+	gov_elect.ballots |= gov
 
+	waiting_elections |= gov_elect
+
+	var/datum/election/council_elect = new()
+	var/datum/democracy/councillor/councillor1 = new()
+	councillor1.title = "Councillor of Justice and Criminal Matters"
+	city_council |= councillor1
+	council_elect.ballots |= councillor1
+
+	var/datum/democracy/councillor/councillor2 = new()
+	councillor2.title = "Councillor of Budget and Tax Measures"
+	city_council |= councillor2
+	council_elect.ballots |= councillor2
+
+	var/datum/democracy/councillor/councillor3 = new()
+	councillor3.title = "Councillor of Commerce and Business Relations"
+	city_council |= councillor3
+	council_elect.ballots |= councillor3
+
+	var/datum/democracy/councillor/councillor4 = new()
+	councillor4.title = "Councillor for Culture and Ethical Oversight"
+	city_council |= councillor4
+	council_elect.ballots |= councillor4
+
+	var/datum/democracy/councillor/councillor5 = new()
+	councillor5.title = "Councillor for the Domestic Affairs"
+	city_council |= councillor5
+	council_elect.ballots |= councillor5
+
+	waiting_elections |= council_elect
+
+	network.name = "NEXUSGOV-NET"
+	network.net_uid = "nexus"
+	network.password = ""
+	network.invisible = 0
+
+	GLOB.all_world_factions |= nexus
 /datum/world_faction/democratic
 
 	var/datum/democracy/governor/gov

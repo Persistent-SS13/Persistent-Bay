@@ -20,6 +20,9 @@ SUBSYSTEM_DEF(mapping)
 		submap_archetypes[atype] = new atype
 	GLOB.using_map.build_away_sites()
 	. = ..()
+#ifdef UNIT_TEST
+	report_progress("Unit testing, so not loading saved map")
+#else
 	Load_World()
 	
 /datum/controller/subsystem/mapping/Recover()

@@ -1,7 +1,6 @@
 SUBSYSTEM_DEF(mazemap)
 	name = "Maze Map"
 	wait = 3 MINUTES
-//	next_fire = 3 HOURS	// To prevent saving upon start.
 	var/init = 0
 	var/list/map_data = list()
 	var/list/activity_checklist

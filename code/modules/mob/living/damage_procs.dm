@@ -18,22 +18,21 @@
 	damage_flags = after_armor[3] // args modifications in case of parent calls
 	if(!damage)
 		return 0
-	log_debug("[src] took [damage] [damagetype] damage from the [used_weapon]. [blocked] was blocked")
 
 	if(IsDamageTypeBrute(damagetype))
-		adjustBruteLoss(damage * blocked_mult(blocked))
+		adjustBruteLoss(damage)
 	else if(IsDamageTypeBurn(damagetype))
 		if(MUTATION_COLD_RESISTANCE in mutations)
 			damage = 0
-		adjustFireLoss(damage * blocked_mult(blocked))
+		adjustFireLoss(damage)
 	else if(ISDAMTYPE(damagetype, DAM_BIO))
-		adjustToxLoss(damage * blocked_mult(blocked))
+		adjustToxLoss(damage)
 	else if(ISDAMTYPE(damagetype, DAM_OXY))
-		adjustOxyLoss(damage * blocked_mult(blocked))
+		adjustOxyLoss(damage)
 	else if(ISDAMTYPE(damagetype, DAM_CLONE))
-		adjustCloneLoss(damage * blocked_mult(blocked))
+		adjustCloneLoss(damage)
 	else if(ISDAMTYPE(damagetype, DAM_PAIN))
-		adjustHalLoss(damage * blocked_mult(blocked))
+		adjustHalLoss(damage)
 	else if(ISDAMTYPE(damagetype, DAM_ELECTRIC))
 		electrocute_act(damage, used_weapon, 1.0, def_zone)
 	else  if(ISDAMTYPE(damagetype, IRRADIATE))

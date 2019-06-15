@@ -351,11 +351,11 @@ var/global/list/datum/stack_recipe/wax_recipes = list(
 
 /obj/item/bee_pack/proc/empty()
 	full = 0
-	on_update_icon()
+	update_icon()
 
 /obj/item/bee_pack/proc/fill()
 	full = initial(full)
-	on_update_icon()
+	update_icon()
 
 /obj/structure/closet/crate/hydroponics/beekeeping
 	name = "beekeeping crate"

@@ -119,6 +119,7 @@
 	. += create_recipe_list(/datum/stack_recipe/tile/light)
 	. += new/datum/stack_recipe/hazard_cone(src)
 	. += new/datum/stack_recipe/furniture/flaps(src)
+	. += new/datum/stack_recipe/mopbucket(src)
 
 /material/wood/generate_recipes(var/reinforce_material)
 	. = ..()

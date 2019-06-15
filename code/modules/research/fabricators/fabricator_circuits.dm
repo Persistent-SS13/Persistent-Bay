@@ -38,6 +38,14 @@
 	build_path = /obj/item/weapon/circuitboard/fabricator/consumerfab
 
 
+/obj/item/weapon/circuitboard/fabricator/storagefab
+	name = "Circuit board (Storage Fabricator)"
+	build_path = /obj/machinery/fabricator/storage_fabricator
+
+/datum/design/circuit/storagefabricator
+	name = "storage fabricator"
+	build_path = /obj/item/weapon/circuitboard/fabricator/storagefab
+
 
 
 /obj/item/weapon/circuitboard/fabricator/servicefab

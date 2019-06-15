@@ -15,7 +15,7 @@
 	light_max_bright = 1
 	var/brightness_on = 1 // Moderate-low bright.
 	action_button_name = null
-	matter = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_IRON = 0.5 SHEET, MATERIAL_ROCK_SALT = 1) //An actual oxy candle uses iron powder and sodium cholorate, then heated to 300c to generate oxygen
+	matter = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_IRON = 0.5 SHEET, MATERIAL_ROCK_SALT = 1 SHEET) //An actual oxy candle uses iron powder and sodium cholorate, then heated to 300c to generate oxygen
 
 /obj/item/device/oxycandle/New()
 	..()

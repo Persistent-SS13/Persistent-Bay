@@ -36,7 +36,7 @@ SUBSYSTEM_DEF(event)
 			)
 	if(GLOB.using_map.use_overmap)
 		overmap_event_handler.create_events(GLOB.using_map.overmap_z, GLOB.using_map.overmap_size, GLOB.using_map.overmap_event_areas)
-	. = ..()
+	return ..()
 
 /datum/controller/subsystem/event/Recover()
 	active_events = SSevent.active_events

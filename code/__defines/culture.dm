@@ -2,13 +2,10 @@
 #define TAG_HOMEWORLD "home_system"
 #define TAG_FACTION   "faction"
 #define TAG_RELIGION  "religion"
-
+#define TAG_AMBITION "ambition"
 #define ALL_CULTURAL_TAGS list( \
 	TAG_CULTURE =   "Culture", \
-	TAG_HOMEWORLD = "Residence", \
-	TAG_FACTION =   "Faction", \
-	TAG_RELIGION =  "Beliefs" \
-	)
+	TAG_HOMEWORLD = "Residence")
 
 // Cultural IDs.
 #define FACTION_SOL_CENTRAL    "Sol Central Government"
@@ -46,8 +43,20 @@
 #define HOME_SYSTEM_OTHER      "Other System"
 #define HOME_SYSTEM_DEEP_SPACE "Deep Space"
 
+#define AMBITION_FREEDOM "Freedom"
+#define AMBITION_OPPORTUNITY "Opportunity"
+#define AMBITION_KNOWLEDGE "Knowledge"
+
 #define CULTURE_OTHER          "Other Culture"
 #define CULTURE_HUMAN          "Humankind"
+
+#define CULTURE_HUMAN_EARTH_POOR          "Sol-born Underclass"
+#define CULTURE_HUMAN_EARTH_MIDDLE         "Sol-born Bureaucrat"
+#define CULTURE_HUMAN_EARTH_HIGH         "Sol-born Academic"
+#define CULTURE_HUMAN_COLONY          "Outerworld Colonist"
+#define CULTURE_HUMAN_AGARTHA_POOR         "Agarthan Dissident"
+#define CULTURE_HUMAN_AGARTHA_MIDDLE      "Agarthan  Laborer"
+
 #define CULTURE_HUMAN_VATGROWN "Nonborn"
 #define CULTURE_HUMAN_MARTIAN  "Martian, Surfacer"
 #define CULTURE_HUMAN_MARSTUN  "Martian, Tunneller"

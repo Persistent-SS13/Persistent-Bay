@@ -3,14 +3,10 @@
 	name_plural = "Humans"
 	primitive_form = "Monkey"
 	unarmed_types = list(/datum/unarmed_attack/stomp, /datum/unarmed_attack/kick, /datum/unarmed_attack/punch, /datum/unarmed_attack/bite)
-	description = "Humanity originated in the Sol system, and over the last five centuries has spread \
-	colonies across a wide swathe of space. They hold a wide range of forms and creeds.<br/><br/> \
-	While the central Sol government maintains control of its far-flung people, powerful corporate \
-	interests, rampant cyber and bio-augmentation and secretive factions make life on most human \
-	worlds tumultous at best."
+	description = "Humanity originated in the Sol system, a has spread colonies across a wide swathe of space. They hold a wide range of forms and creeds."
 	assisted_langs = list(LANGUAGE_NABBER)
-	min_age = 17
-	max_age = 100
+	min_age = 19
+	max_age = 70
 	hidden_from_codex = FALSE
 	bandages_icon = 'icons/mob/bandage.dmi'
 
@@ -23,20 +19,12 @@
 
 	available_cultural_info = list(
 		TAG_CULTURE = list(
-			CULTURE_HUMAN_MARTIAN,
-			CULTURE_HUMAN_MARSTUN,
-			CULTURE_HUMAN_LUNAPOOR,
-			CULTURE_HUMAN_LUNARICH,
-			CULTURE_HUMAN_VENUSIAN,
-			CULTURE_HUMAN_VENUSLOW,
-			CULTURE_HUMAN_BELTER,
-			CULTURE_HUMAN_PLUTO,
-			CULTURE_HUMAN_EARTH,
-			CULTURE_HUMAN_CETI,
-			CULTURE_HUMAN_SPACER,
-			CULTURE_HUMAN_SPAFRO,
-			CULTURE_HUMAN_CONFED,
-			CULTURE_HUMAN_OTHER
+			CULTURE_HUMAN_EARTH_POOR,
+			CULTURE_HUMAN_EARTH_MIDDLE,
+			CULTURE_HUMAN_EARTH_HIGH,
+			CULTURE_HUMAN_AGARTHA_POOR,
+			CULTURE_HUMAN_AGARTHA_MIDDLE,
+			CULTURE_HUMAN_COLONY
 		)
 	)
 	spawns_with_stack = TRUE

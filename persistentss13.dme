@@ -2830,6 +2830,7 @@
 #include "code\modules\research\fabricators\general_fabricator.dm"
 #include "code\modules\research\fabricators\medical_fabricator.dm"
 #include "code\modules\research\fabricators\service_fabricator.dm"
+#include "code\modules\research\fabricators\storage_fabricator.dm"
 #include "code\modules\research\fabricators\weapons_fabricator.dm"
 #include "code\modules\research2\designs.dm"
 #include "code\modules\research2\experiment.dm"

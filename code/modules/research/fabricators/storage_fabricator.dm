@@ -51,59 +51,59 @@
 
 /datum/design/item/storagefab/securecrates/phoron
 	build_path = /obj/structure/closet/crate/secure/phoron
-	
+
 /datum/design/item/storagefab/securecrates/gear
 	build_path = /obj/structure/closet/crate/secure/gear
 
 /datum/design/item/storagefab/securecrates/crate
 	build_path = /obj/structure/closet/crate/secure/hydrosec
-	
+
 /datum/design/item/storagefab/securecrates/bin
 	build_path = /obj/structure/closet/crate/secure/bin
-	
+
 /datum/design/item/storagefab/securecrates/large
 	build_path = /obj/structure/closet/crate/secure/large
-	materials = (MATERIAL_STEEL = 3 SHEETS, MATERIAL_COPPER = 1 SHEET)
+	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_COPPER = 1 SHEET)
 
 /datum/design/item/storagefab/securecrates/large/phoron
 	build_path = /obj/structure/closet/crate/secure/large/phoron
-	
+
 /datum/design/item/storagefab/securecrates/large/reinforced
 	build_path = /obj/structure/closet/crate/secure/large/reinforced
-	
+
 /datum/design/item/storagefab/securecrates/biohazard
 	build_path = /obj/structure/closet/crate/secure/biohazard
-	
-	
-	
+
+
+
 /datum/design/item/storagefab/crates/crate
 	build_path = /obj/structure/closet/crate
-	
+
 /datum/design/item/storagefab/crates/trashcart
 	build_path = /obj/structure/closet/crate/trashcart
 
 /datum/design/item/storagefab/crates/medical
 	build_path = /obj/structure/closet/crate/medical
-	
+
 /datum/design/item/storagefab/crates/freezer
 	build_path = /obj/structure/closet/crate/freezer
 
 /datum/design/item/storagefab/crates/bin
 	build_path = /obj/structure/closet/crate/bin
-	
+
 /datum/design/item/storagefab/crates/plastic
 	build_path = /obj/structure/closet/crate/plastic
 	materials = list(MATERIAL_PLASTIC = 2 SHEETS)
 
 /datum/design/item/storagefab/crates/internals
 	build_path = /obj/structure/closet/crate/internals
-	
+
 /datum/design/item/storagefab/crates/radiation
 	build_path = /obj/structure/closet/crate/radiation
 
 /datum/design/item/storagefab/crates/large
 	build_path = /obj/structure/closet/crate/large
-	materials = (MATERIAL_STEEL = 3 SHEETS)
+	materials = list(MATERIAL_STEEL = 3 SHEETS)
 
 /datum/design/item/storagefab/crates/large/hydroponics
 	build_path = /obj/structure/closet/crate/large/hydroponics
@@ -120,10 +120,10 @@
 	category = "Secure Lockers"
 /datum/design/item/storagefab/lockers/locker
 	build_path = /obj/structure/closet
-	
+
 /datum/design/item/storagefab/lockers/emcloset
 	build_path = /obj/structure/closet/emcloset
-	
+
 /datum/design/item/storagefab/lockers/firecloset
 	build_path = /obj/structure/closet/firecloset
 
@@ -131,25 +131,25 @@
 	build_path = /obj/structure/closet/toolcloset
 
 /datum/design/item/storagefab/lockers/radiation
-	build_path = /obj/structure/radiation
+	build_path = /obj/structure/closet/radiation
 
 /datum/design/item/storagefab/lockers/bombcloset
-	build_path = /obj/structure/bombcloset
-	
+	build_path = /obj/structure/closet/bombcloset
+
 /datum/design/item/storagefab/lockers/secure/chiefengineer
 	build_path = /obj/structure/closet/secure_closet/empty/engineering_chief
 
-	
+
 /datum/design/item/storagefab/lockers/secure/electrical
-	build_path = /obj/structure/closet/secure_closet/empty/eengineering_electrical
-	
+	build_path = /obj/structure/closet/secure_closet/empty/engineering_electrical
+
 /datum/design/item/storagefab/lockers/secure/welding
 	build_path = /obj/structure/closet/secure_closet/empty/engineering_welding
 
 /datum/design/item/storagefab/lockers/secure/engineer
 	build_path = /obj/structure/closet/secure_closet/empty/engineering_personal
-	
-	
+
+
 /datum/design/item/storagefab/lockers/secure/atmos
 	build_path = /obj/structure/closet/secure_closet/empty/atmos_personal
 
@@ -206,7 +206,7 @@
 
 
 
-	
+
 
 
 

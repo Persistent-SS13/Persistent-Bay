@@ -113,34 +113,24 @@
 	email.password = chosen_password
 	H.mind.initial_email_login = list("login" = email.login, "password" = email.password)
 	//testing("created email for [H], [email.login], [email.password]")
-	var/faction_uid = GLOB.using_map.default_faction_uid
-	var/datum/world_faction/F = get_faction(src.faction)
-	if(F)
-		faction_uid = F.uid
-		var/datum/money_account/M = create_account(H.real_name, F.get_new_character_money(H), null)
-		M.remote_access_pin = chosen_pin
-		H.mind.store_memory( {"
-<b>Your email account is :</b> [email.login]<br>
-<b>Your email password is :</b> [email.password]<br>
-<b>Your account number is:</b> #[M.account_number]<br>
-<b>Your account pin is:</b> [M.remote_access_pin]<br>
-"})
-		H.mind.initial_account = M
-
+	var/datum/money_account/M = create_account(H.real_name, 1000, null)
+	M.remote_access_pin = chosen_pin
+	H.mind.initial_account = M
 	//After the bank account and email accounts are made, create the record.
 	// Since the record contains both.
 	var/datum/computer_file/report/crew_record/record = CreateModularRecord(H)
 	//testing("created modular record for [H], [record]")
+	var/datum/world_faction/F = get_faction("nexus")
 	var/datum/computer_file/report/crew_record/record2 = new()
 	if(!record2.load_from_global(real_name))
 		message_admins("record for [real_name] failed to load in character creation..")
 	else if(F)
 		F.records.faction_records |= record
-		
+
 	//ID stuff is handled by the outfit code later on, when the actual final ID is spawned
 
-	if(src.faction)
-		H.spawn_loc = faction_uid
+	if(F)
+		H.spawn_loc = F.uid
 		//testing("Setting spawn loc for [H]. Got faction name: [H.spawn_loc], and faction uid [src.faction]")
 	else
 		H.spawn_loc = "null"
@@ -190,7 +180,7 @@
 	H.force_update_limbs()
 	H.update_eyes()
 	H.regenerate_icons()
-	
+
 	return H
 
 #undef SAVEFILE_VERSION_MAX

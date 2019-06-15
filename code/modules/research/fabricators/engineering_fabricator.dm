@@ -737,6 +737,23 @@
 	name = "White plastic flooring"
 	build_path = /obj/item/stack/tile/floor_white
 
+/datum/design/item/engifab/floortiles/plastic/old_tiles
+	name = "old tile"
+	build_path = /obj/item/stack/tile/new_tile
+
+/datum/design/item/engifab/floortiles/plastic/old_tiles/gray
+	name = "gray old tile"
+	build_path = /obj/item/stack/tile/new_tile/gray
+
+/datum/design/item/engifab/floortiles/plastic/old_monotiles
+	name = "old mono tile"
+	build_path = /obj/item/stack/tile/old_cargo
+
+/datum/design/item/engifab/floortiles/plastic/old_monotiles/gray
+	name = "old gray mono tile"
+	build_path = /obj/item/stack/tile/old_cargo/gray
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // Steel Flooring
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -749,3 +766,173 @@
 	name = "Plasteel flooring"
 	build_path = /obj/item/stack/tile/floor_dark
 	materials = list(MATERIAL_STEEL = 0.04 SHEETS)
+
+/datum/design/item/engifab/floortiles/kafel
+	name = "kafel tile"
+	build_path = /obj/item/stack/tile/kafel
+	materials = list(MATERIAL_STEEL = 0.04 SHEETS)
+
+/datum/design/item/engifab/floortiles/techmaint
+	name = "dark techfloor tile"
+	build_path = /obj/item/stack/tile/techmaint
+	materials = list(MATERIAL_STEEL = 0.04 SHEETS)
+
+/datum/design/item/engifab/floortiles/techgrid
+	name = "grid techfloor tile"
+	build_path = /obj/item/stack/tile/techgrid
+	materials = list(MATERIAL_STEEL = 0.04 SHEETS)
+
+/datum/design/item/engifab/floortiles/techgrey
+	name = "grey techfloor tile"
+	build_path = /obj/item/stack/tile/techgrey
+	materials = list(MATERIAL_STEEL = 0.04 SHEETS)
+
+/datum/design/item/engifab/floortiles/ridge
+	name = "grey ridge tile"
+	build_path = /obj/item/stack/tile/ridge
+	materials = list(MATERIAL_STEEL = 0.04 SHEETS)
+
+/datum/design/item/engifab/floortiles/grid
+	name = "grey grid tile"
+	build_path = /obj/item/stack/tile/grid
+	materials = list(MATERIAL_STEEL = 0.04 SHEETS)
+
+/datum/design/item/engifab/floortiles/grid
+	name = "grey grid tile"
+	build_path = /obj/item/stack/tile/grid
+	materials = list(MATERIAL_STEEL = 0.04 SHEETS)
+
+/datum/design/item/engifab/floortiles/mono
+	name = "steel mono tile"
+	build_path = /obj/item/stack/tile/mono
+	materials = list(MATERIAL_STEEL = 0.04 SHEETS)
+
+/datum/design/item/engifab/floortiles/mono/dark
+	name = "dark mono tile"
+	build_path = /obj/item/stack/tile/mono/dark
+
+/datum/design/item/engifab/floortiles/mono/white
+	name = "white mono tile"
+	build_path = /obj/item/stack/tile/mono/white
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// Wood Flooring
+////////////////////////////////////////////////////////////////////////////////////////////////
+/datum/design/item/engifab/floortiles/wood
+	materials = list(MATERIAL_WOOD = 0.04 SHEETS)
+
+/datum/design/item/engifab/floortiles/wood/wood
+	name = "wood floor tile"
+	build_path = /obj/item/stack/tile/wood
+
+/datum/design/item/engifab/floortiles/wood/bamboo
+	name = "bamboo floor tile"
+	build_path = /obj/item/stack/tile/bamboo
+	materials = list(MATERIAL_BAMBOO = 0.04 SHEETS)
+
+/datum/design/item/engifab/floortiles/wood/walnut
+	name = "walnut floor tile"
+	build_path = /obj/item/stack/tile/walnut
+	materials = list(MATERIAL_WALNUT = 0.04 SHEETS)
+
+/datum/design/item/engifab/floortiles/wood/ebony
+	name = "ebony floor tile"
+	build_path = /obj/item/stack/tile/ebony
+	materials = list(MATERIAL_EBONY = 0.04 SHEETS)
+
+/datum/design/item/engifab/floortiles/wood/maple
+	name = "maple floor tile"
+	build_path = /obj/item/stack/tile/maple
+	materials = list(MATERIAL_MAPLE = 0.04 SHEETS)
+
+/datum/design/item/engifab/floortiles/wood/mahogany
+	name = "mahogany floor tile"
+	build_path = /obj/item/stack/tile/mahogany
+	materials = list(MATERIAL_MAHOGANY = 0.04 SHEETS)
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// Stone Flooring
+////////////////////////////////////////////////////////////////////////////////////////////////
+/datum/design/item/engifab/floortiles/stone
+	category = "stone"
+	materials = list(MATERIAL_SANDSTONE = 0.05 SHEETS)
+
+/datum/design/item/engifab/floortiles/stone/stone
+	name = "stone slabs"
+	build_path = /obj/item/stack/tile/stone
+
+/datum/design/item/engifab/floortiles/stone/sandstonevault
+	name = "sandstone vault tiles"
+	build_path = /obj/item/stack/tile/sandstonevault
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// Misc Flooring
+////////////////////////////////////////////////////////////////////////////////////////////////
+/datum/design/item/engifab/floortiles/misc
+	category = "misc"
+
+/datum/design/item/engifab/floortiles/misc/concrete
+	name = "concrete"
+	build_path = /obj/item/stack/tile/concrete
+	materials = list(MATERIAL_SAND = 0.025 SHEETS, MATERIAL_SANDSTONE = 0.025 SHEETS)
+
+/datum/design/item/engifab/floortiles/misc/rockvault
+	name = "vault tiles"
+	build_path = /obj/item/stack/tile/rockvault
+	materials = list(MATERIAL_PLASTEEL = 0.05 SHEETS)
+
+/datum/design/item/engifab/floortiles/misc/grass
+	name = "grass tile"
+	build_path = /obj/item/stack/tile/grass
+	materials = list(MATERIAL_SAND = 0.04 SHEETS)
+
+/datum/design/item/engifab/floortiles/misc/grass
+	name = "grass tile"
+	build_path = /obj/item/stack/tile/grass
+	materials = list(MATERIAL_SAND = 0.04 SHEETS)
+
+/datum/design/item/engifab/floortiles/misc/shuttle
+	materials = list(MATERIAL_TITANIUM = 0.04 SHEETS)
+
+/datum/design/item/engifab/floortiles/misc/shuttle/blue
+	name = "blue shuttle floor"
+	build_path = /obj/item/stack/tile/shuttle/blue
+
+/datum/design/item/engifab/floortiles/misc/shuttle/yellow
+	name = "yellow shuttle floor"
+	build_path = /obj/item/stack/tile/shuttle/yellow
+
+/datum/design/item/engifab/floortiles/misc/shuttle/white
+	name = "white shuttle floor"
+	build_path = /obj/item/stack/tile/shuttle/white
+
+/datum/design/item/engifab/floortiles/misc/shuttle/red
+	name = "red shuttle floor"
+	build_path = /obj/item/stack/tile/shuttle/red
+
+/datum/design/item/engifab/floortiles/misc/shuttle/purple
+	name = "purple shuttle floor"
+	build_path = /obj/item/stack/tile/shuttle/purple
+
+/datum/design/item/engifab/floortiles/misc/shuttle/darkred
+	name = "darkred shuttle floor"
+	build_path = /obj/item/stack/tile/shuttle/darkred
+
+/datum/design/item/engifab/floortiles/misc/shuttle/black
+	name = "black shuttle floor"
+	build_path = /obj/item/stack/tile/shuttle/black
+
+/datum/design/item/engifab/floortiles/misc/shuttle/plates
+	name = "plated shuttle floor"
+	build_path = /obj/item/stack/tile/shuttle/plates
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// Machines
+////////////////////////////////////////////////////////////////////////////////////////////////
+/datum/design/item/engifab/machines
+	category = "Machines"
+	time = 10
+/datum/design/item/engifab/machines/gas_sensor
+	name = "gas sensor"
+	build_path = /obj/machinery/air_sensor
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 1)

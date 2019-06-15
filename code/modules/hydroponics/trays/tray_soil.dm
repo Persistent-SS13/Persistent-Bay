@@ -59,7 +59,6 @@
 
 /obj/machinery/portable_atmospherics/hydroponics/soil/invisible/LateInitialize()
 	. = ..()
-	age = start_mature ? seed.get_trait(TRAIT_MATURATION) : 1
 	max_health = seed.get_trait(TRAIT_ENDURANCE)
 	health = max_health
 	check_health()

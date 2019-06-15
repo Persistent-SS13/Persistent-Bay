@@ -5,7 +5,7 @@
 	desc 			= "A machine that constantly broadcast information on the ambient gases. Works via radio signals."
 	icon 			= 'icons/obj/machines/gassensor.dmi'
 	icon_state 		= "gsensor1"
-	anchored 		= TRUE
+	anchored 		= FALSE
 	density 		= FALSE
 
 	//Radio
@@ -30,6 +30,9 @@
 
 	//Buffer list to transmit data on each process call
 	var/tmp/list/transmitted_data = list() 
+
+/obj/machinery/air_sensor/mapped
+	anchored = TRUE
 
 /obj/machinery/air_sensor/New()
 	. = ..()

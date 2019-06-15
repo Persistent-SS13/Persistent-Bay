@@ -1,23 +1,26 @@
 /obj/machinery/pipelayer
-
 	name = "automatic pipe layer"
 	icon = 'icons/obj/machines/pipedispenser.dmi'
 	icon_state = "pipe_d"
 	density = 1
+	circuit_type = /obj/item/weapon/circuitboard/pipe_layer
 	var/turf/old_turf
 	var/old_dir
 	var/on = 0
 	var/a_dis = 0
 	var/P_type = 0
 	var/P_type_t = ""
-	var/max_metal = 50
-	var/metal = 10
-	var/obj/item/weapon/tool/wrench/W
+	var/max_metal = 100
+	var/metal = 0
 	var/list/Pipes = list("regular pipes"=0,"scrubbers pipes"=31,"supply pipes"=29,"heat exchange pipes"=2, "fuel pipes"=45)
 
 /obj/machinery/pipelayer/New()
-	W = new(src)
 	..()
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(a_dis)
+	ADD_SAVED_VAR(P_type)
+	ADD_SAVED_VAR(P_type_t)
+	ADD_SAVED_VAR(metal)
 
 /obj/machinery/pipelayer/Move(new_turf,M_Dir)
 	..()
@@ -64,8 +67,8 @@
 
 	if(isScrewdriver(W))
 		if(metal)
-			var/m = round(input(usr,"Please specify the amount of metal to remove","Remove metal",min(round(metal),50)) as num, 1)
-			m = min(m, 50)
+			var/m = round(input(usr,"Please specify the amount of metal to remove","Remove metal",min(round(metal),max_metal)) as num, 1)
+			m = min(m, max_metal)
 			m = min(m, round(metal))
 			m = round(m)
 			if(m)
@@ -114,7 +117,7 @@
 	return new_turf.is_plating()
 
 /obj/machinery/pipelayer/proc/layPipe(var/turf/w_turf,var/M_Dir,var/old_dir)
-	if(!on || !(M_Dir in list(1, 2, 4, 8)) || M_Dir==old_dir)
+	if(!on || !(M_Dir in GLOB.cardinal) || M_Dir==old_dir)
 		return reset()
 	if(!use_metal(0.25))
 		return reset()
@@ -130,6 +133,6 @@
 		p_dir=M_Dir
 
 	var/obj/item/pipe/P = new (w_turf, pipe_type=p_type, dir=p_dir)
-	P.attackby(W , src)
+	P.wrench_down(src)
 
 	return 1

@@ -52,7 +52,7 @@
 
 	//Do default faction outfit
 	if(finalize || (equip_preview_mob & EQUIP_PREVIEW_JOB))
-		var/datum/world_faction/fac = get_faction(src.faction)
+
 		var/decl/hierarchy/outfit/clothes = new()
 		//Handle snowflake species uniforms
 		// if(species == SPECIES_PHOROSIAN)

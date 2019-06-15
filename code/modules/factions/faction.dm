@@ -938,7 +938,7 @@ var/PriorityQueue/all_feeds
 	special_category.parent = src
 	special_category.command_faction = 1
 	limits = new /datum/machine_limits/democracy()
-	
+
 	name = "Nexus City Government"
 	abbreviation = "NEXUS"
 	short_tag = "NEX"
@@ -983,7 +983,6 @@ var/PriorityQueue/all_feeds
 	network.password = ""
 	network.invisible = 0
 
-	GLOB.all_world_factions |= nexus
 /datum/world_faction/democratic
 
 	var/datum/democracy/governor/gov

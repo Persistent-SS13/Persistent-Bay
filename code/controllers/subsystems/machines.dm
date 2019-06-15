@@ -59,7 +59,7 @@ SUBSYSTEM_DEF(machines)
 	makepowernets()
 	setup_atmos_machinery(machinery)
 	fire()
-	. = ..()
+	return ..()
 
 #define INTERNAL_PROCESS_STEP(this_step, check_resumed, proc_to_call, cost_var, next_step)\
 if(current_step == this_step || (check_resumed && !resumed)) {\

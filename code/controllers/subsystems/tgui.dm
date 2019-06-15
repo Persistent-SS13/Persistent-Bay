@@ -11,8 +11,8 @@ SUBSYSTEM_DEF(tgui)
 	var/tmp/list/current_run = list()
 
 /datum/controller/subsystem/tgui/Initialize()
-	. = ..()
 	basehtml = file2text('tgui/tgui.html')
+	return ..()
 
 /datum/controller/subsystem/tgui/fire(resumed = 0)
 	if (!resumed)

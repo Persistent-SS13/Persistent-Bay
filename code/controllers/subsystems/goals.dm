@@ -33,7 +33,7 @@ SUBSYSTEM_DEF(goals)
 	for(var/thing in departments)
 		var/datum/department/dept = departments[thing]
 		dept.Initialize()
-	. = ..()
+	return ..()
 
 /datum/controller/subsystem/goals/proc/update_department_goal(var/department_flag, var/goal_type, var/progress)
 	var/datum/department/dept = departments["[department_flag]"]

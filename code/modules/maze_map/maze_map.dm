@@ -109,6 +109,8 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 /datum/zlevel_data/one
 	z = 1
 	difficulty = 0
+	N_connect = 4
+	S_connect = 9
 
 /datum/zlevel_data/two
 	z = 2
@@ -117,14 +119,12 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 /datum/zlevel_data/three
 	z = 3
 	difficulty = 0
-	N_connect = 4
-	S_connect = 9
-
+	
 /datum/zlevel_data/four
 	z = 4
 	coord = "(0,1)"
 	name = "Due North"
-	S_connect = 3
+	S_connect = 1
 	N_connect = 5
 
 /datum/zlevel_data/five
@@ -158,7 +158,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	z = 9
 	coord = "(0,-1)"
 	name = "Due South"
-	N_connect = 3
+	N_connect = 1
 	E_connect = 10
 
 /datum/zlevel_data/ten

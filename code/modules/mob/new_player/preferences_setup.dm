@@ -51,9 +51,9 @@
 	mannequin.real_name = real_name
 
 	//Do default faction outfit
-	if( faction && (finalize || (!finalize && (equip_preview_mob & EQUIP_PREVIEW_JOB))))
-		var/datum/world_faction/fac = get_faction(src.faction)
-		var/decl/hierarchy/outfit/clothes
+	if(finalize || (equip_preview_mob & EQUIP_PREVIEW_JOB))
+
+		var/decl/hierarchy/outfit/clothes = new()
 		//Handle snowflake species uniforms
 		// if(species == SPECIES_PHOROSIAN)
 		// 	clothes = outfit_by_type(fac.starter_phorosian_outfit)
@@ -63,20 +63,15 @@
 		// 	ASSERT(istype(clothes))
 		// else
 		//testing("dress_preview_mob: got faction [fac?.name]")
-		if(fac && fac.starter_outfit)
-			clothes = outfit_by_type(fac.starter_outfit)
-			//testing("dress_preview_mob: got outfit [clothes]")
-			ASSERT(istype(clothes))
 		//If we have selected a specific uniform, replace the default one
 		if(selected_under)
 			clothes.uniform = selected_under.type //The outfit class uses types not instances
-				
+		else
+			clothes.uniform = /obj/item/clothing/under/color/grey
 		//The outfit class does most of the equipping from preferences, along with the ID setup, backpack setup, etc.. Its really handy
 		clothes.equip(mannequin, equip_adjustments = adjustflags)
 		update_icon = TRUE
 
-	//Extra starter gear, left in for possible use in the future
-	if(finalize || (!finalize && (equip_preview_mob & EQUIP_PREVIEW_LOADOUT)))
 		// Equip custom gear loadout, replacing any job items
 		var/list/loadout_taken_slots = list()
 		for(var/thing in Gear())

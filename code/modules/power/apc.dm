@@ -147,6 +147,8 @@
 	var/alarm_threat_warning_timebuffer
 	var/alarm_threat_warning_timeout = 5 SECONDS
 
+	var/alarm_threat_globalbuffer
+	var/alarm_threat_globaltimeout = 30 MINUTES
 /obj/machinery/power/apc/New()
 	..()
 	ADD_SAVED_VAR(connected_faction)
@@ -1467,6 +1469,8 @@ obj/machinery/power/apc/proc/autoset(var/cur_state, var/on)
 			alarm_threat_warning_timebuffer = world.time
 			alarm_alert = FALSE
 		if (ALARM_THREAT)
+			if(!connected_faction) return
+			
 			alarm_threat_warning = FALSE
 			alarm_threat_warning_timebuffer = null
 			alarm_alert = TRUE

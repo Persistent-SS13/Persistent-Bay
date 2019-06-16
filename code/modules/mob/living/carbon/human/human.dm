@@ -1825,3 +1825,4 @@
 	if(spawn_type == CHARACTER_SPAWN_TYPE_FRONTIER_BEACON)
 		//We want to clear the now useless backpack setup object
 		QDEL_NULL(backpack_setup)
+	..()

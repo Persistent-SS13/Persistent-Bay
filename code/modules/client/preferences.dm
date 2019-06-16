@@ -136,9 +136,6 @@ datum/preferences
 		if(!real_name)
 			to_chat(usr, "You must select a valid character name")
 			return
-		if(!cultural_info[TAG_HOMEWORLD])
-			to_chat(usr, "You must choose a valid early life/homeworld")
-			return
 		if(!rules_agree)
 			to_chat(usr, "You must read the rules and verify that you have read them.")
 			return

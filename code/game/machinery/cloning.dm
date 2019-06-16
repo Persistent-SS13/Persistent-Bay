@@ -5,16 +5,6 @@
 
 #define CLONE_BIOMASS 150
 #define BIOMASS_MEAT_AMOUNT 50
-/obj/item/weapon/circuitboard/clonepod
-	name = "Circuit Board (Cloning Pod)"
-	build_path = /obj/machinery/clonepod
-	board_type = "machine"
-	origin_tech = list(TECH_DATA = 3, TECH_BIO = 3)
-	req_components = list(
-							/obj/item/stack/cable_coil = 2,
-							/obj/item/weapon/stock_parts/scanning_module = 2,
-							/obj/item/weapon/stock_parts/manipulator = 2,
-							/obj/item/weapon/stock_parts/console_screen = 1)
 
 /obj/machinery/clonepod
 	anchored = 1

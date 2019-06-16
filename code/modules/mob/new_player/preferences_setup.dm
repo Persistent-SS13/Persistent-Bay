@@ -52,23 +52,20 @@
 
 	//Do default faction outfit
 	if(finalize || (equip_preview_mob & EQUIP_PREVIEW_JOB))
+		var/decl/hierarchy/outfit/clothes
 
-		var/decl/hierarchy/outfit/clothes = new()
-		//Handle snowflake species uniforms
-		// if(species == SPECIES_PHOROSIAN)
-		// 	clothes = outfit_by_type(fac.starter_phorosian_outfit)
-		// 	ASSERT(istype(clothes))
-		// else if(species == SPECIES_VOX)
-		// 	clothes = outfit_by_type(fac.starter_vox_outfit)
-		// 	ASSERT(istype(clothes))
-		// else
-		//testing("dress_preview_mob: got faction [fac?.name]")
+		var/datum/world_faction/F
+		if(src.faction)
+			F = get_faction(src.faction)
+		else
+			F = get_faction(GLOB.using_map.default_faction_uid) //If no faction forced, use the map's default
+		clothes = outfit_by_type(F.starter_outfit)
+		//testing("dress_preview_mob: got outfit [clothes]")
+		ASSERT(istype(clothes))
+
 		//If we have selected a specific uniform, replace the default one
 		if(selected_under)
 			clothes.uniform = selected_under.type //The outfit class uses types not instances
-		else
-			clothes.uniform = /obj/item/clothing/under/color/grey
-		clothes.shoes = /obj/item/clothing/shoes/black
 		//The outfit class does most of the equipping from preferences, along with the ID setup, backpack setup, etc.. Its really handy
 		clothes.equip(mannequin, equip_adjustments = adjustflags)
 		update_icon = TRUE

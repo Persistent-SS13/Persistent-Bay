@@ -71,3 +71,12 @@
 							/obj/item/stack/cable_coil = 30,
 							/obj/item/pipe = 2,
 							/obj/item/stack/material/plasteel = 10)
+
+/obj/item/weapon/circuitboard/cracker
+	name = T_BOARD("molecular cracking unit")
+	build_path = /obj/machinery/portable_atmospherics/cracker
+	board_type = "machine"
+	origin_tech = list(TECH_POWER = 4, TECH_ENGINEERING = 4)
+	req_components = list(
+							/obj/item/weapon/stock_parts/capacitor/ = 3, 
+							/obj/item/weapon/stock_parts/matter_bin/ = 3)

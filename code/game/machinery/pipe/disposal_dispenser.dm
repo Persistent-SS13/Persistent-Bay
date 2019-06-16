@@ -23,6 +23,7 @@ var/list/DISPOSAL_PIPES_DISPENSER_BUILDABLES = list(
 	icon 			= 'icons/obj/machines/pipedispenser.dmi'
 	icon_state 		= "old_pipe_d"
 	density 		= TRUE
+	circuit_type 	= /obj/item/weapon/circuitboard/disposal_pipe_dispenser
 
 //Allow you to drag-drop disposal pipes into it
 /obj/machinery/pipedispenser/disposal/MouseDrop_T(var/obj/structure/disposalconstruct/pipe as obj, mob/user as mob)

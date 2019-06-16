@@ -4,6 +4,7 @@
 	icon_state 		= "pipe_d"
 	density 		= TRUE
 	anchored 		= TRUE
+	circuit_type 	= /obj/item/weapon/circuitboard/pipe_dispenser
 	var/unwrenched 	= 0
 	var/wait 		= 0
 
@@ -111,6 +112,12 @@
 		add_fingerprint(usr)
 		qdel(W)
 		return
+	else if(default_deconstruction_screwdriver(user, W))
+		return 1
+	else if(default_deconstruction_crowbar(user, W))
+		return 1
+	else if(default_part_replacement(user, W))
+		return 1
 	else if(isWrench(W))
 		add_fingerprint(usr)
 		if (unwrenched==0)

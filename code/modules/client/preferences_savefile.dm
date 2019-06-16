@@ -112,15 +112,21 @@
 	email.login = "[replacetext(H.real_name, " ", "_")]@[pick(GLOB.using_map.usable_email_tlds)]"
 	email.password = chosen_password
 	H.mind.initial_email_login = list("login" = email.login, "password" = email.password)
+
+	var/datum/world_faction/F = get_faction(GLOB.using_map.default_faction_uid)
+	src.faction = GLOB.using_map.default_faction_uid
+	if(!F)
+		log_warning("setup_new_accounts(): Couldn't find faction [GLOB.using_map.default_faction_uid]")
+
 	//testing("created email for [H], [email.login], [email.password]")
-	var/datum/money_account/M = create_account(H.real_name, 1000, null)
+	var/datum/money_account/M = create_account(H.real_name, F.get_new_character_money(H), null)
 	M.remote_access_pin = chosen_pin
 	H.mind.initial_account = M
 	//After the bank account and email accounts are made, create the record.
 	// Since the record contains both.
 	var/datum/computer_file/report/crew_record/record = CreateModularRecord(H)
 	//testing("created modular record for [H], [record]")
-	var/datum/world_faction/F = get_faction("nexus")
+	
 	var/datum/computer_file/report/crew_record/record2 = new()
 	if(!record2.load_from_global(real_name))
 		message_admins("record for [real_name] failed to load in character creation..")

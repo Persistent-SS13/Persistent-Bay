@@ -51,13 +51,13 @@
 	pixel_y = 0
 	switch(dir)
 		if(NORTH)
-			pixel_y = -30
+			pixel_y = 30
 		if(SOUTH)
-			pixel_y = 22
+			pixel_y = -22
 		if(EAST)
-			pixel_x = -22
-		if(WEST)
 			pixel_x = 22
+		if(WEST)
+			pixel_x = -22
 
 	if(!overlay)
 		overlay = image(icon, "light1-overlay")

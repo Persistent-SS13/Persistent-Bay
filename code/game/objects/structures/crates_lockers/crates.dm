@@ -93,7 +93,7 @@
 
 /obj/structure/closet/crate/secure/Initialize()
 	. = ..()
-	update_icon()
+	queue_icon_update()
 
 /obj/structure/closet/crate/plastic
 	name = "plastic crate"

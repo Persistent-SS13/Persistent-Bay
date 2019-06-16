@@ -29,7 +29,7 @@ proc/GetNbSavedZLevels()
 	boss_short    = "Nexus"
 	company_name  = "Nexus"
 	company_short = "NX"
-	default_faction_uid = NEXUS_FACTION_RESIDENT
+	default_faction_uid = NEXUS_FACTION_CITIZEN
 
 	use_overmap = TRUE		//If overmap should be used (including overmap space travel override)
 	overmap_size = 20		//Dimensions of overmap zlevel if overmap is used.
@@ -118,9 +118,9 @@ proc/GetNbSavedZLevels()
 	to_chat(newchar, "No time to think about that, your first priority is to get your bearings and find a job that pays. Whatever you decide to do in this new frontier, you're going to need a lot more cash than what you have now.")
 
 //Example for adding map specific starter uniforms
-/datum/map/nexus/populate_uniforms(var/client/C)
-	. = ..()
-	switch(C.prefs.cultural_info[TAG_CULTURE])
-		if(CULTURE_HUMAN_SPACER)
-			. |= new /obj/item/clothing/under/blazer()
+// /datum/map/nexus/populate_uniforms(var/client/C)
+// 	. = ..()
+// 	switch(C.prefs.cultural_info[TAG_CULTURE])
+// 		if(CULTURE_HUMAN_SPACER)
+// 			. |= new /obj/item/clothing/under/blazer()
 	

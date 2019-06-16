@@ -16,9 +16,10 @@ SUBSYSTEM_DEF(skybox)
 	var/list/skyboxes = list() //Keep track of all existing skyboxes.
 
 /datum/controller/subsystem/skybox/Initialize(timeofday)
-	..(timeofday)
 	BGcolor = RANDOM_RGB
 	BGrot = RANDOM_RIGHT_ANGLE
+
+	return ..()
 
 /datum/controller/subsystem/skybox/Recover()
 	BGrot = SSskybox.BGrot

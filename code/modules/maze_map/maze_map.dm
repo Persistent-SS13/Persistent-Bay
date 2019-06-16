@@ -131,7 +131,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	z = 5
 	coord = "(0,2)"
 	name = "Julian's Corner"
-	N_connect = 4
+	S_connect = 4
 	W_connect = 6
 
 /datum/zlevel_data/six

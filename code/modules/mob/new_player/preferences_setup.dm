@@ -55,7 +55,7 @@
 		var/decl/hierarchy/outfit/clothes
 
 		var/datum/world_faction/F
-		if(src.faction) 
+		if(src.faction)
 			F = get_faction(src.faction)
 		else
 			F = get_faction(GLOB.using_map.default_faction_uid) //If no faction forced, use the map's default
@@ -85,7 +85,11 @@
 				if(G.slot && G.slot != slot_tie && !(G.slot in loadout_taken_slots) && G.spawn_on_mob(mannequin, gear_list[gear_slot][G.display_name]))
 					loadout_taken_slots.Add(G.slot)
 					update_icon = TRUE
-
+	if(finalize)
+		var/obj/item/weapon/card/id/W = new (mannequin)
+		W.registered_name = mannequin.real_name
+		W.selected_faction = "nexus"
+		mannequin.equip_to_slot_or_store_or_drop(mannequin, slot_wear_id)
 	if(update_icon)
 		mannequin.update_icons()
 

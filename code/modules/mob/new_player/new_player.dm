@@ -539,7 +539,6 @@
 		GLOB.using_map.on_new_spawn(src) //Moved to overridable map specific code
 	else if(spawn_type == CHARACTER_SPAWN_TYPE_LACE_STORAGE)
 		to_chat(src, "You regain consciousness, still prisoner of your neural lace.")
-	else if(spawn_type == CHARACTER_SPAWN_TYPE_IMPORT)
 		
 /mob/new_player/proc/deleteCharacter()
 	var/charname = SScharacter_setup.peek_character_name(chosen_slot, ckey)

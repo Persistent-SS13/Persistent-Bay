@@ -35,11 +35,14 @@
 	output += "<div align='center'><hr><br>"
 	if(GAME_STATE < RUNLEVEL_GAME)
 		output += "<span class='average'><b>The Game Is Loading!</b></span><br><br>"
+		
 	else
 		output += "<a href='byond://?src=\ref[src];createCharacter=1'>Create A New Character</a><br><br>"
 		output += "<a href='byond://?src=\ref[src];deleteCharacter=1'>Delete A Character</a><br><br>"
-		output += "<a href='byond://?src=\ref[src];joinGame=1'>Join Game!</a><br><br>"
-
+		output += "<a href='byond://?src=\ref[src];joinGame=1'>Join Game!</a><br><br>"\
+		output += "<a href='byond://?src=\ref[src];importCharacter=1'>Import Prior Character</a><br><br>"
+	output += "<a href='https://discord.gg/53YgfNU'target='_blank'>Join Discord</a><br><br>"
+	output += "<a href='byond://?src=\ref[src];joinGame=1'>Link Discord Account</a><br><br>"
 	if(check_rights(R_DEBUG, 0, client))
 		output += "<a href='byond://?src=\ref[src];observeGame=1'>Observe</a><br><br>"
 	output += "<a href='byond://?src=\ref[src];refreshPanel=1'>Refresh</a><br><br>"
@@ -143,7 +146,29 @@
 			if("delete")
 				deleteCharacter()
 		return 0
+	
+	if(href_list["pickSlot"])
+		chosen_slot = text2num(copytext(href_list["pickSlot"], 1, 2))
+		client.prefs.chosen_slot = chosen_slot
+		load_panel?.close()
+		switch(copytext(href_list["pickSlot"], 2))
+			if("create")
+				client.prefs.randomize_appearance_and_body_for()
+				client.prefs.real_name = null
+				client.prefs.preview_icon = null
+				// client.prefs.home_system = null
+				client.prefs.faction = null
+				client.prefs.selected_under = null
+				client.prefs.sanitize_preferences()
+				client.prefs.ShowChoices(src)
+			if("load")
+				loadCharacter()
+			if("delete")
+				deleteCharacter()
+		return 0
 
+	
+	
 	if(href_list["privacy_poll"])
 		establish_db_connection()
 		if(!dbcon.IsConnected())
@@ -258,6 +283,45 @@
 	load_panel = new(src, "Create Character", "Create Character", 300, 500, src)
 	load_panel.set_content(data)
 	load_panel.open()
+
+/mob/new_player/proc/ImportCharacter()
+	var/found_slot = 0
+	if(!chosen_slot)
+		return 0
+	for(var/ind = 1, ind <= client.prefs.Slots(), ind++)
+		var/characterName = SScharacter_setup.peek_import_name(ind, ckey)
+		if(!characterName)
+			found_slot = ind
+			break
+	if(!found_slot)
+		to_chat(src, "Your character slots are full. Import failed.")
+	var/mob/character = SScharacter_setup.import_character(chosen_slot, ckey)
+	if(!character)
+		return
+	var/list/L = recursive_content_check(character)
+	var/list/spared = list()
+	var/list/hawaii = list()
+	for(var/ind in 1 to L.len)
+		var/atom/A = L[ind] 
+		if(istype(A, /obj/item/clothing/accessory/toggleable/hawaii))
+/mob/new_player/proc/selectImportPanel()
+	var/data = "<div align='center'><br>"
+	data += "<b>Select the character you want to import.</b><br>"
+	
+		
+	for(var/ind = 1, ind <= client.prefs.Slots(), ind++)
+		var/characterName = SScharacter_setup.peek_import_name(ind, ckey)
+		if(characterName)
+			var/icon/preview = SScharacter_setup.peek_import_icon(ind, ckey)
+			if(preview)
+				send_rsc(src, preview, "[ind]preview.png")
+			data += "<img src=[ind]preview.png width=[preview.Width()] height=[preview.Height()]><br>"
+			data += "<b><a href='?src=\ref[src];importSlot=[ind]'>[characterName]</a></b><hr>"
+	data += "</div>"
+	load_panel = new(src, "Select Character", "Select Character", 300, 500, src)
+	load_panel.set_content(data)
+	load_panel.open()
+
 
 /mob/new_player/proc/selectCharacterPanel(var/action = "")
 	for(var/mob/M in SSmobs.mob_list)

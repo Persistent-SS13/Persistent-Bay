@@ -68,6 +68,7 @@
 			clothes.uniform = selected_under.type //The outfit class uses types not instances
 		else
 			clothes.uniform = /obj/item/clothing/under/color/grey
+		clothes.shoes = /obj/item/clothing/shoes/black
 		//The outfit class does most of the equipping from preferences, along with the ID setup, backpack setup, etc.. Its really handy
 		clothes.equip(mannequin, equip_adjustments = adjustflags)
 		update_icon = TRUE
@@ -87,7 +88,11 @@
 				if(G.slot && G.slot != slot_tie && !(G.slot in loadout_taken_slots) && G.spawn_on_mob(mannequin, gear_list[gear_slot][G.display_name]))
 					loadout_taken_slots.Add(G.slot)
 					update_icon = TRUE
-
+	if(finalize)
+		var/obj/item/weapon/card/id/W = new (mannequin)
+		W.registered_name = mannequin.real_name
+		W.selected_faction = "nexus"
+		mannequin.equip_to_slot_or_store_or_drop(mannequin, slot_wear_id)
 	if(update_icon)
 		mannequin.update_icons()
 

@@ -18,7 +18,7 @@
 	name = "Culture"
 	sort_order = 1
 	var/list/hidden
-	var/list/tokens = ALL_CULTURAL_TAGS
+	var/list/tokens = REAL_CULTURAL_TAGS
 
 /datum/category_item/player_setup_item/background/culture/New()
 	hidden = list()

@@ -34,7 +34,7 @@
 				var/list/formatted_trials[0]
 				for(var/datum/judge_trial/trial in connected_faction.scheduled_trials)
 					formatted_trials[++formatted_trials.len] = list("name" = trial.name, "ref" = "\ref[trial]")
-				data["trials"] = formatted_trials	
+				data["trials"] = formatted_trials
 	if(menu == 2)
 		if(selected_verdict)
 			data["verdict_title"] = selected_verdict.name
@@ -53,9 +53,9 @@
 		else
 			if(connected_faction.verdicts.len)
 				var/list/formatted_verdicts[0]
-				for(var/datum/verdicts/verdict in connected_faction.verdicts)
+				for(var/datum/verdict/verdict in connected_faction.verdicts)
 					formatted_verdicts[++formatted_verdicts.len] = list("name" = verdict.name, "ref" = "\ref[verdict]")
-				data["verdicts"] = formatted_vericts
+				data["verdicts"] = formatted_verdicts
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)

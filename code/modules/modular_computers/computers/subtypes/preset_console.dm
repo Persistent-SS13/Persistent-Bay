@@ -26,7 +26,7 @@
 // Telecomm
 /obj/item/modular_computer/console/preset/telecomm/install_default_programs()
 	..()
-	hard_drive.store_file(new /datum/computer_file/program/ntnetmonitor())
+//	hard_drive.store_file(new /datum/computer_file/program/ntnetmonitor())
 	set_autorun("ntmonitor")
 
 // Medical
@@ -45,11 +45,11 @@
 
 /obj/item/modular_computer/console/preset/research/install_default_programs()
 	..()
-	hard_drive.store_file(new/datum/computer_file/program/ntnetmonitor())
+//	hard_drive.store_file(new/datum/computer_file/program/ntnetmonitor())
 	hard_drive.store_file(new/datum/computer_file/program/nttransfer())
 	hard_drive.store_file(new/datum/computer_file/program/chatclient())
 	hard_drive.store_file(new/datum/computer_file/program/camera_monitor())
-	hard_drive.store_file(new/datum/computer_file/program/aidiag())
+//	hard_drive.store_file(new/datum/computer_file/program/aidiag())
 	hard_drive.store_file(new/datum/computer_file/program/email_client())
 	hard_drive.store_file(new/datum/computer_file/program/wordprocessor())
 
@@ -60,13 +60,13 @@
 
 /obj/item/modular_computer/console/preset/sysadmin/install_default_programs()
 	..()
-	hard_drive.store_file(new/datum/computer_file/program/ntnetmonitor())
+//	hard_drive.store_file(new/datum/computer_file/program/ntnetmonitor())
 	hard_drive.store_file(new/datum/computer_file/program/nttransfer())
 	hard_drive.store_file(new/datum/computer_file/program/chatclient())
 	hard_drive.store_file(new/datum/computer_file/program/camera_monitor())
-	hard_drive.store_file(new/datum/computer_file/program/aidiag())
+//	hard_drive.store_file(new/datum/computer_file/program/aidiag())
 	hard_drive.store_file(new/datum/computer_file/program/email_client())
-	hard_drive.store_file(new/datum/computer_file/program/email_administration())
+//	hard_drive.store_file(new/datum/computer_file/program/email_administration())
 	hard_drive.store_file(new/datum/computer_file/program/records())
 	hard_drive.store_file(new/datum/computer_file/program/wordprocessor())
 
@@ -134,7 +134,7 @@
 	hard_drive.store_file(new/datum/computer_file/program/camera_monitor/ert())
 	hard_drive.store_file(new/datum/computer_file/program/alarm_monitor())
 	hard_drive.store_file(new/datum/computer_file/program/comm())
-	hard_drive.store_file(new/datum/computer_file/program/aidiag())
+//	hard_drive.store_file(new/datum/computer_file/program/aidiag())
 	hard_drive.store_file(new/datum/computer_file/program/records())
 	hard_drive.store_file(new/datum/computer_file/program/wordprocessor())
 
@@ -152,7 +152,7 @@
 	..()
 	hard_drive.store_file(new/datum/computer_file/program/camera_monitor/hacked())
 	hard_drive.store_file(new/datum/computer_file/program/alarm_monitor())
-	hard_drive.store_file(new/datum/computer_file/program/aidiag())
+//	hard_drive.store_file(new/datum/computer_file/program/aidiag())
 
 // Merchant
 /obj/item/modular_computer/console/preset/merchant/install_default_programs()

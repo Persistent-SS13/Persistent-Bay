@@ -253,6 +253,10 @@
 			rank.pay = ceo_wage
 			new_business.CEO.accesses |= rank
 			new_business.leader_name = ceo_name
+			if(!new_business.get_record(ceo_name))
+				var/datum/computer_file/report/crew_record/record = new()
+				if(record.load_from_global(ceo_name))
+					new_business.records.faction_records |= record
 			new_business.name = business_name
 			new_business.uid = business_uid
 			new_business.network.net_uid = business_uid

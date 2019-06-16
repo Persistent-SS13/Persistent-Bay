@@ -44,7 +44,7 @@
 			has_password = 1
 		data["has_password"] = has_password
 		data["card_installed"] = 1
-		data["networks"] = format_networks(usr)
+		data["networks"] = format_networks(user)
 		data["connected_to"] = program.computer.network_card.connected_to
 		var/regex/allregex = regex(".")
 		data["display_password"] = allregex.Replace(program.computer.network_card.password, "*")

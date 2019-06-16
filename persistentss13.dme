@@ -2727,6 +2727,7 @@
 #include "code\modules\reagents\Chemistry-Sublimator.dm"
 #include "code\modules\reagents\reagent_containers.dm"
 #include "code\modules\reagents\reagent_dispenser.dm"
+#include "code\modules\reagents\alcohol\enzyme_incubator.dm"
 #include "code\modules\reagents\Chemistry-Reagents\Chemistry-Reagents-Acids.dm"
 #include "code\modules\reagents\Chemistry-Reagents\Chemistry-Reagents-Core.dm"
 #include "code\modules\reagents\Chemistry-Reagents\Chemistry-Reagents-Dispenser.dm"

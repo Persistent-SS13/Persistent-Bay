@@ -348,3 +348,4 @@
 #define CHARACTER_SPAWN_TYPE_CRYONET         1 //Will spawn at a cryopod of the last network and faction stored in the character
 #define CHARACTER_SPAWN_TYPE_FRONTIER_BEACON 2 //Will spawn at a frontier beacon of the same faction as the character's default faction
 #define CHARACTER_SPAWN_TYPE_LACE_STORAGE    3 //Will spawn at the lace storage
+#define CHARACTER_SPAWN_TYPE_IMPORT    4 //frontier beacon

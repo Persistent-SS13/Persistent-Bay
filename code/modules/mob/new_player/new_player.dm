@@ -35,11 +35,11 @@
 	output += "<div align='center'><hr><br>"
 	if(GAME_STATE < RUNLEVEL_GAME)
 		output += "<span class='average'><b>The Game Is Loading!</b></span><br><br>"
-		
+
 	else
 		output += "<a href='byond://?src=\ref[src];createCharacter=1'>Create A New Character</a><br><br>"
 		output += "<a href='byond://?src=\ref[src];deleteCharacter=1'>Delete A Character</a><br><br>"
-		output += "<a href='byond://?src=\ref[src];joinGame=1'>Join Game!</a><br><br>"\
+		output += "<a href='byond://?src=\ref[src];joinGame=1'>Join Game!</a><br><br>"
 		output += "<a href='byond://?src=\ref[src];importCharacter=1'>Import Prior Character</a><br><br>"
 	output += "<a href='https://discord.gg/53YgfNU'target='_blank'>Join Discord</a><br><br>"
 	output += "<a href='byond://?src=\ref[src];joinGame=1'>Link Discord Account</a><br><br>"
@@ -127,26 +127,10 @@
 		panel.close()
 		new_player_panel()
 
-	if(href_list["pickSlot"])
-		chosen_slot = text2num(copytext(href_list["pickSlot"], 1, 2))
-		client.prefs.chosen_slot = chosen_slot
-		load_panel?.close()
-		switch(copytext(href_list["pickSlot"], 2))
-			if("create")
-				client.prefs.randomize_appearance_and_body_for()
-				client.prefs.real_name = null
-				client.prefs.preview_icon = null
-				// client.prefs.home_system = null
-				client.prefs.faction = null
-				client.prefs.selected_under = null
-				client.prefs.sanitize_preferences()
-				client.prefs.ShowChoices(src)
-			if("load")
-				loadCharacter()
-			if("delete")
-				deleteCharacter()
-		return 0
-	
+	if(href_list["importSlot"])
+		chosen_slot = text2num(href_list["importSlot"])
+		ImportCharacter()
+
 	if(href_list["pickSlot"])
 		chosen_slot = text2num(copytext(href_list["pickSlot"], 1, 2))
 		client.prefs.chosen_slot = chosen_slot
@@ -167,8 +151,28 @@
 				deleteCharacter()
 		return 0
 
-	
-	
+	if(href_list["pickSlot"])
+		chosen_slot = text2num(copytext(href_list["pickSlot"], 1, 2))
+		client.prefs.chosen_slot = chosen_slot
+		load_panel?.close()
+		switch(copytext(href_list["pickSlot"], 2))
+			if("create")
+				client.prefs.randomize_appearance_and_body_for()
+				client.prefs.real_name = null
+				client.prefs.preview_icon = null
+				// client.prefs.home_system = null
+				client.prefs.faction = null
+				client.prefs.selected_under = null
+				client.prefs.sanitize_preferences()
+				client.prefs.ShowChoices(src)
+			if("load")
+				loadCharacter()
+			if("delete")
+				deleteCharacter()
+		return 0
+
+
+
 	if(href_list["privacy_poll"])
 		establish_db_connection()
 		if(!dbcon.IsConnected())
@@ -295,20 +299,47 @@
 			break
 	if(!found_slot)
 		to_chat(src, "Your character slots are full. Import failed.")
-	var/mob/character = SScharacter_setup.import_character(chosen_slot, ckey)
+	var/mob/character = SScharacter_setup.load_import_character(chosen_slot, ckey)
 	if(!character)
 		return
 	var/list/L = recursive_content_check(character)
 	var/list/spared = list()
-	var/list/hawaii = list()
 	for(var/ind in 1 to L.len)
-		var/atom/A = L[ind] 
+		var/atom/A = L[ind]
 		if(istype(A, /obj/item/clothing/accessory/toggleable/hawaii))
+			var/obj/item/clothing/accessory/toggleable/hawaii = A
+			hawaii.has_suit = null
+			spared |= A
+		if(istype(A, /obj/item/weapon/paper))
+			spared |= A
+		if(istype(A, /obj/item/weapon/photo))
+			spared |= A
+	for(var/obj/item/W in character)
+		character.drop_from_inventory(W)
+	character.spawn_type = CHARACTER_SPAWN_TYPE_FRONTIER_BEACON //For first time spawn
+	if(!character.mind)
+		character.mind = new()
+	client.prefs.setup_new_accounts(character) //make accounts before! Outfit setup needs the record set
+	var/decl/hierarchy/outfit/clothes = new()
+	clothes.uniform = /obj/item/clothing/under/color/lightpurple
+	clothes.shoes = /obj/item/clothing/shoes/brown
+		//The outfit class does most of the equipping from preferences, along with the ID setup, backpack setup, etc.. Its really handy
+	clothes.equip(character)
+
+	var/obj/item/weapon/card/id/W = new (character)
+	W.registered_name = character.real_name
+	W.selected_faction = "nexus"
+	character.equip_to_slot_or_store_or_drop(character, slot_wear_id)
+	for(var/ind in 1 to spared.len)
+		var/atom/A = spared[ind]
+		character.equip_to_slot_or_store_or_drop(A, slot_l_hand)
+	SScharacter_setup.save_character(found_slot, client.ckey, character)
+
 /mob/new_player/proc/selectImportPanel()
 	var/data = "<div align='center'><br>"
 	data += "<b>Select the character you want to import.</b><br>"
-	
-		
+
+
 	for(var/ind = 1, ind <= client.prefs.Slots(), ind++)
 		var/characterName = SScharacter_setup.peek_import_name(ind, ckey)
 		if(characterName)
@@ -446,7 +477,7 @@
 		if(!spawnTurf)
 			log_and_message_admins("WARNING! No frontier beacons avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
 			spawnTurf = locate(102, 98, 1)
-	
+
 	else if(character.spawn_type == CHARACTER_SPAWN_TYPE_LACE_STORAGE)
 		spawnTurf = GetLaceStorage(character)
 		if(!spawnTurf)

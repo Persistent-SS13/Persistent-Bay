@@ -18,6 +18,7 @@ GLOBAL_DATUM_INIT(discord_api, /datum/discord_api, new)
 	var/database/db
 	var/queueTable = "discord_queue"
 	var/usersTable = "discord_users"
+	var/arg_sep = @"[[sep]]"
 
 /datum/discord_api/New()
 	src.connectToDb()
@@ -30,8 +31,16 @@ GLOBAL_DATUM_INIT(discord_api, /datum/discord_api, new)
 			src.connectToDb()
 
 //The main proc where the magic happens. Sends a message to the database to be read by the Bot
-/datum/discord_api/proc/send_message(msg)
-	var/database/query/q = new("INSERT INTO [queueTable] VALUES('[msg]') ")
+/datum/discord_api/proc/send_message(cmd, cmd_args, message)
+	var/cmd_args_str = ""
+	var/first = TRUE
+	for (var/a in cmd_args)
+		if (first)
+			first = FALSE
+		else
+			cmd_args_str += src.arg_sep
+		cmd_args_str += a
+	var/database/query/q = new("INSERT INTO [queueTable] VALUES(?, ?, ?) ", cmd, cmd_args_str,)
 	if(!q.Execute(db))
 		message_admins(src.db.ErrorMsg())
 		return
@@ -44,17 +53,20 @@ GLOBAL_DATUM_INIT(discord_api, /datum/discord_api, new)
 	if (g.Execute(GLOB.discord_api.db) && g.NextRow())
 		var/list/data = g.GetRowData()
 		var/discordID = data["userID"]
-		var/msg = "MAIL|[discordID]|[sender_name]|[receiver_name]|[message.title]|\n\n[message.stored_data]"
-		src.send_message(msg)
+		var/list/cmd_args = list(discordID, sender_name, receiver_name, message.title)
+		src.send_message("MAIL", cmd_args, message.stored_data)
 
-//A broadcast bot, for the broadcasting needs. (This was mainly for testing, probably should have no use at all.)
+/datum/discord_api/proc/broadcast(message)
+	src.send_message("BROADCAST", list(), message)
+
+//A broadcast bot, for the broadcasting needs. (This was mainly for testing, probably should have no use at all.) EDIT: It is actually fun portraying as the all seeing AI
 /datum/admins/proc/discord_broadcast()
 	set category = "Admin"
 	set name = "Broadcast to Discord"
 	set desc = "VERY EARLY DEV"
 	var/msg = input(usr, "Message:", "Discord") as text|null
 	if (msg)
-		GLOB.discord_api.send_message("BROADCAST|[msg]")
+		GLOB.discord_api.broadcast(msg)
 
 
 /client/verb/linkdiscord()

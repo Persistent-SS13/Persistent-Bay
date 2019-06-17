@@ -30,8 +30,11 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 
 	var/list/monster_types = list(/mob/living/simple_animal/hostile/carp) // types of monsters that will occur on this map.
 	var/monster_quantity = 5 // and how many will occur/respawn
-
+	var/list/obj_types = list(/obj/structure/closet/crate/cryo)
+	var/obj_quantity = 5
+	
 	var/list/current_monsters = list()
+	var/list/current_obj = list()
 	var/list/despawning = list()
 
 	var/coord = "(0,0)"
@@ -40,6 +43,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 /datum/zlevel_data/proc/update()
 	if (isWild() && state == ZLEVEL_ACTIVE)
 		replenish_monsters()
+		replenish_obj()
 
 /datum/zlevel_data/proc/spawn_monster(var/turf/location, var/monster_type, var/diff = difficulty)
 	if (!location || !monster_type || !diff)
@@ -105,7 +109,28 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 		if (! m in SSmobs.mob_list )
 			START_PROCESSING(SSmobs, m)
 	replenish_monsters()
+	replenish_obj()
 
+//////////////////////////////////////////////////////////////////////////////////////////
+//Object Spawns///////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+/datum/zlevel_data/proc/spawn_obj(var/turf/location, var/obj_type)
+	if (!location || !obj_type)
+		return 0
+	var/obj/o = new obj_type(location)
+	current_obj |= o
+
+/datum/zlevel_data/proc/replenish_obj()
+	if(current_obj.len < obj_quantity)
+		var/o_difference = obj_quantity - current_obj.len
+		for(var/i = 1 to o_difference)
+			var/turf/E = locate(rand(TRANSITIONEDGE, world.maxx - TRANSITIONEDGE - 1),rand(TRANSITIONEDGE, world.maxy - TRANSITIONEDGE - 1),z)
+			if(!istype(E, /turf/space)) continue
+			var/obj_type = pick(obj_types)
+			spawn_obj(E,obj_type)
+
+//////////////////////////////////////////////////////////////////////////////////////////
 /datum/zlevel_data/one
 	z = 1
 	difficulty = 0

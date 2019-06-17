@@ -5,7 +5,7 @@
 	icon_state 			= "map_scrubber_off"
 	use_power 			= POWER_USE_IDLE
 	idle_power_usage 	= 150		//internal circuitry, friction losses and stuff
-	power_rating 		= 7500			//7500 W ~ 10 HP
+	power_rating 		= 30000			// 30000 W ~ 40 HP
 	connect_types 		= CONNECT_TYPE_REGULAR|CONNECT_TYPE_SCRUBBER //connects to regular and scrubber pipes
 	level 				= 1
 	//Radio
@@ -16,7 +16,7 @@
 	radio_check_id 		= TRUE
 
 	var/hibernate 		= FALSE 	//Do we even process?
-	var/scrubbing 		= TRUE 		//0 = siphoning, 1 = scrubbing
+	var/scrubbing 		= SCRUBBER_EXCHANGE
 	var/panic 			= FALSE 	//is this scrubber panicked?
 	var/welded 			= FALSE
 	var/area_uid
@@ -78,7 +78,7 @@
 		if(!powered())
 			scrubber_icon += "off"
 		else
-			scrubber_icon += "[use_power ? "[scrubbing ? "on" : "in"]" : "off"]"
+			scrubber_icon += "[use_power ? "[scrubbing == SCRUBBER_SCRUB || scrubbing == SCRUBBER_EXCHANGE ? "on" : "in"]" : "off"]"
 
 	overlays += icon_manager.get_atmos_icon("device", , , scrubber_icon)
 

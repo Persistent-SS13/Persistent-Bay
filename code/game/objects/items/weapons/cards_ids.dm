@@ -454,7 +454,7 @@ var/const/NO_EMAG_ACT = -50
 		user << browse_rsc(front, "front.png")
 		user << browse_rsc(side, "side.png")
 	var/datum/browser/popup = new(user, "idcard", name, 600, 250)
-	if(user.real_name ==  registered_name)
+	if(user.real_name == registered_name)
 		popup.set_content(self_dat())
 	else
 		popup.set_content(dat())
@@ -575,7 +575,7 @@ var/const/NO_EMAG_ACT = -50
 	if(faction)
 		dat += text("Connected Organization: []</A><BR>\n", faction.name)
 		dat += text("Title: []</A><BR>\n", assignment)
-		dat  += "A href='byond://?src=\ref[src];changeorg=1'>Connect to different organization.</A><BR>"
+		dat  += "<A href='byond://?src=\ref[src];changeorg=1'>Connect to different organization.</A><BR>"
 	dat += text("Fingerprint: []</A><BR>\n", fingerprint_hash)
 	dat += text("Blood Type: []<BR>\n", blood_type)
 	dat += text("DNA Hash: []<BR><BR>\n", dna_hash)

@@ -201,6 +201,8 @@ FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_synd
 	var/notifications = 1 // whether or not to be notified when a new email is sent
 	var/list/subscribed_orgs = list()
 	var/list/shuttles = list()
+	
+	
 /datum/computer_file/report/crew_record/New()
 	..()
 	for(var/T in subtypesof(/datum/report_field/))

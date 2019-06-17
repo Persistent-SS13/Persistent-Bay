@@ -86,7 +86,7 @@ proc/GetNbSavedZLevels()
 //Spawn code particular to this map
 //This proc is called right after a new character is spawned for the first time
 //It plays the spawn cutscene and etc 
-/datum/map/nexus/on_new_spawn(var/mob/new_player/newchar)
+/datum/map/nexus/on_new_spawn(var/mob/newchar)
 	if(!istype(newchar))
 		return
 	if(src.intro_icon)
@@ -112,10 +112,11 @@ proc/GetNbSavedZLevels()
 		shake_camera(newchar, 3, 1)
 	newchar.druggy = 3
 	newchar.Weaken(3)
-	to_chat(newchar, "<span class='danger'>Your trip through the frontier gateway is like nothing you have ever experienced!</span>")
-	to_chat(newchar, "In fact, it was like your consciousness was ripped from your body and then hammered back inside moments later.")
-	to_chat(newchar, "However, you've made it to the uncharted frontier. You don't know when you'll be able to return to the places you've left behind.")
-	to_chat(newchar, "No time to think about that, your first priority is to get your bearings and find a job that pays. Whatever you decide to do in this new frontier, you're going to need a lot more cash than what you have now.")
+	to_chat(newchar, "<span class='danger'>You felt a tremendous numness as you passed through the amber teleporter to this new station!</span>")
+	to_chat(newchar, "You exist as a bodyless consicousness for a disconcernting amount of time before your senses slowly return to your body.")
+	to_chat(newchar, "You wake up on a beacon with an book clasped around your hands. "Guide to Nexus City".")
+	to_chat(newchar, "You've come here to make a new life in a far-away space station. Better read the book to find out how this station works.")
+	to_chat(newchar, "((Persistence is a very unique codebase! If you need help you can *always* ask staff by pressing F1. Go out and meet other characters, you dont need to find work right away but making friends is invaluable.))")
 
 //Example for adding map specific starter uniforms
 // /datum/map/nexus/populate_uniforms(var/client/C)

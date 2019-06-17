@@ -10,15 +10,16 @@
 /obj/structure/closet/crate/cryo/proc/select_cont()
 	var/datum/t_picked = pick(
 		prob(100)
-			/datum/rarity/critters,
+		/datum/rarity/critters,
 		prob(100)
-			/datum/rarity/seeds)
+		/datum/rarity/seeds
+		)
 		//prob(50)
-			///datum/rarity/artifacts,
+		///datum/rarity/artifacts,
 		//prob(50)
-			///datum/rarity/datadisks,
+		///datum/rarity/datadisks,
 		//prob(50)
-			///datum/rarity/paper		
+		///datum/rarity/paper		
 		
 	
 	var/datum/rarity/type_p = new t_picked

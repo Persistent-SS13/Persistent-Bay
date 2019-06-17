@@ -31,7 +31,7 @@
 	BITSET(hud_updateflag, LIFE_HUD)
 
 	//backs up lace if available.
-	var/obj/item/organ/internal/stack/s = get_organ(BP_STACK)
+	var/obj/item/organ/internal/stack/s = get_stack()
 	if(s)
 		s.do_backup()
 

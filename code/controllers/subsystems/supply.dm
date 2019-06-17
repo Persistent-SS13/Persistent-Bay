@@ -61,7 +61,6 @@ SUBSYSTEM_DEF(supply)
 	var/list/old_exports = list()
 
 /datum/controller/subsystem/supply/Initialize()
-	. = ..()
 	ordernum = rand(1,9000)
 
 	//Build master supply list
@@ -75,6 +74,7 @@ SUBSYSTEM_DEF(supply)
 	for(var/material/mat in SSmaterials.materials)
 		if(mat.sale_price > 0)
 			point_source_descriptions[mat.display_name] = "From exported [mat.display_name]"
+	return ..()
 
 /datum/controller/subsystem/supply/proc/generate_initial()
 	generate_export("manufacturing-basic")

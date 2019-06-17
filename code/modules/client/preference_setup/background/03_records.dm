@@ -7,7 +7,7 @@
 	var/memory = ""
 	var/chosen_pin = 1000
 	var/chosen_password = "nopassword"
-	//Some faction information.
+	//Some faction info	rmation.
 	var/faction              //Antag faction/general associated faction.
 	var/travel_reason        //Reason to move to the frontier, stored as a string
 
@@ -36,8 +36,25 @@
 	to_file(S["travel_reason"], pref.travel_reason)
 
 /datum/category_item/player_setup_item/background/records/content(var/mob/user)
-	var/datum/world_faction/F = get_faction(pref.faction)
 	. = list()
+	. += "<b>Persistence is a collaborative storytelling server. The rules are taken very seriously and it is your responsibility to know them before creating a character.</b><br><br>"
+	. += "<a href='https://wiki.persistentss13.com/index.php/Rules'target='_blank'>>View Server Rules</a> If you dont understand a rule, press F1 now and ask a question directly to the staff. We want everyone to understand these rules."
+	. += "<b>Creatng a shared space where exciting player-created events and stories can be created and played out is what Persistence is all about. Everyone has a responsibility to try their best to play consistently."
+	. += "playing a consistent character and following our guidelines. You must play a reasonable character, integrate with the community and try to do things that are interesting for everyone participating.</b><br><br>"
+	. += "<a href='https://wiki.persistentss13.com/index.php/Guide_to_Roleplaying'target='_blank'>View Collaborative Storytelling/In Character Guidelines</a>A lot of games have saved worlds, but Persistence is about creating stories, content and a community that lasts."
+	. += "<br><br>"
+	if(pref.rules_agree)
+		. += "<b>The rules make sure that everyone can have good time.</b>"
+	else
+		. += "<a href='?src=\ref[src];rules_agree=1'>I have read the community rules of and I understand them.</a>"
+	. += "<br><br>"
+	if(pref.guide_agree)
+		. += "<b>Working with others to create scenes, events and full storylines is what this community is made for. You dont have to be an expert, but you do have to put the effort in.</b>"
+	else
+		. += "<a href='?src=\ref[src];guide_agree=1'>I am prepared to participate in the player-made story with a reasonable character. I want to be a collaborative storyteller.</a>"
+
+	/**
+	var/datum/world_faction/F = get_faction(pref.faction)
 	. += "<br/><b>Records</b>:<br/>"
 	. += "<br><br>Starting Employer: <a href='?src=\ref[src];faction=1'>[F ? F.name : "Unset*"]</a>"
 	if(F)
@@ -58,6 +75,8 @@
 	. += "<a href='?src=\ref[src];set_security_records=1'>[TextPreview(pref.sec_record,40)]</a><br>"
 	. += "Memory: "
 	. += "<a href='?src=\ref[src];set_memory=1'>[TextPreview(pref.memory,40)]</a><br>"
+
+	**/
 	. = jointext(.,null)
 
 /datum/category_item/player_setup_item/background/records/OnTopic(var/href,var/list/href_list, var/mob/user)
@@ -113,6 +132,13 @@
 			to_chat(user, "Your pin must be between 1000 and 9999")
 		else
 			pref.chosen_pin = chose
+		return TOPIC_REFRESH
+
+	else if(href_list["rules_agree"])
+		pref.rules_agree = 1
+		return TOPIC_REFRESH
+	else if(href_list["guide_agree"])
+		pref.guide_agree = 1
 		return TOPIC_REFRESH
 
 	else if(href_list["set_password"])

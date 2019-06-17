@@ -197,7 +197,7 @@
 // Returns 0 for No Signal, 1 for Low Signal and 2 for Good Signal. 3 is for wired connection (always-on)
 /obj/item/modular_computer/proc/get_ntnet_status(var/specific_action = 0)
 	if(network_card)
-		return network_card.get_signal(specific_action)
+		return network_card.connected_network
 	else
 		return 0
 

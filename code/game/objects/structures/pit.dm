@@ -10,17 +10,42 @@
 	max_health = 60
 	var/open = 1
 
+/obj/structure/pit/New()
+	. = ..()
+	ADD_SAVED_VAR(open)
+
+/obj/structure/pit/Initialize()
+	. = ..()
+	if(!open)
+		close()
+
+/obj/structure/pit/Destroy()
+	var/turf/T = get_turf(src)
+	for(var/atom/movable/I in contents)
+		I.forceMove(T)
+	. = ..()
+	
+
 /obj/structure/pit/attackby(obj/item/W, mob/user)
-	if( istype(W,/obj/item/weapon/shovel) )
-		visible_message("<span class='notice'>\The [user] starts [open ? "filling" : "digging open"] \the [src]</span>")
-		if( do_after(user, 50) )
-			visible_message("<span class='notice'>\The [user] [open ? "fills" : "digs open"] \the [src]!</span>")
-			if(open)
-				close(user)
+	if(isShovel(W))
+		var/whatdo = "dig"
+		if(!open)
+			whatdo = input(user, "Do you want to flatten out the pit, or dig it open?", "dig") as anything in list("dig", "flatten")
+		if(whatdo == "dig")
+			user.visible_message("<span class='notice'>\The [user] starts [open ? "filling" : "digging open"] \the [src]</span>")
+			if( do_after(user, 5 SECONDS) )
+				user.visible_message("<span class='notice'>\The [user] [open ? "fills" : "digs open"] \the [src]!</span>")
+				if(open)
+					close(user)
+				else
+					open()
 			else
-				open()
-		else
-			to_chat(user, "<span class='notice'>You stop shoveling.</span>")
+				to_chat(user, "<span class='notice'>You stop shoveling.</span>")
+		else if("flatten")
+			user.visible_message("<span class='notice'>\The [user] starts flattening \the [src] flat</span>")
+			if( do_after(user, 5 SECONDS) )
+				user.visible_message("<span class='notice'>\The [user] finish flattening \the [src]</span>")
+				qdel(src)
 		return
 	if (!open && istype(W,/obj/item/stack/material/wood))
 		if(locate(/obj/structure/gravemarker) in src.loc)
@@ -35,7 +60,7 @@
 			else
 				to_chat(user, "<span class='notice'>You stop making a grave marker.</span>")
 		return
-	..()
+	return ..()
 
 /obj/structure/pit/on_update_icon()
 	icon_state = "pit[open]"
@@ -100,10 +125,6 @@
 	desc = "Some things are better left buried."
 	open = 0
 
-/obj/structure/pit/closed/Initialize()
-	. = ..()
-	close()
-
 //invisible until unearthed first
 /obj/structure/pit/closed/hidden
 	invisibility = INVISIBILITY_OBSERVER
@@ -134,10 +155,15 @@
 	pixel_x = 15
 	pixel_y = 8
 	anchored = 1
+	parts = /obj/item/weapon/material/stick
 	var/message = "Unknown."
 
 /obj/structure/gravemarker/cross
 	icon_state = "cross"
+
+/obj/structure/gravemarker/New()
+	. = ..()
+	ADD_SAVED_VAR(message)
 
 /obj/structure/gravemarker/examine()
 	..()
@@ -159,13 +185,15 @@
 	message = "Here lies [nam], [born] - [died]."
 
 /obj/structure/gravemarker/attackby(obj/item/W, mob/user)
-	if(istype(W,/obj/item/weapon/material/hatchet))
+	if(isHatchet(W))
 		visible_message("<span class = 'warning'>\The [user] starts hacking away at \the [src] with \the [W].</span>")
-		if(!do_after(user, 30))
+		if(do_after(user, 3 SECONDS))
 			visible_message("<span class = 'warning'>\The [user] hacks \the [src] apart.</span>")
-			new /obj/item/stack/material/wood(src)
-			qdel(src)
+			dismantle()
+		return 1
 	if(istype(W,/obj/item/weapon/pen))
 		var/msg = sanitize(input(user, "What should it say?", "Grave marker", message) as text|null)
 		if(msg)
 			message = msg
+		return 1
+	return ..()

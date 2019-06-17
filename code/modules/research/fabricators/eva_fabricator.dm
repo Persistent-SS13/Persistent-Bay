@@ -199,6 +199,10 @@
 	build_path = /obj/item/weapon/tank/emergency/oxygen/engi/empty
 	materials = list(MATERIAL_STEEL = 5 SHEETS)
 
+/datum/design/item/genfab/eva/oxygen_candle
+	name = "oxygen candle"
+	build_path = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_IRON = 0.5 SHEET, MATERIAL_ROCK_SALT = 1) //An actual oxy candle uses iron powder and sodium cholorate, then heats to 300c to generate oxygen
+
 /datum/design/item/genfab/eva/adv/jetpack // tier 1
 	name = "Blue Jetpack"	//Just a fancy name for a jetpack, heh
 	req_tech = list(TECH_ENGINEERING = 4)
@@ -275,22 +279,27 @@
 	time = 10
 /datum/design/item/genfab/miningtools/adv
 
+/datum/design/item/genfab/miningtools/flag
+	materials = list(MATERIAL_CLOTH = 1 SHEETS)
+	build_path = /obj/item/stack/flag
 
 /datum/design/item/genfab/miningtools/flag/red
-	materials = list(MATERIAL_CLOTH = 1 SHEETS)
 	build_path = /obj/item/stack/flag/red
 
 /datum/design/item/genfab/miningtools/flag/yellow
-	materials = list(MATERIAL_CLOTH = 1 SHEETS)
 	build_path = /obj/item/stack/flag/yellow
 
 /datum/design/item/genfab/miningtools/flag/green
-	materials = list(MATERIAL_CLOTH = 1 SHEETS)
 	build_path = /obj/item/stack/flag/green
 
 /datum/design/item/genfab/miningtools/flag/solgov
-	materials = list(MATERIAL_CLOTH = 1 SHEETS)
 	build_path = /obj/item/stack/flag/solgov
+
+/datum/design/item/genfab/miningtools/flag/blue
+	build_path = /obj/item/stack/flag/blue
+
+/datum/design/item/genfab/miningtools/flag/teal
+	build_path = /obj/item/stack/flag/teal
 
 /datum/design/item/engifab/miningtools/lantern
 	build_path = /obj/item/device/flashlight/lantern
@@ -308,6 +317,14 @@
 /datum/design/item/genfab/miningtools/hammer // 40
 	materials = list(MATERIAL_STEEL = 2 SHEETS)
 	build_path = /obj/item/weapon/pickaxe/hammer
+
+/datum/design/item/genfab/miningtools/shovel
+	build_path = /obj/item/weapon/shovel
+	materials = list(MATERIAL_WOOD = 1 SHEET, MATERIAL_STEEL = 1 SHEET)
+
+/datum/design/item/genfab/miningtools/spade
+	build_path = /obj/item/weapon/shovel/spade
+	materials = list(MATERIAL_STEEL = 2 SHEET)
 
 
 /datum/design/item/genfab/miningtools/adv/drill // 30

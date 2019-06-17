@@ -10,19 +10,21 @@
 	shoes = /obj/item/clothing/shoes/black
 	id_slot = slot_wear_id
 	id_type = /obj/item/weapon/card/id/civilian/residents
+	pda_type = null
 	backpack_contents = list()
 
 /decl/hierarchy/outfit/nexus/citizen
 	name = "Citizen Gear"
-	uniform = /obj/item/clothing/under/color/green
+	uniform = /obj/item/clothing/under/color/grey
 	l_ear = /obj/item/device/radio/headset/nexus/citizen
 	shoes = /obj/item/clothing/shoes/black
 	id_slot = slot_wear_id
 	id_type = /obj/item/weapon/card/id/civilian/citizens
+	pda_type = null
 	backpack_contents = list()
 
 /decl/hierarchy/outfit/phorosian/nexus
-	name = "Phorosian Gear Nexus"
+	name = "Phorosian Gear"
 	l_ear = /obj/item/device/radio/headset/nexus/citizen
 	id_slot = slot_wear_id
 	id_type = /obj/item/weapon/card/id/civilian/citizens

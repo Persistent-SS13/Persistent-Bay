@@ -3,6 +3,7 @@
 	icon_state = "puddle"
 	desc = "A small pool of some liquid, ostensibly water."
 	clogged = -1 // how do you clog a puddle
+	frame_type = null
 
 /obj/structure/hygiene/sink/puddle/attack_hand(mob/M as mob)
 	icon_state = "puddle-splash"

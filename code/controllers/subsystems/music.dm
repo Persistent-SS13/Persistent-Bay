@@ -15,7 +15,7 @@ SUBSYSTEM_DEF(music)
 		musicPlayer.genre = list()
 		zLevelAmbience["[Z]"] = musicPlayer
 
-	. = ..()
+	return ..()
 
 /datum/controller/subsystem/music/fire()
 	var/list/toPlay = list()

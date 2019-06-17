@@ -35,7 +35,7 @@ SUBSYSTEM_DEF(chemistry)
 			if(!chemical_reactions_by_id[reagent_id])
 				chemical_reactions_by_id[reagent_id] = list()
 			chemical_reactions_by_id[reagent_id] += D
-	. = ..()
+	return ..()
 
 /datum/controller/subsystem/chemistry/fire(resumed = FALSE)
 	if (!resumed)

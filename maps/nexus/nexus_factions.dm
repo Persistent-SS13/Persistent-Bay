@@ -14,11 +14,11 @@
 	icon 			= 'icons/misc/map_helpers.dmi'
 	icon_state 		= "faction"
 
-//Faction for slums denizens
+//Null faction
 /obj/faction_spawner/Freemen
-	name 			= "Resident"
-	name_short 		= "Resident"
-	name_tag 		= "RD"
+	name 			= "None"
+	name_short 		= "None"
+	name_tag 		= "NO"
 	uid 			= NEXUS_FACTION_RESIDENT
 	password 		= ""
 	network_name 	= "FreeNet"

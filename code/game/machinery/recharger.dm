@@ -15,6 +15,7 @@
 	var/icon_state_charging = "recharger1"
 	var/icon_state_idle = "recharger0" //also when unpowered
 	var/portable = 1
+	var/tmp/time_last_update = 0 //Since we reaaaaally don't need to update our state every single ticks, use this
 
 /obj/machinery/recharger/New()
 	..()
@@ -31,9 +32,13 @@
 	return ..()
 
 obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
-	if(istype(user,/mob/living/silicon))
-		return
-
+	if(default_deconstruction_screwdriver(user, G))
+		updateUsrDialog()
+		return 1
+	if(default_deconstruction_crowbar(user, G))
+		return 1
+	if(default_part_replacement(user, G))
+		return 1
 	if(portable && isWrench(G))
 		anchored = !anchored
 		to_chat(user, "You [anchored ? "attached" : "detached"] the recharger.")
@@ -74,16 +79,6 @@ obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 				update_icon()
 				return
 
-/obj/machinery/recharger/attackby(var/obj/item/O as obj, var/mob/user as mob)
-	if(default_deconstruction_screwdriver(user, O))
-		updateUsrDialog()
-		return 1
-	if(default_deconstruction_crowbar(user, O))
-		return 1
-	if(default_part_replacement(user, O))
-		return 1
-	return ..()
-
 /obj/machinery/recharger/attack_hand(mob/user as mob)
 	if(istype(user,/mob/living/silicon))
 		return
@@ -97,25 +92,26 @@ obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 		update_icon()
 
 /obj/machinery/recharger/Process()
-	if(inoperable() || !anchored)
-		update_use_power(POWER_USE_OFF)
-		update_icon()
-		return
-
-	if(!charging)
-		update_use_power(POWER_USE_IDLE)
-		update_icon()
-	else
-		var/obj/item/weapon/cell/C = get_charging_cell()
-		if(istype(C))
-			if(!C.fully_charged())
-				C.give(active_power_usage*CELLRATE)
-				update_use_power(POWER_USE_ACTIVE)
-				update_icon()
-			else
-				update_use_power(POWER_USE_IDLE)
-				update_icon()
-			return
+	. = ..()
+	//Since a lot of these are on the map, and don't change that often, we really don't care about updating each ticks..
+	if((time_last_update + 2 SECONDS)  > world.time)
+		if(inoperable() || !anchored)
+			update_use_power(POWER_USE_OFF)
+			queue_icon_update()
+		else if(!charging)
+			update_use_power(POWER_USE_IDLE)
+			queue_icon_update()
+		else
+			var/obj/item/weapon/cell/C = get_charging_cell()
+			if(istype(C))
+				if(!C.fully_charged())
+					C.give(active_power_usage*CELLRATE)
+					update_use_power(POWER_USE_ACTIVE)
+					queue_icon_update()
+				else
+					update_use_power(POWER_USE_IDLE)
+					queue_icon_update()
+		time_last_update = world.time
 
 /obj/machinery/recharger/emp_act(severity)
 	if(inoperable() || !anchored)
@@ -154,7 +150,7 @@ obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 		var/obj/item/weapon/gun/magnetic/railgun/RG = charging
 		. = RG.cell
 
-/obj/machinery/recharger/update_icon()	//we have an update_icon() in addition to the stuff in process to make it feel a tiny bit snappier.
+/obj/machinery/recharger/on_update_icon()	//we have an update_icon() in addition to the stuff in process to make it feel a tiny bit snappier.
 	if(charging)
 		var/obj/item/weapon/cell/C = get_charging_cell()
 		if(C && C.fully_charged())
@@ -178,14 +174,14 @@ obj/machinery/recharger/examine(mob/user)
 	name = "wall recharger"
 	desc = "A heavy duty wall recharger specialized for energy weaponry."
 	icon_state = "wrecharger0"
-	active_power_usage = 50 KILOWATTS	//It's more specialized than the standalone recharger (guns and batons only) so make it more powerful
+	active_power_usage = 5 KILOWATTS	//It's more specialized than the standalone recharger (guns and batons only) so make it more powerful
 	icon_state_charged = "wrecharger2"
 	icon_state_charging = "wrecharger1"
 	icon_state_idle = "wrecharger0"
 	portable = 0
 	circuit_type = /obj/item/weapon/circuitboard/machinery/rechargerwall
 
-/obj/machinery/recharger/wallcharger/update_icon()
+/obj/machinery/recharger/wallcharger/on_update_icon()
 	..()
 	switch(dir)
 		if(NORTH)
@@ -195,10 +191,10 @@ obj/machinery/recharger/examine(mob/user)
 			src.pixel_x = 0
 			src.pixel_y = 24
 		if(EAST)
-			src.pixel_x = -32
+			src.pixel_x = -24
 			src.pixel_y = 0
 		if(WEST)
-			src.pixel_x = 32
+			src.pixel_x = 24
 			src.pixel_y = 0
 
 #undef allowed_devices

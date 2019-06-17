@@ -450,6 +450,10 @@ Buildable meters
 		return ..()
 	if (!isturf(src.loc))
 		return 1
+	wrench_down(W,user)
+
+//Split this off from the attackby proc, because the pipe layer used to literally call attackby to wrench down pipes.. by creating a wrench and passing it as parameter...
+/obj/item/pipe/proc/wrench_down(var/mob/user as mob)
 	if (pipe_type in list (PIPE_SIMPLE_STRAIGHT, PIPE_SUPPLY_STRAIGHT, PIPE_SCRUBBERS_STRAIGHT, PIPE_HE_STRAIGHT, PIPE_MVALVE, PIPE_DVALVE, PIPE_SVALVE, PIPE_FUEL_STRAIGHT))
 		if(dir == SOUTH)
 			set_dir(NORTH)

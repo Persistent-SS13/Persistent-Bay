@@ -62,3 +62,12 @@
 
 /obj/item/weapon/tool/scissors/isscissors()
 	return TRUE
+
+//Shovel helper
+#define isShovel(A)    (A && A.isshovel())
+/atom/proc/isshovel()
+	return FALSE
+/obj/item/weapon/shovel/isshovel()
+	return TRUE
+/obj/item/weapon/shovel/spade/isshovel()
+	return TRUE

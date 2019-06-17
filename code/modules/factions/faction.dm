@@ -762,7 +762,7 @@ var/PriorityQueue/all_feeds
 	for(var/obj/item/organ/internal/stack/stack in connected_laces)
 		if(stack.owner)
 			to_chat(stack.owner, "Your neural lace vibrates letting you know that [src.name] is closed for business and you have been automatically clocked out.")
-		if(employment_log > 100)
+		if(employment_log.len > 100)
 			employment_log.Cut(1,2)
 		employment_log += "At [stationdate2text()] [stationtime2text()] [stack.owner.real_name] clocked out."
 	connected_laces.Cut()
@@ -912,12 +912,9 @@ var/PriorityQueue/all_feeds
 /datum/world_faction/democratic/New()
 	..()
 
-	councillor_assignment = new()
-	judge_assignment = new()
-	governor_assignment = new()
-	councillor_assignment.payscale = 30
-	judge_assignment.payscale = 30
-	governor_assignment.payscale = 45
+	councillor_assignment = new("Councillor", 30)
+	judge_assignment = new("Judge", 30)
+	governor_assignment = new("Governor", 45)
 	councillor_assignment.name = "Councillor"
 	judge_assignment.name = "Judge"
 	governor_assignment.name = "Governor"
@@ -938,6 +935,50 @@ var/PriorityQueue/all_feeds
 	special_category.parent = src
 	special_category.command_faction = 1
 	limits = new /datum/machine_limits/democracy()
+
+	name = "Nexus City Government"
+	abbreviation = "NEXUS"
+	short_tag = "NEX"
+	purpose = "To represent the citizenship of Nexus and keep the station operating."
+	uid = "nexus"
+	gov = new()
+	var/datum/election/gov/gov_elect = new()
+	gov_elect.ballots |= gov
+
+	waiting_elections |= gov_elect
+
+	var/datum/election/council_elect = new()
+	var/datum/democracy/councillor/councillor1 = new()
+	councillor1.title = "Councillor of Justice and Criminal Matters"
+	city_council |= councillor1
+	council_elect.ballots |= councillor1
+
+	var/datum/democracy/councillor/councillor2 = new()
+	councillor2.title = "Councillor of Budget and Tax Measures"
+	city_council |= councillor2
+	council_elect.ballots |= councillor2
+
+	var/datum/democracy/councillor/councillor3 = new()
+	councillor3.title = "Councillor of Commerce and Business Relations"
+	city_council |= councillor3
+	council_elect.ballots |= councillor3
+
+	var/datum/democracy/councillor/councillor4 = new()
+	councillor4.title = "Councillor for Culture and Ethical Oversight"
+	city_council |= councillor4
+	council_elect.ballots |= councillor4
+
+	var/datum/democracy/councillor/councillor5 = new()
+	councillor5.title = "Councillor for the Domestic Affairs"
+	city_council |= councillor5
+	council_elect.ballots |= councillor5
+
+	waiting_elections |= council_elect
+
+	network.name = "NEXUSGOV-NET"
+	network.net_uid = "nexus"
+	network.password = ""
+	network.invisible = 0
 
 /datum/world_faction/democratic
 
@@ -1900,7 +1941,9 @@ var/PriorityQueue/all_feeds
 		var/datum/stockholder/holder = stock_holders[real_name]
 		return holder
 
-/datum/world_faction/business/proc/get_stockholder(var/real_name)
+/datum/world_faction/proc/get_stockholder(var/real_name)
+	return 0
+/datum/world_faction/business/get_stockholder(var/real_name)
 	if(real_name in stock_holders)
 		var/datum/stockholder/holder = stock_holders[real_name]
 		return holder.stocks
@@ -1940,6 +1983,10 @@ var/PriorityQueue/all_feeds
 			leader_name = ""
 		if(STOCKPROPOSAL_CEOREPLACE)
 			leader_name = proposal.target
+			if(!get_record(proposal.target))
+				var/datum/computer_file/report/crew_record/record = new()
+				if(record.load_from_global(proposal.target))
+					records.faction_records |= record
 		if(STOCKPROPOSAL_CEOWAGE)
 			var/datum/accesses/access = CEO.accesses[1]
 			access.pay = proposal.target
@@ -2068,7 +2115,7 @@ var/PriorityQueue/all_feeds
 	var/new_claimed_area = 0
 
 	for(var/obj/machinery/power/apc/apc in limits.apcs)
-		if(!apc.area) continue
+		if(!apc.area || apc.area.shuttle) continue
 		var/list/apc_turfs = get_area_turfs(apc.area)
 		new_claimed_area += apc_turfs.len
 	limits.claimed_area = new_claimed_area
@@ -2276,6 +2323,13 @@ var/PriorityQueue/all_feeds
 /datum/assignment_category/proc/create_account()
 	account = create_account(name, 0)
 
+
+/datum/assignment/New(var/title, var/pay)
+	if(title && pay)
+		var/datum/accesses/access = new()
+		access.name = title
+		access.pay = pay
+		accesses |= access
 /datum/assignment
 	var/name = ""
 	var/list/accesses[0]
@@ -3226,6 +3280,7 @@ var/PriorityQueue/all_feeds
 	cost = 500
 	name = "Medical"
 	desc = "A medical firm has unqiue capacity to develop medications and implants. Programs can be used to register clients under your care and recieve a weekly insurance payment from them, in exchange for tracking their health and responding to medical emergencies."
+	specs = list(/datum/business_spec/medical/pharma, /datum/business_spec/medical/paramedic)
 	levels = list(/datum/machine_limits/medical/one, /datum/machine_limits/medical/two, /datum/machine_limits/medical/three, /datum/machine_limits/medical/four)
 	hourly_objectives = list(/datum/module_objective/hourly/visitors, /datum/module_objective/hourly/employees, /datum/module_objective/hourly/cost, /datum/module_objective/hourly/contract)
 	daily_objectives = list(/datum/module_objective/daily/visitors, /datum/module_objective/daily/employees, /datum/module_objective/daily/cost, /datum/module_objective/daily/contract)
@@ -3295,7 +3350,7 @@ var/PriorityQueue/all_feeds
 	name = "Mining"
 	desc = "Mining companies send teams out into the hostile outer-space armed with picks, drills and a variety of other EVA equipment plus weapons and armor to defend themselves. The ores they recover can be processed and then sold on the Material Marketplace to other organizations for massive profits."
 	levels = list(/datum/machine_limits/mining/one, /datum/machine_limits/mining/two, /datum/machine_limits/mining/three, /datum/machine_limits/mining/four)
-	specs = list(/datum/machine_limits/mining/spec/massdrill, /datum/machine_limits/mining/spec/monsterhunter)
+	specs = list(/datum/business_spec/mining/massdrill, /datum/business_spec/mining/monsterhunter)
 	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/travel, /datum/module_objective/hourly/cost)
 	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/travel, /datum/module_objective/daily/cost)
 	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/travel, /datum/module_objective/weekly/cost)
@@ -3307,7 +3362,7 @@ var/PriorityQueue/all_feeds
 	limits = /datum/machine_limits/mining/spec/massdrill
 
 /datum/business_spec/mining/monsterhunter
-	name = "Monster Hunt"
+	name = "Monster Hunter"
 	desc = "This specialization gives the business capacity for a medical fabricator and tech that can produce machines and equipment to keep employees alive while fighting the top tier of monsters. Travel to the outer reaches and dig for riches, let the monsters come to you."
 	limits = /datum/machine_limits/retail/spec/bigstore
 	hourly_objectives = list(/datum/module_objective/hourly/monsters)

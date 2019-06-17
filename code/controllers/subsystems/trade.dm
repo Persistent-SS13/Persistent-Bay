@@ -9,9 +9,9 @@ SUBSYSTEM_DEF(trade)
 	var/max_traders = 10
 
 /datum/controller/subsystem/trade/Initialize()
-	. = ..()
 	for(var/i in 1 to rand(1,3))
 		generate_trader(1)
+	return ..()
 
 /datum/controller/subsystem/trade/fire(resumed = FALSE)
 	if (!resumed)

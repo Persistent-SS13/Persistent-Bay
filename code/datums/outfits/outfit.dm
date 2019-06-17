@@ -52,7 +52,7 @@ var/list/outfits_decls_by_type_
 	var/id_pda_assignment
 
 	var/list/backpack_overrides
-	var/flags = OUTFIT_RESET_EQUIPMENT
+	var/flags = OUTFIT_RESET_EQUIPMENT|OUTFIT_HAS_BACKPACK
 
 /decl/hierarchy/outfit/New()
 	..()

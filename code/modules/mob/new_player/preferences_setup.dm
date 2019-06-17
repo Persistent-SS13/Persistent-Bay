@@ -51,32 +51,25 @@
 	mannequin.real_name = real_name
 
 	//Do default faction outfit
-	if( faction && (finalize || (!finalize && (equip_preview_mob & EQUIP_PREVIEW_JOB))))
-		var/datum/world_faction/fac = get_faction(src.faction)
+	if(finalize || (equip_preview_mob & EQUIP_PREVIEW_JOB))
 		var/decl/hierarchy/outfit/clothes
-		//Handle snowflake species uniforms
-		// if(species == SPECIES_PHOROSIAN)
-		// 	clothes = outfit_by_type(fac.starter_phorosian_outfit)
-		// 	ASSERT(istype(clothes))
-		// else if(species == SPECIES_VOX)
-		// 	clothes = outfit_by_type(fac.starter_vox_outfit)
-		// 	ASSERT(istype(clothes))
-		// else
-		//testing("dress_preview_mob: got faction [fac?.name]")
-		if(fac && fac.starter_outfit)
-			clothes = outfit_by_type(fac.starter_outfit)
-			//testing("dress_preview_mob: got outfit [clothes]")
-			ASSERT(istype(clothes))
+
+		var/datum/world_faction/F
+		if(src.faction)
+			F = get_faction(src.faction)
+		else
+			F = get_faction(GLOB.using_map.default_faction_uid) //If no faction forced, use the map's default
+		clothes = outfit_by_type(F.starter_outfit)
+		//testing("dress_preview_mob: got outfit [clothes]")
+		ASSERT(istype(clothes))
+
 		//If we have selected a specific uniform, replace the default one
 		if(selected_under)
 			clothes.uniform = selected_under.type //The outfit class uses types not instances
-				
 		//The outfit class does most of the equipping from preferences, along with the ID setup, backpack setup, etc.. Its really handy
 		clothes.equip(mannequin, equip_adjustments = adjustflags)
 		update_icon = TRUE
 
-	//Extra starter gear, left in for possible use in the future
-	if(finalize || (!finalize && (equip_preview_mob & EQUIP_PREVIEW_LOADOUT)))
 		// Equip custom gear loadout, replacing any job items
 		var/list/loadout_taken_slots = list()
 		for(var/thing in Gear())
@@ -92,7 +85,11 @@
 				if(G.slot && G.slot != slot_tie && !(G.slot in loadout_taken_slots) && G.spawn_on_mob(mannequin, gear_list[gear_slot][G.display_name]))
 					loadout_taken_slots.Add(G.slot)
 					update_icon = TRUE
-
+	if(finalize)
+		var/obj/item/weapon/card/id/W = new (mannequin)
+		W.registered_name = mannequin.real_name
+		W.selected_faction = "nexus"
+		mannequin.equip_to_slot_or_store_or_drop(mannequin, slot_wear_id)
 	if(update_icon)
 		mannequin.update_icons()
 

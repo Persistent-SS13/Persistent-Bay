@@ -58,6 +58,39 @@ SUBSYSTEM_DEF(character_setup)
 	M.after_spawn() //Runs after_load
 	return M
 
+/datum/controller/subsystem/character_setup/proc/load_import_character(var/ind, var/ckey)
+	if(!fexists(beta_path(ckey, ind)))
+		return
+	var/savefile/F =  new (beta_path(ckey, ind))
+	var/mob/M
+	from_file(F["mob"], M)
+	M.after_spawn() //Runs after_load
+	return M
+
+
+/datum/controller/subsystem/character_setup/proc/peek_import_name(var/ind, var/ckey)
+	if(!fexists(beta_path(ckey, ind)))
+		return
+	var/savefile/F =  new (beta_path(ckey, ind))
+	var/name
+	from_file(F["name"], name)
+	return name
+
+/datum/controller/subsystem/character_setup/proc/peek_import_icon(var/ind, var/ckey)
+	var/mob/M = src.load_import_character(ind, ckey)
+	if(!M)
+		return
+	if(ishuman(M))
+		var/mob/living/carbon/human/H = M
+		H.force_update_limbs()
+		H.update_eyes()
+	M.regenerate_icons()
+	M.update_icon()
+	var/icon/I = get_preview_icon(M)
+	QDEL_IN(M, 1 SECONDS)
+	return I
+
+
 /datum/controller/subsystem/character_setup/proc/peek_character_name(var/ind, var/ckey)
 	if(!fexists(CHAR_SAVE_FILE_PATH(ind, ckey)))
 		return

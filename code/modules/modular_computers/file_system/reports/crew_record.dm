@@ -60,6 +60,7 @@ FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_synd
 	var/shuttle_limit = 0
 	var/cost = 0
 
+	
 /datum/personal_limits/one
 	stock_limit = 125
 
@@ -127,6 +128,26 @@ FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_synd
 		else
 			var/datum/personal_limits/limit = new /datum/personal_limits/one()
 			return limit.stock_limit
+			
+/datum/computer_file/report/crew_record/proc/get_shuttle_limit()
+	switch(network_level)
+		if(1)
+			var/datum/personal_limits/limit = new /datum/personal_limits/one()
+			return limit.shuttle_limit
+		if(2)
+			var/datum/personal_limits/limit = new /datum/personal_limits/two()
+			return limit.shuttle_limit
+		if(3)
+			var/datum/personal_limits/limit = new /datum/personal_limits/three()
+			return limit.shuttle_limit
+		if(4)
+			var/datum/personal_limits/limit = new /datum/personal_limits/four()
+			return limit.shuttle_limit
+		else
+			var/datum/personal_limits/limit = new /datum/personal_limits/one()
+			return limit.shuttle_limit
+			
+			
 /datum/computer_file/report/crew_record/proc/get_upgrade_cost()
 	switch(network_level)
 		if(1)
@@ -179,8 +200,9 @@ FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_synd
 	var/network_level = 1
 	var/notifications = 1 // whether or not to be notified when a new email is sent
 	var/list/subscribed_orgs = list()
-
-
+	var/list/shuttles = list()
+	
+	
 /datum/computer_file/report/crew_record/New()
 	..()
 	for(var/T in subtypesof(/datum/report_field/))

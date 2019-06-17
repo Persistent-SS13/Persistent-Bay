@@ -37,7 +37,9 @@ datum/preferences
 	var/bonus_slots = 0
 	var/bonus_notes = ""
 	var/datum/browser/prefspanel
-
+	
+	var/rules_agree = 0
+	var/guide_agree = 0
 /datum/preferences/New(client/C)
 	if(istype(C))
 		client = C
@@ -134,14 +136,14 @@ datum/preferences
 		if(!real_name)
 			to_chat(usr, "You must select a valid character name")
 			return
-		if(!cultural_info[TAG_HOMEWORLD])
-			to_chat(usr, "You must choose a valid early life/homeworld")
+		if(!rules_agree)
+			to_chat(usr, "You must read the rules and verify that you have read them.")
 			return
-		if(!faction)
-			to_chat(usr, "You must choose a valid employer.")
+		if(!guide_agree)
+			to_chat(usr, "You must agree to play a reasonable character, stay IC and follow our guidelines.")
 			return
-		save_preferences()
 		save_character()
+		save_preferences()
 		close_browser(usr, "window=saves")
 		if(panel)
 			panel.close()

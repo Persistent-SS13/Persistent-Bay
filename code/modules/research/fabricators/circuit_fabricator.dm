@@ -889,6 +889,35 @@
 	req_tech = list(TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/suit_cycler
 
+/datum/design/circuit/cracker
+	name = "molecular cracking unit"
+	id = "cracker"
+	req_tech = list(TECH_ENGINEERING = 4)
+	build_path = /obj/item/weapon/circuitboard/cracker
+
+/datum/design/circuit/pipe_dispenser
+	name = "pipe dispenser"
+	id = "pipe_dispenser"
+	req_tech = list(TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/pipe_dispenser
+
+/datum/design/circuit/disposal_pipe_dispenser
+	name = "disposal pipe dispenser"
+	id = "disposal_pipe_dispenser"
+	req_tech = list(TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/disposal_pipe_dispenser
+
+/datum/design/circuit/cable_layer
+	name = "cable layer"
+	id = "cable_layer"
+	req_tech = list(TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/cable_layer
+
+/datum/design/circuit/pipe_layer
+	name = "pipe layer"
+	id = "pipe_layer"
+	req_tech = list(TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/pipe_layer
 
 /**
 

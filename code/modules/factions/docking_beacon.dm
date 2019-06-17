@@ -44,6 +44,9 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/datum/shuttle/shuttle
 	var/obj/machinery/computer/bridge_computer/bridge
 	var/dock_interior = 0 // 0 = exterior, 1 = interior
+	var/shuttle_name
+	var/ownership_type = 0 // 0 = organization, 1 = individual
+	var/shuttle_owner
 
 /obj/machinery/docking_beacon/New()
 	..()
@@ -162,6 +165,18 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 				data["status"] = "Occupied"
 			if(DOCKING_BEACON_STATUS_OBSTRUCTED)
 				data["status"] = "Obstructed"
+
+		if(status == DOCKING_BEACON_STATUS_CONSTRUCTION)
+			if(!shuttle_name || shuttle_name == "")
+				data["name"] = "*UNSET*"
+			else
+				data["name"] = shuttle_name
+			if(!shuttle_owner || shuttle_owner == "")
+				data["owner"] = "*UNSET*"
+			else
+				data["owner"] = shuttle_owner
+			data["individual"] = ownership_type
+
 		data["dimension"] = dimensions
 		data["interior"] = dock_interior
 	// update the ui if it exists, returns null if no ui is passed/found
@@ -234,6 +249,29 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		else
 			status = DOCKING_BEACON_STATUS_CONSTRUCTION
 	if(href_list["finalize"])
+		if(!shuttle_name || shuttle_name == "")
+			to_chat(usr, "The shuttle must have a name to be finalized.")
+			return
+		if(!shuttle_owner || shuttle_owner == "")
+			to_chat(usr, "The shuttle must have an owner to be finalized.")
+			return
+		if(ownership_type)
+			var/datum/computer_file/report/crew_record/record = Retrieve_Record(shuttle_owner)
+			if(!record)
+				shuttle_owner = null
+				return 1
+			if(record.get_shuttle_limit() <= record.shuttles.len)
+				shuttle_owner = null
+				return 1
+		else
+			var/datum/world_faction/faction = get_faction(shuttle_owner)
+			if(!faction)
+				shuttle_owner = null
+				return 1
+			if(faction.limits.limit_shuttles <= faction.limits.shuttles)
+				shuttle_owner = null
+				return 1
+
 		finalize(usr)
 	if(href_list["highlight"])
 		if(!highlighted)
@@ -254,9 +292,33 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	if(href_list["set_interior"])
 		dock_interior = text2num(href_list["set_interior"])
 	if(href_list["change_id"])
-		var/select_name = sanitizeName(input(usr,"Enter a new dock ID","DOCK ID") as null|text, MAX_NAME_LEN)
+		var/select_name = sanitize(input(usr,"Enter a new dock ID","DOCK ID") as null|text, MAX_NAME_LEN)
 		if(select_name)
 			id = select_name
+
+	if(href_list["change_name"])
+		var/select_name = sanitize(input(usr,"Enter a name for the new shuttle","Shuttle name") as null|text, MAX_NAME_LEN)
+		if(select_name)
+			shuttle_name = select_name
+	if(href_list["change_owner"])
+		if(!ownership_type)
+			return
+		var/select_name = input(usr,"Enter the full name of the new shuttle owner.","Shuttle owner")
+		if(select_name)
+			var/datum/computer_file/report/crew_record/record = Retrieve_Record(select_name)
+			if(!record)
+				to_chat(usr, "No record exists for [select_name]")
+				return
+			if(record.get_shuttle_limit() <= record.shuttles.len)
+				to_chat(usr, "[select_name] does not have sufficent nexus account level to own this shuttle.")
+				return
+			shuttle_owner = select_name
+	if(href_list["individual"])
+		shuttle_owner = null
+		ownership_type = 1
+	if(href_list["organization"])
+		shuttle_owner = null
+		ownership_type = 0
 
 	update_icon()
 	add_fingerprint(usr)
@@ -350,16 +412,22 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	for(var/obj/machinery/shuttleengine/engine in engines)
 		engine.permaanchor = 1
 	var/area/shuttle/A = new
-	A.name = "shuttle"
+	A.name = shuttle_name
 	A.power_equip = 0
 	A.power_light = 0
 	A.power_environ = 0
 	A.always_unpowered = 0
 	A.contents.Add(turfs)
-
+	A.shuttle = 1
 	shuttle = new()
+	if(ownership_type)
+		bridge.req_access_personal = shuttle_owner
+	else
+		bridge.req_access = list(108)
+		bridge.req_access_faction = shuttle_owner
+	shuttle.finalized = 1
 	shuttle.initial_location = src
-	shuttle.name = "Shuttle"
+	shuttle.name = shuttle_name
 	shuttle.size = dimensions
 	bridge.shuttle = shuttle
 	shuttle.shuttle_area = list(A)
@@ -367,7 +435,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	bridge.dock = src
 	shuttle.setup()
 	status = DOCKING_BEACON_STATUS_OCCUPIED
-	to_chat(user, "Construction complete, finalize with bridge computer.")
+	to_chat(user, "Construction complete.")
 
 
 /obj/machinery/docking_beacon/proc/get_turfs()

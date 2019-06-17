@@ -18,7 +18,7 @@
 	name = "Culture"
 	sort_order = 1
 	var/list/hidden
-	var/list/tokens = ALL_CULTURAL_TAGS
+	var/list/tokens = REAL_CULTURAL_TAGS
 
 /datum/category_item/player_setup_item/background/culture/New()
 	hidden = list()
@@ -38,7 +38,7 @@
 			var/current_value = pref.cultural_info[token]
 			if(!current_value|| !_cultures[current_value])
 				pref.cultural_info[token] = _cultures[1]
-
+				
 /datum/category_item/player_setup_item/background/culture/load_character(var/savefile/S)
 	for(var/token in tokens)
 		var/load_val
@@ -52,10 +52,16 @@
 /datum/category_item/player_setup_item/background/culture/content()
 	. = list()
 	for(var/token in tokens)
-		var/decl/cultural_info/culture = SSculture.get_culture(pref.cultural_info[token])
-		var/title = "<b>[tokens[token]]<a href='?src=\ref[src];set_[token]=1'><small>?</small></a>:</b><a href='?src=\ref[src];set_[token]=2'>[pref.cultural_info[token]]</a>"
-		var/append_text = "<a href='?src=\ref[src];toggle_verbose_[token]=1'>[hidden[token] ? "Expand" : "Collapse"]</a>"
-		. += culture.get_description(title, append_text, verbose = !hidden[token])
+		if(pref.cultural_info[token])
+			var/decl/cultural_info/culture = SSculture.get_culture(pref.cultural_info[token])
+			var/title = "<b>[tokens[token]]:</b><a href='?src=\ref[src];set_[token]=2'>[pref.cultural_info[token]]</a>"
+			var/append_text = ""//<a href='?src=\ref[src];toggle_verbose_[token]=1'>[hidden[token] ? "Expand" : "Collapse"]</a>"
+			. += culture.get_description(title, append_text, verbose = 1 )// !hidden[token])
+		else
+			var/decl/cultural_info/culture = new()
+			var/title = "<b>[tokens[token]]:</b><a href='?src=\ref[src];set_[token]=2'>*UNSET*</a>"
+			var/append_text = ""//<a href='?src=\ref[src];toggle_verbose_[token]=1'>[hidden[token] ? "Expand" : "Collapse"]</a>"
+			. += culture.get_description(title, append_text, verbose = 1 )// !hidden[token])
 	. = jointext(.,null)
 
 /datum/category_item/player_setup_item/background/culture/OnTopic(var/href,var/list/href_list, var/mob/user)
@@ -65,7 +71,7 @@
 		if(href_list["toggle_verbose_[token]"])
 			hidden[token] = !hidden[token]
 			return TOPIC_REFRESH
-
+	
 		var/check_href = text2num(href_list["set_[token]"])
 		if(check_href > 0)
 

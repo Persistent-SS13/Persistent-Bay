@@ -41,7 +41,7 @@
 	. += "<a href='https://wiki.persistentss13.com/index.php/Rules'target='_blank'>>View Server Rules</a> If you dont understand a rule, press F1 now and ask a question directly to the staff. We want everyone to understand these rules."
 	. += "<b>Creatng a shared space where exciting player-created events and stories can be created and played out is what Persistence is all about. Everyone has a responsibility to try their best to play consistently."
 	. += "playing a consistent character and following our guidelines. You must play a reasonable character, integrate with the community and try to do things that are interesting for everyone participating.</b><br><br>"
-	. += "<a href='https://wiki.persistentss13.com/index.php/Guide_to_Roleplaying'>View Collaborative Storytelling/In Character Guidelines</a>A lot of games have saved worlds, but Persistence is about creating stories, content and a community that lasts."
+	. += "<a href='https://wiki.persistentss13.com/index.php/Guide_to_Roleplaying'target='_blank'>View Collaborative Storytelling/In Character Guidelines</a>A lot of games have saved worlds, but Persistence is about creating stories, content and a community that lasts."
 	. += "<br><br>"
 	if(pref.rules_agree)
 		. += "<b>The rules make sure that everyone can have good time.</b>"

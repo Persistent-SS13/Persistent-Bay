@@ -762,7 +762,7 @@ var/PriorityQueue/all_feeds
 	for(var/obj/item/organ/internal/stack/stack in connected_laces)
 		if(stack.owner)
 			to_chat(stack.owner, "Your neural lace vibrates letting you know that [src.name] is closed for business and you have been automatically clocked out.")
-		if(employment_log > 100)
+		if(employment_log.len > 100)
 			employment_log.Cut(1,2)
 		employment_log += "At [stationdate2text()] [stationtime2text()] [stack.owner.real_name] clocked out."
 	connected_laces.Cut()
@@ -2115,7 +2115,7 @@ var/PriorityQueue/all_feeds
 	var/new_claimed_area = 0
 
 	for(var/obj/machinery/power/apc/apc in limits.apcs)
-		if(!apc.area) continue
+		if(!apc.area || apc.area.shuttle) continue
 		var/list/apc_turfs = get_area_turfs(apc.area)
 		new_claimed_area += apc_turfs.len
 	limits.claimed_area = new_claimed_area

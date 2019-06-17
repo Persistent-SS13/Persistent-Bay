@@ -16,8 +16,8 @@ var/global/list/debug_data = list()
 	var/area_type = "/area"
 	var/name
 	var/list/turfs = list()
-	map_storage_saved_vars = "area_type;name;turfs"
-
+	map_storage_saved_vars = "area_type;name;turfs;shuttle"
+	var/shuttle
 /obj/item/map_storage_debugger
 	name = "DEBUG ITEM"
 	desc = "DEBUG ITEM"
@@ -381,6 +381,7 @@ var/global/list/debug_data = list()
 		holder.area_type = A.type
 		holder.name = A.name
 		holder.turfs = A.get_turf_coords()
+		holder.shuttle = A.shuttle
 		formatted_areas += holder
 	var/list/zones = list()
 	to_world("<font size=3 color='green'>Saving zones..</font>")
@@ -497,6 +498,7 @@ var/global/list/debug_data = list()
 	for(var/datum/area_holder/holder in areas)
 		var/area/A = new holder.area_type
 		A.name = holder.name
+		A.shuttle = holder.shuttle
 		var/list/turfs = list()
 		for(var/ind in 1 to holder.turfs.len)
 			var/list/coords = holder.turfs[ind]

@@ -114,7 +114,7 @@ proc/GetNbSavedZLevels()
 	newchar.Weaken(3)
 	to_chat(newchar, "<span class='danger'>You felt a tremendous numness as you passed through the amber teleporter to this new station!</span>")
 	to_chat(newchar, "You exist as a bodyless consicousness for a disconcernting amount of time before your senses slowly return to your body.")
-	to_chat(newchar, "You wake up on a beacon with an book clasped around your hands. "Guide to Nexus City".")
+	to_chat(newchar, "You wake up on a beacon with an book clasped around your hands. 'Guide to Nexus City'.")
 	to_chat(newchar, "You've come here to make a new life in a far-away space station. Better read the book to find out how this station works.")
 	to_chat(newchar, "((Persistence is a very unique codebase! If you need help you can *always* ask staff by pressing F1. Go out and meet other characters, you dont need to find work right away but making friends is invaluable.))")
 

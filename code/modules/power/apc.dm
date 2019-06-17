@@ -180,7 +180,7 @@
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
 
-	if(limits.limit_area <= turfs.len + trying.get_claimed_area())
+	if((area && !area.shuttle) && (limits.limit_area <= turfs.len + trying.get_claimed_area()))
 		if(M)
 			to_chat(M, "[trying.name] cannot connect this APC as it will exceed its area limit.")
 		return 0
@@ -1129,6 +1129,10 @@
 		return
 	if(!area.requires_power)
 		return
+	if(area && !connected_faction && !area.shuttle)
+		equipment = autoset(equipment, 0)
+		lighting = autoset(lighting, 0)
+
 	if(failure_timer)
 		update()
 		queue_icon_update()

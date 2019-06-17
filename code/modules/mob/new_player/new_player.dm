@@ -317,7 +317,7 @@
 	for(var/obj/item/W in character)
 		character.drop_from_inventory(W)
 	character.spawn_type = CHARACTER_SPAWN_TYPE_IMPORT //For first time spawn
-		var/decl/hierarchy/outfit/clothes
+	var/decl/hierarchy/outfit/clothes
 	var/datum/world_faction/F
 	if(src.faction)
 		F = get_faction(src.faction)
@@ -327,26 +327,26 @@
 	//testing("dress_preview_mob: got outfit [clothes]")
 	ASSERT(istype(clothes))
 	clothes.uniform = /obj/item/clothing/under/color/lightpurple
-	clothes.equip(character, equip_adjustments = adjustflags)
+	clothes.equip(character)
 	var/obj/item/weapon/card/id/W = new (character)
 	W.registered_name = character.real_name
 	W.selected_faction = "nexus"
 	character.equip_to_slot_or_store_or_drop(character, slot_wear_id)
 	character.update_icons()
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
 	for(var/ind in 1 to spared.len)
 		var/atom/A = spared[ind]
 		character.equip_to_slot_or_store_or_drop(A, slot_l_hand)
@@ -562,21 +562,20 @@
 	var/mob/newchar = src
 	if(!istype(newchar))
 		return
-	if(src.intro_icon)
-		var/obj/screen/cinematic
-		cinematic = new
-		cinematic.icon = src.intro_icon
-		cinematic.icon_state = "blank"
-		cinematic.plane = HUD_PLANE
-		cinematic.layer = HUD_ABOVE_ITEM_LAYER
-		cinematic.mouse_opacity = 2
-		cinematic.screen_loc = "WEST,SOUTH"
-		
-		if(newchar.client)
-			newchar.client.screen += cinematic
-			flick("cinematic",cinematic)
-			sleep(106)
-			newchar.client.screen -= cinematic
+	var/obj/screen/cinematic
+	cinematic = new
+	cinematic.icon = 'maps/nexus/icons/intro.dmi'
+	cinematic.icon_state = "blank"
+	cinematic.plane = HUD_PLANE
+	cinematic.layer = HUD_ABOVE_ITEM_LAYER
+	cinematic.mouse_opacity = 2
+	cinematic.screen_loc = "WEST,SOUTH"
+
+	if(newchar.client)
+		newchar.client.screen += cinematic
+		flick("cinematic",cinematic)
+		sleep(106)
+		newchar.client.screen -= cinematic
 
 	newchar.spawn_type = CHARACTER_SPAWN_TYPE_CRYONET
 	sound_to(newchar, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
@@ -588,10 +587,10 @@
 	to_chat(newchar, "<span class='danger'>Aboard the cruiser ecaping from the Alpha Quadrant, the journey through the bluespace barrier shreds the hull as it passes the threshold.</span>")
 	to_chat(newchar, "<span class='danger'>With the barrier weakened, the station inside the Beta Quadrant is able to yank the failing vessels cryo-storage over to the frontier beacons..</span>")
 	to_chat(newchar, "But it must have prioritized saving life-signs rather than the item storage. You wake up in an unfamilar uniform with a basic backpack. Maybe some of your lightest belongings are in there.")
-	to_chat(newchar, "You also have a book clasped in your hands. "Guide to Nexus City".")
+	to_chat(newchar, "You also have a book clasped in your hands. 'Guide to Nexus City'.")
 	to_chat(newchar, "You've been in this situation before, but on a different station. What new stories does the Nexus City hold for you?")
 	to_chat(newchar, "((Thanks for returning to persistence. So many staff and contributors have come together to make the lastest chapter, and I'm really glad to have you back. -- Brawler.))")
-		
+
 /mob/new_player/proc/deleteCharacter()
 	var/charname = SScharacter_setup.peek_character_name(chosen_slot, ckey)
 	if(input("Are you SURE you want to delete [charname]? THIS IS PERMANENT. enter the character\'s full name to conform.", "DELETE A CHARACTER", "") == charname)

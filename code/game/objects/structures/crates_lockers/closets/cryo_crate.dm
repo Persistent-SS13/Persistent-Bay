@@ -12,14 +12,14 @@
 		prob(100)
 			/datum/rarity/critters,
 		prob(100)
-			/datum/rarity/seeds
+			/datum/rarity/seeds)
 		//prob(50)
 			///datum/rarity/artifacts,
 		//prob(50)
 			///datum/rarity/datadisks,
 		//prob(50)
 			///datum/rarity/paper		
-		)
+		
 	
 	var/datum/rarity/type_p = new t_picked
 	var/list/r_picked = list()

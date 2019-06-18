@@ -27,13 +27,6 @@
 	. = ..()
 	ADD_SAVED_VAR(state)
 
-/obj/machinery/atmospherics/tvalve/Initialize()
-	. = ..()
-	if(state)
-		go_to_side() // 1
-	else
-		go_straight() // 2
-
 /obj/machinery/atmospherics/tvalve/Destroy()
 	loc = null
 
@@ -79,6 +72,11 @@
 			if (check_connect_types(target,src))
 				node3 = target
 				break
+
+	if(state)
+		go_to_side() // 1
+	else
+		go_straight() // 2
 
 	queue_icon_update()
 	update_underlays()

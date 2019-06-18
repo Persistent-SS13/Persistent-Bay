@@ -31,7 +31,7 @@
 		icon_state += use_power ? "on" : "off"
 	else
 		icon_state += "off"
-		update_use_power(POWER_USE_OFF)
+		//update_use_power(POWER_USE_OFF) //Don't do that in here... If really neccessary use power_change or something
 
 /obj/machinery/atmospherics/trinary/mixer/update_underlays()
 	if(..())

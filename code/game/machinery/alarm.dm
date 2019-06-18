@@ -40,7 +40,7 @@
 	idle_power_usage 	= 80
 	active_power_usage 	= 1 KILOWATTS //For heating/cooling rooms. 1000 joules equates to about 1 degree every 2 seconds for a single tile of air.
 	power_channel 		= ENVIRON
-	req_one_access 		= list(core_access_engineering_programs, core_access_engineering_programs)
+	req_one_access 		= list(core_access_engineering_programs)
 	clicksound 			= "button"
 	clickvol 			= 30
 	layer 				= ABOVE_WINDOW_LAYER
@@ -717,15 +717,15 @@
 					"tox_scrub",
 					"reag_scrub",
 					"n2o_scrub",
-					"panic_siphon",
-					"scrubbing")
+					"panic_siphon")
 
 					send_signal(device_id, list(href_list["command"] = text2num(href_list["val"]) ) )
-					return TOPIC_HANDLED
+					return TOPIC_REFRESH
 
 				if("scrubbing")
-					send_signal(device_id, list(href_list["command"] = href_list["scrub_mode"]) )
-					return TOPIC_REFRESH
+					testing("Sending signal scrubbing = [href_list["scrub_mode"]]")
+					send_signal(device_id, list("scrubbing" = href_list["scrub_mode"]) )
+					return TOPIC_HANDLED
 
 				if("set_threshold")
 					var/env = href_list["env"]

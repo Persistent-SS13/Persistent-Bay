@@ -23,6 +23,8 @@
 	var/area/initial_loc
 	var/list/scrubbing_gas
 
+	var/list/gas_list
+
 	var/obj/machinery/airlock_controller_norad/norad_controller // For the no radio controller (code/modules/norad_controller)
 	var/norad_UID
 
@@ -35,8 +37,9 @@
 	air_contents.volume = ATMOS_DEFAULT_VOLUME_FILTER
 	icon = null
 	ADD_SAVED_VAR(welded)
-	ADD_SAVED_VAR(scrubbing_gas)
 	ADD_SAVED_VAR(scrubbing)
+	ADD_SAVED_VAR(scrubbing)
+	ADD_SAVED_VAR(panic)
 
 /obj/machinery/atmospherics/unary/vent_scrubber/Initialize()
 	if(loc)
@@ -50,6 +53,7 @@
 		for(var/g in gas_data.gases)
 			if(g != GAS_OXYGEN && g != GAS_NITROGEN && !(gas_data.flags[g] & XGM_GAS_REAGENT_GAS))
 				scrubbing_gas += g
+	scrubbing_gas += GAS_REAGENTS //This is gross, but it seems that's how its supposed to work..
 	return INITIALIZE_HINT_LATELOAD
 
 /obj/machinery/atmospherics/unary/vent_scrubber/LateInitialize()
@@ -78,7 +82,7 @@
 		if(!powered())
 			scrubber_icon += "off"
 		else
-			scrubber_icon += "[use_power ? "[scrubbing == SCRUBBER_SCRUB || scrubbing == SCRUBBER_EXCHANGE ? "on" : "in"]" : "off"]"
+			scrubber_icon += "[use_power ? "[scrubbing == SCRUBBER_EXCHANGE ? "on" : "in"]" : "off"]"
 
 	overlays += icon_manager.get_atmos_icon("device", , , scrubber_icon)
 
@@ -132,7 +136,7 @@
 	if (hibernate > world.time)
 		return 1
 
-	if (!node)
+	if (use_power && !node)
 		update_use_power(POWER_USE_OFF)
 	//broadcast_status()
 	if(!use_power || inoperable())
@@ -150,6 +154,8 @@
 		power_draw = pump_gas(src, environment, air_contents, transfer_moles, power_rating)
 	else  //limit flow rate from turfs
 		transfer_moles = min(environment.total_moles, environment.total_moles*MAX_SCRUBBER_FLOWRATE/environment.volume)	//group_multiplier gets divided out here
+		
+		//TODO: This is copying and allocation a list every single ticks its running. 
 		//checking what reagent gases need to be filtered
 		var/list/scrubbed_gases_final
 		if(GAS_REAGENTS in scrubbing_gas)
@@ -204,10 +210,12 @@
 		else
 			scrubbing = SCRUBBER_EXCHANGE
 
-	if(signal.data["scrubbing"] != null)
+	if(signal.data["scrubbing"])
 		scrubbing = signal.data["scrubbing"]
+		testing("Received signal = [scrubbing]")
 		if(scrubbing != SCRUBBER_SIPHON)
 			panic = FALSE
+
 	if(signal.data["toggle_scrubbing"])
 		scrubbing = (scrubbing == SCRUBBER_EXCHANGE)? SCRUBBER_SIPHON : SCRUBBER_EXCHANGE
 		if(scrubbing != SCRUBBER_SIPHON)
@@ -369,3 +377,21 @@
 		to_chat(user, "You are too far away to read the gauge.")
 	if(welded)
 		to_chat(user, "It seems welded shut.")
+
+
+// Handles toggling gases to scrub
+/obj/machinery/atmospherics/unary/vent_scrubber/proc/handle_gas_toggling(var/list/sigdata)
+	if(sigdata["gas_scrub"])
+		var/gasname = sigdata["gas_scrub"]
+		var/gasstate = text2num(sigdata["val"])
+		gas_list[gasname] = gasstate
+	else if(sigdata["toggle_gas_scrub"])
+		var/gasname = sigdata["gas_scrub"]
+		gas_list[gasname] = !(gas_list[gasname])
+
+/obj/machinery/atmospherics/unary/vent_scrubber/proc/setup_gases()
+	LAZYCLEARLIST(gas_list)
+	LAZYINITLIST(gas_list)
+	for(var/g in gas_data.gases)
+		gas_list[g] = FALSE //Add the gas id, and turn filtering off by default
+

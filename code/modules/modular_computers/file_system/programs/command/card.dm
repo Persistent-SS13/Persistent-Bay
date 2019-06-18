@@ -10,7 +10,7 @@
 	requires_ntnet = TRUE
 	size = 8
 
-/datum/computer_file/program/card_mod/can_run(var/mob/living/user, var/loud = 0, var/access_to_check)
+/datum/computer_file/program/card_mod/can_run(var/mob/living/user, var/loud = 0, var/access_to_check, var/alt_computer)
 	// Defaults to required_access
 	if(!access_to_check)
 		access_to_check = required_access
@@ -139,7 +139,12 @@
 			data["promote_button"] = promote_button
 			data["demote_button"] = demote_button
 			var/expense_limit = 0
-			var/datum/accesses/expenses = assignment.accesses[record.rank]
+			var/use_rank = 1
+			if(!record.rank || record.rank > assignment.accesses.len)
+				use_rank = assignment.accesses.len
+			if(!use_rank)
+				message_admins("Broken assignment [assignment] held by [record.get_name()]")
+			var/datum/accesses/expenses = assignment.accesses[use_rank]
 			if(expenses)
 				expense_limit = expenses.expense_limit
 			data["expense_limit"] = expense_limit

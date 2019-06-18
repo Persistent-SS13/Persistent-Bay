@@ -11,7 +11,7 @@
 
 	var/base_icon_state = "body_scanner_0"
 	var/occupied_icon_state = "body_scanner_1"
-	var/on_store_message = "has entered long-term storage."
+	var/on_store_message = "has entered cryo sleep."
 	var/on_store_name = "Cryogenic Oversight"
 	var/on_enter_occupant_message = "You feel cool air surround you. You go numb as your senses turn inward."
 	var/allow_occupant_types = list(/mob/living/carbon/human, /mob/living/silicon/robot, /obj/item/organ/internal/stack)
@@ -388,7 +388,7 @@
 		control_computer._admin_logs += "[key_name(character)] ([role_alt_title]) at [stationtime2text()]"
 	log_and_message_admins("[key_name(character)] ([role_alt_title]) entered cryostorage.")
 
-	announce.autosay("[character.real_name], [role_alt_title], [on_store_message]", "[on_store_name]", character.GetFaction())
+	announce.autosay("[character.real_name] [on_store_message]", "[on_store_name]", character.GetFaction())
 	visible_message("<span class='notice'>\The [initial(name)] hums and hisses as it moves [character.real_name] into storage.</span>", 3)
 
 	//Lace retrieval?

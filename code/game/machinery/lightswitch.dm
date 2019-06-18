@@ -51,7 +51,9 @@
 
 	if(!isnull(connected_area))
 		connected_area.set_lightswitch(on)
+	sync_state()
 	queue_icon_update()
+
 
 /obj/machinery/light_switch/on_update_icon()
 	pixel_x = 0
@@ -126,4 +128,3 @@
 		return
 	power_change()
 	..(severity)
-

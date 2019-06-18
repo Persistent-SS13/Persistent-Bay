@@ -334,20 +334,25 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 /datum/species/proc/create_organs(var/mob/living/carbon/human/H) //Handles creation of mob organs.
 
 	H.mob_size = mob_size
+	var/obj/item/organ/internal/stack/lace
 	for(var/obj/item/organ/organ in H.contents)
 		if(!istype(organ, /obj/item/organ/internal/stack) && (organ in H.organs) || (organ in H.internal_organs))
 			qdel(organ)
+		else if(organ in H.internal_organs)
+			lace = src
 
 	if(H.organs)                  H.organs.Cut()
 	if(H.internal_organs)         H.internal_organs.Cut()
 	if(H.organs_by_name)          H.organs_by_name.Cut()
 	if(H.internal_organs_by_name) H.internal_organs_by_name.Cut()
-
+	
 	H.organs = list()
 	H.internal_organs = list()
 	H.organs_by_name = list()
 	H.internal_organs_by_name = list()
-
+	if(lace)
+		H.internal_organs |= lace
+		H.internal_organs_by_name["stack"] = lace
 	for(var/limb_type in has_limbs)
 		var/list/organ_data = has_limbs[limb_type]
 		var/limb_path = organ_data["path"]

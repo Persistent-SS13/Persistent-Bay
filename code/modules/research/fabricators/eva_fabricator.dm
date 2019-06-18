@@ -201,7 +201,7 @@
 
 /datum/design/item/genfab/eva/oxygen_candle
 	name = "oxygen candle"
-	build_path = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_IRON = 0.5 SHEET, MATERIAL_ROCK_SALT = 1) //An actual oxy candle uses iron powder and sodium cholorate, then heats to 300c to generate oxygen
+	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_IRON = 0.5 SHEET, MATERIAL_ROCK_SALT = 1) //An actual oxy candle uses iron powder and sodium cholorate, then heats to 300c to generate oxygen
 
 /datum/design/item/genfab/eva/adv/jetpack // tier 1
 	name = "Blue Jetpack"	//Just a fancy name for a jetpack, heh

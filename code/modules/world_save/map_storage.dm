@@ -464,6 +464,10 @@ var/global/list/debug_data = list()
 
 
 /proc/Retrieve_Record_Faction(var/key, var/datum/world_faction/faction)
+	if(!faction) return
+	for(var/datum/computer_file/report/crew_record/record2 in faction.records.faction_records)
+		if(record2.get_name() == key)
+			return record2 
 	if(!fexists("record_saves/[faction.uid]/[key].sav")) return
 	var/savefile/f = new("record_saves/[faction.uid]/[key].sav")
 	var/v

@@ -130,7 +130,8 @@
 	if(href_list["importSlot"])
 		chosen_slot = text2num(href_list["importSlot"])
 		ImportCharacter()
-
+	if(href_list["importCharacter"])
+		selectImportPanel()
 	if(href_list["pickSlot"])
 		chosen_slot = text2num(copytext(href_list["pickSlot"], 1, 2))
 		client.prefs.chosen_slot = chosen_slot

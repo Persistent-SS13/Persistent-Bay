@@ -990,7 +990,7 @@
 		vessel.add_reagent(/datum/reagent/blood,species.blood_volume-vessel.total_volume)
 		fixblood()
 
-	species.create_organs(src,1) // Reset our organs/limbs with a new stack.
+	species.create_organs_safe(src) // Reset our organs/limbs with a new stack.
 	restore_all_organs()       // Reapply robotics/amputated status from preferences.
 
 	if(!client || !key) //Don't boot out anyone already in the mob.

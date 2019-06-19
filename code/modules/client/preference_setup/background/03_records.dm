@@ -133,6 +133,7 @@
 		else
 			pref.chosen_pin = chose
 		return TOPIC_REFRESH
+	
 
 	else if(href_list["rules_agree"])
 		pref.rules_agree = 1

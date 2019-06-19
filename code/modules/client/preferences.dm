@@ -140,8 +140,15 @@ datum/preferences
 			to_chat(usr, "You must read the rules and verify that you have read them.")
 			return
 		if(!guide_agree)
-			to_chat(usr, "You must agree to play a reasonable character, stay IC and follow our guidelines.")
+			to_chat(usr, "You must agree to play a reasonable character, stay in character and follow our guidelines.")
 			return
+		if(!cultural_info[TAG_CULTURE])
+			to_chat(usr, "You must select an early life for your character.")
+			return
+		if(!cultural_info[TAG_AMBITION])
+			to_chat(usr, "You must select an ambition for your character.")
+			return	
+			
 		save_character()
 		save_preferences()
 		close_browser(usr, "window=saves")

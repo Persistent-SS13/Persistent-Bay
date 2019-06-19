@@ -51,6 +51,18 @@
 	var/obj/item/stack/material/repairing
 	// turf animation
 	var/atom/movable/overlay/c_animation = null
+	var/datum/gas_mixture/tile_air
+
+/obj/machinery/door/before_save()
+	if(loc && istype(loc, /turf/simulated))
+		var/turf/simulated/floor = loc
+		tile_air = floor.air
+	..()
+/obj/machinery/door/after_load()
+	if(tile_air)
+		for(var/turf/simulated/T in locs)
+			T.air = new()
+			T.air.copy_from(tile_air)
 
 /obj/machinery/door/morgue
 	icon = 'icons/obj/doors/doormorgue.dmi'
@@ -123,7 +135,7 @@
 	return !density && !operating
 
 /obj/machinery/door/Bumped(atom/AM)
-	if(p_open || operating) 
+	if(p_open || operating)
 		return
 	if(ismob(AM))
 		var/mob/M = AM
@@ -164,14 +176,14 @@
 		return
 
 /obj/machinery/door/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
-	if(air_group) 
+	if(air_group)
 		return !block_air_zones
 	if(istype(mover) && mover.checkpass(PASS_FLAG_GLASS))
 		return !opacity
 	return !density
 
 /obj/machinery/door/proc/bumpopen(mob/user as mob)
-	if(operating)	
+	if(operating)
 		return
 	if(user.last_airflow > world.time - vsc.airflow_delay) //Fakkit
 		return
@@ -277,10 +289,10 @@
 		I.attack(src,user)
 		return
 
-	if(src.operating > 0 || isrobot(user))	
+	if(src.operating > 0 || isrobot(user))
 		return //borgs can't attack doors open because it conflicts with their AI-like interaction with them.
 
-	if(src.operating) 
+	if(src.operating)
 		return
 
 	if(src.allowed(user) && operable())
@@ -539,7 +551,7 @@
 	var/area/aft = access_area_by_dir(GLOB.reverse_dir[dir])
 	fore = fore || aft
 	aft = aft || fore
-	
+
 	if (!fore && !aft)
 		req_access = list()
 	else if (fore.secure || aft.secure)

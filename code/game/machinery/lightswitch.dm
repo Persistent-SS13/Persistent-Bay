@@ -44,23 +44,25 @@
 
 	if(!isnull(connected_area))
 		connected_area.set_lightswitch(on)
+	set_dir(dir)
 	sync_state()
 	update_icon()
 
 
 /obj/machinery/light_switch/Initialize()
-	. = ..()
-	if(other_area)
-		src.connected_area = locate(other_area)
-	else
-		src.connected_area = get_area(src)
-	if(name == initial(name))
-		SetName("light switch ([connected_area.name])")
+	if(!map_storage_loaded)
+		. = ..()
+		if(other_area)
+			src.connected_area = locate(other_area)
+		else
+			src.connected_area = get_area(src)
+		if(name == initial(name))
+			SetName("light switch ([connected_area.name])")
 
-	if(!isnull(connected_area))
-		connected_area.set_lightswitch(on)
-	spawn(100)
-		update_icon()
+		if(!isnull(connected_area))
+			connected_area.set_lightswitch(on)
+		spawn(100)
+			update_icon()
 
 /obj/machinery/light_switch/on_update_icon()
 	pixel_x = 0

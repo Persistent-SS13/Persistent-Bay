@@ -139,6 +139,9 @@ datum/preferences
 		if(!rules_agree)
 			to_chat(usr, "You must read the rules and verify that you have read them.")
 			return
+		if(!welcome_accept)
+			to_chat(usr, "You should read the welcome message and then certify you are ready to play persistence.")
+			return
 		if(!guide_agree)
 			to_chat(usr, "You must agree to play a reasonable character, stay in character and follow our guidelines.")
 			return
@@ -212,7 +215,9 @@ datum/preferences
 
 	character.gender = gender
 	character.age = age
-	character.b_type = b_type
+
+	character.b_type = pick(valid_bloodtypes)
+//	character.b_type = b_type
 
 	character.r_eyes = r_eyes
 	character.g_eyes = g_eyes

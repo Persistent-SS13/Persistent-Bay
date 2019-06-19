@@ -126,7 +126,7 @@
 	// Since the record contains both.
 	var/datum/computer_file/report/crew_record/record = CreateModularRecord(H)
 	//testing("created modular record for [H], [record]")
-
+	record.ckey = client.ckey
 	var/datum/computer_file/report/crew_record/record2 = new()
 	if(!record2.load_from_global(real_name))
 		message_admins("record for [real_name] failed to load in character creation..")

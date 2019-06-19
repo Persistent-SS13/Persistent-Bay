@@ -452,6 +452,7 @@ var/global/list/debug_data = list()
 		v.linked_account = account
 	if(v.linked_account)
 		v.linked_account = v.linked_account.after_load()
+		
 	for(var/datum/computer_file/report/crew_record/record2 in GLOB.all_crew_records)
 		if(record2.get_name() == v.get_name())
 			if(v.linked_account && !record2.linked_account || (record2.linked_account && v.linked_account && record2.linked_account.money < v.linked_account))

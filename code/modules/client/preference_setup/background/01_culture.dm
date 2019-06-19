@@ -23,21 +23,12 @@
 /datum/category_item/player_setup_item/background/culture/New()
 	hidden = list()
 	for(var/token in tokens)
-		hidden[token] = TRUE
+		hidden[token] = FALSE
 	..()
 
 /datum/category_item/player_setup_item/background/culture/sanitize_character()
 	if(!islist(pref.cultural_info))
 		pref.cultural_info = list()
-	for(var/token in tokens)
-		var/list/_cultures
-		GET_ALLOWED_VALUES(_cultures, token)
-		if(!LAZYLEN(_cultures))
-			pref.cultural_info[token] = GLOB.using_map.default_cultural_info[token]
-		else
-			var/current_value = pref.cultural_info[token]
-			if(!current_value|| !_cultures[current_value])
-				pref.cultural_info[token] = _cultures[1]
 				
 /datum/category_item/player_setup_item/background/culture/load_character(var/savefile/S)
 	for(var/token in tokens)

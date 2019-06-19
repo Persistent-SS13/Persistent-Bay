@@ -1,3 +1,4 @@
+
 #define TAG_CULTURE   "culture"
 #define TAG_HOMEWORLD "home_system"
 #define TAG_FACTION   "faction"

@@ -345,7 +345,7 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 	if(H.internal_organs)         H.internal_organs.Cut()
 	if(H.organs_by_name)          H.organs_by_name.Cut()
 	if(H.internal_organs_by_name) H.internal_organs_by_name.Cut()
-	
+
 	H.organs = list()
 	H.internal_organs = list()
 	H.organs_by_name = list()
@@ -377,6 +377,28 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 		post_organ_rejuvenate(O, H)
 
 	H.sync_organ_dna()
+
+/datum/species/proc/create_organs_safe(var/mob/living/carbon/human/H) //Handles creation of mob organs.
+
+	var/list/new_organs = list()
+	for(var/limb_type in has_limbs)
+		var/obj/item/organ/O = H.organs_by_name[limb_type]
+		if(!O)
+			var/list/organ_data = has_limbs[limb_type]
+			var/limb_path = organ_data["path"]
+			new_organs |= new limb_path(H)
+		else
+			O.rejuvenate(1)
+
+	for(var/organ_tag in has_organ)
+		var/obj/item/organ/O = H.internal_organs_by_name[organ_tag]
+		if(!O)
+			var/list/organ_data = has_organ[organ_tag]
+			var/limb_path = organ_data["path"]
+			new_organs |= new limb_path(H)
+		else
+			O.rejuvenate(1)
+
 
 /datum/species/proc/hug(var/mob/living/carbon/human/H,var/mob/living/target)
 

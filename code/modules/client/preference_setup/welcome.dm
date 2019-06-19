@@ -1,12 +1,30 @@
+
+/datum/preferences
+	var/welcome_accept = 0
+
 /datum/category_item/player_setup_item/welcome
 	name = "Welcome to Persistent Station 13!"
 	sort_order = 1
 
 /datum/category_item/player_setup_item/welcome/content()
 	. = list()
-	. += "<h2>Persistence is a codebase that makes the world and characters of SS13 save and load. Instead of rounds, the game is continuous with players creating factions and establishing space installations both peaceful and hostile, competing and cooperating in a galaxy of limited resources. After years of private Alpha Testing, the game is finally ready to be publically playable. It's still in early beta under active development however, so you can expect bugs."
-	. += "<br><br>As a new player, the best way to get into the game is to take some time designing your first character. You will need to choose your starting faction and if you haven't played very long your choices for a starting faction will be limited, but most factions recruit their members from defectors of the basic starting factions. If you choose Nanotrasen, you will start on a space station with gameplay very similar to traditional SS13."
-	. += "<br><br>Once you have a character, just look for an assignment so you can start putting money into your account. You can rise through the ranks anywhere, and soon you'll be ensconced in a world of intrigue and politics. Open a buisness designing atmospherics, or found an intersteller empire."
-	. += "<br><br>Persistence is a collaborative project that is developed by an entire community of people. If you are intrested in joining us you can visit our forums here: https://persistentss13.com/forum or our discord here: https://discord.gg/UUpHSPp plus you can find a wiki here: https://persistentss13.com/wiki"
-	. += "<br><br>Thanks for playing our game -- Brawler, Lead Developer</h3>"
+	. += "<center><h1>Welcome to Persistence SS13!</h1></center>"
+	. += "<font size=10 color='orange'>"
+	. += "The entirely unique storytelling community. In Persistence, the entire game-world and every character within it saves. Our community members create structures, organizations and unique characters to bring the shared universe into vibrant life."
+	. += "An elected government creates laws that hires police to enforce them while collecting taxes from private businesses that are competing in the lower floors of the Nexus City Space Station."
+	. += "Members of our community are free to create conflict and excitement as long as they play reasonable characters and work with our excellent administration staff to make sure that conflict helps create a good story for everyone."
+	. += "Relax and have fun on your first day. You are a new immigrant to Nexus City and you might need to spend some time looking for a job or some friends."
+	. += "Persistence is the product of dozens of developers, administrators and community leaders spending years to put together the best community that I've ever been a part of. I'm really glad that you get a chance to play this totally unique game."
+	. += "<br><b><i>Brawler, Lead Developer of Persistence</i></b>"
+	. += "<br><br>"
+	. += "<a href='https://discord.gg/53YgfNU'target='_blank'>Join the Discord</a><br>The Discord is where the majority of OOC discussion takes place and tons of helpful players will tell you all about how to play persistence and what makes it different."
+	if(pref.welcome_accept)
+		. += "<br><br><br><b>You are ready to create a legacy in our shared universe.</b>"
+	else
+		. += "<br><br><br><a href='?src=\ref[src];accept_welcome=1'>I am ready to join Persistence</a>"
 	. = jointext(.,null)
+
+
+/datum/category_item/player_setup_item/background/culture/OnTopic(var/href,var/list/href_list, var/mob/user)
+	if(href_list["accept_welcome"])
+		pref.welcome_accept = 1

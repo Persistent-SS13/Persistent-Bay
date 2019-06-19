@@ -181,8 +181,6 @@ var/global/list/valid_bloodtypes = list("A+", "A-", "B+", "B-", "AB+", "AB-", "O
 		. += "<br>"
 	**/
 	. += "Species: <a href='?src=\ref[src];show_species=1'>[pref.species]</a><br>"
-	. += "Blood Type: <a href='?src=\ref[src];blood_type=1'>[pref.b_type]</a><br>"
-
 	if(has_flag(mob_species, HAS_BASE_SKIN_COLOURS))
 		. += "Base Colour: <a href='?src=\ref[src];base_skin=1'>[pref.s_base]</a><br>"
 
@@ -190,94 +188,6 @@ var/global/list/valid_bloodtypes = list("A+", "A-", "B+", "B-", "AB+", "AB-", "O
 		. += "Skin Tone: <a href='?src=\ref[src];skin_tone=1'>[-pref.s_tone + 35]/[mob_species.max_skin_tone()]</a><br>"
 
 	. += "Needs Glasses: <a href='?src=\ref[src];disabilities=[NEARSIGHTED]'><b>[pref.disabilities & NEARSIGHTED ? "Yes" : "No"]</b></a><br>"
-	. += "Limbs: <a href='?src=\ref[src];limbs=1'>Adjust</a> <a href='?src=\ref[src];reset_limbs=1'>Reset</a><br>"
-	. += "Internal Organs: <a href='?src=\ref[src];organs=1'>Adjust</a><br>"
-
-	//display limbs below
-	var/ind = 0
-	for(var/name in pref.organ_data)
-		var/status = pref.organ_data[name]
-		var/organ_name = null
-		switch(name)
-			if(BP_L_ARM)
-				organ_name = "left arm"
-			if(BP_R_ARM)
-				organ_name = "right arm"
-			if(BP_L_LEG)
-				organ_name = "left leg"
-			if(BP_R_LEG)
-				organ_name = "right leg"
-			if(BP_L_FOOT)
-				organ_name = "left foot"
-			if(BP_R_FOOT)
-				organ_name = "right foot"
-			if(BP_L_HAND)
-				organ_name = "left hand"
-			if(BP_R_HAND)
-				organ_name = "right hand"
-			if(BP_HEART)
-				organ_name = BP_HEART
-			if(BP_EYES)
-				organ_name = BP_EYES
-			if(BP_BRAIN)
-				organ_name = BP_BRAIN
-			if(BP_LUNGS)
-				organ_name = BP_LUNGS
-			if(BP_LIVER)
-				organ_name = BP_LIVER
-			if(BP_KIDNEYS)
-				organ_name = BP_KIDNEYS
-			if(BP_CHEST)
-				organ_name = "upper body"
-			if(BP_GROIN)
-				organ_name = "lower body"
-			if(BP_HEAD)
-				organ_name = "head"
-			if(BP_VOICE)
-				organ_name = BP_VOICE
-
-		if(status == "cyborg")
-			++ind
-			if(ind > 1)
-				. += ", "
-			var/datum/robolimb/R
-			if(pref.rlimb_data[name] && all_robolimbs[pref.rlimb_data[name]])
-				R = all_robolimbs[pref.rlimb_data[name]]
-			else
-				R = basic_robolimb
-			. += "\t[R.company] [organ_name] prosthesis"
-		else if(status == "amputated")
-			++ind
-			if(ind > 1)
-				. += ", "
-			. += "\tAmputated [organ_name]"
-		else if(status == "mechanical")
-			++ind
-			if(ind > 1)
-				. += ", "
-			if(organ_name == BP_BRAIN)
-				. += "\tPositronic [organ_name]"
-			else
-				. += "\tSynthetic [organ_name]"
-		else if(status == "assisted")
-			++ind
-			if(ind > 1)
-				. += ", "
-			switch(organ_name)
-				if(BP_HEART)
-					. += "\tPacemaker-assisted [organ_name]"
-				if(BP_VOICE) //on adding voiceboxes for speaking skrell/similar replacements
-					. += "\tSurgically altered [organ_name]"
-				if(BP_EYES)
-					. += "\tRetinal overlayed [organ_name]"
-				if(BP_BRAIN)
-					. += "\tMachine-interface [organ_name]"
-				else
-					. += "\tMechanically assisted [organ_name]"
-	if(!ind)
-		. += "\[...\]<br><br>"
-	else
-		. += "<br><br>"
 
 	if(LAZYLEN(pref.body_descriptors))
 		. += "<table>"

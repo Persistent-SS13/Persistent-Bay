@@ -1,5 +1,5 @@
 /mob/living/simple_animal/hostile/creature
-	name = "greed"
+	name = "GREED" // never uncapitalize GREED
 	desc = "A sanity-destroying otherthing."
 	icon = 'icons/mob/critter.dmi'
 	speak_emote = list("gibbers")

@@ -169,8 +169,6 @@ FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_synd
 		if(3)
 			return "Increase stock limit to 275 and gain another personal shuttle."
 
-
-
 // Kept as a computer file for possible future expansion into servers.
 /datum/computer_file/report/crew_record
 	filetype = "CDB"

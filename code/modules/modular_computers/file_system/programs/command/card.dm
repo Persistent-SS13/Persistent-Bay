@@ -9,7 +9,8 @@
 	required_access = core_access_reassignment
 	requires_ntnet = TRUE
 	size = 8
-
+	category = PROG_COMMAND
+	
 /datum/computer_file/program/card_mod/can_run(var/mob/living/user, var/loud = 0, var/access_to_check, var/alt_computer)
 	// Defaults to required_access
 	if(!access_to_check)

@@ -8,6 +8,7 @@
 	requires_ntnet = TRUE
 	size = 12
 	democratic = 1
+	category = PROG_GOVERNMENT
 
 /datum/nano_module/program/criminal_laws
 	name = "Nexus City Criminal Laws"

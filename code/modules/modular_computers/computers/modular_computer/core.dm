@@ -79,6 +79,7 @@
 	ADD_SAVED_VAR(scanner)
 	ADD_SAVED_VAR(logistic_processor)
 	ADD_SAVED_VAR(stored_pen)
+	ADD_SAVED_VAR(health)
 
 	ADD_SKIP_EMPTY(active_program)
 	ADD_SKIP_EMPTY(idle_threads)

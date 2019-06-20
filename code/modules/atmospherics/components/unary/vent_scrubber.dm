@@ -23,8 +23,6 @@
 	var/area/initial_loc
 	var/list/scrubbing_gas
 
-	var/list/gas_list
-
 	var/obj/machinery/airlock_controller_norad/norad_controller // For the no radio controller (code/modules/norad_controller)
 	var/norad_UID
 
@@ -38,7 +36,7 @@
 	icon = null
 	ADD_SAVED_VAR(welded)
 	ADD_SAVED_VAR(scrubbing)
-	ADD_SAVED_VAR(scrubbing)
+	ADD_SAVED_VAR(scrubbing_gas)
 	ADD_SAVED_VAR(panic)
 
 /obj/machinery/atmospherics/unary/vent_scrubber/Initialize()
@@ -51,10 +49,18 @@
 	if(!scrubbing_gas)
 		scrubbing_gas = list()
 		for(var/g in gas_data.gases)
-			if(g != GAS_OXYGEN && g != GAS_NITROGEN && !(gas_data.flags[g] & XGM_GAS_REAGENT_GAS))
+			if(g != GAS_OXYGEN && g != GAS_NITROGEN)
 				scrubbing_gas += g
-	scrubbing_gas += GAS_REAGENTS //This is gross, but it seems that's how its supposed to work..
 	return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/atmospherics/unary/vent_scrubber/after_load()
+	. = ..()
+	//Check if we've got non-existent gases, or new ones
+	var/list/toremove = list()
+	for(var/g in scrubbing_gas)
+		if(!(g in gas_data.gases))
+			toremove += g
+	scrubbing_gas -= toremove
 
 /obj/machinery/atmospherics/unary/vent_scrubber/LateInitialize()
 	. = ..()
@@ -113,11 +119,15 @@
 		"filter_o2" 	= (GAS_OXYGEN in scrubbing_gas),
 		"filter_n2" 	= (GAS_NITROGEN in scrubbing_gas),
 		"filter_co2" 	= (GAS_CO2 in scrubbing_gas),
+		"filter_co" 	= (GAS_CARBON_MONOXIDE in scrubbing_gas),
 		"filter_phoron" = (GAS_PHORON in scrubbing_gas),
 		"filter_n2o" 	= (GAS_N2O in scrubbing_gas),
-		"filter_reag" 	= (GAS_REAGENTS in scrubbing_gas),
 		"sigtype" 		= "status"
 	)
+
+	//Add all gas scrubbed, to the advanced list
+	data["filtered"] = scrubbing_gas.Copy()
+	
 	if(!initial_loc.air_scrub_names[id_tag])
 		var/new_name = "[initial_loc.name] Air Scrubber #[initial_loc.air_scrub_names.len+1]"
 		initial_loc.air_scrub_names[id_tag] = new_name
@@ -157,13 +167,14 @@
 		
 		//TODO: This is copying and allocation a list every single ticks its running. 
 		//checking what reagent gases need to be filtered
-		var/list/scrubbed_gases_final
-		if(GAS_REAGENTS in scrubbing_gas)
-			scrubbed_gases_final = (scrubbing_gas - GAS_REAGENTS) //new list so that scrubbing_gas doesn't get flooded with reagent gases.
-			for(var/g in environment.gas)
-				if(gas_data.flags[g] & XGM_GAS_REAGENT_GAS)
-					scrubbed_gases_final += g
-		power_draw = scrub_gas(src, scrubbed_gases_final, environment, air_contents, transfer_moles, power_rating)
+		// var/list/scrubbed_gases_final
+		// if(GAS_REAGENTS in scrubbing_gas)
+		// 	scrubbed_gases_final = (scrubbing_gas - GAS_REAGENTS) //new list so that scrubbing_gas doesn't get flooded with reagent gases.
+		// 	for(var/g in environment.gas)
+		// 		if(gas_data.flags[g] & XGM_GAS_REAGENT_GAS)
+		// 			scrubbed_gases_final += g
+		// power_draw = scrub_gas(src, scrubbed_gases_final, environment, air_contents, transfer_moles, power_rating)
+		power_draw = scrub_gas(src, scrubbing_gas, environment, air_contents, transfer_moles, power_rating)
 
 	if(scrubbing != SCRUBBER_SIPHON && power_draw <= 0)	//99% of all scrubbers
 		//Fucking hibernate because you ain't doing shit.
@@ -221,6 +232,23 @@
 		if(scrubbing != SCRUBBER_SIPHON)
 			panic = FALSE
 
+	if(signal.data["gas_scrub"])
+		var/gasname = signal.data["gas_scrub"]
+		var/gasstate = between(FALSE, text2num(signal.data["gas_scrub_state"]), TRUE)
+		if(gasname in gas_data.gases)
+			if(gasstate)
+				scrubbing_gas |= gasname
+			else
+				scrubbing_gas -= gasname
+	else if(signal.data["toggle_gas_scrub"])
+		var/gasname = signal.data["gas_scrub"]
+		if(gasname in gas_data.gases) //Filter out any bullshit received from the client
+			if(gasname in scrubbing_gas)
+				scrubbing_gas -= gasname
+			else
+				scrubbing_gas |= gasname
+
+	//Leave the defaults gas switches
 	var/list/toggle = list()
 
 	if(!isnull(signal.data["o2_scrub"]) && text2num(signal.data["o2_scrub"]) != (GAS_OXYGEN in scrubbing_gas))
@@ -238,6 +266,11 @@
 	else if(signal.data["toggle_co2_scrub"])
 		toggle += GAS_CO2
 
+	if(!isnull(signal.data["co_scrub"]) && text2num(signal.data["co_scrub"]) != (GAS_CARBON_MONOXIDE in scrubbing_gas))
+		toggle += GAS_CARBON_MONOXIDE
+	else if(signal.data["toggle_co_scrub"])
+		toggle += GAS_CARBON_MONOXIDE
+
 	if(!isnull(signal.data["tox_scrub"]) && text2num(signal.data["tox_scrub"]) != (GAS_PHORON in scrubbing_gas))
 		toggle += GAS_PHORON
 	else if(signal.data["toggle_tox_scrub"])
@@ -247,11 +280,6 @@
 		toggle += GAS_N2O
 	else if(signal.data["toggle_n2o_scrub"])
 		toggle += GAS_N2O
-
-	if(!isnull(signal.data["reag_scrub"]) && text2num(signal.data["reag_scrub"]) != (GAS_REAGENTS in scrubbing_gas))
-		toggle += GAS_REAGENTS
-	else if(signal.data["toggle_reag_scrub"])
-		toggle += GAS_REAGENTS
 
 	scrubbing_gas ^= toggle
 
@@ -381,17 +409,4 @@
 
 // Handles toggling gases to scrub
 /obj/machinery/atmospherics/unary/vent_scrubber/proc/handle_gas_toggling(var/list/sigdata)
-	if(sigdata["gas_scrub"])
-		var/gasname = sigdata["gas_scrub"]
-		var/gasstate = text2num(sigdata["val"])
-		gas_list[gasname] = gasstate
-	else if(sigdata["toggle_gas_scrub"])
-		var/gasname = sigdata["gas_scrub"]
-		gas_list[gasname] = !(gas_list[gasname])
-
-/obj/machinery/atmospherics/unary/vent_scrubber/proc/setup_gases()
-	LAZYCLEARLIST(gas_list)
-	LAZYINITLIST(gas_list)
-	for(var/g in gas_data.gases)
-		gas_list[g] = FALSE //Add the gas id, and turn filtering off by default
 

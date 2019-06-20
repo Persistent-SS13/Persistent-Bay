@@ -2,18 +2,20 @@
 //CONTAINS: Air Alarms and Fire Alarms//
 ////////////////////////////////////////
 
-#define AALARM_MODE_SCRUBBING	1
-#define AALARM_MODE_REPLACEMENT	2 //like scrubbing, but faster.
-#define AALARM_MODE_PANIC		3 //constantly sucks all air
-#define AALARM_MODE_CYCLE		4 //sucks off all air, then refill and switches to scrubbing
-#define AALARM_MODE_FILL		5 //emergency fill
-#define AALARM_MODE_OFF			6 //Shuts it all down.
+#define AALARM_MODE_SCRUBBING   1
+#define AALARM_MODE_REPLACEMENT 2 //like scrubbing, but faster.
+#define AALARM_MODE_PANIC       3 //constantly sucks all air
+#define AALARM_MODE_CYCLE       4 //sucks off all air, then refill and switches to scrubbing
+#define AALARM_MODE_FILL        5 //emergency fill
+#define AALARM_MODE_OFF         6 //Shuts it all down.
+#define AALARM_MODE_EXCHANGE    7 //Like scrubbing, but handles oxygen rarification
 
-#define AALARM_SCREEN_MAIN		1
-#define AALARM_SCREEN_VENT		2
-#define AALARM_SCREEN_SCRUB		3
-#define AALARM_SCREEN_MODE		4
-#define AALARM_SCREEN_SENSORS	5
+#define AALARM_SCREEN_MAIN       1
+#define AALARM_SCREEN_VENT       2
+#define AALARM_SCREEN_SCRUB      3
+#define AALARM_SCREEN_MODE       4
+#define AALARM_SCREEN_SENSORS    5
+#define AALARM_SCREEN_ADV_FILTER 6	//Screen for adding specific gases to specific scrubbers
 
 #define AALARM_REPORT_TIMEOUT 100
 
@@ -62,7 +64,7 @@
 
 	var/datum/wires/alarm/wires
 
-	var/mode = AALARM_MODE_SCRUBBING
+	var/mode = AALARM_MODE_EXCHANGE
 	var/screen = AALARM_SCREEN_MAIN
 	var/area_uid
 	var/area/alarm_area
@@ -78,10 +80,14 @@
 	var/pressure_dangerlevel = 0
 	var/oxygen_dangerlevel = 0
 	var/co2_dangerlevel = 0
+	var/co_dangerlevel = 0 
 	var/temperature_dangerlevel = 0
 	var/other_dangerlevel = 0
 
 	var/report_danger_level = TRUE
+
+	//
+	var/filter_tweak_scrubber = null //The selected scrubber for editing advanced filter settings
 
 /obj/machinery/alarm/cold
 	target_temperature = T0C+4
@@ -104,6 +110,8 @@
 	if(alarm_area && alarm_area.master_air_alarm == src)
 		alarm_area.master_air_alarm = null
 		elect_master(exclude_self = TRUE)
+	filter_tweak_scrubber = null
+	alarm_area = null
 	return ..()
 
 /obj/machinery/alarm/New(var/loc, var/dir, atom/frame)
@@ -170,13 +178,14 @@
 	if(!TLV?.len)
 		TLV[GAS_OXYGEN] =		list(16, 19, 135, 140) // Partial pressure, kpa
 		TLV[GAS_CO2] = 			list(-1.0, -1.0, 5, 10) // Partial pressure, kpa
+		TLV[GAS_CARBON_MONOXIDE] = list(-1.0, -1.0, 5, 10) // Partial pressure, kpa
 		TLV[GAS_PHORON] =		list(-1.0, -1.0, 0.2, 0.5) // Partial pressure, kpa
 		TLV["other"] =			list(-1.0, -1.0, 0.5, 1.0) // Partial pressure, kpa
 		TLV["pressure"] =		list(ONE_ATMOSPHERE*0.80,ONE_ATMOSPHERE*0.90,ONE_ATMOSPHERE*1.10,ONE_ATMOSPHERE*1.20) /* kpa */
 		TLV["temperature"] =	list(T0C-26, T0C, T0C+40, T0C+66) // K
 
 	for(var/g in gas_data.gases)
-		if(!(g in list(GAS_OXYGEN,GAS_NITROGEN,GAS_CO2)))
+		if(!(g in list(GAS_OXYGEN,GAS_NITROGEN,GAS_CO2,GAS_CARBON_MONOXIDE)))
 			trace_gas += g
 
 	if (!master_is_operating())
@@ -282,6 +291,7 @@
 	pressure_dangerlevel = get_danger_level(environment_pressure, TLV["pressure"])
 	oxygen_dangerlevel = get_danger_level(environment.gas[GAS_OXYGEN]*partial_pressure, TLV[GAS_OXYGEN])
 	co2_dangerlevel = get_danger_level(environment.gas[GAS_CO2]*partial_pressure, TLV[GAS_CO2])
+	co_dangerlevel = get_danger_level(environment.gas[GAS_CARBON_MONOXIDE]*partial_pressure, TLV[GAS_CARBON_MONOXIDE])
 
 	temperature_dangerlevel = get_danger_level(environment.temperature, TLV["temperature"])
 	other_dangerlevel = get_danger_level(other_moles*partial_pressure, TLV["other"])
@@ -289,6 +299,7 @@
 	return max(
 		pressure_dangerlevel,
 		oxygen_dangerlevel,
+		co2_dangerlevel,
 		co2_dangerlevel,
 		other_dangerlevel,
 		temperature_dangerlevel
@@ -446,7 +457,13 @@
 	switch(mode)
 		if(AALARM_MODE_SCRUBBING)
 			for(var/device_id in alarm_area.air_scrub_names)
-				send_signal(device_id, list("power"= 1, "co2_scrub"= 1, "scrubbing"= SCRUBBER_SCRUB, "panic_siphon"= 0) )
+				send_signal(device_id, list("power"= 1, "gas_scrub" = GAS_CO2, "gas_scrub_state"= 1, "scrubbing"= SCRUBBER_SCRUB, "panic_siphon"= 0) )
+			for(var/device_id in alarm_area.air_vent_names)
+				send_signal(device_id, list("power"= 1, "checks"= "default", "set_external_pressure"= "default") )
+
+		if(AALARM_MODE_EXCHANGE)
+			for(var/device_id in alarm_area.air_scrub_names)
+				send_signal(device_id, list("power"= 1, "gas_scrub" = GAS_CO2, "gas_scrub_state"= 1, "scrubbing"= SCRUBBER_EXCHANGE, "panic_siphon"= 0) )
 			for(var/device_id in alarm_area.air_vent_names)
 				send_signal(device_id, list("power"= 1, "checks"= "default", "set_external_pressure"= "default") )
 
@@ -539,9 +556,10 @@
 	if(total)
 		var/pressure = environment.return_pressure()
 		environment_data[++environment_data.len] = list("name" = "Pressure", "value" = pressure, "unit" = "kPa", "danger_level" = pressure_dangerlevel)
-		environment_data[++environment_data.len] = list("name" = GAS_OXYGEN, "value" = environment.gas[GAS_OXYGEN] / total * 100, "unit" = "%", "danger_level" = oxygen_dangerlevel)
-		environment_data[++environment_data.len] = list("name" = GAS_NITROGEN, "value" = environment.gas[GAS_NITROGEN] / total * 100, "unit" = "%", "danger_level" = oxygen_dangerlevel)
-		environment_data[++environment_data.len] = list("name" = GAS_CO2, "value" = environment.gas[GAS_CO2] / total * 100, "unit" = "%", "danger_level" = co2_dangerlevel)
+		environment_data[++environment_data.len] = list("name" = "oxygen", "value" = environment.gas[GAS_OXYGEN] / total * 100, "unit" = "%", "danger_level" = oxygen_dangerlevel)
+		environment_data[++environment_data.len] = list("name" = "nitrogen", "value" = environment.gas[GAS_NITROGEN] / total * 100, "unit" = "%", "danger_level" = oxygen_dangerlevel)
+		environment_data[++environment_data.len] = list("name" = "carbon dioxide", "value" = environment.gas[GAS_CO2] / total * 100, "unit" = "%", "danger_level" = co2_dangerlevel)
+		environment_data[++environment_data.len] = list("name" = "carbon monoxide", "value" = environment.gas[GAS_CARBON_MONOXIDE] / total * 100, "unit" = "%", "danger_level" = co_dangerlevel)
 
 		var/other_moles = 0
 		for(var/g in trace_gas)
@@ -593,14 +611,15 @@
 					)
 				scrubbers[scrubbers.len]["filters"] += list(list("name" = GAS_OXYGEN,				  "command" = "o2_scrub",	"val" = info["filter_o2"]))
 				scrubbers[scrubbers.len]["filters"] += list(list("name" = GAS_NITROGEN,			  "command" = "n2_scrub",	"val" = info["filter_n2"]))
-				scrubbers[scrubbers.len]["filters"] += list(list("name" = GAS_CO2, 	  "command" = "co2_scrub","val" = info["filter_co2"]))
+				scrubbers[scrubbers.len]["filters"] += list(list("name" = "Carbon Dioxide", 	  "command" = "co2_scrub","val" = info["filter_co2"]))
+				scrubbers[scrubbers.len]["filters"] += list(list("name" = "Carbon Monoxide", 	  "command" = "gas_scrub", "val" = GAS_CARBON_MONOXIDE, "gas_scrub_state" = info["filter_co"] ))
 				scrubbers[scrubbers.len]["filters"] += list(list("name" = "Toxin"	, 			  "command" = "tox_scrub","val" = info["filter_phoron"]))
-				scrubbers[scrubbers.len]["filters"] += list(list("name" = "Aerosolized Reagents", "command" = "reag_scrub","val" = info["filter_reag"]))
 				scrubbers[scrubbers.len]["filters"] += list(list("name" = "Nitrous Oxide",		  "command" = "n2o_scrub","val" = info["filter_n2o"]))
 			data["scrubbers"] = scrubbers
 		if(AALARM_SCREEN_MODE)
 			var/modes[0]
 			modes[++modes.len] = list("name" = "Filtering - Scrubs out contaminants", 			"mode" = AALARM_MODE_SCRUBBING,		"selected" = mode == AALARM_MODE_SCRUBBING, 	"danger" = 0)
+			modes[++modes.len] = list("name" = "Exchanging - Exchange contaminants with air",	"mode" = AALARM_MODE_EXCHANGE,		"selected" = mode == AALARM_MODE_EXCHANGE, 	"danger" = 0)
 			modes[++modes.len] = list("name" = "Replace Air - Siphons out air while replacing", "mode" = AALARM_MODE_REPLACEMENT,	"selected" = mode == AALARM_MODE_REPLACEMENT,	"danger" = 0)
 			modes[++modes.len] = list("name" = "Panic - Siphons air out of the room", 			"mode" = AALARM_MODE_PANIC,			"selected" = mode == AALARM_MODE_PANIC, 		"danger" = 1)
 			modes[++modes.len] = list("name" = "Cycle - Siphons air before replacing", 			"mode" = AALARM_MODE_CYCLE,			"selected" = mode == AALARM_MODE_CYCLE, 		"danger" = 1)
@@ -615,6 +634,7 @@
 			var/list/gas_names = list(
 				GAS_OXYGEN		= "O<sub>2</sub>",
 				GAS_CO2			= "CO<sub>2</sub>",
+				GAS_CO			= "CO",
 				GAS_PHORON		= "Toxin",
 				"other"			= "Other")
 			for (var/g in gas_names)
@@ -636,6 +656,15 @@
 			data["thresholds"] 			= thresholds
 			data["report_danger_level"] = report_danger_level
 			data["breach_detection"] 	= breach_detection
+
+		if(AALARM_SCREEN_ADV_FILTER)
+			data["scrubber_name"] = alarm_area.air_scrub_names[filter_tweak_scrubber]
+			data["scrubber_id_tag"] = filter_tweak_scrubber
+			var/list/handled_gases[0]
+			for(var/g in gas_data.gases)
+				handled_gases[++handled_gases.len] = list("gas_id" = g, "name" = gas_data.name[g], "state" = (g in alarm_area.air_scrub_info[filter_tweak_scrubber]["filtered"]))
+			data["gases_entries"] = handled_gases
+
 
 /obj/machinery/alarm/CanUseTopic(var/mob/user, var/datum/topic_state/state, var/href_list = list())
 	if(buildstage != 2)
@@ -720,6 +749,15 @@
 					"panic_siphon")
 
 					send_signal(device_id, list(href_list["command"] = text2num(href_list["val"]) ) )
+					return TOPIC_REFRESH
+				
+				if("gas_scrub")
+					send_signal(device_id, list(href_list["command"] = href_list["val"], "gas_scrub_state" = href_list["gas_scrub_state"] ))
+					return TOPIC_REFRESH
+				
+				if("adv_filtering")
+					filter_tweak_scrubber = href_list["id_tag"]
+					screen = AALARM_SCREEN_ADV_FILTER
 					return TOPIC_REFRESH
 
 				if("scrubbing")

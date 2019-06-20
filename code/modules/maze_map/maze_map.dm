@@ -32,7 +32,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	var/monster_quantity = 5 // and how many will occur/respawn
 	var/list/obj_types = list(/obj/structure/closet/crate/cryo)
 	var/obj_quantity = 5
-	
+
 	var/list/current_monsters = list()
 	var/list/current_obj = list()
 	var/list/despawning = list()
@@ -41,13 +41,15 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	var/name = "Nexus"
 
 /datum/zlevel_data/proc/update()
-	if (isWild() && state == ZLEVEL_ACTIVE)
+	if (isWild())
 		replenish_monsters()
 		replenish_obj()
 
 /datum/zlevel_data/proc/spawn_monster(var/turf/location, var/monster_type, var/diff = difficulty)
 	if (!location || !monster_type || !diff)
 		return 0
+	if(diff > 1)
+		diff = rand(1, diff)
 	var/mob/living/simple_animal/monster = new monster_type(location)
 	var/mult_health = 1 + (diff == 1 ? 0 : diff) * ZLEVELDATA_MONSTER_HEALTH_MULT_PER_DIFFICULTY
 	var/mult_damage = 1 + (diff == 1 ? 0 : diff) * ZLEVELDATA_MONSTER_DAMAGE_MULT_PER_DIFFICULTY
@@ -58,6 +60,10 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 
 	current_monsters |= monster
 	monster.faction = "spawned"
+	var/matrix/M = matrix()
+	M.Scale(1*0.2*diff)
+	monster.transform = M
+
 
 /datum/zlevel_data/proc/replenish_monsters()
 	if(current_monsters.len < monster_quantity)
@@ -144,13 +150,17 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 /datum/zlevel_data/three
 	z = 3
 	difficulty = 0
-	
+
 /datum/zlevel_data/four
 	z = 4
 	coord = "(0,1)"
 	name = "Due North"
 	S_connect = 1
 	N_connect = 5
+	monster_types = list(/mob/living/simple_animal/hostile/voxslug) // types of monsters that will occur on this map.
+	monster_quantity = 25 // and how many will occur/respawn
+	obj_quantity = 0
+	difficulty = 1
 
 /datum/zlevel_data/five
 	z = 5
@@ -158,26 +168,45 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	name = "Julian's Corner"
 	S_connect = 4
 	W_connect = 6
+	monster_types = list(/mob/living/simple_animal/hostile/voxslug) // types of monsters that will occur on this map.
+	monster_quantity = 35 // and how many will occur/respawn
+	obj_types = list(/obj/structure/closet/crate/cryo)
+	obj_quantity = 3
+	difficulty = 2
 
 /datum/zlevel_data/six
 	z = 6
 	coord = "(-1,2)"
-	name = "Lost Greed"
+	name = "Ambition's Toll"
 	E_connect = 5
 	W_connect = 7
 	S_connect = 8
+	monster_types = list(/mob/living/simple_animal/hostile/voxslug, /mob/living/simple_animal/hostile/creature) // types of monsters that will occur on this map.
+	monster_quantity = 40 // and how many will occur/respawn
+	obj_types = list(/obj/structure/closet/crate/cryo)
+	obj_quantity = 10
+	difficulty = 3
 
 /datum/zlevel_data/seven
 	z = 7
 	coord = "(-2,2)"
 	name = "Shadowlands"
 	E_connect = 6
+	monster_types = list(/mob/living/simple_animal/hostile/voxslug, /mob/living/simple_animal/hostile/creature, /mob/living/simple_animal/hostile/faithless) // types of monsters that will occur on this map.
+	monster_quantity = 40 // and how many will occur/respawn
+	obj_types = list(/obj/structure/closet/crate/cryo)
+	obj_quantity = 10
+	difficulty = 4
+
 
 /datum/zlevel_data/eight
 	z = 8
 	coord = "(-1,1)"
-	name = "Blue Effigy"
+	name = "Painful Retreat"
 	N_connect = 6
+	monster_quantity = 0 // and how many will occur/respawn
+	obj_quantity = 0
+
 
 /datum/zlevel_data/nine
 	z = 9
@@ -185,6 +214,10 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	name = "Due South"
 	N_connect = 1
 	E_connect = 10
+	monster_types = list(/mob/living/simple_animal/hostile/carp) // types of monsters that will occur on this map.
+	monster_quantity = 20 // and how many will occur/respawn
+	obj_quantity = 1
+	difficulty = 1
 
 /datum/zlevel_data/ten
 	z = 10
@@ -192,15 +225,22 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	name = "Gerald's Zone"
 	W_connect = 9
 	N_connect = 11
+	monster_types = list(/mob/living/simple_animal/hostile/carp) // types of monsters that will occur on this map.
+	monster_quantity = 30 // and how many will occur/respawn
+	obj_quantity = 1
+	difficulty = 2
 
 /datum/zlevel_data/eleven
 	z = 11
 	coord = "(1,0)"
-	name = "Tokens and Dice"
+	name = "Thin Walls"
 	S_connect = 10
 	N_connect = 12
 	W_connect = 13
-
+	monster_types = list(/mob/living/simple_animal/hostile/carp) // types of monsters that will occur on this map.
+	monster_quantity = 20 // and how many will occur/respawn
+	obj_quantity = 1
+	difficulty = 1
 
 /datum/zlevel_data/twelve
 	z = 12

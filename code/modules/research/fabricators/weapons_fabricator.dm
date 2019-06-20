@@ -1673,10 +1673,10 @@
 
 /datum/design/item/weaponfab/magazines/empty/lap39mm
 	name = "LAP3 9mm Pistol Magazine (empty)"
-	build_path = /obj/item/ammo_magazine/lap3/empty
+	build_path = /obj/item/ammo_magazine/box/lap3/empty
 /datum/design/item/weaponfab/magazines/lap39mm
 	name = "LAP3 9mm Pistol Magazine"
-	build_path = /obj/item/ammo_magazine/lap3
+	build_path = /obj/item/ammo_magazine/box/lap3
 
 /datum/design/item/weaponfab/magazines/empty/b92fs
 	name = "92fs Pistol Magazine (empty)"

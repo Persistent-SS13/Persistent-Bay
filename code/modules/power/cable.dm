@@ -490,7 +490,7 @@ obj/structure/cable/proc/cableColor(var/colorC)
 	icon = 'icons/obj/power.dmi'
 	icon_state = "coil"
 	randpixel = 2
-	amount = MAXCOIL
+	amount = 1 //Keep it to 1, otherwise machines will be created with a million cables, and if changed for a numbered sub-class they won't build anymore
 	max_amount = MAXCOIL
 	color = COLOR_MAROON
 	desc = "A coil of wiring, for delicate electronics use aswell as the more basic cable laying."
@@ -507,17 +507,21 @@ obj/structure/cable/proc/cableColor(var/colorC)
 
 /obj/item/stack/cable_coil/single
 	amount = 1
-	
+
 /obj/item/stack/cable_coil/five
 	amount = 5
-	
+
 /obj/item/stack/cable_coil/thirty
 	amount = 30
-	
 	
 
 /obj/item/stack/cable_coil/single/New(var/loc, var/length = 1, var/param_color = null)
 	..(loc, length, param_color)
+/obj/item/stack/cable_coil/five/New(var/loc, var/length = 5, var/param_color = null)
+	..(loc, length, param_color)
+/obj/item/stack/cable_coil/thirty/New(var/loc, var/length = 30, var/param_color = null)
+	..(loc, length, param_color)
+
 
 /obj/item/stack/cable_coil/cyborg
 	name = "cable coil synthesizer"
@@ -527,13 +531,16 @@ obj/structure/cable/proc/cableColor(var/colorC)
 	uses_charge = 1
 	charge_costs = list(1)
 
-/obj/item/stack/cable_coil/New(loc, length = MAXCOIL, var/param_color = null)
+/obj/item/stack/cable_coil/New(loc, length = 1, var/param_color = null)
 	..()
 	src.amount = length
 	if (param_color) // It should be red by default, so only recolor it if parameter was specified.
 		color = param_color
-	update_icon()
 	update_wclass()
+
+/obj/item/stack/cable_coil/Initialize()
+	. = ..()
+	queue_icon_update()
 
 ///////////////////////////////////
 // General procedures

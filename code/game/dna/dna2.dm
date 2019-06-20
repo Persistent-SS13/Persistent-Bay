@@ -85,6 +85,11 @@ var/global/list/datum/dna/gene/dna_genes[0]
 
 /datum/dna/New()
 	. = ..()
+	ADD_SAVED_VAR(uni_identity)
+	ADD_SAVED_VAR(struc_enzymes)
+	ADD_SAVED_VAR(unique_enzymes)
+	ADD_SAVED_VAR(dirtyUI)
+	ADD_SAVED_VAR(dirtySE)
 	ADD_SAVED_VAR(b_type)
 	ADD_SAVED_VAR(real_name)
 	ADD_SAVED_VAR(s_base)
@@ -94,10 +99,11 @@ var/global/list/datum/dna/gene/dna_genes[0]
 
 /datum/dna/after_load()
 	. = ..()
-	unique_enzymes = md5(real_name)
-	GLOB.reg_dna[unique_enzymes] = real_name
-	UpdateUI()
-	UpdateSE()
+	//Don't reset anything. Otherwise it makes bad things happen
+	// unique_enzymes = md5(real_name)
+	// GLOB.reg_dna[unique_enzymes] = real_name
+	// UpdateUI()
+	// UpdateSE()
 
 // Make a copy of this strand.
 // USE THIS WHEN COPYING STUFF OR YOU'LL GET CORRUPTION!

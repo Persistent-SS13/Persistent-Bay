@@ -18,6 +18,7 @@
 	throwforce = 5.0
 	throw_speed = 3
 	throw_range = 15
+	mass = 0.250 //Kg
 	var/build_path = null
 	var/board_type = "computer"
 	var/list/req_components = null

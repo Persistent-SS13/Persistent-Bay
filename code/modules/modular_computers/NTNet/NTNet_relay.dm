@@ -9,6 +9,7 @@
 	icon_state = "bus"
 	anchored = TRUE
 	density = TRUE
+	circuit_type = /obj/item/weapon/circuitboard/ntnet_relay
 	var/datum/ntnet/NTNet = null // This is mostly for backwards reference and to allow varedit modifications from ingame.
 	var/enabled = TRUE				// Set to 0 if the relay was turned off
 	var/dos_failure = 0			// Set to 1 if the relay failed due to (D)DoS attack
@@ -22,15 +23,12 @@
 /obj/machinery/ntnet_relay/New()
 	uid = gl_uid
 	gl_uid++
-	component_parts = list()
-	component_parts += new /obj/item/stack/cable_coil(src,15)
-	component_parts += new /obj/item/weapon/circuitboard/ntnet_relay(src)
-
 	if(ntnet_global)
 		ntnet_global.relays.Add(src)
 		NTNet = ntnet_global
 		ntnet_global.add_log("New quantum relay activated. Current amount of linked relays: [NTNet.relays.len]")
 	..()
+	ADD_SAVED_VAR(enabled)
 
 /obj/machinery/ntnet_relay/Destroy()
 	if(ntnet_global)

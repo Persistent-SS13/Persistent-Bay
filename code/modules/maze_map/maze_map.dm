@@ -61,7 +61,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	current_monsters |= monster
 	monster.faction = "spawned"
 	var/matrix/M = matrix()
-	M.Scale(1*0.2*diff)
+	M.Scale(1+(0.2*diff))
 	monster.transform = M
 
 
@@ -227,7 +227,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	N_connect = 11
 	monster_types = list(/mob/living/simple_animal/hostile/carp) // types of monsters that will occur on this map.
 	monster_quantity = 30 // and how many will occur/respawn
-	obj_quantity = 1
+	obj_quantity = 3
 	difficulty = 2
 
 /datum/zlevel_data/eleven
@@ -237,10 +237,10 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	S_connect = 10
 	N_connect = 12
 	W_connect = 13
-	monster_types = list(/mob/living/simple_animal/hostile/carp) // types of monsters that will occur on this map.
-	monster_quantity = 20 // and how many will occur/respawn
-	obj_quantity = 1
-	difficulty = 1
+	monster_types = list(/mob/living/simple_animal/hostile/carp, /mob/living/simple_animal/hostile/carp/pike) // types of monsters that will occur on this map.
+	monster_quantity = 30 // and how many will occur/respawn
+	obj_quantity = 5
+	difficulty = 3
 
 /datum/zlevel_data/twelve
 	z = 12

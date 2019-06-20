@@ -20,60 +20,21 @@
 	icon_state = "mixer0"
 
 	circuit_type = /obj/item/weapon/circuitboard/carbonator
-
 	var/obj/item/weapon/reagent_containers/glass/beaker = null //output beaker
 	var/obj/item/weapon/tank/co2tank = null	//Carbon dioxide canister used to fill water with carbon
-	var/time_started = 0
 
 /obj/machinery/carbonator/New()
 	. = ..()
 	ADD_SAVED_VAR(beaker)
 	ADD_SAVED_VAR(co2tank)
-	ADD_SAVED_VAR(time_started)
-
-/obj/machinery/carbonator/Initialize()
-	. = ..()
-	STOP_PROCESSING(SSmachines, src)
 
 /obj/machinery/carbonator/Destroy()
-	STOP_PROCESSING(SSmachines, src)
 	beaker = null
 	co2tank = null
 	. = ..()
 
-/obj/machinery/carbonator/before_save()
-	. = ..()
-	if(time_started != 0)
-		time_started -= world.time
-
-/obj/machinery/carbonator/after_save()
-	. = ..()
-	if(time_started != 0)
-		time_started += world.time
-
-/obj/machinery/carbonator/after_load()
-	. = ..()
-	if(time_started != 0)
-		time_started += world.time
-
 /obj/machinery/carbonator/Process()
-	. = ..()
-	if(!isactive())
-		return
-	
-	if(world.time >= (time_started + 2 SECONDS) && beaker && co2tank && beaker.reagents && co2tank.return_air())
-		for(var/datum/reagent/R in beaker.reagents.get_reagents())
-			switch(R.type)
-				if(/datum/reagent/water, /datum/reagent/water/holywater)
-					var/gas_needed = R.volume //Should probably be higher
-					var/volumefill = R.volume
-					var/datum/gas_mixture/G = co2tank.remove_air_volume(volumefill)
-					if(G && G.get_gas(GAS_CO2) >= gas_needed )
-						beaker.reagents.remove_reagent(R.type, R.volume)
-						beaker.reagents.add_reagent(/datum/reagent/drink/sodawater, volumefill)
-						playsound(src, 'sound/effects/bubbles.ogg') //Bubbling
-		turn_idle()
-
+	return PROCESS_KILL
 
 /obj/machinery/carbonator/attackby(obj/item/O, mob/user)
 	if(default_deconstruction_screwdriver(user, O))
@@ -109,12 +70,34 @@
 
 /obj/machinery/carbonator/attack_hand(mob/user)
 	. = ..()
+	if(!isidle())
+		to_chat(user, "\The [src] is busy.")
+	if(!beaker)
+		to_chat(user, "There are no beakers inside!")
+	if(!co2tank)
+		to_chat(user, "There is no gas tank hooked up to the machine!")
 	if(beaker && co2tank && isidle())
 		turn_active()
-		visible_message("[user] turn on \the [src].")
-	else
+		fizz_up(user)
 		turn_idle()
-		visible_message("[user] turn off \the [src].")
+
+/obj/machinery/carbonator/proc/fizz_up(var/mob/user)
+	if(!beaker.reagents && co2tank.return_air())
+		return 0
+	if(!do_after(user, 2 SECONDS, src))
+		return 0
+
+	for(var/datum/reagent/R in beaker.reagents.get_reagents())
+		if(istype(R, /datum/reagent/water) || istype(R, /datum/reagent/water/holywater) )
+			var/volumefill = R.volume
+			var/datum/gas_mixture/G = co2tank.remove_air_volume(volumefill)
+			if(G && G.get_gas(GAS_CO2) >= gas_needed )
+				beaker.reagents.remove_reagent(R.type, R.volume)
+				beaker.reagents.add_reagent(/datum/reagent/drink/sodawater, volumefill)
+				spawn(5)
+					playsound(src, 'sound/effects/bubbles.ogg') //Bubbling
+	
+	return 1
 
 /obj/machinery/carbonator/CtrlClick(mob/user)
 	. = ..()
@@ -131,16 +114,6 @@
 		verbs |= /obj/machinery/carbonator/proc/remove_tank
 	else
 		verbs -= /obj/machinery/carbonator/proc/remove_tank
-
-/obj/machinery/carbonator/turn_active()
-	. = ..()
-	START_PROCESSING(SSmachines, src)
-	time_started = world.time
-	
-/obj/machinery/carbonator/turn_idle()
-	. = ..()
-	STOP_PROCESSING(SSmachines, src)
-	time_started = 0
 
 /obj/machinery/carbonator/proc/remove_beaker()
 	set name = "Remove Beaker"

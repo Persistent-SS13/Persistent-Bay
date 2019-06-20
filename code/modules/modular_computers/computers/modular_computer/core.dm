@@ -3,7 +3,7 @@
 		last_power_usage = 0
 		return 0
 
-	if(get_health() <= (break_threshold * get_max_health()))
+	if(get_health() <= (broken_threshold * get_max_health()))
 		shutdown_computer()
 		return 0
 
@@ -79,7 +79,6 @@
 	ADD_SAVED_VAR(scanner)
 	ADD_SAVED_VAR(logistic_processor)
 	ADD_SAVED_VAR(stored_pen)
-	ADD_SAVED_VAR(health)
 
 	ADD_SKIP_EMPTY(active_program)
 	ADD_SKIP_EMPTY(idle_threads)
@@ -166,7 +165,7 @@
 	if(tesla_link)
 		tesla_link.enabled = 1
 	var/issynth = issilicon(user) // Robots and AIs get different activation messages.
-	if(get_health() <= (break_threshold * get_max_health()))
+	if(get_health() <= (broken_threshold * get_max_health()))
 		if(issynth)
 			to_chat(user, "You send an activation signal to \the [src], but it responds with an error code. It must be damaged.")
 		else

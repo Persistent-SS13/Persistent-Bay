@@ -3233,7 +3233,7 @@ var/PriorityQueue/all_feeds
 	limits = new limits()
 
 /datum/business_module
-	var/cost = 500
+	var/cost = 750
 	var/name = ""
 	var/desc = ""
 	var/current_level = 1
@@ -3245,6 +3245,7 @@ var/PriorityQueue/all_feeds
 	var/list/daily_objectives = list()
 	var/list/weekly_objectives = list()
 
+	var/list/starting_items = list()
 
 /datum/business_module/New()
 	var/list/specs_c = specs.Copy()
@@ -3257,7 +3258,7 @@ var/PriorityQueue/all_feeds
 		levels |= new x()
 
 /datum/business_module/engineering
-	cost = 500
+	cost = 800
 	name = "Engineering"
 	desc = "An engineering business has tools to develop areas of the station and construct shuttles plus the unique capacity to manage private radio communications. Engineering businesses can reserve larger spaces than other businesses and develop those into residential areas to be leased to individuals."
 	levels = list(/datum/machine_limits/eng/one, /datum/machine_limits/eng/two, /datum/machine_limits/eng/three, /datum/machine_limits/eng/four)
@@ -3265,6 +3266,8 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/revenue, /datum/module_objective/hourly/employees, /datum/module_objective/hourly/cost, /datum/module_objective/hourly/contract)
 	daily_objectives = list(/datum/module_objective/daily/revenue, /datum/module_objective/daily/employees, /datum/module_objective/daily/cost, /datum/module_objective/daily/contract)
 	weekly_objectives = list(/datum/module_objective/weekly/revenue, /datum/module_objective/weekly/employees, /datum/module_objective/weekly/cost, /datum/module_objective/weekly/contract)
+	starting_items = list(/obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/clothing/gloves/insulated/cheap = 2, /obj/item/weapon/storage/belt/utility/full = 2)
+	
 /datum/business_spec/eng/realestate
 	name = "Real-Estate"
 	desc = "With this specialization the engineering business gains another 200 tiles of area limit plus a consumer fabricator limit and two levels of consumer tech limit so that you can better furnish interiors."
@@ -3277,7 +3280,7 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/medical
-	cost = 500
+	cost = 700
 	name = "Medical"
 	desc = "A medical firm has unqiue capacity to develop medications and implants. Programs can be used to register clients under your care and recieve a weekly insurance payment from them, in exchange for tracking their health and responding to medical emergencies."
 	specs = list(/datum/business_spec/medical/pharma, /datum/business_spec/medical/paramedic)
@@ -3285,6 +3288,7 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/visitors, /datum/module_objective/hourly/employees, /datum/module_objective/hourly/cost, /datum/module_objective/hourly/contract)
 	daily_objectives = list(/datum/module_objective/daily/visitors, /datum/module_objective/daily/employees, /datum/module_objective/daily/cost, /datum/module_objective/daily/contract)
 	weekly_objectives = list(/datum/module_objective/weekly/visitors, /datum/module_objective/weekly/employees, /datum/module_objective/weekly/cost, /datum/module_objective/weekly/contract)
+	starting_items = list(/obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/weapon/storage/firstaid/surgery/full = 1, /obj/item/clothing/gloves/latex = 2, /obj/item/device/scanner/health = 2)
 
 /datum/business_spec/medical/paramedic
 	name = "Paramedic"
@@ -3293,6 +3297,7 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/travel)
 	daily_objectives = list(/datum/module_objective/daily/travel)
 	weekly_objectives = list(/datum/module_objective/weekly/travel)
+	
 /datum/business_spec/medical/pharma
 	name = "Pharmacy"
 	desc = "This specialization gives the business capacity for a service fabricator and two botany trays that can produce reagents that can be further refined into valuable and effective medicines. It also grants 200 extra tiles to the area limit so you can have larger medical facilities."
@@ -3300,7 +3305,7 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/retail
-	cost = 500
+	cost = 700
 	name = "Retail"
 	desc = "A retail business has exclusive production capacity so that they can sell clothing and furniture to individuals and organizations. With additional specialization they can branch out into combat equipment or engineering supplies, but they are reliant on the material market to supply their production."
 	levels = list(/datum/machine_limits/retail/one, /datum/machine_limits/retail/two, /datum/machine_limits/retail/three, /datum/machine_limits/retail/four)
@@ -3308,11 +3313,13 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/visitors, /datum/module_objective/hourly/employees, /datum/module_objective/hourly/cost, /datum/module_objective/hourly/sales, /datum/module_objective/weekly/fabricate, /datum/module_objective/hourly/revenue)
 	daily_objectives = list(/datum/module_objective/daily/visitors, /datum/module_objective/daily/employees, /datum/module_objective/daily/cost, /datum/module_objective/daily/sales, /datum/module_objective/weekly/fabricate, /datum/module_objective/daily/revenue)
 	weekly_objectives = list(/datum/module_objective/weekly/visitors, /datum/module_objective/weekly/employees, /datum/module_objective/weekly/cost, /datum/module_objective/weekly/sales, /datum/module_objective/weekly/fabricate, /datum/module_objective/weekly/revenue)
+	starting_items = list(/obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 4, /obj/item/stack/material/glass/ten = 4)
+
 /datum/business_spec/retail/combat
 	name = "Combat"
 	desc = "The Combat specialization gives limits for a combat fabricator and an early combat tech limit which will increase as the business network expands. You can also maintain a shuttle, but you'll need to purchase the EVA equipment elsewhere."
 	limits = /datum/machine_limits/retail/spec/combat
-
+	
 /datum/business_spec/retail/bigstore
 	name = "Grand Emporium"
 	desc = "This specialization gives the business capacity for an engineering fabricator, an EVA fabricator, an engineering tech limit, plus 200 extra tiles for the area limit so that you can produce a grand emporium that sells all manner of things."
@@ -3321,7 +3328,7 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/service
-	cost = 400
+	cost = 700
 	name = "Service"
 	desc = "A service business has a fabricator that can produce culinary and botany equipment. A service business can serve food or drink and supply freshly grown plants for other organizations, a crucial source of cloth and biomass."
 	levels = list(/datum/machine_limits/service/one, /datum/machine_limits/service/two, /datum/machine_limits/service/three, /datum/machine_limits/service/four)
@@ -3329,6 +3336,7 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/sales, /datum/module_objective/hourly/cost)
 	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/sales, /datum/module_objective/daily/cost)
 	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/sales, /datum/module_objective/weekly/cost)
+	starting_items = list(/obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 3, /obj/item/stack/material/glass/ten = 3, /obj/item/seeds/potatoseed = 1, /obj/item/seeds/towermycelium = 1)
 
 /datum/business_spec/service/culinary
 	name = "Culinary"
@@ -3346,7 +3354,7 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/mining
-	cost = 500
+	cost = 800
 	name = "Mining"
 	desc = "Mining companies send teams out into the hostile outer-space armed with picks, drills and a variety of other EVA equipment plus weapons and armor to defend themselves. The ores they recover can be processed and then sold on the Material Marketplace to other organizations for massive profits."
 	levels = list(/datum/machine_limits/mining/one, /datum/machine_limits/mining/two, /datum/machine_limits/mining/three, /datum/machine_limits/mining/four)
@@ -3354,6 +3362,8 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/travel, /datum/module_objective/hourly/cost)
 	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/travel, /datum/module_objective/daily/cost)
 	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/travel, /datum/module_objective/weekly/cost)
+	starting_items = list(/obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/weapon/pickaxe = 2, /obj/item/clothing/head/helmet/space/mining = 2, /obj/item/clothing/suit/space/mining = 2)
+
 
 
 /datum/business_spec/mining/massdrill
@@ -3370,7 +3380,7 @@ var/PriorityQueue/all_feeds
 	weekly_objectives = list(/datum/module_objective/weekly/monsters)
 
 /datum/business_module/media
-	cost = 350
+	cost = 600
 	name = "Media"
 	desc = "Media companies have simple production and tech capacities but exclusive access to programs that can publish books and news articles for paid redistribution. It is also much less expensive than other types, making it a good choice for generic business."
 	levels = list(/datum/machine_limits/media/one, /datum/machine_limits/media/two, /datum/machine_limits/media/three, /datum/machine_limits/media/four)
@@ -3378,6 +3388,8 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/sales)
 	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/sales)
 	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/sales)
+	starting_items = list(/obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/weapon/pickaxe = 2, /obj/item/clothing/head/helmet/space/mining = 2, /obj/item/clothing/suit/space/mining = 2)
+
 /datum/business_spec/media/journalism
 	name = "Journalism"
 	desc = "Specializing in Journalism gives capacity for an EVA fabricator and shuttle, plus a medical fabricator with basic medical tech limitation. Explore every corner of Nexus-space, but best to carry basic medical supplies."
@@ -3385,6 +3397,9 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/publish_article)
 	daily_objectives = list(/datum/module_objective/daily/article_viewers)
 	weekly_objectives = list(/datum/module_objective/weekly/article_viewers)
+	starting_items = list(/obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/device/camera = 2, /obj/item/weapon/paper_bin = 1, /obj/item/weapon/pen = 2)
+
+	
 /datum/business_spec/media/bookpublishing
 	name = "Publishing"
 	desc = "The Publishing specialization grants 200 extra tiles to the area limit and an engineering fabricator and tech limit. You can build a proper library and publishing house, or perhaps some other artistic facility."

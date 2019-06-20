@@ -71,6 +71,15 @@
 			attacker.target_mob = null
 
 /obj/machinery/mining/attackby(obj/item/O as obj, mob/user as mob)
+	if(O.GetIdCard())			// trying to unlock the interface with an ID card
+		if(!connected_faction)
+			var/obj/item/weapon/card/id/id = O.GetIdCard()
+			if(id)
+				var/datum/world_faction/faction = get_faction(id.selected_faction)
+				if(faction)
+					can_connect(faction, user)
+		else
+			can_disconnect(connected_faction, user)
 	if(statu == 2)
 		if(stacks_needed && istype(O, /obj/item/stack/material) && O.get_material_name() == MATERIAL_STEEL)
 			var/obj/item/stack/material/sheets = O
@@ -285,7 +294,9 @@
 
 	check_supports()
 
-	if(!connected_faction) return
+	if(!connected_faction) 
+		active = 0
+		return
 	if(!active) return
 
 	if(!anchored || !use_cell_power())

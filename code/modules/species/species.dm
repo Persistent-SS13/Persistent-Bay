@@ -336,7 +336,7 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 	H.mob_size = mob_size
 	var/obj/item/organ/internal/stack/lace
 	for(var/obj/item/organ/organ in H.contents)
-		if(!istype(organ, /obj/item/organ/internal/stack) && (organ in H.organs) || (organ in H.internal_organs))
+		if(!istype(organ, /obj/item/organ/internal/stack) && ((organ in H.organs) || (organ in H.internal_organs)))
 			qdel(organ)
 		else if(organ in H.internal_organs)
 			lace = src
@@ -369,7 +369,10 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 		if(istype(H))
 			var/obj/item/organ/external/E = H.get_organ(lace.parent_organ)
 			E.internal_organs |= lace
-
+	else
+		if(!H.internal_organs_by_name["stack"])
+			lace = new(H)
+		H.internal_organs_by_name["stack"] = lace
 	for(var/name in H.organs_by_name)
 		H.organs |= H.organs_by_name[name]
 

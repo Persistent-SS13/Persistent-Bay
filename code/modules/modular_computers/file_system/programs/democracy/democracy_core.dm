@@ -597,6 +597,8 @@
 				if(copy2)
 					copy.expense_limit = copy2.expense_limit
 					copy.accesses = copy2.accesses.Copy()
+				copy.name = select_name
+				copy.pay = new_pay
 				to_chat(usr, "Rank successfully created.")
 		if("delete_rank")
 			if(selected_assignment.accesses.len < 2)
@@ -604,7 +606,7 @@
 				return 0
 			var/choice2 = input(usr, "Are you sure you want to delete the highest rank?") in list("Confirm", "Cancel")
 			if(choice2 == "Cancel") return 1
-			selected_assignment.accesses.Cut(selected_assignment.accesses.len-1, selected_assignment.accesses.len)
+			selected_assignment.accesses.Cut(selected_assignment.accesses.len)
 			to_chat(usr, "Rank successfully deleted.")
 		if("pick_access")
 			var/datum/access_category/category = locate(href_list["selected_ref"])

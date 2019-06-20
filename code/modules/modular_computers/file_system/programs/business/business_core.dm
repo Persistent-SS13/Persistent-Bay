@@ -553,7 +553,7 @@
 				return 0
 			var/choice2 = input(usr, "Are you sure you want to delete the highest rank?") in list("Confirm", "Cancel")
 			if(choice2 == "Cancel") return 1
-			selected_assignment.accesses.Cut(selected_assignment.accesses.len-1, selected_assignment.accesses.len)
+			selected_assignment.accesses.Cut(selected_assignment.accesses.len)
 			to_chat(usr, "Rank successfully deleted.")
 		if("pick_access")
 			var/datum/access_category/category = locate(href_list["selected_ref"])

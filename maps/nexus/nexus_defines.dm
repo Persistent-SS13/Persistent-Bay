@@ -49,7 +49,7 @@ proc/GetNbSavedZLevels()
 
 //Spawn code particular to this map
 //This proc is called right after a new character is spawned for the first time
-//It plays the spawn cutscene and etc 
+//It plays the spawn cutscene and etc
 /datum/map/nexus/on_new_spawn(var/mob/newchar)
 	if(!istype(newchar))
 		return
@@ -62,7 +62,7 @@ proc/GetNbSavedZLevels()
 		cinematic.layer = HUD_ABOVE_ITEM_LAYER
 		cinematic.mouse_opacity = 2
 		cinematic.screen_loc = "WEST,SOUTH"
-		
+
 		if(newchar.client)
 			newchar.client.screen += cinematic
 			flick("cinematic",cinematic)
@@ -88,4 +88,3 @@ proc/GetNbSavedZLevels()
 // 	switch(C.prefs.cultural_info[TAG_CULTURE])
 // 		if(CULTURE_HUMAN_SPACER)
 // 			. |= new /obj/item/clothing/under/blazer()
-	

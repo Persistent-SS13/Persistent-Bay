@@ -7,6 +7,7 @@
 
 	use_power = POWER_USE_IDLE
 	idle_power_usage = 100 //Watts, I hope.  Just enough to do the computer and display things.
+	circuit_type = /obj/item/weapon/circuitboard/generator
 
 	var/max_power = 500000
 	var/thermal_efficiency = 0.65
@@ -29,23 +30,6 @@
 
 /obj/machinery/power/generator/Initialize()
 	.=..()
-	if(!map_storage_loaded)
-		component_parts = list()
-		component_parts += new /obj/item/weapon/circuitboard/generator(src)
-		component_parts += new /obj/item/stack/cable_coil(src, 30)
-		component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-		component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-	RefreshParts()
 	do_init()
 
 /obj/machinery/power/generator/proc/do_init()

@@ -55,22 +55,8 @@
 	icon = 'icons/turf/shuttle.dmi'
 	icon_state = "propulsion"
 	opacity = 1
+	circuit_type = /obj/item/weapon/circuitboard/shuttleengine
 	var/permaanchor = 0
-
-/obj/machinery/shuttleengine/Initialize(mapload, d)
-	. = ..()
-	if(!map_storage_loaded)
-		component_parts = list()
-		component_parts += new /obj/item/weapon/circuitboard/shuttleengine(src)
-		component_parts += new /obj/item/device/assembly/igniter(src)
-		component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-		component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-		component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-		component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-		component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-		component_parts += new /obj/item/stack/cable_coil(src, 30)
-		component_parts += new /obj/item/stack/material/phoron(src, 5)
-	RefreshParts()
 
 /obj/machinery/shuttleengine/CanPass(atom/movable/mover, turf/target, height, air_group)
 	if(!height || air_group) 

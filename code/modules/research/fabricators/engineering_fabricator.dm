@@ -242,6 +242,7 @@
 	req_tech = list(TECH_ENGINEERING = 2)
 	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GLASS = 2 SHEETS)
 	research = "welding_industrial"
+
 /datum/design/item/engifab/engitools/welder_huge
 	name = "High-capacity welding tool"
 	build_path = /obj/item/weapon/tool/weldingtool/hugetank/empty
@@ -253,6 +254,11 @@
 	name = "Experimental welding tool"
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_PLASTEEL = 5 SHEETS, MATERIAL_PHORON = 5 SHEETS)
 	build_path = /obj/item/weapon/tool/weldingtool/experimental
+
+/datum/design/item/engifab/engitools/adv/electric_welder
+	name = "Electric welding tool"
+	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GRAPHITE = 2 SHEETS, MATERIAL_COPPER = 5 SHEETS)
+	build_path = /obj/item/weapon/tool/weldingtool/electric
 
 /datum/design/item/engifab/engitools/adv/airlock_brace
 	name = "Airlock brace"
@@ -297,13 +303,13 @@
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 2 SHEETS)
 	build_path = /obj/item/weapon/airlock_brace
 
-
-/datum/design/item/engifab/engitools/adv/experimental_welder
-	name = "Experimental welding tool"
-	req_tech = list(TECH_ENGINEERING = 5, TECH_PHORON = 4)
-	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_PLASTEEL = 5 SHEETS)
-	chemicals = list(/datum/reagent/toxin/phoron/oxygen = 80)	//hopefully this makes a good detterant for obtaining OP welding tool
-	build_path = /obj/item/weapon/tool/weldingtool/experimental
+//What's this duplicated entry for? Seems like its using the old format too
+// /datum/design/item/engifab/engitools/adv/experimental_welder
+// 	name = "Experimental welding tool"
+// 	req_tech = list(TECH_ENGINEERING = 5, TECH_PHORON = 4)
+// 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_PLASTEEL = 5 SHEETS)
+// 	chemicals = list(/datum/reagent/toxin/phoron/oxygen = 80)	//hopefully this makes a good detterant for obtaining OP welding tool
+// 	build_path = /obj/item/weapon/tool/weldingtool/experimental
 
 /datum/design/item/engifab/engitools/adv/nanopaste
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 5 SHEETS)

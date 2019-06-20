@@ -13,6 +13,7 @@
 	idle_power_usage = 20
 	clicksound = "button"
 	clickvol = 20
+	circuit_type = /obj/item/weapon/circuitboard/chem_master
 	var/obj/item/weapon/reagent_containers/beaker = null
 	var/obj/item/weapon/storage/pill_bottle/loaded_pill_bottle = null
 	var/mode = 0
@@ -27,19 +28,18 @@
 	var/sloppy = 1 //Whether reagents will not be fully purified (sloppy = 1) or there will be reagent loss (sloppy = 0) on reagent add.
 
 /obj/machinery/chem_master/New()
-	create_reagents(120)
 	..()
+	ADD_SAVED_VAR(beaker)
+	ADD_SAVED_VAR(loaded_pill_bottle)
+	ADD_SAVED_VAR(mode)
+	ADD_SAVED_VAR(useramount)
+	ADD_SAVED_VAR(pillamount)
+	ADD_SAVED_VAR(bottlesprite)
+	ADD_SAVED_VAR(pillsprite)
 
-/obj/machinery/chem_master/Initialize()
+/obj/machinery/chem_master/SetupReagents()
 	. = ..()
-	if(!map_storage_loaded)
-		component_parts = list()
-		component_parts += new /obj/item/weapon/circuitboard/chem_master(null)
-		component_parts += new /obj/item/weapon/stock_parts/manipulator(null)
-		component_parts += new /obj/item/weapon/stock_parts/console_screen(null)
-		component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(null)
-		component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(null)
-	RefreshParts()
+	create_reagents(120)
 
 /obj/machinery/chem_master/ex_act(severity)
 	switch(severity)
@@ -351,6 +351,7 @@
 	anchored = 0
 	idle_power_usage = 5
 	active_power_usage = 100
+	circuit_type = /obj/item/weapon/circuitboard/reagentgrinder
 	var/inuse = 0
 	var/obj/item/weapon/reagent_containers/beaker = null
 	var/limit = 10
@@ -360,16 +361,15 @@
 		/obj/item/weapon/storage/plants
 	) // These bags will fast-empty into the grinder.
 
-/obj/machinery/reagentgrinder/Initialize()
+/obj/machinery/reagentgrinder/New()
 	. = ..()
-	if(!map_storage_loaded)
-		component_parts = list()
-		component_parts += new /obj/item/weapon/circuitboard/reagentgrinder(src)
-		component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-		component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-		component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
-		component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
-		beaker = new /obj/item/weapon/reagent_containers/glass/beaker/large(src)
+	ADD_SAVED_VAR(beaker)
+	ADD_SAVED_VAR(holdingitems)
+	ADD_SKIP_EMPTY(holdingitems)
+
+/obj/machinery/reagentgrinder/SetupParts()
+	. = ..()
+	beaker = locate(/obj/item/weapon/reagent_containers/glass/beaker/large) in component_parts
 
 /obj/machinery/reagentgrinder/on_update_icon()
 	icon_state = "juicer"+num2text(!isnull(beaker))

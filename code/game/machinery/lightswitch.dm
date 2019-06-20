@@ -30,13 +30,20 @@
 
 /obj/machinery/light_switch/before_save()
 	. = ..()
-	if(connected_area && !other_area)
+	var/area/curarea = get_area(src)
+	if(connected_area && connected_area.name != curarea?.name && !other_area)
 		other_area = connected_area.name
 
-/obj/machinery/light_switch/after_load()
+/obj/machinery/light_switch/Initialize()
+	. = ..()
+	if(. != INITIALIZE_HINT_QDEL)
+		return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/light_switch/LateInitialize()
 	. = ..()
 	if(other_area)
 		src.connected_area = locate(other_area)
+		src.other_area = null
 	else
 		src.connected_area = get_area(src)
 	if(name == initial(name))
@@ -44,34 +51,18 @@
 
 	if(!isnull(connected_area))
 		connected_area.set_lightswitch(on)
-	set_dir(dir)
 	sync_state()
-	update_icon()
+	queue_icon_update()
 
-
-/obj/machinery/light_switch/Initialize()
-	if(!map_storage_loaded)
-		. = ..()
-		if(other_area)
-			src.connected_area = locate(other_area)
-		else
-			src.connected_area = get_area(src)
-		if(name == initial(name))
-			SetName("light switch ([connected_area.name])")
-
-		if(!isnull(connected_area))
-			connected_area.set_lightswitch(on)
-		spawn(100)
-			update_icon()
 
 /obj/machinery/light_switch/on_update_icon()
 	pixel_x = 0
 	pixel_y = 0
 	switch(dir)
 		if(NORTH)
-			pixel_y = 30
+			pixel_y = -30
 		if(SOUTH)
-			pixel_y = -22
+			pixel_y = 22
 		if(EAST)
 			pixel_x = 22
 		if(WEST)
@@ -137,4 +128,3 @@
 		return
 	power_change()
 	..(severity)
-

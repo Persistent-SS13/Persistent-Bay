@@ -1,3 +1,6 @@
+/area/nexus
+	req_faction = NEXUS_FACTION_CITIZEN
+
 /area/nexus/d1_atmos
 	name = "Nexus D1-Atmos"
 	icon_state = "atmos"
@@ -281,6 +284,7 @@
 
 /area/nexus/vacant
 	icon_state = "green"
+	req_faction = ""
 /area/nexus/vacant/d2/room1
 	name = "Vacant Room 201"
 /area/nexus/vacant/d2/room2

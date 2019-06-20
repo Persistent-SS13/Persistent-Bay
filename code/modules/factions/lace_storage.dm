@@ -17,8 +17,8 @@
 	desc = "Home to those who departed to their better selves."
 	anchored = 1
 	density = 1
-	icon = 'icons/obj/machines/dock_beacon.dmi'
-	icon_state = "unpowered2"
+	icon = 'icons/obj/machines/lace_storage.dmi'
+	icon_state = "lace"
 	use_power = 2			//1 = idle, 2 = active
 	var/network = "default"
 

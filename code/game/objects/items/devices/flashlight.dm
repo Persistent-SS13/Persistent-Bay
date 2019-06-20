@@ -25,6 +25,7 @@
 
 /obj/item/device/flashlight/New()
 	..()
+	ADD_SAVED_VAR(on)
 	ADD_SAVED_VAR(flashlight_cell)
 	ADD_SKIP_EMPTY(flashlight_cell)
 
@@ -275,6 +276,7 @@
 	flashlight_max_bright = 0.25
 	flashlight_inner_range = 0.1
 	flashlight_outer_range = 2
+	power_usage = 0
 
 
 // the desk lamps are a bit special
@@ -321,10 +323,14 @@
 	var/produce_heat = 1500
 	activation_sound = 'sound/effects/flare.ogg'
 	flashlight_flags = FLASHLIGHT_SINGLE_USE
-
+	power_usage = 0 //Don't use batteries!!!!
 	flashlight_max_bright = 0.8
 	flashlight_inner_range = 0.1
 	flashlight_outer_range = 5
+
+/obj/item/device/flashlight/flare/New()
+	. = ..()
+	ADD_SAVED_VAR(fuel)
 
 /obj/item/device/flashlight/flare/Initialize()
 	. = ..()
@@ -465,7 +471,7 @@
 	w_class = ITEM_SIZE_TINY
 	on = TRUE //Bio-luminesence has one setting, on.
 	flashlight_flags = FLASHLIGHT_ALWAYS_ON
-
+	power_usage = 0
 	flashlight_max_bright = 1
 	flashlight_inner_range = 0.1
 	flashlight_outer_range = 5

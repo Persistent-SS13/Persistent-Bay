@@ -428,8 +428,8 @@
 
 	//Resume playing
 	for(var/mob/M in SSmobs.mob_list)
-		transitionToGame() //Don't forget to close the panel and stop the lobby music
 		if(M.loc && !M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
+			transitionToGame() //Don't forget to close the panel and stop the lobby music
 			if(istype(M, /mob/observer))
 				qdel(M)
 				continue
@@ -504,9 +504,9 @@
 			return
 
 	//If the atmos is bad or etc.. Ask the player if they still want to spawn!
-	if(!SSjobs.check_unsafe_spawn(character, spawnTurf))
-		spawning = FALSE
-		return
+//	if(!SSjobs.check_unsafe_spawn(character, spawnTurf))
+//		spawning = FALSE
+//		return
 
 	//Close the menu and stop the lobby music once we're sure we're spawning
 	transitionToGame()

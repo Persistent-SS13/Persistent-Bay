@@ -383,7 +383,7 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 	var/list/new_organs = list()
 	for(var/limb_type in has_limbs)
 		var/obj/item/organ/O = H.organs_by_name[limb_type]
-		if(!O)
+		if(!O || istype(O, /obj/item/organ/external/stump))
 			var/list/organ_data = has_limbs[limb_type]
 			var/limb_path = organ_data["path"]
 			new_organs |= new limb_path(H)
@@ -398,7 +398,7 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 			new_organs |= new limb_path(H)
 		else
 			O.rejuvenate(1)
-
+			post_organ_rejuvenate(O, H)
 
 /datum/species/proc/hug(var/mob/living/carbon/human/H,var/mob/living/target)
 

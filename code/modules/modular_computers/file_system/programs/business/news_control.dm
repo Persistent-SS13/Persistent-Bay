@@ -251,12 +251,14 @@
 		return 1
 
 	switch(href_list["action"])
+		if("change_menu")
+			menu = text2num(href_list["target"])
 		if("announce_yes")
 			article_announce = 1
 		if("announce_no")
 			article_announce = 0
 		if("feed_invis")
-			connected_faction.feed.visible = 1
+			connected_faction.feed.visible = 0
 		if("feed_vis")
 			connected_faction.feed.visible = 1
 
@@ -280,8 +282,8 @@
 			if(!amount < 0)
 				amount = 0
 			connected_faction.feed.per_issue = amount
-		if("feed_annoucement")
-			var/select_name = sanitizeName(input(usr,"Enter the new announcement for article publishing.","Announcement", connected_faction.feed.announcement) as null|text, 40, 1, 0)
+		if("feed_announcement")
+			var/select_name = sanitize(input(usr,"Enter the new announcement for article publishing.","Announcement", connected_faction.feed.announcement) as null|text, 40, 1, 0)
 			if(select_name)
 				connected_faction.feed.announcement = select_name
 		if("feed_issuename")

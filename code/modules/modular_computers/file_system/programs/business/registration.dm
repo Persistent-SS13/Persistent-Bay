@@ -287,7 +287,7 @@
 			secure_closet.name = "[business_name] Starting Equipment"
 			for(var/x in new_business.module.starting_items)
 				var/ind = new_business.module.starting_items[x]
-				for(var/i in i to ind)
+				for(var/i in 1 to ind)
 					new x(secure_closet)
 			business_name = null
 			business_uid = null

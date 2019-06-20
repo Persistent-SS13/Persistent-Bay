@@ -88,7 +88,7 @@ SUBSYSTEM_DEF(mazemap)
 	stat_active_wild_maps = 0 // For stat purposes
 	for(var/z in map_data)
 		var/datum/zlevel_data/data = map_data[z]
-		if (activity_checklist[z] == TRUE)
+		if (activity_checklist["[z]"] == TRUE)
 			data.set_active()
 			stat_active_wild_maps++
 		else

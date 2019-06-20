@@ -302,6 +302,7 @@ var/global/list/debug_data = list()
 			if(!T || ((T.type == /turf/space || T.type == /turf/simulated/open) && (!T.contents || !T.contents.len)))
 				continue
 			holder.turfs |= T
+			CHECK_TICK
 	to_file(f,holder)
 
 /proc/Save_Records(var/backup_dir)
@@ -560,7 +561,7 @@ var/global/list/debug_data = list()
 		for(var/x in xi to xi + SAVECHUNK_SIZEX)
 			var/turf/T = locate(x,y,z)
 			from_file(f["[x]-[y]"],T)
-
+			CHECK_TICK
 //TODO; make this better.
 /proc/Load_Initialize()
 	for(var/ind in 1 to all_loaded.len)

@@ -7,8 +7,9 @@
 	#include "../../code/modules/lobby_music/comet_haley.dm"
 	#include "../../code/modules/lobby_music/lysendraa.dm"
 
-	#include "nexus.dmm"
-
+//	#include "nexus.dmm"
+	#include "nexus_empty.dmm"
+	
 	#include "_nexus_macros.dm"
 	#include "nexus_access.dm"
 	#include "nexus_areas.dm"

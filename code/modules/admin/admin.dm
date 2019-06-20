@@ -1023,15 +1023,17 @@ var/global/floorIsLava = 0
 			if(record.get_name() == real_name)
 				GLOB.all_crew_records -= record
 				qdel(record)
-
+/**
 /datum/admins/proc/loadnow()
 	set category = "Server"
-	set desc="Loads the Station"
-	set name="Load Station"
+	set desc="Break everything, including future saves"
+	set name="Break All"
 
 	if(!check_rights(R_ADMIN))
 		return
 	Load_World()
+**/	
+	
 /datum/admins/proc/toggleoocdead()
 	set category = "Server"
 	set desc="Toggle Dead OOC."

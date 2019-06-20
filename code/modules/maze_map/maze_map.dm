@@ -61,7 +61,8 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	current_monsters |= monster
 	monster.faction = "spawned"
 	var/matrix/M = matrix()
-	M.Scale(1+(0.2*diff))
+	if(diff > 1)
+		M.Scale(1+(0.2*diff)-0.2)
 	monster.transform = M
 
 

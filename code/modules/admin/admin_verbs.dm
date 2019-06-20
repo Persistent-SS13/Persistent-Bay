@@ -77,7 +77,7 @@ var/list/admin_verbs_admin = list(
 	/datum/admins/proc/autocryo,
 	/datum/admins/proc/spacejunk,
 	/datum/admins/proc/delete_account,
-	/datum/admins/proc/loadnow,			//persistent edit, loadnow loads the station,
+//	/datum/admins/proc/loadnow,			//persistent edit, loadnow loads the station,
 	/client/proc/game_panel,			//game panel, allows to change game-mode etc,
 	/client/proc/cmd_admin_say,			//admin-only ooc chat,
 	/datum/admins/proc/togglehubvisibility, //toggles visibility on the BYOND Hub,

@@ -21,10 +21,11 @@
 	if(pref.welcome_accept)
 		. += "<br><br><br><b>You are ready to create a legacy in our shared universe.</b>"
 	else
-		. += "<br><br><br><a href='?src=\ref[src];accept_welcome=1'>I am ready to join Persistence</a>"
+		. += "<br><br><br><a href='?src=\ref[src];=1'><a href='?src=\ref[src];accept_welcome=1'>I am ready to join Persistence</a>"
 	. = jointext(.,null)
 
 
 /datum/category_item/player_setup_item/welcome/OnTopic(var/href,var/list/href_list, var/mob/user)
 	if(href_list["accept_welcome"])
 		pref.welcome_accept = 1
+	. = ..()

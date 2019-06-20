@@ -1132,7 +1132,7 @@
 	if(area && !connected_faction && !area.shuttle)
 		equipment = autoset(equipment, 0)
 		lighting = autoset(lighting, 0)
-
+		update()
 	if(failure_timer)
 		update()
 		queue_icon_update()

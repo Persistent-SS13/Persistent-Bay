@@ -340,7 +340,6 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 			qdel(organ)
 		else if(organ in H.internal_organs)
 			lace = src
-
 	if(H.organs)                  H.organs.Cut()
 	if(H.internal_organs)         H.internal_organs.Cut()
 	if(H.organs_by_name)          H.organs_by_name.Cut()
@@ -350,9 +349,7 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 	H.internal_organs = list()
 	H.organs_by_name = list()
 	H.internal_organs_by_name = list()
-	if(lace)
-		H.internal_organs |= lace
-		H.internal_organs_by_name["stack"] = lace
+	
 	for(var/limb_type in has_limbs)
 		var/list/organ_data = has_limbs[limb_type]
 		var/limb_path = organ_data["path"]
@@ -365,6 +362,13 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 			warning("[O.type] has a default organ tag \"[O.organ_tag]\" that differs from the species' organ tag \"[organ_tag]\". Updating organ_tag to match.")
 			O.organ_tag = organ_tag
 		H.internal_organs_by_name[organ_tag] = O
+
+	if(lace)
+		H.internal_organs |= lace
+		H.internal_organs_by_name["stack"] = lace
+		if(istype(H))
+			var/obj/item/organ/external/E = H.get_organ(lace.parent_organ)
+			E.internal_organs |= lace
 
 	for(var/name in H.organs_by_name)
 		H.organs |= H.organs_by_name[name]

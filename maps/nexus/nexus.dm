@@ -19,6 +19,8 @@
 	#include "nexus_frontier_beacons.dm"
 	#include "obj/nexus_headsets.dm"
 	#include "obj/nexus_ids.dm"
+	#include "obj/nexus_power.dm"
+	#include "obj/nexus_machines.dm"
 	#define using_map_DATUM /datum/map/nexus
 
 #elif !defined(MAP_OVERRIDE)

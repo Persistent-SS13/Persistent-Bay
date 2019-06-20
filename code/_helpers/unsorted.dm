@@ -1037,6 +1037,8 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 /proc/dview(var/range = world.view, var/center, var/invis_flags = 0)
 	if(!center)
 		return
+	if(!GLOB.dview_mob) //Lazy init this fuck.
+		GLOB.dview_mob = new
 
 	GLOB.dview_mob.loc = center
 	GLOB.dview_mob.see_invisible = invis_flags
@@ -1073,6 +1075,7 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 	. = ..()
 	// We don't want to be in any mob lists; we're a dummy not a mob.
 	STOP_PROCESSING(SSmobs, src)
+	log_debug("Created dview mob! This should only show up once!")
 
 // call to generate a stack trace and print to runtime logs
 ///proc/crash_with(msg)

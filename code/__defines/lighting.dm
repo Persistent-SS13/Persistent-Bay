@@ -1,4 +1,5 @@
 #define FOR_DVIEW(type, range, center, invis_flags) \
+	if(!GLOB.dview_mob) GLOB.dview_mob = new;\
 	GLOB.dview_mob.loc = center; \
 	GLOB.dview_mob.see_invisible = invis_flags; \
 	for(type in view(range, GLOB.dview_mob))

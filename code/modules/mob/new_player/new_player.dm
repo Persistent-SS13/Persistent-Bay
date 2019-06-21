@@ -519,6 +519,7 @@
 	if(!character.mind)
 		mind.active = 0
 		mind.original = character
+		mind.transfer_to(character)	//won't transfer key since the mind is not active
 		
 	character.forceMove(spawnTurf)
 	character.stored_ckey = key

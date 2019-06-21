@@ -105,6 +105,8 @@
 	ADD_SAVED_VAR(branded)
 	ADD_SAVED_VAR(vessel) //Defined in module/organs/blood.dm
 	ADD_SAVED_VAR(side_effects) //Defined in another file
+	ADD_SAVED_VAR(cultural_info)
+	ADD_SAVED_VAR(citizenship)
 
 	ADD_SKIP_EMPTY(backpack_setup)
 	ADD_SKIP_EMPTY(side_effects)

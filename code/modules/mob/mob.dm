@@ -10,7 +10,6 @@
 		qdel(G)
 	clear_fullscreen()
 	if(client)
-		client.eye = null
 		remove_screen_obj_references()
 		for(var/atom/movable/AM in client.screen)
 			var/obj/screen/screenobj = AM

@@ -289,7 +289,6 @@
 	if(!occupant)
 		return 0
 
-	var/mob/new_player/player = new(locate(100,100,51))
 	var/mob/character
 	var/key
 	var/name = ""
@@ -301,10 +300,8 @@
 		if(S.lacemob.ckey)
 			S.lacemob.stored_ckey = S.lacemob.ckey
 			key = S.lacemob.ckey
-			player.ckey = S.lacemob.ckey
 		else
 			key = S.lacemob.stored_ckey
-			player.ckey = S.lacemob.stored_ckey
 		name = S.get_owner_name()
 		character = S.lacemob
 		saveslot = S.lacemob.save_slot
@@ -317,10 +314,8 @@
 		if(M.ckey)
 			M.stored_ckey = M.ckey
 			key = M.ckey
-			player.ckey = M.ckey
 		else
 			key = M.stored_ckey
-			player.ckey = M.stored_ckey
 		name = M.real_name
 		character = M
 		saveslot = M.save_slot

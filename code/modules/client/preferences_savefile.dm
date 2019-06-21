@@ -127,7 +127,6 @@
 	var/datum/computer_file/report/crew_record/record = CreateModularRecord(H)
 	//testing("created modular record for [H], [record]")
 	record.ckey = client.ckey
-	record.citizenship = H.spawn_cit
 	var/datum/computer_file/report/crew_record/record2 = new()
 	if(!record2.load_from_global(real_name))
 		message_admins("record for [real_name] failed to load in character creation..")
@@ -189,7 +188,6 @@
 	H.force_update_limbs()
 	H.update_eyes()
 	H.regenerate_icons()
-
 	return H
 
 #undef SAVEFILE_VERSION_MAX

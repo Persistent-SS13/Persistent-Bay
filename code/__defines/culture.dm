@@ -8,7 +8,8 @@
 	TAG_CULTURE =   "Culture", \
 	TAG_HOMEWORLD = "Residence", \
 	TAG_FACTION =   "Faction", \
-	TAG_RELIGION =  "Beliefs" \
+	TAG_RELIGION =  "Beliefs", \
+	TAG_AMBITION = "Ambition", \
 	)
 
 #define REAL_CULTURAL_TAGS list( \

@@ -1836,6 +1836,7 @@
 	if(C)
 		if(C.starting_citizenship)
 			src.spawn_cit = C.starting_citizenship
+			src.citizenship = C.starting_citizenship
 		else
 			log_warning(" /mob/living/carbon/human/proc/update_citizenship() : Culture for [src] \ref[src] had null starting citizenship!!")
 	else

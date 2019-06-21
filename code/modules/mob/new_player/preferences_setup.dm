@@ -58,7 +58,7 @@
 		if(src.faction)
 			F = get_faction(src.faction)
 		else
-			F = get_faction(GLOB.using_map.default_faction_uid) //If no faction forced, use the map's default
+			F = get_faction("nexus") //If no faction forced, use the map's default
 		clothes = outfit_by_type(F.starter_outfit)
 		//testing("dress_preview_mob: got outfit [clothes]")
 		ASSERT(istype(clothes))

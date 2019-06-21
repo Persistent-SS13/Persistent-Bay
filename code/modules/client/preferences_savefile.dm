@@ -113,10 +113,10 @@
 	email.password = chosen_password
 	H.mind.initial_email_login = list("login" = email.login, "password" = email.password)
 
-	var/datum/world_faction/F = get_faction(GLOB.using_map.default_faction_uid)
-	src.faction = GLOB.using_map.default_faction_uid
+	var/datum/world_faction/F = get_faction("nexus")
+	src.faction = "nexus"
 	if(!F)
-		log_warning("setup_new_accounts(): Couldn't find faction [GLOB.using_map.default_faction_uid]")
+		log_warning("setup_new_accounts(): Couldn't find faction ["nexus"]")
 
 	//testing("created email for [H], [email.login], [email.password]")
 	var/datum/money_account/M = create_account(H.real_name, F.get_new_character_money(H), null)

@@ -66,8 +66,6 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 		M.Scale(1+(0.2*diff)-0.2)
 	monster.transform = M
 
-/datum/zlevel_data/
-
 /datum/zlevel_data/proc/replenish_monsters()
 	if(current_monsters.len < monster_quantity)
 		var/difference = monster_quantity - current_monsters.len
@@ -88,7 +86,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 		if(M.key && M.z == z)
 			last_occupied = world.time
 			return 1
-			
+
 /datum/zlevel_data/proc/lower_state()
 	if (state == ZLEVEL_INACTIVE)
 		return 0
@@ -114,15 +112,13 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 
 /datum/zlevel_data/proc/on_inactive()
 	for(var/mob/m in current_monsters)
-		if ( m in SSmobs.mob_list )
-			STOP_PROCESSING(SSmobs, m)
+		STOP_PROCESSING(SSmobs, m)
 
 /datum/zlevel_data/proc/on_active()
 	if (!isWild())
 		return
 	for(var/mob/m in current_monsters)
-		if (! m in SSmobs.mob_list )
-			START_PROCESSING(SSmobs, m)
+		START_PROCESSING(SSmobs, m)
 	replenish_monsters()
 	replenish_obj()
 
@@ -144,7 +140,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 			if(!istype(E, /turf/space)) continue
 			var/obj_type = pick(obj_types)
 			spawn_obj(E,obj_type)
-			
+
 
 //////////////////////////////////////////////////////////////////////////////////////////
 /datum/zlevel_data/one

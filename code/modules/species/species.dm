@@ -340,7 +340,7 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 		if(!istype(organ, /obj/item/organ/internal/stack) && ((organ in H.organs) || (organ in H.internal_organs)))
 			qdel(organ)
 		else if(organ in H.internal_organs)
-			lace = src
+			lace = organ
 	if(H.organs)                  H.organs.Cut()
 	if(H.internal_organs)         H.internal_organs.Cut()
 	if(H.organs_by_name)          H.organs_by_name.Cut()

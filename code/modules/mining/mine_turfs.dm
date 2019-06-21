@@ -519,8 +519,7 @@ var/list/mining_floors = list()
 			return
 		else
 			to_chat(user, "<span class='warning'>The plating is going to need some support.</span>")
-	return
-
+			
 	var/list/usable_tools = list(
 		/obj/item/weapon/shovel,
 		/obj/item/weapon/pickaxe/diamonddrill,

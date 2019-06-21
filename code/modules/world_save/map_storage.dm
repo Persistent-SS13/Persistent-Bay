@@ -296,13 +296,16 @@ var/global/list/debug_data = list()
 	xi = (xi - (xi % SAVECHUNK_SIZEX) + 1)
 	yi = (yi - (yi % SAVECHUNK_SIZEY) + 1)
 	var/datum/chunk_holder/holder = new()
+	var/ind
 	for(var/y in yi to yi + SAVECHUNK_SIZEY)
 		for(var/x in xi to xi + SAVECHUNK_SIZEX)
+			ind++
 			var/turf/T = locate(x,y,z)
 			if(!T || ((T.type == /turf/space || T.type == /turf/simulated/open) && (!T.contents || !T.contents.len)))
 				continue
 			holder.turfs |= T
-			CHECK_TICK
+			if(ind % 10) // 1 in 10 times do check tick
+				CHECK_TICK
 	to_file(f,holder)
 
 /proc/Save_Records(var/backup_dir)

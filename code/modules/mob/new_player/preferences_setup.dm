@@ -71,21 +71,21 @@
 		update_icon = TRUE
 
 		// Equip custom gear loadout, replacing any job items
-		
-		var/list/loadout_taken_slots = list()
-		for(var/thing in Gear())
-			var/datum/gear/G = gear_datums[thing]
-			if(G)
-				var/permitted = 1
-				if(G.whitelisted && (G.whitelisted != mannequin.species.name))
-					permitted = 0
+		if(src.gear_list.len)
+			var/list/loadout_taken_slots = list()
+			for(var/thing in Gear())
+				var/datum/gear/G = gear_datums[thing]
+				if(G)
+					var/permitted = 1
+					if(G.whitelisted && (G.whitelisted != mannequin.species.name))
+						permitted = 0
 
-				if(!permitted)
-					continue
+					if(!permitted)
+						continue
 
-				if(G.slot && G.slot != slot_tie && !(G.slot in loadout_taken_slots) && G.spawn_on_mob(mannequin, gear_list[gear_slot][G.display_name]))
-					loadout_taken_slots.Add(G.slot)
-					update_icon = TRUE
+					if(G.slot && G.slot != slot_tie && !(G.slot in loadout_taken_slots) && G.spawn_on_mob(mannequin, gear_list[gear_slot][G.display_name]))
+						loadout_taken_slots.Add(G.slot)
+						update_icon = TRUE
 	if(update_icon)
 		mannequin.update_icons()
 

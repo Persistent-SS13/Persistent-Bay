@@ -1834,4 +1834,9 @@
 /mob/living/carbon/human/proc/update_citizenship()
 	var/decl/cultural_info/culture/C = get_cultural_value(TAG_CULTURE)
 	if(C)
-		src.spawn_cit = C.starting_citizenship
+		if(C.starting_citizenship)
+			src.spawn_cit = C.starting_citizenship
+		else
+			log_warning(" /mob/living/carbon/human/proc/update_citizenship() : Culture for [src] \ref[src] had null starting citizenship!!")
+	else
+		log_error(" /mob/living/carbon/human/proc/update_citizenship() : Couldn't find culture token..")

@@ -127,6 +127,7 @@
 	var/datum/computer_file/report/crew_record/record = CreateModularRecord(H)
 	//testing("created modular record for [H], [record]")
 	record.ckey = client.ckey
+	record.citizenship = H.spawn_cit
 	var/datum/computer_file/report/crew_record/record2 = new()
 	if(!record2.load_from_global(real_name))
 		message_admins("record for [real_name] failed to load in character creation..")
@@ -141,13 +142,7 @@
 	else
 		H.spawn_loc = "null"
 		log_warning("[H]'s spawn_loc is null! Got faction: [src.faction]'")
-	var/decl/cultural_info/culture/culture_again = cultural_info[TAG_CULTURE]
-	if(culture_again)
-		H.spawn_cit = culture_again.starting_citizenship
-		record.citizenship = culture_again.starting_citizenship
-	else
-		log_error("NO CITIZENSHIP")
-	H.update_citizenship()
+
 
 //Creates the dummy mob used to store initial character data in the save file
 /datum/preferences/proc/create_initial_character()
@@ -158,7 +153,7 @@
 	if(!H.mind)
 		H.mind = new()
 
-	//Languages
+	//Languages + culture are copied
 	for(var/token in cultural_info)
 		H.set_cultural_value(token, cultural_info[token], defer_language_update = TRUE)
 

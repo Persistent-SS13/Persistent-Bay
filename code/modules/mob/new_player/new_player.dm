@@ -130,6 +130,7 @@
 	if(href_list["importSlot"])
 		chosen_slot = text2num(href_list["importSlot"])
 		ImportCharacter()
+		load_panel?.close()
 	if(href_list["importCharacter"])
 		selectImportPanel()
 	if(href_list["pickSlot"])
@@ -300,9 +301,11 @@
 			break
 	if(!found_slot)
 		to_chat(src, "Your character slots are full. Import failed.")
+		return
 	var/mob/character = SScharacter_setup.load_import_character(chosen_slot, ckey)
 	if(!character)
 		return
+	character.real_name = SScharacter_setup.peek_import_name(chosen_slot, ckey)
 	var/list/L = recursive_content_check(character)
 	var/list/spared = list()
 	for(var/ind in 1 to L.len)
@@ -335,7 +338,7 @@
 		var/atom/A = spared[ind]
 		character.equip_to_slot_or_store_or_drop(A, slot_l_hand)
 	SScharacter_setup.save_character(found_slot, client.ckey, character)
-
+	to_chat(src, "Import Successful. [character.real_name] saved to slot [found_slot].")
 /mob/new_player/proc/selectImportPanel()
 	var/data = "<div align='center'><br>"
 	data += "<b>Select the character you want to import.</b><br>"
@@ -516,17 +519,7 @@
 	if(!character.mind)
 		mind.active = 0
 		mind.original = character
-		if(client && client.prefs.memory)
-			mind.store_memory(client.prefs.memory)
-		if(client.prefs.relations.len)
-			for(var/T in client.prefs.relations)
-				var/TT = matchmaker.relation_types[T]
-				var/datum/relation/R = new TT
-				R.holder = mind
-				R.info = client.prefs.relations_info[T]
-			mind.gen_relations_info = client.prefs.relations_info["general"]
-		mind.transfer_to(character)					//won't transfer key since the mind is not active
-
+		
 	character.forceMove(spawnTurf)
 	character.stored_ckey = key
 	character.key = key

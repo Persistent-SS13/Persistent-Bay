@@ -145,6 +145,9 @@
 	if(culture_again)
 		H.spawn_cit = culture_again.starting_citizenship
 		record.citizenship = culture_again.starting_citizenship
+	else
+		log_error("NO CITIZENSHIP")
+	H.update_citizenship()
 
 //Creates the dummy mob used to store initial character data in the save file
 /datum/preferences/proc/create_initial_character()
@@ -167,6 +170,7 @@
 			if(is_species_lang || ((!(chosen_language.flags & RESTRICTED) || check_rights(R_ADMIN, 0, client))))
 				H.add_language(lang)
 	H.update_languages()
+	H.update_citizenship()
 
 	//DNA should be last
 	H.dna.ResetUIFrom(H)

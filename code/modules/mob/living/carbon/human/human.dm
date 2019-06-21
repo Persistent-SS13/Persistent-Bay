@@ -116,6 +116,7 @@
 
 /mob/living/carbon/human/Initialize()
 	. = ..()
+	update_citizenship()
 	updatehealth()
 	update_action_buttons()	
 	queue_icon_update()
@@ -133,7 +134,8 @@
 	for(var/datum/reagent/blood/B in vessel.reagent_list)
 		if(B.type == /datum/reagent/blood)
 			B.sync_to(src)
-	
+
+	update_citizenship()
 	regenerate_icons()
 	handle_organs(1)
 
@@ -1249,6 +1251,7 @@
 		languages.Cut()
 		default_language = null
 		update_languages()
+	update_citizenship()
 
 	//recheck species-restricted clothing
 	for(var/slot in slot_first to slot_last)
@@ -1792,6 +1795,7 @@
 		cultural_info[token] = _culture
 		if(!defer_language_update)
 			update_languages()
+			update_citizenship()
 
 /mob/living/carbon/human/proc/get_cultural_value(var/token)
 	return cultural_info[token]
@@ -1826,3 +1830,8 @@
 		//We want to clear the now useless backpack setup object
 		QDEL_NULL(backpack_setup)
 	..()
+
+/mob/living/carbon/human/proc/update_citizenship()
+	var/decl/cultural_info/culture/C = get_cultural_value(TAG_CULTURE)
+	if(C)
+		src.spawn_cit = C.starting_citizenship

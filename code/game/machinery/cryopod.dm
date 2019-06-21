@@ -2,15 +2,15 @@
 	name = "cryogenic freezer"
 	desc = "A man-sized pod for entering suspended animation. Takes one minutes to enter stasis."
 	icon = 'icons/obj/Cryogenic2.dmi'
-	icon_state = "body_scanner_0"
+	icon_state = "cryopod_open"
 	density = 1
 	anchored = 1
 	dir = WEST
 	req_access = core_access_command_programs
 	circuit_type = /obj/item/weapon/circuitboard/cryopod
 
-	var/base_icon_state = "body_scanner_0"
-	var/occupied_icon_state = "body_scanner_1"
+	var/base_icon_state = "cryopod_open"
+	var/occupied_icon_state = "cryopod_closed"
 	var/on_store_message = "has entered cryo sleep."
 	var/on_store_name = "Cryogenic Oversight"
 	var/on_enter_occupant_message = "You feel cool air surround you. You go numb as your senses turn inward."
@@ -269,7 +269,7 @@
 		user.drop_from_inventory(A)
 
 	name = "[initial(name)] ([M.real_name])"
-	icon_state = "body_scanner_1"
+	icon_state = "cryopod_closed"
 
 	occupant = A
 	A.forceMove(src)

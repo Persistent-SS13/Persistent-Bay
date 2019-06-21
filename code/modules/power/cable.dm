@@ -515,12 +515,12 @@ obj/structure/cable/proc/cableColor(var/colorC)
 	amount = 30
 	
 
-/obj/item/stack/cable_coil/single/New(var/loc, var/length = 1, var/param_color = null)
-	..(loc, length, param_color)
-/obj/item/stack/cable_coil/five/New(var/loc, var/length = 5, var/param_color = null)
-	..(loc, length, param_color)
-/obj/item/stack/cable_coil/thirty/New(var/loc, var/length = 30, var/param_color = null)
-	..(loc, length, param_color)
+/obj/item/stack/cable_coil/single/New(var/loc, var/amount = 1, var/param_color = null)
+	..(loc, amount, param_color)
+/obj/item/stack/cable_coil/five/New(var/loc, var/amount = 5, var/param_color = null)
+	..(loc, amount, param_color)
+/obj/item/stack/cable_coil/thirty/New(var/loc, var/amount = 30, var/param_color = null)
+	..(loc, amount, param_color)
 
 
 /obj/item/stack/cable_coil/cyborg
@@ -531,9 +531,9 @@ obj/structure/cable/proc/cableColor(var/colorC)
 	uses_charge = 1
 	charge_costs = list(1)
 
-/obj/item/stack/cable_coil/New(loc, length = 1, var/param_color = null)
+/obj/item/stack/cable_coil/New(loc, amount = 1, var/param_color = null)
 	..()
-	src.amount = length
+	src.amount = amount
 	if (param_color) // It should be red by default, so only recolor it if parameter was specified.
 		color = param_color
 	update_wclass()

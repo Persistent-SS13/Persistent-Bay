@@ -40,9 +40,8 @@
 	icon_state = "waterballoon-e"
 	item_state = "balloon-empty"
 
-/obj/item/toy/water_balloon/New()
+/obj/item/toy/water_balloon/SetupReagents()
 	create_reagents(10)
-	..()
 
 /obj/item/toy/water_balloon/attack(mob/living/carbon/human/M as mob, mob/user as mob)
 	return
@@ -151,6 +150,10 @@
 	w_class = ITEM_SIZE_SMALL
 	attack_verb = list("attacked", "struck", "hit")
 	var/bullets = 5
+
+	New()
+		. = ..()
+		ADD_SAVED_VAR(bullets)
 
 	examine(mob/user)
 		if(..(user, 2) && bullets)
@@ -858,6 +861,14 @@
 
 	var/on = 0
 	var/activation_sound = 'sound/effects/flashlight.ogg'
+
+/obj/item/toy/desk/New()
+	. = ..()
+	ADD_SAVED_VAR(on)
+
+/obj/item/toy/desk/after_load()
+	. = ..()
+	queue_icon_update()
 
 /obj/item/toy/desk/on_update_icon()
 	if(on)

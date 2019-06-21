@@ -1,5 +1,6 @@
 /obj/machinery/alarm/nexus
 	req_access_faction = NEXUS_FACTION_CITIZEN
+	faction_uid = NEXUS_FACTION_CITIZEN
 
 /obj/machinery/alarm/nexus/cold
 	target_temperature = T0C+4

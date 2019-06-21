@@ -7,7 +7,7 @@
 	description = "You are from one of various planetary cultures of humankind."
 	language = LANGUAGE_GALCOM
 	secondary_langs = list(LANGUAGE_SIGN, LANGUAGE_GUTTER, LANGUAGE_SPACER)
-
+	starting_citizenship = CITIZEN
 
 /decl/cultural_info/culture/human/earth_poor
 	name = CULTURE_HUMAN_EARTH_POOR

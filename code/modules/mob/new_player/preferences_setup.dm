@@ -58,7 +58,7 @@
 		if(src.faction)
 			F = get_faction(src.faction)
 		else
-			F = get_faction("nexus") //If no faction forced, use the map's default
+			F = get_faction(GLOB.using_map.default_faction_uid) //If no faction forced, use the map's default
 		clothes = outfit_by_type(F.starter_outfit)
 		//testing("dress_preview_mob: got outfit [clothes]")
 		ASSERT(istype(clothes))
@@ -71,6 +71,7 @@
 		update_icon = TRUE
 
 		// Equip custom gear loadout, replacing any job items
+		
 		var/list/loadout_taken_slots = list()
 		for(var/thing in Gear())
 			var/datum/gear/G = gear_datums[thing]
@@ -85,11 +86,6 @@
 				if(G.slot && G.slot != slot_tie && !(G.slot in loadout_taken_slots) && G.spawn_on_mob(mannequin, gear_list[gear_slot][G.display_name]))
 					loadout_taken_slots.Add(G.slot)
 					update_icon = TRUE
-	if(finalize)
-		var/obj/item/weapon/card/id/W = new (mannequin)
-		W.registered_name = mannequin.real_name
-		W.selected_faction = "nexus"
-		mannequin.equip_to_slot_or_store_or_drop(mannequin, slot_wear_id)
 	if(update_icon)
 		mannequin.update_icons()
 

@@ -2,6 +2,7 @@
 	name = "Hardware"
 	desc = "Unknown Hardware."
 	icon = 'icons/obj/modular_components.dmi'
+	obj_flags = OBJ_FLAG_DAMAGEABLE
 	var/obj/item/modular_computer/holder2 = null
 	var/power_usage = 0 			// If the hardware uses extra power, change this.
 	var/enabled = 1					// If the hardware is turned off set this to 0.
@@ -9,7 +10,7 @@
 	var/hardware_size = 1			// Limits which devices can contain this component. 1: Tablets/Laptops/Consoles, 2: Laptops/Consoles, 3: Consoles only
 	max_health = 100			// Maximal damage level.
 	var/malfunction_threshold = 0.8		// "Malfunction" threshold. When damage exceeds this value the hardware piece will semi-randomly fail and do !!FUN!! things
-	var/break_threshold = 0.5			// "Failure" threshold. When damage exceeds this value the hardware piece will not work at all.
+	broken_threshold = 0.5			// "Failure" threshold. When damage exceeds this value the hardware piece will not work at all.
 	var/malfunction_probability = 10// Chance of malfunction when the component is damaged
 	var/usage_flags = PROGRAM_ALL
 
@@ -64,7 +65,7 @@
 	return ..()
 
 /obj/item/weapon/computer_hardware/proc/isfailing()
-	return health < (break_threshold * max_health)
+	return health < (broken_threshold * max_health)
 
 /obj/item/weapon/computer_hardware/proc/ismalfunctioning()
 	return health < (malfunction_threshold * max_health)

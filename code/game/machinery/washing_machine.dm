@@ -13,9 +13,6 @@
 	//6 = blood, open door
 	//7 = blood, closed door
 	//8 = blood, running
-	var/panel = 0
-	//0 = closed
-	//1 = open
 	var/hacked = 1 //Bleh, screw hacking, let's have it hacked by default.
 	//0 = not hacked
 	//1 = hacked
@@ -25,10 +22,21 @@
 	obj_flags = OBJ_FLAG_ANCHORABLE
 	clicksound = "button"
 	clickvol = 40
+	circuit_type = /obj/item/weapon/circuitboard/washing_machine
 
 	// Power
 	idle_power_usage = 10
 	active_power_usage = 150
+
+/obj/machinery/washing_machine/New()
+	. = ..()
+	ADD_SAVED_VAR(state)
+	ADD_SAVED_VAR(gibs_ready)
+	ADD_SAVED_VAR(crayon)
+	ADD_SAVED_VAR(detergent)
+
+	ADD_SKIP_EMPTY(crayon)
+	ADD_SKIP_EMPTY(detergent)
 
 /obj/machinery/washing_machine/Destroy()
 	QDEL_NULL(crayon)
@@ -79,7 +87,7 @@
 				C.ironed_state = WRINKLES_WRINKLY
 				if(detergent)
 					C.change_smell(SMELL_CLEAN)
-					addtimer(CALLBACK(C, /obj/item/clothing/proc/change_smell), detergent.smell_clean_time, TIMER_UNIQUE | TIMER_OVERRIDE)
+					addtimer(CALLBACK(C, /obj/item/clothing/proc/change_smell), detergent.smell_clean_time, TIMER_UNIQUE | TIMER_OVERRIDE) //#TODO: This might not be the best way to do this..
 	QDEL_NULL(detergent)
 
 	//Tanning!
@@ -106,10 +114,16 @@
 		usr.dropInto(loc)
 
 /obj/machinery/washing_machine/on_update_icon()
-	icon_state = "wm_[state][panel]"
+	icon_state = "wm_[state][panel_open]"
 
 /obj/machinery/washing_machine/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if(istype(W,/obj/item/weapon/pen/crayon) || istype(W,/obj/item/weapon/stamp))
+	if(default_deconstruction_screwdriver(user, W))
+		return 1
+	else if(default_deconstruction_crowbar(user, W))
+		return 1
+	if(default_part_replacement(user, W))
+		return 1
+	else if(istype(W,/obj/item/weapon/pen/crayon) || istype(W,/obj/item/weapon/stamp))
 		if(state in list(1, 3, 6))
 			if(!crayon)
 				if(!user.unEquip(W, src))

@@ -15,7 +15,7 @@
 	var/icon_state_charging = "recharger1"
 	var/icon_state_idle = "recharger0" //also when unpowered
 	var/portable = 1
-	var/tmp/time_last_update = 0 //Since we reaaaaally don't need to update our state every single ticks, use this
+	var/tmp/time_next_update = 0 //Since we reaaaaally don't need to update our state every single ticks, use this
 
 /obj/machinery/recharger/New()
 	..()
@@ -29,6 +29,7 @@
 /obj/machinery/recharger/Destroy()
 	if(charging)
 		charging.forceMove(get_turf(src))
+	charging = null
 	return ..()
 
 obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
@@ -39,11 +40,8 @@ obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 		return 1
 	if(default_part_replacement(user, G))
 		return 1
-	if(portable && isWrench(G))
-		anchored = !anchored
-		to_chat(user, "You [anchored ? "attached" : "detached"] the recharger.")
-		playsound(loc, 'sound/items/Ratchet.ogg', 75, 1)
-		return
+	if(portable && default_wrench_floor_bolts(user, G, 1 SECOND))
+		return 1
 
 	for(var/disallowed_type in disallowed_devices)
 		if(istype(G, disallowed_type)) return // Could potentially just use if(G.type in disallowed_devices), but we want to check for subtypes
@@ -91,27 +89,37 @@ obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 		charging = null
 		update_icon()
 
+/obj/machinery/recharger/power_change()
+	. = ..()
+	if(powered())
+		update_use_power(POWER_USE_IDLE)
+	else
+		update_use_power(POWER_USE_OFF)
+	queue_icon_update()
+
+/obj/machinery/recharger/set_anchored(new_anchored)
+	. = ..()
+	if(anchored && operable())
+		update_use_power(POWER_USE_IDLE)
+	else
+		update_use_power(POWER_USE_OFF)
+
 /obj/machinery/recharger/Process()
 	. = ..()
+	if(inoperable() || !anchored)
+		return
 	//Since a lot of these are on the map, and don't change that often, we really don't care about updating each ticks..
-	if((time_last_update + 2 SECONDS)  > world.time)
-		if(inoperable() || !anchored)
-			update_use_power(POWER_USE_OFF)
-			queue_icon_update()
-		else if(!charging)
-			update_use_power(POWER_USE_IDLE)
-			queue_icon_update()
-		else
-			var/obj/item/weapon/cell/C = get_charging_cell()
-			if(istype(C))
-				if(!C.fully_charged())
-					C.give(active_power_usage*CELLRATE)
-					update_use_power(POWER_USE_ACTIVE)
-					queue_icon_update()
-				else
-					update_use_power(POWER_USE_IDLE)
-					queue_icon_update()
-		time_last_update = world.time
+	if(charging && time_next_update <= world.time)
+		var/obj/item/weapon/cell/C = get_charging_cell()
+		if(istype(C))
+			if(!C.fully_charged())
+				C.give(active_power_usage*CELLRATE)
+				update_use_power(POWER_USE_ACTIVE)
+				queue_icon_update()
+			else if(!isidle()) //Don't spam updates if its already idle...
+				update_use_power(POWER_USE_IDLE)
+				queue_icon_update()
+		time_next_update = world.time + 2 SECONDS
 
 /obj/machinery/recharger/emp_act(severity)
 	if(inoperable() || !anchored)
@@ -127,28 +135,28 @@ obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 /obj/machinery/recharger/proc/get_charging_cell()
 	if(!charging)
 		return
-	. = charging
-	if(istype(charging, /obj/item/device/suit_sensor_jammer))
-		var/obj/item/device/suit_sensor_jammer/J = charging
-		. = J.bcell
-	else if(istype(charging, /obj/item/weapon/melee/baton))
-		var/obj/item/weapon/melee/baton/B = charging
-		. = B.bcell
-	else if(istype(charging, /obj/item/modular_computer))
-		var/obj/item/modular_computer/C = charging
-		. = C.battery_module.battery
-	else if(istype(charging, /obj/item/weapon/gun/energy))
-		var/obj/item/weapon/gun/energy/E = charging
-		. = E.power_supply
-	else if(istype(charging, /obj/item/weapon/computer_hardware/battery_module))
-		var/obj/item/weapon/computer_hardware/battery_module/BM = charging
-		. = BM.battery
-	else if(istype(charging, /obj/item/weapon/shield_diffuser))
-		var/obj/item/weapon/shield_diffuser/SD = charging
-		. = SD.cell
-	else if(istype(charging, /obj/item/weapon/gun/magnetic/railgun))
-		var/obj/item/weapon/gun/magnetic/railgun/RG = charging
-		. = RG.cell
+	. = charging.get_cell()
+	// if(istype(charging, /obj/item/device/suit_sensor_jammer))
+	// 	var/obj/item/device/suit_sensor_jammer/J = charging
+	// 	. = J.bcell
+	// else if(istype(charging, /obj/item/weapon/melee/baton))
+	// 	var/obj/item/weapon/melee/baton/B = charging
+	// 	. = B.bcell
+	// else if(istype(charging, /obj/item/modular_computer))
+	// 	var/obj/item/modular_computer/C = charging
+	// 	. = C.battery_module.battery
+	// else if(istype(charging, /obj/item/weapon/gun/energy))
+	// 	var/obj/item/weapon/gun/energy/E = charging
+	// 	. = E.power_supply
+	// else if(istype(charging, /obj/item/weapon/computer_hardware/battery_module))
+	// 	var/obj/item/weapon/computer_hardware/battery_module/BM = charging
+	// 	. = BM.battery
+	// else if(istype(charging, /obj/item/weapon/shield_diffuser))
+	// 	var/obj/item/weapon/shield_diffuser/SD = charging
+	// 	. = SD.cell
+	// else if(istype(charging, /obj/item/weapon/gun/magnetic/railgun))
+	// 	var/obj/item/weapon/gun/magnetic/railgun/RG = charging
+	// 	. = RG.cell
 
 /obj/machinery/recharger/on_update_icon()	//we have an update_icon() in addition to the stuff in process to make it feel a tiny bit snappier.
 	if(charging)
@@ -174,7 +182,7 @@ obj/machinery/recharger/examine(mob/user)
 	name = "wall recharger"
 	desc = "A heavy duty wall recharger specialized for energy weaponry."
 	icon_state = "wrecharger0"
-	active_power_usage = 5 KILOWATTS	//It's more specialized than the standalone recharger (guns and batons only) so make it more powerful
+	active_power_usage = 50 KILOWATTS	//It's more specialized than the standalone recharger (guns and batons only) so make it more powerful
 	icon_state_charged = "wrecharger2"
 	icon_state_charging = "wrecharger1"
 	icon_state_idle = "wrecharger0"

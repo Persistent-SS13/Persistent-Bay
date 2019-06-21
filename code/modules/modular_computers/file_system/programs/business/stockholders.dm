@@ -8,6 +8,7 @@
 	requires_ntnet = 1
 	size = 12
 	business = 1
+	category = PROG_BUSINESS
 
 
 /datum/nano_module/program/stockholders

@@ -116,7 +116,7 @@ Class Procs:
 	var/faction_uid
 	//Damage handling
 	max_health = 100
-	var/break_threshold = 0.5 //Percentage of health remaining at which the machine goes into broken state
+	broken_threshold = 0.5 //Percentage of health remaining at which the machine goes into broken state
 	var/time_emped = 0		  //Time left being emped
 	var/emped_disabled_max_time = 5 MINUTES //Maximum time this machine can be disabled by EMP(Aka for severity 1)
 	var/frame_type = /obj/machinery/constructable_frame/machine_frame //The type of frame that will be left behind after deconstruction
@@ -141,11 +141,13 @@ Class Procs:
 	ADD_SAVED_VAR(emagged)
 	ADD_SAVED_VAR(stat)
 	ADD_SAVED_VAR(faction)
+	ADD_SKIP_EMPTY(faction_uid)
 	ADD_SAVED_VAR(id_tag)
 
 	ADD_SKIP_EMPTY(extensions)
 	ADD_SKIP_EMPTY(component_parts)
 	ADD_SKIP_EMPTY(faction)
+	ADD_SKIP_EMPTY(faction_uid)
 	ADD_SKIP_EMPTY(id_tag)
 
 /obj/machinery/after_load()
@@ -166,6 +168,9 @@ Class Procs:
 	START_PROCESSING(SSmachines, src) // It's safe to remove machines from here.
 	SSmachines.machinery += src // All machines should remain in this list, always.
 
+	if(faction_uid && !faction)
+		faction = get_faction(faction_uid)
+
 /obj/machinery/Destroy()
 	GLOB.moved_event.unregister(src, src, .proc/update_power_on_move)
 	REPORT_POWER_CONSUMPTION_CHANGE(get_power_usage(), 0)
@@ -179,6 +184,7 @@ Class Procs:
 				component_parts -= A
 	if(has_transmitter())
 		delete_transmitter()
+	faction = null
 	. = ..()
 
 //Installs parts when creating a machine for the first time
@@ -630,7 +636,7 @@ Class Procs:
 /obj/machinery/update_health(var/damagetype)
 	..()
 	//Determine if we're broken or not
-	if(health <= (max_health * break_threshold))
+	if(health <= (max_health * broken_threshold))
 		broken(damagetype)
 
 //Called when the machine is broken

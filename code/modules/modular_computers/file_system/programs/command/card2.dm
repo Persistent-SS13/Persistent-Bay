@@ -8,6 +8,7 @@
 	required_access = core_access_command_programs
 	requires_ntnet = FALSE
 	size = 8
+	category = PROG_COMMAND
 
 /datum/nano_module/program/card_mod
 	name = "ID card modification program"

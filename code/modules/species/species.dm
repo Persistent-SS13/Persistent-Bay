@@ -230,7 +230,8 @@
 		TAG_CULTURE =   list(CULTURE_OTHER),
 		TAG_HOMEWORLD = list(HOME_SYSTEM_STATELESS),
 		TAG_FACTION =   list(FACTION_OTHER),
-		TAG_RELIGION =  list(RELIGION_OTHER, RELIGION_ATHEISM, RELIGION_AGNOSTICISM)
+		TAG_RELIGION =  list(RELIGION_OTHER, RELIGION_ATHEISM, RELIGION_AGNOSTICISM),
+		TAG_AMBITION = list(AMBITION_FREEDOM)
 	)
 	var/list/force_cultural_info =                list()
 	var/list/default_cultural_info =              list()
@@ -365,14 +366,14 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 
 	if(lace)
 		H.internal_organs |= lace
-		H.internal_organs_by_name["stack"] = lace
+		H.internal_organs_by_name[BP_STACK] = lace
 		if(istype(H))
 			var/obj/item/organ/external/E = H.get_organ(lace.parent_organ)
 			E.internal_organs |= lace
 	else
-		if(!H.internal_organs_by_name["stack"])
+		if(!H.internal_organs_by_name[BP_STACK])
 			lace = new(H)
-		H.internal_organs_by_name["stack"] = lace
+		H.internal_organs_by_name[BP_STACK] = lace
 	for(var/name in H.organs_by_name)
 		H.organs |= H.organs_by_name[name]
 

@@ -1,6 +1,6 @@
 /obj/item/modular_computer/examine(var/mob/user)
 	. = ..()
-	if(get_health() <= (break_threshold * get_max_health()))
+	if(get_health() <= (broken_threshold * get_max_health()))
 		to_chat(user, "<span class='danger'>It is heavily damaged!</span>")
 	else if(isdamaged())
 		to_chat(user, "It is damaged.")
@@ -18,7 +18,7 @@
 
 /obj/item/modular_computer/update_health(var/damagetype)
 	..()
-	if(get_health() <= (break_threshold * get_max_health()))
+	if(get_health() <= (broken_threshold * get_max_health()))
 		broken()
 
 /obj/item/modular_computer/broken()

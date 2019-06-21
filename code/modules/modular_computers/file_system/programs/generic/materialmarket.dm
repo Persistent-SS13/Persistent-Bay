@@ -8,6 +8,7 @@
 	size = 21
 	requires_ntnet = TRUE
 	required_access = core_access_materials
+	category = PROG_BUSINESS
 
 /datum/nano_module/program/materialmarket
 	name = "Material Marketplace"

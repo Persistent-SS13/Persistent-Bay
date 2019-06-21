@@ -8,6 +8,7 @@
 	available_on_ntnet = TRUE
 	nanomodule_path = /datum/nano_module/program/id_management
 	usage_flags = PROGRAM_CONSOLE
+	category = PROG_MISC
 	
 /datum/nano_module/program/id_management
 	name = "Id Printing & Management"

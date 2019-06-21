@@ -170,6 +170,8 @@
 	icon_state = "ginbottle"
 	center_of_mass = "x=16;y=4"
 	starts_with = list(/datum/reagent/ethanol/gin = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/gin/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/whiskey
 	name = "Uncle Git's Special Reserve"
@@ -177,6 +179,8 @@
 	icon_state = "whiskeybottle"
 	center_of_mass = "x=16;y=3"
 	starts_with = list(/datum/reagent/ethanol/whiskey = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/whiskey/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/specialwhiskey
 	name = "Special Blend Whiskey"
@@ -184,6 +188,8 @@
 	icon_state = "whiskeybottle2"
 	center_of_mass = "x=16;y=3"
 	starts_with = list(/datum/reagent/ethanol/specialwhiskey = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/specialwhiskey/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/vodka
 	name = "Tunguska Triple Distilled"
@@ -191,6 +197,8 @@
 	icon_state = "vodkabottle"
 	center_of_mass = "x=17;y=3"
 	starts_with = list(/datum/reagent/ethanol/vodka = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/vodka/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/tequilla
 	name = "Caccavo Guaranteed Quality Tequilla"
@@ -198,6 +206,8 @@
 	icon_state = "tequillabottle"
 	center_of_mass = "x=16;y=3"
 	starts_with = list(/datum/reagent/ethanol/tequilla = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/tequilla/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/bottleofnothing
 	name = "Bottle of Nothing"
@@ -205,6 +215,8 @@
 	icon_state = "bottleofnothing"
 	center_of_mass = "x=17;y=5"
 	starts_with = list(/datum/reagent/drink/nothing = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/bottleofnothing/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/patron
 	name = "Wrapp Artiste Patron"
@@ -212,6 +224,8 @@
 	icon_state = "patronbottle"
 	center_of_mass = "x=16;y=6"
 	starts_with = list(/datum/reagent/ethanol/patron = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/patron/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/rum
 	name = "Captain Pete's Cuban Spiced Rum"
@@ -219,6 +233,8 @@
 	icon_state = "rumbottle"
 	center_of_mass = "x=16;y=8"
 	starts_with = list(/datum/reagent/ethanol/rum = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/rum/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/holywater
 	name = "Flask of Holy Water"
@@ -226,6 +242,8 @@
 	icon_state = "holyflask"
 	center_of_mass = "x=17;y=10"
 	starts_with = list(/datum/reagent/water/holywater = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/holywater/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/vermouth
 	name = "Goldeneye Vermouth"
@@ -233,6 +251,8 @@
 	icon_state = "vermouthbottle"
 	center_of_mass = "x=17;y=3"
 	starts_with = list(/datum/reagent/ethanol/vermouth = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/vermouth/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/kahlua
 	name = "Robert Robust's Coffee Liqueur"
@@ -240,6 +260,8 @@
 	icon_state = "kahluabottle"
 	center_of_mass = "x=17;y=3"
 	starts_with = list(/datum/reagent/ethanol/coffee/kahlua = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/kahlua/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/goldschlager
 	name = "College Girl Goldschlager"
@@ -247,6 +269,8 @@
 	icon_state = "goldschlagerbottle"
 	center_of_mass = "x=15;y=3"
 	starts_with = list(/datum/reagent/ethanol/goldschlager = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/goldschlager/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/cognac
 	name = "Chateau De Baton Premium Cognac"
@@ -254,6 +278,8 @@
 	icon_state = "cognacbottle"
 	center_of_mass = "x=16;y=6"
 	starts_with = list(/datum/reagent/ethanol/cognac = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/cognac/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/wine
 	name = "Doublebeard Bearded Special Wine"
@@ -261,6 +287,8 @@
 	icon_state = "winebottle"
 	center_of_mass = "x=16;y=4"
 	starts_with = list(/datum/reagent/ethanol/wine = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/wine/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/absinthe
 	name = "Jailbreaker Verte"
@@ -268,6 +296,8 @@
 	icon_state = "absinthebottle"
 	center_of_mass = "x=16;y=6"
 	starts_with = list(/datum/reagent/ethanol/absinthe = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/absinthe/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/melonliquor
 	name = "Emeraldine Melon Liquor"
@@ -275,6 +305,8 @@
 	icon_state = "alco-green" //Placeholder.
 	center_of_mass = "x=16;y=6"
 	starts_with = list(/datum/reagent/ethanol/melonliquor = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/melonliquor/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/bluecuracao
 	name = "Miss Blue Curacao"
@@ -282,6 +314,8 @@
 	icon_state = "alco-blue" //Placeholder.
 	center_of_mass = "x=16;y=6"
 	starts_with = list(/datum/reagent/ethanol/bluecuracao = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/bluecuracao/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/herbal
 	name = "Liqueur d'Herbe"
@@ -289,6 +323,8 @@
 	icon_state = "herbal"
 	center_of_mass = "x=16;y=6"
 	starts_with = list(/datum/reagent/ethanol/herbal = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/herbal/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/grenadine
 	name = "Briar Rose Grenadine Syrup"
@@ -296,6 +332,8 @@
 	icon_state = "grenadinebottle"
 	center_of_mass = "x=16;y=6"
 	starts_with = list(/datum/reagent/drink/grenadine = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/grenadine/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/cola
 	name = "\improper Space Cola"
@@ -303,6 +341,8 @@
 	icon_state = "colabottle"
 	center_of_mass = "x=16;y=6"
 	starts_with = list(/datum/reagent/drink/space_cola = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/cola/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/space_up
 	name = "\improper Space-Up"
@@ -310,6 +350,8 @@
 	icon_state = "space-up_bottle"
 	center_of_mass = "x=16;y=6"
 	starts_with = list(/datum/reagent/drink/space_up = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/space_up/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/space_mountain_wind
 	name = "\improper Space Mountain Wind"
@@ -317,6 +359,8 @@
 	icon_state = "space_mountain_wind_bottle"
 	center_of_mass = "x=16;y=6"
 	starts_with = list(/datum/reagent/drink/spacemountainwind = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/space_mountain_wind/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/pwine
 	name = "Warlock's Velvet"
@@ -324,6 +368,8 @@
 	icon_state = "pwinebottle"
 	center_of_mass = "x=16;y=4"
 	starts_with = list(/datum/reagent/ethanol/pwine = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/pwine/empty
+	starts_with = null
 
 //////////////////////////PREMIUM ALCOHOL ///////////////////////
 /obj/item/weapon/reagent_containers/food/drinks/bottle/premiumvodka
@@ -332,6 +378,8 @@
 	icon_state = "premiumvodka"
 	center_of_mass = "x=17;y=3"
 	starts_with = list(/datum/reagent/ethanol/vodka/premium = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/premiumvodka/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/premiumvodka/SetupReagents()
 	. = ..()
@@ -345,6 +393,8 @@
 	icon_state = "premiumwine"
 	center_of_mass = "x=16;y=4"
 	starts_with = list(/datum/reagent/ethanol/wine/premium = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/premiumwine/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/premiumwine/SetupReagents()
 	..()
@@ -363,6 +413,8 @@
 	center_of_mass = "x=16;y=7"
 	isGlass = 0
 	starts_with = list(/datum/reagent/drink/juice/orange = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/orangejuice/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/cream
 	name = "Milk Cream"
@@ -372,6 +424,8 @@
 	center_of_mass = "x=16;y=8"
 	isGlass = 0
 	starts_with = list(/datum/reagent/drink/milk/cream = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/cream/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/tomatojuice
 	name = "Tomato Juice"
@@ -381,6 +435,8 @@
 	center_of_mass = "x=16;y=8"
 	isGlass = 0
 	starts_with = list(/datum/reagent/drink/juice/tomato = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/tomatojuice/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/limejuice
 	name = "Lime Juice"
@@ -390,6 +446,8 @@
 	center_of_mass = "x=16;y=8"
 	isGlass = 0
 	starts_with = list(/datum/reagent/drink/juice/lime = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/limejuice/empty
+	starts_with = null
 
 //Small bottles
 /obj/item/weapon/reagent_containers/food/drinks/bottle/small
@@ -404,6 +462,8 @@
 	icon_state = "beer"
 	center_of_mass = "x=16;y=12"
 	starts_with = list(/datum/reagent/ethanol/beer = 30)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/small/beer/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/small/ale
 	name = "\improper Magm-Ale"
@@ -412,6 +472,8 @@
 	item_state = "beer"
 	center_of_mass = "x=16;y=10"
 	starts_with = list(/datum/reagent/ethanol/ale = 30)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/small/ale/empty
+	starts_with = null
 
 //Probably not the right place for it, but no idea where else to put it without making a brand new DM and slogging through making vars from scratch.
 
@@ -421,3 +483,5 @@
 	icon_state = "oil"
 	isGlass = 0
 	starts_with = list(/datum/reagent/lube/oil = 100)
+/obj/item/weapon/reagent_containers/food/drinks/bottle/oiljug/empty
+	starts_with = null

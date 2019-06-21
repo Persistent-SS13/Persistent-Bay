@@ -36,6 +36,7 @@ GLOBAL_LIST_INIT(registered_cyborg_weapons, list())
 
 /obj/item/weapon/gun/energy/New()
 	..()
+	ADD_SAVED_VAR(cell_secured)
 	ADD_SAVED_VAR(power_supply)
 	ADD_SKIP_EMPTY(power_supply)
 

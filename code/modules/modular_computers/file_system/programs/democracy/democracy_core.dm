@@ -25,6 +25,7 @@
 	size = 65
 	usage_flags = PROGRAM_CONSOLE
 	democratic = 1
+	category = PROG_GOVERNMENT
 
 /datum/nano_module/program/democracy_core
 	name = "Executive Government Control"

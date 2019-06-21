@@ -10,6 +10,7 @@
 	required_access = core_access_security_programs
 	business = 1
 	required_module = /datum/business_module/media
+	category = PROG_OFFICE
 /datum/nano_module/program/library_control
 	name = "Library Control"
 	var/menu = 1

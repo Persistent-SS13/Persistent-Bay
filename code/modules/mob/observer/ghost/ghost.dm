@@ -145,8 +145,8 @@ Works together with spawning an observer, noted above.
 		if(G.admin_ghosted)
 			return
 	if(key)
-		if(check_rights(R_ADMIN, 0, src))
-			hide_fullscreens()
+		hide_fullscreens()
+		if(check_rights(R_ADMIN, 0, src) && 0)
 			var/mob/observer/ghost/ghost = new(src)	//Transfer safety to observer spawning proc.
 			ghost.can_reenter_corpse = can_reenter_corpse
 			ghost.timeofdeath = src.stat == DEAD ? src.timeofdeath : world.time
@@ -154,6 +154,11 @@ Works together with spawning an observer, noted above.
 			if(ghost.client && !ghost.client.holder && !config.antag_hud_allowed)		// For new ghosts we remove the verb from even showing up if it's not allowed.
 				ghost.verbs -= /mob/observer/ghost/verb/toggle_antagHUD	// Poor guys, don't know what they are missing!
 			return ghost
+		else
+			var/mob/new_player/M = new /mob/new_player()
+			M.key = key
+			M.loc = null
+			return 
 
 /*
 This is the proc mobs get to turn into a ghost. Forked from ghostize due to compatibility issues.

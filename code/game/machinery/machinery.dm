@@ -116,7 +116,7 @@ Class Procs:
 	var/faction_uid
 	//Damage handling
 	max_health = 100
-	var/break_threshold = 0.5 //Percentage of health remaining at which the machine goes into broken state
+	broken_threshold = 0.5 //Percentage of health remaining at which the machine goes into broken state
 	var/time_emped = 0		  //Time left being emped
 	var/emped_disabled_max_time = 5 MINUTES //Maximum time this machine can be disabled by EMP(Aka for severity 1)
 	var/frame_type = /obj/machinery/constructable_frame/machine_frame //The type of frame that will be left behind after deconstruction
@@ -630,7 +630,7 @@ Class Procs:
 /obj/machinery/update_health(var/damagetype)
 	..()
 	//Determine if we're broken or not
-	if(health <= (max_health * break_threshold))
+	if(health <= (max_health * broken_threshold))
 		broken(damagetype)
 
 //Called when the machine is broken

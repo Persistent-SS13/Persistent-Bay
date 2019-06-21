@@ -91,7 +91,7 @@
 	anchored = 0
 	req_access = list(core_access_engineering_programs)
 	max_health = 100
-	break_threshold = 0.3 //30 hp
+	broken_threshold = 0.3 //30 hp
 	var/active = 0
 	var/malfunction = 0 //Malfunction causes parts of the shield to slowly dissapate
 	var/list/deployed_shields = list()

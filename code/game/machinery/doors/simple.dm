@@ -56,7 +56,7 @@
 	name = "[material.display_name] door"
 	max_health = max(100, material.integrity * SIMPLE_DOOR_HEALTH_MULTIPLIER)
 	health = max_health
-	break_threshold = max_health / 3
+	broken_threshold = max_health / 3
 	sound_hit = material.hitsound
 
 	armor = list(

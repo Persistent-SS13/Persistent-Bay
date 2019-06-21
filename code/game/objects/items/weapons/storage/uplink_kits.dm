@@ -93,7 +93,7 @@
 		/obj/item/device/spy_monitor
 	)
 
-/obj/item/weapon/storage/box/syndie_kit/g9mm
+/obj/item/weapon/storage/backpack/satchel/syndie_kit/g9mm
 	name = "\improper Smooth operator"
 	desc = "9mm with silencer kit and ammunition."
 	startswith = list(

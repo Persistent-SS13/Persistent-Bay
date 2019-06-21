@@ -319,11 +319,8 @@
 		character.drop_from_inventory(W)
 	character.spawn_type = CHARACTER_SPAWN_TYPE_IMPORT //For first time spawn
 	var/decl/hierarchy/outfit/clothes
-	var/datum/world_faction/F
-	if(src.faction)
-		F = get_faction(src.faction)
-	else
-		F = get_faction(GLOB.using_map.default_faction_uid) //If no faction forced, use the map's default
+	var/datum/world_faction/F	
+	F = get_faction("nexus") //If no faction forced, use the map's default
 	clothes = outfit_by_type(F.starter_outfit)
 	//testing("dress_preview_mob: got outfit [clothes]")
 	ASSERT(istype(clothes))
@@ -334,20 +331,6 @@
 	W.selected_faction = "nexus"
 	character.equip_to_slot_or_store_or_drop(character, slot_wear_id)
 	character.update_icons()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	for(var/ind in 1 to spared.len)
 		var/atom/A = spared[ind]
 		character.equip_to_slot_or_store_or_drop(A, slot_l_hand)

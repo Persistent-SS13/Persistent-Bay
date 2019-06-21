@@ -4,6 +4,13 @@
 GLOBAL_LIST_EMPTY(neural_laces)
 /mob/var/perma_dead = 0
 
+
+/proc/notify_lace(var/real_name, var/note)
+	for(var/obj/item/organ/internal/stack/stack in GLOB.neural_laces)
+		var/mob/employee = stack.get_owner()
+		if(!employee) continue
+		if(employee.real_name == real_name)
+			to_chat(employee, note)
 /mob/living/carbon/human/proc/create_stack(var/faction_uid, var/silent = FALSE)
 	set waitfor=0
 	if(internal_organs_by_name && internal_organs_by_name[BP_STACK])
@@ -213,7 +220,31 @@ GLOBAL_LIST_EMPTY(neural_laces)
 			else
 				message_admins("Couldnt find a Lace Storage for lacemob [lacemob] (stack.dm)")
 			return 0
-
+		if("transfer")
+			var/chosename = input(usr, "Enter the full name of the person you want to transfer to", "Money Transfer") as null|text
+			if(chosename)
+				var/datum/computer_file/report/crew_record/record = Retrieve_Record(chosename)
+				if(!record)
+					to_chat(usr, "An account by that name cannot be found.")
+					return
+				var/choseamount = input(usr, "Enter the amount you want to transfer.", "Money Transfer") as null|num
+				if(choseamount)
+					var/datum/computer_file/report/crew_record/record2 = Retrieve_Record(owner.real_name)
+					if(record2)
+						if(choseamount > record2.linked_account.money)
+							to_chat(usr, "You do not have sufficent funds to make this transfer.")
+							return
+						if(record2.ckey == record.ckey)
+							to_chat(usr, "This transfer is not allowed. View the server rules.")
+							message_admins("[record.ckey] attempted to transfer money fromtwo of their own charactrs ([owner.real_name] to[chosename])")
+							return
+						var/datum/transaction/T = new("Money Transfer", "Money transfer from [owner.real_name]", choseamount, "Money Transfer")
+						record.linked_account.do_transaction(T)
+						var/datum/transaction/T2 = new("Money Transfer", "Money transfer to [chosename]", -choseamount, "Money Transfer")
+						record2.linked_account.do_transaction(T2)
+						notify_lace(chosename, "Your neural lace buzzes letting you know you've recieved a new money transfer.")
+						
+						
 	if(href_list["page_up"])
 		curr_page++
 		return 1

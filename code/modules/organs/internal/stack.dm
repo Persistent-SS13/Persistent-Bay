@@ -422,7 +422,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		var/datum/assignment/assignment = faction.get_assignment(record.try_duty(), record.get_name())
 		if(assignment && assignment.duty_able)
 			faction.connected_laces |= src
-			if(faction.employment_log > 100)
+			if(faction.employment_log.len > 100)
 				faction.employment_log.Cut(1,2)
 			faction.employment_log += "At [stationdate2text()] [stationtime2text()] [owner.real_name] clocked in."
 		else

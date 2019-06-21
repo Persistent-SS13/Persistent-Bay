@@ -39,6 +39,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 
 	var/coord = "(0,0)"
 	var/name = "Nexus"
+	var/last_occupied = 0
 
 /datum/zlevel_data/proc/update()
 	if (isWild())
@@ -61,9 +62,9 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	current_monsters |= monster
 	monster.faction = "spawned"
 	var/matrix/M = matrix()
-	M.Scale(1*0.2*diff)
+	if(diff > 1)
+		M.Scale(1+(0.2*diff)-0.2)
 	monster.transform = M
-
 
 /datum/zlevel_data/proc/replenish_monsters()
 	if(current_monsters.len < monster_quantity)
@@ -79,6 +80,12 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 		return FALSE
 	else
 		return TRUE
+
+/datum/zlevel_data/proc/check_occupied()
+	for(var/mob/M in SSmobs.mob_list)
+		if(M.key && M.z == z)
+			last_occupied = world.time
+			return 1
 
 /datum/zlevel_data/proc/lower_state()
 	if (state == ZLEVEL_INACTIVE)
@@ -105,15 +112,13 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 
 /datum/zlevel_data/proc/on_inactive()
 	for(var/mob/m in current_monsters)
-		if ( m in SSmobs.mob_list )
-			STOP_PROCESSING(SSmobs, m)
+		STOP_PROCESSING(SSmobs, m)
 
 /datum/zlevel_data/proc/on_active()
 	if (!isWild())
 		return
 	for(var/mob/m in current_monsters)
-		if (! m in SSmobs.mob_list )
-			START_PROCESSING(SSmobs, m)
+		START_PROCESSING(SSmobs, m)
 	replenish_monsters()
 	replenish_obj()
 
@@ -135,6 +140,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 			if(!istype(E, /turf/space)) continue
 			var/obj_type = pick(obj_types)
 			spawn_obj(E,obj_type)
+
 
 //////////////////////////////////////////////////////////////////////////////////////////
 /datum/zlevel_data/one
@@ -158,7 +164,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	S_connect = 1
 	N_connect = 5
 	monster_types = list(/mob/living/simple_animal/hostile/voxslug) // types of monsters that will occur on this map.
-	monster_quantity = 25 // and how many will occur/respawn
+	monster_quantity = 50 // and how many will occur/respawn
 	obj_quantity = 0
 	difficulty = 1
 
@@ -169,7 +175,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	S_connect = 4
 	W_connect = 6
 	monster_types = list(/mob/living/simple_animal/hostile/voxslug) // types of monsters that will occur on this map.
-	monster_quantity = 35 // and how many will occur/respawn
+	monster_quantity = 65 // and how many will occur/respawn
 	obj_types = list(/obj/structure/closet/crate/cryo)
 	obj_quantity = 3
 	difficulty = 2
@@ -182,7 +188,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	W_connect = 7
 	S_connect = 8
 	monster_types = list(/mob/living/simple_animal/hostile/voxslug, /mob/living/simple_animal/hostile/creature) // types of monsters that will occur on this map.
-	monster_quantity = 40 // and how many will occur/respawn
+	monster_quantity = 70 // and how many will occur/respawn
 	obj_types = list(/obj/structure/closet/crate/cryo)
 	obj_quantity = 10
 	difficulty = 3
@@ -193,7 +199,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	name = "Shadowlands"
 	E_connect = 6
 	monster_types = list(/mob/living/simple_animal/hostile/voxslug, /mob/living/simple_animal/hostile/creature, /mob/living/simple_animal/hostile/faithless) // types of monsters that will occur on this map.
-	monster_quantity = 40 // and how many will occur/respawn
+	monster_quantity = 70 // and how many will occur/respawn
 	obj_types = list(/obj/structure/closet/crate/cryo)
 	obj_quantity = 10
 	difficulty = 4
@@ -215,7 +221,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	N_connect = 1
 	E_connect = 10
 	monster_types = list(/mob/living/simple_animal/hostile/carp) // types of monsters that will occur on this map.
-	monster_quantity = 20 // and how many will occur/respawn
+	monster_quantity = 40 // and how many will occur/respawn
 	obj_quantity = 1
 	difficulty = 1
 
@@ -226,8 +232,8 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	W_connect = 9
 	N_connect = 11
 	monster_types = list(/mob/living/simple_animal/hostile/carp) // types of monsters that will occur on this map.
-	monster_quantity = 30 // and how many will occur/respawn
-	obj_quantity = 1
+	monster_quantity = 50 // and how many will occur/respawn
+	obj_quantity = 3
 	difficulty = 2
 
 /datum/zlevel_data/eleven
@@ -237,23 +243,28 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	S_connect = 10
 	N_connect = 12
 	W_connect = 13
-	monster_types = list(/mob/living/simple_animal/hostile/carp) // types of monsters that will occur on this map.
-	monster_quantity = 20 // and how many will occur/respawn
-	obj_quantity = 1
-	difficulty = 1
+	monster_types = list(/mob/living/simple_animal/hostile/carp, /mob/living/simple_animal/hostile/carp/pike) // types of monsters that will occur on this map.
+	monster_quantity = 60 // and how many will occur/respawn
+	obj_quantity = 5
+	difficulty = 3
 
 /datum/zlevel_data/twelve
 	z = 12
 	coord = "(1,1)"
 	name = "Hinterlands"
 	S_connect = 11
-
+	monster_types = list(/mob/living/simple_animal/hostile/carp, /mob/living/simple_animal/hostile/carp/pike, /mob/living/simple_animal/hostile/bear) // types of monsters that will occur on this map.
+	monster_quantity = 70 // and how many will occur/respawn
+	obj_quantity = 5
+	difficulty = 4
 /datum/zlevel_data/thirteen
 	z = 13
 	coord = "(2,0)"
 	name = "Far Reach"
 	E_connect = 11
-
+	monster_quantity = 0 // and how many will occur/respawn
+	obj_quantity = 0
+	difficulty = 0
 
 #undef ZLEVEL_INACTIVE
 #undef ZLEVEL_DORMANT

@@ -1,4 +1,4 @@
-#define MAX_LANGUAGES 1
+#define MAX_LANGUAGES 3
 
 /datum/preferences
 	var/list/alternate_languages

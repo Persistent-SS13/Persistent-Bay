@@ -331,20 +331,6 @@
 	W.selected_faction = GLOB.using_map.default_faction_uid
 	character.equip_to_slot_or_store_or_drop(character, slot_wear_id)
 	character.update_icons()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	for(var/ind in 1 to spared.len)
 		var/atom/A = spared[ind]
 		character.equip_to_slot_or_store_or_drop(A, slot_l_hand)

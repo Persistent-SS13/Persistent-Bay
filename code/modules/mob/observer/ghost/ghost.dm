@@ -146,7 +146,7 @@ Works together with spawning an observer, noted above.
 			return
 	if(key)
 		hide_fullscreens()
-		if(check_rights(R_ADMIN, 0, src) && 0)
+		if(check_rights(R_ADMIN, 0, src))
 			var/mob/observer/ghost/ghost = new(src)	//Transfer safety to observer spawning proc.
 			ghost.can_reenter_corpse = can_reenter_corpse
 			ghost.timeofdeath = src.stat == DEAD ? src.timeofdeath : world.time

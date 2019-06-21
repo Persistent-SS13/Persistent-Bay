@@ -7,6 +7,7 @@
 	extended_desc = "Used to register new businesses."
 	requires_ntnet = 1
 	size = 12
+	category = PROG_BUSINESS
 
 
 /datum/nano_module/program/newbusiness

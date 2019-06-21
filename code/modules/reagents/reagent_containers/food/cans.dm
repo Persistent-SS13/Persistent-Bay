@@ -12,6 +12,8 @@
 	icon_state = "cola"
 	center_of_mass = "x=16;y=10"
 	starts_with = list(/datum/reagent/drink/space_cola = 30)
+/obj/item/weapon/reagent_containers/food/drinks/cans/cola/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/cans/waterbottle
 	name = "bottled water"
@@ -20,6 +22,8 @@
 	center_of_mass = "x=15;y=8"
 	matter = list(MATERIAL_PLASTIC = 40)
 	starts_with = list(/datum/reagent/water = 30)
+/obj/item/weapon/reagent_containers/food/drinks/cans/waterbottle/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/cans/waterbottle/open(mob/user)
 	playsound(loc,'sound/effects/bonebreak1.ogg', rand(10,50), 1)
@@ -32,6 +36,8 @@
 	icon_state = "space_mountain_wind"
 	center_of_mass = "x=16;y=10"
 	starts_with = list(/datum/reagent/drink/spacemountainwind = 30)
+/obj/item/weapon/reagent_containers/food/drinks/cans/space_mountain_wind/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/cans/thirteenloko
 	name = "\improper Thirteen Loko"
@@ -39,6 +45,8 @@
 	icon_state = "thirteen_loko"
 	center_of_mass = "x=16;y=8"
 	starts_with = list(/datum/reagent/ethanol/thirteenloko = 30)
+/obj/item/weapon/reagent_containers/food/drinks/cans/thirteenloko/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/cans/dr_gibb
 	name = "\improper Dr. Gibb"
@@ -46,6 +54,8 @@
 	icon_state = "dr_gibb"
 	center_of_mass = "x=16;y=10"
 	starts_with = list(/datum/reagent/drink/dr_gibb = 30)
+/obj/item/weapon/reagent_containers/food/drinks/cans/dr_gibb/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/cans/starkist
 	name = "\improper Star-kist"
@@ -53,6 +63,8 @@
 	icon_state = "starkist"
 	center_of_mass = "x=16;y=10"
 	starts_with = list(/datum/reagent/drink/brownstar = 30)
+/obj/item/weapon/reagent_containers/food/drinks/cans/starkist/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/cans/space_up
 	name = "\improper Space-Up"
@@ -60,6 +72,8 @@
 	icon_state = "space-up"
 	center_of_mass = "x=16;y=10"
 	starts_with = list(/datum/reagent/drink/space_up = 30)
+/obj/item/weapon/reagent_containers/food/drinks/cans/space_up/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/cans/lemon_lime
 	name = "\improper Lemon-Lime"
@@ -67,6 +81,8 @@
 	icon_state = "lemon-lime"
 	center_of_mass = "x=16;y=10"
 	starts_with = list(/datum/reagent/drink/lemon_lime = 30)
+/obj/item/weapon/reagent_containers/food/drinks/cans/lemon_lime/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/cans/iced_tea
 	name = "\improper Vrisk Serket Iced Tea"
@@ -74,6 +90,8 @@
 	icon_state = "ice_tea_can"
 	center_of_mass = "x=16;y=10"
 	starts_with = list(/datum/reagent/drink/tea/icetea = 30)
+/obj/item/weapon/reagent_containers/food/drinks/cans/iced_tea/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/cans/grape_juice
 	name = "\improper Grapel Juice"
@@ -81,6 +99,8 @@
 	icon_state = "purple_can"
 	center_of_mass = "x=16;y=10"
 	starts_with = list(/datum/reagent/drink/juice/grape = 30)
+/obj/item/weapon/reagent_containers/food/drinks/cans/grape_juice/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/cans/tonic
 	name = "\improper T-Borg's Tonic Water"
@@ -88,6 +108,8 @@
 	icon_state = "tonic"
 	center_of_mass = "x=16;y=10"
 	starts_with = list(/datum/reagent/drink/tonic = 30)
+/obj/item/weapon/reagent_containers/food/drinks/cans/tonic/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/cans/sodawater
 	name = "soda water"
@@ -95,6 +117,8 @@
 	icon_state = "sodawater"
 	center_of_mass = "x=16;y=10"
 	starts_with = list(/datum/reagent/drink/sodawater = 30)
+/obj/item/weapon/reagent_containers/food/drinks/cans/sodawater/empty
+	starts_with = null
 
 
 //Items exclusive to the BODA machine on deck 4 and wherever else it pops up. First two are a bit jokey. Second two are genuine article.
@@ -105,6 +129,8 @@
 	icon_state = "syndi_cola_x"
 	center_of_mass = "x=16;y=10"
 	starts_with = list(/datum/reagent/drink/juice/potato = 30)
+/obj/item/weapon/reagent_containers/food/drinks/cans/syndicolax/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/cans/artbru
 	name = "\improper Arstotzka Bru"
@@ -112,6 +138,8 @@
 	icon_state = "art_bru"
 	center_of_mass = "x=16;y=10"
 	starts_with = list(/datum/reagent/drink/juice/turnip = 30)
+/obj/item/weapon/reagent_containers/food/drinks/cans/artbru/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/cans/syndicola
 	name = "\improper TerraCola"
@@ -119,18 +147,26 @@
 	icon_state = "syndi_cola"
 	center_of_mass = "x=16;y=10"
 	starts_with = list(/datum/reagent/water = 25, /datum/reagent/iron = 5)
+/obj/item/weapon/reagent_containers/food/drinks/cans/syndicola/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/glass2/square/boda
 	name = "boda"
 	desc = "A tall glass of refreshing Boda!"
 	center_of_mass = "x=16;y=10"
 	starts_with = list(/datum/reagent/drink/sodawater = 30)
+/obj/item/weapon/reagent_containers/food/drinks/glass2/square/boda/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/glass2/square/bodaplus
 	name = "tri kopeiki sirop boda"
 	desc = "A tall glass of even more refreshing Boda! Now with Sok!"
 	center_of_mass = "x=16;y=10"
 	starts_with = list(/datum/reagent/drink/sodawater = 15)
+/obj/item/weapon/reagent_containers/food/drinks/glass2/square/bodaplus/empty
+	starts_with = null
+/obj/item/weapon/reagent_containers/food/drinks/glass2/square/bodaplus/empty/SetupReagents()
+	create_reagents(volume)
 
 /obj/item/weapon/reagent_containers/food/drinks/glass2/square/bodaplus/SetupReagents()
 	..()
@@ -154,6 +190,8 @@
 	icon_state = "beercan"
 	center_of_mass = "x=16;y=10"
 	starts_with = list(/datum/reagent/ethanol/beer/good = 30)
+/obj/item/weapon/reagent_containers/food/drinks/cans/speer/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/cans/ale
 	name = "\improper Magm-Ale"
@@ -161,3 +199,5 @@
 	icon_state = "alecan"
 	center_of_mass = "x=16;y=10"
 	starts_with = list(/datum/reagent/ethanol/ale = 30)
+/obj/item/weapon/reagent_containers/food/drinks/cans/ale/empty
+	starts_with = null

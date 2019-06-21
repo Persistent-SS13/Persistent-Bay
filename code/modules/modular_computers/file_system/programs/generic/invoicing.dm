@@ -9,6 +9,7 @@
 	available_on_ntnet = 1
 	requires_ntnet = 1
 	usage_flags = PROGRAM_ALL
+	category = PROG_UTIL
 
 /datum/nano_module/program/invoicing
 	name = "Invoicing program"

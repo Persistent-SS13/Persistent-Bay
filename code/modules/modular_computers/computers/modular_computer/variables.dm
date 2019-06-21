@@ -3,6 +3,7 @@
 /obj/item/modular_computer
 	name = "Modular Computer"
 	desc = "A modular computer. You shouldn't see this."
+	obj_flags = OBJ_FLAG_DAMAGEABLE
 
 	var/enabled = 0											// Whether the computer is turned on.
 	var/screen_on = 1										// Whether the computer is active/opened/it's screen is on.
@@ -36,7 +37,7 @@
 	var/list/idle_threads = list()							// Idle programs on background. They still receive process calls but can't be interacted with.
 
 	// Damage of the chassis. If the chassis takes too much damage it will break apart.
-	var/break_threshold = 0.5		// Damage level at which the computer ceases to operate
+	broken_threshold = 0.5		// Damage level at which the computer ceases to operate
 	max_health = 100
 
 	// Important hardware (must be installed for computer to work)

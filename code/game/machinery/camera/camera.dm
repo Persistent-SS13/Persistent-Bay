@@ -21,7 +21,7 @@
 		DAM_RADS 	= MaxArmorValue,
 		DAM_STUN 	= MaxArmorValue)
 	max_health = 50
-	break_threshold = 0.25
+	broken_threshold = 0.25
 
 	var/last_emped = 0 //Keep tracks of the last time the camera was emped
 

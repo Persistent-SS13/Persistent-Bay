@@ -25,6 +25,7 @@
 	size = 65
 	usage_flags = PROGRAM_CONSOLE
 	business = 1
+	category = PROG_BUSINESS
 
 /datum/nano_module/program/business_core
 	name = "Business Employment Control"

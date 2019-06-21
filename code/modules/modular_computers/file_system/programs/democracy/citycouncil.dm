@@ -8,6 +8,7 @@
 	requires_ntnet = TRUE
 	size = 12
 	democratic = 1
+	category = PROG_GOVERNMENT
 
 /datum/nano_module/program/citycouncil
 	name = "Nexus City Council Control"

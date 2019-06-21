@@ -156,6 +156,7 @@ Works together with spawning an observer, noted above.
 			return ghost
 		else
 			var/mob/new_player/M = new /mob/new_player()
+			client.eye = M
 			M.key = key
 			M.loc = null
 			return 

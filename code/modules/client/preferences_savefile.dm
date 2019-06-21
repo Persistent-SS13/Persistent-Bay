@@ -113,10 +113,10 @@
 	email.password = chosen_password
 	H.mind.initial_email_login = list("login" = email.login, "password" = email.password)
 
-	var/datum/world_faction/F = get_faction("nexus")
-	src.faction = "nexus"
+	var/datum/world_faction/F = get_faction(GLOB.using_map.default_faction_uid)
+	src.faction = GLOB.using_map.default_faction_uid
 	if(!F)
-		log_warning("setup_new_accounts(): Couldn't find faction ["nexus"]")
+		log_warning("setup_new_accounts(): Couldn't find faction [GLOB.using_map.default_faction_uid]")
 
 	//testing("created email for [H], [email.login], [email.password]")
 	var/datum/money_account/M = create_account(H.real_name, F.get_new_character_money(H), null)
@@ -141,10 +141,7 @@
 	else
 		H.spawn_loc = "null"
 		log_warning("[H]'s spawn_loc is null! Got faction: [src.faction]'")
-	var/decl/cultural_info/culture/culture_again = cultural_info[TAG_CULTURE]
-	if(culture_again)
-		H.spawn_cit = culture_again.starting_citizenship
-		record.citizenship = culture_again.starting_citizenship
+
 
 //Creates the dummy mob used to store initial character data in the save file
 /datum/preferences/proc/create_initial_character()
@@ -155,7 +152,7 @@
 	if(!H.mind)
 		H.mind = new()
 
-	//Languages
+	//Languages + culture are copied
 	for(var/token in cultural_info)
 		H.set_cultural_value(token, cultural_info[token], defer_language_update = TRUE)
 
@@ -167,6 +164,7 @@
 			if(is_species_lang || ((!(chosen_language.flags & RESTRICTED) || check_rights(R_ADMIN, 0, client))))
 				H.add_language(lang)
 	H.update_languages()
+	H.update_citizenship()
 
 	//DNA should be last
 	H.dna.ResetUIFrom(H)
@@ -190,7 +188,6 @@
 	H.force_update_limbs()
 	H.update_eyes()
 	H.regenerate_icons()
-
 	return H
 
 #undef SAVEFILE_VERSION_MAX

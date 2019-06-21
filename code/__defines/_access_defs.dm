@@ -35,9 +35,9 @@
 
 
 
-#define RESIDENT 1
-#define CITIZEN 2
-#define PRISONER 3
+#define RESIDENT "Resident"
+#define CITIZEN  "Citizen"
+#define PRISONER "Prisoner"
 
 
 // DEPRECIATED

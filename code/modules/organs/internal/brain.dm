@@ -23,6 +23,7 @@
 	var/damage_threshold_value
 	var/healed_threshold = 1
 	var/oxygen_reserve = 6
+	var/brainderping = 0 //This is set to 1 when the brain damage message is being displayed, so it doesn't spam..
 
 /obj/item/organ/internal/brain/robotize()
 	replace_self_with(/obj/item/organ/internal/posibrain)
@@ -127,6 +128,7 @@
 
 /obj/item/organ/internal/brain/proc/handle_severe_brain_damage()
 	set waitfor = FALSE
+	brainderping = TRUE
 	healed_threshold = 0
 	to_chat(owner, "<span class = 'notice' font size='10'><B>Where am I...?</B></span>")
 	sleep(5 SECONDS)
@@ -140,10 +142,12 @@
 	alert(owner, "You have taken massive brain damage! You will not be able to remember the events leading up to your injury.", "Brain Damaged")
 	if(owner.psi)
 		owner.psi.check_latency_trigger(20, "physical trauma")
+	spawn(20)
+		brainderping = FALSE //Don't spam plz
 
 /obj/item/organ/internal/brain/Process()
 	if(owner)
-		if(get_damages() > (max_health / 2) && healed_threshold)
+		if(!brainderping && get_damages() > (max_health / 2) && healed_threshold)
 			handle_severe_brain_damage()
 
 		if(get_damages() < (max_health / 4))

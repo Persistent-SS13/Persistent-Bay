@@ -144,6 +144,9 @@
 #define PROG_UTIL 		"Utility"
 #define PROG_SEC 		"Security"
 #define PROG_MONITOR	"Monitoring"
+#define PROG_BUSINESS	"Business"
+#define PROG_GOVERNMENT	"Govenment"
+#define PROG_JUSTICE	"Justice"
 
 // Caps for NTNet logging. Less than 10 would make logging useless anyway, more than 500 may make the log browser too laggy. Defaults to 100 unless user changes it.
 #define MAX_NTNET_LOGS 500

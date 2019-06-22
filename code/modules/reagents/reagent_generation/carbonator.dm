@@ -10,6 +10,7 @@
 /*
 	A machine used to make carbonated liquids
 */
+//#TODO: Doesn't work, doesn't uses enough gas, etc..
 /obj/machinery/carbonator
 	name = "carbonation machine"
 	desc = "Use this machine to make carbonated water."
@@ -91,7 +92,7 @@
 		if(istype(R, /datum/reagent/water) || istype(R, /datum/reagent/water/holywater) )
 			var/volumefill = R.volume
 			var/datum/gas_mixture/G = co2tank.remove_air_volume(volumefill)
-			if(G && G.get_gas(GAS_CO2) >= gas_needed )
+			if(G && G.get_gas(GAS_CO2) >= volumefill )
 				beaker.reagents.remove_reagent(R.type, R.volume)
 				beaker.reagents.add_reagent(/datum/reagent/drink/sodawater, volumefill)
 				spawn(5)

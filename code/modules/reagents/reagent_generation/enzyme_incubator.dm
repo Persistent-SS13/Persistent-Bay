@@ -12,7 +12,8 @@
 	Machinery for incubating stuff that's not viruses
 */
 /obj/machinery/small_incubator
-	name = "small incubator"
+	//name = "small incubator"
+	name = "Might MC crash"
 	desc = "This is an enzyme incubator. You just need to place some fresh produces, and add some nutriments to incubate some universal enzymes."
 	density = 1
 	anchored = 1
@@ -24,8 +25,6 @@
 
 	var/obj/item/weapon/reagent_containers/glass/beaker/internal_beaker = null	//used to allow upgrading internal storage using larger beakers
 	var/obj/item/weapon/reagent_containers/glass/output_beaker = null //This is where the enzymes come out
-	var/list/obj/item/weapon/reagent_containers/food/snacks/grown/produces = list() //THe machine needs fruits/veggies as well as nutriments to process. The produce's potency determine how long each lasts
-	var/max_produces = 10				//Max amount of produce you can store in this at a time
 	var/enzyme_created = 1				//nb of units of enzyme created per bunch
 	var/convertion_rate = 5 			//Nb of ticks for "enzyme_created" unit of enzyme
 	var/convertion_ratio = 10 			//How much nutrients are required per "enzyme_created" unit of enzyme
@@ -40,9 +39,6 @@
 	ADD_SAVED_VAR(internal_beaker)
 	ADD_SAVED_VAR(output_beaker)
 	ADD_SAVED_VAR(set_temperature)
-	ADD_SAVED_VAR(produces)
-
-	ADD_SKIP_EMPTY(produces)
 
 /obj/machinery/small_incubator/Initialize()
 	. = ..()
@@ -55,8 +51,6 @@
 		output_beaker.dropInto(loc)
 		output_beaker = null
 	internal_beaker = null
-	produces.Cut()
-	produces = null
 	. = ..()
 
 /obj/machinery/small_incubator/SetupParts()
@@ -65,7 +59,7 @@
 	internal_beaker = locate(/obj/item/weapon/reagent_containers/glass/beaker) in component_parts
 
 /obj/machinery/small_incubator/proc/can_process()
-	return !(atom_flags & ATOM_FLAG_OPEN_CONTAINER) && (output_beaker &&  output_beaker.reagents.get_free_space() < 0) || produces.len || (internal_beaker && internal_beaker.reagents.has_reagent(/datum/reagent/nutriment, convertion_ratio) )
+	return !(atom_flags & ATOM_FLAG_OPEN_CONTAINER) && (output_beaker &&  output_beaker.reagents.get_free_space() < 0) || (internal_beaker && internal_beaker.reagents.has_reagent(/datum/reagent/nutriment, convertion_ratio) )
 
 /obj/machinery/small_incubator/on_update_icon()
 	. = ..()
@@ -99,11 +93,6 @@
 	if(output_beaker &&  output_beaker.reagents.get_free_space() < 0)
 		to_chat(user, SPAN_WARNING("It seems like \the [src] has stopped because \the [output_beaker] is full!"))
 
-	if(produces.len)
-		to_chat(user, "There are [produces.len] produces loaded in the bin.")
-	else
-		to_chat(user, SPAN_WARNING("There are no produces loaded in the bin."))
-	
 	if(atom_flags & ATOM_FLAG_OPEN_CONTAINER)
 		to_chat(user, "The cover is open.")
 	else
@@ -120,26 +109,22 @@
 	. = .()
 	if(inoperable())
 		return
-	
-	if((world.time + convertion_rate) >= time_last_process)
-		if(can_process())
-			var/datum/reagents/I = internal_beaker.reagents
-			if(output_beaker.reagents.get_free_space() >= enzyme_created && I.remove_reagent(/datum/reagent/nutriment, convertion_ratio))
-				output_beaker.reagents.add_reagent(/datum/reagent/enzyme, enzyme_created)
-				
-				var/potency = produces[produces.len].potency
-				potency = max(0, potency - 1) //Take some potency from the produce
-				produces[produces.len].potency = potency
-				if(potency <= 0)
-					qdel(produces[produces.len])
-					produces.len--
-				use_power_oneoff(active_power_usage)
+	try
+		if(world.time >= (time_last_process + convertion_rate))
+			if(can_process())
+				var/datum/reagents/I = internal_beaker.reagents
+				if(output_beaker.reagents.get_free_space() >= enzyme_created && I.remove_reagent(/datum/reagent/nutriment, convertion_ratio))
+					output_beaker.reagents.add_reagent(/datum/reagent/enzyme, enzyme_created)
+					use_power_oneoff(active_power_usage)
+					queue_icon_update()
+			else if(isactive())
+				turn_idle()
 				queue_icon_update()
-		else if(isactive())
-			turn_idle()
-			queue_icon_update()
-	
-	time_last_process = world.time
+		
+		time_last_process = world.time
+	catch(var/exception/e)
+		log_error("small_incubator/Process(): '[e]'([e.file]:[e.line])")
+		return PROCESS_KILL
 
 /obj/machinery/small_incubator/ProcessAtomTemperature()
 	if(isactive())
@@ -174,15 +159,6 @@
 		else
 			to_chat(user, SPAN_WARNING("There is already a container in \the [src]"))
 			return 1
-	else if(istype(O, /obj/item/weapon/reagent_containers/food/snacks/grown))
-		if(produces.len < max_produces)
-			var/obj/item/weapon/reagent_containers/food/snacks/grown/G = O 
-			user.unEquip(O)
-			G.forceMove(src)
-			produces += G
-			to_chat(user, SPAN_NOTICE("You add \a [G] to \the [src]'s bin. There are now [produces.len] produce loaded."))
-		else
-			to_chat(user, SPAN_WARNING("You can't add any more. \The [src] has only room for [max_produces] produce(s)."))
 	else 
 		return ..()
 
@@ -203,12 +179,7 @@
 
 /obj/machinery/small_incubator/CtrlClick(mob/user)
 	. = ..()
-	remove_beaker()
-
-/obj/machinery/small_incubator/AltClick(mob/user)
-	. = ..()
-	eject_produces()
-		
+	remove_beaker()		
 
 /obj/machinery/small_incubator/turn_active()
 	. = ..()
@@ -294,23 +265,5 @@
 	set src in view(1)
 
 	atom_flags &= (~ATOM_FLAG_OPEN_CONTAINER)
-	update_icon()
-	update_verbs()
-
-/obj/machinery/small_incubator/proc/eject_produces()
-	set name = "Empty Produce Bin"
-	set category = "Object"
-	set src in view(1)
-
-	var/mob/living/user = usr
-	if(!istype(user))
-		return
-
-	if(produces.len)
-		var/turf/T = get_turf(src)
-		while(produces.len > 0)
-			produces[produces.len].dropInto(T)
-			produces.len--
-		visible_message("[user] empties \the [src]'s bin.")
 	update_icon()
 	update_verbs()

@@ -281,9 +281,6 @@
 #define SYNTH_HEAT_LEVEL_2 1000
 #define SYNTH_HEAT_LEVEL_3 2000
 
-#define CORPSE_CAN_REENTER 1
-#define CORPSE_CAN_REENTER_AND_RESPAWN 2
-
 #define SPECIES_HUMAN       "Human"
 #define SPECIES_DIONA       "Diona"
 #define SPECIES_VOX         "Vox"

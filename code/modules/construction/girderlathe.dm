@@ -25,6 +25,15 @@
 	ADD_SAVED_VAR(input)
 	ADD_SAVED_VAR(processing)
 
+/obj/machinery/girderlathe/should_save(datum/saver)
+	. = ..()
+	if(!.)
+		return FALSE
+	var/turf/T = saver
+	if(istype(saver))
+		return T == get_turf(src) //only save if we're on the "base" turf on which the stairs rest on
+	return FALSE
+
 /obj/machinery/girderlathe/Process()
 	if(stat & NOPOWER || use_power != 2)
 		if(icon_state != "lathe")

@@ -404,6 +404,8 @@
 
 	SetName(initial(src.name))
 	icon_state = base_icon_state
+	var/mob/new_player/player = new()
+	player.key = key
 	QDEL_NULL(occupant)
 
 

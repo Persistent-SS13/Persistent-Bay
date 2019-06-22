@@ -42,7 +42,7 @@
 		output += "<a href='byond://?src=\ref[src];joinGame=1'>Join Game!</a><br><br>"
 		output += "<a href='byond://?src=\ref[src];importCharacter=1'>Import Prior Character</a><br><br>"
 	output += "<a href='https://discord.gg/53YgfNU'target='_blank'>Join Discord</a><br><br>"
-	output += "<a href='byond://?src=\ref[src];joinGame=1'>Link Discord Account</a><br><br>"
+	output += "<a href='byond://?src=\ref[src];linkDiscord=1'>Link Discord Account</a><br><br>"
 	if(check_rights(R_DEBUG, 0, client))
 		output += "<a href='byond://?src=\ref[src];observeGame=1'>Observe</a><br><br>"
 	output += "<a href='byond://?src=\ref[src];refreshPanel=1'>Refresh</a><br><br>"
@@ -110,7 +110,8 @@
 	if(href_list["joinGame"])
 		selectCharacterPanel("load")
 		return 0
-
+	if(href_list["linkDiscord"])
+		client.link_discord()
 	if(href_list["crewManifest"])
 		crewManifestPanel()
 		return 0
@@ -305,6 +306,7 @@
 	var/mob/character = SScharacter_setup.load_import_character(chosen_slot, ckey)
 	if(!character)
 		return
+	character.revive()
 	character.real_name = SScharacter_setup.peek_import_name(chosen_slot, ckey)
 	var/list/L = recursive_content_check(character)
 	var/list/spared = list()
@@ -318,10 +320,7 @@
 			spared |= A
 		if(istype(A, /obj/item/weapon/photo))
 			spared |= A
-	for(var/obj/item/W in character)
-		character.drop_from_inventory(W)
 	character.spawn_type = CHARACTER_SPAWN_TYPE_IMPORT //For first time spawn
-
 	var/decl/hierarchy/outfit/clothes
 	var/datum/world_faction/F = get_faction(GLOB.using_map.default_faction_uid) //Imported char don't have valid factions
 	clothes = outfit_by_type(F.starter_outfit)
@@ -333,7 +332,7 @@
 	W.registered_name = character.real_name
 	W.selected_faction = GLOB.using_map.default_faction_uid
 	character.equip_to_slot_or_store_or_drop(character, slot_wear_id)
-	character.update_icons()
+	
 	for(var/ind in 1 to spared.len)
 		var/atom/A = spared[ind]
 		character.equip_to_slot_or_store_or_drop(A, slot_l_hand)

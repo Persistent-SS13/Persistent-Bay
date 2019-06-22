@@ -77,7 +77,7 @@ GLOBAL_DATUM_INIT(discord_api, /datum/discord_api, new)
 	usr.client.link_discord()
 
 /client/proc/link_discord()
-	var/userID = input(usr, "Discord User ID:", "Discord") as text|null
+	var/userID = input(usr, "Enter your Discord ID. You can get this by typing !getid in the main discord server.", "Enter Discord ID") as text|null
 	if (userID)
 		var/database/query/g = new("SELECT * FROM [GLOB.discord_api.usersTable] WHERE ckey = ? OR userID = ?", usr.ckey, userID)
 		if (g.Execute(GLOB.discord_api.db) && g.NextRow())

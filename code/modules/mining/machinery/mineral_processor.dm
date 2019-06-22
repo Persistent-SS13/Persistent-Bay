@@ -9,33 +9,39 @@
 	console = /obj/machinery/computer/mining
 	input_turf =  NORTH
 	output_turf = SOUTH
+	circuit_type = /obj/item/weapon/circuitboard/mining_processor
+	active_power_usage = 2.5 KILOWATTS
+	idle_power_usage = 500
 
 	var/sheets_per_tick = 10
 	var/list/materials_processing
 	var/list/materials_stored
 	var/report_all_ores
-	var/active = FALSE
 
 /obj/machinery/mineral/processing_unit/New()
 	..()
-	map_storage_saved_vars += ";materials_stored"
-	component_parts = list(
-		new /obj/item/weapon/circuitboard/mining_processor(src),
-		new /obj/item/weapon/stock_parts/manipulator(src),
-		new /obj/item/weapon/stock_parts/micro_laser(src),
-		new /obj/item/weapon/stock_parts/micro_laser(src)
-		)
-
-/obj/machinery/mineral/processing_unit/Initialize()
 	materials_processing = list()
 	materials_stored = list()
-	for(var/orename in SSmaterials.processable_ores)
-		materials_processing[orename] = 0
-		materials_stored[orename] = 0
+	ADD_SAVED_VAR(materials_processing)
+	ADD_SAVED_VAR(materials_stored)
+	ADD_SAVED_VAR(report_all_ores)
+
+/obj/machinery/mineral/processing_unit/Initialize()
+	if(!map_storage_loaded)
+		for(var/orename in SSmaterials.processable_ores)
+			materials_processing[orename] = 0
+			materials_stored[orename] = 0
+	else
+		//Only init missing ores
+		for(var/orename in SSmaterials.processable_ores)
+			if(!materials_processing[orename])
+				materials_processing[orename] = 0
+			if(!materials_stored[orename])
+				materials_stored[orename] = 0
 	. = ..()
 
 //Now drops its content on destruction as recyclable dust
-/obj/machinery/mineral/processing_unit/Destroy()
+/obj/machinery/mineral/processing_unit/destroyed(damagetype, user)
 	for(var/matname in materials_stored)
 		if(materials_stored[matname])
 			//var/material/M = SSmaterials.get_material_by_name(matname)
@@ -45,33 +51,30 @@
 	. = ..()
 
 /obj/machinery/mineral/processing_unit/Process()
-
+	if(inoperable() || isoff())
+		return
 	//Grab some more ore to process this tick.
 	if(input_turf)
 		for(var/obj/item/I in input_turf)
 			if(QDELETED(I) || !I.simulated || I.anchored || !istype(I))
 				continue
-			if(LAZYLEN(I.matter))
-				for(var/o_material in I.matter)
-					if(!isnull(materials_stored[o_material]))
-						materials_stored[o_material] += I.matter[o_material]
+			if((istype(I, /obj/item/stack/material_dust) || istype(I, /obj/item/stack/ore)) && I.matter.len)
+				for(var/key in I.matter)
+					var/material/M = SSmaterials.get_material_by_name(key)
+					if(!M)
+						continue
+					materials_stored[M.name] += I.matter[key]
 				qdel(I)
-
-	if(!active)
-		return
 
 	//Process our stored ores and spit out sheets.
 	if(output_turf)
 		var/sheets = 0
 		var/list/attempt_to_alloy = list()
 		for(var/metal in materials_stored)
-
 			if(sheets >= sheets_per_tick)
 				break
-
 			if(materials_stored[metal] <= 0 || materials_processing[metal] == ORE_DISABLED)
 				continue
-
 			var/material/M = SSmaterials.get_material_by_name(metal)
 			var/result = 0 // For reference: a positive result indicates sheets were produced,
 			               // and a negative result indicates slag was produced.
@@ -119,16 +122,14 @@
 					materials_stored[otherthing] -= making * M.alloy_materials[otherthing]
 				if(making > 0)
 					M.place_sheet(output_turf, making)
+					use_power_oneoff(active_power_usage)
 					break
 
-/obj/machinery/mineral/processing_unit/proc/attempt_smelt(var/material/metal, var/max_result)
-	. = Clamp(Floor(materials_stored[metal.name]/metal.units_per_sheet),1,max_result)
-	materials_stored[metal.name] -= . * metal.units_per_sheet
-	var/material/M = SSmaterials.get_material_by_name(metal.ore_smelts_to)
-	if(istype(M))
-		M.place_sheet(output_turf, .)
-	else
-		. = -(.)
+/obj/machinery/mineral/processing_unit/proc/attempt_smelt(var/material/M, var/max_result)
+	. = Clamp( Floor(materials_stored[M.name]/M.units_per_sheet), 1, max_result)
+	materials_stored[M.name] -= min(. * M.units_per_sheet, materials_stored[M.name])
+	M.place_sheet(output_turf, .)
+	use_power_oneoff(active_power_usage)
 
 /obj/machinery/mineral/processing_unit/proc/attempt_compression(var/material/metal, var/max_result)
 	var/making = Clamp(Floor(materials_stored[metal.name]/metal.units_per_sheet),1,max_result)
@@ -140,6 +141,7 @@
 			M.place_sheet(output_turf, .)
 		else
 			. = -(.)
+		use_power_oneoff(active_power_usage)
 	else
 		. = 0
 
@@ -166,7 +168,7 @@
 		result += "<tr><td>[line]</td><td><a href='?src=\ref[src];toggle_smelting=[ore]'>[status_string]</a></td></tr>"
 	. += "<table>[result]</table>"
 	. += "Currently displaying [report_all_ores ? "all ore types" : "only available ore types"]. <A href='?src=\ref[src];toggle_ores=1'>[report_all_ores ? "Show less." : "Show more."]</a>"
-	. += "The ore processor is currently <A href='?src=\ref[src];toggle_power=1'>[(active ? "enabled" : "disabled")].</a>"
+	. += "The ore processor is currently <A href='?src=\ref[src];toggle_power=1'>[(isactive() ? "enabled" : "disabled")].</a>"
 
 /obj/machinery/mineral/processing_unit/Topic(href, href_list)
 	if((. = ..()))
@@ -182,7 +184,10 @@
 		materials_processing[href_list["toggle_smelting"]] = choice
 		. = TRUE
 	else if(href_list["toggle_power"])
-		active = !active
+		if(!isactive())
+			turn_active()
+		else
+			turn_idle()
 		. = TRUE
 	else if(href_list["toggle_ores"])
 		report_all_ores = !report_all_ores

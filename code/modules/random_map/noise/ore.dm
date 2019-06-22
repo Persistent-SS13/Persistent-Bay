@@ -56,7 +56,7 @@ Aluminum-Zinc Asteroids
 */
 
 /datum/random_map/noise/ore/iron_tin_solid_heavy/apply_to_turf(var/x,var/y)
-		..() // For normal gas resources
+	..() // For normal gas resources
 	var/tx = ((origin_x-1)+x)*chunk_size
 	var/ty = ((origin_y-1)+y)*chunk_size
 
@@ -823,7 +823,7 @@ Titanium-Fusion Asteroids
 				T.resources[MATERIAL_BAUXITE] =   			0
 				T.resources[MATERIAL_DIAMOND] =				0
 				T.resources[MATERIAL_BSPACE_CRYSTAL] = 		0
-				
+
 				T.gas_resources[GAS_DEUTERIUM] =		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_MID_MAX)
 				T.gas_resources[GAS_HELIUM] = 		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
 				T.gas_resources[GAS_TRITIUM] =		rand(GAS_RESOURCE_LOWEST_MIN,	GAS_RESOURCE_LOWEST_MAX)
@@ -903,7 +903,7 @@ Titanium-Fusion Asteroids
 				T.gas_resources[GAS_HELIUM] = 		rand(GAS_RESOURCE_MID_MIN, 	GAS_RESOURCE_MID_MAX)
 				T.gas_resources[GAS_TRITIUM] =		rand(GAS_RESOURCE_MID_MIN,	GAS_RESOURCE_MID_MAX)
 
-	
+
 /datum/random_map/noise/ore/everything_good/apply_to_turf(var/x,var/y)
 	..() // For normal gas resources
 
@@ -1035,10 +1035,10 @@ Titanium-Fusion Asteroids
 				T.gas_resources[GAS_DEUTERIUM] =		rand(GAS_RESOURCE_MID_MIN, 	GAS_RESOURCE_MID_MAX)
 				T.gas_resources[GAS_HELIUM] = 		rand(GAS_RESOURCE_MID_MIN, 	GAS_RESOURCE_MID_MAX)
 				T.gas_resources[GAS_TRITIUM] =		rand(GAS_RESOURCE_MID_MIN,	GAS_RESOURCE_MID_MAX)
-	
-	
-	
-	
+
+
+
+
 /datum/random_map/noise/ore/rich/apply_to_turf(var/x,var/y)
 
 	var/tx = ((origin_x-1)+x)*chunk_size
@@ -1244,7 +1244,7 @@ Titanium-Fusion Asteroids
 /datum/random_map/noise/ore/rich
 	deep_val = 0.7
 	rare_val = 0.5
-	
+
 /datum/random_map/noise/ore/poor
 	deep_val = 0.8
 	rare_val = 0.7

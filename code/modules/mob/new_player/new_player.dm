@@ -339,6 +339,8 @@
 		character.equip_to_slot_or_store_or_drop(A, slot_l_hand)
 	SScharacter_setup.save_character(found_slot, client.ckey, character)
 	to_chat(src, "Import Successful. [character.real_name] saved to slot [found_slot].")
+	
+	
 /mob/new_player/proc/selectImportPanel()
 	var/data = "<div align='center'><br>"
 	data += "<b>Select the character you want to import.</b><br>"

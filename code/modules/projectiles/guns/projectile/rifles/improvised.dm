@@ -90,14 +90,14 @@
 
 /obj/item/weapon/imprifleframe/attackby(obj/item/W as obj, mob/user as mob)
 	if(istype(W,/obj/item/pipe))
-		if(buildstate == 0)
+		if(buildstate == 0 && do_after(user, 2 SECONDS, src))
 			user.drop_from_inventory(W)
 			qdel(W)
 			user.visible_message("[user] places the pipe on \the [src]'s stock.", "<span class='notice'>You place the piping on the stock.</span>")
 			buildstate++
 			update_icon()
 			return
-		if(buildstate == 7)
+		if(buildstate == 7 && do_after(user, 15 SECONDS, src))
 			user.drop_from_inventory(W)
 			qdel(W)
 			user.visible_message("[user] places a makeshift bolt on \the [src]'s frame.", "<span class='notice'>You install a bolt on the frame.</span>")
@@ -108,7 +108,7 @@
 	else if(istype(W,/obj/item/weapon/tape_roll))
 		var/obj/item/weapon/tape_roll/tape = W
 		if(buildstate == 1)
-			if(tape.use_tape(IMPROVRIFLE_TAPE_NEEDED))
+			if(tape.use_tape(IMPROVRIFLE_TAPE_NEEDED) && do_after(user, 12 SECONDS, src))
 				user.visible_message("[user] tapes generously \the [src]'s barrel to its stock.", "<span class='notice'>You secure the barrel to the wooden furniture with [tape].</span>")
 				buildstate++
 				update_icon()
@@ -116,36 +116,36 @@
 				to_chat(user, "<span class='notice'>You need at least [IMPROVRIFLE_TAPE_NEEDED] segments of [tape] to complete this task.</span>")
 			return
 	else if(istype(W,/obj/item/weapon/tool/screwdriver))
-		if(buildstate == 2)
+		if(buildstate == 2 && do_after(user, 2 SECONDS, src))
 			user.visible_message("[user] screws \the [src]'s barrel to its stock.", "<span class='notice'>You further secure the barrel to the wooden furniture.</span>")
 			buildstate++
 			playsound(src.loc, 'sound/items/Screwdriver2.ogg', 100, 1)
 			return
-		if(buildstate == 6)
+		if(buildstate == 6 && do_after(user, 4 SECONDS, src))
 			user.visible_message("[user] secures \the [src]'s receiver.", "<span class='notice'>You secure the reciever.</span>")
 			buildstate++
 			playsound(src.loc, 'sound/items/Screwdriver.ogg', 100, 1)
 			return
-	else if(istype(W,/obj/item/stack/material) && W.get_material_name() == MATERIAL_PLASTEEL)
-		if(buildstate == 3)
-			var/obj/item/stack/material/P = W
-			if(P.use(5))
-				user.visible_message("[user] reinforces the barrel of \the [src] with [P].", "<span class='notice'>You reinforce the barrel with [P].</span>")
-				buildstate++
-				playsound(src.loc, 'sound/items/Deconstruct.ogg', 100, 1)
-			else
-				to_chat(user, "<span class='notice'>You need at least five plasteel sheets to complete this task.</span>")
-			return
 	else if(istype(W,/obj/item/weapon/tool/wrench))
-		if(buildstate == 4)
+		if(buildstate == 4 && do_after(user, 5 SECONDS, src))
 			user.visible_message("[user] wrenches \the [src]'s barrel firmly.", "<span class='notice'>You secure the reinforced barrel.</span>")
 			buildstate++
 			playsound(src.loc, 'sound/items/Ratchet.ogg', 100, 1)
 			return
-	else if(istype(W,/obj/item/stack/material) && W.get_material_name() == MATERIAL_STEEL)
-		if(buildstate == 5)
+	else if(istype(W,/obj/item/stack/material/rods))
+		if(buildstate == 8)
+			var/obj/item/stack/material/rods/R = W
+			if(R.use(3) && do_after(user, 10 SECONDS, src))
+				user.visible_message("[user] attaches [R] onto \the [src]'s bolt.", "<span class='notice'>You attach the rods to the bolt.</span>")
+				buildstate++
+				playsound(src.loc, 'sound/items/Wirecutter.ogg', 100, 1)
+			else
+				to_chat(user, "<span class='notice'>You need at least 3 rods to complete this task.</span>")
+			return
+	else if(istype(W,/obj/item/stack/material))
+		if(buildstate == 5 && W.get_material_name() == MATERIAL_STEEL)
 			var/obj/item/stack/material/P = W
-			if(P.use(10))
+			if(P.use(10) && do_after(user, 25 SECONDS, src))
 				user.visible_message("[user] assembles a roughly made receiver and install it on \the [src].", "<span class='notice'>You assemble and install a roughly made reciever onto the frame</span>")
 				buildstate++
 				update_icon()
@@ -153,29 +153,25 @@
 			else
 				to_chat(user, "<span class='notice'>You need at least ten steel sheets to complete this task.</span>")
 			return
-	else if(istype(W,/obj/item/stack/material/rods))
-		if(buildstate == 8)
-			var/obj/item/stack/material/rods/R = W
-			if(R.use(3))
-				user.visible_message("[user] attaches [R] onto \the [src]'s bolt.", "<span class='notice'>You attach the rods to the bolt.</span>")
+		if(buildstate == 3 && W.get_material_name() == MATERIAL_PLASTEEL)
+			var/obj/item/stack/material/P = W
+			if(P.use(5) && do_after(user, 20 SECONDS, src))
+				user.visible_message("[user] reinforces the barrel of \the [src] with [P].", "<span class='notice'>You reinforce the barrel with [P].</span>")
 				buildstate++
-				playsound(src.loc, 'sound/items/Wirecutter.ogg', 100, 1)
+				playsound(src.loc, 'sound/items/Deconstruct.ogg', 100, 1)
 			else
-				to_chat(user, "<span class='notice'>You need at least 3 rods to complete this task.</span>")
+				to_chat(user, "<span class='notice'>You need at least five plasteel sheets to complete this task.</span>")
 			return
 	else if(istype(W,/obj/item/weapon/tool/weldingtool))
-		if(buildstate == 9)
-			var/obj/item/weapon/tool/weldingtool/T = W
-			if(T.remove_fuel(5,user))
-				if(!src || !T.isOn()) return
-				playsound(src.loc, 'sound/items/Welder2.ogg', 100, 1)
+		var/obj/item/weapon/tool/weldingtool/T = W
+		if(buildstate == 9 && T.use_tool(user, src, 10 SECONDS, requied_fuel = 5))
 			user.visible_message("[user] is appling welds onto \the [src].", "<span class='notice'>You secure the improvised rifle's various parts.</span>")
 			var/obj/item/weapon/gun/projectile/boltaction/imprifle/emptymag = new /obj/item/weapon/gun/projectile/boltaction/imprifle(get_turf(src))
 			emptymag.loaded = list()
 			qdel(src)
 		return
 	else if(istype(W,/obj/item/weapon/circular_saw))
-		if(buildstate == 9)
+		if(buildstate == 9 && do_after(user, 3 SECONDS, src))
 			user.visible_message("[user] is sawing off part of \the [src].", "<span class='notice'>You saw the barrel on the unfinished improvised rifle down.</span>")
 			new /obj/item/weapon/imprifleframe/imprifleframesawn(get_turf(src))
 			playsound(src.loc, 'sound/weapons/circsawhit.ogg', 100, 1)
@@ -185,11 +181,8 @@
 
 /obj/item/weapon/imprifleframe/imprifleframesawn/attackby(obj/item/W as obj, mob/user as mob)
 	if(istype(W,/obj/item/weapon/tool/weldingtool))
-		if(buildstate == 0)
-			var/obj/item/weapon/tool/weldingtool/T = W
-			if(T.remove_fuel(5,user))
-				if(!src || !T.isOn()) return
-				playsound(src.loc, 'sound/items/Welder2.ogg', 100, 1)
+		var/obj/item/weapon/tool/weldingtool/T = W
+		if(buildstate == 0 && T.use_tool(user, src, 10 SECONDS, requied_fuel = 5))
 			user.visible_message("[user] is appling welds onto \the [src].", "<span class='notice'>You secure the improvised rifle's various parts.</span>")
 			var/obj/item/weapon/gun/projectile/boltaction/imprifle/impriflesawn/emptymag = new /obj/item/weapon/gun/projectile/boltaction/imprifle/impriflesawn(get_turf(src))
 			emptymag.loaded = list()

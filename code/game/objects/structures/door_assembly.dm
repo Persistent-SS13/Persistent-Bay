@@ -73,7 +73,7 @@
 	dir = EAST
 	var/width = 1
 	airlock_type = /obj/machinery/door/airlock/multi_tile
-	glass_type = "/multi_tile/glass"
+	glass_type = /obj/machinery/door/airlock/multi_tile/glass
 
 	New()
 		if(dir in list(EAST, WEST))

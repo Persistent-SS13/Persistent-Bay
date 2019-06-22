@@ -56,7 +56,7 @@ Aluminum-Zinc Asteroids
 */
 
 /datum/random_map/noise/ore/iron_tin_solid_heavy/apply_to_turf(var/x,var/y)
-
+		..() // For normal gas resources
 	var/tx = ((origin_x-1)+x)*chunk_size
 	var/ty = ((origin_y-1)+y)*chunk_size
 
@@ -166,9 +166,10 @@ Aluminum-Zinc Asteroids
 				T.resources[MATERIAL_DEUTERIUM] =			0
 				T.resources[MATERIAL_TRITIUM] =				0
 
-	..() // For normal gas resources
+
 
 /datum/random_map/noise/ore/iron_tin_reagent_heavy/apply_to_turf(var/x,var/y)
+	..() // For normal gas resources
 
 	var/tx = ((origin_x-1)+x)*chunk_size
 	var/ty = ((origin_y-1)+y)*chunk_size
@@ -278,9 +279,9 @@ Aluminum-Zinc Asteroids
 				T.resources[MATERIAL_DEUTERIUM] =			0
 				T.resources[MATERIAL_TRITIUM] =				0
 
-	..() // For normal gas resources
 
 /datum/random_map/noise/ore/aluminum_zinc_solid_heavy/apply_to_turf(var/x,var/y)
+	..() // For normal gas resources
 
 	var/tx = ((origin_x-1)+x)*chunk_size
 	var/ty = ((origin_y-1)+y)*chunk_size
@@ -391,9 +392,9 @@ Aluminum-Zinc Asteroids
 				T.resources[MATERIAL_DEUTERIUM] =			0
 				T.resources[MATERIAL_TRITIUM] =				0
 
-	..() // For normal gas resources
 
 /datum/random_map/noise/ore/aluminum_zinc_reagent_heavy/apply_to_turf(var/x,var/y)
+	..() // For normal gas resources
 
 	var/tx = ((origin_x-1)+x)*chunk_size
 	var/ty = ((origin_y-1)+y)*chunk_size
@@ -504,7 +505,6 @@ Aluminum-Zinc Asteroids
 				T.resources[MATERIAL_DEUTERIUM] =			0
 				T.resources[MATERIAL_TRITIUM] =				0
 
-	..() // For normal gas resources
 
 /*
 High Tier asteroids
@@ -536,6 +536,7 @@ Titanium-Fusion Asteroids
 */
 
 /datum/random_map/noise/ore/silver_tungsten/apply_to_turf(var/x,var/y)
+	..() // For normal gas resources
 
 	var/tx = ((origin_x-1)+x)*chunk_size
 	var/ty = ((origin_y-1)+y)*chunk_size
@@ -650,9 +651,9 @@ Titanium-Fusion Asteroids
 				T.resources[MATERIAL_DEUTERIUM] =			0
 				T.resources[MATERIAL_TRITIUM] =				0
 
-	..() // For normal gas resources
 
 /datum/random_map/noise/ore/gold_platinum/apply_to_turf(var/x,var/y)
+	..() // For normal gas resources
 
 	var/tx = ((origin_x-1)+x)*chunk_size
 	var/ty = ((origin_y-1)+y)*chunk_size
@@ -770,9 +771,9 @@ Titanium-Fusion Asteroids
 				T.resources[MATERIAL_DEUTERIUM] =			0
 				T.resources[MATERIAL_TRITIUM] =				0
 
-	..() // For normal gas resources
 
 /datum/random_map/noise/ore/titanium_fusion/apply_to_turf(var/x,var/y)
+	..() // For normal gas resources
 
 	var/tx = ((origin_x-1)+x)*chunk_size
 	var/ty = ((origin_y-1)+y)*chunk_size
@@ -822,7 +823,7 @@ Titanium-Fusion Asteroids
 				T.resources[MATERIAL_BAUXITE] =   			0
 				T.resources[MATERIAL_DIAMOND] =				0
 				T.resources[MATERIAL_BSPACE_CRYSTAL] = 		0
-
+				
 				T.gas_resources[GAS_DEUTERIUM] =		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_MID_MAX)
 				T.gas_resources[GAS_HELIUM] = 		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
 				T.gas_resources[GAS_TRITIUM] =		rand(GAS_RESOURCE_LOWEST_MIN,	GAS_RESOURCE_LOWEST_MAX)
@@ -869,7 +870,6 @@ Titanium-Fusion Asteroids
 				T.resources[MATERIAL_TRITIUM] =				rand(RESOURCE_HIGH_MIN,	RESOURCE_HIGH_MAX)
 				T.resources[MATERIAL_GALENA] =				rand(RESOURCE_LOW_MIN, 	RESOURCE_LOW_MAX)
 				T.resources[MATERIAL_PHORON] =   			rand(RESOURCE_MID_MIN, 	RESOURCE_MID_MAX)
-				T.resources[MATERIAL_PHORON] =   			rand(RESOURCE_MID_MIN, 	RESOURCE_MID_MAX)
 				if(prob(0.5)) // half a percent
 					T.resources[MATERIAL_BSPACE_CRYSTAL] = 1
 				else
@@ -903,7 +903,142 @@ Titanium-Fusion Asteroids
 				T.gas_resources[GAS_HELIUM] = 		rand(GAS_RESOURCE_MID_MIN, 	GAS_RESOURCE_MID_MAX)
 				T.gas_resources[GAS_TRITIUM] =		rand(GAS_RESOURCE_MID_MIN,	GAS_RESOURCE_MID_MAX)
 
+	
+/datum/random_map/noise/ore/everything_good/apply_to_turf(var/x,var/y)
 	..() // For normal gas resources
+
+	var/tx = ((origin_x-1)+x)*chunk_size
+	var/ty = ((origin_y-1)+y)*chunk_size
+
+	// Solid Resources
+
+	for(var/i=0,i<chunk_size,i++)
+		for(var/j=0,j<chunk_size,j++)
+			var/turf/simulated/T = locate(tx+j, ty+i, origin_z)
+			if(!istype(T) || !T.has_resources)
+				continue
+			if(!priority_process)
+				CHECK_TICK
+			T.resources = list()
+			T.resources[MATERIAL_SAND] = rand(3,5)
+
+			var/tmp_cell
+			TRANSLATE_AND_VERIFY_COORD(x, y)
+
+			if(tmp_cell < rare_val)      // Surface metals.
+				T.resources[MATERIAL_TITANIUM] =			rand(RESOURCE_LOW_MIN, 	RESOURCE_LOW_MAX)
+				T.resources[MATERIAL_DEUTERIUM] =			rand(RESOURCE_LOW_MIN, 	RESOURCE_LOW_MAX)
+				T.resources[MATERIAL_TRITIUM] =				rand(RESOURCE_LOW_MIN, 	RESOURCE_LOW_MAX)
+				T.resources[MATERIAL_GALENA] =				rand(RESOURCE_LOW_MIN, 	RESOURCE_LOW_MAX)
+				T.resources[MATERIAL_GOLD] =				rand(RESOURCE_LOW_MIN, 	RESOURCE_LOW_MAX)
+				T.resources[MATERIAL_HYDROGEN] = 			0
+				T.resources[MATERIAL_HEMATITE] =			0
+				T.resources[MATERIAL_GRAPHITE] =			0
+				T.resources[MATERIAL_SPHALERITE] =			0
+				T.resources[MATERIAL_TETRAHEDRITE] =		0
+				T.resources[MATERIAL_ROCK_SALT] =			0
+				T.resources[MATERIAL_PYRITE] =				0
+				T.resources[MATERIAL_CINNABAR] =			0
+				T.resources[MATERIAL_PHOSPHORITE] =			0
+				T.resources[MATERIAL_POTASH] =				0
+				T.resources[MATERIAL_QUARTZ] =				0
+				T.resources[MATERIAL_SPODUMENE] =			0
+				T.resources[MATERIAL_FREIBERGITE] =			0
+				T.resources[MATERIAL_BOHMEITE] =			0
+				T.resources[MATERIAL_CASSITERITE] =			0
+				T.resources[MATERIAL_SILVER] =				rand(RESOURCE_LOW_MIN, 	RESOURCE_LOW_MAX)
+				T.resources[MATERIAL_HEMATITE] =   			0
+				T.resources[MATERIAL_ILMENITE] = 			0
+				T.resources[MATERIAL_PITCHBLENDE] =			0
+				T.resources[MATERIAL_PHORON] =   			0
+				T.resources[MATERIAL_TUNGSTEN] = 			0
+				T.resources[MATERIAL_PLATINUM] = 			0
+				T.resources[MATERIAL_BAUXITE] =   			0
+				T.resources[MATERIAL_DIAMOND] =				0
+				T.resources[MATERIAL_BSPACE_CRYSTAL] = 		0
+
+				T.gas_resources[GAS_DEUTERIUM] =		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_MID_MAX)
+				T.gas_resources[GAS_HELIUM] = 		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
+				T.gas_resources[GAS_TRITIUM] =		rand(GAS_RESOURCE_LOWEST_MIN,	GAS_RESOURCE_LOWEST_MAX)
+			else if(tmp_cell < deep_val) // Rare metals.
+				T.resources[MATERIAL_TITANIUM] =			rand(RESOURCE_HIGH_MIN,	RESOURCE_HIGH_MAX)
+				T.resources[MATERIAL_DEUTERIUM] =			rand(RESOURCE_MID_MIN,	RESOURCE_MID_MAX)
+				T.resources[MATERIAL_TRITIUM] =				rand(RESOURCE_MID_MIN,	RESOURCE_MID_MAX)
+				T.resources[MATERIAL_GALENA] =				rand(RESOURCE_MID_MIN, 	RESOURCE_MID_MAX)
+				T.resources[MATERIAL_PHORON] =   			rand(RESOURCE_MID_MIN, 	RESOURCE_MID_MAX)
+				T.resources[MATERIAL_HYDROGEN] = 			rand(RESOURCE_LOWEST_MIN, 	RESOURCE_LOWEST_MAX)
+				T.resources[MATERIAL_GOLD] =				rand(RESOURCE_MID_MIN, 	RESOURCE_MID_MAX)
+				T.resources[MATERIAL_PLATINUM] = 			0
+				T.resources[MATERIAL_BAUXITE] =   			0
+				T.resources[MATERIAL_DIAMOND] =				0
+				T.resources[MATERIAL_GALENA] =				rand(RESOURCE_MID_MIN, 	RESOURCE_MID_MAX)
+				T.resources[MATERIAL_ROCK_SALT] =			0
+				T.resources[MATERIAL_PYRITE] =				0
+				T.resources[MATERIAL_CINNABAR] =			0
+				T.resources[MATERIAL_PHOSPHORITE] =			0
+				T.resources[MATERIAL_POTASH] =				0
+				T.resources[MATERIAL_QUARTZ] =				0
+				T.resources[MATERIAL_SPODUMENE] =			0
+				T.resources[MATERIAL_FREIBERGITE] =			0
+				T.resources[MATERIAL_BOHMEITE] =			0
+				T.resources[MATERIAL_CASSITERITE] =			0
+				T.resources[MATERIAL_SILVER] =				rand(RESOURCE_MID_MIN, 	RESOURCE_MID_MAX)
+				T.resources[MATERIAL_HEMATITE] =   			0
+				T.resources[MATERIAL_ILMENITE] = 			0
+				T.resources[MATERIAL_PITCHBLENDE] =  		0
+				T.resources[MATERIAL_HEMATITE] =			rand(RESOURCE_MID_MIN, 	RESOURCE_MID_MAX)
+				T.resources[MATERIAL_GRAPHITE] =			0
+				T.resources[MATERIAL_SPHALERITE] =			0
+				T.resources[MATERIAL_TETRAHEDRITE] =		0
+				T.resources[MATERIAL_TUNGSTEN] = 			0
+				T.resources[MATERIAL_HYDROGEN] = 			0
+				T.resources[MATERIAL_BSPACE_CRYSTAL] = 		0
+
+				T.gas_resources[GAS_DEUTERIUM] =		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_MID_MAX)
+				T.gas_resources[GAS_HELIUM] = 		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
+				T.gas_resources[GAS_TRITIUM] =		rand(GAS_RESOURCE_LOWEST_MIN,	GAS_RESOURCE_LOWEST_MAX)
+			else                             // Deep metals.
+				T.resources[MATERIAL_TITANIUM] =			rand(RESOURCE_MID_MIN,	RESOURCE_MID_MAX)
+				T.resources[MATERIAL_DEUTERIUM] =			rand(RESOURCE_HIGH_MIN,	RESOURCE_HIGH_MAX)
+				T.resources[MATERIAL_TRITIUM] =				rand(RESOURCE_HIGH_MIN,	RESOURCE_HIGH_MAX)
+				T.resources[MATERIAL_GALENA] =				rand(RESOURCE_LOW_MIN, 	RESOURCE_LOW_MAX)
+				T.resources[MATERIAL_PHORON] =   			rand(RESOURCE_MID_MIN, 	RESOURCE_MID_MAX)
+				if(prob(0.5)) // half a percent
+					T.resources[MATERIAL_BSPACE_CRYSTAL] = 1
+				else
+					T.resources[MATERIAL_BSPACE_CRYSTAL] = 0
+				T.resources[MATERIAL_TUNGSTEN] = 			0
+				T.resources[MATERIAL_HYDROGEN] = 			0
+				T.resources[MATERIAL_HEMATITE] =			0
+				T.resources[MATERIAL_GRAPHITE] =			0
+				T.resources[MATERIAL_SPHALERITE] =			0
+				T.resources[MATERIAL_TETRAHEDRITE] =		0
+				T.resources[MATERIAL_ROCK_SALT] =			0
+				T.resources[MATERIAL_PYRITE] =				0
+				T.resources[MATERIAL_CINNABAR] =			0
+				T.resources[MATERIAL_PHOSPHORITE] =			0
+				T.resources[MATERIAL_POTASH] =				0
+				T.resources[MATERIAL_QUARTZ] =				0
+				T.resources[MATERIAL_SPODUMENE] =			0
+				T.resources[MATERIAL_FREIBERGITE] =			0
+				T.resources[MATERIAL_BOHMEITE] =			0
+				T.resources[MATERIAL_CASSITERITE] =			0
+				T.resources[MATERIAL_SILVER] =				0
+				T.resources[MATERIAL_HEMATITE] =   			0
+				T.resources[MATERIAL_ILMENITE] = 			0
+				T.resources[MATERIAL_PITCHBLENDE] =  		0
+				T.resources[MATERIAL_GOLD] =				0
+				T.resources[MATERIAL_PLATINUM] = 			0
+				T.resources[MATERIAL_BAUXITE] =   			0
+				T.resources[MATERIAL_DIAMOND] =				0
+
+				T.gas_resources[GAS_DEUTERIUM] =		rand(GAS_RESOURCE_MID_MIN, 	GAS_RESOURCE_MID_MAX)
+				T.gas_resources[GAS_HELIUM] = 		rand(GAS_RESOURCE_MID_MIN, 	GAS_RESOURCE_MID_MAX)
+				T.gas_resources[GAS_TRITIUM] =		rand(GAS_RESOURCE_MID_MIN,	GAS_RESOURCE_MID_MAX)
+	
+	
+	
+	
 /datum/random_map/noise/ore/rich/apply_to_turf(var/x,var/y)
 
 	var/tx = ((origin_x-1)+x)*chunk_size

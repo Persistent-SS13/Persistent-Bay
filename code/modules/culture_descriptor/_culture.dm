@@ -13,7 +13,7 @@
 	var/hidden
 	var/hidden_from_codex
 	var/list/qualifications
-	var/starting_citizenship
+	var/starting_citizenship = CITIZEN
 /decl/cultural_info/New()
 
 	if(!default_language)

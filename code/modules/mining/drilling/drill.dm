@@ -224,8 +224,9 @@
 	for(var/iy = 0,iy < 5, iy++)
 		for(var/ix = 0, ix < 5, ix++)
 			mine_turf = locate(tx + ix, ty + iy, T.z)
-			if(istype(mine_turf) && (mine_turf.has_resources || mine_turf.has_gas_resources))
-				resource_field += mine_turf
+			if(istype(mine_turf, /turf/simulated))
+				if(mine_turf.has_resources || mine_turf.has_gas_resources)
+					resource_field += mine_turf
 
 	if(!resource_field.len)
 		system_error("resources depleted")

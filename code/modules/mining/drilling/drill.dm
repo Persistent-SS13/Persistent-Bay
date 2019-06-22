@@ -26,7 +26,7 @@
 	//Flags
 	var/need_update_field = 0
 	var/need_player_check = 0
-	
+
 	var/datum/world_faction/connected_faction
 
 
@@ -71,6 +71,15 @@
 			attacker.target_mob = null
 
 /obj/machinery/mining/attackby(obj/item/O as obj, mob/user as mob)
+	if(O.GetIdCard())			// trying to unlock the interface with an ID card
+		if(!connected_faction)
+			var/obj/item/weapon/card/id/id = O.GetIdCard()
+			if(id)
+				var/datum/world_faction/faction = get_faction(id.selected_faction)
+				if(faction)
+					can_connect(faction, user)
+		else
+			can_disconnect(connected_faction, user)
 	if(statu == 2)
 		if(stacks_needed && istype(O, /obj/item/stack/material) && O.get_material_name() == MATERIAL_STEEL)
 			var/obj/item/stack/material/sheets = O
@@ -215,8 +224,9 @@
 	for(var/iy = 0,iy < 5, iy++)
 		for(var/ix = 0, ix < 5, ix++)
 			mine_turf = locate(tx + ix, ty + iy, T.z)
-			if(mine_turf && (mine_turf.has_resources || mine_turf.has_gas_resources))
-				resource_field += mine_turf
+			if(istype(mine_turf, /turf/simulated))
+				if(mine_turf.has_resources || mine_turf.has_gas_resources)
+					resource_field += mine_turf
 
 	if(!resource_field.len)
 		system_error("resources depleted")
@@ -231,7 +241,7 @@
 
 	base_capacity = 200
 
-	var/ore_types = list(
+	var/list/ore_types = list(
 		MATERIAL_PITCHBLENDE,
 		MATERIAL_PLATINUM,
 		MATERIAL_HEMATITE,
@@ -285,13 +295,18 @@
 
 	check_supports()
 
-	if(!connected_faction) return
+	if(!connected_faction)
+		system_error("drill is not connected to an organization.")
+		return
 	if(!active) return
 
-	if(!anchored || !use_cell_power())
-		system_error("system configuration or charge error")
+	if(!use_cell_power())
+		system_error("drill is out of charge/battery error")
 		return
 
+	if(!anchored)
+		system_error("drill is not anchored correctly.")
+		return
 	if(need_update_field)
 		get_resource_field()
 
@@ -330,8 +345,8 @@
 
 		var/total_harvest = harvest_speed //Ore harvest-per-tick.
 		var/found_resource = 0 //If this doesn't get set, the area is depleted and the drill errors out.
-
-		for(var/metal in ore_types)
+		var/list/random_ore_types = shuffle(ore_types.Copy())
+		for(var/metal in random_ore_types)
 
 			if(contents.len >= capacity)
 				system_error("insufficient storage space")

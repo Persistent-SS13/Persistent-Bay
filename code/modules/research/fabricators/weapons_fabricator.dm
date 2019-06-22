@@ -19,6 +19,26 @@
 
 
 
+/obj/machinery/fabricator/weapon_fabricator/can_connect(var/datum/world_faction/trying, var/mob/M)
+	var/datum/machine_limits/limits = trying.get_limits()
+	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(trying.uid)))
+		to_chat(M, "You do not have access to link machines to [trying.name].")
+		return 0
+	if(limits.limit_ammofab <= limits.ammofabs.len)
+		if(M)
+			to_chat(M, "[trying.name] cannot connect any more machines of this type.")
+		return 0
+	limits.ammofabs |= src
+	req_access_faction = trying.uid
+	connected_faction = trying
+
+/obj/machinery/fabricator/weapon_fabricator/can_disconnect(var/datum/world_faction/trying, var/mob/M)
+	var/datum/machine_limits/limits = trying.get_limits()
+	limits.engfabs -= src
+	req_access_faction = ""
+	connected_faction = null
+	if(M) to_chat(M, "The machine has been disconnected.")
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1653,10 +1673,10 @@
 
 /datum/design/item/weaponfab/magazines/empty/lap39mm
 	name = "LAP3 9mm Pistol Magazine (empty)"
-	build_path = /obj/item/ammo_magazine/lap3/empty
+	build_path = /obj/item/ammo_magazine/box/lap3/empty
 /datum/design/item/weaponfab/magazines/lap39mm
 	name = "LAP3 9mm Pistol Magazine"
-	build_path = /obj/item/ammo_magazine/lap3
+	build_path = /obj/item/ammo_magazine/box/lap3
 
 /datum/design/item/weaponfab/magazines/empty/b92fs
 	name = "92fs Pistol Magazine (empty)"

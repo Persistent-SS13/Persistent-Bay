@@ -8,6 +8,7 @@
 	requires_ntnet = 1
 	size = 12
 	democratic = 1
+	category = PROG_JUSTICE
 
 /datum/nano_module/program/verdicts
 	name = "Nexus City Trials & Verdicts"

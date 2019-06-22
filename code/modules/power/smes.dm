@@ -12,6 +12,7 @@
 	anchored = 1
 	clicksound = "switch"
 	interact_offline = 1
+	circuit_type = /obj/item/weapon/circuitboard/smes
 
 	var/capacity = 5e6 // maximum charge
 	var/charge = 1e6 // actual charge
@@ -74,12 +75,18 @@
 	charge -= smes_amt
 	return smes_amt / CELLRATE
 
+
 /obj/machinery/power/smes/Initialize()
 	. = ..()
-	for(var/d in GLOB.cardinal)
-		var/turf/T = get_step(src, d)
+	if(. != INITIALIZE_HINT_QDEL)
+		return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/power/smes/LateInitialize()
+	. = ..()
+	for(var/D in GLOB.cardinal)
+		var/turf/T = get_step(src, D)
 		for(var/obj/machinery/power/terminal/term in T)
-			if(term && term.dir == turn(d, 180) && !term.master)
+			if(term && term.dir == turn(D, 180) && !term.master)
 				terminals |= term
 				term.master = src
 				term.connect_to_network()
@@ -93,7 +100,6 @@
 		powernet.smes_newavail += amount
 		return 1
 	return 0
-
 
 /obj/machinery/power/smes/disconnect_terminal(var/obj/machinery/power/terminal/term)
 	terminals -= term
@@ -285,7 +291,7 @@
 /obj/machinery/power/smes/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
 
 	if(default_deconstruction_screwdriver(user, W))
-		return
+		return 1
 
 	if (!panel_open)
 		to_chat(user, "<span class='warning'>You need to open access hatch on [src] first!</span>")
@@ -482,6 +488,8 @@
 	to_chat(user, "The service hatch is [panel_open ? "open" : "closed"].")
 	if(!isdamaged())
 		return
+	if(stat & BROKEN)
+		to_chat(user, SPAN_WARNING("It appears to be broken.."))
 	var/damage_percentage = round((get_damages() / get_max_health()) * 100)
 	switch(damage_percentage)
 		if(75 to INFINITY)

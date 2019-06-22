@@ -9,8 +9,8 @@
 	silenced = FALSE
 	fire_delay = 4
 	origin_tech = list(TECH_COMBAT = 2, TECH_MATERIAL = 2, TECH_ILLEGAL = 2)
-	magazine_type = /obj/item/ammo_magazine/lap3
-	allowed_magazines = /obj/item/ammo_magazine/lap3
+	magazine_type = /obj/item/ammo_magazine/box/lap3
+	allowed_magazines = /obj/item/ammo_magazine/box/lap3
 
 /obj/item/weapon/gun/projectile/pistol/holdout/New()
 	..()
@@ -63,7 +63,7 @@
 //----------------------------------
 //	9mm LAP3 Magazine
 //----------------------------------
-/obj/item/ammo_magazine/lap3
+/obj/item/ammo_magazine/box/lap3
 	name = "\improper LAP3 magazine (9mm)"
 	icon_state = "holdout"
 	origin_tech = list(TECH_COMBAT = 2)
@@ -72,5 +72,5 @@
 	ammo_type = /obj/item/ammo_casing/c9mm
 	max_ammo = 8
 	multiple_sprites = 1
-/obj/item/ammo_magazine/lap3/empty
+/obj/item/ammo_magazine/box/lap3/empty
 	initial_ammo = 0

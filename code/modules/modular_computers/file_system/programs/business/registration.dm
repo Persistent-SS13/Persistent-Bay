@@ -7,6 +7,7 @@
 	extended_desc = "Used to register new businesses."
 	requires_ntnet = 1
 	size = 12
+	category = PROG_BUSINESS
 
 
 /datum/nano_module/program/newbusiness
@@ -276,6 +277,19 @@
 					new_business.stock_holders[contract.signed_by] = holder
 				signed_contracts -= contract
 			LAZYDISTINCTADD(GLOB.all_world_factions, new_business)
+			var/obj/effect/portal/portal = new(get_turf(program.computer))
+			program.computer.visible_message("A \icon[portal] [portal] appears to deposit a crate of starting equipment.")
+			sleep(1 SECOND)
+			playsound(get_turf(program.computer),'sound/effects/teleport.ogg',100,1)
+			portal.loc = null
+			var/obj/structure/closet/crate/secure/secure_closet = new(get_turf(program.computer))
+			secure_closet.req_access_faction = business_uid
+			secure_closet.req_access = list(101)
+			secure_closet.name = "[business_name] Starting Equipment"
+			for(var/x in new_business.module.starting_items)
+				var/ind = new_business.module.starting_items[x]
+				for(var/i in 1 to ind)
+					new x(secure_closet)
 			business_name = null
 			business_uid = null
 			ceo_name = null

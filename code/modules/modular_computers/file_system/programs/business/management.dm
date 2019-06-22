@@ -9,6 +9,7 @@
 	size = 12
 	business = 1
 	required_access = core_access_command_programs
+	category = PROG_BUSINESS
 
 /datum/nano_module/program/management
 	name = "Business Central Options"

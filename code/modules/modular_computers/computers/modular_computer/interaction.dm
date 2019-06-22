@@ -39,7 +39,7 @@
 				hard_drive.take_damage(hard_drive.malfunction_threshold * hard_drive.get_max_health())
 			else if(prob(5))
 				visible_message("<span class='warning'>[src] emits some ominous clicks.</span>")
-				hard_drive.take_damage(hard_drive.break_threshold * hard_drive.get_max_health())
+				hard_drive.take_damage(hard_drive.broken_threshold * hard_drive.get_max_health())
 		shutdown_computer(FALSE)
 		spawn(2 SECONDS)
 			bsod = 0

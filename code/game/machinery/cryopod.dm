@@ -2,16 +2,16 @@
 	name = "cryogenic freezer"
 	desc = "A man-sized pod for entering suspended animation. Takes one minutes to enter stasis."
 	icon = 'icons/obj/Cryogenic2.dmi'
-	icon_state = "body_scanner_0"
+	icon_state = "cryopod_open"
 	density = 1
 	anchored = 1
 	dir = WEST
 	req_access = core_access_command_programs
 	circuit_type = /obj/item/weapon/circuitboard/cryopod
 
-	var/base_icon_state = "body_scanner_0"
-	var/occupied_icon_state = "body_scanner_1"
-	var/on_store_message = "has entered long-term storage."
+	var/base_icon_state = "cryopod_open"
+	var/occupied_icon_state = "cryopod_closed"
+	var/on_store_message = "has entered cryo sleep."
 	var/on_store_name = "Cryogenic Oversight"
 	var/on_enter_occupant_message = "You feel cool air surround you. You go numb as your senses turn inward."
 	var/allow_occupant_types = list(/mob/living/carbon/human, /mob/living/silicon/robot, /obj/item/organ/internal/stack)
@@ -269,7 +269,7 @@
 		user.drop_from_inventory(A)
 
 	name = "[initial(name)] ([M.real_name])"
-	icon_state = "body_scanner_1"
+	icon_state = "cryopod_closed"
 
 	occupant = A
 	A.forceMove(src)
@@ -289,7 +289,6 @@
 	if(!occupant)
 		return 0
 
-	var/mob/new_player/player = new(locate(100,100,51))
 	var/mob/character
 	var/key
 	var/name = ""
@@ -301,10 +300,8 @@
 		if(S.lacemob.ckey)
 			S.lacemob.stored_ckey = S.lacemob.ckey
 			key = S.lacemob.ckey
-			player.ckey = S.lacemob.ckey
 		else
 			key = S.lacemob.stored_ckey
-			player.ckey = S.lacemob.stored_ckey
 		name = S.get_owner_name()
 		character = S.lacemob
 		saveslot = S.lacemob.save_slot
@@ -317,10 +314,8 @@
 		if(M.ckey)
 			M.stored_ckey = M.ckey
 			key = M.ckey
-			player.ckey = M.ckey
 		else
 			key = M.stored_ckey
-			player.ckey = M.stored_ckey
 		name = M.real_name
 		character = M
 		saveslot = M.save_slot
@@ -388,7 +383,7 @@
 		control_computer._admin_logs += "[key_name(character)] ([role_alt_title]) at [stationtime2text()]"
 	log_and_message_admins("[key_name(character)] ([role_alt_title]) entered cryostorage.")
 
-	announce.autosay("[character.real_name], [role_alt_title], [on_store_message]", "[on_store_name]", character.GetFaction())
+	announce.autosay("[character.real_name] [on_store_message]", "[on_store_name]", character.GetFaction())
 	visible_message("<span class='notice'>\The [initial(name)] hums and hisses as it moves [character.real_name] into storage.</span>", 3)
 
 	//Lace retrieval?
@@ -409,6 +404,8 @@
 
 	SetName(initial(src.name))
 	icon_state = base_icon_state
+	var/mob/new_player/player = new()
+	player.key = key
 	QDEL_NULL(occupant)
 
 

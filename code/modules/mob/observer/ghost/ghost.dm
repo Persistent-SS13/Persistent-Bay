@@ -138,22 +138,27 @@ Works together with spawning an observer, noted above.
 		C.images += target.hud_list[SPECIALROLE_HUD]
 	return 1
 
-/mob/proc/ghostize(var/can_reenter_corpse = CORPSE_CAN_REENTER)
+/mob/proc/ghostize(var/shouldGhost = 0)
 	// Are we the body of an aghosted admin? If so, don't make a ghost.
 	if(teleop && istype(teleop, /mob/observer/ghost))
 		var/mob/observer/ghost/G = teleop
 		if(G.admin_ghosted)
 			return
 	if(key)
-		if(check_rights(R_ADMIN, 0, src))
-			hide_fullscreens()
+		hide_fullscreens()
+		if(check_rights(R_ADMIN, 0, src) && shouldGhost)
 			var/mob/observer/ghost/ghost = new(src)	//Transfer safety to observer spawning proc.
-			ghost.can_reenter_corpse = can_reenter_corpse
 			ghost.timeofdeath = src.stat == DEAD ? src.timeofdeath : world.time
 			ghost.key = key
 			if(ghost.client && !ghost.client.holder && !config.antag_hud_allowed)		// For new ghosts we remove the verb from even showing up if it's not allowed.
 				ghost.verbs -= /mob/observer/ghost/verb/toggle_antagHUD	// Poor guys, don't know what they are missing!
 			return ghost
+		else
+			var/mob/new_player/M = new /mob/new_player()
+			client.eye = M
+			M.key = key
+			M.loc = null
+			return 
 
 /*
 This is the proc mobs get to turn into a ghost. Forked from ghostize due to compatibility issues.
@@ -519,7 +524,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 /mob/observer/ghost/MayRespawn(var/feedback = 0, var/respawn_time = 0)
 	if(!client)
 		return 0
-	if(mind && mind.current && mind.current.stat != DEAD && can_reenter_corpse == CORPSE_CAN_REENTER)
+	if(mind && mind.current && mind.current.stat != DEAD)
 		if(feedback)
 			to_chat(src, "<span class='warning'>Your non-dead body prevents you from respawning.</span>")
 		return 0

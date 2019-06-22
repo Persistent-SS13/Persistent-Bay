@@ -1309,7 +1309,7 @@
 	ADD_SAVED_VAR(spawn_type)
 	ADD_SAVED_VAR(spawn_loc)
 	ADD_SAVED_VAR(spawn_loc_2)
-
+	ADD_SAVED_VAR(spawn_cit)
 	ADD_SKIP_EMPTY(dna)
 	ADD_SKIP_EMPTY(l_hand)
 	ADD_SKIP_EMPTY(r_hand)

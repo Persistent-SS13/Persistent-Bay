@@ -180,10 +180,9 @@ Used In File(s): \code\game\machinery\alarm.dm
 					Operation Mode:
 				</div>
 				<div class="itemContent">
-					{{:helper.link('Scrub', null, { 'id_tag' : value.id_tag, 'command' : 'scrubbing', 'scrub_mode' : 'scrub'}, null, value.scrubbing == 'scrub' ? 'selected' : null)}}
-					{{:helper.link('Exchange', null, { 'id_tag' : value.id_tag, 'command' : 'scrubbing', 'scrub_mode' : 'exchange'}, null, value.scrubbing == 'exchange' ? 'selected' : null)}}
-					{{:helper.link('Siphon', null, { 'id_tag' : value.id_tag, 'command' : 'scrubbing', 'scrub_mode' : 'siphon'}, null, value.scrubbing == 'siphon' ? 'redButton' : null)}}
-<!--					{{:helper.link(value.scrubbing ? 'Scrubbing' : 'Siphoning', null, { 'id_tag' : value.id_tag, 'command' : 'scrubbing', 'val' : value.scrubbing ? 0 : 1}, null, value.scrubbing ? null : 'redButton')}} -->
+						{{:helper.link('Scrub', null, { 'id_tag' : value.id_tag, 'command' : 'scrubbing', 'scrub_mode' : 'scrub'}, null, value.scrubbing == 'scrub' ? 'selected' : null)}}
+						{{:helper.link('Exchange', null, { 'id_tag' : value.id_tag, 'command' : 'scrubbing', 'scrub_mode' : 'exchange'}, null, value.scrubbing == 'exchange' ? 'selected' : null)}}
+						{{:helper.link('Siphon', null, { 'id_tag' : value.id_tag, 'command' : 'scrubbing', 'scrub_mode' : 'siphon'}, null, value.scrubbing == 'siphon' ? 'redButton' : null)}}
 				</div>
 			</div>
 			<div class="item">
@@ -194,6 +193,7 @@ Used In File(s): \code\game\machinery\alarm.dm
 					{{for value.filters :filterValue:filterIndex}}
 						{{:helper.link(filterValue.name, null, { 'id_tag' : value.id_tag, 'command' : filterValue.command, 'val' : filterValue.val ? 0 : 1}, null, filterValue.val ? 'selected' : null)}}
 					{{/for}}
+					{{:helper.link('+Advanced', null, { 'id_tag' : value.id_tag, 'command' : 'adv_filtering'}) }}
 				</div>
 			</div>
 			<HR>
@@ -243,5 +243,20 @@ Used In File(s): \code\game\machinery\alarm.dm
 			</tr>
 		{{/for}}
 		<table>
+
+	{{else data.screen == 6}}
+		<H3>Advanced Filtering</H3>
+		Add/Remove specific gases to the filter list of <span class='average'>{{:data.scrubber_name}} </span>
+		<div class='item'>{{:helper.link('Back', null, {'command' : 'screen', 'val' : 3} )}}</div>
+		{{for data.gases_entries}}
+			<div class='item'>
+					<div class='itemLabel'>
+						{{:value.name}}
+					</div>
+					<div class='itemContent'>
+						{{:helper.link(value.state ?'Filtered':'Ignored', null, {'id_tag' : data.scrubber_id_tag, 'command' : 'gas_scrub', 'val' : value.gas_id, 'gas_scrub_state' : value.state ? 0 : 1}, null, value.state ? 'selected' : null) }}
+					</div>
+			</div>
+		{{/for}}
     {{/if}}
 {{/if}}

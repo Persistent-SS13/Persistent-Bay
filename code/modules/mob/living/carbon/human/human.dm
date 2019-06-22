@@ -105,6 +105,8 @@
 	ADD_SAVED_VAR(branded)
 	ADD_SAVED_VAR(vessel) //Defined in module/organs/blood.dm
 	ADD_SAVED_VAR(side_effects) //Defined in another file
+	ADD_SAVED_VAR(cultural_info)
+	ADD_SAVED_VAR(citizenship)
 
 	ADD_SKIP_EMPTY(backpack_setup)
 	ADD_SKIP_EMPTY(side_effects)
@@ -116,6 +118,7 @@
 
 /mob/living/carbon/human/Initialize()
 	. = ..()
+	update_citizenship()
 	updatehealth()
 	update_action_buttons()	
 	queue_icon_update()
@@ -133,7 +136,8 @@
 	for(var/datum/reagent/blood/B in vessel.reagent_list)
 		if(B.type == /datum/reagent/blood)
 			B.sync_to(src)
-	
+
+	update_citizenship()
 	regenerate_icons()
 	handle_organs(1)
 
@@ -990,7 +994,7 @@
 		vessel.add_reagent(/datum/reagent/blood,species.blood_volume-vessel.total_volume)
 		fixblood()
 
-	species.create_organs(src,1) // Reset our organs/limbs with a new stack.
+	species.create_organs(src) // Reset our organs/limbs with a new stack.
 	restore_all_organs()       // Reapply robotics/amputated status from preferences.
 
 	if(!client || !key) //Don't boot out anyone already in the mob.
@@ -1249,6 +1253,7 @@
 		languages.Cut()
 		default_language = null
 		update_languages()
+	update_citizenship()
 
 	//recheck species-restricted clothing
 	for(var/slot in slot_first to slot_last)
@@ -1792,6 +1797,7 @@
 		cultural_info[token] = _culture
 		if(!defer_language_update)
 			update_languages()
+			update_citizenship()
 
 /mob/living/carbon/human/proc/get_cultural_value(var/token)
 	return cultural_info[token]
@@ -1826,3 +1832,14 @@
 		//We want to clear the now useless backpack setup object
 		QDEL_NULL(backpack_setup)
 	..()
+
+/mob/living/carbon/human/proc/update_citizenship()
+	var/decl/cultural_info/culture/C = get_cultural_value(TAG_CULTURE)
+	if(C)
+		if(C.starting_citizenship)
+			src.spawn_cit = C.starting_citizenship
+			src.citizenship = C.starting_citizenship
+		else
+			log_warning(" /mob/living/carbon/human/proc/update_citizenship() : Culture for [src] \ref[src] had null starting citizenship!!")
+	else
+		log_error(" /mob/living/carbon/human/proc/update_citizenship() : Couldn't find culture token..")

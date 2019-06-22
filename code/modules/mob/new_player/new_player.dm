@@ -42,7 +42,7 @@
 		output += "<a href='byond://?src=\ref[src];joinGame=1'>Join Game!</a><br><br>"
 		output += "<a href='byond://?src=\ref[src];importCharacter=1'>Import Prior Character</a><br><br>"
 	output += "<a href='https://discord.gg/53YgfNU'target='_blank'>Join Discord</a><br><br>"
-	output += "<a href='byond://?src=\ref[src];joinGame=1'>Link Discord Account</a><br><br>"
+	output += "<a href='byond://?src=\ref[src];linkDiscord=1'>Link Discord Account</a><br><br>"
 	if(check_rights(R_DEBUG, 0, client))
 		output += "<a href='byond://?src=\ref[src];observeGame=1'>Observe</a><br><br>"
 	output += "<a href='byond://?src=\ref[src];refreshPanel=1'>Refresh</a><br><br>"
@@ -110,7 +110,8 @@
 	if(href_list["joinGame"])
 		selectCharacterPanel("load")
 		return 0
-
+	if(href_list["linkDiscord"])
+		client.link_discord()
 	if(href_list["crewManifest"])
 		crewManifestPanel()
 		return 0
@@ -130,7 +131,9 @@
 	if(href_list["importSlot"])
 		chosen_slot = text2num(href_list["importSlot"])
 		ImportCharacter()
-
+		load_panel?.close()
+	if(href_list["importCharacter"])
+		selectImportPanel()
 	if(href_list["pickSlot"])
 		chosen_slot = text2num(copytext(href_list["pickSlot"], 1, 2))
 		client.prefs.chosen_slot = chosen_slot
@@ -299,9 +302,12 @@
 			break
 	if(!found_slot)
 		to_chat(src, "Your character slots are full. Import failed.")
-	var/mob/character = SScharacter_setup.load_import_character(chosen_slot, ckey)
+		return
+	var/mob/living/character = SScharacter_setup.load_import_character(chosen_slot, ckey)
 	if(!character)
 		return
+	character.revive()
+	character.real_name = SScharacter_setup.peek_import_name(chosen_slot, ckey)
 	var/list/L = recursive_content_check(character)
 	var/list/spared = list()
 	for(var/ind in 1 to L.len)
@@ -314,44 +320,26 @@
 			spared |= A
 		if(istype(A, /obj/item/weapon/photo))
 			spared |= A
-	for(var/obj/item/W in character)
-		character.drop_from_inventory(W)
 	character.spawn_type = CHARACTER_SPAWN_TYPE_IMPORT //For first time spawn
 	var/decl/hierarchy/outfit/clothes
-	var/datum/world_faction/F
-	if(src.faction)
-		F = get_faction(src.faction)
-	else
-		F = get_faction(GLOB.using_map.default_faction_uid) //If no faction forced, use the map's default
+	var/datum/world_faction/F = get_faction(GLOB.using_map.default_faction_uid) //Imported char don't have valid factions
 	clothes = outfit_by_type(F.starter_outfit)
-	//testing("dress_preview_mob: got outfit [clothes]")
 	ASSERT(istype(clothes))
+
 	clothes.uniform = /obj/item/clothing/under/color/lightpurple
 	clothes.equip(character)
 	var/obj/item/weapon/card/id/W = new (character)
 	W.registered_name = character.real_name
-	W.selected_faction = "nexus"
+	W.selected_faction = GLOB.using_map.default_faction_uid
 	character.equip_to_slot_or_store_or_drop(character, slot_wear_id)
-	character.update_icons()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
 	for(var/ind in 1 to spared.len)
 		var/atom/A = spared[ind]
 		character.equip_to_slot_or_store_or_drop(A, slot_l_hand)
 	SScharacter_setup.save_character(found_slot, client.ckey, character)
-
+	to_chat(src, "Import Successful. [character.real_name] saved to slot [found_slot].")
+	
+	
 /mob/new_player/proc/selectImportPanel()
 	var/data = "<div align='center'><br>"
 	data += "<b>Select the character you want to import.</b><br>"
@@ -427,12 +415,14 @@
 
 	//Resume playing
 	for(var/mob/M in SSmobs.mob_list)
-		transitionToGame() //Don't forget to close the panel and stop the lobby music
 		if(M.loc && !M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
+			transitionToGame() //Don't forget to close the panel and stop the lobby music
 			if(istype(M, /mob/observer))
 				qdel(M)
 				continue
 			M.ckey = ckey
+			M.update_icons()
+			M.redraw_inv() //Make sure icons shows up
 			qdel(src)
 			return
 
@@ -481,19 +471,41 @@
 			spawnTurf = locate(102, 98, 1)
 
 	else if(character.spawn_type == CHARACTER_SPAWN_TYPE_FRONTIER_BEACON)
+		var/list/obj/structure/frontier_beacon/possibles = list()
+		var/list/obj/structure/frontier_beacon/possibles_unsafe = list()
 		for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
 			if(!beacon.loc)
-				qdel(beacon)
 				continue
-			if(beacon.req_access_faction == character.spawn_loc)
-				spawnTurf = get_turf(beacon)//get_step(get_turf(beacon), pick(GLOB.cardinal)) //Set it to get turf because otherwise people spawn in the walls
-				break
-			if(!spawnTurf)
-				spawnTurf = get_turf(beacon)//get_step(get_turf(beacon), pick(GLOB.cardinal)) //Set it to get turf because otherwise people spawn in the walls
+			if(beacon.req_access_faction == character.spawn_loc && beacon.citizenship_type == character.spawn_cit)
+				//Check the beacon position to see if they're safe
+				var/turf/T = get_turf(beacon)
+				var/radlevel = SSradiation.get_rads_at_turf(T)
+				var/airstatus = IsTurfAtmosUnsafe(T)
+				if(airstatus || radlevel > 0)
+					possibles_unsafe += beacon
+				else
+					possibles += beacon
+
+		if(possibles.len)
+			spawnTurf = get_turf(pick(possibles)) //Pick one randomly
+		else if(possibles_unsafe.len)
+			spawnTurf = get_turf(pick(possibles_unsafe))
+			var/radlevel = SSradiation.get_rads_at_turf(spawnTurf)
+			var/airstatus = IsTurfAtmosUnsafe(spawnTurf)
+			log_and_message_admins("Couldn't find a safe spawn beacon. Spawning [character] at [spawnTurf] ([spawnTurf.x], [spawnTurf.y], [spawnTurf.z])! Warning player!", character, spawnTurf)
+			var/reply = alert(src, "Warning. Your selected spawn location seems to have unfavorable conditions. You may die shortly after spawning. \
+			Spawn anyway? More information: [airstatus] Radiation: [radlevel] Bq", "Atmosphere warning", "Abort", "Spawn anyway")
+			if(reply == "Abort")
+				spawning = FALSE
+				new_player_panel(TRUE)
+				return
+			else
+				// Let the staff know, in case the person complains about dying due to this later. They've been warned.
+				log_and_message_admins("User [src.client] spawned as [character] at [spawnTurf]([spawnTurf.x], [spawnTurf.y], [spawnTurf.z]) with dangerous atmosphere.")
 
 		if(!spawnTurf)
 			log_and_message_admins("WARNING! No frontier beacons avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
-			spawnTurf = locate(102, 98, 1)
+			spawnTurf = locate(world.maxx / 2 , world.maxy /2, 1)
 
 	else if(character.spawn_type == CHARACTER_SPAWN_TYPE_LACE_STORAGE)
 		spawnTurf = GetLaceStorage(character)
@@ -501,29 +513,15 @@
 			log_and_message_admins("WARNING! Unable To Find Any Spawn Turf!!! Prehaps you didn't include a map?")
 			return
 
-	//If the atmos is bad or etc.. Ask the player if they still want to spawn!
-	if(!SSjobs.check_unsafe_spawn(character, spawnTurf))
-		spawning = FALSE
-		return
-
 	//Close the menu and stop the lobby music once we're sure we're spawning
 	transitionToGame()
 	character.after_spawn()
 
-	if(!character.mind)		// Not entirely sure what this if() block does, but keeping it just in case
+	if(!character.mind)
 		mind.active = 0
 		mind.original = character
-		if(client && client.prefs.memory)
-			mind.store_memory(client.prefs.memory)
-		if(client.prefs.relations.len)
-			for(var/T in client.prefs.relations)
-				var/TT = matchmaker.relation_types[T]
-				var/datum/relation/R = new TT
-				R.holder = mind
-				R.info = client.prefs.relations_info[T]
-			mind.gen_relations_info = client.prefs.relations_info["general"]
-		mind.transfer_to(character)					//won't transfer key since the mind is not active
-
+		mind.transfer_to(character)	//won't transfer key since the mind is not active
+		
 	character.forceMove(spawnTurf)
 	character.stored_ckey = key
 	character.key = key
@@ -578,7 +576,10 @@
 		newchar.client.screen -= cinematic
 
 	newchar.spawn_type = CHARACTER_SPAWN_TYPE_CRYONET
-	sound_to(newchar, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
+	var/sound/mus = sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel)
+	mus.environment = -1 //Don't do silly reverb stuff
+	mus.status = SOUND_STREAM //Cheaper to do streams
+	sound_to(newchar, mus)
 	spawn()
 		new /obj/effect/portal(get_turf(newchar), null, 5 SECONDS, 0)
 		shake_camera(newchar, 3, 1)
@@ -587,7 +588,7 @@
 	to_chat(newchar, "<span class='danger'>Aboard the cruiser ecaping from the Alpha Quadrant, the journey through the bluespace barrier shreds the hull as it passes the threshold.</span>")
 	to_chat(newchar, "<span class='danger'>With the barrier weakened, the station inside the Beta Quadrant is able to yank the failing vessels cryo-storage over to the frontier beacons..</span>")
 	to_chat(newchar, "But it must have prioritized saving life-signs rather than the item storage. You wake up in an unfamilar uniform with a basic backpack. Maybe some of your lightest belongings are in there.")
-	to_chat(newchar, "You also have a book clasped in your hands. 'Guide to Nexus City'.")
+	to_chat(newchar, "You find a book at your feet. 'Arrivals to Nexus City'.")
 	to_chat(newchar, "You've been in this situation before, but on a different station. What new stories does the Nexus City hold for you?")
 	to_chat(newchar, "((Thanks for returning to persistence. So many staff and contributors have come together to make the lastest chapter, and I'm really glad to have you back. -- Brawler.))")
 

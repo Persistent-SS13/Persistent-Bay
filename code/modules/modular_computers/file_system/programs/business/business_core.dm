@@ -25,6 +25,7 @@
 	size = 65
 	usage_flags = PROGRAM_CONSOLE
 	business = 1
+	category = PROG_BUSINESS
 
 /datum/nano_module/program/business_core
 	name = "Business Employment Control"
@@ -120,7 +121,7 @@
 			data["title"] = selected_assignment.name
 			data["cryonetwork"] = selected_assignment.cryo_net
 			data["selected_rank"] = selected_rank
-			if(selected_rank < selected_assignment.ranks.len+1)
+			if(selected_rank < selected_assignment.ranks.len)
 				data["increase_button"] = 1
 			if(selected_rank != 1)
 				data["decrease_button"] = 1
@@ -553,7 +554,7 @@
 				return 0
 			var/choice2 = input(usr, "Are you sure you want to delete the highest rank?") in list("Confirm", "Cancel")
 			if(choice2 == "Cancel") return 1
-			selected_assignment.accesses.Cut(selected_assignment.accesses.len-1, selected_assignment.accesses.len)
+			selected_assignment.accesses.Cut(selected_assignment.accesses.len)
 			to_chat(usr, "Rank successfully deleted.")
 		if("pick_access")
 			var/datum/access_category/category = locate(href_list["selected_ref"])
@@ -662,7 +663,7 @@
 			if(choice)
 				selected_assignment.cryo_net = choice
 		if("increase_selected_rank")
-			if(selected_rank < selected_assignment.ranks.len+1)
+			if(selected_rank < selected_assignment.ranks.len)
 				selected_rank++
 		if("decrease_selected_rank")
 			if(selected_rank != 1)

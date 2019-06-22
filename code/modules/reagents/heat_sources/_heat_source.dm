@@ -14,6 +14,7 @@
 	anchored =   TRUE
 	idle_power_usage = 0
 	active_power_usage = 1.2 KILOWATTS
+	circuit_type = /obj/item/weapon/circuitboard/reagent_heater
 
 	var/image/glow_icon
 	var/image/beaker_icon
@@ -27,7 +28,7 @@
 	var/last_temperature
 	var/target_temperature
 	var/obj/item/container
-	circuit_type = /obj/item/weapon/circuitboard/reagent_heater
+
 
 /obj/machinery/reagent_temperature/cooler
 	name = "chemical cooler"
@@ -37,6 +38,13 @@
 	max_temperature =  30 CELSIUS
 	min_temperature = -80 CELSIUS
 	circuit_type =     /obj/item/weapon/circuitboard/reagent_heater/cooler
+
+/obj/machinery/reagent_temperature/New()
+	. = ..()
+	ADD_SAVED_VAR(container)
+	ADD_SAVED_VAR(target_temperature)
+	
+	ADD_SKIP_EMPTY(container)
 
 /obj/machinery/reagent_temperature/Initialize()
 	target_temperature = min_temperature

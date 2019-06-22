@@ -179,7 +179,7 @@
 			// Only those programs our user can run will show in the list
 			if(!P.can_run(user, 0, null, program.computer))
 				continue
-			if(!P.is_supported_by_hardware(my_computer.hardware_flag, 1, user))
+			if(!P.is_supported_by_hardware(my_computer.hardware_flag, 0, user))
 				continue
 			category_list.Add(list(list(
 			"filename" = P.filename,

@@ -531,7 +531,7 @@ var/const/NO_EMAG_ACT = -50
 			log_warning("human.set_id_info(): there is no bank account for [ckey], [src]\ref[src]. Skipping adding it to the id card!")
 	else
 		log_warning("human.set_id_info(): there is no mind for [src]\ref[src]. Skipping adding bank account to the id card!")
-	
+
 	var/datum/computer_file/report/crew_record/record = get_crewmember_record(real_name)
 	if(record)
 		id_card.sync_from_record(record)
@@ -552,7 +552,7 @@ var/const/NO_EMAG_ACT = -50
 	if(faction)
 		dat += text("Connected Organization: []</A><BR>\n", faction.name)
 		dat += text("Title: []</A><BR>\n", assignment)
-	
+
 	dat += text("Fingerprint: []</A><BR>\n", fingerprint_hash)
 	dat += text("Blood Type: []<BR>\n", blood_type)
 	dat += text("DNA Hash: []<BR><BR>\n", dna_hash)
@@ -560,7 +560,7 @@ var/const/NO_EMAG_ACT = -50
 		dat +="<td align = center valign = top>Photo:<br><img src=front.png height=80 width=80 border=4><img src=side.png height=80 width=80 border=4></td>"
 	dat += "</tr></table>"
 	return jointext(dat,null)
-	
+
 /obj/item/weapon/card/id/proc/self_dat()
 	var/list/dat = list("<table><tr><td>")
 	dat += text("Name: []</A><BR>", "[formal_name_prefix][registered_name][formal_name_suffix]")
@@ -583,7 +583,7 @@ var/const/NO_EMAG_ACT = -50
 		dat +="<td align = center valign = top>Photo:<br><img src=front.png height=80 width=80 border=4><img src=side.png height=80 width=80 border=4></td>"
 	dat += "</tr></table>"
 	return jointext(dat,null)
-	
+
 /obj/item/weapon/card/id/Topic(href, href_list)
 	if(href_list["changeorg"])
 		if(usr.real_name == registered_name)
@@ -593,11 +593,17 @@ var/const/NO_EMAG_ACT = -50
 					choices |= faction
 			var/datum/world_faction/choice = input(usr, "Choose an organization to connect to.","ID Reconnect",null) as null|anything in choices
 			if(choice && in_range(usr, src))
-				var/datum/computer_file/report/crew_record/record = Retrieve_Record_Faction(registered_name, choice) 
+				var/datum/computer_file/report/crew_record/record = Retrieve_Record_Faction(registered_name, choice)
 				selected_faction = choice.uid
 				if(record) sync_from_record(record)
-				
-				
+				var/datum/browser/popup = new(usr, "idcard", name, 600, 250)
+				if(usr.real_name == registered_name)
+					popup.set_content(self_dat())
+				else
+					popup.set_content(dat())
+				popup.set_title_image(usr.browse_rsc_icon(src.icon, src.icon_state))
+				popup.open()
+
 /obj/item/weapon/card/id/attack_self(mob/user as mob)
 	user.visible_message("\The [user] shows you: \icon[src] [src.name]. The assignment on the card: <font color=navy>[get_faction_tag(selected_faction)]</font>-([src.assignment])",\
 		"You flash your ID card: \icon[src] [src.name]. The assignment on the card: <font color=navy>[get_faction_tag(selected_faction)]</font>-([src.assignment])")

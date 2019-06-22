@@ -126,7 +126,7 @@
 	// Since the record contains both.
 	var/datum/computer_file/report/crew_record/record = CreateModularRecord(H)
 	//testing("created modular record for [H], [record]")
-	
+	record.ckey = client.ckey
 	var/datum/computer_file/report/crew_record/record2 = new()
 	if(!record2.load_from_global(real_name))
 		message_admins("record for [real_name] failed to load in character creation..")
@@ -142,6 +142,7 @@
 		H.spawn_loc = "null"
 		log_warning("[H]'s spawn_loc is null! Got faction: [src.faction]'")
 
+
 //Creates the dummy mob used to store initial character data in the save file
 /datum/preferences/proc/create_initial_character()
 	var/mob/living/carbon/human/H = new()
@@ -151,7 +152,7 @@
 	if(!H.mind)
 		H.mind = new()
 
-	//Languages
+	//Languages + culture are copied
 	for(var/token in cultural_info)
 		H.set_cultural_value(token, cultural_info[token], defer_language_update = TRUE)
 
@@ -163,6 +164,7 @@
 			if(is_species_lang || ((!(chosen_language.flags & RESTRICTED) || check_rights(R_ADMIN, 0, client))))
 				H.add_language(lang)
 	H.update_languages()
+	H.update_citizenship()
 
 	//DNA should be last
 	H.dna.ResetUIFrom(H)
@@ -186,7 +188,6 @@
 	H.force_update_limbs()
 	H.update_eyes()
 	H.regenerate_icons()
-
 	return H
 
 #undef SAVEFILE_VERSION_MAX

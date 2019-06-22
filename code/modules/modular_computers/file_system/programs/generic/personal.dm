@@ -78,10 +78,11 @@
 		if("email_off")
 			R.notifications = 0
 		if("toggle_subscribe")
-			if(href_list["uid"] in R.subscribed_orgs)
-				R.subscribed_orgs -= href_list["uid"]
+			var/datum/world_faction/faction = get_faction(href_list["uid"])
+			if(usr.real_name in faction.people_to_notify)
+				faction.people_to_notify -= usr.real_name
 			else
-				R.subscribed_orgs |= href_list["uid"]
+				faction.people_to_notify |= usr.real_name
 		if("surrender")
 			var/datum/world_faction/business/faction = locate(href_list["ref"])
 			if(istype(faction))

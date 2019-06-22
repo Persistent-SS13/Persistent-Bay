@@ -10,6 +10,7 @@
 	requires_ntnet = FALSE
 	size = 65
 	usage_flags = PROGRAM_CONSOLE
+	category = PROG_COMMAND
 
 /datum/nano_module/program/faction_core
 	name = "Core Logistics Program"

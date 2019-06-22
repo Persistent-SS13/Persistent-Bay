@@ -59,9 +59,9 @@ SUBSYSTEM_DEF(character_setup)
 	return M
 
 /datum/controller/subsystem/character_setup/proc/load_import_character(var/ind, var/ckey)
-	if(!fexists(beta_path(ckey, ind)))
+	if(!fexists(beta_path(ckey, "[ind].sav")))
 		return
-	var/savefile/F =  new (beta_path(ckey, ind))
+	var/savefile/F =  new (beta_path(ckey, "[ind].sav"))
 	var/mob/M
 	from_file(F["mob"], M)
 	M.after_spawn() //Runs after_load
@@ -69,9 +69,11 @@ SUBSYSTEM_DEF(character_setup)
 
 
 /datum/controller/subsystem/character_setup/proc/peek_import_name(var/ind, var/ckey)
-	if(!fexists(beta_path(ckey, ind)))
+	if(!fexists(beta_path(ckey, "[ind].sav")))
 		return
-	var/savefile/F =  new (beta_path(ckey, ind))
+	else
+		message_admins("import found!")
+	var/savefile/F =  new (beta_path(ckey, "[ind].sav"))
 	var/name
 	from_file(F["name"], name)
 	return name
@@ -84,6 +86,8 @@ SUBSYSTEM_DEF(character_setup)
 		var/mob/living/carbon/human/H = M
 		H.force_update_limbs()
 		H.update_eyes()
+	M.dna.ready_dna(M)
+	M.sync_organ_dna()
 	M.regenerate_icons()
 	M.update_icon()
 	var/icon/I = get_preview_icon(M)

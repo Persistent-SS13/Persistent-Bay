@@ -29,8 +29,8 @@
 		return 0
 	return ..()
 
-/obj/machinery/door/airlock/multi_tile/New()
-	..()
+/obj/machinery/door/airlock/multi_tile/Initialize()
+	. = ..()
 	SetBounds()
 
 /obj/machinery/door/airlock/multi_tile/after_load()

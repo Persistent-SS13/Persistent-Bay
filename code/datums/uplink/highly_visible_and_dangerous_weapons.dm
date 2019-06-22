@@ -23,7 +23,7 @@
 	name = "Silenced Holdout Pistol"
 	desc = "Holdout pistol with silencer kit and ammunition."
 	item_cost = 32
-	path = /obj/item/weapon/storage/box/syndie_kit/g9mm
+	path = /obj/item/weapon/storage/backpack/satchel/syndie_kit/g9mm
 
 /datum/uplink_item/item/badassery/money_cannon
 	name = "Modified Money Cannon"

@@ -7,14 +7,14 @@
 	description = "You are from one of various planetary cultures of humankind."
 	language = LANGUAGE_GALCOM
 	secondary_langs = list(LANGUAGE_SIGN, LANGUAGE_GUTTER, LANGUAGE_SPACER)
-
+	starting_citizenship = CITIZEN
 
 /decl/cultural_info/culture/human/earth_poor
 	name = CULTURE_HUMAN_EARTH_POOR
 	description = "Automation has replaced the need for almost all basic labors in the Sol System. The billions who cant find a place \
 	in the new paradigm are known as the 'underclass'. You have been struggling to survive in one of the many areas where the underclass \
-	rule each other through violence and fear. Survival has hardened you and given you a set of skills the elites would never recognize."
-
+	rule each other through violence and fear. Survival has hardened you and given you a set of skills the elites would never recognize. <br><b>You will start on the bottom floor of nexus as a resident. The area is tougher but you will enjoy more freedom from the government. You will not be able to vote in elections without gaining citizenship.</b>"
+	starting_citizenship = RESIDENT
 /decl/cultural_info/culture/human/earth_middle
 	name = CULTURE_HUMAN_EARTH_MIDDLE
 	description = "Society in the capital system is driven by untold millions of administrators, lesser academics, soldiers and functionaries that perform \
@@ -32,7 +32,7 @@
 	description = "Between Earth and Sol are a handful of human colonies that have been the frontline in the many wars between SolGov and the Terran Federation. \
 	Both the SolGov and the Terran Federation lay claim to the entirety of human space, these border worlds being the easiest targets are often the first to be invaded by their military forces. \
 	These colonies are small, cramped and infected with crime and corrupt governance. You have found work but not safety, the wars and the gangs do not spare workers."
-	
+
 /decl/cultural_info/culture/human/agartha_middle
 	name = CULTURE_HUMAN_AGARTHA_MIDDLE
 	description = "In the capital system of the terrans, society is being carved out of the rampant jungles that cover the surface of Agartha. \
@@ -43,8 +43,8 @@
 	name = CULTURE_HUMAN_AGARTHA_POOR
 	description = "On Agartha, anti-war and anti-state movements operate in the shadows despite the best efforts of the Terran secret police. Anyone who opposes the Terran Federation and its war effort in the \
 	'liberation' of the Sol Colonies and the seat of humanty of Earth are forced underground. Peaceful protest, anti-state espionage and violent unrest are all tactics of the various dissident movements. \
-	As a dissident in the Terran state, your views of the state or war have forced you to the absolute bottom of society. The secret police may already know of your involvement in these unlawful and persecuted groups, you live life in constant fear of the repercussions."
-
+	As a dissident in the Terran state, your views of the state or war have forced you to the absolute bottom of society. The secret police may already know of your involvement in these unlawful and persecuted groups, you live life in constant fear of the repercussions. <br><b>You will start on the bottom floor of nexus as a resident. The area is tougher but you will enjoy more freedom from the government. You will not be able to vote in elections without gaining citizenship.</b>"
+	starting_citizenship = RESIDENT
 
 
 /**

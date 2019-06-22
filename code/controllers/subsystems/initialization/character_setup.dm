@@ -86,11 +86,10 @@ SUBSYSTEM_DEF(character_setup)
 		var/mob/living/carbon/human/H = M
 		H.force_update_limbs()
 		H.update_eyes()
-	character.dna.ready_dna(character)
-	character.sync_organ_dna()
+	M.dna.ready_dna(M)
+	M.sync_organ_dna()
 	M.regenerate_icons()
 	M.update_icon()
-	character.regenerate_icons()
 	var/icon/I = get_preview_icon(M)
 	QDEL_IN(M, 1 SECONDS)
 	return I

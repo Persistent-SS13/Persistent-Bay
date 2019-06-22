@@ -303,7 +303,7 @@
 	if(!found_slot)
 		to_chat(src, "Your character slots are full. Import failed.")
 		return
-	var/mob/character = SScharacter_setup.load_import_character(chosen_slot, ckey)
+	var/mob/living/character = SScharacter_setup.load_import_character(chosen_slot, ckey)
 	if(!character)
 		return
 	character.revive()

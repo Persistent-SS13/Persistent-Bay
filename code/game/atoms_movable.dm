@@ -344,10 +344,11 @@
 		var/turf/T = locate(new_x, new_y, new_z)
 		if(T)
 			forceMove(T)
-**/
+
 #undef worldWidth
 #undef worldLength
 #undef worldHeight
+*/
 
 //Called by a weapon's "afterattack" proc when an attack has succeeded. Returns blocked damage
 /atom/movable/proc/hit_with_weapon(obj/item/I, mob/living/user, var/effective_force)

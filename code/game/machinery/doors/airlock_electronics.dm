@@ -277,6 +277,3 @@
  		registered_names.Cut()
 
  		to_chat(user, "You pulse \the [src], resetting the allowed access list.")
-
-/obj/item/weapon/airlock_electronics/attack_self()
-	return

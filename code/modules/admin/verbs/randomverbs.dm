@@ -397,7 +397,6 @@ Ccomp's first proc.
 									   there won't be an autopsy.
 									*/
 	G.has_enabled_antagHUD = 2
-	G.can_reenter_corpse = CORPSE_CAN_REENTER_AND_RESPAWN
 
 	G.show_message("<span class=notice><b>You may now respawn.  You should roleplay as if you learned nothing about the round during your time with the dead.</b></span>", 1)
 	log_and_message_admins("has allowed [key_name(G)] to bypass the [config.respawn_delay] minute respawn limit.")

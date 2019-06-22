@@ -328,8 +328,8 @@
 	if(occupant)
 		connected_message("Critical Error!")
 		mess = 1
-		occupant.ghostize()
-		qdel(occupant)
+		occupant.forceMove(get_turf(src))
+		domutcheck(occupant)
 		occupant = null
 		update_icon()
 	return

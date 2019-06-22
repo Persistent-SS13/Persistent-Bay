@@ -1463,8 +1463,19 @@ obj/machinery/power/apc/proc/autoset(var/cur_state, var/on)
 	for (var/mob/living/carbon/human/A in src.area)
 		message_admins("Human found [A]")
 		if ( ! (text2num(alarm_access) in A.GetAccess(req_access_faction)) )
+			onAlarmActive()
 			return AlarmSet(ALARM_THREAT)
+			
 	return AlarmSet(ALARM_OFF)
+
+/obj/machinery/power/apc/proc/onAlarmActive()
+	if(!connected_faction)
+		return
+	connected_faction.apc_alarm(src)
+	for(var/datum/world_faction/faction in GLOB.all_world_factions)
+		if(connected_faction.uid in faction.service_security_business)
+			faction.apc_alarm(src)
+
 
 /obj/machinery/power/apc/proc/AlarmSet(var/status)
 	switch (status)

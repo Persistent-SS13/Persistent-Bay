@@ -73,7 +73,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	robotize()
 	if(faction_uid)
 		connected_faction = faction_uid
-	
+
 	ADD_SAVED_VAR(ownerckey)
 	ADD_SAVED_VAR(connected_business)
 	ADD_SAVED_VAR(connected_faction)
@@ -243,8 +243,8 @@ GLOBAL_LIST_EMPTY(neural_laces)
 						var/datum/transaction/T2 = new("Money Transfer", "Money transfer to [chosename]", -choseamount, "Money Transfer")
 						record2.linked_account.do_transaction(T2)
 						notify_lace(chosename, "Your neural lace buzzes letting you know you've recieved a new money transfer.")
-						
-						
+
+
 	if(href_list["page_up"])
 		curr_page++
 		return 1
@@ -367,7 +367,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 				var/mob/living/silicon/robot/robot = loc.loc
 				for(var/datum/world_faction/fact in GLOB.all_world_factions)
 					var/datum/computer_file/report/crew_record/record = fact.get_record(robot.real_name)
-					if(record)
+					if(record && fact.get_assignment(record.try_duty(), record.get_name()))
 						potential |= fact
 		return potential
 
@@ -405,7 +405,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	var/datum/assignment/assignment = faction.get_assignment(records.try_duty(), records.get_name())
 	if(assignment && assignment.duty_able)
 		var/title = assignment.get_title(record.rank)
-		return "Working as [title] for [faction.name].<br>Making [assignment.get_pay(record.rank)]$ for every thirty minutes clocked in."
+		return "Working as [title] for [faction.name].<br>Making [assignment.get_pay(record.rank)]$$ for every thirty minutes clocked in."
 	else
 		return "No paying assignment."
 

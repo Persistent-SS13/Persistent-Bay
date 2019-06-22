@@ -304,7 +304,7 @@ var/global/list/debug_data = list()
 			if(!T || ((T.type == /turf/space || T.type == /turf/simulated/open) && (!T.contents || !T.contents.len)))
 				continue
 			holder.turfs |= T
-			if(ind % 10) // 1 in 10 times do check tick
+			if(!(ind % 10)) // 1 in 10 times do check tick
 				CHECK_TICK
 	to_file(f,holder)
 

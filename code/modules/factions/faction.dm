@@ -860,6 +860,34 @@ var/PriorityQueue/all_feeds
 	var/datum/NewsFeed/feed
 	var/datum/LibraryDatabase/library
 
+	var/list/people_to_notify = list()
+
+/datum/world_faction/proc/apc_alarm(var/obj/machinery/power/apc/apc)
+	var/subject = "APC Alarm at [apc.area.name] ([apc.connected_faction.name])"
+	var/body = "On [stationtime2text()] the APC at [apc.area.name] for [apc.connected_faction.name] went into alarm. If you want to unsubscribe to notifications like this use the personal modification program."
+	for(var/name in people_to_notify)
+		Send_Email(name, sender = src.name, subject, body)
+	for(var/obj/item/organ/internal/stack/stack in connected_laces)
+		if(stack.owner)
+			to_chat(stack.owner, "Your neural lace buzzes letting you know that the APC at [apc.area.name] has gone into alarm.")
+
+/datum/world_faction/proc/employee_health_alarm(var/mob/M)
+	for(var/datum/world_faction/faction in GLOB.all_world_factions)
+		if(faction == src) continue
+		if(M.real_name in faction.service_medical_personal) continue
+		if(uid in faction.service_medical_personal)
+			faction.health_alarm(M)
+
+/datum/world_faction/proc/health_alarm(var/mob/M)
+	var/subject = "Critical Health Alarm for [M.real_name]"
+	var/body = "On [stationtime2text()] [M.real_name] is in critical health status. If you want to unsubscribe to notifications like this use the personal modification program."
+	for(var/name in people_to_notify)
+		Send_Email(name, sender = src.name, subject, body)
+	for(var/obj/item/organ/internal/stack/stack in connected_laces)
+		if(stack.owner)
+			to_chat(stack.owner, "Your neural lace buzzes letting you know that [M.real_name] is in critical health status.")
+
+
 /proc/spawn_nexus_gov()
 	var/datum/world_faction/democratic/nexus = new()
 	nexus.name = "Nexus City Government"

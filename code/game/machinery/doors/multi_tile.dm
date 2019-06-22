@@ -66,6 +66,8 @@
 		if(WEST)
 			pixel_y = 0
 			pixel_x = 0
+	
+	SetBounds() //Lets just be sure
 	..()
 
 /obj/machinery/door/airlock/multi_tile/update_connections(var/propagate = 0)

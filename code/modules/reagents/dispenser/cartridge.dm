@@ -16,6 +16,10 @@
 
 /obj/item/weapon/reagent_containers/chem_disp_cartridge/New()
 	. = ..()
+	ADD_SAVED_VAR(label)
+
+/obj/item/weapon/reagent_containers/chem_disp_cartridge/SetupReagents()
+	. = ..()
 	if(spawn_reagent)
 		reagents.add_reagent(spawn_reagent, volume)
 		var/datum/reagent/R = spawn_reagent

@@ -9,6 +9,10 @@
 	var/fuel_cost_multiplier = 10
 	welding_resource = null
 
+/obj/item/weapon/tool/weldingtool/electric/New()
+	. = ..()
+	ADD_SAVED_VAR(cell)
+
 /obj/item/weapon/tool/weldingtool/electric/Initialize()
 	if(ispath(cell))
 		cell = new cell(src)
@@ -69,6 +73,15 @@
 	var/turf/T = get_turf(src)
 	if(T) 
 		T.hotspot_expose(700, 5)
+
+/obj/item/weapon/tool/weldingtool/electric/on_update_icon()
+	icon_state = initial(icon_state) + (welding? 1 : "")
+	item_state = welding ? "welder1" : "welder"
+	update_tank_underlay()
+	var/mob/M = loc
+	if(istype(M))
+		M.update_inv_l_hand()
+		M.update_inv_r_hand()
 
 /obj/item/weapon/tool/weldingtool/electric/update_tank_underlay()
 	underlays.Cut()

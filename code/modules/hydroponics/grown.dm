@@ -33,7 +33,7 @@
 	if(!dried_type)
 		dried_type = type
 
-	update_icon()
+	queue_icon_update()
 
 
 /obj/item/weapon/reagent_containers/food/snacks/grown/proc/fill_reagents()

@@ -938,7 +938,7 @@ var/global/floorIsLava = 0
 		for(var/datum/computer_file/report/crew_record/record in GLOB.all_crew_records)
 			if(record.get_name() == real_name)
 				GLOB.all_crew_records -= record
-	fdel("record_saves/[key].sav")
+	fdel("record_saves/[real_name].sav")
 
 
 /datum/admins/proc/spacejunk()

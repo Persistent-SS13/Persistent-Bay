@@ -86,18 +86,25 @@
 	var/list/viruses = list()
 
 /obj/effect/decal/cleanable/vomit/New()
-	random_icon_states = icon_states(icon)
 	..()
 	atom_flags |= ATOM_FLAG_OPEN_CONTAINER
+
+/obj/effect/decal/cleanable/vomit/Initialize(ml, _age)
+	. = ..()
+	if(!map_storage_loaded)
+		random_icon_states = icon_states(icon)
+		if(prob(75))
+			var/matrix/M = matrix()
+			M.Turn(pick(90, 180, 270))
+			transform = M
+
+/obj/effect/decal/cleanable/vomit/SetupReagents()
 	create_reagents(30, src)
-	if(prob(75))
-		var/matrix/M = matrix()
-		M.Turn(pick(90, 180, 270))
-		transform = M
 
 /obj/effect/decal/cleanable/vomit/on_update_icon()
 	. = ..()
-	color = reagents.get_color()
+	if(reagents)
+		color = reagents.get_color()
 
 /obj/effect/decal/cleanable/tomato_smudge
 	name = "tomato smudge"

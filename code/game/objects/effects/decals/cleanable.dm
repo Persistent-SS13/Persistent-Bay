@@ -2,12 +2,17 @@
 	density = FALSE
 	anchored = TRUE
 	waterproof = FALSE
+	should_save = TRUE
 	var/persistent = FALSE
 	var/generic_filth = FALSE
 	var/age = 0
 	var/list/random_icon_states
 	var/image/hud_overlay/hud_overlay
 
+
+/obj/effect/decal/cleanable/New()
+	. = ..()
+	ADD_SAVED_VAR(age)
 
 /obj/effect/decal/cleanable/Initialize(var/ml, var/_age)
 	if(!isnull(_age))

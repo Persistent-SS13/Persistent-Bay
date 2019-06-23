@@ -73,6 +73,7 @@
 		var/obj/item/weapon/book/multipage/guide
 		var/datum/book_constructor/starterbook/bookconstruct = new()
 		guide = bookconstruct.construct()
+		guide.icon_state= "anomaly"
 		mannequin.equip_to_slot_or_del(guide, slot_r_hand)
 
 	if(update_icon)

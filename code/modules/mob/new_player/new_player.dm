@@ -320,22 +320,25 @@
 			spared |= A
 		if(istype(A, /obj/item/weapon/photo))
 			spared |= A
-	character.spawn_type = CHARACTER_SPAWN_TYPE_IMPORT //For first time spawn
+			
+	var/mob/living/carbon/human/character2 = new()
+	copy_import(character, character2)
+	character2.spawn_type = CHARACTER_SPAWN_TYPE_IMPORT //For first time spawn
 	var/decl/hierarchy/outfit/clothes
 	clothes = outfit_by_type(/decl/hierarchy/outfit/nexus/starter)
 	ASSERT(istype(clothes))
 
 	clothes.uniform = /obj/item/clothing/under/color/lightpurple
-	clothes.equip(character)
-	var/obj/item/weapon/card/id/W = new (character)
-	W.registered_name = character.real_name
+	clothes.equip(character2)
+	var/obj/item/weapon/card/id/W = new (character2)
+	W.registered_name = character2.real_name
 	W.selected_faction = GLOB.using_map.default_faction_uid
-	character.equip_to_slot_or_store_or_drop(character, slot_wear_id)
+	character2.equip_to_slot_or_store_or_drop(character, slot_wear_id)
 
 	for(var/ind in 1 to spared.len)
 		var/atom/A = spared[ind]
-		character.equip_to_slot_or_store_or_drop(A, slot_l_hand)
-	SScharacter_setup.save_character(found_slot, client.ckey, character)
+		character2.equip_to_slot_or_store_or_drop(A, slot_l_hand)
+	SScharacter_setup.save_character(found_slot, client.ckey, character2)
 	to_chat(src, "Import Successful. [character.real_name] saved to slot [found_slot].")
 
 
@@ -421,7 +424,8 @@
 				continue
 			M.ckey = ckey
 			M.update_icons()
-			M.redraw_inv() //Make sure icons shows up
+			spawn(200)
+				M.redraw_inv() //Make sure icons shows up
 			qdel(src)
 			return
 

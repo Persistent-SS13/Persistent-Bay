@@ -933,8 +933,6 @@ var/global/floorIsLava = 0
 
 	if(!check_rights(R_ADMIN))
 		return
-	f(!check_rights(R_ADMIN))
-		return
 	var/real_name = input("Enter the real name to search for", "Real name") as text|null
 	if(real_name)
 		for(var/datum/computer_file/report/crew_record/record in GLOB.all_crew_records)

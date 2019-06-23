@@ -62,6 +62,13 @@ var/global/list/image/fluidtrack_cache=list()
 	// List of laid tracks and their colors.
 	var/list/datum/fluidtrack/stack=list()
 
+/obj/effect/decal/cleanable/blood/tracks/New()
+	. = ..()
+	ADD_SAVED_VAR(dirs)
+	ADD_SAVED_VAR(coming_state)
+	ADD_SAVED_VAR(going_state)
+	ADD_SAVED_VAR(setdirs)
+
 	/**
 	* Add tracks to an existing trail.
 	*

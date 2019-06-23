@@ -421,6 +421,7 @@ var/const/NO_EMAG_ACT = -50
 	species = record.get_species()
 	front = record.photo_front
 	side = record.photo_side
+	selected_faction = record.get_faction()
 	if(record.terminated)
 		assignment = "Terminated"
 		rank = 0

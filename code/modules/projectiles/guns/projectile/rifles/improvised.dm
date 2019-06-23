@@ -14,7 +14,7 @@
 	origin_tech = list(TECH_COMBAT = 2, TECH_MATERIAL = 1)
 	caliber = CALIBER_762MM
 	handle_casings = HOLD_CASINGS
-	load_method = SPEEDLOADER
+	load_method = SPEEDLOADER | SINGLE_CASING
 	max_shells = 5
 	ammo_type = /obj/item/ammo_casing/c762
 	allowed_magazines = /obj/item/ammo_magazine/clip/c762
@@ -37,7 +37,7 @@
 	force = 4
 	slot_flags = SLOT_BELT|SLOT_HOLSTER
 	handle_casings = HOLD_CASINGS
-	load_method = SINGLE_CASING
+	load_method = SPEEDLOADER | SINGLE_CASING
 	max_shells = 3
 	accuracy = 1
 	accuracy_power = 2

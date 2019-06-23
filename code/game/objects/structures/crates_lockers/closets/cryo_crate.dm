@@ -1,7 +1,10 @@
 /obj/structure/closet/crate/cryo
 	name = "cryogenic crate"
 	desc = "A crate which can sustain life and preserve objects in space, this one is still sealed."
-	closet_appearance = /decl/closet_appearance/large_crate/critter
+	//closet_appearance = /decl/closet_appearance/large_crate/critter
+	icon = 'icons/obj/closets/cryocrate.dmi'
+	icon_state = "cryocrate_sealed"
+	health = 300
 	var/content_path = null
 	var/symbol = null
 	var/sealed = TRUE
@@ -45,7 +48,7 @@
 			var/mob/cold_critt = new content_path(src)
 			if(cold_critt in SSmobs.mob_list)
 				STOP_PROCESSING(SSmobs, cold_critt)
-	..()
+	//..()
 
 /obj/structure/closet/crate/cryo/attack_hand(mob/user)
 	if(src.opened == 0 && src.sealed == TRUE) 
@@ -53,6 +56,7 @@
 		if(choice == "Yes")
 			name = "unsealed cryogenic crate"
 			desc = "A crate which can sustain life and preserve objects in space, this one's already unsealed."
+			flick("cryocrate_opening",src)
 			visible_message("<span class='warning'>[src] opens with a hiss as the pressure equalizes and its systems shut down!</span>")
 			playsound(src,'sound/machines/hiss.ogg',40,1)
 			var/datum/effect/effect/system/steam_spread/steam = new /datum/effect/effect/system/steam_spread()
@@ -66,11 +70,12 @@
 					START_PROCESSING(SSmobs, warm_critt)
 
 			..()
+			icon_state = "cryocrate_unsealed"
 			//Check so that its not accidently opened in space, effects, etc.
 		if(choice == "No")
 			return
-	else
-		. = ..()
+	//else
+		//. = ..()
 
 /obj/structure/closet/crate/cryo/examine(mob/user)
 	. = ..()

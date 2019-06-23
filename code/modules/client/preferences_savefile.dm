@@ -95,10 +95,7 @@
 	//return S
 
 /datum/preferences/proc/sanitize_preferences()
-	if(player_setup)
-		player_setup.sanitize_setup()
-	else
-		player_setup = new()
+	player_setup.sanitize_setup()
 	if(!bonus_slots) bonus_slots = 0
 	if(!bonus_notes) bonus_notes = ""
 	return 1

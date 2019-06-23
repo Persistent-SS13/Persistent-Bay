@@ -117,7 +117,7 @@
 			data["current_rank"] = record.rank
 			var/promote_button = 0
 			var/demote_button = 0
-			var/max_rank = assignment.accesses.len + 1
+			var/max_rank = assignment.ranks.len + 1
 			if(user_id_card)
 				for(var/name in record.promote_votes)
 					if(name == user_id_card.registered_name)

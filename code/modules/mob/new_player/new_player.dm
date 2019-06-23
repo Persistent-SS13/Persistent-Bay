@@ -27,7 +27,7 @@
 	..()
 	//verbs += /mob/proc/toggle_antag_pool //no antags
 
-/mob/new_player/proc/new_player_panel(force = TRUE)
+/mob/new_player/proc/new_player_panel(force = FALSE)
 	if(!SScharacter_setup.initialized && !force)
 		return // Not ready yet.
 

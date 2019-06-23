@@ -74,7 +74,7 @@ var/list/admin_verbs_admin = list(
 	/datum/admins/proc/fixemail,
 	/datum/admins/proc/buildemail,
 	/datum/admins/proc/fixrecords,
-	/datum/admins/proc/autocryo,
+	/datum/admins/proc/delete_record,
 	/datum/admins/proc/spacejunk,
 	/datum/admins/proc/delete_account,
 //	/datum/admins/proc/loadnow,			//persistent edit, loadnow loads the station,

@@ -507,6 +507,9 @@
 			spawnTurf = locate(102, 98, 1)
 
 	else if(character.spawn_type == CHARACTER_SPAWN_TYPE_FRONTIER_BEACON || character.spawn_type == CHARACTER_SPAWN_TYPE_IMPORT)
+		var/obj/item/card/id/W = character.get_idcard()
+		if(W)
+			W.selected_faction = "nexus"
 		var/list/obj/structure/frontier_beacon/possibles = list()
 		var/list/obj/structure/frontier_beacon/possibles_unsafe = list()
 		for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)

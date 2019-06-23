@@ -421,7 +421,6 @@ var/const/NO_EMAG_ACT = -50
 	species = record.get_species()
 	front = record.photo_front
 	side = record.photo_side
-	selected_faction = record.get_faction()
 	if(record.terminated)
 		assignment = "Terminated"
 		rank = 0
@@ -442,6 +441,10 @@ var/const/NO_EMAG_ACT = -50
 
 /obj/item/weapon/card/id/proc/prevent_tracking()
 	return 0
+
+/obj/item/weapon/card/id/after_load()
+	if(!selected_faction)
+		selected_faction = "nexus"
 
 /obj/item/weapon/card/id/proc/devalidate()
 	rank = "Devalidated"

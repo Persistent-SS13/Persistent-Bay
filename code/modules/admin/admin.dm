@@ -910,7 +910,7 @@ var/global/floorIsLava = 0
 		if(!found)
 			recovering |= record
 	GLOB.all_crew_records |= recovering
-
+/**
 /datum/admins/proc/autocryo()
 	set category = "Server"
 	set desc="Autocryo"
@@ -923,6 +923,25 @@ var/global/floorIsLava = 0
 		if(!H.loc) continue
 		cryo.occupant = H
 		cryo.despawn_occupant(1)
+**/
+
+
+/datum/admins/proc/delete_record()
+	set category = "Server"
+	set desc="Delete Character Record"
+	set name="Delete Character Record"
+
+	if(!check_rights(R_ADMIN))
+		return
+	f(!check_rights(R_ADMIN))
+		return
+	var/real_name = input("Enter the real name to search for", "Real name") as text|null
+	if(real_name)
+		for(var/datum/computer_file/report/crew_record/record in GLOB.all_crew_records)
+			if(record.get_name() == real_name)
+				GLOB.all_crew_records -= record
+	fdel("record_saves/[key].sav")
+
 
 /datum/admins/proc/spacejunk()
 	set category = "Server"

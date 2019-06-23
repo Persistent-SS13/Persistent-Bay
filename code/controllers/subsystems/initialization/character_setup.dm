@@ -15,7 +15,7 @@ SUBSYSTEM_DEF(character_setup)
 /datum/controller/subsystem/character_setup/Initialize()
 	while(newplayers_requiring_init.len)
 		var/mob/new_player/new_player = newplayers_requiring_init[newplayers_requiring_init.len]
-		if(new_players)
+		if(new_player)
 			new_player.deferred_login()
 		newplayers_requiring_init.len--
 

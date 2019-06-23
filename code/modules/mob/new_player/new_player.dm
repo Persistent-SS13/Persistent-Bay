@@ -323,7 +323,7 @@
 			spared |= A
 		if(istype(A, /obj/item/weapon/photo))
 			spared |= A
-
+		character.drop_from_inventory(A)
 
 	character.update_languages()
 	character.update_citizenship()
@@ -348,6 +348,11 @@
 	W.registered_name = character.real_name
 	W.selected_faction = GLOB.using_map.default_faction_uid
 	character.equip_to_slot_or_store_or_drop(character, slot_wear_id)
+	var/obj/item/weapon/book/multipage/guide
+	var/datum/book_constructor/starterbook/bookconstruct = new()
+	guide = bookconstruct.construct()
+	guide.icon_state= "anomaly"
+	character.equip_to_slot_or_del(guide, slot_r_hand)
 	for(var/ind in 1 to spared.len)
 		var/atom/A = spared[ind]
 		character.equip_to_slot_or_store_or_drop(A, slot_back)
@@ -486,7 +491,7 @@
 			log_and_message_admins("WARNING! No cryopods avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
 			spawnTurf = locate(102, 98, 1)
 
-	else if(character.spawn_type == CHARACTER_SPAWN_TYPE_FRONTIER_BEACON)
+	else if(character.spawn_type == CHARACTER_SPAWN_TYPE_FRONTIER_BEACON || character.spawn_type == CHARACTER_SPAWN_TYPE_IMPORT)
 		var/list/obj/structure/frontier_beacon/possibles = list()
 		var/list/obj/structure/frontier_beacon/possibles_unsafe = list()
 		for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)

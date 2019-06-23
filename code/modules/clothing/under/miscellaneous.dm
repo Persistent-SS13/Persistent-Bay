@@ -953,6 +953,7 @@
 /obj/item/clothing/under/tourist
 	name = "Blue shirt and shorts"
 	desc = "A causual getup."
+	icon = 'icons/obj/clothing/obj_under_unused.dmi'
 	icon_state = "tourist"
 	worn_state = "tourist"
 

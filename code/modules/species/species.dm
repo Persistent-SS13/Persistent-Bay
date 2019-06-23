@@ -276,7 +276,11 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 
 		else if(!LAZYLEN(available_cultural_info[token]))
 			var/list/map_systems = GLOB.using_map.available_cultural_info[token]
-			available_cultural_info[token] = map_systems.Copy()
+			if(map_systems[token])
+				available_cultural_info[token] = map_systems.Copy()
+			else
+				log_debug("species/New() : Missing map default available culture token value for [token], with specie [name] in [GLOB.using_map]'s map datum!")
+				available_cultural_info[token] = "ERROR"
 
 		if(LAZYLEN(available_cultural_info[token]) && !default_cultural_info[token])
 			var/list/avail_systems = available_cultural_info[token]

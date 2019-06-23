@@ -27,6 +27,17 @@ var/global/list/image/splatter_cache=list()
 	var/drydesc = "It's dry and crusty. Someone is not doing their job."
 	var/blood_size = BLOOD_SIZE_MEDIUM // A relative size; larger-sized blood will not override smaller-sized blood, except maybe at mapload.
 
+/obj/effect/decal/cleanable/blood/New()
+	. = ..()
+	ADD_SAVED_VAR(viruses)
+	ADD_SAVED_VAR(basecolor)
+	ADD_SAVED_VAR(virus2)
+	ADD_SAVED_VAR(blood_DNA)
+
+	ADD_SKIP_EMPTY(viruses)
+	ADD_SKIP_EMPTY(blood_DNA)
+	ADD_SKIP_EMPTY(virus2)
+
 /obj/effect/decal/cleanable/blood/reveal_blood()
 	if(!fluorescent)
 		fluorescent = 1

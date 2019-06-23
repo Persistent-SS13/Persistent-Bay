@@ -3,7 +3,7 @@
 //===================================
 /obj/item/weapon/tool/weldingtool/experimental
 	name = "experimental welding tool"
-	icon_state = "welderX"
+	icon_state = "welder_h"
 	desc = "This welding tool feels heavier in your possession than is normal. Uses phoron as hyper-efficient fuel."
 	w_class = ITEM_SIZE_NORMAL
 	origin_tech = list(TECH_ENGINEERING = 4, TECH_PHORON = 3)
@@ -14,7 +14,21 @@
 	fuel_cost_use = 0.001 //Multiplier for static fuel costs when starting a task
 	welding_efficiency = 0.5 //Welds faster, for less fuel
 
+/obj/item/weapon/tool/weldingtool/experimental/on_update_icon()
+	icon_state = initial(icon_state) + (welding? 1 : "")
+	item_state = welding ? "welder1" : "welder"
+	update_tank_underlay()
+	var/mob/M = loc
+	if(istype(M))
+		M.update_inv_l_hand()
+		M.update_inv_r_hand()
 
+// /obj/item/weapon/tool/weldingtool/experimental/update_tank_underlay()
+// 	underlays.Cut()
+// 	if(istype(tank))
+// 		var/image/tank_image = image(tank.icon, icon_state = tank.icon_state)
+// 		tank_image.pixel_z = 0
+// 		underlays += tank_image
 
 //===================================
 //	Experimental welder tool tank

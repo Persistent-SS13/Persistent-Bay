@@ -7,7 +7,7 @@
 	extended_desc = "Used by individuals to control things about their Nexus Account and personal holdings."
 	requires_ntnet = 1
 	size = 12
-
+	usage_flags = PROGRAM_ALL
 /datum/nano_module/program/personal
 	name = "Personal Options"
 	available_to_ai = TRUE

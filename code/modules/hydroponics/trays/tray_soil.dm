@@ -59,7 +59,11 @@
 
 /obj/machinery/portable_atmospherics/hydroponics/soil/invisible/LateInitialize()
 	. = ..()
-	max_health = seed.get_trait(TRAIT_ENDURANCE)
+	if(seed)
+		max_health = seed.get_trait(TRAIT_ENDURANCE)
+	else
+		log_warning("[src]\ref[src]'s seed was null on init!'")
+		max_health = 1
 	health = max_health
 	check_health()
 

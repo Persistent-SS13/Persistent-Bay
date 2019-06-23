@@ -137,22 +137,15 @@
 	. = ..()
 	ADD_SAVED_VAR(band_color)
 
-/obj/item/weapon/reagent_containers/hypospray/autoinjector/SetupReagents()
-	..()
-	for(var/T in starts_with)
-		reagents.add_reagent(T, starts_with[T])
-	queue_icon_update()
-
 /obj/item/weapon/reagent_containers/hypospray/autoinjector/attack(mob/M as mob, mob/user as mob)
 	. = ..()
 	if(reagents.total_volume <= 0) //Prevents autoinjectors to be refilled.
 		atom_flags &= ~ATOM_FLAG_OPEN_CONTAINER
 	update_icon()
 
-
 /obj/item/weapon/reagent_containers/hypospray/autoinjector/on_update_icon()
 	overlays.Cut()
-	if(reagents.total_volume > 0)
+	if(reagents && reagents.total_volume > 0)
 		icon_state = "[initial(icon_state)]1"
 	else
 		icon_state = "[initial(icon_state)]0"

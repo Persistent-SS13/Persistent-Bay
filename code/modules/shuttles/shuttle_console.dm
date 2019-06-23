@@ -19,6 +19,16 @@
 	var/ready = 0 // this is set to 1 to confirm construction is completed, and then the dock finalizes it
 	var/obj/machinery/docking_beacon/dock
 
+/obj/machinery/computer/bridge_computer/New()
+	. = ..()
+	ADD_SAVED_VAR(shuttle_tag)
+	ADD_SAVED_VAR(hacked)
+	ADD_SAVED_VAR(shuttle)
+	ADD_SAVED_VAR(desired_name)
+	ADD_SAVED_VAR(shuttle_type)
+	ADD_SAVED_VAR(locked_to)
+	ADD_SAVED_VAR(ready)
+
 /obj/machinery/computer/bridge_computer/attack_hand(user as mob)
 	if(..(user))
 		return

@@ -67,6 +67,22 @@
 		if(SSsupply.shuttle)
 			CRASH("A supply shuttle is already defined.")
 		SSsupply.shuttle = src
+	
+	ADD_SAVED_VAR(name)
+	ADD_SAVED_VAR(warmup_time)
+	ADD_SAVED_VAR(flags)
+	ADD_SAVED_VAR(multiz)
+	ADD_SAVED_VAR(ceiling_type)
+	ADD_SAVED_VAR(knockdown)
+	ADD_SAVED_VAR(finalized)
+	ADD_SAVED_VAR(owner)
+	ADD_SAVED_VAR(ownertype)
+	ADD_SAVED_VAR(size)
+	ADD_SAVED_VAR(defer_initialisation)
+	ADD_SAVED_VAR(logging_home_tag)
+	ADD_SAVED_VAR(logging_access)
+	ADD_SAVED_VAR(mothershuttle)
+	ADD_SAVED_VAR(motherdock)
 
 /datum/shuttle/proc/setup()
 	var/list/areas = list()

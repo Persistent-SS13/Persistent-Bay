@@ -55,12 +55,21 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	ADD_SAVED_VAR(id)
 	ADD_SAVED_VAR(visible_mode)
 	ADD_SAVED_VAR(dock_interior)
+	ADD_SAVED_VAR(shuttle_name)
+	ADD_SAVED_VAR(ownership_type)
+	ADD_SAVED_VAR(shuttle_owner)
+	//shuttle is loaded from the bridge computer in the shuttle itself. So no reasons to duplicate it here
 
 /obj/machinery/docking_beacon/Initialize()
 	. = ..()
 	if(. != INITIALIZE_HINT_QDEL)
 		GLOB.all_docking_beacons |= src //The list is initialized later on a new map
 	queue_icon_update()
+
+/obj/machinery/docking_beacon/Destroy()
+	if(LAZYLEN(GLOB.all_docking_beacons))
+		GLOB.all_docking_beacons -= src
+	return ..()
 
 /obj/machinery/docking_beacon/proc/get_top_turf()
 	switch(dir)

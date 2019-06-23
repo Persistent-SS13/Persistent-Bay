@@ -33,8 +33,8 @@
 	{{else}}
 		<h2>Current DNA: {{:data.dna}}</h2><br>
 		{{:helper.link('Back', '', {'back' : '1'}, null)}}<br><br>
-		To create a viable clone, a fee of 5000$$ must be paid to the Vox Arkship so they align their equipment to send a signal, rapidly developing the clones cortical node.
-		Use funding contracts to get 5000$$ commited.<br><br>
+		To create a viable clone, a fee of 1000$$ must be paid to the Vox Arkship so they align their equipment to send a signal, rapidly developing the clones cortical node.
+		Use funding contracts to get 1000$$ commited.<br><br>
 		{{:helper.link('Print Funding Contract', '', {'contract' : 1}, null)}}<br><br>
 		<h4>Signed Contracts</h4>
 		<div class="statusDisplay" style="overflow: auto;">
@@ -47,7 +47,7 @@
 				Current Commitment:
 			</div>
 			<div class='itemContent'>
-				{{:data.commitment}}/5000$$
+				{{:data.commitment}}/1000$$
 			</div>
 		</div>
 		{{:helper.link('Finalize', '', {'finish' : '1'}, data.finishable ? null : 'disabled')}}

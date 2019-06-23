@@ -323,7 +323,8 @@
 			spared |= A
 		if(istype(A, /obj/item/weapon/photo))
 			spared |= A
-
+	for(var/obj/item/W in character)
+		character.drop_from_inventory(W)
 	character.update_languages()
 	character.update_citizenship()
 	
@@ -355,7 +356,7 @@
 	for(var/ind in 1 to spared.len)
 		var/atom/A = spared[ind]
 		character.equip_to_slot_or_store_or_drop(A, slot_back)
-
+	SScharacter_setup.delete_import_character(chosen_slot, ckey)
 	SScharacter_setup.save_character(found_slot, client.ckey, character)
 	to_chat(src, "Import Successful. [character.real_name] saved to slot [found_slot].")
 

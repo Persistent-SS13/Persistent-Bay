@@ -66,6 +66,12 @@ SUBSYSTEM_DEF(character_setup)
 	from_file(F["mob"], M)
 	M.after_spawn() //Runs after_load
 	return M
+/datum/controller/subsystem/character_setup/proc/delete_import_character(var/ind, var/ckey)
+	if(!fexists(beta_path(ckey, "[ind].sav")))
+		return
+	var/beta_path = beta_path(ckey, "[ind].sav")	
+	fcopy(beta_path, "exportbackups/[beta_path]")
+	fdel(beta_path)
 
 
 /datum/controller/subsystem/character_setup/proc/peek_import_name(var/ind, var/ckey)

@@ -303,7 +303,7 @@
 	if(!found_slot)
 		to_chat(src, "Your character slots are full. Import failed.")
 		return
-	var/mob/living/character = SScharacter_setup.load_import_character(chosen_slot, ckey)
+	var/mob/living/carbon/human/character = SScharacter_setup.load_import_character(chosen_slot, ckey)
 	if(!character)
 		return
 	character.revive()
@@ -321,26 +321,37 @@
 		if(istype(A, /obj/item/weapon/photo))
 			spared |= A
 
-	var/mob/living/carbon/human/character2 = new()
-	client.prefs.copy_import(character, character2)
-	character2.spawn_type = CHARACTER_SPAWN_TYPE_IMPORT //For first time spawn
+	if(!character.mind)
+		character.mind = new()
+	character.update_languages()
+	character.update_citizenship()
+
+	//DNA should be last
+	character.dna.ResetUIFrom()
+	character.dna.ready_dna(character)
+	character.dna.b_type = client.prefs.b_type
+	character.sync_organ_dna()
+	client.prefs.setup_new_accounts(character) //make accounts before! Outfit setup needs the record set
+
+	// Do the initial caching of the player's body icons.
+	character.force_update_limbs()
+	character.update_eyes()
+	character.regenerate_icons()
+	character.spawn_type = CHARACTER_SPAWN_TYPE_IMPORT //For first time spawn
 	var/decl/hierarchy/outfit/clothes
 	clothes = outfit_by_type(/decl/hierarchy/outfit/nexus/starter)
 	ASSERT(istype(clothes))
-
-	clothes.uniform = /obj/item/clothing/under/color/lightpurple
-	clothes.equip(character2)
-	var/obj/item/weapon/card/id/W = new (character2)
-	W.registered_name = character2.real_name
+	clothes.equip(character)
+	var/obj/item/weapon/card/id/W = new (character)
+	W.registered_name = character.real_name
 	W.selected_faction = GLOB.using_map.default_faction_uid
-	character2.equip_to_slot_or_store_or_drop(character, slot_wear_id)
-
+	character.equip_to_slot_or_store_or_drop(character, slot_wear_id)
 	for(var/ind in 1 to spared.len)
 		var/atom/A = spared[ind]
-		character2.equip_to_slot_or_store_or_drop(A, slot_l_hand)
-	SScharacter_setup.save_character(found_slot, client.ckey, character2)
-	to_chat(src, "Import Successful. [character.real_name] saved to slot [found_slot].")
+		character.equip_to_slot_or_store_or_drop(A, slot_back)
 
+	SScharacter_setup.save_character(found_slot, client.ckey, character)
+	to_chat(src, "Import Successful. [character.real_name] saved to slot [found_slot].")
 
 /mob/new_player/proc/selectImportPanel()
 	var/data = "<div align='center'><br>"

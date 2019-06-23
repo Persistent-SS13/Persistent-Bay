@@ -322,8 +322,7 @@
 			spared |= A
 	character.spawn_type = CHARACTER_SPAWN_TYPE_IMPORT //For first time spawn
 	var/decl/hierarchy/outfit/clothes
-	var/datum/world_faction/F = get_faction(GLOB.using_map.default_faction_uid) //Imported char don't have valid factions
-	clothes = outfit_by_type(F.starter_outfit)
+	clothes = outfit_by_type(/decl/hierarchy/outfit/nexus/starter)
 	ASSERT(istype(clothes))
 
 	clothes.uniform = /obj/item/clothing/under/color/lightpurple
@@ -332,14 +331,14 @@
 	W.registered_name = character.real_name
 	W.selected_faction = GLOB.using_map.default_faction_uid
 	character.equip_to_slot_or_store_or_drop(character, slot_wear_id)
-	
+
 	for(var/ind in 1 to spared.len)
 		var/atom/A = spared[ind]
 		character.equip_to_slot_or_store_or_drop(A, slot_l_hand)
 	SScharacter_setup.save_character(found_slot, client.ckey, character)
 	to_chat(src, "Import Successful. [character.real_name] saved to slot [found_slot].")
-	
-	
+
+
 /mob/new_player/proc/selectImportPanel()
 	var/data = "<div align='center'><br>"
 	data += "<b>Select the character you want to import.</b><br>"
@@ -521,7 +520,7 @@
 		mind.active = 0
 		mind.original = character
 		mind.transfer_to(character)	//won't transfer key since the mind is not active
-		
+
 	character.forceMove(spawnTurf)
 	character.stored_ckey = key
 	character.key = key

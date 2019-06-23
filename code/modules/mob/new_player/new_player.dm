@@ -313,19 +313,20 @@
 	character.real_name = SScharacter_setup.peek_import_name(chosen_slot, ckey)
 	var/list/L = recursive_content_check(character)
 	var/list/spared = list()
+	var/obj/item/weapon/storage/bag/plasticbag = new()
 	for(var/ind in 1 to L.len)
 		var/atom/movable/A = L[ind]
 		if(istype(A, /obj/item/clothing/accessory/toggleable/hawaii))
 			var/obj/item/clothing/accessory/toggleable/hawaii = A
 			hawaii.has_suit = null
 			spared |= A
-			A.loc = null
+			A.loc = plasticbag
 		if(istype(A, /obj/item/weapon/paper))
 			spared |= A
-			A.loc = null
+			A.loc = plasticbag
 		if(istype(A, /obj/item/weapon/photo))
 			spared |= A
-			A.loc = null
+			A.loc = plasticbag
 	for(var/obj/item/W in character)
 		character.drop_from_inventory(W)
 	character.update_languages()
@@ -341,7 +342,7 @@
 		client.prefs.real_name = character.real_name
 		client.prefs.setup_new_accounts(character) //make accounts before! Outfit setup needs the record set
 
-
+	character.spawn_cit = CITIZEN
 	character.dna.ResetUIFrom()
 	character.dna.ready_dna(character)
 	character.dna.b_type = client.prefs.b_type

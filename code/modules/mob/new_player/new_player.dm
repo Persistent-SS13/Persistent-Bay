@@ -336,7 +336,7 @@
 	if(R)
 		R.linked_account.money = 1000
 		R.email = new()
-		R.email.login = H.real_name
+		R.email.login = character.real_name
 	else
 		client.prefs.real_name = character.real_name
 		client.prefs.setup_new_accounts(character) //make accounts before! Outfit setup needs the record set

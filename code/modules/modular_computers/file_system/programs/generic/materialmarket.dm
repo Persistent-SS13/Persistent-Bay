@@ -9,6 +9,8 @@
 	requires_ntnet = TRUE
 	required_access = core_access_materials
 	category = PROG_BUSINESS
+	usage_flags = PROGRAM_ALL
+	
 
 /datum/nano_module/program/materialmarket
 	name = "Material Marketplace"
@@ -18,6 +20,7 @@
 	var/selected_price = 0
 	var/obj/machinery/telepad_cargo/selected_telepad
 	var/buy_ordering = 0
+
 
 /datum/nano_module/program/materialmarket/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/list/data = host.initial_data()

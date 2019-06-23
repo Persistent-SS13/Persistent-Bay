@@ -8,6 +8,8 @@
 	size = 21
 	requires_ntnet = TRUE
 	category = PROG_BUSINESS
+	usage_flags = PROGRAM_ALL
+
 
 /datum/nano_module/program/stockmarket
 	name = "Public Stockmarket"

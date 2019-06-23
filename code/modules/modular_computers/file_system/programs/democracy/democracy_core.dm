@@ -664,11 +664,20 @@
 			if(choice)
 				selected_assignment.cryo_net = choice
 		if("increase_selected_rank")
-			if(selected_rank < selected_assignment.ranks.len)
+			if(selected_rank < selected_assignment.accesses.len)
 				selected_rank++
 		if("decrease_selected_rank")
 			if(selected_rank != 1)
 				selected_rank--
+		if("change_expense_limit")
+			var/datum/accesses/copy = selected_assignment.accesses[selected_rank]
+			if(istype(copy))
+				var/new_pay = input("Enter new expense limit. Expenses are used when approving orders and paying invoices with an expense card.","Change expense limit") as null|num
+				if(!new_pay && new_pay != 0) return 1
+				copy.expense_limit = new_pay
+			else
+				selected_assignment.accesses[selected_rank] = new /datum/accesses()
+		
 		if("print_expense")
 			if(connected_faction.last_expense_print > world.realtime)
 				to_chat(usr, "Your  print was rejected. You have printed an expense card in the last 3 minutes.")

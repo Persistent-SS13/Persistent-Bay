@@ -277,7 +277,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 			if(!faction)
 				shuttle_owner = null
 				return 1
-			if(faction.limits.limit_shuttles <= faction.limits.shuttles)
+			if(faction.limits.limit_shuttles <= faction.limits.shuttles.len)
 				shuttle_owner = null
 				return 1
 

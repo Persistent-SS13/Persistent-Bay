@@ -304,8 +304,11 @@
 		to_chat(src, "Your character slots are full. Import failed.")
 		return
 	var/mob/living/carbon/human/character = SScharacter_setup.load_import_character(chosen_slot, ckey)
+	
 	if(!character)
 		return
+	if(!character.mind)
+		character.mind = new()
 	character.revive()
 	character.real_name = SScharacter_setup.peek_import_name(chosen_slot, ckey)
 	var/list/L = recursive_content_check(character)
@@ -321,8 +324,7 @@
 		if(istype(A, /obj/item/weapon/photo))
 			spared |= A
 
-	if(!character.mind)
-		character.mind = new()
+
 	character.update_languages()
 	character.update_citizenship()
 

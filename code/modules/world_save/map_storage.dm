@@ -296,16 +296,12 @@ var/global/list/debug_data = list()
 	xi = (xi - (xi % SAVECHUNK_SIZEX) + 1)
 	yi = (yi - (yi % SAVECHUNK_SIZEY) + 1)
 	var/datum/chunk_holder/holder = new()
-	var/ind
 	for(var/y in yi to yi + SAVECHUNK_SIZEY)
 		for(var/x in xi to xi + SAVECHUNK_SIZEX)
-			ind++
 			var/turf/T = locate(x,y,z)
 			if(!T || ((T.type == /turf/space || T.type == /turf/simulated/open) && (!T.contents || !T.contents.len)))
 				continue
 			holder.turfs |= T
-			if(!(ind % 10)) // 1 in 10 times do check tick
-				CHECK_TICK
 	to_file(f,holder)
 
 /proc/Save_Records(var/backup_dir)
@@ -456,7 +452,7 @@ var/global/list/debug_data = list()
 		v.linked_account = account
 	if(v.linked_account)
 		v.linked_account = v.linked_account.after_load()
-		
+
 	for(var/datum/computer_file/report/crew_record/record2 in GLOB.all_crew_records)
 		if(record2.get_name() == v.get_name())
 			if(v.linked_account && !record2.linked_account || (record2.linked_account && v.linked_account && record2.linked_account.money < v.linked_account))
@@ -472,7 +468,7 @@ var/global/list/debug_data = list()
 	if(!faction) return
 	for(var/datum/computer_file/report/crew_record/record2 in faction.records.faction_records)
 		if(record2.get_name() == key)
-			return record2 
+			return record2
 	if(!fexists("record_saves/[faction.uid]/[key].sav")) return
 	var/savefile/f = new("record_saves/[faction.uid]/[key].sav")
 	var/v
@@ -499,7 +495,7 @@ var/global/list/debug_data = list()
 	from_file(f["contract_database"],GLOB.contract_database)
 	if(!GLOB.contract_database)
 		GLOB.contract_database = new()
-	
+
 	from_file(f["next_account_number"],next_account_number)
 	var/list/areas
 	from_file(f["areas"],areas)
@@ -564,7 +560,6 @@ var/global/list/debug_data = list()
 		for(var/x in xi to xi + SAVECHUNK_SIZEX)
 			var/turf/T = locate(x,y,z)
 			from_file(f["[x]-[y]"],T)
-			CHECK_TICK
 //TODO; make this better.
 /proc/Load_Initialize()
 	for(var/ind in 1 to all_loaded.len)

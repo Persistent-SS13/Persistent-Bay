@@ -194,6 +194,52 @@ datum/preferences
 	ShowChoices(usr)
 	return 1
 
+/datum/preferences/proc/copy_import(mob/living/carbon/human/character, mob/living/carbon/human/character2)
+	character.set_species(character2.get_species())
+	character.fully_replace_character_name(character2.real_name)
+	character.gender = character2.gender
+	character.age = character2.age
+
+	character.b_type = character2.b_type
+//	character.b_type = b_type
+
+	character.r_eyes = character2.r_eyes
+	character.g_eyes = character2.g_eyes
+	character.b_eyes = character2.b_eyes
+
+	character.h_style = character2.h_style
+	character.r_hair = character2.r_hair
+	character.g_hair = character2.g_hair
+	character.b_hair = character2.b_hair
+
+	character.f_style = character2.f_style
+	character.r_facial = character2.r_facial
+	character.g_facial = character2.g_facial
+	character.b_facial = character2.b_facial
+
+	character.r_skin = character2.r_skin
+	character.g_skin = character2.g_skin
+	character.b_skin = character2.b_skin
+
+	character.s_tone = character2.s_tone
+	character.s_base = character2.s_base
+
+	character.h_style = character2.h_style
+	character.f_style = character2.f_style
+	character.species.handle_limbs_setup(character)
+
+	character.force_update_limbs()
+	character.update_mutations(0)
+	character.update_body(0)
+	character.update_underwear(0)
+	character.update_hair(0)
+	character.update_icons()
+
+	if(!character.isSynthetic())
+		character.nutrition = rand(140,360)
+
+
+
 /datum/preferences/proc/copy_to(mob/living/carbon/human/character, is_preview_copy = FALSE)
 	// Sanitizing rather than saving as someone might still be editing when copy_to occurs.
 	player_setup.sanitize_setup()

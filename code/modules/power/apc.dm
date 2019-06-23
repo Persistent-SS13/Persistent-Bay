@@ -290,7 +290,7 @@
 /obj/machinery/power/apc/after_load()
 	. = ..()
 	connect_to_network()
-
+	can_connect(req_access_faction)
 /obj/machinery/power/apc/proc/make_terminal()
 	// create a terminal object at the same position as original turf loc
 	// wires will attach to this

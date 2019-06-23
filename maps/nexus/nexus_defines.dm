@@ -68,6 +68,8 @@ proc/GetNbSavedZLevels()
 			newchar.client.screen += cinematic
 			flick("cinematic",cinematic)
 			sleep(106)
+			if(!newchar)
+				return //it might have gotten deleted or something??
 			newchar.client.screen -= cinematic
 
 	newchar.spawn_type = CHARACTER_SPAWN_TYPE_CRYONET

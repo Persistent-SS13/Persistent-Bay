@@ -70,6 +70,7 @@
 		clothes.equip(mannequin, equip_adjustments = adjustflags)
 		update_icon = TRUE
 
+	if(!(equip_preview_mob & EQUIP_PREVIEW_JOB)) //Don't give gear to preview mob plz
 		var/obj/item/weapon/book/multipage/guide
 		var/datum/book_constructor/starterbook/bookconstruct = new()
 		guide = bookconstruct.construct()

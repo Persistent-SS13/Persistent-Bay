@@ -211,7 +211,8 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	Master.SetRunLevel(RUNLEVEL_GAME)
 	
 	for(var/mob/new_player/player in GLOB.player_list)
-		player.panel.close()
+		if(player.panel)
+			player.panel.close()
 		player.new_player_panel()
 		if(player && player.ready && player.mind)
 			player.loadCharacter()

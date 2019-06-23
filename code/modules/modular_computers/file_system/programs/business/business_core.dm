@@ -121,7 +121,7 @@
 			data["title"] = selected_assignment.name
 			data["cryonetwork"] = selected_assignment.cryo_net
 			data["selected_rank"] = selected_rank
-			if(selected_rank < selected_assignment.ranks.len)
+			if(selected_rank < selected_assignment.accesses.len)
 				data["increase_button"] = 1
 			if(selected_rank != 1)
 				data["decrease_button"] = 1
@@ -663,7 +663,7 @@
 			if(choice)
 				selected_assignment.cryo_net = choice
 		if("increase_selected_rank")
-			if(selected_rank < selected_assignment.ranks.len)
+			if(selected_rank < selected_assignment.accesses.len)
 				selected_rank++
 		if("decrease_selected_rank")
 			if(selected_rank != 1)

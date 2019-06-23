@@ -320,9 +320,9 @@
 			spared |= A
 		if(istype(A, /obj/item/weapon/photo))
 			spared |= A
-			
+
 	var/mob/living/carbon/human/character2 = new()
-	copy_import(character, character2)
+	client.prefs.copy_import(character, character2)
 	character2.spawn_type = CHARACTER_SPAWN_TYPE_IMPORT //For first time spawn
 	var/decl/hierarchy/outfit/clothes
 	clothes = outfit_by_type(/decl/hierarchy/outfit/nexus/starter)

@@ -54,6 +54,7 @@ proc/GetNbSavedZLevels()
 	if(!istype(newchar))
 		return
 	if(src.intro_icon)
+		sound_to(newchar, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
 		var/obj/screen/cinematic
 		cinematic = new
 		cinematic.icon = src.intro_icon
@@ -70,15 +71,18 @@ proc/GetNbSavedZLevels()
 			newchar.client.screen -= cinematic
 
 	newchar.spawn_type = CHARACTER_SPAWN_TYPE_CRYONET
-	sound_to(newchar, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
+	
 	spawn()
 		new /obj/effect/portal(get_turf(newchar), null, 5 SECONDS, 0)
 		shake_camera(newchar, 3, 1)
 	newchar.druggy = 3
 	newchar.Weaken(3)
-	to_chat(newchar, "<span class='danger'>You felt a tremendous numness as you passed through the amber teleporter to this new station!</span>")
-	to_chat(newchar, "You exist as a bodyless consicousness for a disconcernting amount of time before your senses slowly return to your body.")
-	to_chat(newchar, "You wake up on a beacon with an book clasped around your hands. 'Guide to Nexus City'.")
+	to_chat(newchar, "<span class='danger'>You are carried through the swirling amber portal to your new home, Nexus City.</span>")
+	sleep(100)
+	to_chat(newchar, "The neural lace that you recently had implanted burns at the back of your skull.")
+	sleep(100)
+	to_chat(newchar, "You wake up on a beacon with a book at your feet titled 'Guide to Nexus City'.")
+	sleep(100)
 	to_chat(newchar, "You've come here to make a new life in a far-away space station. Better read the book to find out how this station works.")
 	to_chat(newchar, "((Persistence is a very unique codebase! If you need help you can *always* ask staff by pressing F1. Go out and meet other characters, you dont need to find work right away but making friends is invaluable.))")
 

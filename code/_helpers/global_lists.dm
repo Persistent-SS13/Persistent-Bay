@@ -133,8 +133,8 @@ var/global/list/string_slot_flags = list(
 		rkey++
 
 		var/datum/species/S = T
-		if(!initial(S.name))
-			continue
+	//	if(!initial(S.name))
+	//		continue
 
 		S = new T
 		S.race_key = rkey //Used in mob icon caching.

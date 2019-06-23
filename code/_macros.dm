@@ -146,6 +146,8 @@
 #define LAZYSET(L, A, I) if(!L) { L = list(); } L[A] = I;
 // Reads I from L safely - Works with both associative and traditional lists.
 #define LAZYACCESS(L, I) (L ? (isnum(I) ? (I > 0 && I <= length(L) ? L[I] : null) : L[I]) : null)
+// Associates I in L safely without overrighting I
+#define LAZYASSOC(L, I) if(!L) { L = list(); } if(!(I in L)) { L[I] = null; }
 // Reads the length of L, returning 0 if null
 #define LAZYLEN(L) length(L)
 // Safely checks if I is in L

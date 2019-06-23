@@ -19,7 +19,7 @@
 	var/material/girder_material
 	var/material/girder_reinf_material
 	var/last_state
-	var/construction_stage
+	var/state
 	var/hitsound = 'sound/weapons/Genhit.ogg'
 	var/list/wall_connections = list("0", "0", "0", "0")
 	var/list/other_connections = list("0", "0", "0", "0")
@@ -36,7 +36,7 @@
 	//icon_state = "blank"
 	ADD_SAVED_VAR(paint_color)
 	ADD_SAVED_VAR(stripe_color)
-	ADD_SAVED_VAR(construction_stage)
+	ADD_SAVED_VAR(state)
 	ADD_SAVED_VAR(integrity)
 	ADD_SAVED_VAR(material)
 	ADD_SAVED_VAR(reinf_material)
@@ -201,11 +201,9 @@
 
 	playsound(src, 'sound/items/Welder.ogg', 100, 1)
 	if(!no_product)
-		if(reinf_material)
-			reinf_material.place_dismantled_girder(src, girder_material, girder_reinf_material)
-		else
-			material.place_dismantled_girder(src)
-		material.place_dismantled_product(src,devastated)
+		var/obj/structure/girder/G = new(src, girder_material, girder_reinf_material)
+		G.reset_girder()
+		new material.stack_type(src, 4)
 
 	for(var/obj/O in src.contents) //Eject contents!
 		if(istype(O,/obj/structure/sign/poster))

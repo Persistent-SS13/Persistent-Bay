@@ -331,8 +331,7 @@
 		character.drop_from_inventory(W)
 	character.update_languages()
 	character.update_citizenship()
-	
-		character.spawn_cit = CITIZEN
+	character.spawn_cit = CITIZEN
 	//DNA should be last
 	var/datum/computer_file/report/crew_record/R = Retrieve_Record(character.real_name)
 	if(R)

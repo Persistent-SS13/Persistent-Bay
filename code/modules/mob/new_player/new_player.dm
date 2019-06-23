@@ -314,26 +314,38 @@
 	var/list/L = recursive_content_check(character)
 	var/list/spared = list()
 	for(var/ind in 1 to L.len)
-		var/atom/A = L[ind]
+		var/atom/movable/A = L[ind]
 		if(istype(A, /obj/item/clothing/accessory/toggleable/hawaii))
 			var/obj/item/clothing/accessory/toggleable/hawaii = A
 			hawaii.has_suit = null
 			spared |= A
+			A.loc = null
 		if(istype(A, /obj/item/weapon/paper))
 			spared |= A
+			A.loc = null
 		if(istype(A, /obj/item/weapon/photo))
 			spared |= A
+			A.loc = null
 	for(var/obj/item/W in character)
 		character.drop_from_inventory(W)
 	character.update_languages()
 	character.update_citizenship()
 	
 	//DNA should be last
+	var/datum/computer_file/report/crew_record/R = Retrieve_Record(character.real_name)
+	if(R)
+		R.linked_account.money = 1000
+		R.email = new()
+		R.email.login = H.real_name
+	else
+		client.prefs.real_name = character.real_name
+		client.prefs.setup_new_accounts(character) //make accounts before! Outfit setup needs the record set
+
+
 	character.dna.ResetUIFrom()
 	character.dna.ready_dna(character)
 	character.dna.b_type = client.prefs.b_type
 	character.sync_organ_dna()
-	client.prefs.setup_new_accounts(character) //make accounts before! Outfit setup needs the record set
 
 	// Do the initial caching of the player's body icons.
 	character.force_update_limbs()
@@ -355,7 +367,7 @@
 	character.equip_to_slot_or_del(guide, slot_r_hand)
 	for(var/ind in 1 to spared.len)
 		var/atom/A = spared[ind]
-		character.equip_to_slot_or_store_or_drop(A, slot_back)
+		character.equip_to_slot_or_store_or_drop(A, slot_r_hand)
 	SScharacter_setup.delete_import_character(chosen_slot, ckey)
 	SScharacter_setup.save_character(found_slot, client.ckey, character)
 	to_chat(src, "Import Successful. [character.real_name] saved to slot [found_slot].")

@@ -135,6 +135,7 @@
 	. += new/datum/stack_recipe/furniture/bookcase(src)
 	. += new/datum/stack_recipe/zipgunframe(src)
 	. += new/datum/stack_recipe/coilgun(src)
+	. += new/datum/stack_recipe/rifle_frame(src)
 	. += new/datum/stack_recipe/stick(src)
 	. += new/datum/stack_recipe/noticeboard(src)
 

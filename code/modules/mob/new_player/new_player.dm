@@ -347,7 +347,7 @@
 	character.dna.ready_dna(character)
 	character.dna.b_type = client.prefs.b_type
 	character.sync_organ_dna()
-
+	character.spawn_loc = "nexus"
 	// Do the initial caching of the player's body icons.
 	character.force_update_limbs()
 	character.update_eyes()
@@ -368,6 +368,7 @@
 	character.equip_to_slot_or_del(guide, slot_r_hand)
 	for(var/ind in 1 to spared.len)
 		var/atom/A = spared[ind]
+		message_admins("recovered ITEM!![A]")
 		character.equip_to_slot_or_store_or_drop(A, slot_r_hand)
 	SScharacter_setup.delete_import_character(chosen_slot, ckey)
 	SScharacter_setup.save_character(found_slot, client.ckey, character)

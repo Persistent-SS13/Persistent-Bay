@@ -315,7 +315,7 @@
 	if(!H || !outfit)
 		return
 	if(undress)
-		H.delete_inventory(TRUE)
+		H.delete_inventory(FALSE)
 	outfit.equip(H)
 	log_and_message_admins("changed the equipment of [key_name(H)] to [outfit.name].")
 

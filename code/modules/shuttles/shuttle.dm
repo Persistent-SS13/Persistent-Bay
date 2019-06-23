@@ -320,10 +320,17 @@
 
 	// Move the shuttle
 //	message_admins("dock_interior [bridge.dock.dock_interior].")
-//	if(bridge.dock.dock_interior == 1)
-	translate_turfs(turf_translation, current_location.base_area, current_location.base_turf)
-//	else
-//		translate_turfs(turf_translation, current_location.base_area, /turf/space)
+	var/barea = locate(world.area)
+	var/bturf = /turf/space
+
+	//If the location is a landmark
+	if(istype(current_location))
+		barea = current_location.base_area 
+		bturf = bridge.dock.dock_interior == 1? current_location.base_turf : /turf/space
+	else if(bridge.dock.dock_interior == 1)
+		bturf = /turf/simulated/floor/plating
+		barea = get_area(current_location)
+	translate_turfs(turf_translation, barea, bturf)
 
 	// Reset interior lighting
 	var/obj/machinery/docking_beacon/dest_dock

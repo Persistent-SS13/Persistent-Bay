@@ -323,11 +323,10 @@
 			spared |= A
 		if(istype(A, /obj/item/weapon/photo))
 			spared |= A
-		character.drop_from_inventory(A)
 
 	character.update_languages()
 	character.update_citizenship()
-
+	
 	//DNA should be last
 	character.dna.ResetUIFrom()
 	character.dna.ready_dna(character)
@@ -343,7 +342,7 @@
 	var/decl/hierarchy/outfit/clothes
 	clothes = outfit_by_type(/decl/hierarchy/outfit/nexus/starter)
 	ASSERT(istype(clothes))
-	clothes.equip(character)
+	dressup_human(character, clothes)
 	var/obj/item/weapon/card/id/W = new (character)
 	W.registered_name = character.real_name
 	W.selected_faction = GLOB.using_map.default_faction_uid

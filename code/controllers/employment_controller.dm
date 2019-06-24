@@ -25,7 +25,7 @@ var/datum/controller/employment_controller/employment_controller
 		if(!istype(employee) || !employee.client) continue
 		var/datum/world_faction/employer = get_faction(stack.connected_faction)
 		if(employer)
-			if(employee.client.inactivity <= 15 MINUTES && stack.duty_status)
+			if(employee.client.inactivity <= 15 MINUTES)
 				if(!employer:unpaid["[employee.real_name]"])
 					employer:unpaid["[employee.real_name]"] = 1
 				else

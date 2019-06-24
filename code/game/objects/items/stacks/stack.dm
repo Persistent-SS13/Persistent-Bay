@@ -218,8 +218,6 @@
 			return 0
 		else
 			amount += extra
-			update_icon()
-		return 1
 	else if(!synths || synths.len < uses_charge)
 		return 0
 	else

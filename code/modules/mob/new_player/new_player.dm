@@ -557,7 +557,7 @@
 	character.after_spawn()
 
 	if(!character.mind)
-		mind.active = 0
+		mind.active = 1
 		mind.original = character
 		mind.transfer_to(character)	//won't transfer key since the mind is not active
 

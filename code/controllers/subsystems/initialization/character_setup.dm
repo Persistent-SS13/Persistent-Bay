@@ -15,13 +15,13 @@ SUBSYSTEM_DEF(character_setup)
 /datum/controller/subsystem/character_setup/Initialize()
 	if(newplayers_requiring_init.len)
 		for(var/i in 1 to newplayers_requiring_init.len)
-			var/mob/new_player/new_player = newplayers_requiring_init[i]
+			var/mob/new_player/new_player = newplayers_requiring_init[1]
 			if(new_player)
 				new_player.deferred_login()
 				newplayers_requiring_init -= new_player
 	if(prefs_awaiting_setup.len)
 		for(var/i in 1 to prefs_awaiting_setup.len)
-			var/datum/preferences/prefs = prefs_awaiting_setup[i]
+			var/datum/preferences/prefs = prefs_awaiting_setup[1]
 			if(prefs)
 				prefs.setup()
 				prefs_awaiting_setup -= prefs

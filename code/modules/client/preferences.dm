@@ -60,7 +60,7 @@ datum/preferences
 	b_type = RANDOM_BLOOD_TYPE
 
 	if(client && !IsGuestKey(client.key))
-		src.load_path(client.key)
+		src.load_path_pref(client.key)
 		load_preferences()
 		load_and_update_character()
 	sanitize_preferences()

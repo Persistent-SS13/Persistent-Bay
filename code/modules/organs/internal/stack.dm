@@ -89,6 +89,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	try_connect()
 	if(duty_status)
 		try_duty()
+	GLOB.neural_laces |= src
 
 /obj/item/organ/internal/stack/Destroy()
 	if(lacemob && ((lacemob.key && lacemob.key != "") || (lacemob.key && lacemob.key != "")))
@@ -170,12 +171,12 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		if("clock_out")
 			if(faction)
 
-				if(faction.employment_log > 100)
+				if(faction.employment_log.len > 100)
 					faction.employment_log.Cut(1,2)
 				faction.employment_log += "At [stationdate2text()] [stationtime2text()] [owner.real_name] clocked out."
 				faction.connected_laces -= src
 				faction = null
-				
+
 				connected_faction = ""
 
 		if("connect")
@@ -230,7 +231,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 					to_chat(usr, "An account by that name cannot be found.")
 					return
 				var/choseamount = input(usr, "Enter the amount you want to transfer.", "Money Transfer") as null|num
-				if(choseamount)
+				if(choseamount && choseamount > 0)
 					var/datum/computer_file/report/crew_record/record2 = Retrieve_Record(owner.real_name)
 					if(record2)
 						if(choseamount > record2.linked_account.money)
@@ -392,23 +393,27 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 	if((!owner || !faction) && !robot)
 		return
-	if(owner && faction && owner.real_name == faction.get_leadername())
-		return 1
-	var/datum/computer_file/report/crew_record/records
-	if(!robot)
-		records = faction.get_record(owner.real_name)
-	else
-		records = faction.get_record(robot.real_name)
-	if(!records)
-		faction = null
-		return "No record found."
+	if(!(owner && faction && owner.real_name == faction.get_leadername()))
+		var/datum/computer_file/report/crew_record/records
+		if(!robot)
+			records = faction.get_record(owner.real_name)
+		else
+			records = faction.get_record(robot.real_name)
+		if(!records)
+			faction = null
+			return "No record found."
 
-	var/datum/assignment/assignment = faction.get_assignment(records.try_duty(), records.get_name())
-	if(assignment && assignment.duty_able)
-		var/title = assignment.get_title(record.rank)
-		return "Working as [title] for [faction.name].<br>Making [assignment.get_pay(record.rank)]$$ for every thirty minutes clocked in."
-	else
-		return "No paying assignment."
+		var/datum/assignment/assignment = faction.get_assignment(records.try_duty(), records.get_name())
+		var/title
+		if(assignment && assignment.duty_able)
+			if(record)
+				title = assignment.get_title(record.rank)
+			else
+				title = assignment.get_title(1)
+			return "Working as [title] for [faction.name].<br>Making [assignment.get_pay(record.rank)]$$ for every thirty minutes clocked in."
+		else
+			return "No paying assignment."
+
 
 
 /obj/item/organ/internal/stack/proc/try_connect()

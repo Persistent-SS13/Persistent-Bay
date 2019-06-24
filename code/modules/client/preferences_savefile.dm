@@ -1,7 +1,7 @@
 #define SAVEFILE_VERSION_MIN	8
 #define SAVEFILE_VERSION_MAX	17
 
-/datum/preferences/proc/load_path(ckey,filename="preferences.sav")
+/datum/preferences/proc/load_path_pref(ckey,filename="preferences.sav")
 	if(!ckey)	return
 	path = load_path(ckey, filename)
 	char_save_path = "data/player_saves/[copytext(ckey,1,2)]/[ckey]/"
@@ -97,8 +97,6 @@
 /datum/preferences/proc/sanitize_preferences()
 	if(player_setup)
 		player_setup.sanitize_setup()
-	else
-		player_setup = new()
 	if(!bonus_slots) bonus_slots = 0
 	if(!bonus_notes) bonus_notes = ""
 	return 1

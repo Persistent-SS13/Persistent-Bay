@@ -24,8 +24,6 @@ var/datum/controller/employment_controller/employment_controller
 		var/mob/employee = stack.get_owner()
 		if(!employee || !employee.client) continue
 		var/datum/employer = get_faction(stack.connected_faction)
-		if(stack.business_mode && stack.connected_business && stack.connected_business != "")
-			employer = get_business(stack.connected_business)
 		if(employer)
 			if(employee.client.inactivity <= 15 MINUTES && stack.duty_status)
 				if(!employer:unpaid["[employee.real_name]"])

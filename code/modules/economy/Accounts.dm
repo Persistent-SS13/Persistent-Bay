@@ -14,7 +14,7 @@
 
 	var/account_type = 1	//1 - personal account
 							//2 - business account
-							
+
 	var/datum/world_faction/business/connected_business
 	var/list/recently_paid = list()
 /datum/money_account/after_load()
@@ -28,6 +28,15 @@
 		return src
 	else
 		all_money_accounts.Add(src)
+	for(var/datum/transaction/T in transaction_log)
+		if(findtext(T.purpose, "Money transfer to") && T.amount > 0)
+			var/datum/transaction/Te = new("Exploit Reverse.", "Exploit Reverse", -T.amount)
+			src.do_transaction(Te)
+		if(findtext(T.purpose, "Money transfer from") && T.amount < 0)
+			var/datum/transaction/Te = new("Exploit Reverse.", "Exploit Reverse", -T.amount)
+			src.do_transaction(Te)
+	if(money < 0)
+		money = 0
 	..()
 	return src
 
@@ -49,7 +58,7 @@
 			connected_business.cost_objectives(T.amount)
 	if(T.amount > 0 && nexus_account && nexus_account != src)
 		nexus.pay_tax(src, T.amount)
-		
+
 /datum/money_account/proc/get_balance()
 	. = 0
 	for(var/datum/transaction/T in transaction_log)

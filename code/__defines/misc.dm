@@ -69,7 +69,7 @@
 #define EVENT_LEVEL_MAJOR    3
 
 //General-purpose life speed define for plants.
-#define HYDRO_SPEED_MULTIPLIER 0.25
+#define HYDRO_SPEED_MULTIPLIER 0.5
 
 #define DEFAULT_JOB_TYPE /datum/job/assistant
 

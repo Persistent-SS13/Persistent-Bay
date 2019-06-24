@@ -405,15 +405,24 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 		var/datum/assignment/assignment = faction.get_assignment(records.try_duty(), records.get_name())
 		var/title
+		var/rank = 1
 		if(assignment && assignment.duty_able)
 			if(record)
 				title = assignment.get_title(record.rank)
+				rank = record.rank
 			else
 				title = assignment.get_title(1)
 			return "Working as [title] for [faction.name].<br>Making [assignment.get_pay(record.rank)]$$ for every thirty minutes clocked in."
 		else
 			return "No paying assignment."
-
+	else
+		var/datum/assignment/assignment = faction.get_assignment(null, owner.real_name)
+		var/title
+		if(assignment && assignment.duty_able)
+			title = assignment.get_title(1)
+			return "Working as [title] for [faction.name].<br>Making [assignment.get_pay(record.rank)]$$ for every thirty minutes clocked in."
+		else
+			return "No paying assignment."
 
 
 /obj/item/organ/internal/stack/proc/try_connect()
@@ -422,8 +431,14 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	if(!faction || !faction.status) return 0
 	var/datum/computer_file/report/crew_record/record = faction.get_record(owner.real_name)
 	if(!record)
-		faction = null
-		return 0
+		if(faction.get_leadername() == owner.real_name)
+			faction.connected_laces |= src
+			if(faction.employment_log.len > 100)
+				faction.employment_log.Cut(1,2)
+			faction.employment_log += "At [stationdate2text()] [stationtime2text()] [owner.real_name] clocked in."		
+		else
+			faction = null
+			return 0
 	else
 		var/datum/assignment/assignment = faction.get_assignment(record.try_duty(), record.get_name())
 		if(assignment && assignment.duty_able)

@@ -40,7 +40,7 @@
 	. = ..()
 
 /obj/machinery/mineral/processing_unit/Process()
-	if(inoperable() || isoff())
+	if(inoperable() || !isactive())
 		return
 
 	//Grab some more ore to process this tick.

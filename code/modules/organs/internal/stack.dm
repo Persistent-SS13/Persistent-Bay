@@ -169,11 +169,13 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 		if("clock_out")
 			if(faction)
-				faction.connected_laces -= src
-				faction = null
+
 				if(faction.employment_log > 100)
 					faction.employment_log.Cut(1,2)
 				faction.employment_log += "At [stationdate2text()] [stationtime2text()] [owner.real_name] clocked out."
+				faction.connected_laces -= src
+				faction = null
+				
 				connected_faction = ""
 
 		if("connect")
@@ -389,8 +391,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 			robot = loc.loc
 
 	if((!owner || !faction) && !robot)
-		duty_status = 0
-		return "No owner found.."
+		return
 	if(owner && faction && owner.real_name == faction.get_leadername())
 		return 1
 	var/datum/computer_file/report/crew_record/records

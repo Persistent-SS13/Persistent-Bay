@@ -131,7 +131,7 @@
 	icon_base = "stone"
 	table_icon_base = "stone"
 	icon_reinf = "reinf_stone"
-	ore_matter = list(MATERIAL_SPODUMENE = 2000, MATERIAL_ALUMINUM = 500)
+	ore_matter = list(MATERIAL_SPODUMENE = 2000, MATERIAL_ALUMINIUM = 500)
 	energy_combustion = 43.1
 	sale_price = 2
 

@@ -38,7 +38,7 @@
 /datum/preferences/proc/save_preferences()
 	testing("preferences/save_preferences() : Attempting to save prefs (ckey = [client_ckey], path = [path])")
 	//if(!path || (path && (length(path) == 0) ) )
-	path = load_path_pref(client_ckey, "")
+	path = load_path_pref(client_ckey, "preferences.sav")
 	testing("preferences/save_preferences() : Set path to (path = [path])")
 	var/savefile/S = new /savefile(path)
 	if(!S)					return 0

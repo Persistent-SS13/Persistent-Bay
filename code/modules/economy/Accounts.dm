@@ -32,9 +32,6 @@
 		if(findtext(T.purpose, "Money transfer to") && T.amount > 0)
 			var/datum/transaction/Te = new("Exploit Reverse.", "Exploit Reverse", -T.amount)
 			src.do_transaction(Te)
-		if(findtext(T.purpose, "Money transfer from") && T.amount < 0)
-			var/datum/transaction/Te = new("Exploit Reverse.", "Exploit Reverse", -T.amount)
-			src.do_transaction(Te)
 	if(money < 0)
 		money = 0
 	..()

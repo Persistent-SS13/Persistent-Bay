@@ -3,18 +3,18 @@
 
 /datum/preferences/proc/load_path(ckey,filename="preferences.sav")
 	if(!ckey)	return
-	path = load_path(ckey, filename)
+	path = "data/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 	char_save_path = "data/player_saves/[copytext(ckey,1,2)]/[ckey]/"
 	savefile_version = SAVEFILE_VERSION_MAX
 
 /datum/preferences/proc/beta_path(ckey,filename="preferences.sav")
 	if(!ckey) return
-	path =  beta_path(ckey, filename)
+	path =  "exports/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 	savefile_version = SAVEFILE_VERSION_MAX
 
 /datum/preferences/proc/exit_path(ckey,filename="preferences.sav")
 	if(!ckey)	return
-	path = exit_path(ckey, filename)
+	path = "exits/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 	savefile_version = SAVEFILE_VERSION_MAX
 
 /datum/preferences/proc/character_load_path(slot)

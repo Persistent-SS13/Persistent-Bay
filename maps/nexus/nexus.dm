@@ -22,6 +22,7 @@
 	#include "obj/nexus_ids.dm"
 	#include "obj/nexus_power.dm"
 	#include "obj/nexus_machines.dm"
+	#include "obj/nexus_misc.dm"
 	#define using_map_DATUM /datum/map/nexus
 
 #elif !defined(MAP_OVERRIDE)

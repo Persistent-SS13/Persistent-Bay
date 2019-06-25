@@ -70,12 +70,6 @@
 		clothes.equip(mannequin, equip_adjustments = adjustflags)
 		update_icon = TRUE
 
-	if(!(equip_preview_mob & EQUIP_PREVIEW_JOB)) //Don't give gear to preview mob plz
-		var/obj/item/weapon/book/multipage/guide
-		var/datum/book_constructor/starterbook/bookconstruct = new()
-		guide = bookconstruct.construct()
-		guide.icon_state= "anomaly"
-		mannequin.equip_to_slot_or_del(guide, slot_r_hand)
 
 	if(update_icon)
 		mannequin.update_icons()

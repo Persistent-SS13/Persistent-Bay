@@ -241,6 +241,11 @@
 		log_error("[src]\ref[src] tried to connect to faction \"[trying? trying : "null" ]\"! req_access_faction is \"[req_access_faction? req_access_faction : "null"]\"")
 		return FALSE
 
+	//Bypass for map faction!!!!
+	if(trying.uid == GLOB.using_map.default_faction_uid)
+		connected_faction = trying
+		return TRUE
+
 	var/list/turfs = get_area_turfs(area)
 	var/datum/machine_limits/limits = trying.get_limits()
 

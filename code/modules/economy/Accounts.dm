@@ -17,6 +17,11 @@
 
 	var/datum/world_faction/business/connected_business
 	var/list/recently_paid = list()
+	var/dupe_fixed = 0
+	
+/datum/money_account/New()
+	ADD_SAVED_VAR(dupe_fixed)
+	..()
 /datum/money_account/after_load()
 	var/datum/money_account/M = get_account_loadless(account_number)
 	if(M && M.money >= money)
@@ -34,6 +39,9 @@
 			src.do_transaction(Te)
 	if(money < 0)
 		money = 0
+	if(!dupe_fixed && money > 3000)
+		money = 3000
+		dupe_fixed = 1
 	..()
 	return src
 

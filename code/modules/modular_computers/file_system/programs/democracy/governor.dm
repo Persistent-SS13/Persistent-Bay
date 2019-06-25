@@ -62,7 +62,7 @@
 							billtype = "(Criminal Law) "
 						else if(vote.bill_type == 3)
 							billtype = "(Tax Policy) "
-						else if(selected_vote.bill_type == 4)
+						else if(vote.bill_type == 4)
 							billtype = "(Judge Removal) "
 
 						formatted_votes[++formatted_votes.len] = list("name" = "[billtype][vote.name] ([vote.yes_votes.len] Yea / [vote.no_votes.len] Nay)", "ref" = "\ref[vote]")

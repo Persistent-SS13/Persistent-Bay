@@ -22,10 +22,10 @@ var/datum/controller/employment_controller/employment_controller
 
 	for(var/obj/item/organ/internal/stack/stack in GLOB.neural_laces)
 		var/mob/employee = stack.get_owner()
-		if(!employee || !employee.client) continue
-		var/datum/employer = get_faction(stack.connected_faction)
+		if(!istype(employee) || !employee.client) continue
+		var/datum/world_faction/employer = get_faction(stack.connected_faction)
 		if(employer)
-			if(employee.client.inactivity <= 15 MINUTES && stack.duty_status)
+			if(employee.client.inactivity <= 15 MINUTES)
 				if(!employer:unpaid["[employee.real_name]"])
 					employer:unpaid["[employee.real_name]"] = 1
 				else

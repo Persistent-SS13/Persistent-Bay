@@ -21,7 +21,7 @@
 
 /datum/chemical_reaction/cream
 	name = "cream"
-	result = /datum/reagent/drink/cream
+	result = /datum/reagent/drink/milk/cream
 	required_reagents = list(/datum/reagent/drink/milk = 5)
 	result_amount = 1
 	mix_message = "The solution thickens into a smooth creamy substance."

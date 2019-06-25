@@ -13,13 +13,13 @@ SUBSYSTEM_DEF(character_setup)
 	var/list/save_queue = list()
 
 /datum/controller/subsystem/character_setup/Initialize()
-	if(newplayers_requiring_init.len)
+	if(LAZYLEN(newplayers_requiring_init))
 		for(var/i in 1 to newplayers_requiring_init.len)
 			var/mob/new_player/new_player = newplayers_requiring_init[1]
 			if(new_player)
 				new_player.deferred_login()
 				newplayers_requiring_init -= new_player
-	if(prefs_awaiting_setup.len)
+	if(LAZYLEN(prefs_awaiting_setup))
 		for(var/i in 1 to prefs_awaiting_setup.len)
 			var/datum/preferences/prefs = prefs_awaiting_setup[1]
 			if(prefs)
@@ -30,7 +30,7 @@ SUBSYSTEM_DEF(character_setup)
 
 
 /datum/controller/subsystem/character_setup/fire(resumed = FALSE)
-	while(save_queue.len)
+	while(LAZYLEN(save_queue))
 		var/datum/preferences/prefs = save_queue[save_queue.len]
 		save_queue.len--
 

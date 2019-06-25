@@ -217,6 +217,12 @@
 	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
 	build_path = /obj/item/weapon/circuitboard/mining_stacker
 	build_type = VOIDFAB
+
+/datum/design/circuit/gas_generator
+	name = "gas generator"
+	id = "gas_generator_circuit"
+	build_path = /obj/item/weapon/circuitboard/gasgeneratorcircuit
+	build_type = ENGIFAB
 /**
 /datum/design/circuit/rdservercontrol
 	name = "R&D server control console"

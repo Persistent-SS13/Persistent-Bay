@@ -1,14 +1,14 @@
-// /proc/load_path(ckey,filename="preferences.sav")
-// 	if(!ckey)	return
-// 	return "data/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
+/proc/load_path(ckey,filename="preferences.sav")
+	if(!ckey)	return
+	return "data/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 
-// /proc/beta_path(ckey,filename="preferences.sav")
-// 	if(!ckey) return
-// 	return "exports/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
+/proc/beta_path(ckey,filename="preferences.sav")
+	if(!ckey) return
+	return "exports/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 
-// /proc/exit_path(ckey,filename="preferences.sav")
-// 	if(!ckey)	return
-// 	return "exits/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
+/proc/exit_path(ckey,filename="preferences.sav")
+	if(!ckey)	return
+	return "exits/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 
 #define CHAR_SAVE_FILE_PATH(slot, ckey) load_path(ckey, "[slot].sav")
 #define CHAR_SAVE_FILE(slot, ckey) new(CHAR_SAVE_FILE_PATH(slot, ckey))

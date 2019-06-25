@@ -77,9 +77,8 @@
 		// S.cd = GLOB.using_map.character_load_path(S, default_slot)
 
 	loaded_character = S
-	return 1
-
 	**/
+	return 1
 
 //This saves the initial character after creation is complete
 /datum/preferences/proc/save_character()
@@ -96,8 +95,7 @@
 	//return S
 
 /datum/preferences/proc/sanitize_preferences()
-	if(player_setup)
-		player_setup.sanitize_setup()
+	player_setup.sanitize_setup() //Leave it runtime if it must
 	if(!bonus_slots) bonus_slots = 0
 	if(!bonus_notes) bonus_notes = ""
 	return 1

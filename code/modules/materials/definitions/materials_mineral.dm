@@ -50,8 +50,8 @@
 	stack_type = /obj/item/stack/material/carbon
 	icon_colour = "#141414"
 	chem_products = list(
-		/datum/reagent/carbon = 20,
-		/datum/reagent/acetone = 20
+		/datum/reagent/carbon = 10,
+		/datum/reagent/acetone = 10
 		)
 	sale_price = 1
 	ore_matter = list(MATERIAL_GRAPHITE = 2000)

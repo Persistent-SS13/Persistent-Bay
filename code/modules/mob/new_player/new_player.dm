@@ -473,6 +473,7 @@
 		return
 
 	var/mob/character = SScharacter_setup.load_character(chosen_slot, ckey)
+	sleep(200)
 	Retrieve_Record(character.real_name)
 	var/turf/spawnTurf = locate(0,0,0) //Instead of null start with 0,0,0 because the unsafe spawn check will kick in and warn the user if there's something wrong
 

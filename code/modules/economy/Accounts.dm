@@ -33,10 +33,6 @@
 		return src
 	else
 		all_money_accounts.Add(src)
-	for(var/datum/transaction/T in transaction_log)
-		if(findtext(T.purpose, "Money transfer to") && T.amount > 0)
-			var/datum/transaction/Te = new("Exploit Reverse.", "Exploit Reverse", -T.amount)
-			src.do_transaction(Te)
 	if(money < 0)
 		money = 0
 	if(!dupe_fixed && money > 3000)

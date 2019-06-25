@@ -21,7 +21,7 @@ var/PriorityQueue/all_feeds
 	var/datum/world_faction/business/connected_faction = get_faction(contract.org_uid)
 	if(connected_faction && istype(connected_faction))
 		var/datum/stockholder/holder = connected_faction.get_stockholder_datum(contract.created_by)
-		if(holder && holder.stocks < contract.ownership)
+		if(!holder || holder.stocks < contract.ownership)
 			contract.cancelled = 1
 			contract.linked = null
 			contract.update_icon()
@@ -2126,6 +2126,8 @@ var/PriorityQueue/all_feeds
 			break
 	if(!debts)
 		debts = list()
+	if(central_account)
+		central_account.connected_business = src
 	..()
 
 /datum/world_faction/business/after_load()

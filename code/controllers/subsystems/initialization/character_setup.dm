@@ -61,6 +61,7 @@ SUBSYSTEM_DEF(character_setup)
 	var/savefile/F = CHAR_SAVE_FILE(ind, ckey)
 	var/mob/M
 	from_file(F["mob"], M)
+	sleep(100)
 	M.after_spawn() //Runs after_load
 	return M
 

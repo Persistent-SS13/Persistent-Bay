@@ -1084,9 +1084,8 @@
 	name = "computer processor unit"
 	id = "cpu_normal"
 	req_tech = list(TECH_DATA = 3, TECH_ENGINEERING = 2)
-	build_type = CIRCUITFAB
+	build_type = GENERALFAB
 	materials = list(MATERIAL_STEEL = 1600)
-	chemicals = list(/datum/reagent/acid = 20)
 	build_path = /obj/item/weapon/computer_hardware/processor_unit
 
 /datum/design/item/modularcomponent/cpu/small
@@ -1094,8 +1093,7 @@
 	id = "cpu_small"
 	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
 	build_type = CIRCUITFAB
-	materials = list(MATERIAL_STEEL = 800)
-	chemicals = list(/datum/reagent/acid = 20)
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_COPPER = 5 SHEETS)
 	build_path = /obj/item/weapon/computer_hardware/processor_unit/small
 
 /datum/design/item/modularcomponent/cpu/photonic
@@ -1103,8 +1101,7 @@
 	id = "pcpu_normal"
 	req_tech = list(TECH_DATA = 5, TECH_ENGINEERING = 4)
 	build_type = CIRCUITFAB
-	materials = list(MATERIAL_STEEL = 6400, glass = 2000)
-	chemicals = list(/datum/reagent/acid = 40)
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_COPPER = 5 SHEETS, MATERIAL_PHORON = 1 SHEET)
 	build_path = /obj/item/weapon/computer_hardware/processor_unit/photonic
 
 /datum/design/item/modularcomponent/cpu/photonic/small
@@ -1112,8 +1109,7 @@
 	id = "pcpu_small"
 	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 3)
 	build_type = CIRCUITFAB
-	materials = list(MATERIAL_STEEL = 3200, glass = 1000)
-	chemicals = list(/datum/reagent/acid = 20)
+	materials = list(MATERIAL_STEEL = 3200, MATERIAL_COPPER = 2 SHEETS)
 	build_path = /obj/item/weapon/computer_hardware/processor_unit/photonic/small
 
 // inteliCard Slot

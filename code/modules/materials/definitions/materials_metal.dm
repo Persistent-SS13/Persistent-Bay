@@ -474,7 +474,7 @@
 		/datum/reagent/copper = 12,
 		/datum/reagent/aluminum = 12,
 		)
-	ore_matter = list(MATERIAL_COPPER = 1200, MATERIAL_GOLD = 1200, MATERIAL_ALUMINUM = 1200)
+	ore_matter = list(MATERIAL_COPPER = 1200, MATERIAL_GOLD = 1200, MATERIAL_ALUMINIUM = 1200)
 
 /material/tetrahedrite
 	name = MATERIAL_TETRAHEDRITE

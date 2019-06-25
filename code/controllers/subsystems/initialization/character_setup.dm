@@ -13,15 +13,21 @@ SUBSYSTEM_DEF(character_setup)
 	var/list/save_queue = list()
 
 /datum/controller/subsystem/character_setup/Initialize()
-	while(prefs_awaiting_setup.len)
-		var/datum/preferences/prefs = prefs_awaiting_setup[prefs_awaiting_setup.len]
-		prefs_awaiting_setup.len--
-		prefs.setup()
-	while(newplayers_requiring_init.len)
-		var/mob/new_player/new_player = newplayers_requiring_init[newplayers_requiring_init.len]
-		newplayers_requiring_init.len--
-		new_player.deferred_login()
-	. = ..()
+	if(newplayers_requiring_init.len)
+		for(var/i in 1 to newplayers_requiring_init.len)
+			var/mob/new_player/new_player = newplayers_requiring_init[1]
+			if(new_player)
+				new_player.deferred_login()
+				newplayers_requiring_init -= new_player
+	if(prefs_awaiting_setup.len)
+		for(var/i in 1 to prefs_awaiting_setup.len)
+			var/datum/preferences/prefs = prefs_awaiting_setup[1]
+			if(prefs)
+				prefs.setup()
+				prefs_awaiting_setup -= prefs
+
+		. = ..()
+
 
 /datum/controller/subsystem/character_setup/fire(resumed = FALSE)
 	while(save_queue.len)
@@ -69,7 +75,7 @@ SUBSYSTEM_DEF(character_setup)
 /datum/controller/subsystem/character_setup/proc/delete_import_character(var/ind, var/ckey)
 	if(!fexists(beta_path(ckey, "[ind].sav")))
 		return
-	var/beta_path = beta_path(ckey, "[ind].sav")	
+	var/beta_path = beta_path(ckey, "[ind].sav")
 	fcopy(beta_path, "exportbackups/[beta_path]")
 	fdel(beta_path)
 

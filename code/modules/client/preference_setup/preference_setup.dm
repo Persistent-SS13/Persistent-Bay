@@ -67,12 +67,12 @@ prompts
 	. = ""
 	for(var/datum/category_item/player_setup_item/PI in items)
 		. += "[PI.content(user)]<br>"
-
+/**
 /datum/category_group/player_setup_category/skill_preferences
 	name = "Skills"
 	sort_order = 3
 	category_item_type = /datum/category_item/player_setup_item/skills
-
+**/
 ///datum/category_group/player_setup_category/appearance_preferences
 //	name = "Roles"
 //	sort_order = 4

@@ -1024,32 +1024,7 @@
 	build_path = /obj/item/weapon/aiModule/tyrant
 
 // Network cards
-/datum/design/item/modularcomponent/netcard/basic
-	name = "basic network card"
-	id = "netcard_basic"
-	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 1)
-	build_type = CIRCUITFAB
-	materials = list(MATERIAL_STEEL = 250, MATERIAL_GLASS = 100)
-	chemicals = list(/datum/reagent/acid = 20)
-	build_path = /obj/item/weapon/computer_hardware/network_card
-
-/datum/design/item/modularcomponent/netcard/advanced
-	name = "advanced network card"
-	id = "netcard_advanced"
-	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 2)
-	build_type = CIRCUITFAB
-	materials = list(MATERIAL_STEEL = 500, MATERIAL_GLASS = 200)
-	chemicals = list(/datum/reagent/acid = 20)
-	build_path = /obj/item/weapon/computer_hardware/network_card/advanced
-
-/datum/design/item/modularcomponent/netcard/wired
-	name = "wired network card"
-	id = "netcard_wired"
-	req_tech = list(TECH_DATA = 5, TECH_ENGINEERING = 3)
-	build_type = CIRCUITFAB
-	materials = list(MATERIAL_STEEL = 2500, MATERIAL_GLASS = 400)
-	chemicals = list(/datum/reagent/acid = 20)
-	build_path = /obj/item/weapon/computer_hardware/network_card/wired
+/wired
 
 // Data crystals (USB flash drives)
 /datum/design/item/modularcomponent/portabledrive/basic
@@ -1078,43 +1053,6 @@
 	materials = list(MATERIAL_GLASS = 3200)
 	chemicals = list(/datum/reagent/acid = 20)
 	build_path = /obj/item/weapon/computer_hardware/hard_drive/portable/super
-
-// Processor unit
-/datum/design/item/modularcomponent/cpu/
-	name = "computer processor unit"
-	id = "cpu_normal"
-	req_tech = list(TECH_DATA = 3, TECH_ENGINEERING = 2)
-	build_type = CIRCUITFAB
-	materials = list(MATERIAL_STEEL = 1600)
-	chemicals = list(/datum/reagent/acid = 20)
-	build_path = /obj/item/weapon/computer_hardware/processor_unit
-
-/datum/design/item/modularcomponent/cpu/small
-	name = "computer microprocessor unit"
-	id = "cpu_small"
-	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
-	build_type = CIRCUITFAB
-	materials = list(MATERIAL_STEEL = 800)
-	chemicals = list(/datum/reagent/acid = 20)
-	build_path = /obj/item/weapon/computer_hardware/processor_unit/small
-
-/datum/design/item/modularcomponent/cpu/photonic
-	name = "computer photonic processor unit"
-	id = "pcpu_normal"
-	req_tech = list(TECH_DATA = 5, TECH_ENGINEERING = 4)
-	build_type = CIRCUITFAB
-	materials = list(MATERIAL_STEEL = 6400, glass = 2000)
-	chemicals = list(/datum/reagent/acid = 40)
-	build_path = /obj/item/weapon/computer_hardware/processor_unit/photonic
-
-/datum/design/item/modularcomponent/cpu/photonic/small
-	name = "computer photonic microprocessor unit"
-	id = "pcpu_small"
-	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 3)
-	build_type = CIRCUITFAB
-	materials = list(MATERIAL_STEEL = 3200, glass = 1000)
-	chemicals = list(/datum/reagent/acid = 20)
-	build_path = /obj/item/weapon/computer_hardware/processor_unit/photonic/small
 
 // inteliCard Slot
 /datum/design/item/modularcomponent/aislot

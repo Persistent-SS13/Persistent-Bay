@@ -117,7 +117,7 @@
 			data["current_rank"] = record.rank
 			var/promote_button = 0
 			var/demote_button = 0
-			var/max_rank = assignment.ranks.len + 1
+			var/max_rank = assignment.accesses.len + 1
 			if(user_id_card)
 				for(var/name in record.promote_votes)
 					if(name == user_id_card.registered_name)
@@ -431,7 +431,7 @@
 					if(!isleader && assignment.authority_restriction > user_assignment.edit_authority)
 						to_chat(usr, "Your assignment does not have the authority to assign [assignment.name].")
 						return 0
-					if(check_rights(R_ADMIN, 0, user) || connected_faction.in_command(user_id_card.registered_name) || (user_assignment && user_assignment.parent.name == assignment.parent.name) || isleader)
+					if(check_rights(R_ADMIN, 0, user) || (user_id_card && connected_faction.in_command(user_id_card.registered_name)) || (user_assignment && user_assignment.parent && user_assignment.parent.name == assignment.parent.name) || isleader)
 						module.record.assignment_data[module.record.assignment_uid] = "[module.record.rank]"
 						module.record.assignment_uid = assignment.uid
 						module.record.rank = text2num(module.record.assignment_data[assignment.uid])

@@ -14,9 +14,14 @@
 
 	var/account_type = 1	//1 - personal account
 							//2 - business account
-							
+
 	var/datum/world_faction/business/connected_business
 	var/list/recently_paid = list()
+	var/dupe_fixed = 0
+	
+/datum/money_account/New()
+	ADD_SAVED_VAR(dupe_fixed)
+	..()
 /datum/money_account/after_load()
 	var/datum/money_account/M = get_account_loadless(account_number)
 	if(M && M.money >= money)
@@ -28,6 +33,11 @@
 		return src
 	else
 		all_money_accounts.Add(src)
+	if(money < 0)
+		money = 0
+	if(!dupe_fixed && money > 3000)
+		money = 3000
+		dupe_fixed = 1
 	..()
 	return src
 
@@ -49,7 +59,7 @@
 			connected_business.cost_objectives(T.amount)
 	if(T.amount > 0 && nexus_account && nexus_account != src)
 		nexus.pay_tax(src, T.amount)
-		
+
 /datum/money_account/proc/get_balance()
 	. = 0
 	for(var/datum/transaction/T in transaction_log)

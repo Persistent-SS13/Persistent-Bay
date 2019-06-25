@@ -40,23 +40,28 @@ datum/preferences
 	
 	var/rules_agree = 0
 	var/guide_agree = 0
+
 /datum/preferences/New(client/C)
 	if(istype(C))
 		client = C
 		client_ckey = C.ckey
 		SScharacter_setup.preferences_datums += src
 		if(SScharacter_setup.initialized)
+			testing("preferences/New(): Created and directly setup preferences for [client_ckey]")
 			setup()
 		else
+			testing("preferences/New(): Created and queued preference setup for [client_ckey]")
 			SScharacter_setup.prefs_awaiting_setup += src
 	..()
 
 /datum/preferences/Destroy()
 	if(LAZYLEN(SScharacter_setup.prefs_awaiting_setup))
+		testing("preferences/Destroy(): was called for [client_ckey]")
 		SScharacter_setup.prefs_awaiting_setup -= src
 	. = ..()
 
 /datum/preferences/proc/setup()
+	testing("preferences/setup(): was called for [client_ckey]")
 	if(!length(GLOB.skills))
 		decls_repository.get_decl(/decl/hierarchy/skill)
 	player_setup = new(src)

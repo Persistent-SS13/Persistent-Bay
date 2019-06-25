@@ -184,6 +184,16 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	var/time = (REALTIMEOFDAY - start_timeofday) / 10
 
 	var/msg = "Initializations complete within [time] second\s!"
+	for(var/datum/world_faction/business/faction in GLOB.all_world_factions)
+		var/total_stocks = 0
+			for(var/x in faction.stock_holders)
+				var/datum/stockholder/holder = connected_faction.stock_holders[x]
+				total_stocks += holder.stocks
+				
+			if(total_stocks > 100)
+				message_admins("[faction.name] has over 100 STOCKS. investigate and correct the issue.")
+		
+		
 	report_progress(msg)
 	log_world(msg)
 
@@ -209,7 +219,7 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 
 	GLOB.using_map.setup_economy()
 	Master.SetRunLevel(RUNLEVEL_GAME)
-	
+
 	for(var/mob/new_player/player in GLOB.player_list)
 		if(player.panel)
 			player.panel.close()

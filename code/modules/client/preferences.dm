@@ -51,6 +51,11 @@ datum/preferences
 			SScharacter_setup.prefs_awaiting_setup += src
 	..()
 
+/datum/preferences/Destroy()
+	if(LAZYLEN(SScharacter_setup.prefs_awaiting_setup))
+		SScharacter_setup.prefs_awaiting_setup -= src
+	. = ..()
+
 /datum/preferences/proc/setup()
 	if(!length(GLOB.skills))
 		decls_repository.get_decl(/decl/hierarchy/skill)

@@ -31,6 +31,11 @@
 			var/obj/item/clothing/accessory/tie = new T(src)
 			src.attach_accessory(null, tie)
 
+/obj/item/clothing/after_load()
+	. = ..()
+	for(var/obj/item/clothing/accessory/A in accessories)
+		src.attach_accessory(null, A)
+
 // Updates the icons of the mob wearing the clothing item, if any.
 /obj/item/clothing/proc/update_clothing_icon()
 	return

@@ -41,50 +41,58 @@
 	return ..()
 
 /obj/structure/bed/chair/on_update_icon()
-	..()
+	. = ..()
+	
+	var/cache_key
 
-	var/cache_key = "[base_icon]-[material.name]-over"
-	if(isnull(stool_cache[cache_key]))
+	// Base Overlay
+	cache_key = "[base_icon]-[material.name]-over"
+	if(!icon_cache[cache_key])
 		var/image/I = image(src.icon, "[base_icon]_over")
-		if(material_alteration & MATERIAL_ALTERATION_COLOR)
-			I.color = material.icon_colour
 		I.plane = ABOVE_HUMAN_PLANE
 		I.layer = ABOVE_HUMAN_LAYER
-		stool_cache[cache_key] = I
-	overlays |= stool_cache[cache_key]
-	// Padding overlay.
-	if(padding_material)
-		var/padding_cache_key = "[base_icon]-padding-[padding_material.name]-over"
-		if(isnull(stool_cache[padding_cache_key]))
-			var/image/I =  image(icon, "[base_icon]_padding_over")
-			if(material_alteration & MATERIAL_ALTERATION_COLOR)
-				I.color = padding_material.icon_colour
-			I.plane = ABOVE_HUMAN_PLANE
-			I.layer = ABOVE_HUMAN_LAYER
-			stool_cache[padding_cache_key] = I
-		overlays |= stool_cache[padding_cache_key]
+		I.color = material.icon_colour
+		icon_cache[cache_key] = I
 
+	overlays |= icon_cache [cache_key]
+
+	// Padding Overlay
+	if(padding_material)
+		cache_key = "[base_icon]-padding-[padding_material.name]-over"
+		if(!icon_cache[cache_key])
+			var/image/I = image(src.icon, "[base_icon]_padding_over")
+			I.plane = ABOVE_HUMAN_PLANE
+			I.layer = ABOVE_HUMAN_PLANE
+			I.color = padding_material.icon_colour
+			icon_cache[cache_key] = I
+
+		overlays |= icon_cache[cache_key]
+
+	// Sitting Mob Overlays
+	// These check if the icon is avalible as armrests arn't always included
 	if(buckled_mob)
-		if(padding_material)
-			cache_key = "[base_icon]-armrest-[padding_material.name]"
-		if(isnull(stool_cache[cache_key]))
-			var/image/I = image(icon, "[base_icon]_armrest")
+		// Base Armrest
+		cache_key = "[base_icon]-armrest-[material.name]"
+		if(!icon_cache[cache_key])
+			var/image/I = ("[base_icon]_armrest" in icon_states(src.icon)) ? image(src.icon, "[base_icon]_armrest") : image(src.icon, "blank")
 			I.plane = ABOVE_HUMAN_PLANE
 			I.layer = ABOVE_HUMAN_LAYER
-			if(material_alteration & MATERIAL_ALTERATION_COLOR)
-				I.color = material.icon_colour
-			stool_cache[cache_key] = I
-		overlays |= stool_cache[cache_key]
+			I.color = material.icon_colour
+			icon_cache[cache_key] = I
+
+		overlays |= icon_cache[cache_key]
+
+		// Padding Armrest
 		if(padding_material)
 			cache_key = "[base_icon]-padding-armrest-[padding_material.name]"
-			if(isnull(stool_cache[cache_key]))
-				var/image/I = image(icon, "[base_icon]_padding_armrest")
+			if(!icon_cache[cache_key])
+				var/image/I = ("[base_icon]_padding_armrest" in icon_states(src.icon)) ? image(src.icon, "[base_icon]_padding_armrest") : image(src.icon, "blank")
 				I.plane = ABOVE_HUMAN_PLANE
 				I.layer = ABOVE_HUMAN_LAYER
-				if(material_alteration & MATERIAL_ALTERATION_COLOR)
-					I.color = padding_material.icon_colour
-				stool_cache[cache_key] = I
-			overlays |= stool_cache[cache_key]
+				I.color = padding_material.icon_colour
+				icon_cache[cache_key] = I
+
+			overlays |= icon_cache[cache_key]
 
 /obj/structure/bed/chair/set_dir()
 	..()
@@ -333,14 +341,18 @@
 	..()
 
 /obj/structure/bed/chair/shuttle/on_update_icon()
-	..()
+	. = ..()
+
 	if(!buckled_mob)
-		var/image/I = image(icon, "[base_icon]_special")
-		I.plane = ABOVE_HUMAN_PLANE
-		I.layer = ABOVE_HUMAN_LAYER
-		if(material_alteration & MATERIAL_ALTERATION_COLOR)
+		var/cache_key = "[base_icon]-special-[material.name]"
+		if(!icon_cache[cache_key])
+			var/image/I = image(icon, "[base_icon]_special")
+			I.plane = ABOVE_HUMAN_PLANE
+			I.layer = ABOVE_HUMAN_LAYER
 			I.color = material.icon_colour
-		overlays |= I
+			icon_cache[cache_key] = I
+
+		overlays |= icon_cache
 
 /obj/structure/bed/chair/shuttle/blue/New(newloc, newmaterial = DEFAULT_FURNITURE_MATERIAL)
 	..(newloc,MATERIAL_STEEL,"blue")

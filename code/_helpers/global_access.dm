@@ -853,8 +853,6 @@
 			return global.station_account;
 		if("station_date")
 			return global.station_date;
-		if("stool_cache")
-			return global.stool_cache;
 		if("stored_shock_by_ref")
 			return global.stored_shock_by_ref;
 		if("string_part_flags")
@@ -1854,8 +1852,6 @@
 			global.station_account=newval;
 		if("station_date")
 			global.station_date=newval;
-		if("stool_cache")
-			global.stool_cache=newval;
 		if("stored_shock_by_ref")
 			global.stored_shock_by_ref=newval;
 		if("string_part_flags")
@@ -2428,7 +2424,6 @@
 	"sqlport",
 	"station_account",
 	"station_date",
-	"stool_cache",
 	"stored_shock_by_ref",
 	"string_part_flags",
 	"string_slot_flags",

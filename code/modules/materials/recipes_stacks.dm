@@ -12,7 +12,7 @@
 	S.add_to_stacks(user, 1)
 	return S
 
-// Tiles 
+// Tiles
 /datum/stack_recipe/tile
 	res_amount = 4
 	max_res_amount = 20

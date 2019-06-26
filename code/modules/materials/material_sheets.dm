@@ -58,7 +58,7 @@
 	if(!material)
 		return
 	recipes = material.get_recipes(reinf_material && reinf_material.name)
-	..() 
+	..()
 
 /obj/item/stack/material/get_codex_value()
 	return (material && !material.hidden_from_codex) ? "[lowertext(material.display_name)] (material)" : ..()
@@ -86,7 +86,7 @@
 
 	if(material_flags & USE_MATERIAL_PLURAL_NAME)
 		plural_name = material.sheet_plural_name
-	
+
 	if(amount>1)
 		SetName("[material.use_name] [plural_name]")
 		desc = "A stack of [material.use_name] [plural_name]."
@@ -510,6 +510,22 @@
 	amount = 50
 
 //--------------------------------
+//	Graphene
+//--------------------------------
+/obj/item/stack/material/graphene
+	name = "graphene sheet"
+	icon_state = "brick"
+	plural_icon_state = "brick-mult"
+	max_icon_state = "brick-max"
+	default_type = MATERIAL_GRAPHENE
+
+/obj/item/stack/material/graphene/ten
+	amount = 10
+
+/obj/item/stack/material/graphene/fifty
+	amount = 50
+
+//--------------------------------
 //	Diamond
 //--------------------------------
 /obj/item/stack/material/diamond
@@ -649,7 +665,7 @@
 	default_type = MATERIAL_GLASS
 
 /obj/item/stack/material/glass/on_update_icon()
-	if(reinf_material) 
+	if(reinf_material)
 		icon_state = "sheet-glass-reinf"
 		base_state = icon_state
 		plural_icon_state = "sheet-glass-reinf-mult"

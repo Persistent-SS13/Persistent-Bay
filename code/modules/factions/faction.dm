@@ -1724,7 +1724,7 @@ var/PriorityQueue/all_feeds
 		else
 			var/remainder = holder.stocks % (stock_holders.len-1)
 			var/division = (holder.stocks-remainder)/(stock_holders.len-1)
-			stock_holders -= holder
+			stock_holders -= real_name
 			for(var/datum/stockholder/secondholder in stock_holders)
 				secondholder.stocks += division
 			if(remainder)
@@ -2136,7 +2136,8 @@ var/PriorityQueue/all_feeds
 			var/datum/accesses/access = new()
 			access.name = "CEO"
 			access.pay = 45
-
+			CEO.accesses |= access
+	..()
 /datum/world_faction/proc/get_limits()
 	return limits
 

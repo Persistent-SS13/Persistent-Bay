@@ -21,7 +21,7 @@ var/PriorityQueue/all_feeds
 	var/datum/world_faction/business/connected_faction = get_faction(contract.org_uid)
 	if(connected_faction && istype(connected_faction))
 		var/datum/stockholder/holder = connected_faction.get_stockholder_datum(contract.created_by)
-		if(holder && holder.stocks < contract.ownership)
+		if(!holder || holder.stocks < contract.ownership)
 			contract.cancelled = 1
 			contract.linked = null
 			contract.update_icon()
@@ -1724,7 +1724,7 @@ var/PriorityQueue/all_feeds
 		else
 			var/remainder = holder.stocks % (stock_holders.len-1)
 			var/division = (holder.stocks-remainder)/(stock_holders.len-1)
-			stock_holders -= holder
+			stock_holders -= real_name
 			for(var/datum/stockholder/secondholder in stock_holders)
 				secondholder.stocks += division
 			if(remainder)
@@ -2126,6 +2126,8 @@ var/PriorityQueue/all_feeds
 			break
 	if(!debts)
 		debts = list()
+	if(central_account)
+		central_account.connected_business = src
 	..()
 
 /datum/world_faction/business/after_load()
@@ -2134,7 +2136,8 @@ var/PriorityQueue/all_feeds
 			var/datum/accesses/access = new()
 			access.name = "CEO"
 			access.pay = 45
-
+			CEO.accesses |= access
+	..()
 /datum/world_faction/proc/get_limits()
 	return limits
 

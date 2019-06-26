@@ -294,7 +294,7 @@
 	var/name = ""
 	var/saveslot = 0
 	var/islace = istype(occupant, /obj/item/organ/internal/stack)
-
+	occupant.should_save = 1
 	if(istype(occupant, /obj/item/organ/internal/stack))
 		var/obj/item/organ/internal/stack/S = occupant
 		if(S.lacemob.ckey)

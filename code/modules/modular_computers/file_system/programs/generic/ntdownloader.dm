@@ -177,10 +177,10 @@
 		var/list/category_list[0]
 		for(var/datum/computer_file/program/P in ntnet_global.available_software_by_category[category])
 			// Only those programs our user can run will show in the list
-			if(!P.can_run(user, 0, null, program.computer))
-				continue
-			if(!P.is_supported_by_hardware(my_computer.hardware_flag, 0, user))
-				continue
+	//		if(!P.can_run(user, 0, null, program.computer))
+	//			continue
+	//		if(!P.is_supported_by_hardware(my_computer.hardware_flag, 0, user))
+	//			continue
 			category_list.Add(list(list(
 			"filename" = P.filename,
 			"filedesc" = P.filedesc,

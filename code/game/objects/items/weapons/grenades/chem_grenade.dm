@@ -17,6 +17,15 @@
 
 	New()
 		..()
+		ADD_SAVED_VAR(stage)
+		ADD_SAVED_VAR(state)
+		ADD_SAVED_VAR(path)
+		ADD_SAVED_VAR(detonator)
+		ADD_SAVED_VAR(beakers)
+		ADD_SAVED_VAR(affected_area)
+	
+	SetupReagents()
+		. = ..()
 		create_reagents(1000)
 
 	attack_self(mob/user as mob)
@@ -200,7 +209,11 @@
 	stage = 2
 
 	New()
-		..()
+		. = ..()
+		icon_state = initial(icon_state) +"_locked"
+
+	SetupReagents()
+		. = ..()
 		var/obj/item/weapon/reagent_containers/glass/beaker/B1 = new(src)
 		var/obj/item/weapon/reagent_containers/glass/beaker/B2 = new(src)
 
@@ -212,7 +225,6 @@
 
 		beakers += B1
 		beakers += B2
-		icon_state = initial(icon_state) +"_locked"
 
 /obj/item/weapon/grenade/chem_grenade/incendiary
 	name = "incendiary grenade"
@@ -221,7 +233,11 @@
 	stage = 2
 
 	New()
-		..()
+		. = ..()
+		icon_state = initial(icon_state) +"_locked"
+
+	SetupReagents()
+		. = ..()
 		var/obj/item/weapon/reagent_containers/glass/beaker/B1 = new(src)
 		var/obj/item/weapon/reagent_containers/glass/beaker/B2 = new(src)
 
@@ -235,15 +251,15 @@
 
 		beakers += B1
 		beakers += B2
-		icon_state = initial(icon_state) +"_locked"
 
 /obj/item/weapon/grenade/chem_grenade/antiweed
 	name = "weedkiller grenade"
 	desc = "Used for purging large areas of invasive plant species. Contents under pressure. Do not directly inhale contents."
+	icon_state = "grenade"
 	path = 1
 	stage = 2
 
-	New()
+	SetupReagents()
 		..()
 		var/obj/item/weapon/reagent_containers/glass/beaker/B1 = new(src)
 		var/obj/item/weapon/reagent_containers/glass/beaker/B2 = new(src)
@@ -257,7 +273,7 @@
 
 		beakers += B1
 		beakers += B2
-		icon_state = "grenade"
+
 
 /obj/item/weapon/grenade/chem_grenade/cleaner
 	name = "cleaner grenade"
@@ -266,6 +282,10 @@
 	path = 1
 
 	New()
+		. = ..()
+		icon_state = initial(icon_state) +"_locked"
+
+	SetupReagents()
 		..()
 		var/obj/item/weapon/reagent_containers/glass/beaker/B1 = new(src)
 		var/obj/item/weapon/reagent_containers/glass/beaker/B2 = new(src)
@@ -278,7 +298,6 @@
 
 		beakers += B1
 		beakers += B2
-		icon_state = initial(icon_state) +"_locked"
 
 /obj/item/weapon/grenade/chem_grenade/teargas
 	name = "tear gas grenade"
@@ -287,6 +306,10 @@
 	path = 1
 
 	New()
+		. = ..()
+		icon_state = initial(icon_state) +"_locked"
+
+	SetupReagents()
 		..()
 		var/obj/item/weapon/reagent_containers/glass/beaker/large/B1 = new(src)
 		var/obj/item/weapon/reagent_containers/glass/beaker/large/B2 = new(src)
@@ -301,5 +324,4 @@
 
 		beakers += B1
 		beakers += B2
-		icon_state = initial(icon_state) +"_locked"
 

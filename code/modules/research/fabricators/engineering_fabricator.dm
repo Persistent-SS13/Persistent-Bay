@@ -380,6 +380,10 @@
 	name = "Airlock electronics"
 	build_path = /obj/item/weapon/airlock_electronics
 
+/datum/design/item/engifab/electronics/simple/airlockmoduleb
+	name = "business airlock electronics"
+	path = /obj/item/weapon/airlock_electronics/business
+
 /datum/design/item/engifab/electronics/simple/airalarm
 	name = "Air alarm electronics"
 	build_path = /obj/item/weapon/airalarm_electronics

@@ -1724,7 +1724,7 @@ var/PriorityQueue/all_feeds
 		else
 			var/remainder = holder.stocks % (stock_holders.len-1)
 			var/division = (holder.stocks-remainder)/(stock_holders.len-1)
-			stock_holders -= holder
+			stock_holders -= real_name
 			for(var/datum/stockholder/secondholder in stock_holders)
 				secondholder.stocks += division
 			if(remainder)

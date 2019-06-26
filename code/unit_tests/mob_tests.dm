@@ -349,22 +349,27 @@ datum/unit_test/mob_damage/skrell/pierce
 datum/unit_test/mob_damage/skrell/fire
 	name = "MOB: Skrell Fire Damage Check"
 	damagetype = DAM_BURN
+	expected_vulnerability = ARMORED
 
 datum/unit_test/mob_damage/skrell/laser
 	name = "MOB: Skrell Laser damage check"
 	damagetype = DAM_LASER
+	expected_vulnerability = ARMORED
 
 datum/unit_test/mob_damage/skrell/energy
 	name = "MOB: Skrell Energy damage check"
 	damagetype = DAM_ENERGY
+	expected_vulnerability = ARMORED
 
 datum/unit_test/mob_damage/skrell/tox
 	name = "MOB: Skrell Toxins Damage Check"
 	damagetype = DAM_BIO
+	expected_vulnerability = ARMORED
 
 datum/unit_test/mob_damage/skrell/oxy
 	name = "MOB: Skrell Oxygen Damage Check"
 	damagetype = DAM_OXY
+	expected_vulnerability = EXTRA_VULNERABLE
 
 datum/unit_test/mob_damage/skrell/clone
 	name = "MOB: Skrell Clone Damage Check"

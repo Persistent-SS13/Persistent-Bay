@@ -92,6 +92,13 @@
 	id = "operating"
 	build_path = /obj/item/weapon/circuitboard/operating
 	build_type = MEDICALFAB
+	
+/datum/design/circuit/operatingtable
+	name = "operating table"
+	id = "operating table"
+	build_path = /obj/item/weapon/circuitboard/optable
+	build_type = MEDICALFAB
+	
 /datum/design/circuit/cryo_cell
 	name = "Cryocell"
 	id = "cryocell"

@@ -69,9 +69,9 @@ var/datum/controller/employment_controller/employment_controller
 			faction.unpaid = list()
 			faction.pay_debt()
 
-	for(var/obj/item/organ/internal/stack/stack in GLOB.neural_laces)
-		var/mob/employee = stack.get_owner()
-		if(!employee || !employee.client) continue
-		if(employee.real_name in paydata)
-			to_chat(employee, "Your neural lace buzzes letting you know you've been paid [paydata[employee.real_name]]$$ for work done in the last half hour.")
+		for(var/obj/item/organ/internal/stack/stack in GLOB.neural_laces)
+			var/mob/employee = stack.get_owner()
+			if(!employee || !employee.client) continue
+			if(employee.real_name in paydata)
+				to_chat(employee, "Your neural lace buzzes letting you know you've been paid [paydata[employee.real_name]]$$ for work done in the last half hour.")
 

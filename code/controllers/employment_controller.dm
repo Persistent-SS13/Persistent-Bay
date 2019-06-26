@@ -25,16 +25,16 @@ var/datum/controller/employment_controller/employment_controller
 		if(!istype(employee) || !employee.client) continue
 		var/datum/world_faction/employer = get_faction(stack.connected_faction)
 		if(employer)
-			if(employee.client.inactivity <= 15 MINUTES && stack.duty_status)
+			if(employee.client.inactivity <= 15 MINUTES)
 				if(!employer:unpaid["[employee.real_name]"])
 					employer:unpaid["[employee.real_name]"] = 1
 				else
 					employer:unpaid["[employee.real_name]"]++
-
+	var/list/paydata = list()
 	if(payday)
 		timerbuffer = round_duration_in_ticks + 30 MINUTES
 
-		var/list/paydata = list()
+
 		for(var/datum/world_faction/faction in GLOB.all_world_factions)
 			for(var/employee in faction.unpaid)
 				var/amount = faction.unpaid[employee]

@@ -32,7 +32,7 @@
 		if(connected_faction.employment_log.len)
 			for(var/i=0; i<10; i++)
 				var/minus = i+(10*(curr_page-1))
-				if(minus >= connected_faction.employment_log.len) break
+				if(minus >= connected_faction.employment_log.len || minus > 50) break
 				var/entry = connected_faction.employment_log[connected_faction.employment_log.len-minus]
 				formatted_log[++formatted_log.len] = list("entry" = entry)
 		data["entries"] = formatted_log

@@ -412,7 +412,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 				rank = record.rank
 			else
 				title = assignment.get_title(1)
-			return "Working as [title] for [faction.name].<br>Making [assignment.get_pay(record.rank)]$$ for every thirty minutes clocked in."
+			return "Working as [title] for [faction.name].<br>Making [assignment.get_pay(rank)]$$ for every thirty minutes clocked in."
 		else
 			return "No paying assignment."
 	else

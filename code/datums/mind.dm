@@ -92,7 +92,8 @@ GLOBAL_LIST_EMPTY(minds)
 		SSnano.user_transferred(current, new_character) // transfer active NanoUI instances to new user
 	if(new_character.mind)		//remove any mind currently in our new body's mind variable
 		new_character.mind.current = null
-
+	else
+		new_character.mind = new()
 	new_character.skillset.obtain_from_mob(current)	//handles moving skills over.
 
 	current = new_character		//link ourself to our new body

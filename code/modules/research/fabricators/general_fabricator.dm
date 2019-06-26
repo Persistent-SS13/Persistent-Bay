@@ -614,16 +614,74 @@
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
 	build_path = /obj/item/weapon/computer_hardware/battery_module/micro
 
+/**
 /datum/design/item/genfab/computer/adv/logistic_processor
 	name = "Advanced Logistic Processor"
 	req_tech = list(TECH_DATA = 5, TECH_ENGINEERING = 4)
 	materials = list(MATERIAL_STEEL = 5000, MATERIAL_GLASS = 1000, MATERIAL_PHORON = 3000, MATERIAL_DIAMOND = 3000, MATERIAL_URANIUM = 3000)
 	build_path = /obj/item/weapon/computer_hardware/logistic_processor
 
-// /datum/design/item/genfab/computer/adv/dna_scanner // tier 0
-// 	name = "DNA scanner port"
-// 	materials = list(MATERIAL_STEEL = 01 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
-// 	build_path = /obj/item/weapon/computer_hardware/dna_scanner
+
+/datum/design/item/genfab/computer/adv/dna_scanner // tier 0
+ 	name = "DNA scanner port"
+ 	materials = list(MATERIAL_STEEL = 01 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
+ 	build_path = /obj/item/weapon/computer_hardware/dna_scanner
+**/
+
+
+
+// Processor unit
+/datum/design/item/genfab/computer/cpu/
+	name = "computer processor unit"
+	id = "cpu_normal"
+	req_tech = list(TECH_DATA = 3, TECH_ENGINEERING = 2)
+	materials = list(MATERIAL_STEEL = 1600)
+	build_path = /obj/item/weapon/computer_hardware/processor_unit
+
+/datum/design/item/genfab/computer/cpu/small
+	name = "computer microprocessor unit"
+	id = "cpu_small"
+	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_COPPER = 5 SHEETS)
+	build_path = /obj/item/weapon/computer_hardware/processor_unit/small
+
+/datum/design/item/genfab/computer/adv/cpu/photonic
+	name = "computer photonic processor unit"
+	id = "pcpu_normal"
+	req_tech = list(TECH_DATA = 5, TECH_ENGINEERING = 4)
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_COPPER = 5 SHEETS, MATERIAL_PHORON = 1 SHEET)
+	build_path = /obj/item/weapon/computer_hardware/processor_unit/photonic
+
+/datum/design/item/genfab/computer/adv/cpu/photonic/small
+	name = "computer photonic microprocessor unit"
+	id = "pcpu_small"
+	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 3)
+	materials = list(MATERIAL_STEEL = 2, MATERIAL_COPPER = 2 SHEETS)
+	build_path = /obj/item/weapon/computer_hardware/processor_unit/photonic/small
+
+/datum/design/item/genfab/computer/netcard/basic
+	name = "basic network card"
+	id = "netcard_basic"
+	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 1)
+	build_type = CIRCUITFAB
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 1 SHEET)
+	build_path = /obj/item/weapon/computer_hardware/network_card
+
+/datum/design/item/genfab/computer/adv/netcard/advanced
+	name = "advanced network card"
+	id = "netcard_advanced"
+	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 2)
+	build_type = CIRCUITFAB
+	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_COPPER = 2 SHEETS)
+	build_path = /obj/item/weapon/computer_hardware/network_card/advanced
+
+/datum/design/item/genfab/computer/adv/netcard/wired
+	name = "wired network card"
+	id = "netcard_wired"
+	req_tech = list(TECH_DATA = 5, TECH_ENGINEERING = 3)
+	build_type = CIRCUITFAB
+	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_COPPER = 5 SHEETS)
+	build_path = /obj/item/weapon/computer_hardware/network_card
 
 // /datum/design/item/genfab/computer/adv/pda
 // 	name = "PDA design"

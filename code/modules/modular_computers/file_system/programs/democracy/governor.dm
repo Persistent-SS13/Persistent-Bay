@@ -62,7 +62,7 @@
 							billtype = "(Criminal Law) "
 						else if(vote.bill_type == 3)
 							billtype = "(Tax Policy) "
-						else if(selected_vote.bill_type == 4)
+						else if(vote.bill_type == 4)
 							billtype = "(Judge Removal) "
 
 						formatted_votes[++formatted_votes.len] = list("name" = "[billtype][vote.name] ([vote.yes_votes.len] Yea / [vote.no_votes.len] Nay)", "ref" = "\ref[vote]")
@@ -124,7 +124,7 @@
 			selected_vote = locate(href_list["ref"])
 
 		if("change_title")
-			var/attempt = sanitizeName(input(usr, "Enter new Policy Title", "Policy Title", bill_title), 30, 1, 0)
+			var/attempt = sanitize(input(usr, "Enter new Policy Title", "Policy Title", bill_title), 40)
 			if(attempt)
 				bill_title = attempt
 

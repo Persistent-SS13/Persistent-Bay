@@ -28,7 +28,7 @@
 			contain(A)
 
 /obj/structure/anomaly_container/attackby(obj/item/O, mob/user)
-	if(default_deconstruction_wrench(W, user, 10 SECONDS))
+	if(default_deconstruction_wrench(O, user, 10 SECONDS))
 		dismantle()
 		return 1
 	else

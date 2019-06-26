@@ -3,6 +3,7 @@
 /datum/chemical_reaction/ethanol
 	name = "pure ethanol"
 	result = /datum/reagent/ethanol
+	result_amount = 1
 	required_reagents = list(/datum/reagent/carbon = 2, /datum/reagent/hydrogen = 6, /datum/reagent/oxygen = 1)
 	minimum_temperature = T0C + 100 //Normally you'd wanna distill. But this will do
 	maximum_temperature = T0C + 150
@@ -11,6 +12,7 @@
 /datum/chemical_reaction/ethanol2
 	name = "pure ethanol"
 	result = /datum/reagent/ethanol
+	result_amount = 6
 	required_reagents = list(/datum/reagent/sugar = 4, /datum/reagent/water = 4, /datum/reagent/enzyme = 2)
 	minimum_temperature = T0C + 100 //Normally you'd wanna distill. But this will do
 	maximum_temperature = T0C + 150
@@ -37,6 +39,7 @@
 /datum/chemical_reaction/ice
 	name = "water ice"
 	result = /datum/reagent/drink/ice
+	result_amount = 1
 	required_reagents = list(/datum/reagent/water = 1)
 	minimum_temperature = T0C
 	maximum_temperature = T0C - 150

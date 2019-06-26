@@ -5,6 +5,7 @@
 	name = "Universal enzyme"
 	result = /datum/reagent/enzyme
 	required_reagents = list(/datum/reagent/water = 2, /datum/reagent/nutriment = 2, /datum/reagent/nutriment/flour = 2)
+	result_amount = 1
 	minimum_temperature = T0C + 20
 	maximum_temperature = T0C + 60
 	mix_message = "The mix oozes together and starts bubbling. It smells like yeast.."

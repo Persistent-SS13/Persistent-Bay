@@ -56,8 +56,6 @@
 
 	return //TODO: DEFERRED
 
-/mob/living/carbon/lace/	
-	
 /mob/living/carbon/lace/proc/handle_temperature_damage(body_part, exposed_temperature, exposed_intensity)
 	if(status_flags & GODMODE) return
 	return

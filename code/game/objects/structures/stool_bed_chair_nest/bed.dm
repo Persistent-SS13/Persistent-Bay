@@ -8,6 +8,7 @@
 /*
  * Beds
  */
+
 /obj/structure/bed
 	name = "bed"
 	desc = "This is used to lie in, sleep in or strap on."
@@ -22,13 +23,14 @@
 	damthreshold_brute 	= 5
 	var/material/padding_material
 	var/base_icon = "bed"
-	var/material_alteration = MATERIAL_ALTERATION_ALL
 	var/buckling_sound = 'sound/effects/buckle.ogg'
+
+	// It's fine if statics are inited right away
+	var/static/list/icon_cache = list()
 
 /obj/structure/bed/New(newloc, new_material = DEFAULT_FURNITURE_MATERIAL, new_padding_material)
 	..()
 	ADD_SAVED_VAR(padding_material)
-	ADD_SKIP_EMPTY(padding_material)
 
 /obj/structure/bed/Initialize(mapload, new_material = DEFAULT_FURNITURE_MATERIAL, new_padding_material)
 	. = ..()
@@ -48,34 +50,35 @@
 
 // Reuse the cache/code from stools, todo maybe unify.
 /obj/structure/bed/on_update_icon()
-	// Prep icon.
+	// Clear prior icon
 	icon_state = "blank"
 	overlays.Cut()
-	// Base icon.
-	var/cache_key = "[base_icon]-[material.name]"
-	if(isnull(stool_cache[cache_key]))
-		var/image/I = image(src.icon, base_icon)
-		if(material_alteration & MATERIAL_ALTERATION_COLOR)
-			I.color = material.icon_colour
-		stool_cache[cache_key] = I
-	overlays |= stool_cache[cache_key]
-	// Padding overlay.
+
+	var/cache_key
+
+	// Base Icon
+	cache_key = "[base_icon]-[material.name]"
+	if(!icon_cache[cache_key])
+		var/image/I = image(src.icon, "[base_icon]")
+		I.color = material.icon_colour
+		icon_cache[cache_key] = I
+	
+	overlays |= icon_cache[cache_key]
+
+	// Padding Icon
 	if(padding_material)
-		var/padding_cache_key = "[base_icon]-padding-[padding_material.name]"
-		if(isnull(stool_cache[padding_cache_key]))
-			var/image/I =  image(icon, "[base_icon]_padding")
-			if(material_alteration & MATERIAL_ALTERATION_COLOR)
-				I.color = padding_material.icon_colour
-			stool_cache[padding_cache_key] = I
-		overlays |= stool_cache[padding_cache_key]
+		cache_key = "[base_icon]-padding-[padding_material.name]"
+		if(!icon_cache[cache_key])
+			var/image/I = image(src.icon, "[base_icon]_padding")
+			I.color = padding_material.icon_colour
+			icon_cache[cache_key] = I
 
-	// Strings.
-	if(material_alteration & MATERIAL_ALTERATION_NAME)
-		SetName(padding_material ? "[padding_material.adjective_name] [initial(name)]" : "[material.adjective_name] [initial(name)]") //this is not perfect but it will do for now.
+		overlays |= icon_cache[cache_key]
 
-	if(material_alteration & MATERIAL_ALTERATION_DESC)
-		desc = initial(desc)
-		desc += padding_material ? " It's made of [material.use_name] and covered with [padding_material.use_name]." : " It's made of [material.use_name]."
+	// Fluff
+	// This is not perfect but it will do for now.
+	SetName(padding_material ? "[padding_material.adjective_name] [initial(name)]" : "[material.adjective_name] [initial(name)]") 
+	desc = padding_material ? "[initial(desc)] It's made of [material.use_name] and covered with [padding_material.use_name]." : "[initial(desc)] It's made of [material.use_name]."
 
 /obj/structure/bed/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
 	if(istype(mover) && mover.checkpass(PASS_FLAG_TABLE))

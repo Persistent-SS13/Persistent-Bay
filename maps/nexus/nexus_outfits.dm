@@ -23,8 +23,7 @@
 	pda_type = null
 	backpack_contents = list()
 
-/decl/hierarchy/outfit/phorosian/nexus
-	name = "Phorosian Gear"
+/decl/hierarchy/outfit/phorosian
 	l_ear = /obj/item/device/radio/headset/nexus/citizen
 	id_slot = slot_wear_id
 	id_type = /obj/item/weapon/card/id/civilian/citizens

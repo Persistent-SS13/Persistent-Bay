@@ -681,7 +681,7 @@
 	req_tech = list(TECH_DATA = 5, TECH_ENGINEERING = 3)
 	build_type = CIRCUITFAB
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_COPPER = 5 SHEETS)
-	build_path = /obj/item/weapon/computer_hardware/network_card
+	build_path = /obj/item/weapon/computer_hardware/network_card/wired
 
 // /datum/design/item/genfab/computer/adv/pda
 // 	name = "PDA design"

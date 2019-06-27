@@ -12,7 +12,6 @@
 /obj/item/girderpart/New(var/newloc, var/mat)
 	..()
 	material = mat
-	name = "[material.display_name] " + initial(name)
 	color = material.icon_colour
 	ADD_SAVED_VAR(saved_material)
 

@@ -149,17 +149,81 @@
 
 	var/alarm_threat_globalbuffer
 	var/alarm_threat_globaltimeout = 30 MINUTES
+	var/datum/sound_token/snd_alarm = null
+	var/alarm_sndid = null
+
 /obj/machinery/power/apc/New()
 	..()
-	ADD_SAVED_VAR(connected_faction)
+	alarm_sndid = "[type]_[sequential_id(type)]" //Setup sound id on new
 	ADD_SAVED_VAR(locked)
 	ADD_SAVED_VAR(coverlocked)
 	ADD_SAVED_VAR(cell)
 	ADD_SAVED_VAR(has_electronics)
 	ADD_SAVED_VAR(autoflag)
-
-	ADD_SKIP_EMPTY(connected_faction)
+	//Don'st save the connected faction!! Otherwise it'll create duplicate factions on load
 	ADD_SKIP_EMPTY(cell)
+
+/obj/machinery/power/apc/Initialize(mapload, var/ndir, var/building=0)
+	wires = new(src)
+	// offset 22 pixels in direction of dir
+	// this allows the APC to be embedded in a wall, yet still inside an area
+	if (building)
+		set_dir(ndir)
+	pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? 22 : -22)
+	pixel_y = (src.dir & 3)? (src.dir ==1 ? 22 : -22) : 0
+
+	if (building==0)
+		init_round_start()
+	else
+		area = get_area(src)
+		area.apc = src
+		opened = 1
+		operating = 0
+		SetName("\improper [area.name] APC")
+		stat |= MAINT
+		src.update_icon()
+
+	. = ..(mapload)
+	if(. == INITIALIZE_HINT_QDEL)
+		return .
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/power/apc/LateInitialize()
+	. = ..()
+	if(req_access_faction)
+		var/datum/world_faction/F = get_faction(req_access_faction)
+		if(can_connect(F, force = TRUE))
+			connect_to_network()
+	if(operating)
+		src.update()
+
+/obj/machinery/power/apc/Destroy()
+	src.update()
+	if(area)
+		area.apc = null
+		area.power_light = 0
+		area.power_equip = 0
+		area.power_environ = 0
+		area.power_change()
+	qdel(wires)
+	wires = null
+	qdel(terminal)
+	terminal = null
+	if(cell)
+		cell.forceMove(loc)
+		cell = null
+
+	// Malf AI, removes the APC from AI's hacked APCs list.
+	if((hacker) && (hacker.hacked_apcs) && (src in hacker.hacked_apcs))
+		hacker.hacked_apcs -= src
+
+	//Clear the apc if its still part of a faction
+	if(connected_faction)
+		can_disconnect(connected_faction)
+	connected_faction = null
+
+	QDEL_NULL(snd_alarm)
+	return ..()
 
 /obj/machinery/power/apc/get_cell()
 	return cell
@@ -169,9 +233,18 @@
 		return
 	..()
 
-/obj/machinery/power/apc/can_connect(var/datum/world_faction/trying, var/mob/M)
-	if(!area)
-		return 0
+/obj/machinery/power/apc/can_connect(var/datum/world_faction/trying, var/mob/M, var/force = FALSE)
+	if(!area || (area && !is_not_space_area(area)) )
+		return FALSE
+
+	if(!trying)
+		log_error("[src]\ref[src] tried to connect to faction \"[trying? trying : "null" ]\"! req_access_faction is \"[req_access_faction? req_access_faction : "null"]\"")
+		return FALSE
+
+	//Bypass for map faction!!!!
+	if(trying.uid == GLOB.using_map.default_faction_uid)
+		connected_faction = trying
+		return TRUE
 
 	var/list/turfs = get_area_turfs(area)
 	var/datum/machine_limits/limits = trying.get_limits()
@@ -180,7 +253,7 @@
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
 
-	if((area && !area.shuttle) && (limits.limit_area <= turfs.len + trying.get_claimed_area()))
+	if((area && !area.shuttle) && (!force || (limits.limit_area <= (turfs.len + trying.get_claimed_area()) ) ) )
 		if(M)
 			to_chat(M, "[trying.name] cannot connect this APC as it will exceed its area limit.")
 		return 0
@@ -188,9 +261,14 @@
 	req_access_faction = trying.uid
 	connected_faction = trying
 	trying.calculate_claimed_area()
-	to_chat(M, "You successfuly connect this APC to [trying.name].")
+	if(M)
+		to_chat(M, "You successfuly connect this APC to [trying.name].")
+	return TRUE
 
 /obj/machinery/power/apc/can_disconnect(var/datum/world_faction/trying, var/mob/M)
+	if(!trying) 
+		log_error("[src]\ref[src] tried to disconnect from faction \"[trying? trying : "null" ]\"! connected_faction is \"[connected_faction? connected_faction : "null"]\"")
+		return FALSE
 	var/datum/machine_limits/limits = trying.get_limits()
 	limits.apcs -= src
 	req_access_faction = ""
@@ -198,7 +276,7 @@
 	locked = 1
 	trying.calculate_claimed_area()
 	if(M) to_chat(M, "You successfuly disconnect this APC from [trying.name].")
-
+	return TRUE
 
 /obj/machinery/power/apc/connect_to_network()
 	//Override because the APC does not directly connect to the network; it goes through a terminal.
@@ -231,67 +309,12 @@
 
 	return drained_energy
 
-/obj/machinery/power/apc/Initialize(mapload, var/ndir, var/building=0)
-
-	wires = new(src)
-
-	// offset 22 pixels in direction of dir
-	// this allows the APC to be embedded in a wall, yet still inside an area
-	if (building)
-		set_dir(ndir)
-
-	pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? 22 : -22)
-	pixel_y = (src.dir & 3)? (src.dir ==1 ? 22 : -22) : 0
-
-	if (building==0)
-		init_round_start()
-	else
-		area = get_area(src)
-		area.apc = src
-		opened = 1
-		operating = 0
-		SetName("\improper [area.name] APC")
-		stat |= MAINT
-		src.update_icon()
-
-	. = ..(mapload)
-
-	if(operating)
-		src.update()
-
-/obj/machinery/power/apc/Destroy()
-	src.update()
-	if(area)
-		area.apc = null
-		area.power_light = 0
-		area.power_equip = 0
-		area.power_environ = 0
-		area.power_change()
-	qdel(wires)
-	wires = null
-	qdel(terminal)
-	terminal = null
-	if(cell)
-		cell.forceMove(loc)
-		cell = null
-
-	// Malf AI, removes the APC from AI's hacked APCs list.
-	if((hacker) && (hacker.hacked_apcs) && (src in hacker.hacked_apcs))
-		hacker.hacked_apcs -= src
-
-	return ..()
-
 /obj/machinery/power/apc/proc/energy_fail(var/duration)
 	if(emp_hardened)
 		return
 	failure_timer = max(failure_timer, round(duration))
 	playsound(src, 'sound/machines/apc_nopower.ogg', 75, 0)
 
-/obj/machinery/power/apc/after_load()
-	. = ..()
-	connect_to_network()
-	can_connect(req_access_faction)
-	update()
 /obj/machinery/power/apc/proc/make_terminal()
 	// create a terminal object at the same position as original turf loc
 	// wires will attach to this
@@ -1490,21 +1513,27 @@ obj/machinery/power/apc/proc/autoset(var/cur_state, var/on)
 			alarm_threat_warning = FALSE
 			alarm_threat_warning_timebuffer = null
 			alarm_alert = TRUE
+			update_sound(1)
 		if (ALARM_OFF)
 			alarm_threat_warning = FALSE
 			alarm_threat_warning_timebuffer = null
 			alarm_alert = FALSE
+			update_sound(0)
 
 /obj/machinery/power/apc/proc/AlarmUpdate()
 	if (!operating || !alarm_status)
 		AlarmSet(ALARM_OFF)
 		return
-	if (alarm_threat_warning)
-		if (world.time >= alarm_threat_warning_timebuffer + alarm_threat_warning_timeout)
-			AlarmCheckForThreats()
+	if (alarm_threat_warning && world.time >= alarm_threat_warning_timebuffer + alarm_threat_warning_timeout)
+		AlarmCheckForThreats()
 	if (alarm_alert)
-		visible_message("** BEEP ** BEEP **** BEEP ** BEEP **")
-		playsound(src, 'sound/machines/airalarm.ogg', 80, 1)
+		audible_message("** BEEP ** BEEP **** BEEP ** BEEP **", "..b...e..", 4)
+
+/obj/machinery/power/apc/proc/update_sound(var/playing)
+	if(playing && !snd_alarm)
+		snd_alarm = GLOB.sound_player.PlayLoopingSound(src, alarm_sndid, "sound/machines/apc_alarm.ogg", volume = 80, range = 15, falloff = 10)
+	else if(!playing && snd_alarm)
+		QDEL_NULL(snd_alarm)
 
 #undef APC_UPDATE_ICON_COOLDOWN
 

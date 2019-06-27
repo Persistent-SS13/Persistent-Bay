@@ -16,6 +16,26 @@
 
 	var/move_trail = /obj/effect/decal/cleanable/blood/tracks/footprints // if this item covers the feet, the footprints it should leave
 
+
+/obj/item/clothing/New()
+	. = ..()
+	ADD_SAVED_VAR(accessories)
+	ADD_SAVED_VAR(visible_name)
+	ADD_SAVED_VAR(ironed_state)
+	ADD_SAVED_VAR(smell_state)
+
+/obj/item/clothing/Initialize()
+	. = ..()
+	if(!map_storage_loaded && starting_accessories)
+		for(var/T in starting_accessories)
+			var/obj/item/clothing/accessory/tie = new T(src)
+			src.attach_accessory(null, tie)
+
+/obj/item/clothing/after_load()
+	. = ..()
+	for(var/obj/item/clothing/accessory/A in accessories)
+		src.attach_accessory(null, A)
+
 // Updates the icons of the mob wearing the clothing item, if any.
 /obj/item/clothing/proc/update_clothing_icon()
 	return
@@ -64,13 +84,6 @@
 	add_fingerprint(source)
 	if(prob(10))
 		ironed_state = WRINKLES_WRINKLY
-
-/obj/item/clothing/New()
-	..()
-	if(starting_accessories)
-		for(var/T in starting_accessories)
-			var/obj/item/clothing/accessory/tie = new T(src)
-			src.attach_accessory(null, tie)
 
 //BS12: Species-restricted clothing check.
 /obj/item/clothing/mob_can_equip(M as mob, slot, disable_warning = 0)
@@ -276,10 +289,24 @@ BLIND     // can't see anything
 		)
 	blood_overlay_type = "bloodyhands"
 
+/obj/item/clothing/gloves/New()
+	. = ..()
+	ADD_SAVED_VAR(wired)
+	ADD_SAVED_VAR(cell)
+	ADD_SAVED_VAR(clipped)
+	ADD_SAVED_VAR(ring)
+	ADD_SAVED_VAR(wearer)
+
 /obj/item/clothing/gloves/Initialize()
 	if(item_flags & ITEM_FLAG_PREMODIFIED)
 		cut_fingertops()
 
+	. = ..()
+
+/obj/item/clothing/gloves/Destroy()
+	QDEL_NULL(cell)
+	ring = null
+	wearer = null
 	. = ..()
 
 /obj/item/clothing/gloves/update_clothing_icon()
@@ -385,6 +412,16 @@ BLIND     // can't see anything
 		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_head_unathi.dmi',
 		)
 	blood_overlay_type = "helmetblood"
+
+/obj/item/clothing/head/New()
+	. = ..()
+	ADD_SAVED_VAR(brightness_on)
+	ADD_SAVED_VAR(on)
+
+/obj/item/clothing/head/after_load()
+	. = ..()
+	if(on)
+		update_flashlight(loc)
 
 /obj/item/clothing/head/equipped(var/mob/user, var/slot)
 	light_overlay_image = null
@@ -517,6 +554,12 @@ BLIND     // can't see anything
 		action_button_name = "Adjust Mask"
 		verbs += /obj/item/clothing/mask/proc/adjust_mask
 	..()
+	ADD_SAVED_VAR(voicechange)
+	ADD_SAVED_VAR(hanging)
+
+/obj/item/clothing/mask/Initialize()
+	. = ..()
+	queue_icon_update()
 
 /obj/item/clothing/mask/update_clothing_icon()
 	if (ismob(src.loc))
@@ -556,6 +599,28 @@ BLIND     // can't see anything
 			update_clothing_icon()
 			user.update_action_buttons()
 
+/obj/item/clothing/mask/on_update_icon()
+	. = ..()
+	if (src.hanging)
+		gas_transfer_coefficient = down_gas_transfer_coefficient
+		body_parts_covered = down_body_parts_covered
+		icon_state = down_icon_state
+		item_state = down_icon_state
+		item_flags = down_item_flags
+		flags_inv = down_flags_inv
+	else
+		gas_transfer_coefficient = initial(gas_transfer_coefficient)
+		body_parts_covered = initial(body_parts_covered)
+		icon_state = initial(icon_state)
+		item_state = initial(icon_state)
+		item_flags = initial(item_flags)
+		flags_inv = initial(flags_inv)
+	update_clothing_icon()
+
+	if(ismob(loc))
+		var/mob/M = loc
+		M.update_action_buttons()
+
 /obj/item/clothing/mask/attack_self(mob/user)
 	if(pull_mask)
 		adjust_mask(user)
@@ -585,6 +650,14 @@ BLIND     // can't see anything
 		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_feet_unathi.dmi',
 		)
 	blood_overlay_type = "shoeblood"
+
+/obj/item/clothing/shoes/New()
+	. = ..()
+	ADD_SAVED_VAR(holding)
+
+/obj/item/clothing/shoes/Initialize()
+	. = ..()
+	queue_icon_update()
 
 /obj/item/clothing/shoes/proc/draw_knife()
 	set name = "Draw Boot Knife"
@@ -774,6 +847,10 @@ BLIND     // can't see anything
 		verbs -= /obj/item/clothing/under/verb/rollsuit
 	if(rolled_sleeves == -1)
 		verbs -= /obj/item/clothing/under/verb/rollsleeves
+	
+	ADD_SAVED_VAR(sensor_mode)
+	ADD_SAVED_VAR(rolled_down)
+	ADD_SAVED_VAR(rolled_sleeves)
 
 /obj/item/clothing/under/get_icon_state(mob/user_mob, slot)
 	var/ret

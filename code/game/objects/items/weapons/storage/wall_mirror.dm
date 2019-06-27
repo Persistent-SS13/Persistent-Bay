@@ -12,15 +12,6 @@
 	var/shattered = 0
 	var/list/ui_users
 
-	startswith = list(
-		/obj/item/weapon/haircomb/random,
-		/obj/item/weapon/haircomb/brush,
-		/obj/random/medical/lite,
-		/obj/item/weapon/lipstick/random,
-		/obj/random/soap,
-		/obj/item/weapon/reagent_containers/spray/cleaner/deodorant,
-		/obj/item/weapon/towel/random)
-
 /obj/item/weapon/storage/mirror/MouseDrop(obj/over_object as obj)
 	if(!(. = ..()))
 		return
@@ -33,7 +24,7 @@
 	if(shattered)
 		to_chat(user, "<spawn class='notice'>You enter the key combination for the style you want on the panel, but the nanomachines inside \the [src] refuse to come out.")
 		return
-	open_mirror_ui(user, ui_users, "SalonPro Nano-Mirror&trade;")
+	open_mirror_ui(user, ui_users, "SalonPro Nano-Mirror&trade;", mirror = src)
 
 /obj/item/weapon/storage/mirror/proc/shatter()
 	if(shattered)	return
@@ -112,20 +103,20 @@
 	var/list/ui_users
 
 /obj/item/weapon/mirror/attack_self(mob/user as mob)
-	open_mirror_ui(user, ui_users, "SalonPro Nano-Mirror&trade;", APPEARANCE_HAIR)
+	open_mirror_ui(user, ui_users, "SalonPro Nano-Mirror&trade;", APPEARANCE_HAIR, src)
 
 /obj/item/weapon/mirror/Destroy()
 	clear_ui_users(ui_users)
 	. = ..()
 
-/proc/open_mirror_ui(var/mob/user, var/ui_users, var/title, var/flags)
+/proc/open_mirror_ui(var/mob/user, var/ui_users, var/title, var/flags, var/obj/item/mirror)
 	if(!ishuman(user))
 		return
 
 	var/W = weakref(user)
 	var/datum/nano_module/appearance_changer/AC = LAZYACCESS(ui_users, W)
 	if(!AC)
-		AC = new(src, user)
+		AC = new(mirror, user)
 		AC.name = title
 		if(flags)
 			AC.flags = flags

@@ -8,7 +8,7 @@
 	anchored = 0
 	interact_offline = 0
 	volume = 500
-	circuit_type = /obj/item/weapon/circuitboard/gasgeneratorcircuit
+	circuit_type = /obj/item/weapon/circuitboard/gasgenerator
 	var/valve_open = 0
 	var/release_pressure = ONE_ATMOSPHERE
 	var/release_flow_rate = ATMOS_DEFAULT_VOLUME_PUMP

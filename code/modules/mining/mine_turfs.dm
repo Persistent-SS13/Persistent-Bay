@@ -204,7 +204,7 @@ var/list/mining_floors = list()
 
 		playsound(user, P.drill_sound, 20, 1)
 
-		
+
 		var/newDepth = excavation_level + P.excavation_amount // Used commonly below
 		//handle any archaeological finds we might uncover
 		var/fail_message = ""
@@ -295,7 +295,7 @@ var/list/mining_floors = list()
 				var/obj/item/stack/ore/O = new(src)
 				geologic_data.UpdateNearbyArtifactInfo(src)
 				O.geologic_data = geologic_data
-			
+
 	else
 		return ..()
 
@@ -350,7 +350,7 @@ var/list/mining_floors = list()
 		N.updateMineralOverlays(1)
 
 /turf/simulated/mineral/proc/excavate_find(var/prob_clean = 0, var/datum/find/F)
-
+	/**
 	//many finds are ancient and thus very delicate - luckily there is a specialised energy suspension field which protects them when they're being extracted
 	if(prob(F.prob_delicate))
 		var/obj/effect/suspension_field/S = locate() in src
@@ -370,7 +370,7 @@ var/list/mining_floors = list()
 		rock.geologic_data = geologic_data
 
 	finds.Remove(F)
-
+	**/
 
 /turf/simulated/mineral/proc/artifact_debris(var/severity = 0)
 	//cael's patented random limited drop componentized loot system!
@@ -519,9 +519,8 @@ var/list/mining_floors = list()
 			return
 		else
 			to_chat(user, "<span class='warning'>The plating is going to need some support.</span>")
-			
+
 	var/list/usable_tools = list(
-		/obj/item/weapon/shovel,
 		/obj/item/weapon/pickaxe/diamonddrill,
 		/obj/item/weapon/pickaxe/drill,
 		/obj/item/weapon/pickaxe/borgdrill

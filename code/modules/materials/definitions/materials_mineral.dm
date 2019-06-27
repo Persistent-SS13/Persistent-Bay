@@ -43,6 +43,20 @@
 	ore_matter = list(MATERIAL_GRAPHITE = 2000)
 	energy_combustion = 32.7
 
+/material/graphene
+	name = MATERIAL_GRAPHENE //Aka carbon
+	ignition_point= T0C + 700
+	melting_point = T0C + 3500
+	stack_type = /obj/item/stack/material/carbon
+	icon_colour = "#141414"
+	chem_products = list(
+		/datum/reagent/carbon = 10,
+		/datum/reagent/acetone = 10
+		)
+	sale_price = 1
+	ore_matter = list(MATERIAL_GRAPHITE = 2000)
+	energy_combustion = 32.7
+
 /material/quartz
 	name = MATERIAL_QUARTZ
 	ore_compresses_to = MATERIAL_QUARTZ
@@ -131,7 +145,7 @@
 	icon_base = "stone"
 	table_icon_base = "stone"
 	icon_reinf = "reinf_stone"
-	ore_matter = list(MATERIAL_SPODUMENE = 2000, MATERIAL_ALUMINUM = 500)
+	ore_matter = list(MATERIAL_SPODUMENE = 2000, MATERIAL_ALUMINIUM = 500)
 	energy_combustion = 43.1
 	sale_price = 2
 

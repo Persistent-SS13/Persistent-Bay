@@ -24,7 +24,7 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 	clicksound = 'sound/machines/buttonbeep.ogg'
 	var/selected_genre = "ALL"
 	var/playing = 0
-	var/volume = 10
+	var/volume = 60
 
 	var/sound_id
 	var/datum/sound_token/sound_token

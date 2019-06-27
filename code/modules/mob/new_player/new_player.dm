@@ -27,7 +27,7 @@
 	..()
 	//verbs += /mob/proc/toggle_antag_pool //no antags
 
-/mob/new_player/proc/new_player_panel(force = FALSE)
+/mob/new_player/proc/new_player_panel(force = TRUE)
 	if(!SScharacter_setup.initialized && !force)
 		return // Not ready yet.
 
@@ -473,6 +473,12 @@
 		return
 
 	var/mob/character = SScharacter_setup.load_character(chosen_slot, ckey)
+	if(!character)
+		sleep(100)
+	if(!character)
+		message_admins("[ckey] load character failed during join.")
+		to_chat(src, "Your character is not loading correctly. Contact Brawler.")
+		return
 	Retrieve_Record(character.real_name)
 	var/turf/spawnTurf = locate(0,0,0) //Instead of null start with 0,0,0 because the unsafe spawn check will kick in and warn the user if there's something wrong
 
@@ -557,7 +563,7 @@
 	character.after_spawn()
 
 	if(!character.mind)
-		mind.active = 0
+		mind.active = 1
 		mind.original = character
 		mind.transfer_to(character)	//won't transfer key since the mind is not active
 

@@ -22,21 +22,19 @@ var/datum/controller/employment_controller/employment_controller
 
 	for(var/obj/item/organ/internal/stack/stack in GLOB.neural_laces)
 		var/mob/employee = stack.get_owner()
-		if(!employee || !employee.client) continue
-		var/datum/employer = get_faction(stack.connected_faction)
-		if(stack.business_mode && stack.connected_business && stack.connected_business != "")
-			employer = get_business(stack.connected_business)
+		if(!istype(employee) || !employee.client) continue
+		var/datum/world_faction/employer = get_faction(stack.connected_faction)
 		if(employer)
-			if(employee.client.inactivity <= 15 MINUTES && stack.duty_status)
+			if(employee.client.inactivity <= 15 MINUTES)
 				if(!employer:unpaid["[employee.real_name]"])
 					employer:unpaid["[employee.real_name]"] = 1
 				else
 					employer:unpaid["[employee.real_name]"]++
-
+	var/list/paydata = list()
 	if(payday)
 		timerbuffer = round_duration_in_ticks + 30 MINUTES
 
-		var/list/paydata = list()
+
 		for(var/datum/world_faction/faction in GLOB.all_world_factions)
 			for(var/employee in faction.unpaid)
 				var/amount = faction.unpaid[employee]

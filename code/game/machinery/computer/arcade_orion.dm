@@ -69,7 +69,7 @@
 	var/view = 0
 
 /obj/machinery/computer/arcade/orion_trail/proc/newgame(var/emag = 0)
-	name = "orion trail[emag ? ": Realism Edition" : ""]"
+	SetName("orion trail[emag ? ": Realism Edition" : ""]")
 	supplies = list("1" = 1, "2" = 1, "3" = 1, "4" = 60, "5" = 20, "6" = 5000)
 	emagged = emag
 	distance = 0
@@ -412,7 +412,7 @@
 					M.hallucination(50, 50)
 				else
 					to_chat(usr, "<span class='danger'>Something strikes you from behind! It hurts like hell and feel like a blunt weapon, but nothing is there...</span>")
-					M.take_organ_damage(10)
+					M.apply_damage(10, DAM_BLUNT)
 			else
 				to_chat(usr, "<span class='warning'>The sounds of battle fill your ears...</span>")
 		if(ORION_TRAIL_ILLNESS)
@@ -431,7 +431,7 @@
 				var/mob/living/carbon/M = usr
 				M.Weaken(3)
 				src.visible_message("A sudden gust of powerful wind slams \the [M] into the floor!", "You hear a large fwooshing sound, followed by a bang.")
-				M.take_organ_damage(10)
+				M.apply_damage(10, DAM_BLUNT)
 			else
 				to_chat(usr, "<span class='warning'>A violent gale blows past you, and you barely manage to stay standing!</span>")
 		if(ORION_TRAIL_MALFUNCTION)
@@ -484,6 +484,7 @@
 	icon_state = "ship"
 	w_class = ITEM_SIZE_SMALL
 	var/active = 0 //if the ship is on
+/**
 /obj/item/weapon/orion_ship/examine(mob/user)
 	. = ..()
 	if(!(in_range(user, src)))
@@ -510,7 +511,7 @@
 	src.visible_message("<span class='danger'>[src] explodes!</span>")
 	explosion(src.loc, 1,2,4)
 	qdel(src)
-
+**/
 #undef ORION_TRAIL_RAIDERS
 #undef ORION_TRAIL_FLUX
 #undef ORION_TRAIL_ILLNESS

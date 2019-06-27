@@ -33,7 +33,7 @@ They sell generic supplies and ask for generic supplies.
 								/obj/item/device/encryptionkey/syndicate = TRADER_BLACKLIST,
 								/obj/item/weapon/tank/phoron/onetankbomb = TRADER_BLACKLIST,
 								/obj/item/device/radio                   = TRADER_BLACKLIST_ALL,
-								/obj/item/device/pda                     = TRADER_BLACKLIST_SUB,
+								/obj/item/modular_computer/pda                     = TRADER_BLACKLIST_SUB,
 								/obj/item/device/uplink                  = TRADER_BLACKLIST)
 	possible_trading_items = list(/obj/item/weapon/storage/bag                       = TRADER_SUBTYPES_ONLY,
 								/obj/item/weapon/storage/bag/cash/infinite           = TRADER_BLACKLIST,
@@ -71,7 +71,7 @@ They sell generic supplies and ask for generic supplies.
 /datum/trader/trading_beacon/mine
 	origin = "Mining Beacon"
 
-	possible_trading_items = list(/obj/item/weapon/ore                    = TRADER_SUBTYPES_ONLY,
+	possible_trading_items = list(/obj/item/stack/ore                    = TRADER_SUBTYPES_ONLY,
 								/obj/item/stack/material/glass            = TRADER_ALL,
 								/obj/item/stack/material/glass/fifty      = TRADER_BLACKLIST,
 								/obj/item/stack/material/iron             = TRADER_THIS_TYPE,
@@ -114,6 +114,6 @@ They sell generic supplies and ask for generic supplies.
 								/obj/structure/plushie              = TRADER_SUBTYPES_ONLY,
 								/obj/structure/sign                 = TRADER_SUBTYPES_ONLY,
 								/obj/structure/sign/double          = TRADER_BLACKLIST_ALL,
-								/obj/structure/sign/goldenplaque    = TRADER_BLACKLIST_ALL,
+								/obj/item/sign/goldenplaque    		= TRADER_BLACKLIST_ALL,
 								/obj/structure/sign/poster          = TRADER_BLACKLIST
 								)

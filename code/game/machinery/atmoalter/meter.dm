@@ -1,65 +1,89 @@
 /obj/machinery/meter
-	name = "meter"
-	desc = "A gas flow meter."
-	icon = 'icons/obj/meter.dmi'
-	icon_state = "meterX"
+	name 			= "meter"
+	desc 			= "A gas flow meter. Monitors the pipe it is attached to."
+	icon 			= 'icons/obj/meter.dmi'
+	icon_state 		= "meterX"
+	layer = ABOVE_WINDOW_LAYER
+	anchored 		= TRUE
+	power_channel 	= ENVIRON
+	idle_power_usage= 15
+
+	//Radio
+	id_tag 			= null
+	frequency 		= null
+	radio_filter_in = RADIO_ATMOSIA
+	radio_filter_out= RADIO_ATMOSIA
+
+	//#FIXME: Might be a better idea to store the thing in the pipe instead and display it as an overlay?
 	var/obj/machinery/atmospherics/pipe/target = null
-	anchored = 1.0
-	power_channel = ENVIRON
-	var/frequency = 0
-	var/id
-	use_power = 1
-	idle_power_usage = 15
+	var/last_pressure = -1 //The last pressure reading taken this tick
 
 /obj/machinery/meter/Initialize()
+	..()
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/meter/LateInitialize()
 	. = ..()
 	if (!target)
-		src.target = locate(/obj/machinery/atmospherics/pipe) in loc
+		set_target(locate(/obj/machinery/atmospherics/pipe) in loc)
+	queue_icon_update()
+
+/obj/machinery/meter/proc/set_target(atom/new_target)
+	clear_target()
+	target = new_target
+	GLOB.destroyed_event.register(target, src, .proc/clear_target)
+
+/obj/machinery/meter/proc/clear_target()
+	if(target)
+		GLOB.destroyed_event.unregister(target, src)
+		target = null	
+
+/obj/machinery/meter/Destroy()
+	clear_target()
+	. = ..()
 
 /obj/machinery/meter/Process()
+	. = ..()
 	if(!target)
+		return
+	var/datum/gas_mixture/pipe_air = target.return_air()
+	if(!pipe_air)
+		src.last_pressure = -1
+	else
+		src.last_pressure = pipe_air.return_pressure()
+
+	if(has_transmitter()) 
+		var/list/data = list(
+			// "tag" = id,
+			"device" = "AM",
+			"pressure" = (last_pressure > 0)? round(last_pressure) : 0,
+			"sigtype" = "status"
+		)
+		post_signal(data)
+	queue_icon_update()
+
+/obj/machinery/meter/on_update_icon()
+	if(!target || last_pressure == -1)
 		icon_state = "meterX"
 		return 0
-
-	if(stat & (BROKEN|NOPOWER))
+	if(inoperable())
 		icon_state = "meter0"
 		return 0
-
-	var/datum/gas_mixture/environment = target.return_air()
-	if(!environment)
-		icon_state = "meterX"
-		return 0
-
-	var/env_pressure = environment.return_pressure()
-	if(env_pressure <= 0.15*ONE_ATMOSPHERE)
+	
+	if(last_pressure <= 0.15*ONE_ATMOSPHERE)
 		icon_state = "meter0"
-	else if(env_pressure <= 1.8*ONE_ATMOSPHERE)
-		var/val = round(env_pressure/(ONE_ATMOSPHERE*0.3) + 0.5)
+	else if(last_pressure <= 1.8*ONE_ATMOSPHERE)
+		var/val = round(last_pressure/(ONE_ATMOSPHERE*0.3) + 0.5)
 		icon_state = "meter1_[val]"
-	else if(env_pressure <= 30*ONE_ATMOSPHERE)
-		var/val = round(env_pressure/(ONE_ATMOSPHERE*5)-0.35) + 1
+	else if(last_pressure <= 30*ONE_ATMOSPHERE)
+		var/val = round(last_pressure/(ONE_ATMOSPHERE*5)-0.35) + 1
 		icon_state = "meter2_[val]"
-	else if(env_pressure <= 59*ONE_ATMOSPHERE)
-		var/val = round(env_pressure/(ONE_ATMOSPHERE*5) - 6) + 1
+	else if(last_pressure <= 59*ONE_ATMOSPHERE)
+		var/val = round(last_pressure/(ONE_ATMOSPHERE*5) - 6) + 1
 		icon_state = "meter3_[val]"
 	else
 		icon_state = "meter4"
 
-	if(frequency)
-		var/datum/radio_frequency/radio_connection = radio_controller.return_frequency(frequency)
-
-		if(!radio_connection) return
-
-		var/datum/signal/signal = new
-		signal.source = src
-		signal.transmission_method = 1
-		signal.data = list(
-			"tag" = id,
-			"device" = "AM",
-			"pressure" = round(env_pressure),
-			"sigtype" = "status"
-		)
-		radio_connection.post_signal(src, signal)
 /obj/machinery/meter/attack_hand(mob/user)
 	examine(user)
 
@@ -67,10 +91,10 @@
 	. = ..()
 
 	if(get_dist(user, src) > 3 && !(istype(user, /mob/living/silicon/ai) || isghost(user)))
-		to_chat(user, "<span class='warning'>You are too far away to read it.</span>")
+		to_chat(user, SPAN_WARNING("You are too far away to read it."))
 
-	else if(stat & (NOPOWER|BROKEN))
-		to_chat(user, "<span class='warning'>The display is off.</span>")
+	else if(inoperable())
+		to_chat(user, SPAN_WARNING("The display is off."))
 
 	else if(src.target)
 		var/datum/gas_mixture/environment = target.return_air()
@@ -79,7 +103,7 @@
 		else
 			to_chat(user, "The sensor error light is blinking.")
 	else
-		to_chat(user, "The connect error light is blinking.")
+		to_chat(user, "The connection error light is blinking.")
 
 
 /obj/machinery/meter/Click()
@@ -105,16 +129,9 @@
 
 // TURF METER - REPORTS A TILE'S AIR CONTENTS
 
-/obj/machinery/meter/turf/New()
-	..()
-	src.target = loc
-	return 1
-
-
 /obj/machinery/meter/turf/Initialize()
-	. = ..()
 	if (!target)
-		src.target = loc
+		set_target(loc)
+	. = ..()
 
 /obj/machinery/meter/turf/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
-	return

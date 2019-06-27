@@ -4,21 +4,29 @@ var/global/list/plant_seed_sprites = list()
 /obj/item/seeds
 	name = "packet of seeds"
 	icon = 'icons/obj/seeds.dmi'
-	icon_state = "blank"
+	icon_state = "seedy"
 	w_class = ITEM_SIZE_SMALL
 
 	var/seed_type
 	var/datum/seed/seed
 	var/modified = 0
+/obj/item/seeds/New()
+	. = ..()
+	ADD_SAVED_VAR(seed_type)
+	ADD_SAVED_VAR(seed)
+	ADD_SAVED_VAR(modified)
 
+/obj/item/seeds/after_load()
+	..()
+	update_seed()
 /obj/item/seeds/Initialize()
 	update_seed()
 	. = ..()
 
 //Grabs the appropriate seed datum from the global list.
 /obj/item/seeds/proc/update_seed()
-	if(!seed && seed_type && !isnull(plant_controller.seeds) && plant_controller.seeds[seed_type])
-		seed = plant_controller.seeds[seed_type]
+	if(!seed && seed_type && !isnull(SSplants.seeds) && SSplants.seeds[seed_type])
+		seed = SSplants.seeds[seed_type]
 	update_appearance()
 
 //Updates strings and icon appropriately based on seed datum.
@@ -51,10 +59,10 @@ var/global/list/plant_seed_sprites = list()
 	overlays |= seed_overlay
 
 	if(is_seeds)
-		src.name = "packet of [seed.seed_name] [seed.seed_noun]"
+		src.SetName("packet of [seed.seed_name] [seed.seed_noun]")
 		src.desc = "It has a picture of [seed.display_name] on the front."
 	else
-		src.name = "sample of [seed.seed_name] [seed.seed_noun]"
+		src.SetName("sample of [seed.seed_name] [seed.seed_noun]")
 		src.desc = "It's labelled as coming from [seed.display_name]."
 
 /obj/item/seeds/examine(mob/user)
@@ -68,14 +76,15 @@ var/global/list/plant_seed_sprites = list()
 
 /obj/item/seeds/cutting/update_appearance()
 	..()
-	src.name = "packet of [seed.seed_name] cuttings"
+	src.SetName("packet of [seed.seed_name] cuttings")
 
 /obj/item/seeds/random
 	seed_type = null
 
 /obj/item/seeds/random/Initialize()
-	seed = plant_controller.create_random_seed()
-	seed_type = seed.name
+	if(!map_storage_loaded)
+		seed = SSplants.create_random_seed()
+		seed_type = seed.name
 	. = ..()
 /*
 /obj/item/seeds/replicapod
@@ -278,3 +287,9 @@ var/global/list/plant_seed_sprites = list()
 
 /obj/item/seeds/onionseed
 	seed_type = "onion"
+
+/obj/item/seeds/algaeseed
+	seed_type = "algae"
+
+/obj/item/seeds/bamboo
+	seed_type = "bamboo"

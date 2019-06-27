@@ -1,7 +1,7 @@
 // Bluespace crystals, used in telescience and when crushed it will blink you to a random turf.
 
 /obj/item/bluespace_crystal
-	name = "bluespace crystal"
+	name = MATERIAL_BSPACE_CRYSTAL
 	desc = "A glowing bluespace crystal. This rare crystal is incredibly valuable for those looking to create high end technology, or even their own bluespace network."
 	icon = 'icons/obj/telescience.dmi'
 	icon_state = "bluespace_crystal"

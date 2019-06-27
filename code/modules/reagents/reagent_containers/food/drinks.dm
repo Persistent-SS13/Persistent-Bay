@@ -6,7 +6,7 @@
 	desc = "Yummy!"
 	icon = 'icons/obj/drinks.dmi'
 	icon_state = null
-	flags = OPENCONTAINER
+	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 	amount_per_transfer_from_this = 5
 	volume = 50
 	var/filling_states   // List of percentages full that have icons
@@ -24,15 +24,15 @@
 /obj/item/weapon/reagent_containers/food/drinks/proc/open(mob/user)
 	playsound(loc,'sound/effects/canopen.ogg', rand(10,50), 1)
 	to_chat(user, "<span class='notice'>You open \the [src] with an audible pop!</span>")
-	flags |= OPENCONTAINER
+	atom_flags |= ATOM_FLAG_OPEN_CONTAINER
 
 /obj/item/weapon/reagent_containers/food/drinks/cans/waterbottle/open(mob/user)
 	playsound(loc,'sound/effects/bonebreak1.ogg', rand(10,50), 1)
 	to_chat(user, "<span class='notice'>You twist open \the [src], destroying the safety seal!</span>")
-	flags |= OPENCONTAINER
+	atom_flags |= ATOM_FLAG_OPEN_CONTAINER
 
 /obj/item/weapon/reagent_containers/food/drinks/attack(mob/M as mob, mob/user as mob, def_zone)
-	if(force && !(flags & NOBLUDGEON) && user.a_intent == I_HURT)
+	if(force && !(item_flags & ITEM_FLAG_NO_BLUDGEON) && user.a_intent == I_HURT)
 		return ..()
 
 	if(standard_feed_mob(user, M))
@@ -69,6 +69,9 @@
 
 /obj/item/weapon/reagent_containers/food/drinks/self_feed_message(var/mob/user)
 	to_chat(user, "<span class='notice'>You swallow a gulp from \the [src].</span>")
+	if(user.has_personal_goal(/datum/goal/achievement/specific_object/drink))
+		for(var/datum/reagent/R in reagents.reagent_list)
+			user.update_personal_goal(/datum/goal/achievement/specific_object/drink, R.type)
 
 /obj/item/weapon/reagent_containers/food/drinks/feed_sound(var/mob/user)
 	playsound(user.loc, 'sound/items/drink.ogg', rand(10, 50), 1)
@@ -93,17 +96,20 @@
 		if(percent <= k)
 			return k
 
-/obj/item/weapon/reagent_containers/food/drinks/update_icon()
+/obj/item/weapon/reagent_containers/food/drinks/on_update_icon()
 	overlays.Cut()
 	if(reagents.reagent_list.len > 0)
 		if(base_name)
 			var/datum/reagent/R = reagents.get_master_reagent()
-			name = "[base_name] of [R.glass_name ? R.glass_name : "something"]"
+			SetName("[base_name] of [R.glass_name ? R.glass_name : "something"]")
 			desc = R.glass_desc ? R.glass_desc : initial(desc)
 		if(filling_states)
 			var/image/filling = image(icon, src, "[base_icon][get_filling_state()]")
 			filling.color = reagents.get_color()
 			overlays += filling
+	else
+		SetName(initial(name))
+		desc = initial(desc)
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -121,7 +127,9 @@
 	amount_per_transfer_from_this = 20
 	possible_transfer_amounts = null
 	volume = 150
-	flags = CONDUCT | OPENCONTAINER
+	atom_flags = ATOM_FLAG_OPEN_CONTAINER
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	matter = list(MATERIAL_GOLD = 1 SHEET)
 
 ///////////////////////////////////////////////Drinks
 //Notes by Darem: Drinks are simply containers that start preloaded. Unlike condiments, the contents can be ingested directly
@@ -134,9 +142,10 @@
 	icon_state = "milk"
 	item_state = "carton"
 	center_of_mass = "x=16;y=9"
-/obj/item/weapon/reagent_containers/food/drinks/milk/New()
-	. = ..()
-	reagents.add_reagent(/datum/reagent/drink/milk, 50)
+	starts_with = list(/datum/reagent/drink/milk = 50)
+	matter = list(MATERIAL_CARDBOARD = 0.1 SHEETS)
+/obj/item/weapon/reagent_containers/food/drinks/milk/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/soymilk
 	name = "soymilk carton"
@@ -144,67 +153,54 @@
 	icon_state = "soymilk"
 	item_state = "carton"
 	center_of_mass = "x=16;y=9"
-	New()
-		..()
-		reagents.add_reagent(/datum/reagent/drink/milk/soymilk, 50)
+	starts_with = list(/datum/reagent/drink/milk/soymilk = 50)
+	matter = list(MATERIAL_CARDBOARD = 0.1 SHEETS)
+/obj/item/weapon/reagent_containers/food/drinks/soymilk/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/milk/smallcarton
 	name = "small milk carton"
 	volume = 30
 	icon_state = "mini-milk"
-/obj/item/weapon/reagent_containers/food/drinks/milk/smallcarton/New()
-	..()
-	reagents.add_reagent(/datum/reagent/drink/milk, 30)
+	starts_with = list(/datum/reagent/drink/milk = 30)
+/obj/item/weapon/reagent_containers/food/drinks/milk/smallcarton/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/milk/smallcarton/chocolate
 	name = "small chocolate milk carton"
 	desc = "It's milk! This one is in delicious chocolate flavour."
-
-/obj/item/weapon/reagent_containers/food/drinks/milk/smallcarton/chocolate/New()
-	..()
-	reagents.add_reagent(/datum/reagent/drink/milk/chocolate, 30)
-
+	starts_with = list(/datum/reagent/drink/milk/chocolate = 30)
+/obj/item/weapon/reagent_containers/food/drinks/milk/smallcarton/chocolate/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/coffee
 	name = "\improper Robust Coffee"
 	desc = "Careful, the beverage you're about to enjoy is extremely hot."
 	icon_state = "coffee"
 	center_of_mass = "x=15;y=10"
-/obj/item/weapon/reagent_containers/food/drinks/coffee/New()
-	. = ..()
-	reagents.add_reagent(/datum/reagent/drink/coffee, 30)
-
-/obj/item/weapon/reagent_containers/food/drinks/tea
-	name = "cup of Duke Purple Tea"
-	desc = "An insult to Duke Purple is an insult to the Space Queen! Any proper gentleman will fight you, if you sully this tea."
-	icon_state = "teacup"
-	item_state = "coffee"
-	center_of_mass = "x=16;y=14"
-	filling_states = "100"
-	base_name = "cup"
-	base_icon = "teacup"
-	New()
-		..()
-		reagents.add_reagent(/datum/reagent/drink/tea, 30)
+	starts_with = list(/datum/reagent/drink/coffee = 30)
+	matter = list(MATERIAL_PLASTIC = 0.1 SHEETS)
+/obj/item/weapon/reagent_containers/food/drinks/coffee/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/ice
 	name = "cup of ice"
 	desc = "Careful, cold ice, do not chew."
 	icon_state = "coffee"
 	center_of_mass = "x=15;y=10"
-/obj/item/weapon/reagent_containers/food/drinks/ice/New()
-	. = ..()
-	reagents.add_reagent(/datum/reagent/drink/ice, 30)
+	starts_with = list(/datum/reagent/drink/ice = 30)
+	matter = list(MATERIAL_PLASTIC = 0.1 SHEETS)
 
 /obj/item/weapon/reagent_containers/food/drinks/h_chocolate
-	name = "cup of Dutch hot coco"
-	desc = "Made in Space South America."
+	name = "cup of hot cocoa"
+	desc = "A tall plastic cup of creamy hot chocolate."
 	icon_state = "hot_coco"
 	item_state = "coffee"
 	center_of_mass = "x=15;y=13"
-/obj/item/weapon/reagent_containers/food/drinks/h_chocolate/New()
-	. = ..()
-	reagents.add_reagent(/datum/reagent/drink/hot_coco, 30)
+	starts_with = list(/datum/reagent/drink/hot_coco = 30)
+	matter = list(MATERIAL_PLASTIC = 0.1 SHEETS)
+/obj/item/weapon/reagent_containers/food/drinks/h_chocolate/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/dry_ramen
 	name = "cup ramen"
@@ -212,10 +208,10 @@
 	desc = "Just add 10ml water, self heats! A taste that reminds you of your school years."
 	icon_state = "ramen"
 	center_of_mass = "x=16;y=11"
-	New()
-		..()
-		reagents.add_reagent(/datum/reagent/drink/dry_ramen, 30)
-
+	starts_with = list(/datum/reagent/drink/dry_ramen = 30)
+	matter = list(MATERIAL_PLASTIC = 0.2 SHEETS)
+/obj/item/weapon/reagent_containers/food/drinks/dry_ramen/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/sillycup
 	name = "paper cup"
@@ -231,20 +227,13 @@
 			icon_state = "water_cup"
 		else
 			icon_state = "water_cup_e"
+	matter = list(MATERIAL_WOOD = 0.1 SHEETS)
 
 
-//////////////////////////drinkingglass and shaker//
+//////////////////////////pitchers, pots, flasks and cups //
 //Note by Darem: This code handles the mixing of drinks. New drinks go in three places: In Chemistry-Reagents.dm (for the drink
 //	itself), in Chemistry-Recipes.dm (for the reaction that changes the components into the drink), and here (for the drinking glass
 //	icon states.
-
-/obj/item/weapon/reagent_containers/food/drinks/shaker
-	name = "shaker"
-	desc = "A metal shaker to mix drinks in."
-	icon_state = "shaker"
-	amount_per_transfer_from_this = 10
-	volume = 120
-	center_of_mass = "x=17;y=10"
 
 /obj/item/weapon/reagent_containers/food/drinks/teapot
 	name = "teapot"
@@ -254,24 +243,26 @@
 	amount_per_transfer_from_this = 10
 	volume = 120
 	center_of_mass = "x=17;y=7"
+	matter = list(MATERIAL_STEEL = 0.5 SHEET)
 
 /obj/item/weapon/reagent_containers/food/drinks/pitcher
-	name = "pitcher"
-	desc = "Everyone's best friend in the morning."
+	name = "insulated pitcher"
+	desc = "A stainless steel insulated pitcher. Everyone's best friend in the morning."
 	icon_state = "pitcher"
 	volume = 120
 	amount_per_transfer_from_this = 10
 	center_of_mass = "x=16;y=9"
 	filling_states = "15;30;50;70;85;100"
 	base_icon = "pitcher"
-	matter = list(DEFAULT_WALL_MATERIAL = 100)
+	matter = list(MATERIAL_STEEL = 0.25 SHEET)
 
 /obj/item/weapon/reagent_containers/food/drinks/flask
-	name = "\improper Captain's flask"
-	desc = "A metal flask belonging to the captain."
+	name = "\improper fancy flask"
+	desc = "A metal flask."
 	icon_state = "flask"
 	volume = 60
 	center_of_mass = "x=17;y=7"
+	matter = list(MATERIAL_ALUMINIUM = 0.2 SHEET)
 
 /obj/item/weapon/reagent_containers/food/drinks/flask/shiny
 	name = "shiny flask"
@@ -284,8 +275,8 @@
 	icon_state = "lithiumflask"
 
 /obj/item/weapon/reagent_containers/food/drinks/flask/detflask
-	name = "\improper Detective's flask"
-	desc = "A metal flask with a leather band and golden badge belonging to the detective."
+	name = "\improper classy flask"
+	desc = "A metal flask with a leather band and golden badge."
 	icon_state = "detflask"
 	volume = 60
 	center_of_mass = "x=17;y=8"
@@ -303,6 +294,8 @@
 	icon_state = "vacuumflask"
 	volume = 60
 	center_of_mass = "x=15;y=4"
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE
+	matter = list(MATERIAL_ALUMINIUM = 0.2 SHEET, MATERIAL_GLASS = 0.1 SHEET)
 
 /obj/item/weapon/reagent_containers/food/drinks/coffeecup
 	name = "coffee cup"
@@ -314,7 +307,7 @@
 	filling_states = "40;80;100"
 	base_name = "cup"
 	base_icon = "coffeecup"
-	matter = list(DEFAULT_WALL_MATERIAL = 60)
+	matter = list(MATERIAL_PLASTIC = 0.2 SHEETS)
 
 /obj/item/weapon/reagent_containers/food/drinks/coffeecup/black
 	name = "black coffee cup"
@@ -335,22 +328,37 @@
 	base_name = "heart cup"
 
 /obj/item/weapon/reagent_containers/food/drinks/coffeecup/SCG
-	name = "SCG coffee cup"
+	name = "\improper SCG coffee cup"
 	desc = "A blue coffee cup emblazoned with the crest of the Sol Central Government."
 	icon_state = "coffeecup_SCG"
-	base_name = "SCG cup"
+	base_name = "\improper SCG cup"
 
 /obj/item/weapon/reagent_containers/food/drinks/coffeecup/NT
-	name = "NT coffee cup"
-	desc = "A red Nanotrasen coffee cup. 90% Guaranteed to not be laced with mind-control drugs."
+	name = "\improper NT coffee cup"
+	desc = "A red NanoTrasen coffee cup."
 	icon_state = "coffeecup_NT"
 	base_name = "NT cup"
+
+/obj/item/weapon/reagent_containers/food/drinks/coffeecup/corp
+	name = "\improper EXO coffee cup"
+	desc = "A tasteful coffee cup in Expeditionary Corps Organisation corporate colours."
+	icon_state = "coffeecup_corp"
+	base_name = "EXO cup"
 
 /obj/item/weapon/reagent_containers/food/drinks/coffeecup/one
 	name = "#1 coffee cup"
 	desc = "A white coffee cup, prominently featuring a #1."
 	icon_state = "coffeecup_one"
 	base_name = "#1 cup"
+
+/obj/item/weapon/reagent_containers/food/drinks/coffeecup/punitelli
+	name = "#1 monkey coffee cup"
+	desc = "A white coffee cup, prominently featuring a \"#1 monkey\"."
+	icon_state = "coffeecup_punitelli"
+	base_name = "#1 monkey cup"
+	starts_with = list(/datum/reagent/drink/juice/banana = 30)
+/obj/item/weapon/reagent_containers/food/drinks/coffeecup/punitelli/empty
+	starts_with = null
 
 /obj/item/weapon/reagent_containers/food/drinks/coffeecup/rainbow
 	name = "rainbow coffee cup"
@@ -363,10 +371,12 @@
 	desc = "A metal coffee cup. You're not sure which metal."
 	icon_state = "coffeecup_metal"
 	base_name = "metal cup"
-	flags = CONDUCT | OPENCONTAINER
+	atom_flags = ATOM_FLAG_OPEN_CONTAINER
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	matter = list(MATERIAL_ALUMINIUM = 0.2 SHEETS)
 
 /obj/item/weapon/reagent_containers/food/drinks/coffeecup/STC
-	name = "TCC coffee cup"
+	name = "ICCG coffee cup"
 	desc = "A coffee cup adorned with the flag of the Terran Colonial Confederation, for when you need some espionage charges to go with your morning coffee."
 	icon_state = "coffeecup_STC"
 	base_name = "TCC cup"
@@ -398,3 +408,43 @@
 	filling_states = "50;70;90;100"
 	base_name = "tall cup"
 	base_icon = "coffeecup_tall"
+
+/obj/item/weapon/reagent_containers/food/drinks/coffeecup/dais
+	name = "\improper DAIS coffee cup"
+	desc = "A coffee cup imprinted with the stylish logo of Deimos Advanced Information Systems."
+	icon_state = "coffeecup_dais"
+	base_name = "DAIS cup"
+
+/obj/item/weapon/reagent_containers/food/drinks/coffeecup/teacup
+	name = "teacup"
+	desc = "A plain white porcelain teacup."
+	icon_state = "teacup"
+	item_state = "coffee"
+	volume = 20
+	center_of_mass = "x=15;y=13"
+	filling_states = "100"
+	base_name = "teacup"
+	base_icon = "teacup"
+	matter = list(MATERIAL_SAND = 0.2 SHEETS)
+
+//tea and tea accessories
+/obj/item/weapon/reagent_containers/food/drinks/tea
+	name = "cup of tea master item"
+	desc = "A tall plastic cup full of the concept and ideal of tea."
+	icon_state = "coffee"
+	item_state = "coffee"
+	center_of_mass = "x=16;y=14"
+	filling_states = "100"
+	base_name = "cup"
+	base_icon = "cup"
+	matter = list(MATERIAL_PLASTIC = 0.4 SHEETS)
+
+/obj/item/weapon/reagent_containers/food/drinks/tea/black
+	name = "cup of black tea"
+	desc = "A tall plastic cup of hot black tea."
+	starts_with = list(/datum/reagent/drink/tea = 30)
+
+/obj/item/weapon/reagent_containers/food/drinks/tea/green
+	name = "cup of green tea"
+	desc = "A tall plastic cup of hot green tea."
+	starts_with = list(/datum/reagent/drink/tea/green = 30)

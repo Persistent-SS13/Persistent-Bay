@@ -1,6 +1,7 @@
 /obj/machinery/autolathe
 	name = "autolathe"
 	desc = "It produces items using metal and glass."
+	icon = 'icons/obj/machines/autolathe.dmi'
 	icon_state = "autolathe"
 	density = 1
 	anchored = 1
@@ -10,9 +11,10 @@
 	clicksound = "keyboard"
 	clickvol = 30
 	multiplier = 1
+	circuit_type = /obj/item/weapon/circuitboard/autolathe
 
 	var/list/machine_recipes
-	var/list/stored_material = list(DEFAULT_WALL_MATERIAL = 0, "glass" = 0)
+	var/list/stored_material = list(MATERIAL_STEEL = 0, MATERIAL_GLASS = 0)
 	var/list/storage_capacity = 0
 	var/show_category = "All"
 
@@ -29,19 +31,14 @@
 /obj/machinery/autolathe/New()
 	..()
 	wires = new(src)
-	//Create parts for lathe.
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/autolathe(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	RefreshParts()
+	ADD_SAVED_VAR(stored_material)
+	ADD_SAVED_VAR(storage_capacity)
+	ADD_SAVED_VAR(hacked)
+	ADD_SAVED_VAR(disabled)
+	ADD_SAVED_VAR(shocked)
 
 /obj/machinery/autolathe/Destroy()
-	qdel(wires)
-	wires = null
+	QDEL_NULL(wires)
 	return ..()
 
 /obj/machinery/autolathe/proc/update_recipe_list()
@@ -224,6 +221,7 @@
 		var/obj/item/stack/stack = eating
 		stack.use(max(1, round(total_used/mass_per_sheet))) // Always use at least 1 to prevent infinite materials.
 	else if(user.unEquip(O))
+		O.loc = null
 		qdel(O)
 
 	updateUsrDialog()
@@ -331,7 +329,7 @@
 	for(var/obj/item/weapon/stock_parts/manipulator/M in component_parts)
 		man_rating += M.rating
 
-	var/material/M = SSmaterials.get_material_by_name(DEFAULT_WALL_MATERIAL)
+	var/material/M = SSmaterials.get_material_by_name(MATERIAL_STEEL)
 	var/obj/item/stack/material/S = M.stack_type
 	storage_capacity = mb_rating * initial(S.perunit) * 15
 	build_time = 45 / man_rating

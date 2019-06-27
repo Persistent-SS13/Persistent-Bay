@@ -5,7 +5,7 @@
 // So this cannot be abused for other uses, we make it two-handed and inable to have its storage looked into.
 /obj/item/weapon/storage/laundry_basket
 	name = "laundry basket"
-	icon = 'icons/obj/janitor.dmi'
+	icon = 'icons/obj/items/storage/laundrybasket.dmi'
 	icon_state = "laundry-empty"
 	item_state = "laundry"
 	desc = "The peak of thousands of years of laundry evolution."
@@ -43,14 +43,14 @@
 
 /obj/item/weapon/storage/laundry_basket/pickup(mob/user)
 	var/obj/item/weapon/storage/laundry_basket/offhand/O = new(user)
-	O.name = "[name] - second hand"
+	O.SetName("[name] - second hand")
 	O.desc = "Your second grip on the [name]."
 	O.linked = src
 	user.put_in_inactive_hand(O)
 	linked = O
 	return
 
-/obj/item/weapon/storage/laundry_basket/update_icon()
+/obj/item/weapon/storage/laundry_basket/on_update_icon()
 	if(contents.len)
 		icon_state = "laundry-full"
 	else

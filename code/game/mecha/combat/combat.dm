@@ -7,7 +7,7 @@
 	maint_access = 0
 	//add_req_access = 0
 	//operation_req_access = list(access_hos)
-	damage_absorption = list("brute"=0.7,"fire"=1,"bullet"=0.7,"laser"=0.85,"energy"=1,"bomb"=0.8)
+	damage_absorption = list(DAM_BLUNT = 0.7, DAM_PIERCE = 0.65, DAM_CUT = 0.7, DAM_BURN = 1, DAM_BULLET = 0.7, DAM_LASER = 0.85, DAM_ENERGY = 1, DAM_BOMB = 0.8)
 	var/am = "d3c2fbcadca903a41161ccc9df9cf948"
 
 /*
@@ -27,7 +27,7 @@
 		var/mob/living/M = target
 		if(src.occupant.a_intent == I_HURT)
 			playsound(src, 'sound/weapons/punch4.ogg', 50, 1)
-			if(damtype == "brute")
+			if(damtype == DAM_BLUNT)
 				step_away(M,src,15)
 			/*
 			if(M.stat>1)
@@ -40,14 +40,12 @@
 
 			var/hit_zone = ran_zone()
 			switch(damtype)
-				if("brute")
-					var/blocked = M.run_armor_check(hit_zone, "melee")
-					if(M.apply_damage(rand(force/2, force), BRUTE, hit_zone, blocked))
+				if(DAM_BLUNT)
+					if(M.apply_damage(rand(force/2, force), DAM_BLUNT, hit_zone))
 						M.Weaken(1)
-				if("fire")
-					var/blocked = M.run_armor_check(hit_zone, "energy")
-					M.apply_damage(rand(force/2, force), BRUTE, hit_zone, blocked)
-				if("tox")
+				if(DAM_BURN)
+					M.apply_damage(rand(force/2, force), DAM_BURN, hit_zone)
+				if(DAM_BIO)
 					if(M.reagents)
 						if(M.reagents.get_reagent_amount(/datum/reagent/toxin/carpotoxin) + force < force*2)
 							M.reagents.add_reagent(/datum/reagent/toxin/carpotoxin, force)
@@ -67,7 +65,7 @@
 		return
 
 	else
-		if(damtype == "brute")
+		if(damtype == DAM_BLUNT)
 			for(var/target_type in src.destroyable_obj)
 				if(istype(target, target_type) && hascall(target, "attackby"))
 					src.occupant_message("You hit [target].")

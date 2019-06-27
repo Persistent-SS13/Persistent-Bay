@@ -1,0 +1,154 @@
+<h2>Judge Controls</h2>
+<br><hr>
+{{if data.is_judge}}
+	{{:helper.link("Scheduled Trials", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
+	{{:helper.link("Schedule New Trial", '', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
+	{{:helper.link("Render Verdict", '', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}	
+	{{if data.menu == 1}}
+		<h3>Scheduled Trials</h3><br><hr>
+		{{if data.selected_trial}}
+			<h4>{{:data.selected_trial}}</h4><br>
+			{{:helper.link('Back', '', {'action' : 'deselect_trial'})}}<br><br>
+			<div class='item'>
+				<div class='itemLabel'>
+					Date Scheduled
+				</div>
+				<div class='itemContent'>
+					{{:data.trial_time}}
+				</div>
+			</div>
+			<div class='item'>
+				<div class='itemLabel'>
+					Judge
+				</div>
+				<div class='itemContent'>
+					{{:data.judge}}
+				</div>
+			</div>
+			<br><hr><br>
+			{{:data.trial_body}}
+			<br><hr>
+			<br>
+			{{if data.is_presiding}}
+				<div class='item'>
+					<div class='itemLabel'>
+						Cancel Trial
+					</div>
+					<div class='itemContent'>
+						{{:helper.link('Cancel', '', {'action' : 'cancel_trial'})}}
+					</div>
+				</div>
+			{{/if}}
+		{{else}}
+			<div class="statusDisplay" style="overflow: auto;">
+				{{if data.trials}}
+					{{for data.trials}}
+						{{:helper.link(value.name, '', {'action' : 'select_trial', 'ref' : value.ref})}}
+					{{/for}}
+				{{else}}
+					<span class='alert'>No trials scheduled.</span>
+				{{/if}}
+			</div>
+			
+		{{/if}}
+		
+	{{/if}}
+	{{if data.menu == 2}}
+		<h3>Schedule New Trial</h3><br><hr>
+		Shortly before the trial, the entire station will be notified. If either the plaintiff or the defendant have emails on file (by matching their names exactly), they will be emailed notifications as well.
+		<div class='item'>
+			<div class='itemLabel'>
+				Trial Title
+			</div>
+			<div class='itemContent'>
+				{{:helper.link(data.trial_title, '', {'action' : 'change_trialtitle'})}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Plaintiff
+			</div>
+			<div class='itemContent'>
+				{{:helper.link(data.plaintiff, '', {'action' : 'change_plaintiff'})}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Defendant
+			</div>
+			<div class='itemContent'>
+				{{:helper.link(data.defendant, '', {'action' : 'change_defendant'})}}
+			</div>
+		</div>
+		
+		<div class='item'>
+			<div class='itemLabel'>
+				Month/Day/Hour
+			</div>
+			<div class='itemContent'>
+				{{:helper.link(data.month, '', {'action' : 'change_month'})}}{{:helper.link(data.day, '', {'action' : 'change_day'})}}{{:helper.link(data.hour, '', {'action' : 'change_hour'})}}
+			</div>
+		</div>
+		
+		<br>
+		Have a full copy of a trial description printed and scan it here.<br>
+		{{:helper.link('Scan Document', '', {'action' : 'scan_trial'})}}
+		<br><hr><br>
+		{{:data.trial_body}}
+		<br><hr><br>
+		<div class='item'>
+			<div class='itemLabel'>
+				Finalize
+			</div>
+			<div class='itemContent'>
+				{{:helper.link('Schedule Trial', '', {'action' : 'finish'})}}
+			</div>
+		</div>
+	{{/if}}
+	{{if data.menu == 3}}
+		<h3>Render Verdict</h3><br><hr>
+		Enter a verdict into the record, that optionally changes the defendants citizenship status.
+		<div class='item'>
+			<div class='itemLabel'>
+				Verdict Title
+			</div>
+			<div class='itemContent'>
+				{{:helper.link(data.verdict_title, '', {'action' : 'change_verdicttitle'})}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Defendant
+			</div>
+			<div class='itemContent'>
+				{{:helper.link(data.defendant_verdict, '', {'action' : 'change_defendant_verdict'})}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Citizenship Change
+			</div>
+			<div class='itemContent'>
+				{{:helper.link('None', '', {'action' : 'select_citizen', 'type' : 'None'},  data.citizenship == "None" ? 'selected' : null)}}{{:helper.link('Resident', '', {'action' : 'select_citizen', 'type' : 'Resident'},  data.citizenship == "Resident" ? 'selected' : null)}}
+				{{:helper.link('Citizen', '', {'action' : 'select_citizen', 'type' : 'Citizen'},  data.citizenship == "Citizen" ? 'selected' : null)}}{{:helper.link('Prisoner', '', {'action' : 'select_citizen', 'type' : 'Prisoner'},  data.citizenship == "Prisoner" ? 'selected' : null)}}
+			</div>
+		</div>
+		Have a full copy of a verdict description printed and scan it here.<br>
+		{{:helper.link('Scan Document', '', {'action' : 'scan_verdict'})}}
+		<br><hr><br>
+		{{:data.verdict_body}}
+		<br><hr><br>
+		<div class='item'>
+			<div class='itemLabel'>
+				Finalize
+			</div>
+			<div class='itemContent'>
+				{{:helper.link('Render Verdict', '', {'action' : 'finish_verdict'})}}
+			</div>
+		</div>
+	{{/if}}
+
+{{else}}
+	<br>
+	This program is only for judges.
+{{/if}}

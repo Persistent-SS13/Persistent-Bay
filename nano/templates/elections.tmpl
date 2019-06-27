@@ -1,0 +1,112 @@
+<h2>Elections and Nominations</h2>
+<br><hr>
+{{:helper.link("Elections", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
+{{:helper.link("Candidacy Details", '', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
+{{if data.menu == 1}}
+	<h3>Elections</h3><br><hr>
+	<br>
+	{{if data.selected_ballot}}
+		{{:helper.link('Back', '', {'action' : 'deselect_ballot'})}}<br><br>
+		<div class='itemLabel'>
+			Election Name
+		</div>
+		<div class='itemContent'>
+			{{:data.selected_ballot}}
+		</div>
+		<div class='itemLabel'>
+			Position Description
+		</div>
+		<div class='itemContent'>
+			{{:data.ballot_desc}}
+		</div>
+		<h4>Candidates</h4><br>
+		<div class="statusDisplay" style="overflow: auto;">
+			{{if data.ballots}}
+				{{for data.candidates}}
+					{{:value.name}}<br><br>
+					{{:value.desc}}
+				{{/for}}
+			{{else}}
+				<span class='alert'>No candidates.</span>
+			{{/if}}
+		</div>
+	{{else}}
+		<div class='item'>
+			<div class='itemLabel'>
+				Upcoming Election
+			</div>
+			<div class='itemContent'>
+				{{:data.upcoming_election}}
+			</div>
+		</div>
+		<h4>Election Details</h4>
+		<div class="statusDisplay" style="overflow: auto;">
+			{{if data.ballots}}
+				{{for data.ballots}}
+					{{:helper.link(value.name, '', {'action' : 'select_ballot', 'ref' : value.ref})}}
+				{{/for}}
+			{{else}}
+				<span class='alert'>No elections.</span>
+			{{/if}}
+		</div>
+		
+	{{/if}}
+	
+{{/if}}
+{{if data.menu == 2}}
+	<h3>Candidacy Details</h3><br><hr>
+	You must pay 500$$ to enter an election.
+	<br>
+	{{if data.eligible}}
+		<div class="statusDisplay" style="overflow: auto;">
+			{{if data.ballots}}
+				{{for data.ballots}}
+					{{:helper.link(value.name, '', {'action' : 'select_ballot_candidate', 'ref' : value.ref})}}
+				{{/for}}
+			{{else}}
+				<span class='alert'>No elections.</span>
+			{{/if}}
+		</div>
+	{{/if}}
+	{{if data.candidate}}
+		You are currently a candidate for {{:data.candidate_position}}.<br>
+		<div class='item'>
+			<div class='itemLabel'>
+				Cancel
+			</div>
+			<div class='itemContent'>
+				{{:helper.link('Cancel Candidacy', '', {'action' : 'candidate_cancel'})}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Description
+			</div>
+			<div class='itemContent'>
+				{{:data.candidate_desc}}{{:helper.link('Change', '', {'action' : 'candidate_changedesc'})}}
+			</div>
+		</div>
+	{{/if}}
+	{{if data.elected}}
+		You are currently elected as a {{:data.elected_position}}.<br>
+		<div class='item'>
+			<div class='itemLabel'>
+				Status
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Running For Reelection", '', {'action' : 'select_reelect'}, data.reelection ? 'selected' : null)}}{{:helper.link("Not Running For Reelection", '', {'action' : 'select_noreelect'}, data.reelection ? null : 'selected')}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Description
+			</div>
+			<div class='itemContent'>
+				{{:data.candidate_desc}}{{:helper.link('Change', '', {'action' : 'elected_changedesc'})}}
+			</div>
+		</div>
+	{{/if}}	
+	{{if data.judge}}
+		As a judge, you are ineligible to run in any elections.
+	{{/if}}
+{{/if}}

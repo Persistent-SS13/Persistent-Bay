@@ -3,36 +3,11 @@
 	type_name = GRAB_NAB
 	start_grab_name = NAB_PASSIVE
 
-/obj/item/grab/nab/can_grab()
-
-	if(assailant.anchored || affecting.anchored)
-		return 0
-
-	if(!assailant.Adjacent(affecting))
-		return 0
-
-	for(var/obj/item/grab/G in affecting.grabbed_by)
-		if(G.assailant == assailant)
-			to_chat(assailant, "<span class='notice'>You already grabbed [src].</span>")
-			return 0
-
-	return 1
-
 /obj/item/grab/nab/init()
-	..()
-
-	if(affecting.w_uniform)
-		affecting.w_uniform.add_fingerprint(assailant)
-
-	if(assailant.l_hand) assailant.unEquip(assailant.l_hand)
-	if(assailant.r_hand) assailant.unEquip(assailant.r_hand)
-
-	assailant.put_in_active_hand(src)
-	assailant.do_attack_animation(affecting)
-	playsound(affecting.loc, 'sound/weapons/thudswoosh.ogg', 50, 1, -1)
+	if(!(. = ..()))
+		return
+	assailant.unEquip(assailant.get_inactive_hand())
 	visible_message("<span class='warning'>[assailant] has nabbed [affecting] passively!</span>")
-	affecting.grabbed_by += src
-
 
 /datum/grab/nab
 
@@ -90,36 +65,28 @@
 // This causes the assailant to crush the affecting mob. There is a chance that the crush will cause the
 // forelimb spikes to dig into the affecting mob, doing extra damage and likely causing them to bleed.
 /datum/grab/nab/proc/crush(var/obj/item/grab/G, var/attack_damage)
-	var/mob/living/carbon/human/affecting = G.affecting
-	var/mob/living/carbon/human/assailant = G.assailant
 	var/obj/item/organ/external/damaging = G.get_targeted_organ()
-	var/hit_zone = G.assailant.zone_sel.selecting
-
-	var/armor = affecting.run_armor_check(hit_zone, "melee")
-
-	affecting.visible_message("<span class='danger'>[assailant] crushes [affecting]'s [damaging.name]!</span>")
+	var/hit_zone = G.target_zone
+	G.affecting.visible_message("<span class='danger'>[G.assailant] crushes [G.affecting]'s [damaging.name]!</span>")
 
 	if(prob(30))
-		affecting.apply_damage(max(attack_damage + 10, 15), BRUTE, hit_zone, armor, DAM_SHARP, "organic punctures")
-		affecting.apply_effect(attack_damage, PAIN, armor)
-		affecting.visible_message("<span class='danger'>[assailant]'s spikes dig in painfully!</span>")
+		G.affecting.apply_damage(max(attack_damage + 10, 15), DAM_PIERCE, hit_zone, used_weapon = "organic punctures")
+		var/armor = 100 * G.affecting.get_blocked_ratio(hit_zone, DAM_PIERCE)
+		G.affecting.apply_effect(attack_damage, PAIN, armor)
+		G.affecting.visible_message("<span class='danger'>[G.assailant]'s spikes dig in painfully!</span>")
 	else
-		affecting.apply_damage(attack_damage, BRUTE, hit_zone, armor,, "crushing")
-	playsound(assailant.loc, 'sound/weapons/bite.ogg', 25, 1, -1)
+		G.affecting.apply_damage(attack_damage, DAM_BLUNT, hit_zone, used_weapon = "crushing")
+	playsound(get_turf(G.assailant), 'sound/weapons/bite.ogg', 25, 1, -1)
 
-	admin_attack_log(assailant, affecting, "Crushed their victim.", "Was crushed.", "crushed")
+	admin_attack_log(G.assailant, G.affecting, "Crushed their victim.", "Was crushed.", "crushed")
 
 // This causes the assailant to chew on the affecting mob.
 /datum/grab/nab/proc/masticate(var/obj/item/grab/G, var/attack_damage)
-	var/mob/living/carbon/human/affecting = G.affecting
-	var/mob/living/carbon/human/assailant = G.assailant
-	var/obj/item/organ/external/damaging = G.get_targeted_organ()
 	var/hit_zone = G.assailant.zone_sel.selecting
+	var/obj/item/organ/external/damaging = G.affecting.get_organ(hit_zone)
 
-	var/armor = affecting.run_armor_check(hit_zone, "melee")
+	G.affecting.apply_damage(attack_damage, DAM_PIERCE, hit_zone, used_weapon = "mandibles")
+	G.affecting.visible_message("<span class='danger'>[G.assailant] chews on [G.affecting]'s [damaging.name]!</span>")
+	playsound(get_turf(G.assailant), 'sound/weapons/bite.ogg', 25, 1, -1)
 
-	affecting.apply_damage(attack_damage, BRUTE, hit_zone, armor, DAM_SHARP|DAM_EDGE, "mandibles")
-	affecting.visible_message("<span class='danger'>[assailant] chews on [affecting]'s [damaging.name]!</span>")
-	playsound(assailant.loc, 'sound/weapons/bite.ogg', 25, 1, -1)
-
-	admin_attack_log(assailant, affecting, "Chews their victim.", "Was chewed.", "chewed")
+	admin_attack_log(G.assailant, G.affecting, "Chews their victim.", "Was chewed.", "chewed")

@@ -19,21 +19,21 @@
 
 /obj/item/weapon/reagent_containers/food/snacks/grown/Initialize()
 	. = ..()
-	if(!plant_controller)
+	if(!SSplants)
 		log_error("<span class='danger'>Plant controller does not exist and [src] requires it. Aborting.</span>")
 		return INITIALIZE_HINT_QDEL
 
-	seed = plant_controller.seeds[plantname]
+	seed = SSplants.seeds[plantname]
 
 	if(!seed)
 		return INITIALIZE_HINT_QDEL
 
-	name = "[seed.seed_name]"
+	SetName("[seed.seed_name]")
 	trash = seed.get_trash_type()
 	if(!dried_type)
 		dried_type = type
 
-	update_icon()
+	queue_icon_update()
 
 
 /obj/item/weapon/reagent_containers/food/snacks/grown/proc/fill_reagents()
@@ -66,15 +66,15 @@
 
 	if(!seed)
 		return
-	if(!plant_controller)
+	if(!SSplants)
 		sleep(250) // ugly hack, should mean roundstart plants are fine.
-	if(!plant_controller)
+	if(!SSplants)
 		log_error("<span class='danger'>Plant controller does not exist and [src] requires it. Aborting.</span>")
 		qdel(src)
 		return
 
-	if(plant_controller.product_descs["[seed.uid]"])
-		desc = plant_controller.product_descs["[seed.uid]"]
+	if(SSplants.product_descs["[seed.uid]"])
+		desc = SSplants.product_descs["[seed.uid]"]
 	else
 		var/list/descriptors = list()
 		if(reagents.has_reagent(/datum/reagent/sugar) || reagents.has_reagent(/datum/reagent/nutriment/cherryjelly) || reagents.has_reagent(/datum/reagent/nutriment/honey) || reagents.has_reagent(/datum/reagent/drink/juice/berry))
@@ -126,10 +126,10 @@
 			desc += " mushroom"
 		else
 			desc += " fruit"
-		plant_controller.product_descs["[seed.uid]"] = desc
+		SSplants.product_descs["[seed.uid]"] = desc
 	desc += ". Delicious! Probably."
 
-/obj/item/weapon/reagent_containers/food/snacks/grown/update_icon()
+/obj/item/weapon/reagent_containers/food/snacks/grown/on_update_icon()
 	if(!seed)
 		return
 	overlays.Cut()
@@ -149,7 +149,7 @@
 
 			if(istype(M,/mob/living/carbon/human))
 				var/mob/living/carbon/human/H = M
-				if(H.shoes && H.shoes.item_flags & NOSLIP)
+				if(H.shoes && H.shoes.item_flags & ITEM_FLAG_NOSLIP)
 					return
 
 			M.stop_pulling()
@@ -181,28 +181,22 @@
 				pocell.charge = pocell.maxcharge
 				qdel(src)
 				return
-		else if(W.sharp)
+		else if(W.sharpness)
 			if(seed.kitchen_tag == "pumpkin") // Ugggh these checks are awful.
 				user.show_message("<span class='notice'>You carve a face into [src]!</span>", 1)
 				new /obj/item/clothing/head/pumpkinhead (user.loc)
 				qdel(src)
 				return
 			else if(seed.chems)
-				if(istype(W,/obj/item/weapon/material/hatchet) && !isnull(seed.chems[/datum/reagent/woodpulp]))
-					user.show_message("<span class='notice'>You make planks out of \the [src]!</span>", 1)
-					var/flesh_colour = seed.get_trait(TRAIT_FLESH_COLOUR)
-					if(!flesh_colour) flesh_colour = seed.get_trait(TRAIT_PRODUCT_COLOUR)
-					for(var/i=0,i<2,i++)
-						var/obj/item/stack/material/wood/NG = new (user.loc)
-						if(flesh_colour) NG.color = flesh_colour
-						for (var/obj/item/stack/material/wood/G in user.loc)
-							if(G==NG)
-								continue
-							if(G.amount>=G.max_amount)
-								continue
-							G.attackby(NG, user)
-						to_chat(user, "You add the newly-formed wood to the stack. It now contains [NG.amount] planks.")
-					qdel(src)
+				if(isHatchet(W))
+					if(!isnull(seed.chems[/datum/reagent/woodpulp]))
+						user.visible_message("<span class='notice'>\The [user] makes planks out of \the [src].</span>")
+						new /obj/item/stack/material/wood(user.loc)
+						qdel(src)
+					else if(!isnull(seed.chems[/datum/reagent/bamboo]))
+						user.visible_message("<span class='notice'>\The [user] makes planks out of \the [src].</span>")
+						new /obj/item/stack/material/wood/bamboo(user.loc)
+						qdel(src)
 					return
 				else if(!isnull(seed.chems[/datum/reagent/drink/juice/potato]))
 					to_chat(user, "You slice \the [src] into sticks.")

@@ -1,13 +1,15 @@
 var/list/flooring_cache = list()
 
-/turf/simulated/floor/update_icon(var/update_neighbors)
+/turf/simulated/floor/on_update_icon(var/update_neighbors)
+
+	..()
 
 	if(lava)
 		return
 
 	if(flooring)
 		// Set initial icon and strings.
-		name = flooring.name
+		SetName(flooring.name)
 		desc = flooring.desc
 		icon = flooring.icon
 		color = flooring.color

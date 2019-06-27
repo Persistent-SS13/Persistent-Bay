@@ -2,7 +2,7 @@
 #define JAMMER_POWER_CONSUMPTION(tick_delay) ((max(0.75, range)**2 * jammer_method.energy_cost * tick_delay) / 20)
 
 /obj/item/device/suit_sensor_jammer
-	name = "small device"
+	name = "suit sensor jammer"
 	desc = "This object menaces with tiny, dull spikes of plastic."
 	icon_state = "jammer"
 	w_class = ITEM_SIZE_SMALL
@@ -40,6 +40,9 @@
 /obj/item/device/suit_sensor_jammer/attack_self(var/mob/user)
 	tg_ui_interact(user)
 
+/obj/item/device/suit_sensor_jammer/get_cell()
+	return bcell
+
 /obj/item/device/suit_sensor_jammer/attackby(obj/item/I as obj, mob/user as mob)
 	if(isCrowbar(I))
 		if(bcell)
@@ -59,7 +62,7 @@
 		else
 			to_chat(user, "<span class='warning'>You're unable to insert the battery.</span>")
 
-/obj/item/device/suit_sensor_jammer/update_icon()
+/obj/item/device/suit_sensor_jammer/on_update_icon()
 	overlays.Cut()
 	if(bcell)
 		var/percent = bcell.percent()
@@ -116,7 +119,7 @@ obj/item/device/suit_sensor_jammer/ui_status(mob/user, datum/ui_state/state)
 	return ..()
 
 obj/item/device/suit_sensor_jammer/tg_ui_interact(mob/user, ui_key = "main", datum/tgui/ui = null, force_open = 0, datum/tgui/master_ui = null, datum/ui_state/state = tg_default_state)
-	ui = tgui_process.try_update_ui(user, src, ui_key, ui, force_open)
+	ui = SStgui.try_update_ui(user, src, ui_key, ui, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "suit_sensor_jammer", "Sensor Jammer", 350, 610, master_ui, state)
 		ui.open()

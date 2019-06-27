@@ -34,7 +34,6 @@ GLOBAL_DATUM_INIT(item_equipped_event, /decl/observ/item_equipped, new)
 * Equipped Handling *
 ********************/
 
-/obj/item/equipped(var/mob/user, var/slot)
-	. = ..()
+/obj/item/proc/equipped(var/mob/user, var/slot)
 	GLOB.mob_equipped_event.raise_event(user, src, slot)
 	GLOB.item_equipped_event.raise_event(src, user, slot)

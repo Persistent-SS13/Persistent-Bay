@@ -13,6 +13,17 @@
 							/obj/item/weapon/stock_parts/matter_bin = 1,
 							/obj/item/weapon/stock_parts/micro_laser = 1)
 
+/obj/item/weapon/circuitboard/gasdrill
+	name = T_BOARD("gas drill head")
+	build_path = /obj/machinery/mining/gas_drill
+	board_type = "machine"
+	origin_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
+	req_components = list(
+							/obj/item/weapon/stock_parts/capacitor = 1,
+							/obj/item/weapon/cell = 1,
+							/obj/item/weapon/stock_parts/matter_bin = 1,
+							/obj/item/weapon/stock_parts/micro_laser = 1)
+
 /obj/item/weapon/circuitboard/miningdrillbrace
 	name = T_BOARD("mining drill brace")
 	build_path = /obj/machinery/mining/brace
@@ -30,7 +41,7 @@
 	name = T_BOARD("ore processor")
 	build_path = /obj/machinery/mineral/processing_unit
 	board_type = "machine"
-	origin_tech = list()
+	origin_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
 	req_components = list(
 		/obj/item/weapon/stock_parts/manipulator = 1,
 		/obj/item/weapon/stock_parts/micro_laser = 2
@@ -40,7 +51,7 @@
 	name = T_BOARD("unloading machine")
 	build_path = /obj/machinery/mineral/unloading_machine
 	board_type = "machine"
-	origin_tech = list()
+	origin_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
 	req_components = list(
 		/obj/item/weapon/stock_parts/manipulator = 2
 		)
@@ -49,7 +60,7 @@
 	name = T_BOARD("stacking machine")
 	build_path = /obj/machinery/mineral/stacking_machine
 	board_type = "machine"
-	origin_tech = list()
+	origin_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
 	req_components = list(
 		/obj/item/weapon/stock_parts/matter_bin = 1,
 		/obj/item/weapon/stock_parts/manipulator = 1

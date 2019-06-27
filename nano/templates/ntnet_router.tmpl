@@ -17,13 +17,12 @@
 			{{/if}}
 
 		{{/if}}
-	<h1>PUBLIC NETWORKS</h1>	
+	<h1>AVAILABLE NETWORKS</h1>	
 		<div class="statusDisplay" style="overflow: auto;">
 			<div class="item">
 				<div class="itemContent" style="width: 100%;">
 					{{for data.networks}}
-						{{:value.net_uid}} ({{:value.display_name}})<br>
-						{{:value.secured ? 'password/access required' : 'unsecured network'}}<br>
+						{{:value.display_name}}<br>
 						{{if value.connected}}
 							Connected
 						{{else}}
@@ -33,10 +32,7 @@
 					{{/for}}
 				</div>
 			</div>
-		</div>
-	<h1>MANUAL CONNECT</h1>
-		{{:helper.link('MANUALLY ENTER NET_UID AND PASSWORD', null, {'manual_connect' : 1})}}
-		
+		</div>		
 {{else}}
 	<h1>NO NETWORK CARD DETECTED. PLEASE INSTALL A WIRELESS NETWORK CARD TO CONTINUE</h1>
 {{/if}}

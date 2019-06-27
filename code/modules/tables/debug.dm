@@ -16,7 +16,7 @@
 
 /obj/item/stack/material/debug
 	name = "debugium"
-	icon = 'icons/obj/tables.dmi'
+	icon = 'icons/obj/structures/tables.dmi'
 	icon_state = "debugium"
 	default_type = "debugium"
 

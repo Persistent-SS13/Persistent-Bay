@@ -1,39 +1,79 @@
+#define DISEASE_SPLICER_SCANNING 0x1
+#define DISEASE_SPLICER_SPLICING 0x2
+#define DISEASE_SPLICER_WRITING  0x4
+#ifndef T_BOARD
+#error T_BOARD macro is not defined but we need it!
+#endif
+
+/obj/item/weapon/circuitboard/diseasesplicer
+	name = T_BOARD("disease splicer")
+	build_path = /obj/machinery/computer/diseasesplicer
+	origin_tech = list(TECH_DATA = 3, TECH_BIO = 2)
+
 /obj/machinery/computer/diseasesplicer
 	name = "disease splicer"
 	icon = 'icons/obj/computer.dmi'
 	icon_keyboard = "med_key"
 	icon_screen = "crew"
+	circuit = /obj/item/weapon/circuitboard/diseasesplicer
 
 	var/datum/disease2/effect/memorybank = null
 	var/list/species_buffer = null
-	var/analysed = 0
 	var/obj/item/weapon/virusdish/dish = null
-	var/burning = 0
-	var/splicing = 0
-	var/scanning = 0
+	var/analysed = 0
+	var/time_job_done
+	var/busy_state = 0
+
+/obj/machinery/computer/diseasesplicer/New()
+	..()
+	ADD_SAVED_VAR(memorybank)
+	ADD_SAVED_VAR(species_buffer)
+	ADD_SAVED_VAR(dish)
+	ADD_SAVED_VAR(analysed)
+	ADD_SAVED_VAR(time_job_done)
+	ADD_SAVED_VAR(busy_state)
+
+	ADD_SKIP_EMPTY(memorybank)
+	ADD_SKIP_EMPTY(species_buffer)
+	ADD_SKIP_EMPTY(dish)
+	ADD_SKIP_EMPTY(time_job_done)
+
+/obj/machinery/computer/diseasesplicer/before_save()
+	. = ..()
+	//Convert to absolute time
+	if(busy_state && time_job_done)
+		time_job_done = world.time - time_job_done
+
+/obj/machinery/computer/diseasesplicer/after_load()
+	. = ..()
+	//Convert to relative time
+	if(busy_state && time_job_done)
+		time_job_done = world.time + time_job_done
 
 /obj/machinery/computer/diseasesplicer/attackby(var/obj/I as obj, var/mob/user as mob)
-	if(isScrewdriver(I))
-		return ..(I,user)
-
-	if(istype(I,/obj/item/weapon/virusdish))
-		var/mob/living/carbon/c = user
+	if(default_deconstruction_screwdriver(user, I))
+		return 1
+	else if(default_deconstruction_crowbar(user, I))
+		return 1
+	else if(istype(I,/obj/item/weapon/virusdish))
 		if (dish)
 			to_chat(user, "\The [src] is already loaded.")
 			return
-
 		dish = I
-		c.drop_item()
-		I.loc = src
-
-	if(istype(I,/obj/item/weapon/diseasedisk))
+		user.drop_from_inventory(I)
+		I.forceMove(src)
+		SSnano.update_uis(src)
+		return 1
+	else if(istype(I,/obj/item/weapon/diseasedisk))
 		to_chat(user, "You upload the contents of the disk onto the buffer.")
 		var/obj/item/weapon/diseasedisk/disk = I
 		memorybank = disk.effect
 		species_buffer = disk.species
 		analysed = disk.analysed
-
-	src.attack_hand(user)
+		SSnano.update_uis(src)
+		return 1
+	else
+		return ..()
 
 /obj/machinery/computer/diseasesplicer/attack_ai(var/mob/user as mob)
 	return src.attack_hand(user)
@@ -55,11 +95,11 @@
 	if (species_buffer)
 		data["species_buffer"] = analysed ? jointext(species_buffer, ", ") : "Unknown Species"
 
-	if (splicing)
+	if(busy_state == DISEASE_SPLICER_SPLICING)
 		data["busy"] = "Splicing..."
-	else if (scanning)
+	else if (busy_state == DISEASE_SPLICER_SCANNING)
 		data["busy"] = "Scanning..."
-	else if (burning)
+	else if (busy_state == DISEASE_SPLICER_WRITING)
 		data["busy"] = "Copying data to disk..."
 	else if (dish)
 		data["growth"] = min(dish.growth, 100)
@@ -80,52 +120,59 @@
 	else
 		data["info"] = "No dish loaded."
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "disease_splicer.tmpl", src.name, 400, 600)
 		ui.set_initial_data(data)
 		ui.open()
 
 /obj/machinery/computer/diseasesplicer/Process()
-	if(stat & (NOPOWER|BROKEN))
+	if(inoperable())
 		return
 
-	if(scanning)
-		scanning -= 1
-		if(!scanning)
-			ping("\The [src] pings, \"Analysis complete.\"")
-			GLOB.nanomanager.update_uis(src)
-	if(splicing)
-		splicing -= 1
-		if(!splicing)
-			ping("\The [src] pings, \"Splicing operation complete.\"")
-			GLOB.nanomanager.update_uis(src)
-	if(burning)
-		burning -= 1
-		if(!burning)
-			var/obj/item/weapon/diseasedisk/d = new /obj/item/weapon/diseasedisk(src.loc)
-			d.analysed = analysed
-			if(analysed)
-				if (memorybank)
-					d.name = "[memorybank.name] GNA disk (Stage: [memorybank.stage])"
-					d.effect = memorybank
-				else if (species_buffer)
-					d.name = "[jointext(species_buffer, ", ")] GNA disk"
-					d.species = species_buffer
-			else
-				if (memorybank)
-					d.name = "Unknown GNA disk (Stage: [memorybank.stage])"
-					d.effect = memorybank
-				else if (species_buffer)
-					d.name = "Unknown Species GNA disk"
-					d.species = species_buffer
+	switch(busy_state)
+		if(DISEASE_SPLICER_SCANNING)
+			if(world.time >= time_job_done)
+				busy_state = 0
+				time_job_done = null
+				ping("\The [src] pings, \"Analysis complete.\"")
+				SSnano.update_uis(src)
+		if(DISEASE_SPLICER_SPLICING)
+			if(world.time >= time_job_done)
+				busy_state = 0
+				time_job_done = null
+				ping("\The [src] pings, \"Splicing operation complete.\"")
+				SSnano.update_uis(src)
+		if(DISEASE_SPLICER_WRITING)
+			if(world.time >= time_job_done)
+				busy_state = 0
+				time_job_done = null
+				var/obj/item/weapon/diseasedisk/d = new /obj/item/weapon/diseasedisk(src.loc)
+				d.analysed = analysed
+				if(analysed)
+					if (memorybank)
+						d.SetName("[memorybank.name] GNA disk (Stage: [memorybank.stage])")
+						d.effect = memorybank
+					else if (species_buffer)
+						d.SetName("[jointext(species_buffer, ", ")] GNA disk")
+						d.species = species_buffer
+				else
+					if (memorybank)
+						d.SetName("Unknown GNA disk (Stage: [memorybank.stage])")
+						d.effect = memorybank
+					else if (species_buffer)
+						d.SetName("Unknown Species GNA disk")
+						d.species = species_buffer
 
-			ping("\The [src] pings, \"Backup disk saved.\"")
-			GLOB.nanomanager.update_uis(src)
+				ping("\The [src] pings, \"Backup disk saved.\"")
+				SSnano.update_uis(src)
+	if(busy_state && dish && dish.virus2)
+		infect_nearby(dish.virus2, 40, SKILL_PROF)
 
-/obj/machinery/computer/diseasesplicer/OnTopic(user, href_list)
+/obj/machinery/computer/diseasesplicer/OnTopic(mob/user, href_list)
+	operator_skill = user.get_skill_value(core_skill)
 	if (href_list["close"])
-		GLOB.nanomanager.close_user_uis(user, src, "main")
+		SSnano.close_user_uis(user, src, "main")
 		return TOPIC_HANDLED
 
 	if (href_list["grab"])
@@ -134,7 +181,8 @@
 			species_buffer = null
 			analysed = dish.analysed
 			dish = null
-			scanning = 10
+			time_job_done = world.time + 5 SECONDS
+			busy_state = DISEASE_SPLICER_SCANNING
 		return TOPIC_REFRESH
 
 	if (href_list["affected_species"])
@@ -143,12 +191,12 @@
 			species_buffer = dish.virus2.affected_species
 			analysed = dish.analysed
 			dish = null
-			scanning = 10
+			time_job_done = world.time + 5 SECONDS
+			busy_state = DISEASE_SPLICER_SCANNING
 		return TOPIC_REFRESH
 
 	if(href_list["eject"])
 		if (dish)
-			dish.forceMove(loc)
 			if(Adjacent(usr) && !issilicon(usr))
 				usr.put_in_hands(dish)
 			dish = null
@@ -177,15 +225,19 @@
 
 			else if(species_buffer && target == -1)
 				dish.virus2.affected_species = species_buffer
-
 			else
 				return TOPIC_HANDLED
 
-			splicing = 10
-			dish.virus2.uniqueID = rand(0,10000)
+			time_job_done = world.time + 6 SECONDS
+			busy_state = DISEASE_SPLICER_SPLICING
+			dish.virus2.uniqueID = random_id("virusid", 0, 10000)
 		return TOPIC_REFRESH
 
 	if(href_list["disk"])
-		burning = 10
+		time_job_done = world.time + 5 SECONDS
+		busy_state = DISEASE_SPLICER_WRITING
 		return TOPIC_REFRESH
 
+#undef DISEASE_SPLICER_SCANNING
+#undef DISEASE_SPLICER_SPLICING
+#undef DISEASE_SPLICER_WRITING

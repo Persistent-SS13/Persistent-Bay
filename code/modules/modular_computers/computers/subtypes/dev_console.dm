@@ -4,19 +4,18 @@
 	icon = 'icons/obj/modular_console.dmi'
 	icon_state = "console"
 	icon_state_unpowered = "console"
-	icon_state_screensaver = "standby"
 	icon_state_menu = "menu"
 	hardware_flag = PROGRAM_CONSOLE
 	anchored = TRUE
 	density = 1
+	w_class = ITEM_SIZE_GARGANTUAN
 	base_idle_power_usage = 100
 	base_active_power_usage = 500
 	max_hardware_size = 3
 	steel_sheet_cost = 20
 	light_strength = 4
-	max_damage = 300
-	broken_damage = 150
-	flags = OBJ_CLIMBABLE
+	max_health = 300
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
 
 /obj/item/modular_computer/console/CouldUseTopic(var/mob/user)
 	..()

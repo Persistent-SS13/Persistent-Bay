@@ -10,6 +10,7 @@ var/list/fusion_reactions
 	var/instability = 0
 	var/list/products = list()
 	var/minimum_reaction_temperature = 100
+	var/priority = 100
 
 /decl/fusion_reaction/proc/handle_reaction_special(var/obj/effect/fusion_em_field/holder)
 	return 0
@@ -46,48 +47,49 @@ proc/get_fusion_reaction(var/p_react, var/s_react, var/m_energy)
 // Basic power production reactions.
 // This is not necessarily realistic, but it makes a basic failure more spectacular.
 /decl/fusion_reaction/hydrogen_hydrogen
-	p_react = "hydrogen"
-	s_react = "hydrogen"
+	p_react = GAS_HYDROGEN
+	s_react = GAS_HYDROGEN
 	energy_consumption = 1
 	energy_production = 2
-	products = list("helium" = 1)
+	products = list(GAS_HELIUM = 1)
 
 /decl/fusion_reaction/deuterium_deuterium
-	p_react = "deuterium"
-	s_react = "deuterium"
+	p_react = GAS_DEUTERIUM
+	s_react = GAS_DEUTERIUM
 	energy_consumption = 1
 	energy_production = 2
+	priority = 0
 
 // Advanced production reactions (todo)
 /decl/fusion_reaction/deuterium_helium
-	p_react = "deuterium"
-	s_react = "helium"
+	p_react = GAS_DEUTERIUM
+	s_react = GAS_HELIUM
 	energy_consumption = 1
 	energy_production = 5
 	radiation = 2
 
 /decl/fusion_reaction/deuterium_tritium
-	p_react = "deuterium"
-	s_react = "tritium"
+	p_react = GAS_DEUTERIUM
+	s_react = GAS_TRITIUM
 	energy_consumption = 1
 	energy_production = 1
-	products = list("helium" = 1)
+	products = list(GAS_HELIUM = 1)
 	instability = 0.5
 	radiation = 3
 
 /decl/fusion_reaction/deuterium_lithium
-	p_react = "deuterium"
-	s_react = "lithium"
+	p_react = GAS_DEUTERIUM
+	s_react = GAS_LITHIUM
 	energy_consumption = 2
 	energy_production = 0
 	radiation = 3
-	products = list("tritium"= 1)
+	products = list(GAS_TRITIUM= 1)
 	instability = 1
 
 // Unideal/material production reactions
 /decl/fusion_reaction/oxygen_oxygen
-	p_react = "oxygen"
-	s_react = "oxygen"
+	p_react = GAS_OXYGEN
+	s_react = GAS_OXYGEN
 	energy_consumption = 10
 	energy_production = 0
 	instability = 5
@@ -95,17 +97,17 @@ proc/get_fusion_reaction(var/p_react, var/s_react, var/m_energy)
 	products = list("silicon"= 1)
 
 /decl/fusion_reaction/iron_iron
-	p_react = "iron"
-	s_react = "iron"
-	products = list("silver" = 1, "gold" = 1, "platinum" = 1) // Not realistic but w/e
+	p_react = MATERIAL_IRON
+	s_react = MATERIAL_IRON
+	products = list(MATERIAL_SILVER = 1, MATERIAL_GOLD = 1, MATERIAL_PLATINUM = 1) // Not realistic but w/e
 	energy_consumption = 10
 	energy_production = 0
 	instability = 2
 	minimum_reaction_temperature = 10000
 
 /decl/fusion_reaction/phoron_hydrogen
-	p_react = "hydrogen"
-	s_react = "phoron"
+	p_react = GAS_HYDROGEN
+	s_react = GAS_PHORON
 	energy_consumption = 10
 	energy_production = 0
 	instability = 5
@@ -115,7 +117,7 @@ proc/get_fusion_reaction(var/p_react, var/s_react, var/m_energy)
 // VERY UNIDEAL REACTIONS.
 /decl/fusion_reaction/phoron_supermatter
 	p_react = "supermatter"
-	s_react = "phoron"
+	s_react = GAS_PHORON
 	energy_consumption = 0
 	energy_production = 5
 	radiation = 20
@@ -131,7 +133,7 @@ proc/get_fusion_reaction(var/p_react, var/s_react, var/m_energy)
 	var/radiation_level = rand(100, 200)
 
 	// Copied from the SM for proof of concept. //Not any more --Cirra //Use the whole z proc --Leshana
-	radiation_repository.z_radiate(locate(1, 1, holder.z), radiation_level, 1)
+	SSradiation.z_radiate(locate(1, 1, holder.z), radiation_level, 1)
 
 	for(var/mob/living/mob in GLOB.living_mob_list_)
 		var/turf/T = get_turf(mob)
@@ -141,7 +143,7 @@ proc/get_fusion_reaction(var/p_react, var/s_react, var/m_energy)
 				H.hallucination(rand(100,150), 51)
 
 	for(var/obj/machinery/fusion_fuel_injector/I in range(world.view, origin))
-		if(I.cur_assembly && I.cur_assembly.fuel_type == "supermatter")
+		if(I.cur_assembly && I.cur_assembly.fuel_type == MATERIAL_SUPERMATTER)
 			explosion(get_turf(I), 1, 2, 3)
 			spawn(5)
 				if(I && I.loc)
@@ -155,8 +157,8 @@ proc/get_fusion_reaction(var/p_react, var/s_react, var/m_energy)
 
 // High end reactions.
 /decl/fusion_reaction/boron_hydrogen
-	p_react = "boron"
-	s_react = "hydrogen"
+	p_react = GAS_BORON
+	s_react = GAS_HYDROGEN
 	minimum_energy_level = FUSION_HEAT_CAP * 0.5
 	energy_consumption = 3
 	energy_production = 15

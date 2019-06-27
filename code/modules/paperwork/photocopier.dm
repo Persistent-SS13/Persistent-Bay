@@ -1,15 +1,17 @@
 /obj/machinery/photocopier
 	name = "photocopier"
-	icon = 'icons/obj/library.dmi'
-	icon_state = "bigscanner"
-	var/insert_anim = "bigscanner1"
+	icon = 'icons/obj/machines/photocopier.dmi'
+	icon_state = "photocopier"
+	var/insert_anim = "photocopier_animation"
 	anchored = 1
 	density = 1
 	use_power = 1
 	idle_power_usage = 30
 	active_power_usage = 200
 	power_channel = EQUIP
-	flags = OBJ_ANCHORABLE|OBJ_CLIMBABLE
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
+	obj_flags = OBJ_FLAG_ANCHORABLE | OBJ_FLAG_DAMAGEABLE
+	circuit_type = /obj/item/weapon/circuitboard/photocopier
 	var/obj/item/copyitem = null	//what's in the copier!
 	var/copies = 1	//how many copies to print!
 	var/toner = 30 //how much toner is left! woooooo~
@@ -17,13 +19,12 @@
 
 /obj/machinery/photocopier/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/photocopier(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	return
+	ADD_SAVED_VAR(copyitem)
+	ADD_SAVED_VAR(copies)
+	ADD_SAVED_VAR(toner)
+
+	ADD_SKIP_EMPTY(copyitem)
+
 /obj/machinery/photocopier/attack_ai(mob/user as mob)
 	return attack_hand(user)
 
@@ -71,7 +72,7 @@
 				to_chat(usr, "<span class='warning'>\The [copyitem] can't be copied by \the [src].</span>")
 				break
 
-			use_power(active_power_usage)
+			use_power_oneoff(active_power_usage)
 		updateUsrDialog()
 	else if(href_list["remove"])
 		if(copyitem)
@@ -121,9 +122,9 @@
 		return
 	if(istype(O, /obj/item/weapon/paper) || istype(O, /obj/item/weapon/photo) || istype(O, /obj/item/weapon/paper_bundle))
 		if(!copyitem)
-			user.drop_item()
+			if(!user.unEquip(O, src))
+				return
 			copyitem = O
-			O.loc = src
 			to_chat(user, "<span class='notice'>You insert \the [O] into \the [src].</span>")
 			flick(insert_anim, src)
 			updateUsrDialog()
@@ -131,7 +132,8 @@
 			to_chat(user, "<span class='notice'>There is already something in \the [src].</span>")
 	else if(istype(O, /obj/item/device/toner))
 		if(toner <= 10) //allow replacing when low toner is affecting the print darkness
-			user.drop_item()
+			if(!user.unEquip(O, src))
+				return
 			to_chat(user, "<span class='notice'>You insert the toner cartridge into \the [src].</span>")
 			var/obj/item/device/toner/T = O
 			toner += T.toner_amount
@@ -139,8 +141,8 @@
 			updateUsrDialog()
 		else
 			to_chat(user, "<span class='notice'>This cartridge is not yet ready for replacement! Use up the rest of the toner.</span>")
-	..()
-	return
+	else 
+		return ..()
 
 /obj/machinery/photocopier/ex_act(severity)
 	switch(severity)
@@ -161,7 +163,10 @@
 	return
 
 /obj/machinery/photocopier/proc/copy(var/obj/item/weapon/paper/copy, var/need_toner=1)
-	var/obj/item/weapon/paper/c = new /obj/item/weapon/paper (loc)
+	var/obj/item/weapon/paper/c = new copy.type(loc, copy.text, copy.name, copy.metadata )
+
+	c.color = COLOR_WHITE
+
 	if(toner > 10)	//lots of toner, make it dark
 		c.info = "<font color = #101010>"
 	else			//no toner? shitty copies for you!
@@ -171,7 +176,7 @@
 	copied = replacetext(copied, "<font face=\"[c.crayonfont]\" color=", "<font face=\"[c.crayonfont]\" nocolor=")	//This basically just breaks the existing color tag, which we need to do because the innermost tag takes priority.
 	c.info += copied
 	c.info += "</font>"//</font>
-	c.name = copy.name // -- Doohl
+	c.SetName(copy.name) // -- Doohl
 	c.fields = copy.fields
 	c.stamps = copy.stamps
 	c.stamped = copy.stamped
@@ -182,11 +187,11 @@
 	var/image/img                                //and puts a matching
 	for (var/j = 1, j <= min(temp_overlays.len, copy.ico.len), j++) //gray overlay onto the copy
 		if (findtext(copy.ico[j], "cap") || findtext(copy.ico[j], "cent"))
-			img = image('icons/obj/bureaucracy.dmi', "paper_stamp-circle")
+			img = image('icons/obj/items/paper.dmi', "paper_stamp-circle")
 		else if (findtext(copy.ico[j], "deny"))
-			img = image('icons/obj/bureaucracy.dmi', "paper_stamp-x")
+			img = image('icons/obj/items/paper.dmi', "paper_stamp-x")
 		else
-			img = image('icons/obj/bureaucracy.dmi', "paper_stamp-dots")
+			img = image('icons/obj/items/paper.dmi', "paper_stamp-dots")
 		img.pixel_x = copy.offset_x[j]
 		img.pixel_y = copy.offset_y[j]
 		c.overlays += img
@@ -195,12 +200,12 @@
 		toner--
 	if(toner == 0)
 		visible_message("<span class='notice'>A red light on \the [src] flashes, indicating that it is out of toner.</span>")
+	c.update_icon()
 	return c
-
 
 /obj/machinery/photocopier/proc/photocopy(var/obj/item/weapon/photo/photocopy, var/need_toner=1)
 	var/obj/item/weapon/photo/p = photocopy.copy()
-	p.forceMove(get_turf(src))
+	p.dropInto(loc)
 
 	if(toner > 10)	//plenty of toner, go straight greyscale
 		p.img.MapColors(rgb(77,77,77), rgb(150,150,150), rgb(28,28,28), rgb(0,0,0))//I'm not sure how expensive this is, but given the many limitations of photocopying, it shouldn't be an issue.
@@ -229,13 +234,13 @@
 			W = copy(W)
 		else if(istype(W, /obj/item/weapon/photo))
 			W = photocopy(W)
-		W.loc = p
+		W.forceMove(p)
 		p.pages += W
 
-	p.loc = src.loc
+	p.dropInto(loc)
 	p.update_icon()
 	p.icon_state = "paper_words"
-	p.name = bundle.name
+	p.SetName(bundle.name)
 	return p
 
 /obj/item/device/toner

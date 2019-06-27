@@ -21,7 +21,7 @@ var/list/mob_hat_cache = list()
 /mob/living/silicon/robot/drone
 	name = "maintenance drone"
 	real_name = "drone"
-	icon = 'icons/mob/robots.dmi'
+	icon = 'icons/mob/robots_drones.dmi'
 	icon_state = "repairbot"
 	maxHealth = 35
 	health = 35
@@ -29,14 +29,15 @@ var/list/mob_hat_cache = list()
 	universal_speak = 0
 	universal_understand = 1
 	gender = NEUTER
-	pass_flags = PASSTABLE
+	pass_flags = PASS_FLAG_TABLE
 	braintype = "Drone"
 	lawupdate = 0
 	density = 1
 	req_access = list(core_access_science_programs)
-	integrated_light_power = 3
+	integrated_light_max_bright = 0.5
 	local_transmit = 1
 	possession_candidate = 1
+	speed = -1
 
 	can_pull_size = ITEM_SIZE_NORMAL
 	can_pull_mobs = MOB_PULL_SMALLER
@@ -61,8 +62,25 @@ var/list/mob_hat_cache = list()
 
 	holder_type = /obj/item/weapon/holder/drone
 
-/mob/living/silicon/robot/drone/New()
-	..()
+/mob/living/silicon/robot/drone/Initialize()
+	. = ..()
+
+	verbs += /mob/living/proc/hide
+	remove_language("Robot Talk")
+	add_language("Robot Talk", 0)
+	add_language("Drone Talk", 1)
+	default_language = all_languages["Drone Talk"]
+	// NO BRAIN.
+	mmi = null
+
+	//We need to screw with their HP a bit. They have around one fifth as much HP as a full borg.
+	for(var/V in components) if(V != "power cell")
+		var/datum/robot_component/C = components[V]
+		C.max_damage = 10
+
+	verbs -= /mob/living/silicon/robot/verb/Namepick
+	update_icon()
+
 	GLOB.moved_event.register(src, src, /mob/living/silicon/robot/drone/proc/on_moved)
 
 /mob/living/silicon/robot/drone/Destroy()
@@ -93,7 +111,7 @@ var/list/mob_hat_cache = list()
 	if(too_many_active_drones())
 		to_chat(src, "<span class='danger'>The maximum number of active drones has been reached..</span>")
 		return 0
-	if(jobban_isbanned(possessor,"Cyborg"))
+	if(jobban_isbanned(possessor,"Robot"))
 		to_chat(usr, "<span class='danger'>You are banned from playing synthetics and cannot spawn as a drone.</span>")
 		return 0
 	if(!possessor.MayRespawn(1,DRONE_SPAWN_DELAY))
@@ -122,26 +140,6 @@ var/list/mob_hat_cache = list()
 	can_pull_size = ITEM_SIZE_NO_CONTAINER
 	can_pull_mobs = MOB_PULL_SAME
 
-/mob/living/silicon/robot/drone/New()
-
-	..()
-
-	verbs += /mob/living/proc/hide
-	remove_language("Robot Talk")
-	add_language("Robot Talk", 0)
-	add_language("Drone Talk", 1)
-
-	// NO BRAIN.
-	mmi = null
-
-	//We need to screw with their HP a bit. They have around one fifth as much HP as a full borg.
-	for(var/V in components) if(V != "power cell")
-		var/datum/robot_component/C = components[V]
-		C.max_damage = 10
-
-	verbs -= /mob/living/silicon/robot/verb/Namepick
-	update_icon()
-
 /mob/living/silicon/robot/drone/init()
 	additional_law_channels["Drone"] = ":d"
 	if(!module) module = new module_type(src)
@@ -153,16 +151,16 @@ var/list/mob_hat_cache = list()
 /mob/living/silicon/robot/drone/fully_replace_character_name(pickedName as text)
 	// Would prefer to call the grandparent proc but this isn't possible, so..
 	real_name = pickedName
-	name = real_name
+	SetName(real_name)
 
 /mob/living/silicon/robot/drone/updatename()
 	if(controlling_ai)
 		real_name = "remote drone ([controlling_ai.name])"
 	else
 		real_name = "[initial(name)] ([random_id(type,100,999)])"
-	name = real_name
+	SetName(real_name)
 
-/mob/living/silicon/robot/drone/update_icon()
+/mob/living/silicon/robot/drone/on_update_icon()
 
 	overlays.Cut()
 	if(stat == 0)
@@ -197,10 +195,9 @@ var/list/mob_hat_cache = list()
 	if(user.a_intent == I_HELP && istype(W, /obj/item/clothing/head))
 		if(hat)
 			to_chat(user, "<span class='warning'>\The [src] is already wearing \the [hat].</span>")
-			return
-		user.unEquip(W)
-		wear_hat(W)
-		user.visible_message("<span class='notice'>\The [user] puts \the [W] on \the [src].</span>")
+		else if(user.unEquip(W))
+			wear_hat(W)
+			user.visible_message("<span class='notice'>\The [user] puts \the [W] on \the [src].</span>")
 		return
 	else if(istype(W, /obj/item/borg/upgrade/))
 		to_chat(user, "<span class='danger'>\The [src] is not compatible with \the [W].</span>")
@@ -210,7 +207,7 @@ var/list/mob_hat_cache = list()
 		to_chat(user, "<span class='danger'>\The [src] is hermetically sealed. You can't open the case.</span>")
 		return
 
-	else if (istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))
+	else if (istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/modular_computer))
 
 		if(stat == 2)
 

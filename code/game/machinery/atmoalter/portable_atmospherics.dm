@@ -1,7 +1,7 @@
 /obj/machinery/portable_atmospherics
 	name = "atmoalter"
-	use_power = 0
-	var/datum/gas_mixture/air_contents = new
+	use_power = POWER_USE_OFF
+	var/datum/gas_mixture/air_contents
 
 	var/obj/machinery/atmospherics/portables_connector/connected_port
 	var/obj/item/weapon/tank/holding
@@ -11,15 +11,12 @@
 
 	var/start_pressure = ONE_ATMOSPHERE
 	var/maximum_pressure = 90 * ONE_ATMOSPHERE
-	flags = OBJ_CLIMBABLE
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
 
 /obj/machinery/portable_atmospherics/New()
 	..()
-
-	air_contents.volume = volume
-	air_contents.temperature = T20C
-
-	return 1
+	ADD_SAVED_VAR(holding)
+	ADD_SKIP_EMPTY(holding)
 
 /obj/machinery/portable_atmospherics/Destroy()
 	QDEL_NULL(air_contents)
@@ -27,12 +24,24 @@
 	. = ..()
 
 /obj/machinery/portable_atmospherics/Initialize()
+	..()
+	if(!air_contents)
+		init_air_content()
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/portable_atmospherics/LateInitialize()
 	. = ..()
-	spawn()
-		var/obj/machinery/atmospherics/portables_connector/port = locate() in loc
-		if(port)
-			connect(port)
-			update_icon()
+	var/obj/machinery/atmospherics/portables_connector/port = locate() in loc
+	if(port)
+		connect(port)
+		update_icon()
+
+// Override this to change the initial air content!
+//
+/obj/machinery/portable_atmospherics/proc/init_air_content()
+	air_contents = new
+	air_contents.volume = volume
+	air_contents.temperature = T20C
 
 /obj/machinery/portable_atmospherics/Process()
 	if(!connected_port) //only react when pipe_network will ont it do it for you
@@ -43,13 +52,13 @@
 
 /obj/machinery/portable_atmospherics/proc/StandardAirMix()
 	return list(
-		"oxygen" = O2STANDARD * MolesForPressure(),
-		"nitrogen" = N2STANDARD *  MolesForPressure())
+		GAS_OXYGEN = O2STANDARD * MolesForPressure(),
+		GAS_NITROGEN = N2STANDARD *  MolesForPressure())
 
 /obj/machinery/portable_atmospherics/proc/MolesForPressure(var/target_pressure = start_pressure)
 	return (target_pressure * air_contents.volume) / (R_IDEAL_GAS_EQUATION * air_contents.temperature)
 
-/obj/machinery/portable_atmospherics/update_icon()
+/obj/machinery/portable_atmospherics/on_update_icon()
 	return null
 
 /obj/machinery/portable_atmospherics/proc/connect(obj/machinery/atmospherics/portables_connector/new_port)
@@ -103,10 +112,9 @@
 	if ((istype(W, /obj/item/weapon/tank) && !( src.destroyed )))
 		if (src.holding)
 			return
-		var/obj/item/weapon/tank/T = W
-		user.drop_item()
-		T.forceMove(src)
-		src.holding = T
+		if(!user.unEquip(W, src))
+			return
+		src.holding = W
 		update_icon()
 		return
 
@@ -130,7 +138,7 @@
 				to_chat(user, "<span class='notice'>Nothing happens.</span>")
 				return
 
-	else if (istype(W, /obj/item/device/analyzer))
+	else if (istype(W, /obj/item/device/scanner/gas))
 		return
 
 	return
@@ -144,6 +152,15 @@
 	var/last_power_draw = 0
 	var/obj/item/weapon/cell/cell
 
+/obj/machinery/portable_atmospherics/powered/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		cell = make_cell()
+
+//Override this
+/obj/machinery/portable_atmospherics/powered/proc/make_cell()
+	return null
+
 /obj/machinery/portable_atmospherics/powered/powered()
 	if(use_power) //using area power
 		return ..()
@@ -156,14 +173,10 @@
 		if(cell)
 			to_chat(user, "There is already a power cell installed.")
 			return
-
-		var/obj/item/weapon/cell/C = I
-
-		user.drop_item()
-		C.add_fingerprint(user)
-		cell = C
-		C.forceMove(src)
-		user.visible_message("<span class='notice'>[user] opens the panel on [src] and inserts [C].</span>", "<span class='notice'>You open the panel on [src] and insert [C].</span>")
+		if(!user.unEquip(I, src))
+			return
+		cell = I
+		user.visible_message("<span class='notice'>[user] opens the panel on \the [src] and inserts \the [I].</span>", "<span class='notice'>You open the panel on \the [src] and insert \the [I].</span>")
 		power_change()
 		return
 
@@ -172,7 +185,7 @@
 			to_chat(user, "<span class='warning'>There is no power cell installed.</span>")
 			return
 
-		user.visible_message("<span class='notice'>[user] opens the panel on [src] and removes [cell].</span>", "<span class='notice'>You open the panel on [src] and remove [cell].</span>")
+		user.visible_message("<span class='notice'>[user] opens the panel on \the [src] and removes \the [cell].</span>", "<span class='notice'>You open the panel on \the [src] and remove \the [cell].</span>")
 		cell.add_fingerprint(user)
 		cell.dropInto(loc)
 		cell = null

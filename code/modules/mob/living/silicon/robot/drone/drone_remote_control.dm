@@ -3,6 +3,7 @@
 
 /mob/living/silicon/robot/drone
 	var/mob/living/silicon/ai/controlling_ai
+	var/obj/item/device/radio/drone_silicon_radio
 
 /mob/living/silicon/robot/drone/attack_ai(var/mob/living/silicon/ai/user)
 
@@ -16,18 +17,24 @@
 	if(health < -35 || emagged)
 		to_chat(user, "<span class='notice'><b>WARNING:</b> connection timed out.</span>")
 		return
+	
+	assume_control(user)
 
+/mob/living/silicon/robot/drone/proc/assume_control(var/mob/living/silicon/ai/user)
 	user.controlling_drone = src
 	controlling_ai = user
 	verbs += /mob/living/silicon/robot/drone/proc/release_ai_control_verb
 	local_transmit = FALSE
-	languages.Cut()
-	speech_synthesizer_langs.Cut()
+	languages = controlling_ai.languages.Copy()
 
-	for(var/datum/language/L in controlling_ai.languages)
-		add_language(L.name, 0)
+	//give controlled drone access to AI radio
+	drone_silicon_radio = silicon_radio
+	silicon_radio = new /obj/item/device/radio/headset/heads/ai_integrated(src)
+	//silicon_radio.recalculateChannels()
+
 	add_language("Drone Talk", 1)
-	default_language = all_languages["Drone Talk"]
+	add_language("Robot Talk", 1)
+	default_language = controlling_ai.default_language
 
 	stat = CONSCIOUS
 	if(user.mind)
@@ -59,28 +66,13 @@
 		return
 
 	var/mob/living/silicon/robot/drone/new_drone = create_drone()
-	user.controlling_drone = new_drone
-	new_drone.controlling_ai = user
-	new_drone.verbs += /mob/living/silicon/robot/drone/proc/release_ai_control_verb
-	new_drone.local_transmit = FALSE
-	new_drone.languages.Cut()
-	new_drone.speech_synthesizer_langs.Cut()
-	for(var/datum/language/L in new_drone.controlling_ai.languages)
-		new_drone.add_language(L.name, 0)
-	new_drone.add_language("Drone Talk", 1)
-	new_drone.default_language = all_languages["Drone Talk"]
+	new_drone.assume_control(user)
 
-	if(user.mind)
-		user.mind.transfer_to(new_drone)
-	else
-		new_drone.key = user.key
-	new_drone.updatename()
-
-	to_chat(new_drone, "<span class='notice'><b>You have shunted your primary control loop into \a [initial(new_drone.name)].</b> Use the <b>Release Control</b> verb to return to your core.</span>")
 
 /mob/living/silicon/robot/drone/death(gibbed)
 	if(controlling_ai)
 		release_ai_control("<b>WARNING: remote system failure.</b> Connection timed out.")
+	drone_silicon_radio = null
 	. = ..(gibbed)
 
 /mob/living/silicon/ai/death(gibbed)
@@ -110,6 +102,11 @@
 		to_chat(controlling_ai, "<span class='notice'>[message]</span>")
 		controlling_ai.controlling_drone = null
 		controlling_ai = null
+	//releases controlled drone access to AI radio
+	QDEL_NULL(silicon_radio)
+	silicon_radio = drone_silicon_radio
+	drone_silicon_radio = null
+	default_language = all_languages["Drone Talk"]
 
 	verbs -= /mob/living/silicon/robot/drone/proc/release_ai_control_verb
 	full_law_reset()

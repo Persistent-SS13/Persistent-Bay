@@ -5,7 +5,7 @@
 	var
 		round_time // time of the round at which this should be announced, in seconds
 		message // body of the message
-		author = "Nanotrasen Editor"
+		author = "NanoTrasen Editor"
 		channel_name = "Nyx Daily"
 		can_be_redacted = 0
 		message_type = "Story"
@@ -14,7 +14,7 @@
 
 		paycuts_suspicion
 			round_time = 60*10
-			message = {"Reports have leaked that Nanotrasen is planning to put paycuts into
+			message = {"Reports have leaked that NanoTrasen is planning to put paycuts into
 						effect on many of its Research Stations around the frontier. Apparently these research
 						stations haven't been able to yield the expected revenue, and thus adjustments
 						have to be made."}
@@ -30,12 +30,12 @@
 		human_experiments
 			round_time = 60*90
 			message = {"Unbelievable reports about human experimentation have reached our ears. According
-			 			to a refugee from one of the Nanotrasen Research Stations, their station, in order
+			 			to a refugee from one of the NanoTrasen Research Stations, their station, in order
 			 			to increase revenue, has refactored several of their facilities to perform experiments
 			 			on live humans, including virology research, genetic manipulation, and \"feeding them
 			 			to the slimes to see what happens\". Allegedly, these test subjects were neither
 			 			humanified monkeys nor volunteers, but rather unqualified staff that were forced into
-			 			the experiments, and reported to have died in a \"work accident\" by Nanotrasen."}
+			 			the experiments, and reported to have died in a \"work accident\" by NanoTrasen."}
 			author = "Unauthorized"
 
 	bluespace_research
@@ -60,7 +60,7 @@
 		net_block
 			author = "Assistant Editor Carl Ritz"
 			channel_name = "The Gibson Gazette"
-			message = {"Several corporations banding together to block access to 'wetskrell.nt', site administrators
+			message = {"Several corporations banding together to block access to 'wetskrell.net', site administrators
 			claiming violation of net laws."}
 			round_time = 60 * 50
 
@@ -95,9 +95,9 @@
 			author = "Reporter Ro'kii Ar-Raqis"
 
 			message = {"Breaking news: Food riots have broken out throughout the Refuge asteroid colony in the Tenebrae
-						Lupus system. This comes only hours after Nanotrasen officials announced they will no longer trade with the
+						Lupus system. This comes only hours after NanoTrasen officials announced they will no longer trade with the
 						colony, citing the increased presence of \"hostile factions\" on the colony has made trade too dangerous to
-						continue. Nanotrasen officials have not given any details about said factions. More on that at the top of
+						continue. NanoTrasen officials have not given any details about said factions. More on that at the top of
 						the hour."}
 			round_time = 60 * 10
 
@@ -105,19 +105,19 @@
 			channel_name = "Nyx Daily"
 			author = "Reporter Ro'kii Ar-Raqis"
 
-			message = {"More on the Refuge food riots: The Refuge Council has condemned Nanotrasen's withdrawal from
-			the colony, claiming \"there has been no increase in anti-Nanotrasen activity\", and \"\[the only] reason
-			Nanotrasen withdrew was because the \[Tenebrae Lupus] system's Phoron deposits have been completely mined out.
-			We have little to trade with them now\". Nanotrasen officials have denied these allegations, calling them
-			\"further proof\" of the colony's anti-Nanotrasen stance. Meanwhile, Refuge Security has been unable to quell
+			message = {"More on the Refuge food riots: The Refuge Council has condemned NanoTrasen's withdrawal from
+			the colony, claiming \"there has been no increase in anti-NanoTrasen activity\", and \"\[the only] reason
+			NanoTrasen withdrew was because the \[Tenebrae Lupus] system's Phoron deposits have been completely mined out.
+			We have little to trade with them now\". NanoTrasen officials have denied these allegations, calling them
+			\"further proof\" of the colony's anti-NanoTrasen stance. Meanwhile, Refuge Security has been unable to quell
 			the riots. More on this at 6."}
 			round_time = 60 * 60
 
 
 var/global/list/newscaster_standard_feeds = list(/datum/news_announcement/bluespace_research, /datum/news_announcement/lotus_tree, /datum/news_announcement/random_junk,  /datum/news_announcement/food_riots)
 
-proc/process_newscaster()
-	check_for_newscaster_updates(ticker.mode.newscaster_announcements)
+// proc/process_newscaster()
+// 	check_for_newscaster_updates(SSticker.mode.newscaster_announcements)
 
 var/global/tmp/announced_news_types = list()
 proc/check_for_newscaster_updates(type)

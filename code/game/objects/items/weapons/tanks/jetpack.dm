@@ -1,13 +1,13 @@
 //This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:32
 
 /obj/item/weapon/tank/jetpack
-	name = "jetpack (empty)"
+	name = "jetpack"
 	desc = "A tank of compressed gas for use as propulsion in zero-gravity areas. Use with caution."
 	icon_state = "jetpack"
 	gauge_icon = null
 	w_class = ITEM_SIZE_HUGE
 	item_state = "jetpack"
-	matter = list(DEFAULT_WALL_MATERIAL = 6000)
+	matter = list(MATERIAL_STEEL = 6000)
 	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
 	var/datum/effect/effect/system/trail/ion/ion_trail
 	var/on = 0.0
@@ -21,8 +21,8 @@
 	ion_trail.set_up(src)
 
 /obj/item/weapon/tank/jetpack/Destroy()
-	. = ..()
 	qdel(ion_trail)
+	..()
 
 /obj/item/weapon/tank/jetpack/examine(mob/living/user)
 	. = ..()
@@ -54,21 +54,19 @@
 
 	to_chat(usr, "You toggle the thrusters [on? "on":"off"].")
 
-/obj/item/weapon/tank/jetpack/proc/allow_thrust(num, mob/living/user as mob)
+/obj/item/weapon/tank/jetpack/proc/allow_thrust(num, mob/living/user)
 	if(!(src.on))
 		return 0
 	if((num < 0.005 || src.air_contents.total_moles < num))
 		src.ion_trail.stop()
 		return 0
 
-	var/datum/gas_mixture/G = src.air_contents.remove(num)
+	var/datum/gas_mixture/G = remove_air(num)
 
-	var/allgases = G.gas["carbon_dioxide"] + G.gas["nitrogen"] + G.gas["oxygen"] + G.gas["phoron"]
-	if(allgases >= 0.005)
+	if(G.total_moles >= 0.005)
 		return 1
 
 	qdel(G)
-	return
 
 /obj/item/weapon/tank/jetpack/ui_action_click()
 	toggle()
@@ -79,14 +77,14 @@
 	desc = "It works well in a void."
 	icon_state = "jetpack-void"
 	item_state =  "jetpack-void"
-	starting_pressure = list("oxygen" = 6*ONE_ATMOSPHERE)
+	starting_pressure = list(GAS_OXYGEN = 6*ONE_ATMOSPHERE)
 
 /obj/item/weapon/tank/jetpack/oxygen
 	name = "jetpack (oxygen)"
 	desc = "A tank of compressed oxygen for use as propulsion in zero-gravity areas. Use with caution."
 	icon_state = "jetpack"
 	item_state = "jetpack"
-	starting_pressure = list("oxygen" = 6*ONE_ATMOSPHERE)
+	starting_pressure = list(GAS_OXYGEN = 6*ONE_ATMOSPHERE)
 
 /obj/item/weapon/tank/jetpack/carbondioxide
 	name = "jetpack (carbon dioxide)"
@@ -94,7 +92,7 @@
 	distribute_pressure = 0
 	icon_state = "jetpack-black"
 	item_state =  "jetpack-black"
-	starting_pressure = list("carbon_dioxide" = 6*ONE_ATMOSPHERE)
+	starting_pressure = list(GAS_CO2 = 6*ONE_ATMOSPHERE)
 
 /obj/item/weapon/tank/jetpack/rig
 	name = "jetpack"
@@ -119,7 +117,7 @@
 		src.ion_trail.stop()
 		return 0
 
-	var/datum/gas_mixture/G = pressure_vessel.air_contents.remove(num)
+	var/datum/gas_mixture/G = pressure_vessel.remove_air(num)
 
 	if(G.total_moles >= 0.005)
 		return 1

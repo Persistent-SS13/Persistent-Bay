@@ -11,8 +11,7 @@
 	input_turf = null
 	output_turf = null
 	if(console && !ispath(console))
-		if(src in console.connected)
-			console.connected -= src
+		console.disconnect_machine(src)
 		console = null
 	. = ..()
 
@@ -30,11 +29,35 @@
 	if(default_deconstruction_screwdriver(user, O))
 		updateUsrDialog()
 		return
-	if(default_deconstruction_crowbar(user, O))
+	else if(default_deconstruction_crowbar(user, O))
 		return
-	if(default_part_replacement(user, O))
+	else if(default_part_replacement(user, O))
+		return
+	else if(isMultitool(O))
+		var/obj/item/device/multitool/mt = O
+		var/obj/machinery/mach = mt.get_buffer(/obj/machinery)
+		if(mach)
+			mt.set_buffer(null)
+			if(connect_machine(mach))
+				to_chat(user, "<span class='notice'>You connect \the [src] to \the [console]!</span>")
+			else
+				to_chat(user, "<span class='warning'>Nothing happens..</span>")
+		else
+			mt.set_buffer(src)
+			to_chat(user, "<span class='notice'>You set \the [mt]'s buffer to \the [src]!</span>")
 		return
 	. = ..()
+
+/obj/machinery/mineral/proc/connect_machine(var/obj/machinery/mach)
+	if(mach == src)
+		return FALSE
+
+	if(istype(mach, /obj/machinery/computer/mining))
+		console = mach
+		console.connect_machine(src)
+		return TRUE
+
+	return FALSE
 
 /obj/machinery/mineral/proc/set_input(var/_dir)
 	input_turf = _dir ? get_step(loc, _dir) : null
@@ -45,13 +68,13 @@
 /obj/machinery/mineral/proc/get_console_data()
 	. = list("<h1>Input/Output</h1>")
 	if(input_turf)
-		. += "<b>Input</b>: [dir2text(get_dir(src, input_turf))]"
+		. += "<b>Input</b>: [dir2text(get_dir(src, input_turf))]."
 	else
-		. += "<b>Input</b>: disabled"
+		. += "<b>Input</b>: disabled."
 	if(output_turf)
-		. += "<b>Output</b>: [dir2text(get_dir(src, output_turf))]"
+		. += "<b>Output</b>: [dir2text(get_dir(src, output_turf))]."
 	else
-		. += "<b>Output</b>: disabled"
+		. += "<b>Output</b>: disabled."
 	. += "<br><a href='?src=\ref[src];configure_input_output=1'>Configure</a>"
 
 /obj/machinery/mineral/CanUseTopic(var/mob/user)
@@ -103,7 +126,7 @@
 	if(isnull(choice) || !can_configure(user)) return
 
 	var/list/_dirs = list("North" = NORTH, "South" = SOUTH, "East" = EAST, "West" = WEST, "Clear" = 0)
-	var/dchoice = input("[choice] should be...") as null|anything in _dirs
+	var/dchoice = input("Do you wish to change the input direction, or the output direction?") as null|anything in _dirs
 	if(isnull(dchoice) || !can_configure(user)) return
 
 	if(choice == "Input")

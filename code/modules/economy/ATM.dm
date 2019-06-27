@@ -6,12 +6,11 @@
 /obj/item/weapon/card/id/var/money = 2000
 
 /obj/machinery/atm
-	name = "Automatic Teller Machine"
+	name = "automatic teller machine"
 	desc = "For all your monetary needs!"
-	icon = 'icons/obj/terminals.dmi'
+	icon = 'icons/obj/machines/terminals/atm.dmi'
 	icon_state = "atm"
 	anchored = 1
-	use_power = 1
 	idle_power_usage = 10
 	var/datum/money_account/authenticated_account
 	var/number_incorrect_tries = 0
@@ -27,18 +26,54 @@
 	var/account_security_level = 0
 	var/buildstage = 2	// 2 = complete, 1 = no wires,  0 = circuit gone
 	var/wiresexposed = 0
+	frame_type = /obj/item/frame/atm
+	circuit_type = /obj/item/weapon/circuitboard/atm
+
+/obj/machinery/atm/New(loc, dir, atom/frame, var/ndir)	//ATM is created from frame
+	..(loc)
+	if(istype(frame))
+		buildstage = 0
+		wiresexposed = 1
+		frame.transfer_fingerprints_to(src)
+
+	machine_id = "[station_name()] ATM #[num_financial_terminals++]"
+	spark_system = new /datum/effect/effect/system/spark_spread
+	spark_system.set_up(5, 0, src)
+	spark_system.attach(src)
+
+	if(ndir)
+		set_dir(ndir)
+		update_icon()
+
+/obj/machinery/atm/Initialize(mapload, d)
+	. = ..()
+	queue_icon_update()
 
 /obj/machinery/atm/update_icon()	//Sprites for each build stage
 	overlays.Cut()
+	//ATMs can only exist on walls. So its better to just do it like this.
+	switch(dir)
+		if(NORTH)
+			src.pixel_x = 0
+			src.pixel_y = -32
+		if(SOUTH)
+			src.pixel_x = 0
+			src.pixel_y = 40
+		if(EAST)
+			src.pixel_x = -36
+			src.pixel_y = 0
+		if(WEST)
+			src.pixel_x = 36
+			src.pixel_y = 0
 
 	if(wiresexposed)
 		switch(buildstage)
 			if(2)
-				icon_state="atm_b2"
+				icon_state="atm_off"
 			if(1)
-				icon_state="atm_b1"
+				icon_state="atm_off"
 			if(0)
-				icon_state="atm_b0"
+				icon_state="atm_off"
 		set_light(0)
 		return
 	else
@@ -96,25 +131,8 @@
 
 	return
 
-/obj/machinery/atm/New(loc, dir, atom/frame, var/ndir)	//ATM is created from frame
-	..(loc)
-
-	if(istype(frame))
-		buildstage = 0
-		wiresexposed = 1
-		frame.transfer_fingerprints_to(src)
-	..()
-	machine_id = "[station_name()] ATM #[num_financial_terminals++]"
-	spark_system = new /datum/effect/effect/system/spark_spread
-	spark_system.set_up(5, 0, src)
-	spark_system.attach(src)
-
-	if(ndir)
-		set_dir(ndir)
-		pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? 30 : -30)
-		pixel_y = (src.dir & 3)? (src.dir ==1 ? 30 : -30) : 0
 /obj/machinery/atm/Process()
-	if(stat & NOPOWER)
+	if(inoperable())
 		return
 
 	if(ticks_left_timeout > 0)
@@ -127,7 +145,7 @@
 			number_incorrect_tries = 0
 
 	for(var/obj/item/weapon/spacecash/S in src)
-		S.loc = src.loc
+		S.dropInto(loc)
 		if(prob(50))
 			playsound(loc, 'sound/items/polaroid1.ogg', 50, 1)
 		else
@@ -148,19 +166,31 @@
 		to_chat(user, "\icon[src] <span class='warning'>The [src] beeps: \"[response]\"</span>")
 		return 1
 
-/obj/machinery/atm/attackby(obj/item/I as obj, mob/user as mob)
-	if(..())
+/obj/item/frame/atm/try_build(turf/on_wall)
+	if (get_dist(on_wall,usr)>1)
 		return
+	var/ndir = get_dir(usr,on_wall)
+	if (!(ndir in GLOB.cardinal))
+		return
+	var/turf/loc = get_turf(usr)
+
+	new /obj/machinery/atm(loc, 1, src, ndir)
+	qdel(src)
+
+/obj/machinery/atm/attackby(obj/item/I as obj, mob/user as mob)
 	if(istype(I, /obj/item/weapon/card))
 		if(emagged > 0)
 			//prevent inserting id into an emagged ATM
 			to_chat(user, "\icon[src] <span class='warning'>CARD READER ERROR. This system has been compromised!</span>")
 			return
+		if(stat & NOPOWER)
+			to_chat(user, "You try to insert your card into [src], but nothing happens.")
+			return
 
 		var/obj/item/weapon/card/id/idcard = I
 		if(!held_card)
-			usr.drop_item()
-			idcard.loc = src
+			if(!user.unEquip(idcard, src))
+				return
 			held_card = idcard
 			if(authenticated_account && held_card.associated_account_number != authenticated_account.account_number)
 				authenticated_account = null
@@ -181,6 +211,8 @@
 			to_chat(user, "<span class='info'>You insert [I] into [src].</span>")
 			src.attack_hand(user)
 			qdel(I)
+	else
+		return ..()
 
 
 /obj/machinery/atm/attack_hand(mob/user)	//Prevent ATM from being used when under de/construction
@@ -192,6 +224,7 @@
 		interact(user)
 
 /obj/machinery/atm/interact(mob/user)
+
 
 	if(get_dist(src,user) <= 1)
 		//make the window the user interacts with, divided out into welcome message, card 'slot', then login/data screen
@@ -356,7 +389,9 @@
 					//Below is to avoid a runtime
 					if(tried_account_num)
 						D = get_account(tried_account_num)
-						account_security_level = D.security_level
+
+						if(D)
+							account_security_level = D.security_level
 
 					authenticated_account = attempt_account_access(tried_account_num, tried_pin, held_card && login_card.associated_account_number == tried_account_num ? 2 : 1)
 
@@ -426,8 +461,8 @@
 			if("balance_statement")
 				if(authenticated_account)
 					var/obj/item/weapon/paper/R = new(src.loc)
-					R.name = "Account balance: [authenticated_account.owner_name]"
-					R.info = "<b>NT Automated Teller Account Statement</b><br><br>"
+					R.SetName("Account balance: [authenticated_account.owner_name]")
+					R.info = "<b>Automated Teller Account Statement</b><br><br>"
 					R.info += "<i>Account holder:</i> [authenticated_account.owner_name]<br>"
 					R.info += "<i>Account number:</i> [authenticated_account.account_number]<br>"
 					R.info += "<i>Balance:</i> T[authenticated_account.money]<br>"
@@ -435,7 +470,7 @@
 					R.info += "<i>Service terminal ID:</i> [machine_id]<br>"
 
 					//stamp the paper
-					var/image/stampoverlay = image('icons/obj/bureaucracy.dmi')
+					var/image/stampoverlay = image('icons/obj/items/paper.dmi')
 					stampoverlay.icon_state = "paper_stamp-cent"
 					if(!R.stamped)
 						R.stamped = new
@@ -450,7 +485,7 @@
 			if ("print_transaction")
 				if(authenticated_account)
 					var/obj/item/weapon/paper/R = new(src.loc)
-					R.name = "Transaction logs: [authenticated_account.owner_name]"
+					R.SetName("Transaction logs: [authenticated_account.owner_name]")
 					R.info = "<b>Transaction logs</b><br>"
 					R.info += "<i>Account holder:</i> [authenticated_account.owner_name]<br>"
 					R.info += "<i>Account number:</i> [authenticated_account.account_number]<br>"
@@ -477,7 +512,7 @@
 					R.info += "</table>"
 
 					//stamp the paper
-					var/image/stampoverlay = image('icons/obj/bureaucracy.dmi')
+					var/image/stampoverlay = image('icons/obj/items/paper.dmi')
 					stampoverlay.icon_state = "paper_stamp-cent"
 					if(!R.stamped)
 						R.stamped = new
@@ -498,8 +533,8 @@
 					else
 						var/obj/item/I = usr.get_active_hand()
 						if (istype(I, /obj/item/weapon/card/id))
-							usr.drop_item()
-							I.loc = src
+							if(!usr.unEquip(I, src))
+								return
 							held_card = I
 				else
 					release_held_id(usr)
@@ -511,22 +546,16 @@
 
 /obj/machinery/atm/proc/scan_user(mob/living/carbon/human/human_user as mob)
 	if(!authenticated_account)
-		if(human_user.wear_id)
-			var/obj/item/weapon/card/id/I
-			if(istype(human_user.wear_id, /obj/item/weapon/card/id) )
-				I = human_user.wear_id
-			else if(istype(human_user.wear_id, /obj/item/device/pda) )
-				var/obj/item/device/pda/P = human_user.wear_id
-				I = P.id
-			if(I)
-				return I
+		var/obj/item/weapon/card/id/I = human_user.GetIdCard()
+		if(istype(I))
+			return I
 
 // put the currently held id on the ground or in the hand of the user
 /obj/machinery/atm/proc/release_held_id(mob/living/carbon/human/human_user as mob)
 	if(!held_card)
 		return
 
-	held_card.loc = src.loc
+	held_card.dropInto(loc)
 	authenticated_account = null
 	account_security_level = 0
 

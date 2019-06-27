@@ -1,6 +1,7 @@
 /mob/living/bot/remotebot
 	name = "Remote-Bot"
 	desc = "A remote controlled robot used by lazy people to switch channels and get pizza."
+	icon = 'icons/mob/bot/fetchbot.dmi'
 	icon_state = "fetchbot1"
 	health = 15
 	maxHealth = 15
@@ -33,7 +34,7 @@
 	for(var/i in 1 to rand(3,5))
 		var/obj/item/stack/material/cardboard/C = new(src.loc)
 		if(prob(50))
-			C.loc = get_step(src, pick(GLOB.alldirs))
+			C.forceMove(get_step(src, pick(GLOB.alldirs)))
 
 	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 	s.set_up(3, 1, src)
@@ -158,7 +159,7 @@
 /obj/item/device/bot_kit
 	name = "Remote-Bot Kit"
 	desc = "The cover says 'control your own cardboard nuclear powered robot. Comes with real plutonium!"
-	icon = 'icons/obj/storage.dmi'
+	icon = 'icons/obj/items/storage/boxes.dmi'
 	icon_state = "remotebot"
 
 /obj/item/device/bot_kit/attack_self(var/mob/living/user)
@@ -166,5 +167,4 @@
 	var/turf/T = get_turf(src.loc)
 	new /mob/living/bot/remotebot(T)
 	new /obj/item/device/bot_controller(T)
-	user.drop_from_inventory(src)
 	qdel(src)

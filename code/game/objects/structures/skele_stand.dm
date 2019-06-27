@@ -4,17 +4,23 @@
 	icon = 'icons/obj/surgery.dmi'
 	icon_state = "hangskele"
 	desc = "It's an anatomical model of a human skeletal system made of plaster."
+	mass = 10
+	max_health = 30
 	var/list/swag = list()
+	var/cooldown
 
 /obj/structure/skele_stand/New()
 	..()
 	gender = pick(MALE, FEMALE)
 
 /obj/structure/skele_stand/proc/rattle_bones(mob/user, atom/thingy)
+	if((world.time - cooldown) <= 1 SECOND)
+		return //reduces spam.
 	if(user)
 		visible_message("\The [user] pushes on [src][thingy?" with \the [thingy]":""], giving the bones a good rattle.")
 	else
 		visible_message("\The [src] rattles on \his stand upon hitting [thingy?"\the [thingy]":"something"].")
+	cooldown = world.time
 	playsound(loc, 'sound/effects/bonerattle.ogg', 40)
 
 /obj/structure/skele_stand/attack_hand(mob/user)
@@ -43,8 +49,8 @@
 /obj/structure/skele_stand/attackby(obj/item/weapon/W, mob/user)
 	if(istype(W,/obj/item/weapon/pen))
 		var/nuname = sanitize(input(user,"What do you want to name this skeleton as?","Skeleton Christening",name) as text|null)
-		if(nuname)
-			name = nuname
+		if(nuname && CanPhysicallyInteract(user))
+			SetName(nuname)
 			return 1
 	if(istype(W,/obj/item/clothing))
 		var/slot
@@ -61,9 +67,8 @@
 		if(slot)
 			if(swag[slot])
 				to_chat(user,"<span class='notice'>There is already that kind of clothing on \the [src].</span>")
-			else
+			else if(user.unEquip(W, src))
 				swag[slot] = W
-				user.drop_from_inventory(W,src)
 				update_icon()
 				return 1
 	else
@@ -75,7 +80,7 @@
 		I.forceMove(loc)
 	. = ..()
 
-/obj/structure/skele_stand/update_icon()
+/obj/structure/skele_stand/on_update_icon()
 	overlays.Cut()
 	for(var/slot in swag)
 		var/obj/item/I = swag[slot]

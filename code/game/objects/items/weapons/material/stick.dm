@@ -6,20 +6,22 @@
 	force_divisor = 0.1
 	thrown_force_divisor = 0.1
 	w_class = ITEM_SIZE_NORMAL
-	default_material = "wood"
+	default_material = MATERIAL_WOOD
 	attack_verb = list("poked", "jabbed")
+	damtype = DAM_BLUNT
+	mass = 1.2
 
 
 /obj/item/weapon/material/stick/attack_self(mob/user as mob)
 	user.visible_message("<span class='warning'>\The [user] snaps [src].</span>", "<span class='warning'>You snap [src].</span>")
-	shatter(0)
+	kill()
 
 
 /obj/item/weapon/material/stick/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if(W.sharp && W.edge && !sharp)
+	if(W.sharpness && !sharpness)
 		user.visible_message("<span class='warning'>[user] sharpens [src] with [W].</span>", "<span class='warning'>You sharpen [src] using [W].</span>")
-		sharp = 1 //Sharpen stick
-		name = "sharpened " + name
+		sharpness = 1 //Sharpen stick
+		SetName("sharpened " + name)
 		update_force()
 	return ..()
 

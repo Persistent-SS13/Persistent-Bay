@@ -5,7 +5,7 @@
 // Allows remote operation of electrical systems on station (SMESs and Breaker Boxes)
 
 /obj/machinery/computer/rcon
-	name = "\improper RCON console"
+	name = "RCON console"
 	desc = "Console used to remotely control machinery."
 	icon_keyboard = "power_key"
 	icon_screen = "ai-fixer"
@@ -20,8 +20,7 @@
 	rcon = new(src)
 
 /obj/machinery/computer/rcon/Destroy()
-	qdel(rcon)
-	rcon = null
+	QDEL_NULL(rcon)
 	..()
 
 // Proc: attack_hand()
@@ -37,7 +36,7 @@
 /obj/machinery/computer/rcon/ui_interact(mob/user, ui_key = "rcon", var/datum/nanoui/ui = null, var/force_open = 1)
 	rcon.ui_interact(user, ui_key, ui, force_open)
 
-/obj/machinery/computer/rcon/update_icon()
-	..()
+/obj/machinery/computer/rcon/on_update_icon()
+	. = ..()
 	if(is_operable())
-		overlays += image('icons/obj/computer.dmi', "ai-fixer-empty", overlay_layer)
+		overlays += image(src.icon, "ai-fixer-empty", overlay_layer)

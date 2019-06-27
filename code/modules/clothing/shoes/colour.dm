@@ -61,11 +61,22 @@
 	desc = "A pair of flimsy, cheap shoes. The soles have been made of a soft rubber."
 	var/obj/item/weapon/handcuffs/chained = null
 
+/obj/item/clothing/shoes/orange/New()
+	. = ..()
+	ADD_SAVED_VAR(chained)
+	ADD_SKIP_EMPTY(chained)
+
+/obj/item/clothing/shoes/orange/after_load()
+	. = ..()
+	if(chained && ishuman(loc))
+		attach_cuffs(chained, loc)
+
 /obj/item/clothing/shoes/orange/proc/attach_cuffs(var/obj/item/weapon/handcuffs/cuffs, mob/user as mob)
 	if (src.chained) return
 
-	user.drop_item()
-	cuffs.loc = src
+	if(!user.unequip_item())
+		return
+	cuffs.forceMove(src)
 	src.chained = cuffs
 	src.slowdown_per_slot[slot_shoes] += 15
 	src.icon_state = "orange1"
@@ -93,6 +104,10 @@
 	name = "flats"
 	desc = "Sleek flats."
 	icon_state = "flatswhite"
+
+/obj/item/clothing/shoes/flats/black
+	name = "black flats"
+	color = COLOR_GRAY15
 
 /obj/item/clothing/shoes/hightops
 	name = "white high tops"

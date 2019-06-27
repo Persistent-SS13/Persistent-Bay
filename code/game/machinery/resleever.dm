@@ -5,14 +5,14 @@
 
 	anchored = 1
 	density = 1
-	use_power = 1
 	idle_power_usage = 4
-	active_power_usage = 4000 // 4 Kw. A CT scan machine uses 1-15 kW depending on the model and equipment involved.
+	active_power_usage = 4 KILOWATTS // A CT scan machine uses 1-15 kW depending on the model and equipment involved.
 	req_access = list(core_access_medical_programs)
+	circuit_type = /obj/item/weapon/circuitboard/resleever
 
-	icon_state = "body_scanner_0"
-	var/empty_state = "body_scanner_0"
-	var/occupied_state = "body_scanner_1"
+	icon_state = "resleever_open"
+	var/empty_state = "resleever_open"
+	var/occupied_state = "resleever_closed"
 	var/allow_occupant_types = list(/mob/living/carbon/human)
 	var/disallow_occupant_types = list()
 
@@ -28,31 +28,35 @@
 
 /obj/machinery/resleever/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/resleever(src)
-	component_parts += new /obj/item/stack/cable_coil(src, 2)
-	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src, 3)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	ADD_SAVED_VAR(occupant)
+	ADD_SAVED_VAR(lace)
+	ADD_SAVED_VAR(remaining)
+	ADD_SAVED_VAR(resleeving)
 
-	RefreshParts()
-	update_icon()
+	ADD_SKIP_EMPTY(occupant)
+	ADD_SKIP_EMPTY(lace)
 
 /obj/machinery/resleever/Destroy()
 	eject_occupant()
 	eject_lace()
 	return ..()
 
+/obj/machinery/resleever/after_load()
+	..()
+	if(occupant)
+		occupant_name = occupant.name
+	if(lace)
+		lace_name = lace.name
 
 obj/machinery/resleever/Process()
 
 	if(occupant)
 		occupant.Paralyse(4) // We need to always keep the occupant sleeping if they're in here.
 	if(stat & (NOPOWER|BROKEN) || !anchored)
-		update_use_power(0)
+		update_use_power(POWER_USE_OFF)
 		return
 	if(resleeving)
-		update_use_power(2)
+		update_use_power(POWER_USE_ACTIVE)
 		if(remaining < timetosleeve)
 			remaining += 1
 
@@ -61,37 +65,26 @@ obj/machinery/resleever/Process()
 		else
 			remaining = 0
 			resleeving = 0
-			update_use_power(1)
+			update_use_power(POWER_USE_IDLE)
 			eject_occupant()
-			playsound(loc, 'sound/machines/ping.ogg', 100, 1)
-			visible_message("\The [src] pings as it completes its procedure!", 3)
+			playsound(loc, 'sound/machines/ping.ogg', 100, vary = TRUE)
+			visible_message("\The [src] pings as it completes its procedure!", "You hear a ping.", range = 3)
 			return
-	update_use_power(0)
+	update_use_power(POWER_USE_OFF)
 	return
 
 /obj/machinery/resleever/proc/isOccupiedEjectable()
-	if(occupant)
-		if(!resleeving)
-			return 1
-	return 0
+	return occupant && !resleeving
 
 /obj/machinery/resleever/proc/isLaceEjectable()
-	if(lace)
-		if(!resleeving)
-			return 1
-	return 0
+	return lace && !resleeving
 
 /obj/machinery/resleever/proc/readyToBegin()
-	if(lace && occupant)
-		if(!resleeving)
-			return 1
-	return 0
+	return (lace && occupant) && !resleeving
 
 /obj/machinery/resleever/attack_ai(mob/user as mob)
-
 	add_hiddenprint(user)
 	return attack_hand(user)
-
 
 /obj/machinery/resleever/attack_hand(mob/user as mob)
 	if(!anchored)
@@ -101,21 +94,14 @@ obj/machinery/resleever/Process()
 		to_chat(usr, "\The [src] doesn't appear to function.")
 		return
 
-	tg_ui_interact(user)
+	ui_interact(user)
 
 /obj/machinery/resleever/ui_status(mob/user, datum/ui_state/state)
 	if(!anchored || inoperable())
 		return UI_CLOSE
 	return ..()
 
-
-/obj/machinery/resleever/tg_ui_interact(mob/user, ui_key = "main", datum/tgui/ui = null, force_open = 0, datum/tgui/master_ui = null, datum/ui_state/state = GLOB.default_state)
-	ui = tgui_process.try_update_ui(user, src, ui_key, ui, force_open)
-	if(!ui)
-		ui = new(user, src, ui_key, "resleever", "Neural Lace Resleever", 300, 300, master_ui, state)
-		ui.open()
-
-/obj/machinery/resleever/ui_data()
+/obj/machinery/resleever/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 	var/list/data = list(
 		"name" = occupant_name,
 		"lace" = lace_name,
@@ -127,32 +113,40 @@ obj/machinery/resleever/Process()
 		"ready" = readyToBegin()
 	)
 
-	return data
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
+	if (!ui)
+		ui = new(user, src, ui_key, "resleever.tmpl", "Neural Lace Resleever", 300, 370)
+		ui.set_initial_data(data)
+		ui.open()
+		ui.set_auto_update(1)
+	
 
-/obj/machinery/resleever/ui_act(action, params)
-	if(..())
-		return TRUE
-	switch(action)
-		if("begin")
-			sleeve()
+/obj/machinery/resleever/OnTopic(var/mob/user, var/list/href_list, state)
+	if (href_list["begin"])
+		if(sleeve())
 			resleeving = 1
-		if("eject")
-			eject_occupant()
-		if("ejectlace")
-			eject_lace()
-	update_icon()
-	return TRUE
+		return TOPIC_REFRESH
+
+	if (href_list["eject"])
+		eject_occupant()
+		return TOPIC_REFRESH
+
+	if (href_list["ejectlace"])
+		eject_lace()
+		return TOPIC_REFRESH
 
 /obj/machinery/resleever/proc/sleeve()
-	if(lace && occupant)
+	if(lace && !lace.prompting && occupant) // Not only check for the lace and occupant, but also if the lace isn't already prompting the dead user.
 		var/obj/item/organ/O = occupant.get_organ(lace.parent_organ)
 		if(istype(O))
 			lace.status &= ~ORGAN_CUT_AWAY //ensure the lace is properly attached
-			lace.replaced(occupant, O)
-			lace = null
-			lace_name = null
-	else
-		return
+			if(lace.replaced(occupant, O))
+				lace = null
+				lace_name = null
+				playsound(loc, 'sound/machines/twobeep.ogg', 50, vary = TRUE)
+				visible_message("\The [src] beeps softly as it begins its procedure.", "You hear a beep.", range = 3)
+				return TRUE
+	return FALSE // Return false if the the lace doesn't exist, the lace is busy prompting, no occupant, or the occupant's head (parrent organ) doesn't exist.
 
 /obj/machinery/resleever/proc/go_in(var/mob/target, var/mob/user)
 	if(occupant)
@@ -164,7 +158,7 @@ obj/machinery/resleever/Process()
 
 	visible_message("[user] starts putting [target.name] into \the [src].", 3)
 
-	if(do_after(user, 20, target))
+	if(do_after(user, 2 SECONDS, target))
 		if (target.buckled)
 			target.buckled.user_unbuckle_mob(user)
 			if (target.buckled)
@@ -196,11 +190,12 @@ obj/machinery/resleever/Process()
 			to_chat(user, "<span class='warning'>You need to remove the occupant first!</span>")
 			return
 	if(istype(W, /obj/item/organ/internal/stack))
-		if(isnull(lace))
+		if(istype(W, /obj/item/organ/internal/stack/vat))
+			to_chat(user, "<span class='warning'>[W] does not fit into [src], and you get the horrifying feeling that it was not meant to.</span>")
+			return
+		if(isnull(lace) && user.unEquip(W, src))
 			to_chat(user, "<span class='notice'>You insert \the [W] into [src].</span>")
-			user.drop_from_inventory(W)
 			lace = W
-			W.forceMove(src)
 			if(lace.backup)
 				lace_name = lace.backup.name
 		else
@@ -254,39 +249,21 @@ obj/machinery/resleever/Process()
 	lace = null
 	lace_name = null
 
-/obj/machinery/resleever/emp_act(severity)
-	//if(prob(100/severity))
-		//malfunction() //NOT DEFINED YET
-	..()
-
-
-
 /obj/machinery/resleever/ex_act(severity)
+	var/dropprob = 100
 	switch(severity)
-		if(1.0)
-			for(var/atom/movable/A as mob|obj in src)
-				A.forceMove(loc)
-				ex_act(severity)
-			qdel(src)
-			return
-		if(2.0)
-			if(prob(50))
-				for(var/atom/movable/A as mob|obj in src)
-					A.forceMove(loc)
-					ex_act(severity)
-				qdel(src)
-				return
-		if(3.0)
-			if(prob(25))
-				for(var/atom/movable/A as mob|obj in src)
-					A.forceMove(loc)
-					ex_act(severity)
-				qdel(src)
-				return
-		else
-	return
+		if(2)
+			dropprob = 50
+		if(3)
+			dropprob = 25
+	if(prob(dropprob))
+		for(var/atom/movable/A in src)
+			A.forceMove(loc)
+			A.ex_act(severity)
+		//qdel(src)
+	return ..()
 
-/obj/machinery/resleever/update_icon()
+/obj/machinery/resleever/on_update_icon()
 	..()
 	icon_state = empty_state
 	if(occupant)

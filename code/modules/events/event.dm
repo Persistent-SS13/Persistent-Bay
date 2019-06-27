@@ -43,8 +43,10 @@
 	var/penalty = 100 // A simple penalty gives admins the ability to increase the weight to again be part of the random event selection
 
 /datum/event_meta/extended_penalty/get_weight()
-	return ..() - (ticker && istype(ticker.mode, /datum/game_mode/extended) ? penalty : 0)
+	return ..()
 
+/datum/event_meta/no_overmap/get_weight() //these events have overmap equivalents, and shouldn't fire randomly if overmap is used
+	return GLOB.using_map.use_overmap ? 0 : ..()
 
 /datum/event	//NOTE: Times are measured in master controller ticks!
 	var/startWhen		= 0	//When in the lifetime to call start().
@@ -57,6 +59,7 @@
 	var/startedAt		= 0 //When this event started.
 	var/endedAt			= 0 //When this event ended.
 	var/datum/event_meta/event_meta = null
+	var/list/affecting_z
 
 /datum/event/nothing
 
@@ -130,12 +133,11 @@
 		end()
 
 	endedAt = world.time
-	GLOB.event_manager.active_events -= src
-	GLOB.event_manager.event_complete(src)
+	SSevent.event_complete(src)
 
 /datum/event/New(var/datum/event_meta/EM)
 	// event needs to be responsible for this, as stuff like APLUs currently make their own events for curious reasons
-	GLOB.event_manager.active_events += src
+	SSevent.active_events += src
 
 	event_meta = EM
 	severity = event_meta.severity
@@ -144,5 +146,15 @@
 
 	startedAt = world.time
 
+	if(!affecting_z)
+		affecting_z = GLOB.using_map.station_levels
+
 	setup()
 	..()
+
+/datum/event/proc/location_name()
+	if(!GLOB.using_map.use_overmap)
+		return station_name()
+
+	var/obj/effect/overmap/O = map_sectors["[pick(affecting_z)]"]
+	return O ? O.name : "Unknown Location"

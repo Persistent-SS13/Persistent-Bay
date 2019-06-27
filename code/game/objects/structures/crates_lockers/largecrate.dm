@@ -1,10 +1,13 @@
 /obj/structure/largecrate
 	name = "large crate"
 	desc = "A hefty wooden crate."
-	icon = 'icons/obj/storage.dmi'
+	icon = 'icons/obj/shipping_crates.dmi'
 	icon_state = "densecrate"
 	density = 1
-	flags = OBJ_CLIMBABLE
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
+	mass = 20
+	max_health = 200
+	damthreshold_brute 	= 5
 
 /obj/structure/largecrate/Initialize()
 	. = ..()

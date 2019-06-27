@@ -7,7 +7,7 @@
 	body_parts_covered = EYES
 	dir = SOUTH
 
-	icon = 'icons/obj/clothing/monitor.dmi'
+	icon = 'icons/obj/clothing/obj_head_ipc.dmi'
 	icon_override = 'icons/mob/monitor_icons.dmi'
 	icon_state = "ipc_blank"
 	item_state = null
@@ -36,7 +36,12 @@
 		"no" =       "ipc_no",
 		"frown" =    "ipc_frowny",
 		"stars" =    "ipc_stars",
-		"crt" =      "ipc_crt"
+		"crt" =      "ipc_crt",
+		"scroll" =   "ipc_scroll",
+		"console" =  "ipc_console",
+		"rgb" =      "ipc_rgb",
+		"tetris" =   "ipc_tetris",
+		"doom" =     "ipc_doom"
 		)
 
 /obj/item/clothing/mask/monitor/set_dir()
@@ -59,7 +64,7 @@
 		return 0
 	if(istype(user))
 		var/obj/item/organ/external/E = user.organs_by_name[BP_HEAD]
-		if(istype(E) && (E.robotic >= ORGAN_ROBOT))
+		if(istype(E) && BP_IS_ROBOTIC(E))
 			return 1
 		to_chat(user, "<span class='warning'>You must have a robotic head to install this upgrade.</span>")
 	return 0
@@ -81,7 +86,7 @@
 		monitor_state_index = choice
 		update_icon()
 
-/obj/item/clothing/mask/monitor/update_icon()
+/obj/item/clothing/mask/monitor/on_update_icon()
 	if(!(monitor_state_index in monitor_states))
 		monitor_state_index = initial(monitor_state_index)
 	icon_state = monitor_states[monitor_state_index]

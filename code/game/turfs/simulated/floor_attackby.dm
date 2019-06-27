@@ -1,10 +1,13 @@
-/turf/simulated/floor/attackby(obj/item/C as obj, mob/user as mob)
+/turf/simulated/floor/attackby(var/obj/item/C, var/mob/user)
 
 	if(!C || !user)
 		return 0
 
-	if(isCoil(C) || (flooring && istype(C, /obj/item/stack/rods)))
+	if(isCoil(C) || (flooring && istype(C, /obj/item/stack/material/rods)))
 		return ..(C, user)
+
+	if(!(isScrewdriver(C) && flooring && (flooring.flags & TURF_REMOVE_SCREWDRIVER)) && try_graffiti(user, C))
+		return
 
 	if(flooring)
 		if(isCrowbar(C))
@@ -33,7 +36,7 @@
 			make_plating(1)
 			playsound(src, 'sound/items/Ratchet.ogg', 80, 1)
 			return
-		else if(istype(C, /obj/item/weapon/shovel) && (flooring.flags & TURF_REMOVE_SHOVEL))
+		else if(isShovel(C) && (flooring.flags & TURF_REMOVE_SHOVEL))
 			to_chat(user, "<span class='notice'>You shovel off the [flooring.descriptor].</span>")
 			make_plating(1)
 			playsound(src, 'sound/items/Deconstruct.ogg', 80, 1)
@@ -50,16 +53,17 @@
 			//first check, catwalk? Else let flooring do its thing
 			if(locate(/obj/structure/catwalk, src))
 				return
-		/**	if (istype(C, /obj/item/stack/rods))
-				var/obj/item/stack/rods/R = C
+			if (istype(C, /obj/item/stack/material/rods))
+				var/obj/item/stack/material/rods/R = C
 				if (R.use(2))
 					playsound(src, 'sound/weapons/Genhit.ogg', 50, 1)
 					new /obj/structure/catwalk(src)
-				return **/
+				return
 			var/obj/item/stack/S = C
 			var/decl/flooring/use_flooring
-			for(var/flooring_type in flooring_types)
-				var/decl/flooring/F = flooring_types[flooring_type]
+			var/list/decls = decls_repository.get_decls_of_subtype(/decl/flooring)
+			for(var/flooring_type in decls)
+				var/decl/flooring/F = decls[flooring_type]
 				if(!F.build_type)
 					continue
 				if(ispath(S.type, F.build_type) || ispath(S.build_type, F.build_type))
@@ -83,9 +87,12 @@
 		// Repairs and Deconstruction.
 		else if(isCrowbar(C))
 			if(broken || burnt)
+				var/turf/T = GetBelow(src)
+				if(istype(T,/turf/simulated/wall) || istype(T,/turf/unsimulated/wall))
+					to_chat(user, SPAN_WARNING("Remove the wall on the level below first!"))
+					return
 				playsound(src, 'sound/items/Crowbar.ogg', 80, 1)
 				visible_message("<span class='notice'>[user] has begun prying off the damaged plating.</span>")
-				var/turf/T = GetBelow(src)
 				if(T)
 					T.visible_message("<span class='warning'>The ceiling above looks as if it's being pried off.</span>")
 				if(do_after(user, 10 SECONDS))
@@ -95,11 +102,12 @@
 					playsound(src, 'sound/items/Deconstruct.ogg', 80, 1)
 					if(T)
 						T.visible_message("<span class='danger'>The ceiling above has been pried off!</span>")
+						playsound(T, 'sound/items/Deconstruct.ogg', 60, 1)
 			else
 				return
 			return
 		else if(isWelder(C))
-			var/obj/item/weapon/weldingtool/welder = C
+			var/obj/item/weapon/tool/weldingtool/welder = C
 			if(welder.isOn() && (is_plating()))
 				if(broken || burnt)
 					if(welder.isOn())
@@ -113,6 +121,17 @@
 					return
 				else
 					if(welder.isOn())
+						var/turf/T = GetBelow(src)
+						var/datum/effect/effect/system/spark_spread/spark = null //Keep it in this scope so it stays alive until after do_after
+						var/obj/effect/effect/smoke/illumination/sparklight = null
+						if(T)
+							T.visible_message("<span class='warning'>The ceiling above looks as if it's being cut with a welder!</span>")
+							spark = new
+							spark.set_up(10,0,T)
+							spark.attach(T)
+							spark.start()
+							sparklight = new(T, 5 SECONDS, 8, 10, COLOR_MUZZLE_FLASH)
+							playsound(T, 'sound/items/Welder.ogg', 40, 1)
 						playsound(src, 'sound/items/Welder.ogg', 80, 1)
 						visible_message("<span class='notice'>[user] has started melting the plating's reinforcements!</span>")
 						if(do_after(user, 5 SECONDS) && welder.isOn())
@@ -121,6 +140,8 @@
 							burnt = 1
 							remove_decals()
 							update_icon()
+							qdel(sparklight)
+							qdel(spark)
 					else
 						to_chat(user, "<span class='warning'>You need more welding fuel to complete this task.</span>")
 					return

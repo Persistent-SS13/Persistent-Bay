@@ -5,8 +5,9 @@
 	program_icon_state = "id"
 	program_menu_icon = "key"
 	extended_desc = "Used to manage everything business related."
-	requires_ntnet = 1
+	requires_ntnet = TRUE
 	size = 8
+	category = PROG_BUSINESS
 
 /datum/nano_module/program/business
 	name = "Business control program"
@@ -19,6 +20,18 @@
 	var/list/pending_contracts = list()
 	var/list/signed_contracts = list()
 	var/potential_name = ""
+
+	var/image/insert1
+	var/image/insert2
+	var/insert1_name
+	var/insert2_name
+
+	var/openfile
+	var/filedata
+	var/headline
+	var/error
+	var/is_edited
+	var/nfmenu = 1
 /datum/nano_module/program/business/Destroy()
 	cancel_contracts()
 	. = ..()
@@ -100,10 +113,10 @@
 			data["page"] = curr_page
 			data["page_up"] = curr_page < pages
 			data["page_down"] = curr_page > 1
-			
+
 			data["money"] = viewing.central_account.money
 			data["debt"] = viewing.get_debt()
-			
+
 		if(menu == 3)
 			var/list/formatted_names[0]
 			for(var/real_name in viewing.employees)
@@ -119,7 +132,7 @@
 					data["employee_expenses"] = employee.expenses
 					data["employee_expense_limit"] = employee.expense_limit
 					var/list/formatted[0]
-					var/list/all_access = list("Sales", "Budget View", "Employee Control", "Upper Management", "Door Access 1", "Door Access 2", "Door Access 3")
+					var/list/all_access = ACCESS_BUSINESS_DEFAULT_ALL
 					for(var/x in all_access)
 						var/select = 0
 						if(x in employee.accesses)
@@ -161,6 +174,36 @@
 				data["personal_holding"] = viewing.get_stocks(user_id_card.registered_name)
 			else
 				data["personal_holding"] = 0
+		if(menu == 6)
+			data["nfmenu"] = nfmenu
+			data["feed_invis"] = !viewing.feed.visible
+			data["newsfeed_name"] = viewing.feed.name
+			data["article_price"] = viewing.feed.per_article
+			data["paper_price"] = viewing.feed.per_issue
+			data["article_announcement"] = viewing.feed.announcement
+
+			if(headline && headline != "")
+				data["headline"] = headline
+			else
+				data["headline"] = "*None*"
+			if(insert1_name && insert1_name != "")
+				data["copied_image1"] = insert1_name
+			else
+				data["copied_image1"] =" *None*"
+			if(insert2_name && insert2_name != "")
+				data["copied_image2"] = insert2_name
+			else
+				data["copied_image2"] = "*None*"
+			data["issue_name"] = viewing.feed.current_issue.name
+			var/list/formatted_articles[0]
+			for(var/datum/NewsStory/story in viewing.feed.current_issue.stories)
+				formatted_articles[++formatted_articles.len] = list("name" = story.name)
+			data["articles"] = formatted_articles
+			data["filedata"] = imgcode2html(pencode2html(filedata), insert1, insert2, user)
+
+
+
+
 	else
 		data["submenu"] = submenu
 		menu = 1
@@ -189,7 +232,7 @@
 	data["menu"] = menu
 
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "business_control.tmpl", name, 600, 700, state = state)
 		ui.auto_update_layout = 1
@@ -199,14 +242,63 @@
 /datum/nano_module/program/business/contract_signed(var/obj/item/weapon/paper/contract/contract)
 	pending_contracts -= contract
 	signed_contracts |= contract
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)
 	return 1
 
 /datum/nano_module/program/business/contract_cancelled(var/obj/item/weapon/paper/contract/contract)
 	pending_contracts -= contract
 	signed_contracts -= contract
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)
 	return 1
+
+/datum/nano_module/program/business/proc/get_file(var/filename)
+	var/obj/item/weapon/computer_hardware/hard_drive/HDD = program.computer.hard_drive
+	if(!HDD)
+		return
+	var/datum/computer_file/data/F = HDD.find_file_by_name(filename)
+	if(!istype(F))
+		return
+	return F
+
+/datum/nano_module/program/business/proc/open_file(var/filename)
+	var/datum/computer_file/data/F = get_file(filename)
+	if(F)
+		filedata = F.stored_data
+		return 1
+
+/datum/nano_module/program/business/proc/save_file(var/filename)
+	var/datum/computer_file/data/F = get_file(filename)
+	if(!F) //try to make one if it doesn't exist
+		F = create_file(filename, filedata)
+		return !isnull(F)
+	var/datum/computer_file/data/backup = F.clone()
+	var/obj/item/weapon/computer_hardware/hard_drive/HDD = program.computer.hard_drive
+	if(!HDD)
+		return
+	HDD.remove_file(F)
+	F.stored_data = filedata
+	F.calculate_size()
+	if(!HDD.store_file(F))
+		HDD.store_file(backup)
+		return 0
+	is_edited = 0
+	return 1
+
+/datum/nano_module/program/business/proc/create_file(var/newname, var/data = "")
+	if(!newname)
+		return
+	var/obj/item/weapon/computer_hardware/hard_drive/HDD = program.computer.hard_drive
+	if(!HDD)
+		return
+	if(get_file(newname))
+		return
+	var/datum/computer_file/data/F = new/datum/computer_file/data()
+	F.filename = newname
+	F.filetype = "TXT"
+	F.stored_data = data
+	F.calculate_size()
+	if(HDD.store_file(F))
+		return F
 
 
 /datum/nano_module/program/business/Topic(href, href_list)
@@ -224,7 +316,226 @@
 	if(href_list["page_down"])
 		curr_page--
 		return 1
+	if(href_list["PRG_openfile"])
+		. = 1
+		if(is_edited)
+			if(alert("Would you like to save your changes first?",,"Yes","No") == "Yes")
+				save_file("[headline] (draft)")
+		if(!open_file(href_list["PRG_openfile"]))
+			error = "I/O error: Unable to open file '[href_list["PRG_openfile"]]'."
+
+	if(href_list["PRG_newfile"])
+		. = 1
+		if(is_edited)
+			if(alert("Would you like to save your changes first?",,"Yes","No") == "Yes")
+				save_file("[headline] (draft)")
+
+		var/newname = sanitize(input(usr, "Enter headline name:", "New Headline") as text|null)
+		if(!newname)
+			return 1
+		filedata = ""
+		headline = newname
+	if(href_list["PRG_editname"])
+		. = 1
+		var/newname = sanitize(input(usr, "Enter headline name:", "New Headline") as text|null)
+		if(!newname)
+			return 1
+		headline = newname
+	if(href_list["PRG_saveasfile"])
+		. = 1
+		var/newname = sanitize(input(usr, "Enter file name to save draft under:", "Save Draft") as text|null)
+		if(!newname)
+			return 1
+		var/datum/computer_file/data/F = create_file(newname, filedata)
+		if(!F)
+			error = "I/O error: Unable to create file '[href_list["PRG_saveasfile"]]'."
+		return 1
+	if(href_list["PRG_publish"])
+		if(!connected_business.has_access(user_id_card.registered_name, "Newsfeed"))
+			to_chat(usr, "Access denied.")
+			return
+		if(!connected_business.feed.visible)
+			to_chat(usr, "The Newsfeed must be visible to publish.")
+			return
+		if(!headline || headline == "")
+			to_chat(usr, "This must have a valid headline.")
+			return
+		if(!filedata || filedata == "")
+			to_chat(usr, "Their must be content in the article to publish it.")
+			return
+		var/choice = input(usr,"This will publish [headline], announcing it to subscribed newscasters and making it available for purchase. Are you sure?") in list("Confirm", "Cancel")
+		if(choice == "Confirm")
+			var/datum/NewsStory/story = new()
+			story.name = headline
+			story.image1 = insert1
+			story.image2 = insert2
+			story.body = filedata
+			story.author = user_id_card.registered_name
+			story.true_author = usr.real_name
+			story.publish_date = "[stationdate2text()] [stationtime2text()]"
+			story.uid = world.realtime
+			connected_business.feed.publish_story(story)
+			insert1 = null
+			insert1_name = null
+			insert2 = null
+			insert2_name = null
+			headline = ""
+			filedata = ""
+	if(href_list["PRG_editfile"])
+		var/oldtext = html_decode(filedata)
+		oldtext = replacetext(oldtext, "\[br\]", "\n")
+
+		var/newtext = sanitize(replacetext(input(usr, "Editing article '[headline]'. You may use most tags used in paper formatting plus \[IMG\] and \[IMG2\]:", "Text Editor", oldtext) as message|null, "\n", "\[br\]"), MAX_TEXTFILE_LENGTH)
+		if(!newtext)
+			return
+		filedata = newtext
+		is_edited = 1
+		return 1
+	if(href_list["PRG_taghelp"])
+		to_chat(usr, "<span class='notice'>The hologram of a googly-eyed paper clip helpfully tells you:</span>")
+		var/help = {"
+		\[tab\] : Indents the text.
+		\[br\] : Creates a linebreak.
+		\[center\] - \[/center\] : Centers the text.
+		\[h1\] - \[/h1\] : First level heading.
+		\[h2\] - \[/h2\] : Second level heading.
+		\[h3\] - \[/h3\] : Third level heading.
+		\[b\] - \[/b\] : Bold.
+		\[i\] - \[/i\] : Italic.
+		\[u\] - \[/u\] : Underlined.
+		\[small\] - \[/small\] : Decreases the size of the text.
+		\[large\] - \[/large\] : Increases the size of the text.
+		\[field\] : Inserts a blank text field, which can be filled later. Useful for forms.
+		\[date\] : Current station date.
+		\[time\] : Current station time.
+		\[list\] - \[/list\] : Begins and ends a list.
+		\[*\] : A list item.
+		\[hr\] : Horizontal rule.
+		\[table\] - \[/table\] : Creates table using \[row\] and \[cell\] tags.
+		\[grid\] - \[/grid\] : Table without visible borders, for layouts.
+		\[row\] - New table row.
+		\[cell\] - New table cell.
+		\[logo\] - Inserts NT logo image.
+		\[bluelogo\] - Inserts blue NT logo image.
+		\[solcrest\] - Inserts SCG crest image.
+		\[terraseal\] - Inserts TCC seal.
+		\[nfrseal\] - Inserts NFR seal.
+		\[IMG1\] - Inserts attached photo 1.
+		\[IMG2\] - Inserts attached photo 2.
+		"}
+
+		to_chat(usr, help)
+		return 1
+
 	switch(href_list["action"])
+
+		if("switchnfm")
+			if(!connected_business.has_access(user_id_card.registered_name, "Newsfeed"))
+				to_chat(usr, "Access denied.")
+				return
+			if(href_list["target"] == "settings")
+				nfmenu = 1
+			else if (href_list["target"] == "issue")
+				nfmenu = 2
+			else if (href_list["target"] == "article")
+				nfmenu = 3
+		if("feed_invis")
+			if(!connected_business.has_access(user_id_card.registered_name, "Newsfeed"))
+				to_chat(usr, "Access denied.")
+				return
+			connected_business.feed.visible = 1
+		if("feed_vis")
+			if(!connected_business.has_access(user_id_card.registered_name, "Newsfeed"))
+				to_chat(usr, "Access denied.")
+				return
+			connected_business.feed.visible = 1
+
+		if("feed_name")
+			if(!connected_business.has_access(user_id_card.registered_name, "Newsfeed"))
+				to_chat(usr, "Access denied.")
+				return
+			var/select_name = sanitizeName(input(usr,"Enter the new name of the newsfeed.","Newsfeed name", connected_business.feed.name) as null|text, 40, 1, 0)
+			if(select_name)
+				connected_business.feed.name = select_name
+		if("feed_articleprice")
+			if(!connected_business.has_access(user_id_card.registered_name, "Newsfeed"))
+				to_chat(usr, "Access denied.")
+				return
+			var/amount = input("Enter price to charge per article.", "Article price", 0) as null|num
+			if(!amount < 0)
+				amount = 0
+			connected_business.feed.per_article = amount
+
+		if("feed_paperprice")
+			if(!connected_business.has_access(user_id_card.registered_name, "Newsfeed"))
+				to_chat(usr, "Access denied.")
+				return
+			var/amount = input("Enter price to charge per issue.", "Issue price", 0) as null|num
+			if(!amount < 0)
+				amount = 0
+			connected_business.feed.per_issue = amount
+		if("feed_annoucement")
+			if(!connected_business.has_access(user_id_card.registered_name, "Newsfeed"))
+				to_chat(usr, "Access denied.")
+				return
+			var/select_name = sanitizeName(input(usr,"Enter the new announcement for article publishing.","Announcement", connected_business.feed.announcement) as null|text, 40, 1, 0)
+			if(select_name)
+				connected_business.feed.announcement = select_name
+		if("feed_issuename")
+			if(!connected_business.has_access(user_id_card.registered_name, "Newsfeed"))
+				to_chat(usr, "Access denied.")
+				return
+			var/select_name = sanitizeName(input(usr,"Enter the new name of the current issue.","Issue name", connected_business.feed.current_issue.name) as null|text, 40, 1, 0)
+			if(select_name)
+				connected_business.feed.current_issue.name = select_name
+		if("feed_issuepublish")
+			if(!connected_business.has_access(user_id_card.registered_name, "Newsfeed"))
+				to_chat(usr, "Access denied.")
+				return
+			if(!connected_business.feed.current_issue.stories.len > 1)
+				to_chat(usr, "There is not enough articles to publish this yet.")
+				return
+			if(!connected_business.feed.visible)
+				to_chat(usr, "The Newsfeed must be visible to publish.")
+				return
+			var/choice = input(usr,"This will publish [connected_business.feed.current_issue.name], announcing it to subscribed newscasters and making it available for purchase. Are you sure?") in list("Confirm", "Cancel")
+			if(choice == "Confirm")
+				connected_business.feed.current_issue.publish_date = "[stationdate2text()] [stationtime2text()]"
+				connected_business.feed.current_issue.publisher = user_id_card.registered_name
+				connected_business.feed.publish_issue()
+
+		if("sale")
+			if(!connected_business) return
+			if(!user_id_card) return
+			if(!connected_business.status)
+				to_chat(usr, "The business is closed and so you cannot create a sale.")
+				return
+			if(!connected_business.has_access(user_id_card.registered_name, "Sales"))
+				to_chat(usr, "Access denied.")
+				return
+
+		if("copy_image1")
+			var/obj/item/I = usr.get_active_hand()
+			if(istype(I, /obj/item/weapon/photo))
+				var/obj/item/weapon/photo/photo = I
+				insert1 = image(photo.tiny.icon)
+				insert1_name = photo.name
+
+		if("delete_image1")
+			insert1 = null
+			insert1_name = null
+
+		if("copy_image2")
+			var/obj/item/I = usr.get_active_hand()
+			if(istype(I, /obj/item/weapon/photo))
+				var/obj/item/weapon/photo/photo = I
+				insert2 = image(photo.tiny.icon)
+				insert2_name = photo.name
+
+		if("delete_image2")
+			insert2 = null
+			insert2_name = null
+
 		if("switchm")
 			if(href_list["target"] == "sale")
 				menu = 1
@@ -243,12 +554,18 @@
 					to_chat(usr, "Access denied.")
 					return
 				menu = 4
+			else if (href_list["target"] == "news")
+				if(!connected_business.has_access(user_id_card.registered_name, "Newsfeed"))
+					to_chat(usr, "Access denied.")
+					return
+				menu = 6
 			else if (href_list["target"] == "stock")
 
 				if(!connected_business.is_stock_holder(user_id_card.registered_name))
 					to_chat(usr, "Access denied.")
 					return
 				menu = 5
+
 			else if (href_list["target"] == "logout")
 				viewing = null
 				business_name = ""
@@ -284,7 +601,7 @@
 				to_chat(usr,"Text was not valid.")
 				return 1
 			var/amount = input("Sale amount", "Sale amount", 0) as null|num
-			if(!amount)
+			if(!amount || amount < 0)
 				to_chat(usr,"You cannot create a sale for nothing.")
 				return 1
 
@@ -319,10 +636,13 @@
 					to_chat(usr, "[select_name] is the CEO.")
 					return
 				var/found = 0
-				for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+				for(var/datum/computer_file/report/crew_record/R in GLOB.all_crew_records)
 					if(R.get_name() == select_name)
 						found = 1
 						break
+				if(!found)
+					var/datum/computer_file/report/crew_record/L = Retrieve_Record(select_name)
+					if(L) found = 1
 				if(!found)
 					to_chat(usr, "No record found for [select_name]. Verify Employee Identity.")
 					return
@@ -353,13 +673,13 @@
 				to_chat(usr, "Access denied.")
 				return
 			viewing_employee = ""
-			
+
 		if("employee_fire")
 			if(!user_id_card) return
 			if(!connected_business.has_access(user_id_card.registered_name, "Employee Control"))
 				to_chat(usr, "Access denied.")
 				return
-			if(!viewing_employee || viewing_employee == "") return 	
+			if(!viewing_employee || viewing_employee == "") return
 			var/choice = input(usr,"This will fire [viewing_employee] and remove them from the network. Are you sure?") in list("Confirm", "Cancel")
 			if(choice == "Confirm")
 				connected_business.employees -= viewing_employee
@@ -372,11 +692,13 @@
 				return
 
 			if(user_id_card.registered_name == connected_business.ceo_name)
-				var/datum/computer_file/crew_record/record
-				for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+				var/datum/computer_file/report/crew_record/record
+				for(var/datum/computer_file/report/crew_record/R in GLOB.all_crew_records)
 					if(R.get_name() == user_id_card.registered_name)
 						record = R
 						break
+				if(!record)
+					record = Retrieve_Record(user_id_card.registered_name)
 				if(!record)
 					message_admins("NO global record found for [usr.real_name]")
 					to_chat(usr, "No record found for [usr.real_name].. contact software developer.")
@@ -404,11 +726,13 @@
 				var/datum/employee_data/employee = connected_business.get_employee_data(user_id_card.registered_name)
 				if(!employee)
 					return
-				var/datum/computer_file/crew_record/record
-				for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+				var/datum/computer_file/report/crew_record/record
+				for(var/datum/computer_file/report/crew_record/R in GLOB.all_crew_records)
 					if(R.get_name() == user_id_card.registered_name)
 						record = R
 						break
+				if(!record)
+					record = Retrieve_Record(user_id_card.registered_name)
 				if(!record)
 					message_admins("NO global record found for [usr.real_name]")
 					to_chat(usr, "No record found for [usr.real_name].. contact software developer.")
@@ -484,7 +808,7 @@
 				amount = 0
 			employee.expense_limit = amount
 
-		
+
 		if("employee_expenses")
 			if(!user_id_card) return
 			if(!connected_business) return
@@ -626,10 +950,9 @@
 				message_admins("couldnt find proposal")
 				return
 			if(user_id_card.registered_name in proposal.supporters)
-				proposal.add_support(user_id_card.registered_name, connected_business.get_stocks(user_id_card.registered_name))
-			else
 				proposal.remove_support(user_id_card.registered_name)
-
+			else
+				proposal.add_support(user_id_card.registered_name, connected_business.get_stocks(user_id_card.registered_name))
 		if("toggleDeny")
 			if(!connected_business) return
 			if(!user_id_card) return
@@ -674,10 +997,13 @@
 						to_chat(usr, "[select_name] is the current CEO.")
 						return
 					var/found = 0
-					for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+					for(var/datum/computer_file/report/crew_record/R in GLOB.all_crew_records)
 						if(R.get_name() == select_name)
 							found = 1
 							break
+					if(!found)
+						var/datum/computer_file/report/crew_record/L = Retrieve_Record(select_name)
+						if(L) found = 1
 					if(!found)
 						to_chat(usr, "No record found for [select_name]. Verify Identity.")
 						return
@@ -858,7 +1184,7 @@
 
 		if("login")
 			if(!user_id_card) return
-			var/select_name = input(usr,"Enter the full name of the business.","Log in", "") as null|text
+			var/select_name =  sanitize(input(usr,"Enter the full name of the business.","Log in", "") as null|text)
 			var/datum/small_business/viewing = get_business(select_name)
 			if(!viewing)
 				to_chat(usr, "Business not found,")
@@ -887,7 +1213,7 @@
 		if("business_name")
 			var/choice = input(usr,"Warning! Changing the name of the business will reset any pending contracts!") in list("Confirm", "Cancel")
 			if(choice == "Confirm")
-				var/select_name = input(usr,"Enter the full name of the new business.","business name", "") as null|text
+				var/select_name =  sanitize(input(usr,"Enter the full name of the new business.","business name", "") as null|text)
 				var/datum/small_business/viewing = get_business(select_name)
 				if(viewing)
 					to_chat(usr, "That business already exists!")
@@ -933,16 +1259,16 @@
 		if("business_finalize")
 			var/commitment = get_contributed()
 			var/signed_stocks = get_distributed()
-			if(commitment < 5000 || signed_stocks != 100)
+			if(commitment < 2500 || signed_stocks != 100)
 				return 0
-			commitment -= 5000
+			commitment -= 2500
 			if(!potential_name || potential_name == "")
 				to_chat(usr, "A name for the business must be chosen first.")
 				return
 			for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
 				if(!contract.is_solvent())
 					contract.cancel()
-					GLOB.nanomanager.update_uis(src)
+					SSnano.update_uis(src)
 					return 0
 			var/datum/small_business/new_business = new()
 			new_business.name = potential_name
@@ -962,5 +1288,5 @@
 			menu = 5
 			cancel_contracts()
 
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)
 	return 1

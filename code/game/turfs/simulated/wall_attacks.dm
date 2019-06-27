@@ -25,7 +25,7 @@
 		playsound(src, hitsound, 25, 1)
 		return
 
-	take_damage(damage, "brute")
+	take_damage(damage, DAM_BLUNT)
 
 	if(wallreturner == 2)
 		return success_smash(user)
@@ -45,22 +45,22 @@
 
 	if(locate(/obj/effect/overlay/wallrot) in src)
 		if(isWelder(W))
-			var/obj/item/weapon/weldingtool/WT = W
+			var/obj/item/weapon/tool/weldingtool/WT = W
 			if( WT.remove_fuel(0,user) )
-				to_chat(user, "<span class='notice'>You burn away the fungi with \the [WT].</span>")
+				to_chat(user, SPAN_NOTICE("You burn away the fungi with \the [WT]."))
 				playsound(src, 'sound/items/Welder.ogg', 10, 1)
 				for(var/obj/effect/overlay/wallrot/WR in src)
 					qdel(WR)
 				return
 		else if(!is_sharp(W) && W.force >= 10 || W.force >= 20)
-			to_chat(user, "<span class='notice'>\The [src] crumbles away under the force of your [W.name].</span>")
+			to_chat(user, SPAN_NOTICE("\The [src] crumbles away under the force of your [W.name]."))
 			src.dismantle_wall(1)
 			return
 
 	//THERMITE related stuff. Calls src.thermitemelt() which handles melting simulated walls and the relevant effects
 	if(thermite)
 		if(isWelder(W))
-			var/obj/item/weapon/weldingtool/WT = W
+			var/obj/item/weapon/tool/weldingtool/WT = W
 			if( WT.remove_fuel(0,user) )
 				thermitemelt(user)
 				return
@@ -73,7 +73,7 @@
 			var/obj/item/weapon/melee/energy/blade/EB = W
 
 			EB.spark_system.start()
-			to_chat(user, "<span class='notice'>You slash \the [src] with \the [EB]; the thermite ignites!</span>")
+			to_chat(user, SPAN_NOTICE("You slash \the [src] with \the [EB]; the thermite ignites!"))
 			playsound(src, "sparks", 50, 1)
 			playsound(src, 'sound/weapons/blade1.ogg', 50, 1)
 
@@ -84,139 +84,109 @@
 		repair_damage(MaxIntegrity())
 		return
 
-	// Basic dismantling.
-	if(r_material)
-		switch(state)
-			if(0)
-				if(Wrench(W, user, 10))
-					state = 1
-					to_chat(user, "<span class='notice'>You secure the material to \the [src].</span>")
-					update_icon()
-					return
-				if(Wirecutter(W, user, 5, "You start removing \the [p_material.display_name]."))
-					to_chat(user, "<span class='notice'>You finish removing \the [p_material.display_name].</span>")
-					dismantle_wall()
-					return
-			if(1)
-				if(Crowbar(W, user))
-					state = 2
-					to_chat(user, "<span class='notice'>You bend the material around \the [src].</span>")
-					update_icon()
-					return
-				if(Wrench(W, user, 10))
-					state = 0
-					to_chat(user, "<span class='notice'>You unsecure the material from \the [src].</span>")
-					update_icon()
-					return
-			if(2)
-				if(Weld(W, user, null, "You start welding the material to \the [src]."))
-					to_chat(user, "<span class='notice'>You weld the material to \the [src].</span>")
-					state = 3
-					update_icon()
-					return
-				if(Crowbar(W, user))
-					state = 1
-					to_chat(user, "<span class='notice'>You unbend the material from around \the [src].</span>")
-					update_icon()
-					return
-			if(3)
-				if(Wirecutter(W, user))
-					state = 4
-					to_chat(user, "<span class='notice'>You cut a hole for reinforcing rods.</span>")
-					update_icon()
-					return
-				if(Weld(W, user, null, "You start to unweld the material from \the [src]."))
-					to_chat(user, "<span class='notice'>You unweld the material from \the [src].</span>")
-					state = 2
-					update_icon()
-					return
-			if(4)
-				if(istype(W, /obj/item/stack/rods))
-					if(W:use(4))
-						to_chat(user, "<span class='notice'>You insert the rods into \the [src].</span>")
-						state = 5
-						update_icon()
-						return
-					else
-						to_chat(user, "<span class='notice'>You need more rods.</span>")
-				if(Weld(W, user))
-					to_chat(user, "<span class='notice'>You repair the hole for reinforcing rods.</span>")
-					state = 3
-					update_icon()
-					return
-			if(5)
-				if(Screwdriver(W, user))
-					state = 6
-					to_chat(user, "<span class='notice'>You secure the rods to \the [src].</span>")
-					update_icon()
-					return
-				if(Wirecutter(W, user))
-					to_chat(user, "<span class='notice'>You remove the rods from \the [src].</span>")
-					state = 4
-					update_icon()
-					return
-			if(6)
-				if(Weld(W, user, null, "You start to weld the rods into place."))
-					to_chat(user, "<span class='notice'>You finish \the [src].</span>")
-					state = null
-					update_connections(1)
-					update_icon()
-					return
-				if(Screwdriver(W, user))
-					to_chat(user, "<span class='notice'>You unsecure the rods from \the [src].</span>")
+	switch(state)
+		if(0)
+			if(Wrench(W, user))
+				to_chat(user, SPAN_NOTICE("You secure the  material to \the [src]."))
+				state = 1
+				update_icon()
+				return
+			if(Wirecutter(W, user, 5, "You start removing \the [material.display_name]."))
+				to_chat(user, SPAN_NOTICE("You finish removing \the [material.display_name]."))
+				dismantle_wall()
+				return
+		if(1)
+			if(Crowbar(W, user))
+				to_chat(user, SPAN_NOTICE("You bend the material around \the [src]."))
+				state = 2
+				update_icon()
+				return
+			if(Wrench(W, user))
+				to_chat(user, SPAN_NOTICE("You unsecure the material from \the [src]"))
+				state = 0
+				update_icon()
+				return
+		if(2)
+			if(Weld(W, user, null, "You start welding the material to \the [src]."))
+				to_chat(user, SPAN_NOTICE("You weld the material to \the [src]."))
+				state = null
+				update_connections(TRUE)
+				update_icon()
+				return
+			if(Crowbar(W, user))
+				to_chat(user, SPAN_NOTICE("You unbend the material from around \the [src]."))
+				state = 1
+				update_icon()
+				return
+		// NOTE: The weld directly above skips to the bottom via state = null
+		// If we decide to reinforce we come back up here
+		if(3)
+			if(Wirecutter(W, user))
+				state = 4
+				to_chat(user, SPAN_NOTICE("You cut holes for reinforcing rods."))
+				update_icon()
+				return
+			if(Screwdriver(W, user))
+				to_chat(user, SPAN_NOTICE("You unprepare \the [src]."))
+				state = null
+				update_icon()
+				return
+		if(4)
+			if(istype(W, /obj/item/stack/material/rods))
+				if(UseMaterial(W, user, null, null, null, null, 4))
+					var/obj/item/stack/material/rods/R = W
+					reinf_material = SSmaterials.get_material_by_name(R.default_type)
+					to_chat(user, SPAN_NOTICE("You insert the rods into \the [src]."))
 					state = 5
-					update_icon()
+					update_material(1)
 					return
-			if(null)
-				if(Weld(W, user, null, "You start to unweld the rods from \the [src]."))
-					to_chat(user, "<span class='notice'>You unweld the rods.</span>")
-					state = 6
-					update_connections(1)
-					update_icon()
-					return
-	else
-		switch(state)
-			if(0)
-				if(Wrench(W, user))
-					to_chat(user, "<span class='notice'>You secure the  material to \the [src].</span>")
-					state = 1
-					update_icon()
-					return
-				if(Wirecutter(W, user, 5, "You start removing \the [p_material.display_name]."))
-					to_chat(user, "<span class='notice'>You finish removing \the [p_material.display_name].</span>")
-					dismantle_wall()
-					return
-			if(1)
-				if(Crowbar(W, user))
-					to_chat(user, "<span class='notice'>You bend the material around \the [src].</span>")
-					state = 2
-					update_icon()
-					return
-				if(Wrench(W, user))
-					to_chat(user, "<span class='notice'>You unsecure the material from \the [src]</span>")
-					state = 0
-					update_icon()
-					return
-			if(2)
-				if(Weld(W, user, null, "You start welding the material to \the [src]."))
-					to_chat(user, "<span class='notice'>You weld the material to \the [src].</span>")
-					state = null
-					update_connections(1)
-					update_icon()
-					return
-				if(Crowbar(W, user))
-					to_chat(user, "<span class='notice'>You unbend the material from around \the [src].</span>")
-					state = 1
-					update_icon()
-					return
-			if(null)
-				if(Weld(W, user, null, "You start unwelding the material from \the [src]."))
-					to_chat(user, "<span class='notice'>You unweld the material from \the [src].</span>")
-					state = 2
-					update_connections(1)
-					update_icon()
-					return
-
+			if(Weld(W, user))
+				to_chat(user, SPAN_NOTICE("You repair the holes made for reinforcing rods."))
+				state = 3
+				update_icon()
+				return
+		if(5)
+			if(Screwdriver(W, user))
+				state = 6
+				to_chat(user, SPAN_NOTICE("You secure the rods to \the [src]."))
+				update_icon()
+				return
+			if(Wirecutter(W, user))
+				to_chat(user, SPAN_NOTICE("You remove the rods from \the [src]."))
+				new reinf_material.stack_type(get_turf(src), 2)
+				state = 4
+				update_icon()
+				return
+		if(6)
+			if(Weld(W, user, null, "You start to weld the rods into place."))
+				to_chat(user, SPAN_NOTICE("You finish \the [src]."))
+				state = null
+				update_connections(TRUE)
+				update_icon()
+				return
+			if(Screwdriver(W, user))
+				to_chat(user, SPAN_NOTICE("You unsecure the rods from \the [src]."))
+				state = 5
+				update_icon()
+				return
+		if(null)
+			if(!reinf_material && Weld(W, user, null, "You start unwelding the material from \the [src]."))
+				to_chat(user, SPAN_NOTICE("You unweld the material from \the [src]."))
+				state = 2
+				update_connections(TRUE)
+				update_icon()
+				return
+			if(!reinf_material && Screwdriver(W, user))
+				to_chat(user, SPAN_NOTICE("You prepare \the [src] for reinforcement."))
+				state = 3
+				update_icon()
+				return
+			if(reinf_material && Weld(W, user, null, "You start to unweld the rods from \the [src]."))
+				to_chat(user, SPAN_NOTICE("You unweld the rods."))
+				state = 6
+				update_connections(1)
+				update_icon()
+				return
 	if(W)
 		radiate()
 		if(is_hot(W))
@@ -232,12 +202,12 @@
 			return attack_hand(user)
 		switch(!istool(W) && take_damage(W.force, W.damtype))
 			if(2)
-				visible_message("<span class='danger'>\The [user] attacks \the [src] with \the [W] and it [material.destruction_desc]!</span>")
+				visible_message(SPAN_DANGER("\The [user] attacks \the [src] with \the [W] and it [material.destruction_desc]!"))
 				return
 			if(1)
-				visible_message("<span class='danger'>\The [user] attacks \the [src] with \the [W]!</span>")
+				visible_message(SPAN_DANGER("\The [user] attacks \the [src] with \the [W]!"))
 				return
 			if(0)
-				visible_message("<span class='danger'>\The [user] attacks \the [src] with \the [W], but it bounces off!</span>")
+				visible_message(SPAN_DANGER("\The [user] attacks \the [src] with \the [W], but it bounces off!"))
 				return
 		return

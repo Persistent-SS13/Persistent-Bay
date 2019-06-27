@@ -3,16 +3,21 @@
 	name = "breath mask"
 	icon_state = "breath"
 	item_state = "breath"
-	item_flags = AIRTIGHT|FLEXIBLEMATERIAL
+	item_flags = ITEM_FLAG_AIRTIGHT|ITEM_FLAG_FLEXIBLEMATERIAL
 	body_parts_covered = FACE
 	w_class = ITEM_SIZE_SMALL
 	gas_transfer_coefficient = 0.10
 	permeability_coefficient = 0.50
 	down_gas_transfer_coefficient = 1
 	down_body_parts_covered = null
-	down_item_flags = FLEXIBLEMATERIAL
+	down_item_flags = ITEM_FLAG_THICKMATERIAL
 	down_icon_state = "breathdown"
 	pull_mask = 1
+	sprite_sheets = list(
+		SPECIES_VOX = 'icons/mob/species/vox/onmob_mask_vox.dmi',
+		SPECIES_VOX_ARMALIS = 'icons/mob/species/vox/onmob_mask_vox_armalis.dmi',
+		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_mask_unathi.dmi',
+		)
 
 /obj/item/clothing/mask/breath/medical
 	desc = "A close-fitting sterile mask that can be manually connected to an air supply for treatment."
@@ -34,3 +39,4 @@
 	icon_state = "breath"
 	item_state = "breath"
 	permeability_coefficient = 0.50
+

@@ -17,6 +17,11 @@
 */
 
 /atom/Click(var/location, var/control, var/params) // This is their reaction to being clicked on (standard proc)
+	var/list/L = params2list(params)
+	var/dragged = L["drag"]
+	if(dragged && !L[dragged])
+		return
+
 	var/datum/click_handler/click_handler = usr.GetClickHandler()
 	click_handler.OnClick(src, params)
 
@@ -48,6 +53,8 @@
 	if(modifiers["shift"] && modifiers["ctrl"])
 		CtrlShiftClickOn(A)
 		return 1
+	if(modifiers["ctrl"] && modifiers["alt"])
+		CtrlAltClickOn(A)
 	if(modifiers["middle"] && modifiers["shift"])
 		MiddleShiftClickOn(A)
 		return 1
@@ -67,7 +74,9 @@
 	if(stat || paralysis || stunned || weakened)
 		return
 
-	face_atom(A) // change direction to face what you clicked on
+	// Do not allow player facing change in fixed chairs
+	if(!istype(buckled) || buckled.buckle_movable)
+		face_atom(A) // change direction to face what you clicked on
 
 	if(!canClick()) // in the year 2000...
 		return
@@ -145,6 +154,11 @@
 
 			trigger_aiming(TARGET_CAN_CLICK)
 	return 1
+	
+/mob/living/ClickOn()
+	if(SSautosave.saving)
+		return
+	. = ..()
 
 /mob/proc/setClickCooldown(var/timeout)
 	next_move = max(world.time + timeout, next_move)
@@ -173,10 +187,6 @@
 
 /mob/living/UnarmedAttack(var/atom/A, var/proximity_flag)
 
-	if(!ticker)
-		to_chat(src, "You cannot attack people before the game has started.")
-		return 0
-
 	if(stat)
 		return 0
 
@@ -192,9 +202,9 @@
 */
 /mob/proc/RangedAttack(var/atom/A, var/params)
 	if(!mutations.len) return
-	if((LASER in mutations) && a_intent == I_HURT)
+	if((MUTATION_LASER in mutations) && a_intent == I_HURT)
 		LaserEyes(A) // moved into a proc below
-	else if(TK in mutations)
+	else if(MUTATION_TK in mutations)
 		setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
 		A.attack_tk(src)
 /*
@@ -256,6 +266,9 @@
 	Unused except for AI
 */
 /mob/proc/AltClickOn(var/atom/A)
+	var/datum/extension/on_click/alt = get_extension(A, /datum/extension/on_click/alt)
+	if(alt && alt.on_click(src))
+		return
 	A.AltClick(src)
 
 /atom/proc/AltClick(var/mob/user)
@@ -285,6 +298,16 @@
 	return
 
 /atom/proc/CtrlShiftClick(var/mob/user)
+	return
+
+/*
+	Control+Alt click
+*/
+/mob/proc/CtrlAltClickOn(var/atom/A)
+	A.CtrlAltClick(src)
+	return
+
+/atom/proc/CtrlAltClick(var/mob/user)
 	return
 
 /*
@@ -330,12 +353,17 @@
 	if(direction != dir)
 		facedir(direction)
 
+GLOBAL_LIST_INIT(click_catchers, create_click_catcher())
+
 /obj/screen/click_catcher
 	icon = 'icons/mob/screen_gen.dmi'
 	icon_state = "click_catcher"
 	plane = CLICKCATCHER_PLANE
 	mouse_opacity = 2
 	screen_loc = "CENTER-7,CENTER-7"
+
+/obj/screen/click_catcher/Destroy()
+	return QDEL_HINT_LETMELIVE
 
 /proc/create_click_catcher()
 	. = list()

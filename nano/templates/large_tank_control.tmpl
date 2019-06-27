@@ -1,0 +1,78 @@
+<!--
+
+-->
+<H2>Tank Control System</H2>
+<H3>Sensor Data:</H3><BR />
+{{if data.info}}
+	<!--{{for data.info}}
+		<div class='item'>
+			<div class='itemLabel'>
+				<B>{{:value.key1}}:</B>
+			</div>
+			<div class='itemContent'>
+				{{:value}}
+			</div>
+		</div>
+	{{/for}}-->
+	{{:data.info}}
+{{else}}
+	<SPAN class="bad">ERROR: No sensor data received!</SPAN>
+{{/if}}
+<BR/>
+<H3>Input/Output:</H3>
+<div class='itemWide'>
+	<div class='itemLabelWide'>
+		<H4>Input:</H4><BR />
+	</div>
+	{{if data.inputConnected}}
+		<div class='itemContent'>
+			<div class='itemWide'>
+				<div class="itemLabel">State:</div>
+				<div class="itemContent">{{:helper.link(data.inputState? 'Injecting' : 'On Hold', null, {'in_toggle_injector' : 1}) }}</div>
+			</div>
+			<div class='itemWide'>
+				<div class="itemLabel">Flow Rate:</div>
+				<div class="itemContent">
+					{{:helper.link('-100', '', {'adj_input_flow_rate' : -100}) }}
+					{{:helper.link('-10', '', {'adj_input_flow_rate' : -10}) }}
+					<div style="float: left; width: 80px; text-align: center;">{{:data.inputFlowRate}} L/s</div>
+					{{:helper.link('+10', '', {'adj_input_flow_rate' : 10}) }}
+					{{:helper.link('+100', '', {'adj_input_flow_rate' : 100}) }}
+				</div>
+			</div>
+		</div>
+	{{else}}
+		<div class='itemContent'><SPAN class='bad'>ERROR: No injector connected!</SPAN></div>
+	{{/if}}
+	<div class='itemContent'>
+		{{:helper.link('Refresh', null, { 'in_refresh_status' : 1}) }}
+	</div>
+</div>
+<BR/>
+
+<div class='itemWide'>
+	<div class='itemLabelWide'>
+		<H4>Output:</H4><BR />
+	</div>
+	{{if data.outputConnected}}
+		<div class='itemContent'>
+			<div class='item'>
+				<div class="itemLabel">State:</div> 
+				<div class="itemContent">{{:helper.link(data.outputState? 'Open' : 'On Hold', null, {'out_toggle_power' : 1})}}</div>
+			</div>
+			<div class='item'>
+				<div class="itemLabel">Direction:</div> 
+				<div class="itemContent">{{:helper.link(data.outputPumpDir? 'Siphon' : 'Release', null, {'out_toggle_dir' : 1})}}</div>
+			</div>
+			<div class='item'>
+				<div class="itemLabel">Max Output Pressure:</div> 
+				<div class="itemContent">{{:helper.link(data.outputPressure + ' kPa', null, {'out_set_pressure' : 1})}}</div>
+			</div>
+		</div>
+	{{else}}
+		<div class='itemContent'><SPAN class="bad">ERROR: No output vent connected!</SPAN></div>
+	{{/if}}
+	<div class='itemContent'>
+		{{:helper.link('Refresh', null, { 'out_refresh_status' : 1})}}
+	</div>
+</div>

@@ -17,6 +17,7 @@
 
 /datum/uplink_item/item/tools/clerical
 	name = "Morphic Clerical Kit"
+	desc = "Comes with all you need to fake paperwork. Assumes you have passed basic writing lessons."
 	item_cost = 16
 	path = /obj/item/weapon/storage/backpack/satchel/syndie_kit/clerical
 
@@ -32,7 +33,7 @@
 
 /datum/uplink_item/item/tools/encryptionkey_radio
 	name = "Encrypted Radio Channel Key"
-	item_cost = 16
+	item_cost = 1
 	path = /obj/item/device/encryptionkey/syndicate
 
 /datum/uplink_item/item/tools/shield_diffuser
@@ -108,3 +109,16 @@
 	item_cost = 60
 	antag_costs = list(MODE_MERCENARY = 30)
 	path = /obj/item/clothing/mask/ai
+
+/datum/uplink_item/item/tools/interceptor
+	name = "Radio Interceptor"
+	item_cost = 30
+	path = /obj/item/device/radio/intercept
+	desc = "A radio that can intercept secure radio channels. Doesn't fit in pockets."
+	
+/datum/uplink_item/item/tools/ttv
+	name = "Binary Gas Bomb"
+	item_cost = 30
+	path = /obj/effect/spawner/newbomb/traitor
+	desc = "A remote-activated phoron-oxygen bomb assembly with built-in signaler. \
+			A flashing disclaimer begins with the warning 'SOME DISASSEMBLY/REASSEMBLY REQUIRED.'"

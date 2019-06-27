@@ -13,6 +13,7 @@
 
 	clicksound = "keyboard"
 	clickvol = 30
+	circuit_type = /obj/item/weapon/circuitboard/girderlathe
 
 	var/stored_materials = list()
 	var/input = 0
@@ -20,13 +21,18 @@
 
 /obj/machinery/girderlathe/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/girderlathe(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	ADD_SAVED_VAR(stored_materials)
+	ADD_SAVED_VAR(input)
+	ADD_SAVED_VAR(processing)
+
+/obj/machinery/girderlathe/should_save(datum/saver)
+	. = ..()
+	if(!.)
+		return FALSE
+	var/turf/T = saver
+	if(istype(saver))
+		return T == get_turf(src) //only save if we're on the "base" turf on which the stairs rest on
+	return FALSE
 
 /obj/machinery/girderlathe/Process()
 	if(stat & NOPOWER || use_power != 2)
@@ -45,8 +51,8 @@
 					stored_materials[M.material.type] += M.amount
 					qdel(M)
 		for(var/M in stored_materials)
-			if(!processing && stored_materials[M] >= 4)
-				stored_materials[M] -= 4
+			if(!processing && stored_materials[M] >= 2)
+				stored_materials[M] -= 2
 				processing = 1
 				sleep(80)
 				flick("lathe_o", src)
@@ -69,7 +75,7 @@
 		L.Add(list(list("type" = "[item]", "amount" = stored_materials[item])))
 	data["contents"] = L
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "girderlathe.tmpl", src.name, 325, 625, master_ui = master_ui, state = state)
 		ui.set_initial_data(data)
@@ -80,7 +86,7 @@
 	if(..()) return 0
 
 	var/mob/user = usr
-	var/datum/nanoui/ui = GLOB.nanomanager.get_open_ui(user, src, "main")
+	var/datum/nanoui/ui = SSnano.get_open_ui(user, src, "main")
 
 	if(href_list["close"])
 		user.unset_machine()

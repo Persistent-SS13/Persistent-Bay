@@ -1,0 +1,249 @@
+<h2>Material Marketplace</h2><br>
+{{:helper.link("Marketplace View", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
+{{:helper.link("Quick Buy Material", '', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
+{{:helper.link("Quick Sell Material", '', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}	
+{{:helper.link("Current Orders/Inventory", '', {'action' : 'change_menu', 'menu_target' : '4'}, data.menu == 4 ? 'selected' : null)}}	
+<br><hr>
+{{if data.menu == 1}}
+	<h4>Marketplace View</h4>
+	<div class="statusDisplay" style="overflow: auto;">
+		<table style='width: 100%'>
+			<thead>
+				<tr>
+					<th><b>Material</b></th>
+					<th><b>Highest Buy Order</b></th>
+					<th><b>Highest Sell Order</b></th>
+					<th><b>#Sold Last HR</b></th>
+					<th><b>#Sold Last 24HRS</b></th>
+				</tr>
+			</thead>
+			<tbody>
+				{{for data.materials}}
+					<tr>
+						<td>{{:helper.link(value.name, '', {'action' : 'select_material', 'ref' : value.ref})}}</td>
+						<td>$${{:value.buy}} per unit</td>
+						<td>$${{:value.sell}} per unit</td>
+						<td>{{:value.amount}} units</td>
+						<td>{{:value.amount24}} units</td>
+					</tr>
+				{{/for}}
+			</tbody>
+		</table>
+	</div>
+{{/if}}
+{{if data.menu == 2}}
+	<h4>Quick Buy Material</h4>
+	Account Balance: {{:data.balance}} 
+	<div class="item">
+		<div class="itemLabel">
+			Material: 
+		</div>
+		<div class="itemContent">
+			{{:helper.link(data.selected_material, null, {'action' : 'change_material'})}}
+		</div>
+	</div>
+	<div class="item">
+		<div class="itemLabel">
+			Current Seller Volume: 
+		</div>
+		<div class="itemContent">
+			{{:data.supply}}
+		</div>
+	</div>
+	You cannot buy more than the volume listed on the market.
+	<div class="item">
+		<div class="itemLabel">
+			Buying Amount: 
+		</div>
+		<div class="itemContent">
+			{{:helper.link(data.selected_amount, null, {'action' : 'change_amount'})}}
+		</div>
+	</div>
+	<div class="item">
+		<div class="itemLabel">
+			Destination Telepad: 
+		</div>
+		<div class="itemContent">
+			{{for data.telepads}}
+				{{:helper.link(value.name, '', {'action' : 'select_telepad', 'ref' : value.ref}, value.selected ? 'selected' : null )}}
+			{{/for}}
+		</div>
+	</div>
+	<div class="item">
+		<div class="itemLabel">
+			Final Price: 
+		</div>
+		<div class="itemContent">
+			{{:data.calc_price}}{{:helper.link('Refresh', null, {'action' : 'refresh'})}}
+		</div>
+	</div>
+	This is based on the current orders on the marketplace and is subject to change as materials are bought and listed.
+	<br>
+	{{:helper.link('Complete Purchase', null, {'action' : 'quick_buy'})}}
+	
+{{/if}}
+
+{{if data.menu == 3}}
+	<h4>Quick Sell Material</h4>
+	<div class="item">
+		<div class="itemLabel">
+			Material: 
+		</div>
+		<div class="itemContent">
+			{{:helper.link(data.selected_material, null, {'action' : 'change_material'})}}
+		</div>
+	</div>
+	<div class="item">
+		<div class="itemLabel">
+			Inventory/Current Buyer Volume: 
+		</div>
+		<div class="itemContent">
+			{{:data.inventory}}/{{:data.demand}}{{:helper.link('Refresh Inventory', null, {'action' : 'refresh_inv'})}}
+		</div>
+	</div>
+	You cannot sell more than what you currently have stacked onto telepads, and you cannot quick sell unless other organizations have created buy orders for this material.<br>
+	If theit are no buy orders, consider making a sell order through the market view so that the materials can be automatically purchased by the next material buyer.
+	<div class="item">
+		<div class="itemLabel">
+			Selling Amount: 
+		</div>
+		<div class="itemContent">
+			{{:helper.link(data.selected_amount, null, {'action' : 'change_amount'})}}
+		</div>
+	</div>
+	<div class="item">
+		<div class="itemLabel">
+			Final Price: 
+		</div>
+		<div class="itemContent">
+			{{:data.calc_price}}{{:helper.link('Refresh', null, {'action' : 'refresh'})}}
+		</div>
+	</div>
+	This is based on the current orders on the marketplace and is subject to change as materials are bought and listed.
+	<br>
+	{{:helper.link('Complete Sale', null, {'action' : 'quick_sell'})}}
+{{/if}}
+{{if data.menu == 4}}
+	<h4>Current Orders/Inventory</h4>
+	<b>Current Orders</b>
+	<div class="statusDisplay" style="overflow: auto;">
+		{{for data.orders}}
+			{{:value.name}}{{:helper.link('Cancel', null, {'action' : 'cancel_order', 'ref' : value.ref, 'ref2' : value.ref2})}}<br><br>
+		{{/for}}
+	</div>
+	<br>	
+	<b>Default Telepad</b>
+	<div class="statusDisplay" style="overflow: auto;">
+		{{for data.telepads}}
+			{{:helper.link(value.name, '', {'action' : 'select_telepad_default', 'ref' : value.ref}, value.selected ? 'selected' : null )}}<br><br>
+		{{/for}}
+	</div>	
+	This is the telepad used whenever a buy order is filled. If one is not chosen, the buy order will go to a random telepad.
+	<br><br>
+	<b>Inventory</b>
+	<div class="statusDisplay" style="overflow: auto;">
+		{{for data.materials}}
+			{{:value.name}}<br>
+		{{/for}}
+	</div>
+{{/if}}
+{{if data.menu == 5}}
+	<h4>{{:data.selected_material}}</h4>
+	{{:helper.link("Back", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}<br><br>
+	<b>Highest Buy Order:</b> {{:data.buy}}/unit <b>Lowest Sell Order:</b> {{:data.sell}}/unit<br>
+	<b>Amount sold in last hour:</b> {{:data.sold}} <b>Amount sold in last 24 hours:</b> {{:data.sold24}}<br>
+	Buy orders will automaticaly fufill sell orders if their prices overlap, and when quick buy or quick sell is used, they will automatically use the best priced orders.
+	<hr>
+	<br>
+	Account Balance: $${{:data.balance}}<br>
+	Inventory of {{:data.selected_material}}: {{:data.inventory}} units<br>
+	<div class="item">
+		<div class="itemLabel">
+			Create New
+		</div>
+		<div class="itemContent">
+			{{:helper.link("Sell Order", '', {'action' : 'select_sell'}, data.buy_ordering ? null : 'selected' )}}{{:helper.link("Buy Order", '', {'action' : 'select_buy'}, data.buy_ordering ? 'selected' : null )}}
+		</div>
+	</div>
+	<div class="item">
+		<div class="itemLabel">
+			Order Volume: 
+		</div>
+		<div class="itemContent">
+			{{:helper.link(data.selected_amount, null, {'action' : 'change_amount'})}}
+		</div>
+	</div>
+	How many units of {{:data.selected_material}} you want to {{:data.order_status}}.
+	{{if !data.buy_ordering}}
+		You must keep this amount of {{:data.selected_material}} on your telepads or else the order will be automatically cancelled.
+	{{/if}}
+	<div class="item">
+		<div class="itemLabel">
+			Order Price PER UNIT: 
+		</div>
+		<div class="itemContent">
+			{{:helper.link(data.selected_price, null, {'action' : 'change_price'})}}
+		</div>
+	</div>
+	How much will be spent per unit of {{:data.selected_material}}.
+	<div class="item">
+		<div class="itemLabel">
+			Total Order Value: 
+		</div>
+		<div class="itemContent">
+			$${{:data.order_value}}
+		</div>
+	</div>
+	This is how much the total transaction will be if the {{:data.order_status}} order is completely filled.
+	{{if data.buy_ordering}}
+		You must keep this amount of money in your organizations account or the buy order will be automatically cancelled.
+	{{/if}}
+	<div class="item">
+		<div class="itemLabel">
+			Place Order
+		</div>
+		<div class="itemContent">
+			{{:helper.link("Finalize", null, {'action' : 'finalize'})}}
+		</div>
+	</div>
+	<hr>
+	Buy Orders
+	<div class="statusDisplay" style="overflow: auto;">
+		<table style='width: 100%'>
+			<thead>
+				<tr>
+					<th><b>Price</b></th>
+					<th><b>Amount Buying</b></th>
+				</tr>
+			</thead>
+			<tbody>
+				{{for data.buy_orders}}
+					<tr>
+						<td>    $${{:value.price}}</td>
+						<td>    {{:value.volume}} units</td>
+					</tr>
+				{{/for}}
+			</tbody>
+		</table>
+	</div>
+	Sell Orders
+	<div class="statusDisplay" style="overflow: auto;">
+		<table style='width: 100%'>
+			<thead>
+				<tr>
+					<th><b>Price</b></th>
+					<th><b>Amount Selling</b></th>
+				</tr>
+			</thead>
+			<tbody>
+				{{for data.sell_orders}}
+					<tr>
+						<td>    $${{:value.price}}</td>
+						<td>    {{:value.volume}} units</td>
+					</tr>
+				{{/for}}
+			</tbody>
+		</table>
+	</div>
+{{/if}}
+

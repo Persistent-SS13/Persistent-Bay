@@ -2,6 +2,17 @@
 #define DIRECT_OUTPUT(A, B) A << B
 #define WRITE_FILE(file, text) DIRECT_OUTPUT(file, text)
 
+#define LOGS_PATH_FOLDER(YEAR,MONTH,DAY) "data/logs/##YEAR/##MONTH/##DAY"
+#define LOGS_PATH_FOLDER_NOW "data/logs/[time2text(world.realtime,"YYYY/MM/DD")]" //Folder structure for log folder for the day
+#define MAKE_LOGS_PATH_NOW(LOGFILENAME) "data/logs/[time2text(world.realtime,"YYYY/MM/DD")]/[LOGFILENAME]" //Macro for the path to a log file in today's log folder
+
+#define PATH_ATTACK_LOG_NOW  MAKE_LOGS_PATH_NOW("attack-[game_id].log")
+#define PATH_GAME_LOG_NOW    MAKE_LOGS_PATH_NOW("game-[game_id].log")
+#define PATH_RUNTIME_LOG_NOW MAKE_LOGS_PATH_NOW("runtime-[game_id].log")
+#define PATH_QDEL_LOG_NOW    MAKE_LOGS_PATH_NOW("qdel-[game_id].log")
+#define PATH_HREF_LOG_NOW    MAKE_LOGS_PATH_NOW("hrefs-[game_id].htm")
+#define PATH_WORLD_LOG_NOW   MAKE_LOGS_PATH_NOW("world-[game_id].log")
+
 
 // On Linux/Unix systems the line endings are LF, on windows it's CRLF, admins that don't use notepad++
 // will get logs that are one big line if the system is Linux and they are using notepad.  This solves it by adding CR to every line ending
@@ -11,19 +22,34 @@
 
 
 /proc/error(msg)
-	to_world_log("## ERROR: [msg][log_end]")
+	log_world("## ERROR: [msg][log_end]")
+
+/proc/log_ss(subsystem, text, log_world = TRUE)
+	if (!subsystem)
+		subsystem = "UNKNOWN"
+	var/msg = "[subsystem]: [text]"
+	game_log("SS", msg)
+	if (log_world)
+		to_world_log("SS[subsystem]: [text]")
+
+/proc/log_ss_init(text)
+	game_log("SS", "[text]")
 
 #define WARNING(MSG) warning("[MSG] in [__FILE__] at line [__LINE__] src: [src] usr: [usr].")
 //print a warning message to world.log
 /proc/warning(msg)
-	to_world_log("## WARNING: [msg][log_end]")
+	log_world("## WARNING: [msg][log_end]")
 
 //print a testing-mode debug message to world.log
 /proc/testing(msg)
-	to_world_log("## TESTING: [msg][log_end]")
+	log_world("## TESTING: [msg][log_end]")
 
 /proc/game_log(category, text)
-	diary << "\[[time_stamp()]] [game_id] [category]: [text][log_end]"
+	//diary << "\[[time_stamp()]] [game_id] [category]: [text][log_end]"
+	diary << "\[[time_stamp()]] [category]: [text][log_end]"
+
+/proc/attack_log(text)
+	to_file(GLOB.world_attack_log, "\[[time_stamp()]] ATTACK: [text][log_end]")
 
 /proc/log_admin(text)
 	GLOB.admin_log.Add(text)
@@ -110,10 +136,11 @@
 //This replaces world.log so it displays both in DD and the file
 /proc/log_world(text)
 	if(config && config.log_runtime)
-		to_world_log(runtime_diary)
 		to_world_log(text)
-	to_world_log(null)
-	to_world_log(text)
+		//to_world_log(runtime_diary)
+		//to_world_log(text)
+	//to_world_log(text)
+	to_world_log(runtime_diary)
 
 //pretty print a direction bitflag, can be useful for debugging.
 /proc/dir_text(var/dir)
@@ -210,8 +237,14 @@
 	if(islist(d))
 		var/list/L = list()
 		for(var/e in d)
-			L += log_info_line(e)
+			// Indexing on numbers just gives us the same number again in the best case and causes an index out of bounds runtime in the worst
+			var/v = isnum(e) ? null : d[e]
+			L += "[log_info_line(e)][v ? " - [log_info_line(v)]" : ""]"
 		return "\[[jointext(L, ", ")]\]" // We format the string ourselves, rather than use json_encode(), because it becomes difficult to read recursively escaped "
 	if(!istype(d))
 		return json_encode(d)
 	return d.get_log_info_line()
+
+/proc/report_progress(var/progress_message)
+	admin_notice("<span class='boldannounce'>[progress_message]</span>", R_DEBUG)
+	to_world_log(progress_message)

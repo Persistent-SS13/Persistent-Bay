@@ -45,7 +45,11 @@
 	var/sheet_singular_name = "sheet"
 	var/sheet_plural_name = "sheets"
 	var/is_fusion_fuel
-	var/list/chem_products				  // Used with the grinder to produce chemicals
+	var/list/chem_products				  //Used with the grinder to produce chemicals.
+	var/hidden_from_codex
+	var/lore_text
+	var/mechanics_text
+	var/antag_text
 
 	// Shards/tables/structures
 	var/shard_type = SHARD_SHRAPNEL       // Path of debris object.
@@ -56,15 +60,18 @@
 
 	// Icons
 	var/icon_colour                                      // Colour applied to products of this material.
-	var/icon_base = "solid"                              // Wall and table base icon tag. See header.
+	var/icon_base = "metal"                              // Wall and table base icon tag. See header.
 	var/door_icon_base = "metal"                         // Door base icon tag. See header.
-	var/icon_reinf = "metal"                       // Overlay used
+	var/icon_reinf = "reinf_metal"                       // Overlay used
+	var/table_icon_base = "metal"
+	var/table_reinf = "reinf_metal"
 	var/list/stack_origin_tech = list(TECH_MATERIAL = 1) // Research level for stacks.
 
 	// Attributes
 	var/cut_delay = 0            // Delay in ticks when cutting through this wall.
 	var/radioactivity            // Radiation var. Used in wall and object processing to irradiate surroundings.
 	var/ignition_point           // K, point at which the material catches on fire.
+	var/energy_combustion = 8    // MJ/kilo-unit Basically the heat energy given off for burning 1,000 units of said material(8 is given for generic trash on wikipedia)
 	var/melting_point = 1800     // K, walls will take damage if they're next to a fire hotter than this
 	var/brute_armor = 2	 		 // Brute damage to a wall is divided by this value if the wall is reinforced by this material.
 	var/burn_armor				 // Same as above, but for Burn damage type. If blank brute_armor's value is used.
@@ -77,8 +84,6 @@
 	var/units_per_sheet = SHEET_MATERIAL_AMOUNT
 
 	// Placeholder vars for the time being, todo properly integrate windows/light tiles/rods.
-	var/created_window
-	var/rod_product
 	var/wire_product
 	var/list/window_options = list()
 
@@ -96,6 +101,8 @@
 	var/stack_type = /obj/item/stack/material/generic
 	// Wallrot crumble message.
 	var/rotting_touch_message = "crumbles under your touch"
+	// Modifies skill checks when constructing with this material.
+	var/construction_difficulty = 0
 
 	// Mining behavior.
 	var/alloy_product
@@ -107,29 +114,42 @@
 	var/ore_spread_chance
 	var/ore_scan_icon
 	var/ore_icon_overlay
- 	// Xenoarch behavior.
+	var/sale_price
+	var/list/ore_matter = list() //material contained in the ore itself
+
+	// Xenoarch behavior.
 	var/list/xarch_ages = list("thousand" = 999, "million" = 999)
-	var/xarch_source_mineral = "iron"
+	var/xarch_source_mineral = MATERIAL_IRON
 
 // Placeholders for light tiles and rglass.
-/material/proc/build_rod_product(var/mob/user, var/obj/item/stack/used_stack, var/obj/item/stack/target_stack)
-	if(!rod_product)
-		to_chat(user, "<span class='warning'>You cannot make anything out of \the [target_stack]</span>")
+/material/proc/reinforce(var/mob/user, var/obj/item/stack/material/used_stack, var/obj/item/stack/material/target_stack)
+	if(!used_stack.can_use(1))
+		to_chat(user, "<span class='warning'>You need need at least one [used_stack.singular_name] to reinforce [target_stack].</span>")
 		return
-	if(used_stack.get_amount() < 1 || target_stack.get_amount() < 1)
-		to_chat(user, "<span class='warning'>You need one rod and one sheet of [display_name] to make anything useful.</span>")
+
+	var/needed_sheets = 2 * used_stack.matter_multiplier
+	if(!target_stack.can_use(needed_sheets))
+		to_chat(user, "<span class='warning'>You need need at least [needed_sheets] [target_stack.plural_name] for reinforcement with [used_stack].</span>")
 		return
+
+	var/material/reinf_mat = used_stack.material
+	if(reinf_mat.integrity <= integrity || reinf_mat.is_brittle())
+		to_chat(user, "<span class='warning'>The [reinf_mat.display_name] is too structurally weak to reinforce the [display_name].</span>")
+		return
+
+	to_chat(user, "<span class='notice'>You reinforce the [target_stack] with the [reinf_mat.display_name].</span>")
 	used_stack.use(1)
-	target_stack.use(1)
-	var/obj/item/stack/S = new rod_product(get_turf(user))
-	S.add_fingerprint(user)
-	S.add_to_stacks(user)
+	var/obj/item/stack/material/S = target_stack.split(needed_sheets)
+	S.reinf_material = reinf_mat
+	S.update_strings()
+	S.update_icon()
+	S.dropInto(target_stack.loc)
 
 /material/proc/build_wired_product(var/mob/user, var/obj/item/stack/used_stack, var/obj/item/stack/target_stack)
 	if(!wire_product)
 		to_chat(user, "<span class='warning'>You cannot make anything out of \the [target_stack]</span>")
 		return
-	if(used_stack.get_amount() < 5 || target_stack.get_amount() < 1)
+	if(!used_stack.can_use(5) || !target_stack.can_use(1))
 		to_chat(user, "<span class='warning'>You need five wires and one sheet of [display_name] to make anything useful.</span>")
 		return
 
@@ -154,23 +174,26 @@
 	if(!burn_armor)
 		burn_armor = brute_armor
 
-// This is a placeholder for proper integration of windows/windoors into the system.
-/material/proc/build_windows(var/mob/living/user, var/obj/item/stack/used_stack)
-	return 0
-
-// Weapons handle applying a divisor for this value locally.
-/material/proc/get_blunt_damage()
-	return weight //todo
-
 // Return the matter comprising this material.
 /material/proc/get_matter()
 	var/list/temp_matter = list()
 	temp_matter[name] = SHEET_MATERIAL_AMOUNT
 	return temp_matter
 
+// Weapons handle applying a divisor for this value locally.
+/material/proc/get_blunt_damage()
+	return weight //todo
+
 // As above.
 /material/proc/get_edge_damage()
 	return hardness //todo
+
+/material/proc/get_attack_cooldown()
+	if(weight < 19)
+		return FAST_WEAPON_COOLDOWN
+	if(weight > 23)
+		return SLOW_WEAPON_COOLDOWN
+	return DEFAULT_WEAPON_COOLDOWN
 
 // Snowflakey, only checked for alien doors at the moment.
 /material/proc/can_open_material_door(var/mob/living/user)
@@ -184,6 +207,18 @@
 /material/placeholder
 	name = "placeholder"
 
+// Places a girder object when a wall is dismantled, also applies reinforced material.
+/material/proc/place_dismantled_girder(var/turf/target, var/material/material, var/material/reinf_material)
+	var/obj/structure/girder/G = new(target)
+	G.anchored = TRUE
+	if(material)
+		G.material = material
+		G.state = 2
+	if(reinf_material)
+		G.reinf_material = reinf_material
+		G.reinforce_girder()
+		G.state = 3
+
 // General wall debris product placement.
 // Not particularly necessary aside from snowflakey cult girders.
 /material/proc/place_dismantled_product(var/turf/target,var/is_devastated)
@@ -191,11 +226,7 @@
 
 // Debris product. Used ALL THE TIME.
 /material/proc/place_sheet(var/turf/target, var/amount = 1)
-	if(stack_type)
-		var/obj/item/stack/material/stack = new stack_type(target, amount, name)
-		stack.update_strings()
-		return stack
-	return null
+	return stack_type ? new stack_type(target, amount, name) : null
 
 // As above.
 /material/proc/place_shard(var/turf/target)
@@ -208,3 +239,7 @@
 
 /material/proc/combustion_effect(var/turf/T, var/temperature)
 	return
+
+//Returns the material content of the ore for this material if available
+/material/proc/get_ore_matter()
+	return ore_matter

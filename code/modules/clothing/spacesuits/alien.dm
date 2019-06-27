@@ -1,53 +1,48 @@
-//Skrell space gear. Sleek like a wetsuit.
-/obj/item/clothing/head/helmet/space/skrell
-	name = "Skrellian helmet"
-	desc = "Smoothly contoured and polished to a shine. Still looks like a fishbowl."
-	armor = list(melee = 20, bullet = 20, laser = 50,energy = 50, bomb = 50, bio = 100, rad = 100)
-	max_heat_protection_temperature = SPACE_SUIT_MAX_HEAT_PROTECTION_TEMPERATURE
-	species_restricted = list(SPECIES_SKRELL,SPECIES_HUMAN)
-
-/obj/item/clothing/head/helmet/space/skrell/white
-	icon_state = "skrell_helmet_white"
-
-/obj/item/clothing/head/helmet/space/skrell/black
-	icon_state = "skrell_helmet_black"
-
-/obj/item/clothing/suit/space/skrell
-	name = "Skrellian voidsuit"
-	desc = "Seems like a wetsuit with reinforced plating seamlessly attached to it. Very chic."
-	armor = list(melee = 20, bullet = 20, laser = 50,energy = 50, bomb = 50, bio = 100, rad = 100)
-	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/weapon/storage/ore,/obj/item/device/t_scanner,/obj/item/weapon/pickaxe, /obj/item/weapon/rcd)
-	heat_protection = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
-	max_heat_protection_temperature = SPACE_SUIT_MAX_HEAT_PROTECTION_TEMPERATURE
-	species_restricted = list(SPECIES_SKRELL,SPECIES_HUMAN)
-
-/obj/item/clothing/suit/space/skrell/white
-	icon_state = "skrell_suit_white"
-
-/obj/item/clothing/suit/space/skrell/black
-	icon_state = "skrell_suit_black"
-
 // Vox space gear (vaccuum suit, low pressure armour)
 // Can't be equipped by any other species due to bone structure and vox cybernetics.
 /obj/item/clothing/suit/space/vox
 	w_class = ITEM_SIZE_NORMAL
 	allowed = list(/obj/item/weapon/gun,/obj/item/ammo_magazine,/obj/item/ammo_casing,/obj/item/weapon/melee/baton,/obj/item/weapon/melee/energy/sword,/obj/item/weapon/handcuffs,/obj/item/weapon/tank)
-	armor = list(melee = 60, bullet = 50, laser = 40,energy = 15, bomb = 30, bio = 30, rad = 30)
 	siemens_coefficient = 0.6
 	heat_protection = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
 	max_heat_protection_temperature = SPACE_SUIT_MAX_HEAT_PROTECTION_TEMPERATURE
-	species_restricted = list(SPECIES_VOX)
+	species_restricted = list(SPECIES_VOX, SPECIES_VOX_ARMALIS)
+	armor  = list(
+		DAM_BLUNT 	= 60,
+		DAM_PIERCE 	= 50,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 50,
+		DAM_LASER 	= 40,
+		DAM_ENERGY 	= 15,
+		DAM_BURN 	= 40,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 30,
+		DAM_RADS 	= 30,
+		DAM_STUN 	= 2)
 
 /obj/item/clothing/suit/space/vox/New()
 	..()
-	slowdown_per_slot[slot_wear_suit] = 2
+	slowdown_per_slot[slot_wear_suit] = 1
 
 /obj/item/clothing/head/helmet/space/vox
-	armor = list(melee = 60, bullet = 50, laser = 40, energy = 15, bomb = 30, bio = 30, rad = 30)
 	siemens_coefficient = 0.6
-	item_flags = STOPPRESSUREDAMAGE
+	item_flags = ITEM_FLAG_STOPPRESSUREDAMAGE
 	flags_inv = 0
-	species_restricted = list(SPECIES_VOX)
+	species_restricted = list(SPECIES_VOX, SPECIES_VOX_ARMALIS)
+	armor  = list(
+		DAM_BLUNT 	= 60,
+		DAM_PIERCE 	= 50,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 50,
+		DAM_LASER 	= 40,
+		DAM_ENERGY 	= 15,
+		DAM_BURN 	= 40,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 30,
+		DAM_RADS 	= 30,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/head/helmet/space/vox/pressure
 	name = "alien helmet"
@@ -91,7 +86,7 @@
 
 /obj/item/clothing/under/vox
 	has_sensor = 0
-	species_restricted = list(SPECIES_VOX)
+	species_restricted = list(SPECIES_VOX, SPECIES_VOX_ARMALIS)
 
 /obj/item/clothing/under/vox/vox_casual
 	name = "alien clothing"
@@ -113,7 +108,7 @@
 	item_state = "gloves-vox"
 	siemens_coefficient = 0
 	permeability_coefficient = 0.05
-	species_restricted = list(SPECIES_VOX)
+	species_restricted = list(SPECIES_VOX, SPECIES_VOX_ARMALIS)
 
 /obj/item/clothing/shoes/magboots/vox
 
@@ -121,13 +116,13 @@
 	name = "vox magclaws"
 	item_state = "boots-vox"
 	icon_state = "boots-vox"
-	species_restricted = list(SPECIES_VOX)
+	species_restricted = list(SPECIES_VOX, SPECIES_VOX_ARMALIS)
 
 	action_button_name = "Toggle the magclaws"
 
 /obj/item/clothing/shoes/magboots/vox/attack_self(mob/user)
 	if(src.magpulse)
-		item_flags &= ~NOSLIP
+		item_flags &= ~ITEM_FLAG_NOSLIP
 		magpulse = 0
 		canremove = 1
 		to_chat(user, "You relax your deathgrip on the flooring.")
@@ -140,7 +135,7 @@
 			to_chat(user, "You will have to put on the [src] before you can do that.")
 			return
 
-		item_flags |= NOSLIP
+		item_flags |= ITEM_FLAG_NOSLIP
 		magpulse = 1
 		canremove = 0	//kinda hard to take off magclaws when you are gripping them tightly.
 		to_chat(user, "You dig your claws deeply into the flooring, bracing yourself.")
@@ -152,7 +147,7 @@
 	..()
 	if(src.magpulse)
 		user.visible_message("The [src] go limp as they are removed from [usr]'s feet.", "The [src] go limp as they are removed from your feet.")
-		item_flags &= ~NOSLIP
+		item_flags &= ~ITEM_FLAG_NOSLIP
 		magpulse = 0
 		canremove = 1
 

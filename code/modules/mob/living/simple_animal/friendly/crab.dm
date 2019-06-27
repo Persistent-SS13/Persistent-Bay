@@ -18,12 +18,17 @@
 	stop_automated_movement = 1
 	friendly = "pinches"
 	mob_size = 5
+	density = 0
 	var/obj/item/inventory_head
 	var/obj/item/inventory_mask
 	possession_candidate = 1
+	can_escape = 1 //snip snip
+	pass_flags = PASS_FLAG_TABLE
 
 /mob/living/simple_animal/crab/Life()
-	..()
+	. = ..()
+	if(!.)
+		return FALSE
 	//CRAB movement
 	if(!ckey && !stat)
 		if(isturf(src.loc) && !resting && !buckled)		//This is so it only moves if it's not inside a closet, gentics machine, etc.

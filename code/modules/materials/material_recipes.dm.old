@@ -1,0 +1,472 @@
+/material/proc/get_recipes()
+	if(!recipes)
+		generate_recipes()
+	return recipes
+
+/material/proc/generate_recipes()
+	recipes = list()
+
+	// If is_brittle() returns true, these are only good for a single strike.
+	recipes += new/datum/stack_recipe("[display_name] baseball bat", /obj/item/weapon/material/twohanded/baseballbat, 10, time = 20, one_per_turf = 0, on_floor = 1, supplied_material = "[name]")
+	recipes += new/datum/stack_recipe("[display_name] ashtray", /obj/item/weapon/material/ashtray, 2, one_per_turf = 1, on_floor = 1, supplied_material = "[name]")
+	recipes += new/datum/stack_recipe("[display_name] spoon", /obj/item/weapon/material/kitchen/utensil/spoon/plastic, 1, on_floor = 1, supplied_material = "[name]")
+	recipes += new/datum/stack_recipe("[display_name] ring", /obj/item/clothing/ring/material, 1, on_floor = 1, supplied_material = "[name]")
+	recipes += new/datum/stack_recipe("[display_name] coin", /obj/item/weapon/material/coin, 2, one_per_turf = 1, on_floor = 1, supplied_material = "[name]")
+
+
+	if(integrity>50)
+		recipes += new/datum/stack_recipe("[display_name] chair", /obj/structure/bed/chair, one_per_turf = 1, on_floor = 1, supplied_material = "[name]") //NOTE: the wood material has it's own special chair recipe
+
+	if(integrity>=50)
+		recipes += new/datum/stack_recipe("[display_name] door", /obj/machinery/door/unpowered/simple, 10, time = 50, one_per_turf = 1, on_floor = 1, supplied_material = "[name]")
+		recipes += new/datum/stack_recipe("[display_name] barricade", /obj/structure/barricade, 5, time = 50, one_per_turf = 1, on_floor = 1, supplied_material = "[name]")
+		recipes += new/datum/stack_recipe("[display_name] stool", /obj/item/weapon/stool, one_per_turf = 1, on_floor = 1, supplied_material = "[name]")
+		recipes += new/datum/stack_recipe("[display_name] bar stool", /obj/item/weapon/stool/bar, one_per_turf = 1, on_floor = 1, supplied_material = "[name]")
+		recipes += new/datum/stack_recipe("[display_name] bed", /obj/structure/bed, 2, one_per_turf = 1, on_floor = 1, supplied_material = "[name]")
+		recipes += new/datum/stack_recipe("[display_name] lock",/obj/item/weapon/material/lock_construct, 1, time = 20, one_per_turf = 0, on_floor = 1, supplied_material = "[name]")
+		recipes += new/datum/stack_recipe("[display_name] wall frame", /obj/structure/wall_frame, 2, time = 50, one_per_turf = 1, on_floor = 1, supplied_material = "[name]")
+	if(hardness>50)
+		recipes += new/datum/stack_recipe("[display_name] fork", /obj/item/weapon/material/kitchen/utensil/fork/plastic, 1, on_floor = 1, supplied_material = "[name]")
+		recipes += new/datum/stack_recipe("[display_name] knife", /obj/item/weapon/material/kitchen/utensil/knife/plastic, 1, on_floor = 1, supplied_material = "[name]")
+		recipes += new/datum/stack_recipe("[display_name] blade", /obj/item/weapon/material/butterflyblade, 6, time = 20, one_per_turf = 0, on_floor = 1, supplied_material = "[name]")
+
+/material/steel/generate_recipes()
+	..()
+	recipes += new/datum/stack_recipe("wall girders", /obj/structure/girder, 6, time = 50, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("metal rod", /obj/item/stack/material/rods, 1, 2, 60)
+	recipes += new/datum/stack_recipe("regular floor tile", /obj/item/stack/tile/floor, 1, 4, 20)
+	recipes += new/datum/stack_recipe("key", /obj/item/weapon/key, 1, time = 10)
+
+	recipes += new/datum/stack_recipe_list("Machines Frames", list( \
+		new/datum/stack_recipe("machine frame", 			/obj/machinery/constructable_frame/machine_frame, 	5, time = 25, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("computer frame", 			/obj/structure/computerframe, 						5, time = 25, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("turret frame", 				/obj/machinery/porta_turret_construct, 				5, time = 25, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("modular console frame", 	/obj/item/modular_computer/console, 				20, time = 25, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("modular telescreen frame", 	/obj/item/modular_computer/telescreen, 				10, time = 25, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("modular laptop frame", 		/obj/item/modular_computer/laptop, 					10, time = 25, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("modular tablet frame", 		/obj/item/modular_computer/tablet, 					5, time = 25, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("modular pda frame", 		/obj/item/modular_computer/pda, 					5, time = 25, one_per_turf = 1, on_floor = 1),\
+	))
+
+	recipes += new/datum/stack_recipe_list("Wall-Mounted Frames", list( \
+		new/datum/stack_recipe("apc frame", 				/obj/item/frame/apc, 			2),\
+		new/datum/stack_recipe("air alarm frame", 			/obj/item/frame/air_alarm, 		2),\
+		new/datum/stack_recipe("fire alarm frame", 			/obj/item/frame/fire_alarm, 	2),\
+		new/datum/stack_recipe("ATM", 						/obj/item/frame/atm, 			2),\
+		new/datum/stack_recipe("intercom frame", 			/obj/item/frame/intercom, 		2),\
+		new/datum/stack_recipe("light switch frame", 		/obj/item/frame/light_switch, 	1),\
+		new/datum/stack_recipe("light fixture frame", 		/obj/item/frame/light, 			2),\
+		new/datum/stack_recipe("small light fixture frame", /obj/item/frame/light/small, 	1),\
+		new/datum/stack_recipe("status display frame",		/obj/item/frame/status_display,	5),\
+		new/datum/stack_recipe("request console frame",		/obj/item/frame/request_console,5),\
+		new/datum/stack_recipe("emergency oxygen pump frame",/obj/item/frame/oxypump,		5),\
+		new/datum/stack_recipe("anesthetic pump frame",		/obj/item/frame/anestheticpump,5),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Airlock Assemblies", list( \
+		new/datum/stack_recipe("standard airlock assembly", 		/obj/structure/door_assembly, 							4, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("external airlock assembly", 		/obj/structure/door_assembly/door_assembly_ext, 		4, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("airtight hatch assembly", 			/obj/structure/door_assembly/door_assembly_hatch, 		4, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("high security airlock assembly", 	/obj/structure/door_assembly/door_assembly_highsecurity,4, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("emergency shutter", 				/obj/structure/firedoor_assembly, 						4, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("multi-tile airlock assembly", 		/obj/structure/door_assembly/multi_tile, 				4, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("keypad airlock assembly", 			/obj/structure/door_assembly/door_assembly_keyp, 		4, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("personal airlock assembly", /obj/structure/door_assembly/door_assembly_personal, 4, time = 50, one_per_turf = 1, on_floor = 1)
+		))
+
+	recipes += new/datum/stack_recipe_list("Furnitures",list( \
+		new/datum/stack_recipe("table frame", 			/obj/structure/table, 					1, time = 10, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("dark office chair", 	/obj/structure/bed/chair/office/dark, 	5, time = 10, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("light office chair", 	/obj/structure/bed/chair/office/light, 	5, time = 10, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe_list("comfy chairs", list( \
+			new/datum/stack_recipe("beige comfy chair", /obj/structure/bed/chair/comfy/beige, 	2,time = 10, one_per_turf = 1, on_floor = 1), \
+			new/datum/stack_recipe("black comfy chair", /obj/structure/bed/chair/comfy/black, 	2,time = 10, one_per_turf = 1, on_floor = 1), \
+			new/datum/stack_recipe("brown comfy chair", /obj/structure/bed/chair/comfy/brown, 	2,time = 10, one_per_turf = 1, on_floor = 1), \
+			new/datum/stack_recipe("lime comfy chair", /obj/structure/bed/chair/comfy/lime, 	2,time = 10, one_per_turf = 1, on_floor = 1), \
+			new/datum/stack_recipe("teal comfy chair", /obj/structure/bed/chair/comfy/teal, 	2,time = 10, one_per_turf = 1, on_floor = 1), \
+			new/datum/stack_recipe("red comfy chair", /obj/structure/bed/chair/comfy/red, 		2,time = 10, one_per_turf = 1, on_floor = 1), \
+			new/datum/stack_recipe("blue comfy chair", /obj/structure/bed/chair/comfy/blue, 	2,time = 10, one_per_turf = 1, on_floor = 1), \
+			new/datum/stack_recipe("purple comfy chair", /obj/structure/bed/chair/comfy/purp, 	2,time = 10, one_per_turf = 1, on_floor = 1), \
+			new/datum/stack_recipe("green comfy chair", /obj/structure/bed/chair/comfy/green, 	2,time = 10, one_per_turf = 1, on_floor = 1), \
+			)),\
+		new/datum/stack_recipe("steel bed", 			/obj/structure/bed, 					5, time = 20, one_per_turf = 1, on_floor = 1), \
+		))
+
+	recipes += new/datum/stack_recipe_list("conveyor belts", list( \
+		new/datum/stack_recipe("conveyor belt assembly", /obj/item/conveyor_construct, 3, time = 15, one_per_turf = 1, on_floor =1), \
+		new/datum/stack_recipe("conveyor belt switch", /obj/item/conveyor_switch_construct, 1, time = 5, one_per_turf = 1, on_floor =1), \
+		))
+	recipes += new/datum/stack_recipe_list("Training Equipment",list( \
+		new/datum/stack_recipe("weight lifter", /obj/structure/fitness/weightlifter, 4, time = 50, one_per_turf = 1, on_floor = 1),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Tools",list( \
+		new/datum/stack_recipe("tray", 				/obj/item/weapon/tray, 				1, time = 2),\
+		new/datum/stack_recipe("meat spike frame", 	/obj/structure/kitchenspike_frame, 	4, time = 40, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("IV Drip", 			/obj/machinery/iv_drip, 			3, time = 15, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("Paper Shredder", 	/obj/machinery/papershredder, 		3, time = 25, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("Roller Bed", 		/obj/structure/bed/roller, 			2, time = 10, one_per_turf = 1, on_floor = 1),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Storage-Closets",list( \
+		new/datum/stack_recipe("closet", 					/obj/structure/closet, 							5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("bartender closet",			/obj/structure/closet/gmcloset, 				5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("janitor closet",			/obj/structure/closet/jcloset, 					5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("chef closet",				/obj/structure/closet/chefcloset, 				5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("lawyer closet",				/obj/structure/closet/lawcloset, 				5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("biohazad suit closet",			/obj/structure/closet/l3closet, 			5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("biohazad suit closet(command)",/obj/structure/closet/l3closet/command, 		5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("biohazad suit closet(science)",/obj/structure/closet/l3closet/scientist, 	5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("biohazad suit closet(janitor)",/obj/structure/closet/l3closet/janitor, 		5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("biohazad suit closet(viro)",/obj/structure/closet/l3closet/virology, 		5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("biohazad suit closet(sec)",	/obj/structure/closet/l3closet/security, 		5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("administrator closet",		/obj/structure/closet/gimmick,	 				5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("armory closet",				/obj/structure/closet/syndicate,	 			5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("emergency closet",			/obj/structure/closet/emcloset,	 				5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("fire closet",				/obj/structure/closet/firecloset,	 			5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("tools closet",				/obj/structure/closet/toolcloset,	 			5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("radiation closet",			/obj/structure/closet/radiation,	 			5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("bomb suit closet",			/obj/structure/closet/bombcloset,	 			5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("bomb suit closet(sec)",		/obj/structure/closet/bombclosetsecurity,		5, time = 50, one_per_turf = 1, on_floor = 1),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Storage-Wall-Mounted Closets",list( \
+		new/datum/stack_recipe("first-aid wall closet frame", 	/obj/item/frame/medical_closet,			5, 	time = 50, one_per_turf = 0, on_floor = 0),\
+		new/datum/stack_recipe("wall closet frame", 			/obj/item/frame/general_closet,			5, 	time = 50, one_per_turf = 0, on_floor = 0),\
+		new/datum/stack_recipe("fire-safety closet frame", 		/obj/item/frame/hydrant_closet,			5, 	time = 50, one_per_turf = 0, on_floor = 0),\
+		new/datum/stack_recipe("shipping closet frame", 		/obj/item/frame/shipping_closet,		5, 	time = 50, one_per_turf = 0, on_floor = 0),\
+		new/datum/stack_recipe("extinguisher cabinet frame", 	/obj/item/frame/extinguisher_cabinet,	5, 	time = 50, one_per_turf = 0, on_floor = 0),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Storage-Crates",list( \
+		new/datum/stack_recipe("metal crate", 				/obj/structure/closet/crate, 					5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("internals crate", 			/obj/structure/closet/crate/internals,			5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("medical crate", 			/obj/structure/closet/crate/medical,			5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("hydroponics crate", 		/obj/structure/closet/crate/hydroponics,		5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("secure metal crate", 		/obj/structure/closet/crate/secure,				8, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("secure gear crate", 		/obj/structure/closet/crate/secure/gear, 		8, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("secure hydroponics crate", 	/obj/structure/closet/crate/secure/hydrosec, 	8, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("large metal crate", 		/obj/structure/closet/crate/large, 				12, time = 75, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("large secure metal crate", 	/obj/structure/closet/crate/secure/large,		15, time = 75, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("large hydroponics crate",	/obj/structure/closet/crate/large/hydroponics,	12, time = 75, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("large critter crate",		/obj/structure/closet/crate/critter,			18, time = 80, one_per_turf = 1, on_floor = 1),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Storage-Misc",list( \
+		new/datum/stack_recipe("canister", 					/obj/machinery/portable_atmospherics/canister, 10, time = 15, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("air tank dispenser", 		/obj/structure/dispenser/empty, 				5, time = 25, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("filing cabinet", 			/obj/structure/filingcabinet, 					3, time = 25, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("chest drawer", 				/obj/structure/filingcabinet/chestdrawer, 		3, time = 25, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("trash bin", 				/obj/structure/closet/crate/bin, 				5, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("secure trash bin", 			/obj/structure/closet/crate/secure/bin, 		6, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("rack", 						/obj/structure/table/rack, 						2, time = 25, one_per_turf = 1, on_floor = 1),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Weapons",list( \
+		new/datum/stack_recipe("cannon frame", 				/obj/item/weapon/cannonframe, 			10, time = 15),\
+		new/datum/stack_recipe("grenade casing", 			/obj/item/weapon/grenade/chem_grenade,	5,	time = 5),\
+		))
+
+/material/plasteel/generate_recipes()
+	..()
+	recipes += new/datum/stack_recipe("Bar Sign Frame", /obj/item/frame/barsign, 4, time = 50, one_per_turf = 1)
+	recipes += new/datum/stack_recipe("AI core", /obj/structure/AIcore, 4, time = 50, one_per_turf = 1)
+
+	recipes += new/datum/stack_recipe("knife grip", /obj/item/weapon/material/butterflyhandle, 4, time = 20, one_per_turf = 0, on_floor = 1, supplied_material = "[name]")
+	recipes += new/datum/stack_recipe("Wheelchair", /obj/structure/bed/chair/wheelchair, 10, time = 50, one_per_turf = 1, on_floor = 1)
+
+	recipes += new/datum/stack_recipe("Target stake", /obj/structure/target_stake, 5, time = 10, one_per_turf = 1)
+//	recipes += new/datum/stack_recipe_list("Blast Doors Assemblies", list( \
+	new/datum/stack_recipe("assembly", /obj/structure/door_assembly/, 4, time = 50, one_per_turf = 1, on_floor = 1), \
+		))
+//	/obj/machinery/door/blast
+//	/obj/machinery/door/blast/shutters
+
+	recipes += new/datum/stack_recipe_list("Containers",list( \
+		new/datum/stack_recipe("secure vial lockbox",	/obj/item/weapon/storage/lockbox/vials, 	5, time = 75),\
+		new/datum/stack_recipe("secure briefcase",		/obj/item/weapon/storage/secure/briefcase, 	5, time = 75),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Flooring",list( \
+		new/datum/stack_recipe("dark floor tile", 			/obj/item/stack/tile/floor_dark, 		1, 4, 20),\
+		new/datum/stack_recipe("blue circuit floor tile", 	/obj/item/stack/tile/floor_bcircuit, 	1, 4, 20),\
+		new/datum/stack_recipe("green circuit floor tile", 	/obj/item/stack/tile/floor_gcircuit, 	1, 4, 20),\
+		new/datum/stack_recipe("red circuit floor tile", 	/obj/item/stack/tile/floor_rcircuit, 	1, 4, 20),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Furnitures",list( \
+		new/datum/stack_recipe("Operating Table", /obj/machinery/optable, 10, time = 50, one_per_turf = 1),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Storage",list( \
+		new/datum/stack_recipe("secure gun cabinet", 			/obj/structure/closet/secure_closet/guncabinet, 	10, time = 75, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("secure crate", 					/obj/structure/closet/crate/secure, 				6, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("secure weapon crate", 			/obj/structure/closet/crate/secure/weapon, 			6, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("secure phoron crate", 			/obj/structure/closet/crate/secure/phoron, 			6, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("secure large toxin crate", 		/obj/structure/closet/crate/secure/large/phoron,	10, time = 75, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("secure large reinforced crate", /obj/structure/closet/crate/secure/large/reinforced,15, time = 75, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("secure biohazard cart", 		/obj/structure/closet/crate/secure/biohazard,		20, time = 75, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("radiation crate", 				/obj/structure/closet/crate/radiation,				10, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("wall safe frame", 				/obj/item/frame/wall_safe,							15, time = 75),\
+		new/datum/stack_recipe("item safe", 					/obj/structure/safe, 								10, time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("morgue body container", 		/obj/structure/morgue, 								20, time = 50, one_per_turf = 1, on_floor = 1),\
+		))
+
+/material/stone/generate_recipes()
+	..()
+	recipes += new/datum/stack_recipe("planting bed", /obj/machinery/portable_atmospherics/hydroponics/soil, 3, time = 10, one_per_turf = 1, on_floor = 1)
+
+/material/copper/generate_recipes()
+	..()
+	recipes += new/datum/stack_recipe("cable coil", /obj/item/stack/cable_coil, 1, time=5)
+
+/material/plastic/generate_recipes()
+	..()
+	recipes += new/datum/stack_recipe("plastic flaps", /obj/structure/plasticflaps, 15, one_per_turf = 1, on_floor = 1)
+
+	recipes += new/datum/stack_recipe_list("Containers",list( \
+		new/datum/stack_recipe("plastic bag", 							/obj/item/weapon/storage/bag/plasticbag, 						3, on_floor=1),\
+		new/datum/stack_recipe("laundry basket",						/obj/item/weapon/storage/laundry_basket,						5, time = 15, 	on_floor=0),\
+		new/datum/stack_recipe("blood pack", 							/obj/item/weapon/reagent_containers/blood/empty, 				4, on_floor=0),\
+		new/datum/stack_recipe("reagent dispenser cartridge (large)", 	/obj/item/weapon/reagent_containers/chem_disp_cartridge,        5, time = 15, 	on_floor=0),\
+		new/datum/stack_recipe("reagent dispenser cartridge (med)",   	/obj/item/weapon/reagent_containers/chem_disp_cartridge/medium, 3, time = 10, 	on_floor=0),\
+		new/datum/stack_recipe("reagent dispenser cartridge (small)", 	/obj/item/weapon/reagent_containers/chem_disp_cartridge/small,  1, time = 5,	on_floor=0),\
+		new/datum/stack_recipe("lunchbox", 								/obj/item/weapon/storage/lunchbox,        						5, time = 15, 	on_floor=0),\
+		new/datum/stack_recipe("lunchbox (heart)", 						/obj/item/weapon/storage/lunchbox/heart,        				5, time = 15, 	on_floor=0),\
+		new/datum/stack_recipe("lunchbox (cat)", 						/obj/item/weapon/storage/lunchbox/cat,        					5, time = 15, 	on_floor=0),\
+		new/datum/stack_recipe("lunchbox (NT)", 						/obj/item/weapon/storage/lunchbox/nt,        					5, time = 15, 	on_floor=0),\
+		new/datum/stack_recipe("lunchbox (Mars)", 						/obj/item/weapon/storage/lunchbox/mars,        					5, time = 15, 	on_floor=0),\
+		new/datum/stack_recipe("lunchbox (CTI)", 						/obj/item/weapon/storage/lunchbox/cti,        					5, time = 15, 	on_floor=0),\
+		new/datum/stack_recipe("lunchbox (nymph)", 						/obj/item/weapon/storage/lunchbox/nymph,        				5, time = 15, 	on_floor=0),\
+		new/datum/stack_recipe("lunchbox (Syndi)", 						/obj/item/weapon/storage/lunchbox/syndicate,        			5, time = 15, 	on_floor=0),\
+		new/datum/stack_recipe("lunchbox (TCC)", 						/obj/item/weapon/storage/lunchbox/tf,        					5, time = 15, 	on_floor=0),\
+		new/datum/stack_recipe("first aid kit", 						/obj/item/weapon/storage/firstaid/empty,        				5, time = 15, 	on_floor=0),\
+		new/datum/stack_recipe("burns first aid kit",					/obj/item/weapon/storage/firstaid/fire/empty,        			5, time = 15, 	on_floor=0),\
+		new/datum/stack_recipe("toxins first aid kit",					/obj/item/weapon/storage/firstaid/toxin/empty,        			5, time = 15, 	on_floor=0),\
+		new/datum/stack_recipe("o2 first aid kit",						/obj/item/weapon/storage/firstaid/o2/empty,        				5, time = 15, 	on_floor=0),\
+		new/datum/stack_recipe("advanced first aid kit",				/obj/item/weapon/storage/firstaid/adv/empty,        			5, time = 15, 	on_floor=0),\
+		new/datum/stack_recipe("combat first aid kit",					/obj/item/weapon/storage/firstaid/combat/empty,        			5, time = 15, 	on_floor=0),\
+		new/datum/stack_recipe("surgery kit",							/obj/item/weapon/storage/firstaid/surgery/empty,        		5, time = 15, 	on_floor=0),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Curtains",list( \
+		new/datum/stack_recipe("Curtain", 				/obj/structure/curtain, 						3, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("Black Curtain", 		/obj/structure/curtain/black, 					3, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("Medical Curtain", 		/obj/structure/curtain/medical, 				3, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("Privacy Curtain", 		/obj/structure/curtain/open/privacy, 			3, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("Shower Curtain", 		/obj/structure/curtain/open/shower, 			3, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("Engineering Curtain", 	/obj/structure/curtain/open/shower/engineering, 3, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("Security Curtain", 		/obj/structure/curtain/open/shower/security, 	3, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("Bed Curtain", 		/obj/structure/curtain/open/bed, 				3, one_per_turf = 1, on_floor = 1), \
+		))
+
+	recipes += new/datum/stack_recipe_list("Flooring",list( \
+		new/datum/stack_recipe("white floor tile", 		/obj/item/stack/tile/floor_white, 	1, 4, 20),\
+		new/datum/stack_recipe("freezer floor tile", 	/obj/item/stack/tile/floor_freezer, 1, 4, 20),\
+		new/datum/stack_recipe("linoleum tile", 		/obj/item/stack/tile/linoleum, 		1, 4, 20),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Furnitures",list( \
+		new/datum/stack_recipe("Water Cooler", 		/obj/structure/reagent_dispensers/water_cooler/empty, 	10,	time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("grey plastic bed",	/obj/structure/bed/padded, 								12, time = 20, one_per_turf = 1, on_floor = 1),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Signs",list( \
+		new/datum/stack_recipe("airlock warning",			/obj/item/sign/warning/airlock,							2),\
+		new/datum/stack_recipe("bomb range warning",		/obj/item/sign/warning/bomb_range,						2),\
+		new/datum/stack_recipe("disposals warning",			/obj/item/sign/warning/deathsposal,						2),\
+		new/datum/stack_recipe("docking area warning",		/obj/item/sign/warning/docking_area,					2),\
+		new/datum/stack_recipe("engineering access warning",/obj/item/sign/warning/engineering_access,				2),\
+		new/datum/stack_recipe("compressed gas warning",	/obj/item/sign/warning/compressed_gas,					2),\
+		new/datum/stack_recipe("caution warning",			/obj/item/sign/warning/caution,							2),\
+		new/datum/stack_recipe("fall warning",				/obj/item/sign/warning/fall,							2),\
+		new/datum/stack_recipe("fire warning",				/obj/item/sign/warning/fire,							2),\
+		new/datum/stack_recipe("high voltage warning",		/obj/item/sign/warning/high_voltage,					2),\
+		new/datum/stack_recipe("radioactive warning",		/obj/item/sign/warning/radioactive,						2),\
+		new/datum/stack_recipe("biohazard warning",			/obj/item/sign/warning/biohazard,						2),\
+		new/datum/stack_recipe("hot exhaust warning",		/obj/item/sign/warning/hot_exhaust,						2),\
+		new/datum/stack_recipe("internals warning",			/obj/item/sign/warning/internals_required,				2),\
+		new/datum/stack_recipe("lethal turrets warning",	/obj/item/sign/warning/lethal_turrets,					2),\
+		new/datum/stack_recipe("mail delivery warning",		/obj/item/sign/warning/mail_delivery,					2),\
+		new/datum/stack_recipe("moving parts warning",		/obj/item/sign/warning/moving_parts,					2),\
+		new/datum/stack_recipe("no smoking1 warning",		/obj/item/sign/warning/nosmoking_1,						2),\
+		new/datum/stack_recipe("no smoking2 warning",		/obj/item/sign/warning/nosmoking_2,						2),\
+		new/datum/stack_recipe("escape pods warning",		/obj/item/sign/warning/pods,							2),\
+		new/datum/stack_recipe("secure area warning",		/obj/item/sign/warning/secure_area,						2),\
+		new/datum/stack_recipe("armory warning",			/obj/item/sign/warning/secure_area/armory,				2),\
+		new/datum/stack_recipe("server room warning",		/obj/item/sign/warning/server_room,						2),\
+		new/datum/stack_recipe("siphon valve warning",		/obj/item/sign/warning/siphon_valve,					2),\
+		new/datum/stack_recipe("vacuum warning",			/obj/item/sign/warning/vacuum,							2),\
+		new/datum/stack_recipe("vent port warning",			/obj/item/sign/warning/vent_port,						2),\
+		new/datum/stack_recipe("red cross",					/obj/item/sign/redcross,								2),\
+		new/datum/stack_recipe("green cross",				/obj/item/sign/greencross,								2),\
+		new/datum/stack_recipe("blue cross1",				/obj/item/sign/bluecross_1,								2),\
+		new/datum/stack_recipe("blue cross2",				/obj/item/sign/bluecross_2,								2),\
+		new/datum/stack_recipe("golden plaque",				/obj/item/sign/goldenplaque,							2),\
+		new/datum/stack_recipe("security golden plaque",	/obj/item/sign/goldenplaque/security,					2),\
+		new/datum/stack_recipe("medical golden plaque",		/obj/item/sign/goldenplaque/medical,					2),\
+		new/datum/stack_recipe("kiddie plaque",				/obj/item/sign/kiddieplaque,							2),\
+		new/datum/stack_recipe("atmos plaque",				/obj/item/sign/atmosplaque,								2),\
+		new/datum/stack_recipe("floor plaque",				/obj/item/sign/floorplaque,								2),\
+		new/datum/stack_recipe("SCIENCE! warning",			/obj/item/sign/warning/science,							2),\
+		new/datum/stack_recipe("science anomalous materials",/obj/item/sign/warning/science/anomalous_materials,	2),\
+		new/datum/stack_recipe("science mass spectrometry",	/obj/item/sign/warning/science/mass_spectrometry,		2),\
+		new/datum/stack_recipe("research wing",				/obj/item/sign/science_1,								2),\
+		new/datum/stack_recipe("research",					/obj/item/sign/science_2,								2),\
+		new/datum/stack_recipe("xenobio1",					/obj/item/sign/xenobio_1,								2),\
+		new/datum/stack_recipe("xenobio2",					/obj/item/sign/xenobio_2,								2),\
+		new/datum/stack_recipe("xenobio3",					/obj/item/sign/xenobio_3,								2),\
+		new/datum/stack_recipe("xenobio4",					/obj/item/sign/xenobio_4,								2),\
+		new/datum/stack_recipe("xenoarch",					/obj/item/sign/xenoarch,								2),\
+		new/datum/stack_recipe("chemistry",					/obj/item/sign/chemistry,								2),\
+		new/datum/stack_recipe("xenoflora",					/obj/item/sign/xenoflora,								2),\
+		new/datum/stack_recipe("botany",					/obj/item/sign/botany,									2),\
+		new/datum/stack_recipe("hydro",						/obj/item/sign/hydro,									2),\
+		new/datum/stack_recipe("hydrostorage",				/obj/item/sign/hydrostorage,							2),\
+		new/datum/stack_recipe("direction to science",		/obj/item/sign/directions/science,						2),\
+		new/datum/stack_recipe("direction to engineering",	/obj/item/sign/directions/engineering,					2),\
+		new/datum/stack_recipe("direction to security",		/obj/item/sign/directions/security,						2),\
+		new/datum/stack_recipe("direction to medical",		/obj/item/sign/directions/medical,						2),\
+		new/datum/stack_recipe("direction to evac",			/obj/item/sign/directions/evac,							2),\
+		new/datum/stack_recipe("direction to bridge",		/obj/item/sign/directions/bridge,						2),\
+		new/datum/stack_recipe("direction to supply",		/obj/item/sign/directions/supply,						2),\
+		new/datum/stack_recipe("direction to infirmary",	/obj/item/sign/directions/infirmary,					2),\
+		new/datum/stack_recipe("direction to exam room",	/obj/item/sign/directions/examroom,						2),\
+		new/datum/stack_recipe("bridge deck",				/obj/item/sign/deck/bridge,								2),\
+		new/datum/stack_recipe("first deck",				/obj/item/sign/deck/first,								2),\
+		new/datum/stack_recipe("second deck",				/obj/item/sign/deck/second,								2),\
+		new/datum/stack_recipe("third deck",				/obj/item/sign/deck/third,								2),\
+		new/datum/stack_recipe("fourth deck",				/obj/item/sign/deck/fourth,								2),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Plumbing",list( \
+		new/datum/stack_recipe("shower frame", 		/obj/item/frame/plastic/shower, 	2), \
+		new/datum/stack_recipe("toilet", 			/obj/structure/toilet, 				5, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("urinal frame",		/obj/item/frame/plastic/urinal, 	5),\
+		new/datum/stack_recipe("sink frame", 		/obj/item/frame/plastic/sink, 		2),\
+		new/datum/stack_recipe("kitchen sink frame",/obj/item/frame/plastic/kitchensink,2),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Storage",list( \
+		new/datum/stack_recipe("plastic crate", 				/obj/structure/closet/crate/plastic, 				5, 	time = 50, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("water Tank", 					/obj/structure/reagent_dispensers/watertank/empty, 	10, time = 80, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("body bag", 						/obj/structure/closet/body_bag, 					10, time = 20, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("linen bin", 					/obj/structure/bedsheetbin, 						4, 	time = 10, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("trash cart", 					/obj/structure/closet/crate/trashcart, 				25, time = 70, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("freezer crate", 				/obj/structure/closet/crate/freezer,				10, time = 75, one_per_turf = 1, on_floor = 1),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Tools",list( \
+		new/datum/stack_recipe("mop Bucket", 		/obj/structure/mopbucket, 		3, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("red marker flag", 	/obj/item/stack/flag/red, 		2),\
+		new/datum/stack_recipe("yellow marker flag",/obj/item/stack/flag/yellow, 	2, one_per_turf = 0, on_floor = 0),\
+		new/datum/stack_recipe("green marker flag",	/obj/item/stack/flag/green, 	2, one_per_turf = 0, on_floor = 0),\
+		new/datum/stack_recipe("solgove marker flag",/obj/item/stack/flag/solgov, 	2, one_per_turf = 0, on_floor = 0),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Training Equipment",list( \
+		new/datum/stack_recipe("punching bag", /obj/structure/fitness/punchingbag, 	5, one_per_turf = 1, on_floor = 1, time = 5), \
+		new/datum/stack_recipe("human target", /obj/item/target, 					4, on_floor = 1, time = 2), \
+		new/datum/stack_recipe("alien target", /obj/item/target/alien, 				6, on_floor = 1, time = 2), \
+		new/datum/stack_recipe("agent Target", /obj/item/target/syndicate, 			8, on_floor = 1, time = 2), \
+		))
+
+	recipes += new/datum/stack_recipe_list("Misc",list( \
+		new/datum/stack_recipe("beach ball", 	/obj/item/weapon/beach_ball,	3, time = 10),\
+		new/datum/stack_recipe("hair comb", 	/obj/item/weapon/haircomb,		1, time = 5),\
+		new/datum/stack_recipe("hazard cone", 	/obj/item/weapon/caution/cone, 	2, time = 5, on_floor = 1),\
+		new/datum/stack_recipe("wetfloor sign",	/obj/item/weapon/caution, 		2, time = 5, on_floor = 1),\
+		))
+	recipes += new/datum/stack_recipe("basketball", /obj/item/weapon/basketball, 2, one_per_turf = 0, on_floor = 1)
+
+/material/wood/generate_recipes()
+	..()
+	recipes += new/datum/stack_recipe("beehive assembly", /obj/item/beehive_assembly, 4)
+	recipes += new/datum/stack_recipe("beehive frame", /obj/item/honey_frame, 1)
+	recipes += new/datum/stack_recipe("wooden Saloon Door", /obj/machinery/door/unpowered/simple/wood/saloon, 10, time = 10, one_per_turf = 1, on_floor = 1)
+
+	recipes += new/datum/stack_recipe_list("Acessories",list( \
+		new/datum/stack_recipe("corn cob pipe", 	/obj/item/clothing/mask/smokable/pipe/cobpipe, 	1),\
+		new/datum/stack_recipe("walking Cane", 		/obj/item/weapon/cane, 							5, time = 8),\
+		new/datum/stack_recipe("wooden sandals", 	/obj/item/clothing/shoes/sandal, 				1),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Flooring",list( \
+		new/datum/stack_recipe("wood floor tile", /obj/item/stack/tile/wood, 1, 4, 20),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Furnitures",list( \
+		new/datum/stack_recipe("psychiatrist couch",/obj/structure/bed/psych,			10,	time = 20, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("book shelf", 		/obj/structure/bookcase, 			5, 	time = 15, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("cabinet", 			/obj/structure/closet/cabinet,		10, time = 25, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("dog bed", 			/obj/structure/dogbed, 				2,	time = 10, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("dresser", 			/obj/structure/undies_wardrobe, 	4, 	time = 10, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("notice Board", 		/obj/item/frame/noticeboard, 		4,	time = 5, 	one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("wooden chair", 		/obj/structure/bed/chair/wood, 		3, 	time = 10, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("fancy wooden chair",/obj/structure/bed/chair/wood/wings,3, 	time = 10, one_per_turf = 1, on_floor = 1),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Storage",list( \
+		new/datum/stack_recipe("large crate", 		/obj/structure/largecrate, 		5, time = 30, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("ore Box", 			/obj/structure/ore_box, 		5, time = 30, one_per_turf = 1),\
+		new/datum/stack_recipe("coffin", 			/obj/structure/closet/coffin, 	5, time = 15, one_per_turf = 1, on_floor = 1),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Tools",list( \
+		new/datum/stack_recipe("rolling pin", 		/obj/item/weapon/material/kitchen/rollingpin, 	2, time = 5),\
+		new/datum/stack_recipe("gavel hammer", 		/obj/item/gavelhammer, 							2, time = 5),\
+		new/datum/stack_recipe("gavel block", 		/obj/item/gavelblock, 							2, time = 3),\
+		))
+
+	recipes += new/datum/stack_recipe_list("Weapons",list( \
+		new/datum/stack_recipe("stick", 			/obj/item/weapon/material/stick, 	1),\
+		new/datum/stack_recipe("coilgun stock", 	/obj/item/weapon/coilgun_assembly, 	5, time = 20, one_per_turf = 0, on_floor = 0),\
+		new/datum/stack_recipe("crossbow frame", 	/obj/item/weapon/crossbowframe, 	5, time = 25, one_per_turf = 0, on_floor = 0),\
+		new/datum/stack_recipe("rifle frame", 		/obj/item/weapon/imprifleframe, 	6, time = 20, one_per_turf = 0, on_floor = 0),\
+		new/datum/stack_recipe("zip gun frame", 	/obj/item/weapon/zipgunframe, 		5, time = 20, one_per_turf = 0, on_floor = 0),\
+		new/datum/stack_recipe("wooden buckler", 	/obj/item/weapon/shield/buckler,	10, time = 30),\
+		))
+
+/material/cardboard/generate_recipes()
+	..()
+	recipes += new/datum/stack_recipe_list("Boxes",list( \
+		new/datum/stack_recipe("box", 				/obj/item/weapon/storage/box), \
+		new/datum/stack_recipe("large box", 		/obj/item/weapon/storage/box/large, 2), \
+		new/datum/stack_recipe("donut box", 		/obj/item/weapon/storage/box/donut/empty), \
+		new/datum/stack_recipe("egg box", 			/obj/item/weapon/storage/fancy/egg_box/empty), \
+		new/datum/stack_recipe("cigarette carton", 	/obj/item/weapon/storage/box/cigarettes, 4), \
+		new/datum/stack_recipe("light tubes box", 	/obj/item/weapon/storage/box/lights/tubes/empty), \
+		new/datum/stack_recipe("light bulbs box", 	/obj/item/weapon/storage/box/lights/bulbs/empty), \
+		new/datum/stack_recipe("mouse traps box", 	/obj/item/weapon/storage/box/mousetraps/empty), \
+		new/datum/stack_recipe("pizza box", 		/obj/item/pizzabox), \
+		new/datum/stack_recipe("vial box", 			/obj/item/weapon/storage/fancy/vials/empty,5),\
+		))
+
+	recipes += new/datum/stack_recipe("hand-rolled cigarette", /obj/item/clothing/mask/smokable/cigarette/custom)
+	recipes += new/datum/stack_recipe("empty cigarette pack", /obj/item/weapon/storage/fancy/cigarettes/blank)
+	recipes += new/datum/stack_recipe("cardborg suit", /obj/item/clothing/suit/cardborg, 3)
+	recipes += new/datum/stack_recipe("cardborg helmet", /obj/item/clothing/head/cardborg)
+
+	recipes += new/datum/stack_recipe_list("folders",list( \
+		new/datum/stack_recipe("blue folder", /obj/item/weapon/folder/blue), \
+		new/datum/stack_recipe("grey folder", /obj/item/weapon/folder), \
+		new/datum/stack_recipe("red folder", /obj/item/weapon/folder/red), \
+		new/datum/stack_recipe("white folder", /obj/item/weapon/folder/white), \
+		new/datum/stack_recipe("yellow folder", /obj/item/weapon/folder/yellow), \
+		))
+
+
+material/silver/generate_recipes()
+	..()
+	recipes += new/datum/stack_recipe("Mirror Frame", /obj/item/frame/mirror, 2)
+
+
+
+/material/cloth/generate_recipes()
+	..()
+	recipes += new/datum/stack_recipe("towel", 			/obj/item/weapon/towel, 5, time = 30)
+	recipes += new/datum/stack_recipe("strip of gauze",	/obj/item/stack/medical/bruise_pack, 1, 2, 30, time = 20)
+
+
+material/marble/generate_recipes()
+	..()

@@ -1,88 +1,156 @@
+#define BELT_OVERLAY_ITEMS		1
+#define BELT_OVERLAY_HOLSTER	2
+
 /obj/item/weapon/storage/belt
 	name = "belt"
 	desc = "Can hold various things."
-	icon = 'icons/obj/clothing/belts.dmi'
+	icon = 'icons/obj/clothing/obj_belt.dmi'
 	icon_state = "utilitybelt"
 	item_state = "utility"
 	storage_slots = 7
-	item_flags = IS_BELT
+	item_flags = ITEM_FLAG_IS_BELT
 	max_w_class = ITEM_SIZE_NORMAL
 	slot_flags = SLOT_BELT
+	var/overlay_flags
 	attack_verb = list("whipped", "lashed", "disciplined")
-	var/show_above_suit = 0
 
 /obj/item/weapon/storage/belt/verb/toggle_layer()
 	set name = "Switch Belt Layer"
 	set category = "Object"
 
-	if(show_above_suit == -1)
-		to_chat(usr, "<span class='notice'>\The [src] cannot be worn above your suit!</span>")
-		return
-	show_above_suit = !show_above_suit
+	use_alt_layer = !use_alt_layer
 	update_icon()
 
-/obj/item/weapon/storage/update_icon()
+/obj/item/weapon/storage/belt/on_update_icon()
 	if (ismob(src.loc))
 		var/mob/M = src.loc
 		M.update_inv_belt()
 
+	overlays.Cut()
+	if(overlay_flags & BELT_OVERLAY_ITEMS)
+		for(var/obj/item/I in contents)
+			overlays += image('icons/obj/clothing/obj_belt_overlays.dmi', "[I.icon_state]")
 
 /obj/item/weapon/storage/belt/get_mob_overlay(mob/user_mob, slot)
 	var/image/ret = ..()
 	if(slot == slot_belt_str && contents.len)
+		var/list/ret_overlays = list()
 		for(var/obj/item/I in contents)
-			ret.overlays += image("icon" = 'icons/mob/belt.dmi', "icon_state" = "[I.item_state ? I.item_state : I.icon_state]")
+			var/use_state = (I.item_state ? I.item_state : I.icon_state)
+			if(ishuman(user_mob))
+				var/mob/living/carbon/human/H = user_mob
+				ret_overlays += H.species.get_offset_overlay_image(FALSE, 'icons/mob/onmob/onmob_belt.dmi', use_state, I.color, slot)
+			else
+				ret_overlays += overlay_image('icons/mob/onmob/onmob_belt.dmi', use_state, I.color, RESET_COLOR)
+			ret.overlays += ret_overlays
 	return ret
 
+/obj/item/weapon/storage/belt/holster
+	name = "holster belt"
+	icon_state = "holsterbelt"
+	item_state = "holster"
+	desc = "Can holster various things."
+	storage_slots = 2
+	overlay_flags = BELT_OVERLAY_ITEMS|BELT_OVERLAY_HOLSTER
+	var/list/can_holster //List of objects which this item can store in the designated holster slot(if unset, it will default to any holsterable items)
+	var/sound_in = 'sound/effects/holster/holsterin.ogg'
+	var/sound_out = 'sound/effects/holster/holsterout.ogg'
+	can_hold = list(
+		/obj/item/weapon/melee/baton,
+		/obj/item/weapon/melee/telebaton
+		)
+
+/obj/item/weapon/storage/belt/holster/Initialize()
+	. = ..()
+	set_extension(src, /datum/extension/holster, /datum/extension/holster, src, sound_in, sound_out, can_holster)
+
+/obj/item/weapon/storage/belt/holster/attackby(obj/item/W as obj, mob/user as mob)
+	var/datum/extension/holster/H = get_extension(src, /datum/extension/holster)
+	if(H.holster(W, user))
+		return
+	else
+		. = ..(W, user)
+
+/obj/item/weapon/storage/belt/holster/attack_hand(mob/user as mob)
+	var/datum/extension/holster/H = get_extension(src, /datum/extension/holster)
+	if(H.unholster(user))
+		return
+	else
+		. = ..(user)
+
+/obj/item/weapon/storage/belt/holster/examine(mob/user)
+	. = ..(user)
+	var/datum/extension/holster/H = get_extension(src, /datum/extension/holster)
+	H.examine_holster(user)
+
+/obj/item/weapon/storage/belt/holster/on_update_icon()
+	if (ismob(src.loc))
+		var/mob/M = src.loc
+		M.update_inv_belt()
+
+	overlays.Cut()
+	var/datum/extension/holster/H = get_extension(src, /datum/extension/holster)
+	if(overlay_flags)
+		for(var/obj/item/I in contents)
+			if(I == H.holstered)
+				if(overlay_flags & BELT_OVERLAY_HOLSTER)
+					overlays += image('icons/obj/clothing/obj_belt_overlays.dmi', "[I.icon_state]")
+			else if(overlay_flags & BELT_OVERLAY_ITEMS)
+				overlays += image('icons/obj/clothing/obj_belt_overlays.dmi', "[I.icon_state]")
+
 /obj/item/weapon/storage/belt/utility
-	name = "tool-belt"
+	name = "tool belt"
 	desc = "A belt of durable leather, festooned with hooks, slots, and pouches."
-	description_info = "The tool-belt has enough slots to carry a full engineer's toolset: screwdriver, crowbar, wrench, welder, cable coil, and multitool. Simply click the belt to move a tool to one of its slots."
-	description_fluff = "Good hide is hard to come by in certain regions of the galaxy. When they can't come across it, most TSCs will outfit their crews with toolbelts made of synthesized leather."
-	description_antag = "Only amateurs skip grabbing a tool-belt."
 	icon_state = "utilitybelt"
 	item_state = "utility"
+	overlay_flags = BELT_OVERLAY_ITEMS
 	can_hold = list(
 		///obj/item/weapon/combitool,
-		/obj/item/weapon/crowbar,
-		/obj/item/weapon/screwdriver,
-		/obj/item/weapon/weldingtool,
-		/obj/item/weapon/wirecutters,
-		/obj/item/weapon/wrench,
+		/obj/item/weapon/tool/crowbar,
+		/obj/item/weapon/tool/screwdriver,
+		/obj/item/weapon/tool/weldingtool,
+		/obj/item/weapon/tool/wirecutters,
+		/obj/item/weapon/tool/wrench,
 		/obj/item/device/multitool,
 		/obj/item/device/flashlight,
 		/obj/item/stack/cable_coil,
 		/obj/item/device/t_scanner,
-		/obj/item/device/analyzer,
+		/obj/item/device/scanner/gas,
 		/obj/item/taperoll/engineering,
+		/obj/item/inducer/,
 		/obj/item/device/robotanalyzer,
 		/obj/item/weapon/material/minihoe,
 		/obj/item/weapon/material/hatchet,
-		/obj/item/device/analyzer/plant_analyzer,
+		/obj/item/device/scanner/plant,
 		/obj/item/taperoll,
 		/obj/item/weapon/extinguisher/mini,
-		/obj/item/weapon/marshalling_wand
+		/obj/item/weapon/marshalling_wand,
+		/obj/item/weapon/hand_labeler,
+		/obj/item/clothing/gloves
 		)
 
 
 /obj/item/weapon/storage/belt/utility/full/New()
 	..()
-	new /obj/item/weapon/screwdriver(src)
-	new /obj/item/weapon/wrench(src)
-	new /obj/item/weapon/weldingtool(src)
-	new /obj/item/weapon/crowbar(src)
-	new /obj/item/weapon/wirecutters(src)
-	new /obj/item/stack/cable_coil(src,30,pick("red","yellow","orange"))
+	new /obj/item/weapon/tool/screwdriver(src)
+	new /obj/item/weapon/tool/wrench(src)
+	new /obj/item/weapon/tool/weldingtool(src)
+	new /obj/item/weapon/tool/crowbar(src)
+	new /obj/item/weapon/tool/wirecutters(src)
+	new /obj/item/device/multitool(src)
+	new /obj/item/stack/cable_coil/random(src, 30)
+	queue_icon_update()
 
 
 /obj/item/weapon/storage/belt/utility/atmostech/New()
 	..()
-	new /obj/item/weapon/screwdriver(src)
-	new /obj/item/weapon/wrench(src)
-	new /obj/item/weapon/weldingtool(src)
-	new /obj/item/weapon/crowbar(src)
-	new /obj/item/weapon/wirecutters(src)
+	new /obj/item/weapon/tool/screwdriver(src)
+	new /obj/item/weapon/tool/wrench(src)
+	new /obj/item/weapon/tool/weldingtool(src)
+	new /obj/item/weapon/tool/crowbar(src)
+	new /obj/item/weapon/tool/wirecutters(src)
 	new /obj/item/device/t_scanner(src)
+	queue_icon_update()
 
 
 
@@ -92,7 +160,7 @@
 	icon_state = "medicalbelt"
 	item_state = "medical"
 	can_hold = list(
-		/obj/item/device/healthanalyzer,
+		/obj/item/device/scanner/health,
 		/obj/item/weapon/reagent_containers/dropper,
 		/obj/item/weapon/reagent_containers/glass/beaker,
 		/obj/item/weapon/reagent_containers/glass/bottle,
@@ -108,10 +176,13 @@
 		/obj/item/clothing/gloves/latex,
 		/obj/item/weapon/reagent_containers/hypospray,
 		/obj/item/clothing/glasses/hud/health,
-		/obj/item/weapon/crowbar,
+		/obj/item/weapon/tool/crowbar,
 		/obj/item/device/flashlight,
 		/obj/item/taperoll,
-		/obj/item/weapon/extinguisher/mini
+		/obj/item/weapon/extinguisher/mini,
+		/obj/item/weapon/storage/med_pouch,
+		/obj/item/bodybag,
+		/obj/item/clothing/gloves
 		)
 
 /obj/item/weapon/storage/belt/medical/emt
@@ -120,13 +191,15 @@
 	icon_state = "emsbelt"
 	item_state = "emsbelt"
 
-/obj/item/weapon/storage/belt/security
-	name = "security belt"
-	desc = "Can hold security gear like handcuffs and flashes."
+/obj/item/weapon/storage/belt/holster/security
+	name = "security holster belt"
+	desc = "Can hold security gear like handcuffs and flashes. This one has a convenient holster."
 	icon_state = "securitybelt"
 	item_state = "security"
+	storage_slots = 8
+	overlay_flags = BELT_OVERLAY_ITEMS|BELT_OVERLAY_HOLSTER
 	can_hold = list(
-		/obj/item/weapon/crowbar,
+		/obj/item/weapon/tool/crowbar,
 		/obj/item/weapon/grenade,
 		/obj/item/weapon/reagent_containers/spray/pepper,
 		/obj/item/weapon/handcuffs,
@@ -136,35 +209,220 @@
 		/obj/item/ammo_magazine,
 		/obj/item/weapon/reagent_containers/food/snacks/donut/,
 		/obj/item/weapon/melee/baton,
+		/obj/item/weapon/melee/telebaton,
+		/obj/item/weapon/flame/lighter,
+		/obj/item/device/flashlight,
+		/obj/item/modular_computer/pda,
+		/obj/item/device/radio/headset,
+		/obj/item/device/hailer,
+		/obj/item/device/megaphone,
+		/obj/item/weapon/melee,
+		/obj/item/taperoll,
+		/obj/item/device/holowarrant,
+		/obj/item/weapon/magnetic_ammo,
+		/obj/item/device/binoculars,
+		/obj/item/clothing/gloves
+		)
+
+/obj/item/weapon/storage/belt/security
+	name = "security belt"
+	desc = "Can hold security gear like handcuffs and flashes."
+	icon_state = "basicsecuritybelt"
+	item_state = "basicsecurity"
+	overlay_flags = BELT_OVERLAY_ITEMS
+	can_hold = list(
+		/obj/item/weapon/tool/crowbar,
+		/obj/item/weapon/grenade,
+		/obj/item/weapon/reagent_containers/spray/pepper,
+		/obj/item/weapon/handcuffs,
+		/obj/item/device/flash,
+		/obj/item/clothing/glasses,
+		/obj/item/ammo_casing/shotgun,
+		/obj/item/ammo_magazine,
+		/obj/item/weapon/reagent_containers/food/snacks/donut/,
+		/obj/item/weapon/melee/baton,
+		/obj/item/weapon/melee/telebaton,
 		/obj/item/weapon/gun/energy/taser,
 		/obj/item/weapon/gun/energy/stunrevolver,
 		/obj/item/weapon/flame/lighter,
 		/obj/item/clothing/glasses/hud/security,
 		/obj/item/device/flashlight,
-		/obj/item/device/pda,
+		/obj/item/modular_computer/pda,
 		/obj/item/device/radio/headset,
 		/obj/item/device/hailer,
 		/obj/item/device/megaphone,
 		/obj/item/weapon/melee,
-		/obj/item/weapon/gun/projectile/sec,
-		/obj/item/weapon/gun/projectile/colt/detective,
+		/obj/item/weapon/gun/projectile/pistol,
 		/obj/item/taperoll,
 		/obj/item/device/holowarrant,
-		/obj/item/weapon/magnetic_ammo
+		/obj/item/weapon/magnetic_ammo,
+		/obj/item/device/binoculars,
+		/obj/item/clothing/gloves
 		)
+
+/obj/item/weapon/storage/belt/general
+	name = "equipment belt"
+	desc = "Can hold general equipment such as tablets, folders, and other office supplies."
+	icon_state = "gearbelt"
+	item_state = "gear"
+	overlay_flags = BELT_OVERLAY_ITEMS
+	can_hold = list(
+		/obj/item/device/flash,
+		/obj/item/weapon/melee/telebaton,
+		/obj/item/device/taperecorder,
+		/obj/item/weapon/folder,
+		/obj/item/weapon/paper,
+		/obj/item/weapon/material/clipboard,
+		/obj/item/modular_computer/tablet,
+		/obj/item/device/flashlight,
+		/obj/item/modular_computer/pda,
+		/obj/item/device/radio/headset,
+		/obj/item/device/megaphone,
+		/obj/item/taperoll,
+		/obj/item/device/holowarrant,
+		/obj/item/device/radio,
+		/obj/item/device/tape,
+		/obj/item/weapon/pen,
+		/obj/item/weapon/stamp,
+		/obj/item/stack/package_wrap,
+		/obj/item/device/binoculars,
+		/obj/item/weapon/marshalling_wand,
+		/obj/item/device/camera,
+		/obj/item/weapon/hand_labeler,
+		/obj/item/device/destTagger,
+		/obj/item/clothing/glasses,
+		/obj/item/clothing/head/soft,
+		/obj/item/weapon/hand_labeler,
+		/obj/item/clothing/gloves,
+		/obj/item/weapon/tool/crowbar/prybar,
+		)
+
+/obj/item/weapon/storage/belt/janitor
+	name = "janibelt"
+	desc = "A belt used to hold most janitorial supplies."
+	icon_state = "janibelt"
+	item_state = "janibelt"
+	can_hold = list(
+		/obj/item/weapon/grenade/chem_grenade,
+		/obj/item/device/lightreplacer,
+		/obj/item/device/flashlight,
+		/obj/item/weapon/reagent_containers/spray/cleaner,
+		/obj/item/weapon/soap,
+		/obj/item/holosign_creator,
+		/obj/item/clothing/gloves,
+		/obj/item/device/assembly/mousetrap,
+		/obj/item/weapon/tool/crowbar/prybar,
+		/obj/item/clothing/mask/plunger,
+		)
+
+/obj/item/weapon/storage/belt/holster/general
+	name = "holster belt"
+	desc = "Can hold general equipment such as tablets, folders, and other office supplies. Comes with a holster."
+	icon_state = "commandbelt"
+	item_state = "command"
+	storage_slots = 7
+	overlay_flags = BELT_OVERLAY_ITEMS|BELT_OVERLAY_HOLSTER
+	can_hold = list(
+		/obj/item/device/flash,
+		/obj/item/weapon/melee/telebaton,
+		/obj/item/device/taperecorder,
+		/obj/item/weapon/folder,
+		/obj/item/weapon/paper,
+		/obj/item/weapon/material/clipboard,
+		/obj/item/modular_computer/tablet,
+		/obj/item/device/flash,
+		/obj/item/device/flashlight,
+		/obj/item/modular_computer/pda,
+		/obj/item/device/radio/headset,
+		/obj/item/device/megaphone,
+		/obj/item/taperoll,
+		/obj/item/device/holowarrant,
+		/obj/item/device/radio,
+		/obj/item/device/tape,
+		/obj/item/weapon/pen,
+		/obj/item/weapon/stamp,
+		/obj/item/stack/package_wrap,
+		/obj/item/device/binoculars,
+		/obj/item/weapon/marshalling_wand,
+		/obj/item/device/camera,
+		/obj/item/device/destTagger,
+		/obj/item/clothing/glasses,
+		/obj/item/clothing/head/soft,
+		/obj/item/weapon/hand_labeler,
+		/obj/item/clothing/gloves,
+		/obj/item/weapon/tool/crowbar/prybar
+		)
+
+/obj/item/weapon/storage/belt/holster/forensic
+	name = "forensic belt"
+	desc = "Can hold forensic gear like fingerprint powder and luminol."
+	icon_state = "forensicbelt"
+	item_state = "forensic"
+	storage_slots = 8
+	overlay_flags = BELT_OVERLAY_HOLSTER
+	can_hold = list(
+		/obj/item/weapon/reagent_containers/spray/luminol,
+		/obj/item/device/uv_light,
+		/obj/item/weapon/reagent_containers/syringe,
+		/obj/item/weapon/forensics/swab,
+		/obj/item/weapon/sample/print,
+		/obj/item/weapon/sample/fibers,
+		/obj/item/device/taperecorder,
+		/obj/item/device/tape,
+		/obj/item/clothing/gloves/latex,
+		/obj/item/clothing/gloves/forensic,
+		/obj/item/weapon/folder,
+		/obj/item/weapon/paper,
+		/obj/item/weapon/forensics/sample_kit,
+		/obj/item/device/camera,
+		/obj/item/device/taperecorder,
+		/obj/item/device/tape
+		)
+
+/obj/item/weapon/storage/belt/holster/machete
+	name = "machete belt"
+	desc = "Can hold general surveying equipment used for exploration, as well as your very own machete."
+	icon_state = "machetebelt"
+	item_state = "machetebelt"
+	storage_slots = 8
+	overlay_flags = BELT_OVERLAY_HOLSTER
+	can_hold = list(
+		/obj/item/device/binoculars,
+		/obj/item/device/camera,
+		/obj/item/stack/flag,
+		/obj/item/device/geiger,
+		/obj/item/device/flashlight,
+		/obj/item/device/radio,
+		/obj/item/device/gps,
+		/obj/item/device/scanner/mining,
+		/obj/item/device/scanner/xenobio,
+		/obj/item/device/scanner/plant,
+		/obj/item/weapon/folder,
+		/obj/item/weapon/paper,
+		/obj/item/weapon/pen,
+		/obj/item/device/spaceflare,
+		/obj/item/device/radio/beacon,
+		/obj/item/weapon/pinpointer/radio,
+		/obj/item/device/taperecorder,
+		/obj/item/device/tape,
+		/obj/item/device/scanner/gas
+		)
+	can_holster = list(/obj/item/weapon/material/hatchet/machete)
+	sound_in = 'sound/effects/holster/sheathin.ogg'
+	sound_out = 'sound/effects/holster/sheathout.ogg'
 
 /obj/item/weapon/storage/belt/soulstone
 	name = "soul stone belt"
 	desc = "Designed for ease of access to the shards during a fight, as to not let a single enemy spirit slip away."
 	icon_state = "soulstonebelt"
 	item_state = "soulstonebelt"
-	storage_slots = 6
 	can_hold = list(
 		/obj/item/device/soulstone
 		)
 
 /obj/item/weapon/storage/belt/soulstone/full/New()
 	..()
+	new /obj/item/device/soulstone(src)
 	new /obj/item/device/soulstone(src)
 	new /obj/item/device/soulstone(src)
 	new /obj/item/device/soulstone(src)
@@ -178,24 +436,43 @@
 	desc = "Proves to the world that you are the strongest!"
 	icon_state = "championbelt"
 	item_state = "champion"
-	storage_slots = 1
+	storage_slots = null
+	max_storage_space = ITEM_SIZE_SMALL
 	can_hold = list(
 		/obj/item/clothing/mask/luchador
 		)
 
-/obj/item/weapon/storage/belt/security/tactical
+/obj/item/weapon/storage/belt/holster/security/tactical
 	name = "combat belt"
 	desc = "Can hold security gear like handcuffs and flashes, with more pouches for more storage."
 	icon_state = "swatbelt"
 	item_state = "swatbelt"
-	storage_slots = 9
+	storage_slots = 10
 
-/obj/item/weapon/storage/belt/security/tactical/fed
+/obj/item/weapon/storage/belt/holster/security/tactical/Initialize()
+	.=..()
+	slowdown_per_slot[slot_belt] = 1
+
+/obj/item/weapon/storage/belt/security/fed
 	name = "federation combat belt"
 	desc = "Can hold combat gear such as ammo magazines and grenades."
 	icon_state = "ammobelt"
 	item_state = "ammobelt"
 	storage_slots = 9
+
+/obj/item/weapon/storage/belt/security/military
+	name = "parade belt"
+	desc = "A striking red ammo belt, more for style than camouflage."
+	icon_state = "military"
+	item_state = "military"
+	storage_slots = 9
+
+/obj/item/weapon/storage/belt/security/assault
+	name = "assault belt"
+	desc = "A tactical assault belt."
+	icon_state = "assault"
+	item_state = "assault"
+	storage_slots = 6
 
 /obj/item/weapon/storage/belt/waistpack
 	name = "waist pack"
@@ -209,13 +486,167 @@
 
 /obj/item/weapon/storage/belt/waistpack/big
 	name = "large waist pack"
-	desc = "An bag designed to be worn on the waist. Definitely makes your butt look big."
+	desc = "A bag designed to be worn on the waist. Definitely makes your butt look big."
 	icon_state = "fannypack_big_white"
 	item_state = "fannypack_big_white"
 	w_class = ITEM_SIZE_LARGE
 	max_w_class = ITEM_SIZE_NORMAL
 	max_storage_space = ITEM_SIZE_NORMAL * 4
 
+/obj/item/weapon/storage/belt/waistpack/big/Initialize()
+	.=..()
+	slowdown_per_slot[slot_belt] = 1
+
 /obj/item/weapon/storage/belt/waistpack/big/New()
 	..()
 	slowdown_per_slot[slot_belt] = 3
+
+/obj/item/weapon/storage/belt/botany
+	name = "botanist belt"
+	desc = "Can hold various botanical supplies."
+	icon_state = "botany"
+	item_state = "botany"
+	can_hold = list(
+		/obj/item/device/scanner/plant,
+		/obj/item/weapon/material/minihoe,
+		/obj/item/weapon/material/hatchet,
+		/obj/item/weapon/shovel,
+		/obj/item/weapon/reagent_containers/glass/bottle,
+		/obj/item/weapon/reagent_containers/syringe,
+		/obj/item/weapon/reagent_containers/glass/beaker,
+		/obj/item/weapon/reagent_containers/spray,
+		/obj/item/weapon/flame/lighter/zippo,
+		/obj/item/weapon/storage/fancy/cigarettes,
+		/obj/item/weapon/tool/wirecutters/clippers,
+		/obj/item/weapon/tool/crowbar,
+		/obj/item/device/flashlight,
+		/obj/item/device/flashlight/pen,
+		/obj/item/taperoll,
+		/obj/item/weapon/gun/energy/floragun,
+		/obj/item/weapon/grenade/chem_grenade/antiweed,
+		/obj/item/seeds/
+		)
+
+/obj/item/weapon/storage/belt/janitor
+	name = "janibelt"
+	desc = "A belt used to hold most janitorial supplies."
+	icon_state = "janibelt"
+	item_state = "janibelt"
+	storage_slots = 6
+	can_hold = list(
+		/obj/item/weapon/caution,
+		/obj/item/device/lightreplacer,
+		/obj/item/weapon/reagent_containers/glass/bottle,
+		/obj/item/weapon/reagent_containers/syringe,
+		/obj/item/weapon/reagent_containers/glass/beaker,
+		/obj/item/weapon/reagent_containers/spray/cleaner,
+		/obj/item/weapon/reagent_containers/glass/rag,
+		/obj/item/weapon/grenade/chem_grenade/cleaner,
+		/obj/item/weapon/soap,
+		/obj/item/clothing/mask/gas,
+		/obj/item/weapon/reagent_containers/spray,
+		/obj/item/weapon/flame/lighter/zippo,
+		/obj/item/weapon/storage/fancy/cigarettes,
+		/obj/item/weapon/tool/crowbar,
+		/obj/item/device/flashlight,
+		/obj/item/device/flashlight/pen,
+		/obj/item/taperoll,
+		)
+
+/obj/item/weapon/storage/belt/janitor/large
+	icon_state = "soulstonebelt"
+	item_state = "soulstonebelt"
+
+/obj/item/weapon/storage/belt/bandolier
+	name = "bandolier"
+	desc = "A bandolier for holding ammunition."
+	icon_state = "bandolier"
+	item_state = "bandolier"
+	storage_slots = 8
+	can_hold = list(
+		/obj/item/ammo_casing/
+		)
+
+/obj/item/weapon/storage/belt/fannypack
+	name = "fannypack"
+	desc = "A dorky fannypack for keeping small items in."
+	icon_state = "fannypack_leather"
+	item_state = "fannypack_leather"
+	storage_slots = null
+	max_w_class = ITEM_SIZE_SMALL
+	max_storage_space = ITEM_SIZE_SMALL * 4
+
+/obj/item/weapon/storage/belt/fannypack/black
+	name = "black fannypack"
+	icon_state = "fannypack_black"
+	item_state = "fannypack_black"
+
+/obj/item/weapon/storage/belt/fannypack/red
+	name = "red fannypack"
+	icon_state = "fannypack_red"
+	item_state = "fannypack_red"
+
+/obj/item/weapon/storage/belt/fannypack/purple
+	name = "purple fannypack"
+	icon_state = "fannypack_purple"
+	item_state = "fannypack_purple"
+
+/obj/item/weapon/storage/belt/fannypack/blue
+	name = "blue fannypack"
+	icon_state = "fannypack_blue"
+	item_state = "fannypack_blue"
+
+/obj/item/weapon/storage/belt/fannypack/orange
+	name = "orange fannypack"
+	icon_state = "fannypack_orange"
+	item_state = "fannypack_orange"
+
+/obj/item/weapon/storage/belt/fannypack/green
+	name = "green fannypack"
+	icon_state = "fannypack_green"
+	item_state = "fannypack_green"
+
+/obj/item/weapon/storage/belt/fannypack/pink
+	name = "pink fannypack"
+	icon_state = "fannypack_pink"
+	item_state = "fannypack_pink"
+
+/obj/item/weapon/storage/belt/fannypack/cyan
+	name = "cyan fannypack"
+	icon_state = "fannypack_cyan"
+	item_state = "fannypack_cyan"
+
+/obj/item/weapon/storage/belt/fannypack/yellow
+	name = "yellow fannypack"
+	icon_state = "fannypack_yellow"
+	item_state = "fannypack_yellow"
+
+/obj/item/weapon/storage/belt/fannypack/white
+	name = "white fannypack"
+	icon_state = "fannypack_blanca"
+	item_state = "fannypack_blanca"
+//This is mixed up with the small waistpack above.
+//I dont wan't to break anything so this is the blanca version.
+
+/obj/item/weapon/storage/belt/peddler
+	name = "Peddlers Belt"
+	desc = "Holds things while business is conducted."
+	icon_state = "lazbelt"
+	item_state = "lazbelt"
+	storage_slots = 6
+	// If someone ever ports the lazarus injector, so sorry about this.
+
+/obj/item/weapon/storage/belt/bluespace
+	name = "Belt of Holding"
+	desc = "The greatest in pants-supporting technology."
+	icon_state = "holdingbelt"
+	item_state = "holdingbelt"
+	storage_slots = 14
+	origin_tech = "bluespace=5;materials=4;engineering=4;plasmatech=5"
+	can_hold = list()
+
+/obj/item/weapon/storage/belt/utility/chief
+	name = "Chief Engineer's toolbelt"
+	desc = "Holds tools, looks snazzy"
+	icon_state = "utility_ce"
+	item_state = "utility_ce"

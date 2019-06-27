@@ -13,7 +13,7 @@ obj/machinery/atmospherics/unary/oxygen_generator
 
 	var/oxygen_content = 10
 
-	update_icon()
+	on_update_icon()
 		if(node)
 			icon_state = "intact_[on?("on"):("off")]"
 		else
@@ -25,8 +25,9 @@ obj/machinery/atmospherics/unary/oxygen_generator
 
 	New()
 		..()
-
 		air_contents.volume = 50
+		ADD_SAVED_VAR(on)
+		ADD_SAVED_VAR(oxygen_content)
 
 	Process()
 		..()
@@ -41,7 +42,7 @@ obj/machinery/atmospherics/unary/oxygen_generator
 			var/added_oxygen = oxygen_content - total_moles
 
 			air_contents.temperature = (current_heat_capacity*air_contents.temperature + 20*added_oxygen*T0C)/(current_heat_capacity+20*added_oxygen)
-			air_contents.adjust_gas("oxygen", added_oxygen)
+			air_contents.adjust_gas(GAS_OXYGEN, added_oxygen)
 
 			if(network)
 				network.update = 1

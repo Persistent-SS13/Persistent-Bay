@@ -227,7 +227,7 @@
 	data["hacked"] = hacked
 	data["offline_for"] = offline_for * 2
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "shieldgen.tmpl", src.name, 500, 800)
 		ui.set_initial_data(data)
@@ -313,23 +313,22 @@
 
 
 // Takes specific amount of damage
-/obj/machinery/power/shield_generator/proc/take_damage(var/damage, var/shield_damtype)
+/obj/machinery/power/shield_generator/take_damage(damage, damtype, armorbypass, used_weapon)
 	var/energy_to_use = damage * ENERGY_PER_HP
 	if(check_flag(MODEFLAG_MODULATE))
 		mitigation_em -= MITIGATION_HIT_LOSS
 		mitigation_heat -= MITIGATION_HIT_LOSS
 		mitigation_physical -= MITIGATION_HIT_LOSS
 
-		switch(shield_damtype)
-			if(SHIELD_DAMTYPE_PHYSICAL)
-				mitigation_physical += MITIGATION_HIT_LOSS + MITIGATION_HIT_GAIN
-				energy_to_use *= 1 - (mitigation_physical / 100)
-			if(SHIELD_DAMTYPE_EM)
-				mitigation_em += MITIGATION_HIT_LOSS + MITIGATION_HIT_GAIN
-				energy_to_use *= 1 - (mitigation_em / 100)
-			if(SHIELD_DAMTYPE_HEAT)
-				mitigation_heat += MITIGATION_HIT_LOSS + MITIGATION_HIT_GAIN
-				energy_to_use *= 1 - (mitigation_heat / 100)
+		if(IsDamageTypeBrute(damtype))
+			mitigation_physical += MITIGATION_HIT_LOSS + MITIGATION_HIT_GAIN
+			energy_to_use *= 1 - (mitigation_physical / 100)
+		else if(IsDamageTypeBurn(damtype))
+			mitigation_heat += MITIGATION_HIT_LOSS + MITIGATION_HIT_GAIN
+			energy_to_use *= 1 - (mitigation_heat / 100)
+		else if(ISDAMTYPE(damtype, DAM_EMP))
+			mitigation_em += MITIGATION_HIT_LOSS + MITIGATION_HIT_GAIN
+			energy_to_use *= 1 - (mitigation_em / 100)
 
 		mitigation_em = between(0, mitigation_em, mitigation_max)
 		mitigation_heat = between(0, mitigation_heat, mitigation_max)
@@ -432,7 +431,7 @@
 			// Find adjacent space/shuttle tiles and cover them. Shuttles won't be blocked if shield diffuser is mapped in and turned on.
 			for(var/turf/TN in orange(1, T))
 				TA = get_area(TN)
-				if ((istype(TN, /turf/space) || (istype(TN, /turf/simulated/open) && (istype(TA, /area/space) || TA.flags & AREA_EXTERNAL))))
+				if ((istype(TN, /turf/space) || (istype(TN, /turf/simulated/open) && (istype(TA, /area/space) || TA.area_flags & AREA_FLAG_EXTERNAL))))
 					. |= TN
 					continue
 

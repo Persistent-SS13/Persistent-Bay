@@ -1,15 +1,3 @@
-var/list/flooring_types
-
-/proc/get_flooring_data(var/flooring_path)
-	if(!flooring_types)
-		flooring_types = list()
-		var/list/possible = subtypesof(/decl/flooring)
-		for(var/decl in possible)
-			flooring_types["[decl]"] = new decl
-	if(!flooring_types["[flooring_path]"])
-		flooring_types["[flooring_path]"] = new flooring_path
-	return flooring_types["[flooring_path]"]
-
 // State values:
 // [icon_base]: initial base icon_state without edges or corners.
 // if has_base_range is set, append 0-has_base_range ie.
@@ -26,6 +14,7 @@ var/list/flooring_types
 	var/icon
 	var/icon_base
 	var/color
+	var/footstep_type = FOOTSTEP_BLANK
 
 	var/has_base_range
 	var/has_damage_range
@@ -41,6 +30,7 @@ var/list/flooring_types
 	var/descriptor = "tiles"
 	var/flags
 	var/can_paint
+	var/can_engrave = TRUE
 
 /decl/flooring/proc/on_remove()
 	return
@@ -54,14 +44,16 @@ var/list/flooring_types
 	damage_temperature = T0C+80
 	flags = TURF_HAS_EDGES | TURF_REMOVE_SHOVEL
 	build_type = /obj/item/stack/tile/grass
+	can_engrave = FALSE
 
-/decl/flooring/asteroidspa
+/decl/flooring/asteroid
 	name = "coarse sand"
 	desc = "Gritty and unpleasant."
 	icon = 'icons/turf/flooring/asteroid.dmi'
 	icon_base = "asteroid"
 	flags = TURF_HAS_EDGES | TURF_REMOVE_SHOVEL
 	build_type = null
+	can_engrave = FALSE
 
 /decl/flooring/carpet
 	name = "brown carpet"
@@ -71,6 +63,8 @@ var/list/flooring_types
 	build_type = /obj/item/stack/tile/carpet
 	damage_temperature = T0C+200
 	flags = TURF_HAS_EDGES | TURF_HAS_CORNERS | TURF_REMOVE_CROWBAR | TURF_CAN_BURN
+	can_engrave = FALSE
+	footstep_type = FOOTSTEP_CARPET
 
 /decl/flooring/carpet/blue
 	name = "blue carpet"
@@ -110,46 +104,116 @@ var/list/flooring_types
 	can_paint = 1
 	build_type = /obj/item/stack/tile/linoleum
 	flags = TURF_REMOVE_SCREWDRIVER
+	footstep_type = FOOTSTEP_TILES
 
 /decl/flooring/tiling
 	name = "floor"
 	desc = "Scuffed from the passage of countless greyshirts."
 	icon = 'icons/turf/flooring/tiles.dmi'
 	icon_base = "tiled"
-	color = COLOR_GUNMETAL
+	color = COLOR_DARK_GUNMETAL
 	has_damage_range = 4
 	damage_temperature = T0C+1400
+	apply_thermal_conductivity = 45
+	apply_heat_capacity = 480
 	flags = TURF_REMOVE_CROWBAR | TURF_CAN_BREAK | TURF_CAN_BURN
 	build_type = /obj/item/stack/tile/floor
 	can_paint = 1
+	footstep_type = FOOTSTEP_TILES
 
 /decl/flooring/tiling/mono
 	icon_base = "monotile"
-	build_type = null
-/decl/flooring/tiling/white
-	desc = "How sterile."
-	color = COLOR_WHITE
-	build_type = /obj/item/stack/tile/floor_white
+	build_type = /obj/item/stack/tile/mono
 
-/decl/flooring/tiling/white/mono
-	icon_base = "monotile"
+/decl/flooring/tiling/mono/dark
+	color = COLOR_DARK_GRAY
+	build_type = /obj/item/stack/tile/mono/dark
+
+/decl/flooring/tiling/mono/white
+	icon_base = "monotile_light"
+	color = COLOR_OFF_WHITE
+	build_type = /obj/item/stack/tile/mono/white
+
+/decl/flooring/tiling/white
+	icon_base = "tiled_light"
+	desc = "How sterile."
+	color = COLOR_OFF_WHITE
+	build_type = /obj/item/stack/tile/floor_white
 
 /decl/flooring/tiling/dark
 	desc = "How ominous."
 	color = COLOR_DARK_GRAY
 	build_type = /obj/item/stack/tile/floor_dark
 
-/decl/flooring/tiling/dark/mono
-	icon_base = "monotile"
-	build_type = null
+// /decl/flooring/tiling/dark/mono
+// 	icon_base = "monotile"
+// 	build_type = /obj/item/stack/tile/floor_dark/mono
 
 /decl/flooring/tiling/freezer
 	desc = "Don't slip."
 	icon_base = "freezer"
 	color = null
 	has_damage_range = null
-	flags = TURF_REMOVE_CROWBAR
+	flags = TURF_REMOVE_CROWBAR | TURF_ACID_IMMUNE | TURF_CAN_BREAK
 	build_type = /obj/item/stack/tile/floor_freezer
+	apply_thermal_conductivity = 0.035
+	apply_heat_capacity = 1000
+	can_paint = 1
+
+/decl/flooring/tiling/tech
+	icon = 'icons/turf/flooring/techfloor.dmi'
+	icon_base = "techfloor_gray"
+	build_type = /obj/item/stack/tile/techgrey
+	color = null
+
+/decl/flooring/tiling/tech/grid
+	icon_base = "techfloor_grid"
+	build_type = /obj/item/stack/tile/techgrid
+
+/decl/flooring/tiling/new_tile
+	icon_base = "tile_full"
+	color = null
+	build_type = /obj/item/stack/tile/new_tile
+
+/decl/flooring/tiling/new_tile/gray
+	icon_base = "tile_full"
+	color = COLOR_GRAY
+	build_type = /obj/item/stack/tile/new_tile/gray
+
+/decl/flooring/tiling/new_tile/old_cargo
+	icon_base = "cargo_one_full"
+	build_type = /obj/item/stack/tile/old_cargo
+
+/decl/flooring/tiling/new_tile/old_cargo/gray
+	icon_base = "cargo_one_full"
+	color = COLOR_GRAY
+	build_type = /obj/item/stack/tile/old_cargo/gray
+
+/decl/flooring/tiling/new_tile/kafel
+	icon_base = "kafel_full"
+	build_type = /obj/item/stack/tile/kafel
+
+/decl/flooring/tiling/stone
+	icon_base = "stone"
+	build_type = /obj/item/stack/tile/stone
+
+/decl/flooring/tiling/new_tile/techmaint
+	icon_base = "techmaint"
+	build_type = /obj/item/stack/tile/techmaint
+
+/decl/flooring/tiling/new_tile/monofloor
+	icon_base = "monofloor"
+	color = COLOR_GUNMETAL
+
+/decl/flooring/tiling/new_tile/steel_grid
+	icon_base = "grid"
+	color = COLOR_GUNMETAL
+	build_type = /obj/item/stack/tile/grid
+
+/decl/flooring/tiling/new_tile/steel_ridged
+	icon_base = "ridged"
+	color = COLOR_GUNMETAL
+	build_type = /obj/item/stack/tile/ridge
 
 /decl/flooring/wood
 	name = "wooden floor"
@@ -158,9 +222,32 @@ var/list/flooring_types
 	icon_base = "wood"
 	has_damage_range = 6
 	damage_temperature = T0C+200
+	apply_thermal_conductivity = 0.14
+	apply_heat_capacity = 1200
 	descriptor = "planks"
 	build_type = /obj/item/stack/tile/wood
 	flags = TURF_CAN_BREAK | TURF_IS_FRAGILE | TURF_REMOVE_SCREWDRIVER
+	footstep_type = FOOTSTEP_WOOD
+
+/decl/flooring/wood/mahogany
+	icon_base = "mahogany"
+	build_type = /obj/item/stack/tile/mahogany
+
+/decl/flooring/wood/maple
+	icon_base = "maple"
+	build_type = /obj/item/stack/tile/maple
+
+/decl/flooring/wood/ebony
+	icon_base = "ebony"
+	build_type = /obj/item/stack/tile/ebony
+
+/decl/flooring/wood/walnut
+	icon_base = "walnut"
+	build_type = /obj/item/stack/tile/walnut
+
+/decl/flooring/wood/bamboo
+	icon_base = "maple"
+	build_type = /obj/item/stack/tile/bamboo
 
 /decl/flooring/reinforced
 	name = "reinforced floor"
@@ -174,22 +261,28 @@ var/list/flooring_types
 	apply_thermal_conductivity = 0.025
 	apply_heat_capacity = 325000
 	can_paint = 1
+	footstep_type = FOOTSTEP_PLATING
 
 /decl/flooring/reinforced/circuit
 	name = "processing strata"
 	icon = 'icons/turf/flooring/circuit.dmi'
 	icon_base = "bcircuit"
-	build_type = null
+	build_type = /obj/item/stack/tile/floor_bcircuit
+	build_cost = 1
+	build_time = 30
 	flags = TURF_ACID_IMMUNE | TURF_CAN_BREAK | TURF_REMOVE_WRENCH
 	can_paint = 1
+	can_engrave = FALSE
 
 /decl/flooring/reinforced/circuit/green
 	icon_base = "gcircuit"
+	build_type = /obj/item/stack/tile/floor_gcircuit
 
 /decl/flooring/reinforced/circuit/red
 	icon_base = "rcircuit"
 	flags = TURF_ACID_IMMUNE
 	can_paint = 0
+	build_type = /obj/item/stack/tile/floor_rcircuit
 
 /decl/flooring/reinforced/cult
 	name = "engraved floor"
@@ -202,35 +295,78 @@ var/list/flooring_types
 	can_paint = null
 
 /decl/flooring/reinforced/cult/on_remove()
-	cult.remove_cultiness(CULTINESS_PER_TURF)
+	GLOB.cult.remove_cultiness(CULTINESS_PER_TURF)
 
 /decl/flooring/reinforced/shuttle
 	name = "floor"
 	icon = 'icons/turf/shuttle.dmi'
-	build_type = null
-	flags = TURF_ACID_IMMUNE | TURF_CAN_BREAK | TURF_REMOVE_WRENCH
+	build_type = /obj/item/stack/tile/shuttle/blue
+	flags = TURF_ACID_IMMUNE | TURF_CAN_BREAK | TURF_REMOVE_WRENCH | TURF_CAN_BURN
 	can_paint = 1
+	can_engrave = FALSE
+	has_damage_range = 4
+	damage_temperature = T0C+1400
+	build_time = 5 SECONDS
 
 /decl/flooring/reinforced/shuttle/blue
 	icon_base = "floor"
+	build_type = /obj/item/stack/tile/shuttle/blue
 
 /decl/flooring/reinforced/shuttle/yellow
 	icon_base = "floor2"
+	build_type = /obj/item/stack/tile/shuttle/yellow
 
 /decl/flooring/reinforced/shuttle/white
 	icon_base = "floor3"
+	build_type = /obj/item/stack/tile/shuttle/white
 
 /decl/flooring/reinforced/shuttle/red
 	icon_base = "floor4"
+	build_type = /obj/item/stack/tile/shuttle/red
 
 /decl/flooring/reinforced/shuttle/purple
 	icon_base = "floor5"
+	build_type = /obj/item/stack/tile/shuttle/purple
 
 /decl/flooring/reinforced/shuttle/darkred
 	icon_base = "floor6"
+	build_type = /obj/item/stack/tile/shuttle/darkred
 
 /decl/flooring/reinforced/shuttle/black
 	icon_base = "floor7"
+	build_type = /obj/item/stack/tile/shuttle/black
+
+
+/decl/flooring/reinforced/shuttle/skrell
+	icon = 'icons/turf/skrellturf.dmi'
+	icon_base = "skrellblack"
+
+/decl/flooring/reinforced/shuttle/skrell/white
+	icon_base = "skrellwhite"
+
+/decl/flooring/reinforced/shuttle/skrell/red
+	icon_base = "skrellred"
+
+/decl/flooring/reinforced/shuttle/skrell/blue
+	icon_base = "skrellblue"
+
+/decl/flooring/reinforced/shuttle/skrell/orange
+	icon_base = "skrellorange"
+
+/decl/flooring/reinforced/shuttle/skrell/green
+	icon_base = "skrellgreen"
+
+/decl/flooring/crystal
+	name = "crystal floor"
+	icon = 'icons/turf/flooring/crystal.dmi'
+	build_type = null
+	flags = TURF_ACID_IMMUNE | TURF_CAN_BREAK | TURF_REMOVE_CROWBAR
+	color = "#00ffe1"
+
+
+/decl/flooring/reinforced/shuttle/plates
+	icon_base = "vfloor"
+	build_type = /obj/item/stack/tile/shuttle/plates
 /*
 /decl/flooring/diona
 	name = "biomass"
@@ -239,3 +375,36 @@ var/list/flooring_types
 	icon_base = "diona"
 	flags = TURF_ACID_IMMUNE | TURF_REMOVE_SHOVEL
 */
+
+/decl/flooring/concrete
+	name = "concrete"
+	desc = "Good old concrete."
+	icon = 'icons/turf/flooring/misc.dmi'
+	icon_base = "concrete"
+	build_type = /obj/item/stack/tile/concrete
+	damage_temperature = T0C+1500
+	flags = TURF_REMOVE_CROWBAR | TURF_CAN_BURN | TURF_CAN_BREAK
+	apply_thermal_conductivity = 1.13
+	apply_heat_capacity = 1000
+
+/decl/flooring/rockvault
+	name = "vault floor"
+	desc = "Sturdy looking floor."
+	icon = 'icons/turf/flooring/misc.dmi'
+	icon_base = "rockvault"
+	build_type = /obj/item/stack/tile/rockvault
+	flags = TURF_REMOVE_CROWBAR | TURF_CAN_BREAK
+
+/decl/flooring/sandstonevault
+	name = "sandstone vault floor"
+	desc = "Sturdy looking floor."
+	icon = 'icons/turf/flooring/misc.dmi'
+	icon_base = "sandstonevault"
+	build_type = /obj/item/stack/tile/sandstonevault
+	flags = TURF_REMOVE_CROWBAR | TURF_CAN_BREAK
+
+/decl/flooring/elevatorshaft
+	name = "elevator shaft floor"
+	icon = 'icons/turf/flooring/misc.dmi'
+	icon_base = "elevatorshaft"
+	build_type = null

@@ -11,7 +11,7 @@
 	origin_tech = list(TECH_BIO = 4)
 	var/Uses = 1 // uses before it goes inert
 	var/enhanced = 0 //has it been enhanced before?
-	flags = OPENCONTAINER
+	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 
 	attackby(obj/item/O as obj, mob/user as mob)
 		if(istype(O, /obj/item/weapon/slimesteroid2))
@@ -27,9 +27,10 @@
 			qdel(O)
 
 /obj/item/slime_extract/New()
+	SSstatistics.extracted_slime_cores_amount++
 	..()
 	create_reagents(100)
-	reagents.add_reagent(/datum/reagent/slimejelly, 10)
+	reagents.add_reagent(/datum/reagent/slimejelly, 30)
 
 /obj/item/slime_extract/grey
 	name = "grey slime extract"
@@ -99,6 +100,11 @@
 	name = "adamantine slime extract"
 	icon_state = "adamantine slime extract"
 	export_value = 100
+
+/obj/item/slime_extract/adamantine/Initialize()
+	. = ..()
+	reagents.add_reagent(/datum/reagent/crystal, 10)
+
 /obj/item/slime_extract/bluespace
 	name = "bluespace slime extract"
 	icon_state = "bluespace slime extract"
@@ -151,7 +157,7 @@
 
 		if (!newname)
 			newname = "pet slime"
-		pet.name = newname
+		pet.SetName(newname)
 		pet.real_name = newname
 		qdel(src)
 
@@ -182,7 +188,7 @@
 
 		if (!newname)
 			newname = "pet slime"
-		pet.name = newname
+		pet.SetName(newname)
 		pet.real_name = newname
 		qdel(src)
 
@@ -242,7 +248,7 @@
 	layer = RUNE_LAYER
 
 /obj/effect/golemrune/Initialize()
-	..()
+	. = ..()
 	START_PROCESSING(SSobj, src)
 
 /obj/effect/golemrune/Process()

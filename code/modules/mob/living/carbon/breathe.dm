@@ -14,7 +14,7 @@
 	var/datum/gas_mixture/breath = null
 
 	//First, check if we can breathe at all
-	if(is_asystole() && !(CE_STABLE in chem_effects) && active_breathe) //crit aka circulatory shock
+	if(handle_drowning() || (is_asystole() && !(CE_STABLE in chem_effects) && active_breathe)) //crit aka circulatory shock
 		losebreath = max(2, losebreath + 1)
 
 	if(losebreath>0) //Suffocating so do not take a breath
@@ -40,7 +40,7 @@
 	if(internal)
 		if (!contents.Find(internal))
 			internal = null
-		if (!(wear_mask && (wear_mask.item_flags & AIRTIGHT)))
+		if (!(wear_mask && (wear_mask.item_flags & ITEM_FLAG_AIRTIGHT)))
 			internal = null
 		if(internal)
 			if (internals)
@@ -52,6 +52,8 @@
 	return null
 
 /mob/living/carbon/proc/get_breath_from_environment(var/volume_needed=STD_BREATH_VOLUME)
+	if(volume_needed <= 0)
+		return
 	var/datum/gas_mixture/breath = null
 
 	var/datum/gas_mixture/environment
@@ -75,7 +77,7 @@
 /mob/living/carbon/proc/handle_chemical_smoke(var/datum/gas_mixture/environment)
 	if(species && environment.return_pressure() < species.breath_pressure/5)
 		return //pressure is too low to even breathe in.
-	if(wear_mask && (wear_mask.flags & BLOCK_GAS_SMOKE_EFFECT))
+	if(wear_mask && (wear_mask.item_flags & ITEM_FLAG_BLOCK_GAS_SMOKE_EFFECT))
 		return
 
 	for(var/obj/effect/effect/smoke/chem/smoke in view(1, src))
@@ -86,7 +88,7 @@
 			break // If they breathe in the nasty stuff once, no need to continue checking
 
 /mob/living/carbon/proc/get_breath_volume()
-	return species.breath_volume
+	return STD_BREATH_VOLUME
 
 /mob/living/carbon/proc/handle_breath(datum/gas_mixture/breath)
 	return

@@ -82,13 +82,13 @@
 			else if(env.temperature > 375)
 				trigger_hot = 1
 
-			if(env.gas["phoron"] >= 10)
+			if(env.gas[GAS_PHORON] >= 10)
 				trigger_phoron = 1
-			if(env.gas["oxygen"] >= 10)
+			if(env.gas[GAS_OXYGEN] >= 10)
 				trigger_oxy = 1
-			if(env.gas["carbon_dioxide"] >= 10)
+			if(env.gas[GAS_CO2] >= 10)
 				trigger_co2 = 1
-			if(env.gas["nitrogen"] >= 10)
+			if(env.gas[GAS_NITROGEN] >= 10)
 				trigger_nitro = 1
 
 	//COLD ACTIVATION
@@ -163,12 +163,16 @@
 		if(secondary_effect && secondary_effect.trigger == TRIGGER_NITRO && !secondary_effect.activated)
 			secondary_effect.ToggleActivate(0)
 
-/obj/machinery/artifact/attack_hand(var/mob/user as mob)
+/obj/machinery/artifact/attack_hand(mob/living/user)
+	if(!istype(user))
+		return
+
 	if (get_dist(user, src) > 1)
 		to_chat(user, "<span class='warning'>You can't reach \the [src] from here.</span>")
 		return
-	if(ishuman(user) && user:gloves)
-		to_chat(user, "<b>You touch [src]</b> with your gloved hands, [pick("but nothing of note happens","but nothing happens","but nothing interesting happens","but you notice nothing different","but nothing seems to have happened")].")
+	var/bodypart = user.hand ? HAND_RIGHT : HAND_LEFT
+	if(ishuman(user) && user.get_covering_equipped_item(bodypart))
+		to_chat(user, "<b>You touch [src]</b> with your covered hands, [pick("but nothing of note happens","but nothing happens","but nothing interesting happens","but you notice nothing different","but nothing seems to have happened")].")
 		return
 
 	src.add_fingerprint(user)

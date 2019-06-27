@@ -1,14 +1,17 @@
 /obj/structure/bed/chair/e_chair
 	name = "electric chair"
 	desc = "Looks absolutely SHOCKING!"
+	icon = 'icons/obj/structures/echair.dmi'
 	icon_state = "echair0"
+	base_icon = "echair0"
+	max_health = 150
 	var/on = 0
 	var/obj/item/assembly/shock_kit/part = null
 	var/last_time = 1.0
 
 /obj/structure/bed/chair/e_chair/New()
 	..()
-	overlays += image('icons/obj/objects.dmi', src, "echair_over", MOB_LAYER + 1, dir)
+	overlays += image(src.icon, src, "echair_over", MOB_LAYER + 1, dir)
 	return
 
 /obj/structure/bed/chair/e_chair/attackby(obj/item/weapon/W as obj, mob/user as mob)
@@ -16,12 +19,12 @@
 		var/obj/structure/bed/chair/C = new /obj/structure/bed/chair(loc)
 		playsound(loc, 'sound/items/Ratchet.ogg', 50, 1)
 		C.set_dir(dir)
-		part.loc = loc
+		part.dropInto(loc)
 		part.master = null
 		part = null
 		qdel(src)
 		return
-	return
+	return ..()
 
 /obj/structure/bed/chair/e_chair/verb/toggle()
 	set name = "Toggle Electric Chair"
@@ -40,7 +43,16 @@
 /obj/structure/bed/chair/e_chair/rotate()
 	..()
 	overlays.Cut()
-	overlays += image('icons/obj/objects.dmi', src, "echair_over", MOB_LAYER + 1, dir)	//there's probably a better way of handling this, but eh. -Pete
+	overlays += image(icon, src, "echair_over", MOB_LAYER + 1, dir)	//there's probably a better way of handling this, but eh. -Pete
+	return
+
+/obj/structure/bed/chair/e_chair/on_update_icon()
+	..()
+	if(on)	icon_state = "echair0"
+	else	icon_state = "echair1"
+	icon_state = "echair0"
+	overlays.Cut()
+	overlays += image(icon, src, "echair_over", MOB_LAYER + 1, dir)	//there's probably a better way of handling this, but eh. -Pete
 	return
 
 /obj/structure/bed/chair/e_chair/proc/shock()
@@ -56,7 +68,7 @@
 		return
 	if(!A.powered(EQUIP))
 		return
-	A.use_power(EQUIP, 5000)
+	A.use_power_oneoff(5000, EQUIP)
 	var/light = A.power_light
 	A.update_icon()
 

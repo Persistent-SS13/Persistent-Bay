@@ -8,6 +8,7 @@
 	unacidable = 1
 	anchored = 1
 	var/boom_time = 1
+	should_save = 1
 
 /obj/effect/force_portal/Initialize()
 	. = ..()
@@ -30,7 +31,7 @@
 		var/target = pick(possible_turfs)
 		possible_turfs -= target
 		var/atom/movable/picked = pick(contents)
-		picked.forceMove(get_turf(src))
+		picked.dropInto(loc)
 		if(istype(picked, /obj/item/projectile))
 			var/obj/item/projectile/P = picked
 			P.launch(target)

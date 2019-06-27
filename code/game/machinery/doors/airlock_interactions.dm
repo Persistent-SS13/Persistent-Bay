@@ -22,6 +22,9 @@
 /obj/machinery/shield/blocks_airlock()
 	return 0
 
+/obj/effect/shield/blocks_airlock()
+	return 0
+
 /mob/living/blocks_airlock()
 	return 1
 
@@ -53,7 +56,7 @@
 
 /obj/structure/closet/airlock_crush(var/crush_damage)
 	..()
-	damage(crush_damage)
+	take_damage(crush_damage)
 	for(var/atom/movable/AM in src)
 		AM.airlock_crush()
 	return
@@ -61,12 +64,8 @@
 /mob/living/airlock_crush(var/crush_damage)
 	. = ..()
 
-	//using getarmor() instead of run_armor_check() to reflect the fact that this is "slow" damage and not high-impact damage
-	var/protection = blocked_mult(getarmor(null, "melee"))
-	crush_damage *= protection
-
 	for(var/i in 1 to round(crush_damage/AIRLOCK_CRUSH_INCREMENT, 1))
-		apply_damage(AIRLOCK_CRUSH_INCREMENT, BRUTE, null, 0)
+		apply_damage(AIRLOCK_CRUSH_INCREMENT, DAM_BLUNT)
 
 	SetStunned(round(crush_damage / 8, 1))
 	SetWeakened(round(crush_damage / 8, 1))

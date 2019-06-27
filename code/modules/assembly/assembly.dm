@@ -3,9 +3,9 @@
 	desc = "A small electronic device that should never exist."
 	icon = 'icons/obj/assemblies/new_assemblies.dmi'
 	icon_state = ""
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	w_class = ITEM_SIZE_SMALL
-	matter = list(DEFAULT_WALL_MATERIAL = 100)
+	matter = list(MATERIAL_STEEL = 100)
 	throwforce = 2
 	throw_speed = 3
 	throw_range = 10
@@ -22,6 +22,13 @@
 	var/const/WIRE_PULSE_SPECIAL = 4		//Allows Pulse(0) to act on the holders special assembly
 	var/const/WIRE_RADIO_RECEIVE = 8		//Allows Pulsed(1) to call Activate()
 	var/const/WIRE_RADIO_PULSE = 16		//Allows Pulse(1) to send a radio message
+
+/obj/item/device/assembly/New()
+	. = ..()
+	ADD_SAVED_VAR(secured)
+	ADD_SAVED_VAR(attached_overlays)
+	ADD_SAVED_VAR(holder)
+	ADD_SAVED_VAR(wires)
 
 /obj/item/device/assembly/proc/activate()									//What the device does when turned on
 	return

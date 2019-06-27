@@ -1,0 +1,228 @@
+<h2>City Council Control Panel</h2>
+<br><hr>
+{{if data.is_councillor}}
+	{{:helper.link("Current Votes", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
+	{{:helper.link("New Bill", '', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
+	{{:helper.link("Tax Policy", '', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}	
+	{{if data.menu == 1}}
+		<h3>Current Votes</h3><br><hr>
+		{{if data.selected_vote}}
+			<h4>{{:data.selected_vote}}</h4><br>
+			{{:helper.link('Back', '', {'action' : 'deselect_vote'})}}<br><br>
+			<div class='item'>
+				<div class='itemLabel'>
+					Date Proposed
+				</div>
+				<div class='itemContent'>
+					{{:data.propose_time}}
+				</div>
+			</div>
+			<div class='item'>
+				<div class='itemLabel'>
+					Sponsor
+				</div>
+				<div class='itemContent'>
+					{{:data.sponsor}}
+				</div>
+			</div>
+			<br><hr><br>
+			{{:data.vote_body}}
+			<br><hr>
+			<br>
+			<div class='item'>
+				<div class='itemLabel'>
+					Vote Status
+				</div>
+				<div class='itemContent'>
+					{{if data.vote_status}}
+						{{:data.vote_status}}
+						{{if !data.is_sponsor}}
+							{{:helper.link('Cancel Vote', '', {'action' : 'vote_cancel'})}}
+						{{/if}}
+					{{else}}
+						{{:helper.link('Vote to Approve', '', {'action' : 'vote_yes'})}}{{:helper.link('Vote Against', '', {'action' : 'vote_no'})}}
+					{{/if}}			
+				</div>
+			</div>
+			{{if data.is_sponsor}}
+				<div class='item'>
+					<div class='itemLabel'>
+						Withdraw Bill
+					</div>
+					<div class='itemContent'>
+						{{:helper.link('Withdraw', '', {'action' : 'withdraw'})}}
+					</div>
+				</div>
+			{{/if}}
+		{{else}}
+		
+			<div class="statusDisplay" style="overflow: auto;">
+				{{if data.votes}}
+					{{for data.votes}}
+						{{:helper.link(value.name, '', {'action' : 'select_vote', 'ref' : value.ref})}}
+					{{/for}}
+				{{else}}
+					<span class='alert'>No votes currently being held.</span>
+				{{/if}}
+			</div>
+			
+		{{/if}}
+		
+	{{/if}}
+	{{if data.menu == 2}}
+		<h3>New Bill</h3><br><hr>
+		<div class='item'>
+			<div class='itemLabel'>
+				Law Type
+			</div>
+			<div class='itemContent'>
+				{{:helper.link('Criminal Law', '', {'action' : 'select_criminal'}, data.law_type == 1 ? 'selected' : null)}}{{:helper.link('Civil Law', '', {'action' : 'select_civil'}, data.law_type == 2 ? 'selected' : null)}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Title
+			</div>
+			<div class='itemContent'>
+				{{:helper.link(data.bill_title, '', {'action' : 'change_title'})}}
+			</div>
+		</div>
+		<br>
+		Have a full copy of the bill printed and scan it now to insert the contents of the bill.<br>
+		{{:helper.link('Scan Document', '', {'action' : 'scan'})}}
+		<br><hr><br>
+		{{:data.bill_body}}
+		<br><hr><br>
+		<div class='item'>
+			<div class='itemLabel'>
+				Finalize
+			</div>
+			<div class='itemContent'>
+				{{:helper.link('Propose Bill', '', {'action' : 'finish'})}}
+			</div>
+		</div>
+	{{/if}}
+	{{if data.menu == 3}}
+		<h3>Tax Policy</h3><br><hr>
+		If you make changes here make sure to finalize them in order to call a vote on the changes. You can only change either business or personal tax with one vote.
+		{{:helper.link("Personal Income Tax", '', {'action' : 'change_tax', 'menu_target' : '1'}, data.taxee == 2 ? null : 'selected')}}	
+		{{:helper.link("Business Income Tax", '', {'action' : 'change_tax', 'menu_target' : '2'}, data.taxee == 2 ? 'selected' : null)}}	
+		<h4>{{:data.tax}}</h4><br>
+		<div class='item'>
+			<div class='itemLabel'>
+				Tax Type
+			</div>
+			<div class='itemContent'>
+				{{:helper.link('Flat Tax', '', {'action' : 'select_flat'}, data.tax_type == 1 ? 'selected' : null)}}{{:helper.link('Progressive Tax', '', {'action' : 'select_prog'}, data.tax_type == 2 ? 'selected' : null)}}
+			</div>
+		</div>
+		A flat tax is charged every time an account recieves funds. A progressive tax includes four brackets where tax is charged at different rates according to the amount of money in their account.
+		{{if data.tax_type == 2}}
+			<hr>
+			<div class='item'>
+				<div class='itemLabel'>
+					Minimum Tax Rate
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.tax_prog1_rate, '', {'action' : 'change_prog1_rate'})}}
+				</div>
+			</div>
+			This tax will be charged if the account has less money than any other bracket requires.
+			<hr>
+			<div class='item'>
+				<div class='itemLabel'>
+					Second Bracket Amount
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.tax_prog2_amount, '', {'action' : 'change_prog2_amount'})}}
+				</div>
+			</div>
+			This is the amount of money in the account to qualify for this bracket.
+			<div class='item'>
+				<div class='itemLabel'>
+					Second Bracket Rate
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.tax_prog2_rate, '', {'action' : 'change_prog2_rate'})}}
+				</div>
+			</div>
+			This is the percent taken from recieved money when at this tax bracket.
+			<hr>
+			<div class='item'>
+				<div class='itemLabel'>
+					Third Bracket Amount
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.tax_prog3_amount, '', {'action' : 'change_prog3_amount'})}}
+				</div>
+			</div>
+			This is the amount of money in the account to qualify for this bracket.
+			<div class='item'>
+				<div class='itemLabel'>
+					Third Bracket Rate
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.tax_prog3_rate, '', {'action' : 'change_prog3_rate'})}}
+				</div>
+			</div>
+			This is the percent taken from recieved money when at this tax bracket.
+			<hr>
+			<div class='item'>
+				<div class='itemLabel'>
+					Fourth Bracket Amount
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.tax_prog4_amount, '', {'action' : 'change_prog4_amount'})}}
+				</div>
+			</div>
+			This is the amount of money in the account to qualify for this bracket.
+			<div class='item'>
+				<div class='itemLabel'>
+					Fourth Bracket Rate
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.tax_prog4_rate, '', {'action' : 'change_prog4_rate'})}}
+				</div>
+			</div>
+			This is the percent taken from recieved money when at this tax bracket.
+			<hr>
+			
+		{{else}}
+			<div class='item'>
+				<div class='itemLabel'>
+					Flat Tax Rate
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.tax_flat_rate, '', {'action' : 'change_flat_rate'})}}
+				</div>
+			</div>
+			This tax will be charged every time money comes into the account.
+		{{/if}}
+
+		<div class='item'>
+			<div class='itemLabel'>
+				Finalize
+			</div>
+			<div class='itemContent'>
+				{{:helper.link('Propose Tax Policy', '', {'action' : 'propose_tax'})}}
+			</div>
+		</div>
+		When you have made all desired changes, finalize them here to create a vote for the council to consider adopting the tax policy.
+	{{/if}}
+	
+	
+	{{if data.menu == 4}}
+		<h3>Impeachment</h3><br><hr>
+		Initiate a vote to remove an official from office. 
+		<h4>Judges</h4><br>
+		Judges require either five votes, or three and a governor's signature to remove from office. <br> 
+		{{for data.judges}}
+			{{:helper.link(value.name, '', {'action' : 'impeach_judge', 'ref' : value.ref})}}
+		{{/for}}
+		
+	{{/if}}
+	
+{{else}}
+	<br>
+	This program is only for city councillors.
+{{/if}}

@@ -6,7 +6,10 @@
 	icon_state = "jeans"
 	gender = PLURAL
 	body_parts_covered = LOWER_TORSO|LEGS
-	item_icons = list(slot_w_uniform_str = 'icons/mob/pants.dmi')
+	item_icons = list(slot_w_uniform_str = 'icons/mob/onmob/onmob_under_pants.dmi')
+	sprite_sheets = list(
+		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_under_pants_unathi.dmi',
+		)
 
 /obj/item/clothing/under/casual_pants/classicjeans
 	name = "classic jeans"
@@ -14,7 +17,7 @@
 	icon_state = "jeansclassic"
 
 /obj/item/clothing/under/casual_pants/mustangjeans
-	name = "must hang jeans"
+	name = "mustang jeans"
 	desc = "Made in the finest space jeans factory this side of Alpha Centauri."
 	icon_state = "jeansmustang"
 
@@ -72,7 +75,7 @@
 	icon_state = "baggy_jeansclassic"
 
 /obj/item/clothing/under/casual_pants/baggy/mustangjeans
-	name = "maggy must hang jeans"
+	name = "baggy mustang jeans"
 	desc = "Made in the finest space jeans factory this side of Alpha Centauri."
 	icon_state = "baggy_jeansmustang"
 

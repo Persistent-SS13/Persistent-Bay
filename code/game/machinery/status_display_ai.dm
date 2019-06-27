@@ -58,27 +58,39 @@ var/list/ai_status_emotions = list(
 	icon = 'icons/obj/status_display.dmi'
 	icon_state = "frame"
 	name = "AI display"
-	anchored = 1
-	density = 0
+	anchored = TRUE
+	density = FALSE
 
 	var/mode = 0	// 0 = Blank
 					// 1 = AI emoticon
 					// 2 = Blue screen of death
-
 	var/picture_state	// icon_state of ai picture
-
 	var/emotion = "Neutral"
+
+/obj/machinery/ai_status_display/Initialize(mapload, d)
+	. = ..()
+	queue_icon_update()
 
 /obj/machinery/ai_status_display/attack_ai/(mob/user as mob)
 	var/list/ai_emotions = get_ai_emotions(user.ckey)
 	var/emote = input("Please, select a status!", "AI Status", null, null) in ai_emotions
 	src.emotion = emote
 
-/obj/machinery/ai_status_display/Process()
-	return
-
 /obj/machinery/ai_status_display/update_icon()
-	if(stat & (NOPOWER|BROKEN))
+	switch(dir)
+		if(NORTH)
+			src.pixel_x = 0
+			src.pixel_y = -30
+		if(SOUTH)
+			src.pixel_x = 0
+			src.pixel_y = 30
+		if(EAST)
+			src.pixel_x = -30
+			src.pixel_y = 0
+		if(WEST)
+			src.pixel_x = 30
+			src.pixel_y = 0
+	if(inoperable())
 		overlays.Cut()
 		return
 
@@ -95,4 +107,4 @@ var/list/ai_status_emotions = list(
 	picture_state = state
 	if(overlays.len)
 		overlays.Cut()
-	overlays += image('icons/obj/status_display.dmi', icon_state=picture_state)
+	overlays += image(icon, icon_state=picture_state)

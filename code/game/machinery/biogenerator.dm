@@ -11,8 +11,8 @@
 	icon_state = "biogen-stand"
 	density = 1
 	anchored = 1
-	use_power = 1
 	idle_power_usage = 40
+	circuit_type = /obj/item/weapon/circuitboard/biogenerator
 	var/processing = 0
 	var/obj/item/weapon/reagent_containers/glass/beaker = null
 	var/points = 0
@@ -28,41 +28,33 @@
 			/obj/item/weapon/reagent_containers/glass/bottle/eznutrient = 60,
 			/obj/item/weapon/reagent_containers/glass/bottle/left4zed = 120,
 			/obj/item/weapon/reagent_containers/glass/bottle/robustharvest = 120),
-		"Leather" = list(
-			/obj/item/weapon/storage/wallet/leather = 100,
-			/obj/item/clothing/gloves/thick/botany = 250,
-			/obj/item/weapon/storage/belt/utility = 300,
-			/obj/item/weapon/storage/belt/security = 300,
-			/obj/item/weapon/storage/backpack/satchel = 400,
-			/obj/item/weapon/storage/bag/cash = 400,
-			/obj/item/clothing/shoes/workboots = 400,
-			/obj/item/clothing/shoes/leather = 400,
-			/obj/item/clothing/shoes/dress = 400,
-			/obj/item/clothing/suit/leathercoat = 500,
-			/obj/item/clothing/suit/storage/toggle/brown_jacket = 500,
-			/obj/item/clothing/suit/storage/toggle/bomber = 500,
-			/obj/item/clothing/suit/storage/hooded/wintercoat = 500),
-		"Other" = list(
+		"Materials" = list(
+			/obj/item/stack/material/cardboard/ten = 250,
+			/obj/item/stack/material/cloth/ten = 500,
+			/obj/item/stack/material/leather/ten = 800,
+			/obj/item/stack/material/wood/ten = 1500,
 			/obj/item/weapon/paper = 5,
-			/obj/item/weapon/paper_package = 250)
+			/obj/item/weapon/paper_package = 250,)
 			)
 
 /obj/machinery/biogenerator/New()
 	..()
+	ADD_SAVED_VAR(beaker)
+	ADD_SAVED_VAR(points)
+
+	ADD_SKIP_EMPTY(beaker)
+	ADD_SKIP_EMPTY(points)
+	
+/obj/machinery/biogenerator/SetupParts()
 	create_reagents(1000)
 	beaker = new /obj/item/weapon/reagent_containers/glass/bottle(src)
-
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/biogenerator(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-
-	RefreshParts()
+	..()
 
 /obj/machinery/biogenerator/on_reagent_change()			//When the reagents change, change the icon as well.
-	update_icon()
+	..()
+	queue_icon_update()
 
-/obj/machinery/biogenerator/update_icon()
+/obj/machinery/biogenerator/on_update_icon()
 	if(state == BG_NO_BEAKER)
 		icon_state = "biogen-empty"
 	else if(state == BG_READY || state == BG_COMPLETE)
@@ -159,7 +151,7 @@
 				"type_name" = type_name,
 				"products" = listed_products)))
 		data["types"] = listed_types
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "biogenerator.tmpl", "Biogenerator", 440, 600)
 		ui.set_initial_data(data)
@@ -210,10 +202,10 @@
 		qdel(I)
 	if(S)
 		state = BG_PROCESSING
-		GLOB.nanomanager.update_uis(src)
+		SSnano.update_uis(src)
 		update_icon()
 		playsound(src.loc, 'sound/machines/blender.ogg', 50, 1)
-		use_power(S * 30)
+		use_power_oneoff(S * 30)
 		sleep((S + 15) / eat_eff)
 		state = BG_READY
 		update_icon()
@@ -226,7 +218,7 @@
 	var/cost = products[type][path]
 	cost = round(cost/build_eff)
 	points -= cost
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)
 	update_icon()
 	sleep(30)
 	var/atom/movable/result = new path

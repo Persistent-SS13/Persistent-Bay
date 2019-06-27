@@ -103,7 +103,7 @@ proc/cardinalrange(var/center)
 
 
 /obj/machinery/am_shielding/bullet_act(var/obj/item/projectile/Proj)
-	if(Proj.check_armour != "bullet")
+	if(!ISDAMTYPE(Proj.damtype, DAM_BULLET))
 		stability -= Proj.force/2
 	return 0
 
@@ -126,8 +126,7 @@ proc/cardinalrange(var/center)
 	if(W.force > 10)
 		stability -= W.force/2
 		check_stability()
-	..()
-	return
+	return ..()
 
 
 
@@ -192,11 +191,11 @@ proc/cardinalrange(var/center)
 	icon_state = "box"
 	item_state = "electronic"
 	w_class = ITEM_SIZE_HUGE
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	throwforce = 5
 	throw_speed = 1
 	throw_range = 2
-	matter = list(DEFAULT_WALL_MATERIAL = 100)
+	matter = list(MATERIAL_STEEL = 100)
 
 /obj/item/device/am_shielding_container/attackby(var/obj/item/I, var/mob/user)
 	if(isMultitool(I) && istype(src.loc,/turf))

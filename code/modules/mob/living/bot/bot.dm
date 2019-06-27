@@ -2,7 +2,7 @@
 	name = "Bot"
 	health = 20
 	maxHealth = 20
-	icon = 'icons/obj/aibots.dmi'
+	icon = 'icons/mob/bot/placeholder.dmi'
 	universal_speak = 1
 	density = 0
 	var/obj/item/weapon/card/id/botcard = null
@@ -39,6 +39,9 @@
 	var/frustration = 0
 	var/max_frustration = 0
 
+	plane = HIDING_MOB_PLANE
+	layer = HIDING_MOB_LAYER
+
 /mob/living/bot/New()
 	..()
 	update_icons()
@@ -49,6 +52,11 @@
 	access_scanner = new /obj(src)
 	access_scanner.req_access = req_access.Copy()
 	access_scanner.req_one_access = req_one_access.Copy()
+
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(open)
+	ADD_SAVED_VAR(locked)
+	ADD_SAVED_VAR(emagged)
 
 /mob/living/bot/Initialize()
 	. = ..()
@@ -358,7 +366,7 @@
 	if(stat)
 		return 0
 	on = 1
-	set_light(light_strength)
+	set_light(0.5, 0.1, light_strength)
 	update_icons()
 	resetTarget()
 	patrol_path = list()
@@ -417,7 +425,7 @@
 		return 1
 
 	for(var/obj/O in B)
-		if(O.density && !istype(O, /obj/machinery/door) && !(O.flags & ON_BORDER))
+		if(O.density && !istype(O, /obj/machinery/door) && !(O.atom_flags & ATOM_FLAG_CHECKS_BORDER))
 			return 1
 
 	return 0

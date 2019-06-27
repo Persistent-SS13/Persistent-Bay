@@ -33,6 +33,7 @@
 			to_chat(usr, "This machine is already in perfect condition.")
 		return
 
+
 	switch(construct_op)
 		if(0)
 			if(isScrewdriver(P))
@@ -59,14 +60,14 @@
 				construct_op ++
 				var/obj/item/stack/cable_coil/A = new /obj/item/stack/cable_coil( user.loc )
 				A.amount = 5
-				stat |= BROKEN // the machine's been borked!
+				set_broken(TRUE, TRUE) // the machine's been borked!
 		if(3)
 			if(isCoil(P))
 				var/obj/item/stack/cable_coil/A = P
 				if (A.use(5))
 					to_chat(user, "<span class='notice'>You insert the cables.</span>")
 					construct_op--
-					stat &= ~BROKEN // the machine's not borked anymore!
+					set_broken(FALSE, TRUE) // the machine's not borked anymore!
 				else
 					to_chat(user, "<span class='warning'>You need five coils of wire for this.</span>")
 			if(isCrowbar(P))
@@ -78,7 +79,7 @@
 					// Drop all the component stuff
 					if(contents.len > 0)
 						for(var/obj/x in src)
-							x.loc = user.loc
+							x.dropInto(loc)
 					else
 
 						// If the machine wasn't made during runtime, probably doesn't have components:
@@ -87,18 +88,19 @@
 						for(var/I in C.req_components)
 							for(var/i = 1, i <= C.req_components[I], i++)
 								var/obj/item/s = new I
-								s.loc = user.loc
-								if(istype(P, /obj/item/stack/cable_coil))
-									var/obj/item/stack/cable_coil/A = P
+								s.dropInto(user.loc)
+								if(istype(s, /obj/item/stack/cable_coil))
+									var/obj/item/stack/cable_coil/A = s
 									A.amount = 1
 
 						// Drop a circuit board too
-						C.loc = user.loc
+						C.dropInto(user.loc)
 
 					// Create a machine frame and delete the current machine
 					var/obj/machinery/constructable_frame/machine_frame/F = new
-					F.loc = src.loc
+					F.dropInto(loc)
 					qdel(src)
+
 
 /obj/machinery/telecomms/attack_ai(var/mob/user as mob)
 	attack_hand(user)
@@ -117,8 +119,8 @@
 	var/obj/item/device/multitool/P = get_multitool(user)
 
 	user.set_machine(src)
-	var/dat
-	dat = "<font face = \"Courier\"><HEAD><TITLE>[src.name]</TITLE></HEAD><center><H3>[src.name] Access</H3></center>"
+	var/list/dat = list()
+	dat += "<font face = \"Courier\"><HEAD><TITLE>[src.name]</TITLE></HEAD><center><H3>[src.name] Access</H3></center>"
 	dat += "<br>[temp]<br>"
 	dat += "<br>Power Status: <a href='?src=\ref[src];input=toggle'>[src.toggled ? "On" : "Off"]</a>"
 	if(overloaded_for)
@@ -159,6 +161,16 @@
 			dat += "NONE"
 
 		dat += "<br>  <a href='?src=\ref[src];input=freq'>\[Add Filter\]</a>"
+
+		dat += "<br><br>Channel Tagging Rules: <ol>"
+
+		if(length(channel_tags))
+			for(var/list/rule in channel_tags)
+				dat +="<li>[format_frequency(rule[1])] -> [rule[2]] ([rule[3]]) <a href='?src=\ref[src];deletetagrule=[rule[1]]'>\[X\]</a></li>"
+
+		dat += "</ol>"
+		dat += "<a href='?src=\ref[src];input=tagrule'>\[Add Rule\]</a>"
+
 		dat += "<hr>"
 
 		if(P)
@@ -170,9 +182,10 @@
 
 	dat += "</font>"
 	temp = ""
-	user << browse(dat, "window=tcommachine;size=520x500;can_resize=0")
-	onclose(user, "dormitory")
-
+	
+	var/datum/browser/popup = new(user, "tcommmachine", "Telecommunications Machine Configuration Panel", 520, 600)
+	popup.set_content(JOINTEXT(dat))
+	popup.open()
 
 // Off-Site Relays
 //
@@ -285,7 +298,8 @@
 
 
 /obj/machinery/telecomms/Topic(href, href_list)
-
+	if(..())
+		return 1
 	if(!issilicon(usr))
 		if(!istype(usr.get_active_hand(), /obj/item/device/multitool))
 			return
@@ -345,6 +359,35 @@
 						freq_listening.Add(newfreq)
 						temp = "<font color = #666633>-% New frequency filter assigned: \"[newfreq] GHz\" %-</font>"
 
+			if("tagrule")
+				var/freq = input(usr, "Specify frequency to tag (GHz). Decimals assigned automatically.", src, network) as null|num
+				if(freq && canAccess(usr))
+					if(findtext(num2text(freq), "."))
+						freq *= 10
+
+					if(!(freq in freq_listening))
+						temp = "<font color = #660000>-% Not filtering specified frequency %-</font>"
+						updateUsrDialog()
+						return
+
+					for(var/list/rule in channel_tags)
+						if(rule[1] == freq)
+							temp = "<font color = #660000>-% Tagging rule already defined %-</font>"
+							updateUsrDialog()
+							return
+
+					var/tag = input(usr, "Specify tag.", src, "") as null|text
+					var/color = input(usr, "Select color.", src, "") as null|anything in (channel_color_presets + "Custom color")
+
+					if(color == "Custom color")
+						color = input("Select color.", src, rgb(0, 128, 0)) as null|color
+					else
+						color = channel_color_presets[color]
+
+					if(freq < 10000)
+						channel_tags.Add(list(list(freq, tag, color)))
+						temp = "<font color = #666633>-% New tagging rule assigned:[freq] GHz -> \"[tag]\" ([color]) %-</font>"
+
 	if(href_list["delete"])
 
 		// changed the layout about to workaround a pesky runtime -- Doohl
@@ -352,6 +395,16 @@
 		var/x = text2num(href_list["delete"])
 		temp = "<font color = #666633>-% Removed frequency filter [x] %-</font>"
 		freq_listening.Remove(x)
+
+	if(href_list["deletetagrule"])
+
+		var/freq = text2num(href_list["deletetagrule"])
+		var/rule_delete
+		for(var/list/rule in channel_tags)
+			if(rule[1] == freq)
+				rule_delete = rule
+		temp = "<font color = #666633>-% Removed tagging rule: [rule_delete[1]] -> [rule_delete[2]] %-</font>"
+		channel_tags.Remove(list(rule_delete))
 
 	if(href_list["unlink"])
 
@@ -396,7 +449,6 @@
 	src.Options_Topic(href, href_list)
 
 	usr.set_machine(src)
-	src.add_fingerprint(usr)
 
 	updateUsrDialog()
 

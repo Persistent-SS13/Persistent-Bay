@@ -6,7 +6,8 @@
 /area
 	var/global/global_uid = 0
 	var/uid
-
+	var/area_flags
+	var/shuttle = 0
 /area/New()
 	icon_state = ""
 	uid = ++global_uid
@@ -34,6 +35,12 @@
 /area/proc/get_contents()
 	return contents
 
+/area/proc/get_turfs()
+	var/list/all_turfs = list()
+	for(var/turf/T in src)
+		all_turfs |= T
+	return all_turfs
+
 /area/proc/get_cameras()
 	var/list/cameras = list()
 	for (var/obj/machinery/camera/C in src)
@@ -51,7 +58,7 @@
 
 	//Check all the alarms before lowering atmosalm. Raising is perfectly fine.
 	for (var/obj/machinery/alarm/AA in src)
-		if (!(AA.stat & (NOPOWER|BROKEN)) && !AA.shorted && AA.report_danger_level)
+		if (AA.operable() && !AA.shorted && AA.report_danger_level)
 			danger_level = max(danger_level, AA.danger_level)
 
 	if(danger_level != atmosalm)
@@ -159,7 +166,7 @@
 					D.open()
 	return
 
-/area/update_icon()
+/area/on_update_icon()
 	if ((fire || eject || party) && (!requires_power||power_environ))//If it doesn't require power, can still activate this proc.
 		if(fire && !eject && !party)
 			icon_state = "blue"
@@ -174,62 +181,6 @@
 	else
 	//	new lighting behaviour with obj lights
 		icon_state = null
-
-/*
-#define EQUIP 1
-#define LIGHT 2
-#define ENVIRON 3
-*/
-
-/area/proc/powered(var/chan)		// return true if the area has power to given channel
-
-	if(!requires_power)
-		return 1
-	if(always_unpowered)
-		return 0
-	switch(chan)
-		if(EQUIP)
-			return power_equip
-		if(LIGHT)
-			return power_light
-		if(ENVIRON)
-			return power_environ
-
-	return 0
-
-// called when power status changes
-/area/proc/power_change()
-	for(var/obj/machinery/M in src)	// for each machine in the area
-		M.power_change()			// reverify power status (to update icons etc.)
-	if (fire || eject || party)
-		update_icon()
-
-/area/proc/usage(var/chan)
-	var/used = 0
-	switch(chan)
-		if(LIGHT)
-			used += used_light
-		if(EQUIP)
-			used += used_equip
-		if(ENVIRON)
-			used += used_environ
-		if(TOTAL)
-			used += used_light + used_equip + used_environ
-	return used
-
-/area/proc/clear_usage()
-	used_equip = 0
-	used_light = 0
-	used_environ = 0
-
-/area/proc/use_power(var/amount, var/chan)
-	switch(chan)
-		if(EQUIP)
-			used_equip += amount
-		if(LIGHT)
-			used_light += amount
-		if(ENVIRON)
-			used_environ += amount
 
 /area/proc/set_lightswitch(var/new_switch)
 	if(lightswitch != new_switch)
@@ -257,22 +208,20 @@ var/list/mob/living/forced_ambiance_list = new
 	var/area/newarea = get_area(L.loc)
 	var/area/oldarea = L.lastarea
 	if(oldarea.has_gravity != newarea.has_gravity)
-		if(newarea.has_gravity == 1 && L.m_intent == "run") // Being ready when you change areas allows you to avoid falling.
+		if(newarea.has_gravity == 1 && !MOVING_DELIBERATELY(L)) // Being ready when you change areas allows you to avoid falling.
 			thunk(L)
 		L.update_floating()
 
-	L.lastarea = newarea
 	play_ambience(L)
+	L.lastarea = newarea
+
+	if(apc && apc.operating && !apc.shorted && !apc.failure_timer && !apc.stat & (BROKEN|MAINT))
+		apc.AlarmOnEntered(A)
 
 /area/proc/play_ambience(var/mob/living/L)
 	// Ambience goes down here -- make sure to list each area seperately for ease of adding things in later, thanks! Note: areas adjacent to each other should have the same sounds to prevent cutoff when possible.- LastyScratch
-	if(!(L && L.get_preference_value(/datum/client_preference/play_ambiance) == GLOB.PREF_YES))	return
-
-
-	// If we previously were in an area with force-played ambiance, stop it.
-	if(L in forced_ambiance_list)
-		sound_to(L, sound(null, channel = 1))
-		forced_ambiance_list -= L
+	if(!(L && L.client && L.get_preference_value(/datum/client_preference/play_ambiance) == GLOB.PREF_YES) || L.ear_deaf)
+		return FALSE
 
 	var/turf/T = get_turf(L)
 	var/hum = 0
@@ -281,27 +230,25 @@ var/list/mob/living/forced_ambiance_list = new
 			if(vent.can_pump())
 				hum = 1
 				break
-
 	if(hum)
 		if(!L.client.ambience_playing)
 			L.client.ambience_playing = 1
-			L.playsound_local(T,sound('sound/ambience/vents.ogg', repeat = 1, wait = 0, volume = 20, channel = 2))
+			L.playsound_local(T,sound('sound/ambience/vents.ogg', repeat = 1, wait = 0, volume = 20, channel = GLOB.ambience_sound_channel))
 	else
 		if(L.client.ambience_playing)
 			L.client.ambience_playing = 0
-			sound_to(L, sound(null, channel = 2))
+			sound_to(L, sound(null, channel = GLOB.ambience_sound_channel))
 
-	if(forced_ambience)
-		if(forced_ambience.len)
+	if(L.lastarea != src)
+		if(LAZYLEN(forced_ambience))
 			forced_ambiance_list |= L
-			L.playsound_local(T,sound(pick(forced_ambience), repeat = 1, wait = 0, volume = 25, channel = 3))
-		else
-			sound_to(L, sound(null, channel = 1))
-	else if(src.ambience.len)// && prob(35))
-		if((world.time >= L.client.played + 3 MINUTES))
-			var/sound = pick(ambience)
-			L.playsound_local(T, sound(sound, repeat = 0, wait = 0, volume = 15, channel = 3))
-			L.client.played = world.time
+			L.playsound_local(T,sound(pick(forced_ambience), repeat = 1, wait = 0, volume = 25, channel = GLOB.lobby_sound_channel))
+		else	//stop any old area's forced ambience, and try to play our non-forced ones
+			sound_to(L, sound(null, channel = GLOB.lobby_sound_channel))
+			forced_ambiance_list -= L
+	if(ambience.len && prob(35) && (world.time >= L.client.played + 3 MINUTES))
+		L.playsound_local(T, sound(pick(ambience), repeat = 0, wait = 0, volume = 15, channel = GLOB.lobby_sound_channel))
+		L.client.played = world.time
 
 /area/proc/gravitychange(var/gravitystate = 0)
 	has_gravity = gravitystate
@@ -311,22 +258,23 @@ var/list/mob/living/forced_ambiance_list = new
 			thunk(M)
 		M.update_floating()
 
-/area/proc/thunk(mob)
+/area/proc/thunk(mob/mob)
 	if(istype(get_turf(mob), /turf/space)) // Can't fall onto nothing.
+		return
+
+	if(mob.Check_Shoegrip())
 		return
 
 	if(istype(mob,/mob/living/carbon/human/))
 		var/mob/living/carbon/human/H = mob
-		if(istype(H.shoes, /obj/item/clothing/shoes/magboots) && (H.shoes.item_flags & NOSLIP))
-			return
-
-		if(H.m_intent == "run")
-			H.AdjustStunned(6)
-			H.AdjustWeakened(6)
-		else
-			H.AdjustStunned(3)
-			H.AdjustWeakened(3)
-		to_chat(mob, "<span class='notice'>The sudden appearance of gravity makes you fall to the floor!</span>")
+		if(prob(H.skill_fail_chance(SKILL_EVA, 100, SKILL_PROF)))
+			if(!MOVING_DELIBERATELY(H))
+				H.AdjustStunned(6)
+				H.AdjustWeakened(6)
+			else
+				H.AdjustStunned(3)
+				H.AdjustWeakened(3)
+			to_chat(mob, "<span class='notice'>The sudden appearance of gravity makes you fall to the floor!</span>")
 
 /area/proc/prison_break()
 	var/obj/machinery/power/apc/theAPC = get_apc()

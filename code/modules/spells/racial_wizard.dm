@@ -12,7 +12,6 @@
 	var/list/potentials = list(
 		SPECIES_HUMAN = /obj/item/weapon/storage/bag/cash/infinite,
 		SPECIES_VOX = /spell/targeted/shapeshift/true_form,
-		//SPECIES_TAJARA = /spell/messa_shroud,
 		SPECIES_UNATHI = /spell/moghes_blessing,
 		//SPECIES_DIONA = /spell/aoe_turf/conjure/grove/gestalt,
 		SPECIES_SKRELL = /obj/item/weapon/contract/apprentice/skrell,
@@ -31,7 +30,6 @@
 		if(istype(S,reward))
 			to_chat(user, "\The [src] can do no more for you.")
 			return
-	user.drop_from_inventory(src)
 	var/a = new reward()
 	if(ispath(reward,/spell))
 		H.add_spell(a)
@@ -51,26 +49,6 @@
 			var/obj/item/I = new /obj/item/weapon/spacecash/bundle/c1000()
 			src.handle_item_insertion(I,1)
 
-
-//Tajaran
-/*
-/spell/messa_shroud
-	name = "Messa's Shroud"
-	desc = "This spell causes darkness at the point of the caster for a duration of time."
-
-	school = "racial"
-	spell_flags = 0
-	invocation_type = SpI_EMOTE
-	invocation = "mutters a small prayer, the light around them darkening."
-	charge_max = 300 //30 seconds
-
-	range = 5
-	duration = 150 //15 seconds
-
-	cast_sound = 'sound/effects/bamf.ogg'
-
-	hud_state = "wiz_tajaran"
-
 /spell/messa_shroud/choose_targets()
 	return list(get_turf(holder))
 
@@ -81,11 +59,11 @@
 		return
 
 	var/obj/O = new /obj(T)
-	O.set_light(range, -10, "#ffffff")
+	O.set_light(-10, 0.1, 10, 2, "#ffffff")
 
 	spawn(duration)
 		qdel(O)
-*/
+
 //VOX
 /spell/targeted/shapeshift/true_form
 	name = "True Form"
@@ -102,7 +80,7 @@
 	smoke_amt = 5
 	smoke_spread = 1
 
-	possible_transformations = list(/mob/living/simple_animal/hostile/armalis)
+	possible_transformations = list(/mob/living/simple_animal/parrot/space/lesser)
 
 	hud_state = "wiz_vox"
 
@@ -158,12 +136,12 @@
 /*
 /spell/aoe_turf/conjure/grove/gestalt
 	name = "Convert Gestalt"
-	desc = "Converts the surrounding area into a Dionaea gestalt."
+	desc = "Converts the surrounding area into a diona gestalt."
 
 	school = "racial"
 	spell_flags = 0
 	invocation_type = SpI_EMOTE
-	invocation = "rumbles as green alien plants grow quickly along the floor."
+	invocation = "rumbles as strange alien growth quickly overtakes their surroundings."
 
 	charge_type = Sp_HOLDVAR
 	holder_var_type = "bruteloss"

@@ -5,9 +5,9 @@
 
 #define START_PROCESSING_IN_LIST(Datum, List) \
 if (Datum.is_processing) {\
-	if(Datum.is_processing != #Processor)\
+	if(Datum.is_processing != "SSmachines.[#List]")\
 	{\
-		crash_with("Failed to start processing. [log_info_line(Datum)] is already being processed by [Datum.is_processing] but queue attempt occured on [#Processor]."); \
+		crash_with("Failed to start processing. [log_info_line(Datum)] is already being processed by [Datum.is_processing] but queue attempt occured on SSmachines.[#List]."); \
 	}\
 } else {\
 	Datum.is_processing = "SSmachines.[#List]";\
@@ -34,8 +34,8 @@ if(Datum.is_processing) {\
 
 SUBSYSTEM_DEF(machines)
 	name = "Machines"
+	init_order = SS_INIT_MACHINES
 	priority = SS_PRIORITY_MACHINERY
-	init_order = INIT_ORDER_MACHINES
 	flags = SS_KEEP_TIMING
 	runlevels = RUNLEVEL_GAME|RUNLEVEL_POSTGAME
 
@@ -47,21 +47,19 @@ SUBSYSTEM_DEF(machines)
 	var/cost_power_objects = 0
 
 	var/list/pipenets      = list()
-	var/list/machinery     = list()
+	var/list/machinery     = list() // These are all machines.
 	var/list/powernets     = list()
 	var/list/power_objects = list()
 
-	var/list/processing
+	var/list/processing  = list() // These are the machines which are processing.
 	var/list/current_run = list()
-
-/datum/controller/subsystem/machines/PreInit()
-	 processing = machinery
+	var/current_machine
 
 /datum/controller/subsystem/machines/Initialize(timeofday)
 	makepowernets()
 	setup_atmos_machinery(machinery)
 	fire()
-	..()
+	return ..()
 
 #define INTERNAL_PROCESS_STEP(this_step, check_resumed, proc_to_call, cost_var, next_step)\
 if(current_step == this_step || (check_resumed && !resumed)) {\
@@ -100,27 +98,33 @@ if(current_step == this_step || (check_resumed && !resumed)) {\
 			NewPN.add_cable(PC)
 			propagate_network(PC,PC.powernet)
 
-datum/controller/subsystem/machines/proc/setup_atmos_machinery(list/machines)
+/datum/controller/subsystem/machines/proc/setup_atmos_machinery(list/machines)
 	set background=1
 
+	var/pretime = REALTIMEOFDAY
 	report_progress("Initializing atmos machinery")
 	for(var/obj/machinery/atmospherics/A in machines)
-		A.atmos_init()
+		if(!(QDELETED(A) || QDELING(A)))
+			A.atmos_init()
 		CHECK_TICK
+	report_progress("Done in [(REALTIMEOFDAY - pretime) / 10] second\s")
 
-	for(var/obj/machinery/atmospherics/unary/U in machines)
-		if(istype(U, /obj/machinery/atmospherics/unary/vent_pump))
-			var/obj/machinery/atmospherics/unary/vent_pump/T = U
-			T.broadcast_status()
-		else if(istype(U, /obj/machinery/atmospherics/unary/vent_scrubber))
-			var/obj/machinery/atmospherics/unary/vent_scrubber/T = U
-			T.broadcast_status()
-		CHECK_TICK
+//Those are already initialized in their atmos_init
+	// for(var/obj/machinery/atmospherics/unary/U in machines)
+	// 	if(istype(U, /obj/machinery/atmospherics/unary/vent_pump))
+	// 		var/obj/machinery/atmospherics/unary/vent_pump/T = U
+	// 		T.broadcast_status()
+	// 	else if(istype(U, /obj/machinery/atmospherics/unary/vent_scrubber))
+	// 		var/obj/machinery/atmospherics/unary/vent_scrubber/T = U
+	// 		T.broadcast_status()
+	// 	CHECK_TICK
 
+	pretime = REALTIMEOFDAY
 	report_progress("Initializing pipe networks")
 	for(var/obj/machinery/atmospherics/machine in machines)
 		machine.build_network()
 		CHECK_TICK
+	report_progress("Done in [(REALTIMEOFDAY - pretime) / 10] second\s")
 
 /datum/controller/subsystem/machines/stat_entry()
 	var/msg = list()
@@ -131,10 +135,10 @@ datum/controller/subsystem/machines/proc/setup_atmos_machinery(list/machines)
 	msg += "PO:[round(cost_power_objects,1)]"
 	msg += "} "
 	msg += "PI:[pipenets.len]|"
-	msg += "MC:[machinery.len]|"
+	msg += "MC:[processing.len]|"
 	msg += "PN:[powernets.len]|"
 	msg += "PO:[power_objects.len]|"
-	msg += "MC/MS:[round((cost ? machinery.len/cost : 0),0.1)]"
+	msg += "MC/MS:[round((cost ? processing.len/cost : 0),0.1)]"
 	..(jointext(msg, null))
 
 /datum/controller/subsystem/machines/proc/process_pipenets(resumed = 0)
@@ -146,6 +150,7 @@ datum/controller/subsystem/machines/proc/setup_atmos_machinery(list/machines)
 		var/datum/pipe_network/PN = current_run[current_run.len]
 		current_run.len--
 		if(istype(PN) && !QDELETED(PN))
+			current_machine = "PipeNet[PN]\ref[PN]"
 			PN.Process(wait)
 		else
 			pipenets.Remove(PN)
@@ -155,19 +160,16 @@ datum/controller/subsystem/machines/proc/setup_atmos_machinery(list/machines)
 
 /datum/controller/subsystem/machines/proc/process_machinery(resumed = 0)
 	if (!resumed)
-		src.current_run = machinery.Copy()
+		src.current_run = processing.Copy()
 
 	var/list/current_run = src.current_run
 	while(current_run.len)
 		var/obj/machinery/M = current_run[current_run.len]
+		current_machine = "Machinery[M]\ref[M]"
 		current_run.len--
-		if(istype(M) && !QDELETED(M) && !(M.Process(wait) == PROCESS_KILL))
-			if(M.use_power)
-				M.auto_use_power()
-		else
-			machinery.Remove(M)
-			if(M)
-				M.is_processing = null
+		if(!QDELETED(M) && (M.Process(wait) == PROCESS_KILL))
+			processing.Remove(M)
+			M.is_processing = null
 		if(MC_TICK_CHECK)
 			return
 
@@ -180,6 +182,7 @@ datum/controller/subsystem/machines/proc/setup_atmos_machinery(list/machines)
 		var/datum/powernet/PN = current_run[current_run.len]
 		current_run.len--
 		if(istype(PN) && !QDELETED(PN))
+			current_machine = "PowerNet[PN]\ref[PN]"
 			PN.reset(wait)
 		else
 			powernets.Remove(PN)
@@ -196,6 +199,7 @@ datum/controller/subsystem/machines/proc/setup_atmos_machinery(list/machines)
 		var/obj/item/I = current_run[current_run.len]
 		current_run.len--
 		if(!I.pwr_drain(wait)) // 0 = Process Kill, remove from processing list.
+			current_machine = "PowerObject[I]\ref[I]"
 			power_objects.Remove(I)
 			I.is_processing = null
 		if(MC_TICK_CHECK)
@@ -206,6 +210,8 @@ datum/controller/subsystem/machines/proc/setup_atmos_machinery(list/machines)
 		pipenets = SSmachines.pipenets
 	if (istype(SSmachines.machinery))
 		machinery = SSmachines.machinery
+	if (istype(SSmachines.processing))
+		processing = SSmachines.processing
 	if (istype(SSmachines.powernets))
 		powernets = SSmachines.powernets
 	if (istype(SSmachines.power_objects))
@@ -213,5 +219,5 @@ datum/controller/subsystem/machines/proc/setup_atmos_machinery(list/machines)
 
 #undef SSMACHINES_PIPENETS
 #undef SSMACHINES_MACHINERY
-#undef SSMACHINES_POWER
-#undef SSMACHINES_power_objects
+#undef SSMACHINES_POWERNETS
+#undef SSMACHINES_POWER_OBJECTS

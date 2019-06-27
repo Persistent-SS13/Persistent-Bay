@@ -4,6 +4,7 @@
 	icon_state = "red_pyjamas"
 	worn_state = "red_pyjamas"
 	item_state = "w_suit"
+	gender_icons = 1
 
 /obj/item/clothing/under/pj/blue
 	name = "blue pj's"
@@ -11,6 +12,7 @@
 	icon_state = "blue_pyjamas"
 	worn_state = "blue_pyjamas"
 	item_state = "w_suit"
+	gender_icons = 1
 
 /obj/item/clothing/under/captain_fly
 	name = "rogue's uniform"
@@ -32,6 +34,7 @@
 	icon_state = "sl_suit"
 	worn_state = "sl_suit"
 	item_state = "sl_suit"
+	gender_icons = 1
 
 /obj/item/clothing/under/waiter
 	name = "waiter's outfit"
@@ -39,6 +42,7 @@
 	icon_state = "waiter"
 	item_state = "waiter"
 	worn_state = "waiter"
+	gender_icons = 1
 
 /obj/item/clothing/under/rank/mailman
 	name = "mailman's jumpsuit"
@@ -93,7 +97,19 @@
 	icon_state = "ert_uniform"
 	item_state = "bl_suit"
 	worn_state = "ert_uniform"
-	armor = list(melee = 10, bullet = 5, laser = 5,energy = 0, bomb = 0, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 10,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 5,
+		DAM_ENERGY 	= 2,
+		DAM_BURN 	= 2,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 	siemens_coefficient = 0.9
 
 /obj/item/clothing/under/space
@@ -118,7 +134,19 @@
 	gas_transfer_coefficient = 0.01
 	permeability_coefficient = 0.01
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
-	armor = list(melee = 100, bullet = 100, laser = 100,energy = 100, bomb = 100, bio = 100, rad = 100)
+	armor  = list(
+		DAM_BLUNT 	= 100,
+		DAM_PIERCE 	= 90,
+		DAM_CUT 	= 100,
+		DAM_BULLET 	= 100,
+		DAM_LASER 	= 100,
+		DAM_ENERGY 	= 100,
+		DAM_BURN 	= 100,
+		DAM_BOMB 	= 100,
+		DAM_EMP 	= 100,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 100,
+		DAM_STUN 	= 0)
 	cold_protection = UPPER_TORSO | LOWER_TORSO | LEGS | FEET | ARMS | HANDS
 	min_cold_protection_temperature = SPACE_SUIT_MIN_COLD_PROTECTION_TEMPERATURE
 	siemens_coefficient = 0
@@ -142,6 +170,7 @@
 	icon_state = "rainbow"
 	item_state = "rainbow"
 	worn_state = "rainbow"
+	gender_icons = 1
 
 /obj/item/clothing/under/cloud
 	name = "cloud"
@@ -189,7 +218,7 @@
 	desc = "A formal black suit and red tie, intended for the galaxy's finest."
 	icon_state = "really_black_suit"
 	item_state = "jensensuit"
-	worn_state = "black_suit"
+	worn_state = "really_black_suit"
 
 /obj/item/clothing/under/suit_jacket/female
 	name = "executive suit"
@@ -197,6 +226,7 @@
 	icon_state = "black_suit_fem"
 	item_state = "lawyer_black"
 	worn_state = "black_suit_fem"
+	gender_icons = 1
 
 /obj/item/clothing/under/suit_jacket/red
 	name = "red suit"
@@ -234,6 +264,7 @@
 	icon_state = "pirate"
 	item_state = "sl_suit"
 	worn_state = "pirate"
+	gender_icons = 1
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS
 
 /obj/item/clothing/under/soviet
@@ -377,6 +408,97 @@
 	worn_state = "plaid_purple"
 
 //wedding stuff
+
+/obj/item/clothing/under/dress/red_evening_gown
+	name = "red evening gown"
+	desc = "A fancy red evening gown. Gorgeous."
+	icon_state = "red_evening_gown"
+	item_state = "kilt"
+	worn_state = "red_evening_gown"
+
+/obj/item/clothing/under/maid
+	name = "maid uniform"
+	desc = "A black maid uniform."
+	icon_state = "maid"
+	item_state = "w_suit"
+	worn_state = "maid"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+
+/obj/item/clothing/under/finemaid
+	name = "fine maid uniform"
+	desc = "A fine black maid uniform. The apron comes built in."
+	icon_state = "janimaid"
+	item_state = "w_suit"
+	worn_state = "janimaid"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+
+/obj/item/clothing/under/purpleskirt
+	name = "purple skirt"
+	desc = "A dark purple skirt."
+	icon_state = "purpleskirt"
+	item_state = "w_suit"
+	worn_state = "purpleskirt"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+
+/obj/item/clothing/under/dress/striped_dress
+	name = "striped dress"
+	desc = "A striped dress."
+	icon_state = "striped_dress"
+	item_state = "kilt"
+	worn_state = "striped_dress"
+
+/obj/item/clothing/under/blueskirt
+	name = "blue skirt"
+	desc = "A blue skirt."
+	icon_state = "blueskirt"
+	item_state = "w_suit"
+	worn_state = "blueskirt"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+
+/obj/item/clothing/under/redskirt
+	name = "red skirt"
+	desc = "A red skirt."
+	icon_state = "redskirt"
+	item_state = "w_suit"
+	worn_state = "redskirt"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+
+/obj/item/clothing/under/dress/sailor_dress
+	name = "sailor dress"
+	desc = "A red sailor dress."
+	icon_state = "sailor_dress"
+	item_state = "kilt"
+	worn_state = "sailor_dress"
+
+/obj/item/clothing/under/dress/geisha
+	name = "geisha dress"
+	desc = "A traditional geisha dress."
+	icon_state = "geisha"
+	item_state = "kilt"
+	worn_state = "geisha"
+
+/obj/item/clothing/under/dress/draculass
+	name = "sexy black coat"
+	desc = "A sexy black coat with a red blouse and lace."
+	icon_state = "draculass"
+	item_state = "kilt"
+	worn_state = "draculass"
+
+/obj/item/clothing/under/dress/ysing
+	name = "eastern dress"
+	desc = "A dress in the style of the far east."
+	icon_state = "ysing"
+	item_state = "kilt"
+	worn_state = "ysing"
+
+/obj/item/clothing/under/secskirt
+	name = "security skirt"
+	desc = "A skirt in traditional security red and black."
+	icon_state = "secskirt"
+	item_state = "w_suit"
+	worn_state = "secskirt"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+
 /obj/item/clothing/under/wedding/
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS
 
@@ -485,6 +607,7 @@
 	icon_state = "charcoal_suit"
 	item_state = "bl_suit"
 	worn_state = "charcoal_suit"
+	gender_icons = 1
 	starting_accessories = list(/obj/item/clothing/accessory/navy, /obj/item/clothing/accessory/toggleable/charcoal_jacket)
 
 /obj/item/clothing/under/suit_jacket/navy
@@ -493,6 +616,7 @@
 	icon_state = "navy_suit"
 	item_state = "bl_suit"
 	worn_state = "navy_suit"
+	gender_icons = 1
 	starting_accessories = list(/obj/item/clothing/accessory/red, /obj/item/clothing/accessory/toggleable/navy_jacket)
 
 /obj/item/clothing/under/suit_jacket/burgundy
@@ -501,6 +625,7 @@
 	icon_state = "burgundy_suit"
 	item_state = "r_suit"
 	worn_state = "burgundy_suit"
+	gender_icons = 1
 	starting_accessories = list(/obj/item/clothing/accessory/black, /obj/item/clothing/accessory/toggleable/burgundy_jacket)
 
 /obj/item/clothing/under/suit_jacket/checkered
@@ -509,6 +634,7 @@
 	icon_state = "checkered_suit"
 	item_state = "gy_suit"
 	worn_state = "checkered_suit"
+	gender_icons = 1
 	starting_accessories = list(/obj/item/clothing/accessory/black, /obj/item/clothing/accessory/toggleable/checkered_jacket)
 
 /obj/item/clothing/under/suit_jacket/tan
@@ -517,15 +643,16 @@
 	icon_state = "tan_suit"
 	item_state = "lb_suit"
 	worn_state = "tan_suit"
+	gender_icons = 1
 	starting_accessories = list(/obj/item/clothing/accessory/yellow, /obj/item/clothing/accessory/toggleable/tan_jacket)
 
 /obj/item/clothing/under/serviceoveralls
-	name = "simple workers outfit"
-	desc = "A uniform suitable for basic labor."
+	name = "workman outfit"
+	desc = "The very image of a working man. Not that you're probably doing work."
+	icon_state = "mechanic"
 	item_state = "lb_suit"
-	icon_state = "grayson"
 	worn_state = "mechanic"
-	
+
 /obj/item/clothing/under/cheongsam
 	name = "cheongsam"
 	desc = "It is a cheongsam dress."
@@ -563,6 +690,15 @@
 	icon_state = "pcrc"
 	item_state = "jensensuit"
 	worn_state = "pcrc"
+	gender_icons = 1
+
+/obj/item/clothing/under/pcrcsuit
+	name = "\improper PCRC suit"
+	desc = "A suit belonging to Proxima Centauri Risk Control, a private security firm. This one looks more formal than its utility counterpart."
+	icon_state = "pcrcsuit"
+	item_state = "jensensuit"
+	worn_state = "pcrcsuit"
+	gender_icons = 1
 
 /obj/item/clothing/under/grayson
 	name = "\improper Grayson overalls"
@@ -575,12 +711,32 @@
 	desc = "A jumpsuit belonging to Ward-Takahashi, a Trans-Stellar in the consumer goods market."
 	icon_state = "wardt"
 	worn_state = "wardt"
+	gender_icons = 1
+
+/obj/item/clothing/under/dais
+	name = "\improper Deimos Advanced Information Systems uniform"
+	desc = "The uniform of Deimos Advanced Information Systems, an IT company."
+	icon_state = "dais"
+	worn_state = "dais"
 
 /obj/item/clothing/under/mbill
 	name = "\improper Major Bill's uniform"
 	desc = "A uniform belonging to Major Bill's Transportation, a shipping megacorporation."
 	icon_state = "mbill"
 	worn_state = "mbill"
+	gender_icons = 1
+
+/obj/item/clothing/under/morpheus
+	name = "\improper Morpheus Cyberkinetics uniform"
+	desc = "A pair of overalls belonging to Morpheus Cyberkinetics, an IPC manufacturing company. It doesn't look like it would be comfortable on a human."
+	icon_state = "morpheus"
+	worn_state = "morpheus"
+
+/obj/item/clothing/under/skinner
+	name = "\improper Skinner Catering uniform"
+	desc = "A uniform belonging to Skinner's Catering, a dining company."
+	icon_state = "skinner"
+	worn_state = "skinner"
 
 // Replace this with actual uniform when someone wants to sprite one
 /obj/item/clothing/under/confederacy
@@ -594,6 +750,7 @@
 	desc = "A uniform that citizens of Agartha wear in solidarity with their navy and armed forces."
 	icon_state = "saare"
 	worn_state = "saare"
+	gender_icons = 1
 
 /obj/item/clothing/under/frontier
 	name = "frontier clothes"
@@ -606,6 +763,7 @@
 	desc = "A jumpsuit belonging to Aether Atmospherics and Recycling, a Trans-Stellar that supplies recycling and atmospheric systems to colonies."
 	icon_state = "aether"
 	worn_state = "aether"
+	gender_icons = 1
 
 /obj/item/clothing/under/focal
 	name = "\improper Focal Point jumpsuit"
@@ -618,6 +776,7 @@
 	desc = "A jumpsuit belonging to Hephaestus Industries, a Trans-Stellar best known for its arms production."
 	icon_state = "heph"
 	worn_state = "heph"
+	gender_icons = 1
 
 /obj/item/clothing/under/punpun
 	name = "fancy uniform"
@@ -625,7 +784,7 @@
 	icon_state = "punpun"
 	worn_state = "punpun"
 	species_restricted = list("Monkey")
-	sprite_sheets = list("Monkey" = 'icons/mob/species/monkey/uniform.dmi')
+	sprite_sheets = list("Monkey" = 'icons/mob/species/monkey/onmob_under_monkey.dmi')
 
 /obj/item/clothing/under/punpants
 	name = "monkey pants"
@@ -633,7 +792,7 @@
 	icon_state = "jeansmustang"
 	worn_state = "jeansmustang"
 	species_restricted = list("Monkey")
-	sprite_sheets = list("Monkey" = 'icons/mob/species/monkey/uniform.dmi')
+	sprite_sheets = list("Monkey" = 'icons/mob/species/monkey/onmob_under_monkey.dmi')
 
 /obj/item/clothing/under/rank/psych/turtleneck/sweater
 	desc = "A warm looking sweater and a pair of dark blue slacks."
@@ -669,8 +828,21 @@
 	icon_state = "hazard"
 	item_state = "engi_suit"
 	worn_state = "hazard"
+	gender_icons = 1
 	siemens_coefficient = 0.8
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 20, bio = 0, rad = 20)
+	armor  = list(
+		DAM_BLUNT 	= 1,
+		DAM_PIERCE 	= 1,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 20,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 20,
+		DAM_STUN 	= 0)
 	max_heat_protection_temperature = FIRESUIT_MAX_HEAT_PROTECTION_TEMPERATURE
 
 /obj/item/clothing/under/sterile
@@ -679,5 +851,108 @@
 	icon_state = "sterile"
 	item_state = "w_suit"
 	worn_state = "sterile"
+	gender_icons = 1
 	permeability_coefficient = 0.50
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 30, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 1,
+		DAM_PIERCE 	= 1,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 2,
+		DAM_BURN 	= 2,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 30,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
+
+/obj/item/clothing/under/kimono
+	desc = "A traditional robe with remarkably long sleeves, mostly worn by women. <i>Sugoi.</i>"
+	name = "kimono"
+	icon_state = "kimono"
+	worn_state = "kimono"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+
+/obj/item/clothing/under/shinypurple
+	name = "shiny purple suit"
+	desc = "A shiny purple suit made of synthread. It has a flower pinned to it."
+	icon_state = "purpletux"
+	worn_state = "purpletux"
+
+/obj/item/clothing/under/blacktux
+	name = "black tuxedo"
+	desc = "A shiny black suit made of synthread. It has a flower pinned to it."
+	icon_state = "blacktux"
+	worn_state = "blacktux"
+
+/obj/item/clothing/under/bouqet
+	name = "bouqet"
+	desc = "A shiny black suit made of synthread. It has a flower pinned to it."
+	icon_state = "bouqet"
+	item_state = "bouqet"
+	worn_state = "bouqet"
+
+/obj/item/clothing/under/maydress
+	name = "colorful wedding dress"
+	desc = "A beautiful gown specially ordered and tailored. Embroidered along the inside of the dress, in cursive, May Crystalia."
+	icon_state = "maydress"
+	worn_state = "maydress"
+
+/obj/item/clothing/under/koudress
+	name = "beautiful wedding dress"
+	desc = "A beautiful weddubg gown specially tailored with purple highlights."
+	icon_state = "koudress"
+	worn_state = "koudress"
+
+/obj/item/clothing/under/purpfrill
+	name = "purple fancy dress"
+	desc = "A fancy deep-purple dress."
+	icon_state = "purpfrill"
+	worn_state = "purpfrill"
+
+/obj/item/clothing/under/purpleweddingtux
+	name = "purple wedding tuxedo"
+	desc = "A tuxedo tailored for a wedding with purple detailing."
+	icon_state = "weddingtux"
+	worn_state = "weddingtux"
+
+
+/obj/item/clothing/under/weddingfrill
+	name = "green wedding dress"
+	desc = "A frilly green wedding dress."
+	icon_state = "weddingfrill"
+	worn_state = "weddingfrill"
+
+
+/obj/item/clothing/under/tulleddress
+	name = "Silk Dress"
+	desc = "A silk dress padded with tulle fabric. Sleek, modest, and beauty all in one article."
+	icon_state = "tulled_dress"
+	worn_state = "tulled_dress"
+
+/obj/item/clothing/under/bridesmaid
+	name = "Purple bridesmaid dress"
+	desc = "A form fitted bridesmaid dress made of purple silk. Really shows those curves."
+	icon_state = "purplemaid"
+	worn_state = "purplemaid"
+
+/obj/item/clothing/under/greendress
+	name = "Green dress"
+	desc = "A green dress."
+	icon_state = "greendress"
+	worn_state = "greendress"
+
+/obj/item/clothing/under/referee
+	name = "Referee Uniform"
+	desc = "A uniform for officiating sporting events."
+	item_state = "bl_suit"
+	icon_state = "referee"
+	worn_state = "referee"
+
+/obj/item/clothing/under/tourist
+	name = "Blue shirt and shorts"
+	desc = "A causual getup."
+	icon_state = "tourist"
+	worn_state = "tourist"
+

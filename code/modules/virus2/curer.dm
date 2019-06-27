@@ -4,36 +4,70 @@
 	icon_keyboard = "med_key"
 	icon_screen = "dna"
 	circuit = /obj/item/weapon/circuitboard/curefab
-	var/curing
-	var/virusing
-
+	active_power_usage = 500//Watts
+	idle_power_usage = 50
+	var/curing = FALSE
+	var/virusing = FALSE
 	var/obj/item/weapon/reagent_containers/container = null
+	var/obj/item/weapon/virusdish/dish = null
+	var/time_curing_end
+	var/time_virusing_end
+
+/obj/machinery/computer/curer/New()
+	..()
+	ADD_SAVED_VAR(curing)
+	ADD_SAVED_VAR(virusing)
+	ADD_SAVED_VAR(container)
+	ADD_SAVED_VAR(time_curing_end)
+	ADD_SAVED_VAR(time_virusing_end)
+	ADD_SAVED_VAR(dish)
+	ADD_SKIP_EMPTY(container)
+	ADD_SKIP_EMPTY(time_curing_end)
+	ADD_SKIP_EMPTY(time_virusing_end)
+	ADD_SKIP_EMPTY(dish)
+
+/obj/machinery/computer/curer/before_save()
+	. = ..()
+	//Convert to absolute time
+	if(curing && time_curing_end)
+		time_curing_end = world.time - time_curing_end
+	if(virusing && time_virusing_end)
+		time_virusing_end = world.time - time_virusing_end
+
+/obj/machinery/computer/curer/after_load()
+	. = ..()
+	//Convert to relative time
+	if(curing && time_curing_end)
+		time_curing_end = world.time + time_curing_end
+	if(virusing && time_virusing_end)
+		time_virusing_end = world.time + time_virusing_end
 
 /obj/machinery/computer/curer/attackby(var/obj/I as obj, var/mob/user as mob)
-	if(istype(I,/obj/item/weapon/reagent_containers))
-		var/mob/living/carbon/C = user
+	if(default_deconstruction_screwdriver(user, I))
+		return 1
+	else if(default_deconstruction_crowbar(user, I))
+		return 1
+	else if(istype(I,/obj/item/weapon/reagent_containers))
 		if(!container)
+			if(!user.unEquip(I, src))
+				return
 			container = I
-			C.drop_item()
-			I.loc = src
-		return
-	if(istype(I,/obj/item/weapon/virusdish))
+		return 1
+	else if(istype(I,/obj/item/weapon/virusdish))
 		if(virusing)
 			to_chat(user, "<b>The pathogen materializer is still recharging..</b>")
 			return
-		var/obj/item/weapon/reagent_containers/glass/beaker/product = new(src.loc)
-
-		var/list/data = list("donor" = null, "blood_DNA" = null, "blood_type" = null, "trace_chem" = null, "virus2" = list(), "antibodies" = list())
-		data["virus2"] |= I:virus2
-		product.reagents.add_reagent(/datum/reagent/blood,30,data)
-
+		if(dish)
+			to_chat(user, SPAN_WARNING("There is already a virus dish."))
+			return
+		dish = I
+		user.drop_from_inventory(I)
+		I.forceMove(src)
 		virusing = 1
-		spawn(1200) virusing = 0
-
-		state("The [src.name] Buzzes", "blue")
-		return
-	..()
-	return
+		time_virusing_end = world.time + 120 SECONDS
+		return 1
+	else
+		return ..()
 
 /obj/machinery/computer/curer/attack_ai(var/mob/user as mob)
 	return src.attack_hand(user)
@@ -44,9 +78,9 @@
 	user.machine = src
 	var/dat
 	if(curing)
-		dat = "Antibody production in progress"
+		dat = "Antibody production in progress.. [(time_curing_end - world.time) / 1 SECONDS] seconds left.."
 	else if(virusing)
-		dat = "Virus production in progress"
+		dat = "Virus production in progress.. [(time_virusing_end - world.time) / 1 SECONDS] seconds left.."
 	else if(container)
 		// see if there's any blood in the container
 		var/datum/reagent/blood/B = locate(/datum/reagent/blood) in container.reagents.reagent_list
@@ -67,34 +101,51 @@
 
 /obj/machinery/computer/curer/Process()
 	..()
-
-	if(stat & (NOPOWER|BROKEN))
+	if(inoperable())
 		return
-	use_power(500)
-
-	if(curing)
-		curing -= 1
-		if(curing == 0)
-			if(container)
-				createcure(container)
+	
+	if(curing && world.time > time_curing_end)
+		curing = FALSE
+		time_curing_end = null
+		createcure()
+	if(virusing && world.time > time_virusing_end)
+		virusing = FALSE
+		time_virusing_end = null
+		createvirus()
 	return
 
-/obj/machinery/computer/curer/OnTopic(user, href_list)
+/obj/machinery/computer/curer/OnTopic(var/mob/living/user, href_list)
 	if (href_list["antibody"])
-		curing = 10
+		curing = TRUE
+		time_curing_end = world.time + 10 SECONDS
 		. = TOPIC_REFRESH
 	else if(href_list["eject"])
 		container.dropInto(loc)
-		if(Adjacent(usr) && !issilicon(usr))
-			usr.put_in_hands(container)
+		if(Adjacent(user) && !issilicon(user))
+			user.put_in_hands(container)
 		container = null
 		. = TOPIC_REFRESH
 
 	if(. == TOPIC_REFRESH)
 		attack_hand(user)
 
+/obj/machinery/computer/curer/proc/createvirus()
+	if(!dish)
+		state("No virus dish inserted!")
+		return
+	var/obj/item/weapon/reagent_containers/glass/beaker/product = new(src.loc)
+	var/list/data = list("donor" = null, "donor_name" = "", "blood_DNA" = null, "blood_type" = null, "trace_chem" = null, "virus2" = list(), "antibodies" = list())
+	data["virus2"] |= dish.virus2
+	product.reagents.add_reagent(/datum/reagent/blood,30,data)
+	state("\The [src] Buzzes", "blue")
+	dish.forceMove(get_turf(src))
+	dish = null
 
-/obj/machinery/computer/curer/proc/createcure(var/obj/item/weapon/reagent_containers/container)
+/obj/machinery/computer/curer/proc/createcure()
+	if(!container)
+		state("Error: No container present to receive cure!", "red")
+		return
+
 	var/obj/item/weapon/reagent_containers/glass/beaker/product = new(src.loc)
 
 	var/datum/reagent/blood/B = locate() in container.reagents.reagent_list

@@ -5,7 +5,6 @@
 	name = "omni device"
 	icon = 'icons/atmos/omni_devices.dmi'
 	icon_state = "base"
-	use_power = 1
 	initialize_directions = 0
 	level = 1
 
@@ -44,28 +43,17 @@
 			initialize_directions |= d
 		ports += new_port
 
+	ADD_SAVED_VAR(ports)
+
+/obj/machinery/atmospherics/omni/Initialize()
+	. = ..()
 	build_icons()
+
 /obj/machinery/atmospherics/omni/after_load()
+	update_ports()
 	..()
-	ports = new()
-	for(var/d in GLOB.cardinal)
-		var/datum/omni_port/new_port = new(src, d)
-		switch(d)
-			if(NORTH)
-				new_port.mode = tag_north
-			if(SOUTH)
-				new_port.mode = tag_south
-			if(EAST)
-				new_port.mode = tag_east
-			if(WEST)
-				new_port.mode = tag_west
-		if(new_port.mode > 0)
-			initialize_directions |= d
-		ports += new_port
 
-	build_icons()
-
-/obj/machinery/atmospherics/omni/update_icon()
+/obj/machinery/atmospherics/omni/on_update_icon()
 	if(stat & NOPOWER)
 		overlays = overlays_off
 	else if(error_check())
@@ -85,7 +73,7 @@
 	last_flow_rate = 0
 
 	if(error_check())
-		use_power = 0
+		update_use_power(POWER_USE_OFF)
 
 	if((stat & (NOPOWER|BROKEN)) || !use_power)
 		return 0
@@ -245,15 +233,13 @@
 	return null
 
 /obj/machinery/atmospherics/omni/Destroy()
-	loc = null
-
 	for(var/datum/omni_port/P in ports)
 		if(P.node)
 			P.node.disconnect(src)
 			qdel(P.network)
 			P.node = null
 
-	..()
+	return ..()
 
 /obj/machinery/atmospherics/omni/atmos_init()
 	..()

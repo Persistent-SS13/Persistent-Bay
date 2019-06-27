@@ -1,8 +1,5 @@
+//#TODO: Is this still in use?
 var/global/datum/controller/occupations/job_master
-
-#define GET_RANDOM_JOB 0
-#define BE_ASSISTANT 1
-#define RETURN_TO_LOBBY 2
 
 /datum/controller/occupations
 		//List of all jobs
@@ -239,115 +236,6 @@ var/global/datum/controller/occupations/job_master
  *  This proc must not have any side effect besides of modifying "assigned_role".
  **/
 	proc/DivideOccupations()
-		/**
-		//Setup new player list and get the jobs list
-		Debug("Running DO")
-		SetupOccupations()
-
-		//Holder for Triumvirate is stored in the ticker, this just processes it
-		if(ticker && ticker.triai)
-			for(var/datum/job/A in occupations)
-				if(A.title == "AI")
-					A.spawn_positions = 3
-					break
-
-		//Get the players who are ready
-		for(var/mob/new_player/player in GLOB.player_list)
-			if(player.ready && player.mind && !player.mind.assigned_role)
-				unassigned += player
-
-		Debug("DO, Len: [unassigned.len]")
-		if(unassigned.len == 0)	return 0
-
-		//Shuffle players and jobs
-		unassigned = shuffle(unassigned)
-
-		HandleFeedbackGathering()
-
-		//People who wants to be assistants, sure, go on.
-		Debug("DO, Running Assistant Check 1")
-		var/datum/job/assist = new DEFAULT_JOB_TYPE ()
-		var/list/assistant_candidates = FindOccupationCandidates(assist, 3)
-		Debug("AC1, Candidates: [assistant_candidates.len]")
-		for(var/mob/new_player/player in assistant_candidates)
-			Debug("AC1 pass, Player: [player]")
-			AssignRole(player, "Assistant")
-			assistant_candidates -= player
-		Debug("DO, AC1 end")
-
-		//Select one head
-		Debug("DO, Running Head Check")
-		FillHeadPosition()
-		Debug("DO, Head Check end")
-
-		//Other jobs are now checked
-		Debug("DO, Running Standard Check")
-
-
-		// New job giving system by Donkie
-		// This will cause lots of more loops, but since it's only done once it shouldn't really matter much at all.
-		// Hopefully this will add more randomness and fairness to job giving.
-
-		// Loop through all levels from high to low
-		var/list/shuffledoccupations = shuffle(occupations)
-		// var/list/disabled_jobs = ticker.mode.disabled_jobs  // So we can use .Find down below without a colon.
-		for(var/level = 1 to 3)
-			//Check the head jobs first each level
-			CheckHeadPositions(level)
-
-			// Loop through all unassigned players
-			for(var/mob/new_player/player in unassigned)
-
-				// Loop through all jobs
-				for(var/datum/job/job in shuffledoccupations) // SHUFFLE ME BABY
-					if(!job || ticker.mode.disabled_jobs.Find(job.title) )
-						continue
-
-					if(jobban_isbanned(player, job.title))
-						Debug("DO isbanned failed, Player: [player], Job:[job.title]")
-						continue
-
-					if(!job.player_old_enough(player.client))
-						Debug("DO player not old enough, Player: [player], Job:[job.title]")
-						continue
-
-					// If the player wants that job on this level, then try give it to him.
-					if(player.client.prefs.CorrectLevel(job,level))
-
-						// If the job isn't filled
-						if((job.current_positions < job.spawn_positions) || job.spawn_positions == -1)
-							Debug("DO pass, Player: [player], Level:[level], Job:[job.title]")
-							AssignRole(player, job.title)
-							unassigned -= player
-							break
-
-		// Hand out random jobs to the people who didn't get any in the last check
-		// Also makes sure that they got their preference correct
-		for(var/mob/new_player/player in unassigned)
-			if(player.client.prefs.alternate_option == GET_RANDOM_JOB)
-				GiveRandomJob(player)
-
-		Debug("DO, Standard Check end")
-
-		Debug("DO, Running AC2")
-
-		// For those who wanted to be assistant if their preferences were filled, here you go.
-		for(var/mob/new_player/player in unassigned)
-			if(player.client.prefs.alternate_option == BE_ASSISTANT)
-				Debug("AC2 Assistant located, Player: [player]")
-				if(GLOB.using_map.flags & MAP_HAS_BRANCH)
-					var/datum/mil_branch/branch = mil_branches.get_branch(player.get_branch_pref())
-					AssignRole(player, branch.assistant_job)
-				else
-					AssignRole(player, "Assistant")
-
-		//For ones returning to lobby
-		for(var/mob/new_player/player in unassigned)
-			if(player.client.prefs.alternate_option == RETURN_TO_LOBBY)
-				player.ready = 0
-				player.new_player_panel_proc()
-				unassigned -= player
-		**/
 		return 1
 
 
@@ -358,6 +246,9 @@ var/global/datum/controller/occupations/job_master
 		var/list/spawn_in_storage = list()
 
 		if(job)
+
+			// Transfers the skill settings for the job to the mob
+			H.skillset.obtain_from_client(job, H.client)
 
 			//Equip job items.
 			job.setup_account(H)
@@ -450,8 +341,8 @@ var/global/datum/controller/occupations/job_master
 				if("AI")
 					return H
 				if("Captain")
-					var/sound/announce_sound = (ticker.current_state <= GAME_STATE_SETTING_UP)? null : sound('sound/misc/boatswain.ogg', volume=20)
-					captain_announcement.Announce("All hands, Captain [H.real_name] on deck!", new_sound=announce_sound)
+					if(GAME_STATE == RUNLEVEL_GAME)
+						captain_announcement.Announce("All hands, Captain [H.real_name] on deck!", new_sound = sound('sound/misc/boatswain.ogg', volume=20))
 
 		// put any loadout items that couldn't spawn into storage or on the ground
 		for(var/datum/gear/G in spawn_in_storage)
@@ -463,7 +354,7 @@ var/global/datum/controller/occupations/job_master
 			if(!l_foot || !r_foot)
 				var/obj/structure/bed/chair/wheelchair/W = new /obj/structure/bed/chair/wheelchair(H.loc)
 				H.buckled = W
-				H.update_canmove()
+				H.UpdateLyingBuckledAndVerbStatus()
 				W.set_dir(H.dir)
 				W.buckled_mob = H
 				W.add_fingerprint(H)
@@ -484,7 +375,7 @@ var/global/datum/controller/occupations/job_master
 		if(H.char_branch && H.char_branch.email_domain)
 			domain = H.char_branch.email_domain
 		else
-			domain = "freemail.nt"
+			domain = EMAIL_DOMAIN_DEFAULT
 		var/sanitized_name = sanitize(replacetext(replacetext(lowertext(H.real_name), " ", "."), "'", ""))
 		var/complete_login = "[sanitized_name]@[domain]"
 
@@ -582,7 +473,7 @@ var/global/datum/controller/occupations/job_master
 				else level4++ //not selected
 
 			tmp_str += "HIGH=[level1]|MEDIUM=[level2]|LOW=[level3]|NEVER=[level4]|BANNED=[level5]|YOUNG=[level6]|-"
-			feedback_add_details("job_preferences",tmp_str)
+			SSstatistics.add_field_details("job_preferences",tmp_str)
 
 
 /**

@@ -6,10 +6,11 @@
 	desc = "Cools gas when connected to a pipe network."
 	icon = 'icons/obj/Cryogenic2.dmi'
 	icon_state = "freezer_0"
-	density = 1
-	anchored = 1
-	use_power = 0
+	density = TRUE
+	anchored = TRUE
+	use_power = POWER_USE_OFF
 	idle_power_usage = 5			// 5 Watts for thermostat related circuitry
+	circuit_type = /obj/item/weapon/circuitboard/unary_atmos/cooler
 
 	var/heatsink_temperature = T20C	// The constant temperature reservoir into which the freezer pumps heat. Probably the hull of the station or something.
 	var/internal_volume = 600		// L
@@ -18,19 +19,18 @@
 	var/power_setting = 100
 
 	var/set_temperature = T20C		// Thermostat
-	var/cooling = 0
+	var/cooling = FALSE
 
 /obj/machinery/atmospherics/unary/freezer/New()
 	..()
-	initialize_directions = dir
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/unary_atmos/cooler(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/stack/cable_coil(src, 2)
-	RefreshParts()
+	ADD_SAVED_VAR(power_setting)
+	ADD_SAVED_VAR(set_temperature)
+
+/obj/machinery/atmospherics/unary/freezer/Initialize(mapload, d)
+	. = ..()
+	if(!map_storage_loaded)
+		initialize_directions = dir
+
 /obj/machinery/atmospherics/unary/freezer/atmos_init()
 	..()
 	if(node)
@@ -50,9 +50,9 @@
 			node = null
 			break
 
-	update_icon()
+	queue_icon_update()
 
-/obj/machinery/atmospherics/unary/freezer/update_icon()
+/obj/machinery/atmospherics/unary/freezer/on_update_icon()
 	if(node)
 		if(use_power && cooling)
 			icon_state = "freezer_1"
@@ -71,7 +71,7 @@
 /obj/machinery/atmospherics/unary/freezer/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 	// this is the data which will be sent to the ui
 	var/data[0]
-	data["on"] = use_power ? 1 : 0
+	data["on"] = ison()
 	data["gasPressure"] = round(air_contents.return_pressure())
 	data["gasTemperature"] = round(air_contents.temperature)
 	data["minGasTemperature"] = 0
@@ -87,7 +87,7 @@
 	data["gasTemperatureClass"] = temp_class
 
 	// update the ui if it exists, returns null if no ui is passed/found
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		// the ui does not exist, so we'll create a new() one
 		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
@@ -97,14 +97,14 @@
 		// open the new ui window
 		ui.open()
 		// auto update every Master Controller tick
-		ui.set_auto_update(1)
+		ui.set_auto_update(TRUE)
 
 /obj/machinery/atmospherics/unary/freezer/Topic(href, href_list)
 	if(..())
 		return 1
 	if(href_list["toggleStatus"])
-		use_power = !use_power
-		update_icon()
+		update_use_power(!use_power)
+		queue_icon_update()
 	if(href_list["temp"])
 		var/amount = text2num(href_list["temp"])
 		if(amount > 0)
@@ -120,13 +120,13 @@
 /obj/machinery/atmospherics/unary/freezer/Process()
 	..()
 
-	if(stat & (NOPOWER|BROKEN) || !use_power)
+	if(inoperable() || isoff())
 		cooling = 0
-		update_icon()
+		queue_icon_update()
 		return
 
 	if(network && air_contents.temperature > set_temperature)
-		cooling = 1
+		cooling = TRUE
 
 		var/heat_transfer = max( -air_contents.get_thermal_energy_change(set_temperature - 5), 0 )
 
@@ -139,13 +139,13 @@
 		if(debug)
 			visible_message("[src]: Removing [removed] W.")
 
-		use_power(power_rating)
+		use_power_oneoff(power_rating)
 
 		network.update = 1
 	else
-		cooling = 0
+		cooling = FALSE
 
-	update_icon()
+	queue_icon_update()
 
 //upgrading parts
 /obj/machinery/atmospherics/unary/freezer/RefreshParts()
@@ -163,7 +163,8 @@
 			bin_rating += P.rating
 
 	power_rating = initial(power_rating) * cap_rating / 2			//more powerful
-	heatsink_temperature = initial(heatsink_temperature) / ((manip_rating + bin_rating) / 2)	//more efficient
+	var/eff = manip_rating + bin_rating
+	heatsink_temperature = initial(heatsink_temperature) / ((eff? eff : 1) / 2)	//more efficient
 	air_contents.volume = max(initial(internal_volume) - 200, 0) + 200 * bin_rating
 	set_power_level(power_setting)
 

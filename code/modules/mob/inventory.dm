@@ -78,30 +78,31 @@ var/list/slot_equipment_priority = list( \
 
 //puts the item "W" into an appropriate slot in a human's inventory
 //returns 0 if it cannot, 1 if successful
-/mob/proc/equip_to_appropriate_slot(obj/item/W)
+/mob/proc/equip_to_appropriate_slot(obj/item/W, var/skip_store = 0)
 	if(!istype(W)) return 0
 
 	for(var/slot in slot_equipment_priority)
+		if(skip_store)
+			if(slot == slot_s_store || slot == slot_l_store || slot == slot_r_store)
+				continue
 		if(equip_to_slot_if_possible(W, slot, del_on_fail=0, disable_warning=1, redraw_mob=1))
 			return 1
 
 	return 0
 
 /mob/proc/equip_to_storage(obj/item/newitem)
-	//Try to put it in a "weird" place first
-	//That'll help tools to find your toolbelt before your backpack etc.
-	// Try to place it in any item that can store stuff, on the mob.
-	for(var/obj/item/weapon/storage/S in src.contents)
-		if(S == src.back) continue
-		if(S.can_be_inserted(newitem, null, 1))
-			newitem.forceMove(S)
-			return S
 	// Try put it in their backpack
 	if(istype(src.back,/obj/item/weapon/storage))
 		var/obj/item/weapon/storage/backpack = src.back
 		if(backpack.can_be_inserted(newitem, null, 1))
 			newitem.forceMove(src.back)
 			return backpack
+
+	// Try to place it in any item that can store stuff, on the mob.
+	for(var/obj/item/weapon/storage/S in src.contents)
+		if(S.can_be_inserted(newitem, null, 1))
+			newitem.forceMove(S)
+			return S
 
 /mob/proc/equip_to_storage_or_drop(obj/item/newitem)
 	var/stored = equip_to_storage(newitem)
@@ -223,11 +224,17 @@ var/list/slot_equipment_priority = list( \
 			break
 	return slot
 
-//This differs from remove_from_mob() in that it checks if the item can be unequipped first.
-/mob/proc/unEquip(obj/item/I, force = 0, var/atom/target = null) //Force overrides NODROP for things like wizarditis and admin undress.
-	if(!(force || canUnEquip(I)))
+//This differs from remove_from_mob() in that it checks if the item can be unequipped first. Use drop_from_inventory if you don't want to check.
+/mob/proc/unEquip(obj/item/I, var/atom/target)
+	if(!canUnEquip(I))
 		return
 	drop_from_inventory(I, target)
+	return 1
+
+/mob/proc/unequip_item(atom/target)
+	if(!canUnEquip(get_active_hand()))
+		return
+	drop_item(target)
 	return 1
 
 //Attemps to remove an object on a mob.

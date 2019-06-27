@@ -10,7 +10,7 @@
 	possible_transfer_amounts = "1;2;3;4;5"
 	w_class = ITEM_SIZE_TINY
 	slot_flags = SLOT_EARS
-	matter = list("glass" = 60)
+	matter = list(MATERIAL_GLASS = 60)
 	volume = 5
 
 	afterattack(var/obj/target, var/mob/user, var/proximity)
@@ -92,7 +92,7 @@
 	on_reagent_change()
 		update_icon()
 
-	update_icon()
+	on_update_icon()
 		if(reagents.total_volume)
 			icon_state = "dropper1"
 		else

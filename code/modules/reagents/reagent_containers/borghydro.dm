@@ -23,6 +23,10 @@
 /obj/item/weapon/reagent_containers/borghypo/crisis
 	reagent_ids = list(/datum/reagent/tricordrazine, /datum/reagent/inaprovaline, /datum/reagent/tramadol)
 
+/obj/item/weapon/reagent_containers/borghypo/New()
+	. = ..()
+	ADD_SAVED_VAR(mode)
+
 /obj/item/weapon/reagent_containers/borghypo/Initialize()
 	. = ..()
 
@@ -67,7 +71,7 @@
 		if(!affected)
 			to_chat(user, "<span class='danger'>\The [H] is missing that limb!</span>")
 			return
-		else if(affected.robotic >= ORGAN_ROBOT)
+		else if(BP_IS_ROBOTIC(affected))
 			to_chat(user, "<span class='danger'>You cannot inject a robotic limb.</span>")
 			return
 

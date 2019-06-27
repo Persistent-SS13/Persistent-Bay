@@ -3,7 +3,6 @@
 	warn_before_use = TRUE
 
 /datum/admin_secret_item/admin_secret/prison_warp/can_execute(var/mob/user)
-	if(!ticker) return 0
 	return ..()
 
 /datum/admin_secret_item/admin_secret/prison_warp/execute(var/mob/user)
@@ -18,7 +17,7 @@
 			continue
 		H.Paralyse(5)
 		if(H.wear_id)
-			var/obj/item/weapon/card/id/id = H.get_idcard()
+			var/obj/item/weapon/card/id/id = H.GetIdCard()
 			for(var/A in id.access)
 				if(A == access_security)
 					security++

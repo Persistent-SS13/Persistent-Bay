@@ -4,12 +4,6 @@
 /datum/admin_secret_item/random_event/gravity
 	name = "Toggle Artificial Gravity"
 
-/datum/admin_secret_item/random_event/gravity/can_execute(var/mob/user)
-	if(!(ticker && ticker.mode))
-		return 0
-
-	return ..()
-
 /datum/admin_secret_item/random_event/gravity/execute(var/mob/user)
 	. = ..()
 	if(!.)
@@ -20,8 +14,8 @@
 	for(var/area/A in world)
 		A.gravitychange(gravity_is_on)
 
-	feedback_inc("admin_secrets_fun_used",1)
-	feedback_add_details("admin_secrets_fun_used","Grav")
+	SSstatistics.add_field("admin_secrets_fun_used",1)
+	SSstatistics.add_field_details("admin_secrets_fun_used","Grav")
 	log_and_message_admins("toggled gravity.")
 	if(choice == "Yes")
 		if(gravity_is_on)

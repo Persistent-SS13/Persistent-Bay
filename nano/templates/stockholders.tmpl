@@ -1,0 +1,128 @@
+{{if data.stockholder}}	
+	<h2>{{:data.business_name}} Stockholders Panel</h2><br>
+	{{:helper.link("Current Proposals", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
+	{{:helper.link("Business Options", '', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
+	{{:helper.link("Ownership Panel", '', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}	
+	<br><hr>
+
+	{{if data.menu == 1}}
+		<h4>Current Shareholder Proposals</h4>
+		<div class="statusDisplay" style="overflow: auto;">
+			{{if data.proposals}}
+				{{for data.proposals}}
+					{{:helper.link(value.name, '', {'action' : 'select_proposal', 'ref' : value.ref}, null)}}<br><br>
+				{{/for}}
+			{{else}}
+				No proposals are currently being voted on.
+			{{/if}}
+		</div>
+	{{/if}}
+
+	{{if data.menu == 2}}
+		<h4>Business Options</h4>
+		<div class='item'>
+			<div class='itemLabel'>
+				Current CEO: {{:data.ceo_name}}
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Proposal to fire", '', {'action' : 'fire_ceo'}, null)}}{{:helper.link("Proposal to appoint a CEO", '', {'action' : 'choose_ceo'}, null)}}	
+			</div>
+		</div>
+		The CEO has all access and should lead the business in all matters while remaining responsible to the shareholders. These proposals require 51 shares to pass.
+		<div class='item'>
+			<div class='itemLabel'>
+				CEO Half-Hourly Wage: {{:data.ceo_wage}}
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Proposal to change", '', {'action' : 'change_wage'}, null)}}
+			</div>
+		</div>
+		This is paid for every half hour that the CEO is clocked in. 75 shares to increase, 51 to decrease.
+		<div class='item'>
+			<div class='itemLabel'>
+				CEO Revenue Share: {{:data.ceo_revenue}}
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Proposal to change", '', {'action' : 'change_ceo_revenue'}, null)}}
+			</div>
+		</div>
+		This is a percent taken off every transaction that goes into the business account, redirected to a pool of money paid out to the CEO every thirty minutes. 75 shares to increase, 51 to decrease.  
+		<div class='item'>
+			<div class='itemLabel'>
+				Stockholders Revenue Share: {{:data.stockholder_revenue}}
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Proposal to change", '', {'action' : 'change_stockholder_revenue'}, null)}}
+			</div>
+		</div>
+		This is a percent taken off every transaction that goes into the business account, redirected to a pool of money paid to the shareholders based on their holdings every thirty minutes. 51 shares to increase, 61 shares to decrease.
+		<div class='item'>
+			<div class='itemLabel'>
+				Business Account Balance: {{:data.business_balance}}
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Propose instant dividend", '', {'action' : 'instant_dividend'}, null)}}
+			</div>
+		</div>
+		A percent of the account balance can be instantly taken and split between the shareholders as an instant dividend. 51 shares to authorize.
+		<div class='item'>
+			<div class='itemLabel'>
+				Publically List Business
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Proposal to list business", '', {'action' : 'list_stock'}, data.stock_listed ? 'selected' : null)}}{{:helper.link("Proposal to unlist Business", '', {'action' : 'unlist_stock'}, data.stock_listed ? null : 'selected')}}
+			</div>
+		</div>
+		When the business is publically listed it will appear on the stock market where people can make buy and sell orders to purchase and sell stock.
+		Stockholder settings, the uid and the transaction history of the business will also be viewable through the stock market. 51 shares to list, 75 shares to unlist.
+	{{/if}}
+
+	{{if data.menu == 3}}
+		<h4>Ownership Panel</h4>
+		<b>Current Stockholders</b><br>
+		<div class="statusDisplay" style="overflow: auto;">
+			{{for data.stockholders}}
+				{{:value.name}}<br>
+			{{/for}}
+		</div>
+		<br>
+		<div class='item'>
+			<div class='itemLabel'>
+				Subscribe to Email Notifications
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Subscribe", '', {'action' : 'subscribe'}, data.subscribed ? 'selected' : null)}}{{:helper.link("Unsubscribe", '', {'action' : 'unsubscribe'}, data.subscribed ? null : 'selected')}}
+			</div>
+		</div>
+		You will be automatically emailed every time a new proposal is made if you are subscribed.
+		<div class='item'>
+			<div class='itemLabel'>
+				Current Holdings: {{:data.holdings}}
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Print stock sell contract", '', {'action' : 'stock_contract'})}}
+			</div>	
+		</div>
+		This will print a contract that will automatically pay you for the stocks when a person digitally signs it.
+	{{/if}}
+
+	{{if data.menu == 4}}
+		<h4>{{:data.proposal_name}}</h4>
+		{{:helper.link('Back', '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}<br><br>
+		<b>Current Supporters</b>
+		<div class="statusDisplay" style="overflow: auto;">
+			{{for data.support}}
+				{{:value.name}}<br>
+			{{/for}}
+		</div>
+		<div class='itemLabel'>
+			{{:data.supporting}} / {{:data.required}} Support
+		</div>
+		<div class='itemContent'>
+			{{:helper.link("Support", '', {'action' : 'support'}, data.supported ? 'selected' : null)}}{{:helper.link("Unsupport", '', {'action' : 'unsupport'}, data.supported ? null : 'selected')}}
+		</div>
+	{{/if}}
+	
+{{else}}
+	You must be a stockholder to use this program.
+{{/if}}

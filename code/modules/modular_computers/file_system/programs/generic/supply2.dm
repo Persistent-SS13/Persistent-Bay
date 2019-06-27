@@ -6,8 +6,8 @@
 	program_menu_icon = "cart"
 	extended_desc = "A management tool that allows for ordering of various supplies through the facility's cargo system. Some features may require additional access."
 	size = 21
-	available_on_ntnet = 1
-	requires_ntnet = 1
+	available_on_ntnet = TRUE
+	requires_ntnet = TRUE
 
 /datum/computer_file/program/supply/process_tick()
 	..()
@@ -23,8 +23,9 @@
 	var/list/category_contents
 	var/emagged = FALSE	// TODO: Implement synchronisation with modular computer framework.
 	var/current_security_level
-	var/list/selected_telepads
+	var/list/selected_telepads = list()
 	var/list/selected_telepads_export = list()
+	var/list/selected_telepads_revoke = list()
 	var/curr_page = 1
 
 /datum/nano_module/program/supply/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
@@ -34,12 +35,13 @@
 		connected_faction = program.computer.network_card.connected_network.holder
 	if(!connected_faction)
 		program.computer.kill_program()
-	if(!selected_telepads)
-		selected_telepads = connected_faction.cargo_telepads.Copy()
-	var/is_admin = check_access(user, core_access_order_approval, connected_faction.uid)
+	var/is_admin = (check_access(user, core_access_order_approval, connected_faction.uid) || check_access(user, core_access_invoicing, connected_faction.uid))
+	var/is_superadmin = (check_access(user, core_access_command_programs, connected_faction.uid))
+
 	data["faction_name"] = connected_faction.name
 	data["credits"] = connected_faction.central_account.money
 	data["is_admin"] = is_admin
+	data["is_superadmin"] = is_superadmin
 
 
 	var/decl/security_state/security_state = decls_repository.get_decl(GLOB.using_map.security_state)
@@ -105,7 +107,7 @@
 			data["requests"] = requests
 		if(5) // export view..
 			var/list/exports[0]
-			for(var/datum/export_order/order in supply_controller.all_exports)
+			for(var/datum/export_order/order in SSsupply.all_exports)
 				exports.Add(list(list(
 					"name" = order.name,
 					"required" = order.required,
@@ -122,8 +124,17 @@
 					"selected" = (telepad in selected_telepads_export)
 				)))
 				data["telepads"] = telepads
+		if(7) // revoke telepads
+			var/list/telepads[0]
+			for(var/obj/machinery/telepad_cargo/telepad in connected_faction.cargo_telepads)
+				telepads.Add(list(list(
+					"name" = telepad.name,
+					"ref" = "\ref[telepad]",
+					"selected" = (telepad in selected_telepads_revoke)
+				)))
+				data["telepads"] = telepads
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "supply.tmpl", name, 1050, 800, state = state)
 		ui.set_auto_update(1)
@@ -151,6 +162,7 @@
 		return 1
 	if(href_list["toggle_telepad"])
 		var/obj/machinery/telepad_cargo/telepad = locate(href_list["toggle_telepad"])
+		if(!selected_telepads) selected_telepads = list()
 		if(telepad in selected_telepads)
 			selected_telepads -= telepad
 		else
@@ -163,8 +175,15 @@
 		else
 			selected_telepads_export |= telepad
 		return 1
+	if(href_list["toggle_telepad_revoke"])
+		var/obj/machinery/telepad_cargo/telepad = locate(href_list["toggle_telepad_revoke"])
+		if(telepad in selected_telepads_revoke)
+			selected_telepads_revoke -= telepad
+		else
+			selected_telepads_revoke |= telepad
+		return 1
 	if(href_list["order"])
-		var/decl/hierarchy/supply_pack/P = locate(href_list["order"]) in supply_controller.master_supply_list
+		var/decl/hierarchy/supply_pack/P = locate(href_list["order"]) in SSsupply.master_supply_list
 		if(!istype(P) || P.is_category())
 			return 1
 
@@ -184,10 +203,10 @@
 		else if(issilicon(user))
 			idname = user.real_name
 
-		supply_controller.ordernum++
+		SSsupply.ordernum++
 
 		var/datum/supply_order/O = new /datum/supply_order()
-		O.ordernum = supply_controller.ordernum
+		O.ordernum = SSsupply.ordernum
 		O.object = P
 		O.orderedby = idname
 		O.reason = reason
@@ -202,25 +221,25 @@
 		print_export(user, href_list["print_export"])
 
 		return 1
-		
+
 	if(href_list["print_export2"])
 		if(!check_access(core_access_invoicing)) return
 		if(!can_print())
 			return
 		print_export_business(user, href_list["print_export2"])
 
-		return 1	
-		
+		return 1
+
 	if(href_list["print_summary"])
 		if(!can_print())
 			return
 		print_summary(user)
 
 	// Items requiring cargo access go below this entry. Other items go above.
-	
+
 
 	if(href_list["launch_shuttle"])
-		var/datum/shuttle/autodock/ferry/supply/shuttle = supply_controller.shuttle
+		var/datum/shuttle/autodock/ferry/supply/shuttle = SSsupply.shuttle
 		if(!shuttle)
 			to_chat(user, "<span class='warning'>Error connecting to the shuttle.</span>")
 			return
@@ -231,7 +250,7 @@
 				shuttle.launch(user)
 		else
 			shuttle.launch(user)
-			var/datum/radio_frequency/frequency = radio_controller.return_frequency(1435)
+			var/datum/radio_frequency/frequency = radio_controller.return_frequency(STATUS_FREQ)
 			if(!frequency)
 				return
 
@@ -241,6 +260,18 @@
 			status_signal.data["command"] = "supply"
 			frequency.post_signal(src, status_signal)
 		return 1
+	if(href_list["revoke_pad"])
+		if(!check_access(core_access_command_programs))
+			to_chat(usr, "Access Denied.")
+			return 1
+		var/revoked = 0
+		for(var/obj/machinery/telepad_cargo/telepad in selected_telepads_revoke)
+			if(connected_faction)
+				connected_faction.cargo_telepads -= telepad
+			telepad.connected_faction = null
+			telepad.req_access_faction = null
+			revoked += 1
+		to_chat(usr, "Revoked network connection for " + revoked + " telepads.")
 	if(href_list["launch_export"])
 		if(!check_access(core_access_invoicing))
 			to_chat(usr, "Access Denied.")
@@ -255,17 +286,17 @@
 			for(var/obj/structure/closet/closet in T.contents)
 				for(var/obj/item/weapon/paper/export/export in closet.contents)
 					if(export.business_name)
-						var/earn = supply_controller.fill_order(export.export_id, closet)
-						if(earn)
-							var/datum/small_business/business = get_business(export.business_name)
-							if(business)
+						var/datum/small_business/business = get_business(export.business_name)
+						if(business)
+							var/earn = SSsupply.fill_order(export.export_id, closet)
+							if(earn)
 								var/datum/transaction/Te = new("Central Authority Exports", "Export ([export.name])", earn, 1)
 								business.central_account.do_transaction(Te)
 								earned += business.pay_export_tax(earn, connected_faction)
 								sent++
 						break
 					else if(export.business_name == 0)
-						var/earn = supply_controller.fill_order(export.export_id, closet)
+						var/earn = SSsupply.fill_order(export.export_id, closet)
 						if(earn)
 							var/datum/transaction/Te = new("Central Authority Exports", "Export ([export.name])", earn, 1)
 							connected_faction.central_account.do_transaction(Te)
@@ -322,8 +353,8 @@
 
 			//spawn the stuff, finish generating the manifest while you're at it
 			if(A.req_access.len)
-			//	SP.access.len
-				A.req_access = list(core_access_order_approval)
+			//
+				A.req_access = list(SP.access)
 
 			var/list/spawned = SP.spawn_contents(A)
 			if(slip)
@@ -338,12 +369,12 @@
 			to_chat(usr, "Access Denied.")
 			return 1
 		if(!user_id_card) return 0
-		var/datum/computer_file/crew_record/R = connected_faction.get_record(user_id_card.registered_name)
+		var/datum/computer_file/report/crew_record/R = connected_faction.get_record(user_id_card.registered_name)
 		if(!R) return 0
 		var/expense_limit = 0
-		var/datum/assignment/assignment = connected_faction.get_assignment(R.assignment_uid)
+		var/datum/assignment/assignment = connected_faction.get_assignment(R.assignment_uid, R.get_name())
 		if(assignment)
-			var/datum/accesses/expenses = assignment.accesses["[R.rank]"]
+			var/datum/accesses/expenses = assignment.accesses[R.rank]
 			if(expenses)
 				expense_limit = expenses.expense_limit
 		var/id = text2num(href_list["approve_order"])
@@ -356,7 +387,7 @@
 			if(SO.object.cost*10 > connected_faction.central_account.money)
 				to_chat(usr, "<span class='warning'>Not enough Ethericoin $$ to purchase \the [SO.object.name]!</span>")
 				return 1
-				
+
 			R.expenses += SO.object.cost*10
 			connected_faction.pending_orders -= SO
 			connected_faction.approved_orders += SO
@@ -364,14 +395,14 @@
 			connected_faction.central_account.do_transaction(T)
 			break
 		return 1
-		
+
 	if(href_list["invoice_order"])
 		if(!check_access(core_access_invoicing) && !check_access(core_access_order_approval))
 			to_chat(usr, "Access Denied.")
 			return 1
 		var/id = text2num(href_list["invoice_order"])
 		for(var/datum/supply_order/SO in connected_faction.pending_orders)
-		
+
 			if(SO.ordernum != id)
 				continue
 			if(SO.last_print > world.time)
@@ -403,10 +434,10 @@
 			invoice.linked_faction = connected_faction.uid
 			invoice.loc = get_turf(program.computer)
 			playsound(get_turf(program.computer), pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
-			invoice.name = "[connected_faction.short_tag] digital import invoice"	
+			invoice.name = "[connected_faction.short_tag] digital import invoice"
 			SO.last_print = world.time + 3 MINUTES
 			break
-		return 1	
+		return 1
 
 	if(href_list["deny_order"])
 		if(!check_access(core_access_order_approval))
@@ -444,7 +475,8 @@
 		return 1
 	category_names = list()
 	category_contents = list()
-	for(var/decl/hierarchy/supply_pack/sp in cargo_supply_pack_root.children)
+	var/decl/hierarchy/supply_pack/root = decls_repository.get_decl(/decl/hierarchy/supply_pack)
+	for(var/decl/hierarchy/supply_pack/sp in root.children)
 		if(sp.is_category())
 			category_names.Add(sp.name)
 			var/list/category[0]
@@ -459,7 +491,7 @@
 			category_contents[sp.name] = category
 
 /datum/nano_module/program/supply/proc/get_shuttle_status()
-	var/datum/shuttle/autodock/ferry/supply/shuttle = supply_controller.shuttle
+	var/datum/shuttle/autodock/ferry/supply/shuttle = SSsupply.shuttle
 	if(!istype(shuttle))
 		return "No Connection"
 
@@ -501,8 +533,8 @@
 /datum/nano_module/program/supply/proc/print_summary(var/mob/user)
 	var/t = ""
 	t += "<center><BR><b><large>[GLOB.using_map.station_name]</large></b><BR><i>[station_date]</i><BR><i>Export overview<field></i></center><hr>"
-	for(var/source in point_source_descriptions)
-		t += "[point_source_descriptions[source]]: [supply_controller.point_sources[source] || 0]<br>"
+	for(var/source in SSsupply.point_sources)
+		t += "[SSsupply.point_sources[source]]: [SSsupply.point_sources[source] || 0]<br>"
 	print_text(t, user)
 /datum/nano_module/program/supply/proc/print_export(var/mob/user, var/id)
 	var/datum/world_faction/connected_faction
@@ -539,5 +571,4 @@
 	var/obj/item/weapon/paper/export/business/export = new(program.computer.loc)
 	export.info = t
 	export.export_id = order.id
-	
-	
+

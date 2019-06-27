@@ -5,11 +5,10 @@
 	name = "omni gas mixer"
 	icon_state = "map_mixer"
 
-	use_power = 1
 	idle_power_usage = 150		//internal circuitry, friction losses and stuff
-	power_rating = 3700			//3700 W ~ 5 HP
+	power_rating = 15000			// 15000 W ~ 20 HP
 
-	var/list/inputs = new()
+	var/list/inputs
 	var/datum/omni_port/output
 	var/max_output_pressure = MAX_OMNI_PRESSURE
 
@@ -19,13 +18,32 @@
 	var/tag_east_con
 	var/tag_west_con
 
-	var/max_flow_rate = 200
-	var/set_flow_rate = 200
+	var/max_flow_rate = ATMOS_DEFAULT_VOLUME_MIXER
+	var/set_flow_rate = ATMOS_DEFAULT_VOLUME_MIXER
 
 	var/list/mixing_inputs = list()
 
 /obj/machinery/atmospherics/omni/mixer/New()
 	..()
+	if(!inputs)
+		inputs = list()
+	ADD_SAVED_VAR(inputs)
+	ADD_SAVED_VAR(output)
+	ADD_SAVED_VAR(mixing_inputs)
+
+/obj/machinery/atmospherics/omni/mixer/Initialize()
+	.=..()
+	do_init()
+
+
+/obj/machinery/atmospherics/omni/mixer/after_load()
+	update_ports()
+	build_icons()
+	for(var/datum/omni_port/P in ports)
+		handle_port_change(P)
+	..()
+
+/obj/machinery/atmospherics/omni/mixer/proc/do_init()
 	if(mapper_set())
 		var/con = 0
 		for(var/datum/omni_port/P in ports)
@@ -119,7 +137,7 @@
 
 	if (power_draw >= 0)
 		last_power_draw = power_draw
-		use_power(power_draw)
+		use_power_oneoff(power_draw)
 
 		for(var/datum/omni_port/P in inputs)
 			if(P.concentration && P.network)
@@ -137,7 +155,7 @@
 
 	data = build_uidata()
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 
 	if (!ui)
 		ui = new(user, src, ui_key, "omni_mixer.tmpl", "Omni Mixer Control", 360, 330)
@@ -184,13 +202,13 @@
 	switch(href_list["command"])
 		if("power")
 			if(!configuring)
-				use_power = !use_power
+				update_use_power(!use_power)
 			else
-				use_power = 0
+				update_use_power(POWER_USE_OFF)
 		if("configure")
 			configuring = !configuring
 			if(configuring)
-				use_power = 0
+				update_use_power(POWER_USE_OFF)
 
 	//only allows config changes when in configuring mode ~otherwise you'll get weird pressure stuff going on
 	if(configuring && !use_power)
@@ -206,7 +224,7 @@
 				con_lock(dir_flag(href_list["dir"]))
 
 	update_icon()
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)
 	return
 
 /obj/machinery/atmospherics/omni/mixer/proc/switch_mode(var/port = NORTH, var/mode = ATM_NONE)
@@ -237,14 +255,7 @@
 		else if(P.mode == ATM_OUTPUT && mode == ATM_OUTPUT)
 			P.mode = ATM_INPUT
 		if(P.mode != old_mode)
-			switch(P.mode)
-				if(ATM_NONE)
-					initialize_directions &= ~P.dir
-					P.disconnect()
-				else
-					initialize_directions |= P.dir
-					P.connect()
-			P.update = 1
+			handle_port_change(P)
 
 	update_ports()
 	rebuild_mixing_inputs()
@@ -301,3 +312,13 @@
 	for(var/datum/omni_port/P in inputs)
 		if(P.dir == port)
 			P.con_lock = !P.con_lock
+
+/obj/machinery/atmospherics/omni/mixer/proc/handle_port_change(var/datum/omni_port/P)
+	switch(P.mode)
+		if(ATM_NONE)
+			initialize_directions &= ~P.dir
+			P.disconnect()
+		else
+			initialize_directions |= P.dir
+			P.connect()
+	P.update = 1

@@ -2,11 +2,11 @@ var/bomb_set
 
 /obj/machinery/nuclearbomb
 	name = "\improper Nuclear Fission Explosive"
-	desc = "Uh oh. RUN!!!!"
+	desc = "Uh oh. RUN!"
 	icon = 'icons/obj/nuke.dmi'
 	icon_state = "idle"
 	density = 1
-	use_power = 0
+	use_power = POWER_USE_OFF
 	unacidable = 1
 
 	var/deployable = 0
@@ -40,15 +40,15 @@ var/bomb_set
 /obj/machinery/nuclearbomb/Process(var/wait)
 	if(timing)
 		timeleft = max(timeleft - (wait / 10), 0)
+		playsound(loc, 'sound/items/timer.ogg', 50)
 		if(timeleft <= 0)
-			spawn
-				explode()
-		GLOB.nanomanager.update_uis(src)
+			addtimer(CALLBACK(src, .proc/explode), 0)
+		SSnano.update_uis(src)
 
 /obj/machinery/nuclearbomb/attackby(obj/item/weapon/O as obj, mob/user as mob, params)
 	if(isScrewdriver(O))
-		src.add_fingerprint(user)
-		if(src.auth)
+		add_fingerprint(user)
+		if(auth)
 			if(panel_open == 0)
 				panel_open = 1
 				overlays |= "panel_open"
@@ -73,19 +73,19 @@ var/bomb_set
 	if(panel_open && isMultitool(O) || isWirecutter(O))
 		return attack_hand(user)
 
-	if(src.extended)
+	if(extended)
 		if(istype(O, /obj/item/weapon/disk/nuclear))
-			usr.drop_item()
-			O.forceMove(src)
-			src.auth = O
-			src.add_fingerprint(user)
+			if(!user.unEquip(O, src))
+				return
+			auth = O
+			add_fingerprint(user)
 			return attack_hand(user)
 
-	if(src.anchored)
+	if(anchored)
 		switch(removal_stage)
 			if(0)
 				if(isWelder(O))
-					var/obj/item/weapon/weldingtool/WT = O
+					var/obj/item/weapon/tool/weldingtool/WT = O
 					if(!WT.isOn()) return
 					if(WT.get_fuel() < 5) // uses up 5 fuel.
 						to_chat(user, "<span class='warning'>You need more fuel to complete this task.</span>")
@@ -111,7 +111,7 @@ var/bomb_set
 
 			if(2)
 				if(isWelder(O))
-					var/obj/item/weapon/weldingtool/WT = O
+					var/obj/item/weapon/tool/weldingtool/WT = O
 					if(!WT.isOn()) return
 					if (WT.get_fuel() < 5) // uses up 5 fuel.
 						to_chat(user, "<span class='warning'>You need more fuel to complete this task.</span>")
@@ -193,7 +193,7 @@ var/bomb_set
 		if(yes_code)
 			data["message"] = "*****"
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "nuclear_bomb.tmpl", "Nuke Control Panel", 300, 510)
 		ui.set_initial_data(data)
@@ -208,12 +208,12 @@ var/bomb_set
 	if(usr.incapacitated())
 		return
 
-	if(src.deployable)
+	if(deployable)
 		to_chat(usr, "<span class='warning'>You close several panels to make [src] undeployable.</span>")
-		src.deployable = 0
+		deployable = 0
 	else
 		to_chat(usr, "<span class='warning'>You adjust some panels to make [src] deployable.</span>")
-		src.deployable = 1
+		deployable = 1
 	return
 
 /obj/machinery/nuclearbomb/proc/is_auth(var/mob/user)
@@ -235,8 +235,8 @@ var/bomb_set
 		else
 			var/obj/item/I = usr.get_active_hand()
 			if(istype(I, /obj/item/weapon/disk/nuclear))
-				usr.drop_item()
-				I.forceMove(src)
+				if(!usr.unEquip(I, src))
+					return 1
 				auth = I
 	if(is_auth(usr))
 		if(href_list["type"])
@@ -281,23 +281,9 @@ var/bomb_set
 					to_chat(usr, "<span class='warning'>Nothing happens, something might be wrong with the wiring.</span>")
 					return 1
 				if(!timing && !safety)
-					if(istype(src, /obj/machinery/nuclearbomb/station))
-						var/obj/machinery/nuclearbomb/station/B = src
-						for(var/inserter in B.inserters)
-							var/obj/machinery/self_destruct/sd = inserter
-							if(!istype(sd) || !sd.armed)
-								to_chat(usr, "<span class='warning'>An inserter has not been armed or is damaged.</span>")
-								return
-					timing = 1
-					log_and_message_admins("activated the detonation countdown of \the [src]")
-					bomb_set++ //There can still be issues with this resetting when there are multiple bombs. Not a big deal though for Nuke/N
-					var/decl/security_state/security_state = decls_repository.get_decl(GLOB.using_map.security_state)
-					original_level = security_state.current_security_level
-					security_state.set_security_level(security_state.severe_security_level, TRUE)
-					update_icon()
+					start_bomb()
 				else
-					secure_device()
-
+					check_cutoff()
 			if(href_list["safety"])
 				if (wires.IsIndexCut(NUCLEARBOMB_WIRE_SAFETY))
 					to_chat(usr, "<span class='warning'>Nothing happens, something might be wrong with the wiring.</span>")
@@ -323,6 +309,18 @@ var/bomb_set
 					to_chat(usr, "<span class='warning'>There is nothing to anchor to!</span>")
 	return 1
 
+/obj/machinery/nuclearbomb/proc/start_bomb()
+	timing = 1
+	log_and_message_admins("activated the detonation countdown of \the [src]")
+	bomb_set++ //There can still be issues with this resetting when there are multiple bombs. Not a big deal though for Nuke/N
+	var/decl/security_state/security_state = decls_repository.get_decl(GLOB.using_map.security_state)
+	original_level = security_state.current_security_level
+	security_state.set_security_level(security_state.severe_security_level, TRUE)
+	update_icon()
+
+/obj/machinery/nuclearbomb/proc/check_cutoff()
+	secure_device()
+
 /obj/machinery/nuclearbomb/proc/secure_device()
 	if(timing <= 0)
 		return
@@ -339,17 +337,17 @@ var/bomb_set
 
 #define NUKERANGE 80
 /obj/machinery/nuclearbomb/proc/explode()
-	if (src.safety)
+	if (safety)
 		timing = 0
 		return
-	src.timing = -1
-	src.yes_code = 0
-	src.safety = 1
+	timing = -1
+	yes_code = 0
+	safety = 1
 	update_icon()
 
 	SetUniversalState(/datum/universal_state/nuclear_explosion, arguments=list(src))
 
-/obj/machinery/nuclearbomb/update_icon()
+/obj/machinery/nuclearbomb/on_update_icon()
 	if(lighthack)
 		icon_state = "idle"
 	else if(timing == -1)
@@ -370,57 +368,55 @@ var/bomb_set
 	item_state = "card-id"
 	w_class = ITEM_SIZE_TINY
 
-/obj/item/weapon/disk/nuclear/New()
-	..()
-	nuke_disks |= src
 
 /obj/item/weapon/disk/nuclear/Initialize()
 	. = ..()
+//	LAZYDISTINCTADD(GLOB.nuke_disks, src)
 	// Can never be quite sure that a game mode has been properly initiated or not at this point, so always register
 	GLOB.moved_event.register(src, src, /obj/item/weapon/disk/nuclear/proc/check_z_level)
 
 /obj/item/weapon/disk/nuclear/proc/check_z_level()
-	if(!(ticker && istype(ticker.mode, /datum/game_mode/nuclear)))
-		GLOB.moved_event.unregister(src, src, /obj/item/weapon/disk/nuclear/proc/check_z_level) // However, when we are certain unregister if necessary
-		return
 	var/turf/T = get_turf(src)
 	if(!T || isNotStationLevel(T.z))
 		qdel(src)
 
 /obj/item/weapon/disk/nuclear/Destroy()
 	GLOB.moved_event.unregister(src, src, /obj/item/weapon/disk/nuclear/proc/check_z_level)
-	nuke_disks -= src
-	if(!nuke_disks.len)
-		var/turf/T = pick_area_turf(/area/maintenance, list(/proc/is_station_turf, /proc/not_turf_contains_dense_objects))
-		if(T)
-			var/obj/D = new /obj/item/weapon/disk/nuclear(T)
-			log_and_message_admins("[src], the last authentication disk, has been destroyed. Spawning [D] at ([D.x], [D.y], [D.z]).", location = T)
-		else
-			log_and_message_admins("[src], the last authentication disk, has been destroyed. Failed to respawn disc!")
+//	LAZYREMOVE(GLOB.nuke_disks, src)
+	// if(!LAZYLEN(GLOB.nuke_disks))
+	// 	var/turf/T = pick_area_turf(/area/maintenance, list(/proc/is_station_turf, /proc/not_turf_contains_dense_objects))
+	// 	if(T)
+	// 		var/obj/D = new /obj/item/weapon/disk/nuclear(T)
+	// 		log_and_message_admins("[src], the last authentication disk, has been destroyed. Spawning [D] at ([D.x], [D.y], [D.z]).", location = T)
+	// 	else
+	// 		log_and_message_admins("[src], the last authentication disk, has been destroyed. Failed to respawn disc!")
 	return ..()
 
 //====the nuclear football (holds the disk and instructions)====
 /obj/item/weapon/storage/secure/briefcase/nukedisk
+	desc = "A large briefcase with a digital locking system."
 	startswith = list(
 		/obj/item/weapon/disk/nuclear,
 		/obj/item/weapon/pinpointer,
-		/obj/item/smallDelivery/nuke_instructions,
+		/obj/item/weapon/folder/envelope/nuke_instructions,
 		/obj/item/modular_computer/laptop/preset/custom_loadout/cheap/
 	)
-	desc = "A large briefcase with a digital locking system. On closer inspection, you see an \
-	Expeditionary Corps emblem is etched into the front of it."
 
-/obj/item/smallDelivery/nuke_instructions
-	name = "classified instructions"
+/obj/item/weapon/storage/secure/briefcase/nukedisk/examine(var/user)
+	..()
+	to_chat(user,"On closer inspection, you see \a [GLOB.using_map.company_name] emblem is etched into the front of it.")
+
+/obj/item/weapon/folder/envelope/nuke_instructions
+	name = "instructions envelope"
 	desc = "A small envelope. The label reads 'open only in event of high emergency'."
 
-/obj/item/smallDelivery/nuke_instructions/Initialize()
+/obj/item/weapon/folder/envelope/nuke_instructions/Initialize()
 	. = ..()
 	var/obj/item/weapon/paper/R = new(src)
 	R.set_content("<center><img src=sollogo.png><br><br>\
-	<b>Warning: Classified<br>NTF Shambhala Self Destruct System - Instructions</b></center><br><br>\
+	<b>Warning: Classified<br>[GLOB.using_map.station_name] Self-Destruct System - Instructions</b></center><br><br>\
 	In the event of a Delta-level emergency, this document will guide you through the activation of the vessel's \
-	on-board nuclear self destruct system. Please read carefully.<br><br>\
+	on-board nuclear self-destruct system. Please read carefully.<br><br>\
 	1) (Optional) Announce the imminent activation to any surviving crew members, and begin evacuation procedures.<br>\
 	2) Notify two heads of staff, both with ID cards with access to the ship's Keycard Authentication Devices.<br>\
 	3) Proceed to the self-destruct chamber, located on Deck One by the stairwell.<br>\
@@ -440,12 +436,11 @@ var/bomb_set
 	This concludes the instructions.", "vessel self-destruct instructions")
 
 	//stamp the paper
-	var/image/stampoverlay = image('icons/obj/bureaucracy.dmi')
+	var/image/stampoverlay = image('icons/obj/items/paper.dmi')
 	stampoverlay.icon_state = "paper_stamp-hos"
 	R.stamped += /obj/item/weapon/stamp
 	R.overlays += stampoverlay
 	R.stamps += "<HR><i>This paper has been stamped as 'Top Secret'.</i>"
-	src.wrapped = R
 
 //====vessel self-destruct system====
 /obj/machinery/nuclearbomb/station
@@ -457,8 +452,12 @@ var/bomb_set
 	extended = 1
 
 	var/list/flash_tiles = list()
-	var/last_turf_state
 	var/list/inserters = list()
+	var/last_turf_state
+
+	var/announced = 0
+	var/time_to_explosion = 0
+	var/self_destruct_cutoff = 60 //Seconds
 
 /obj/machinery/nuclearbomb/station/Initialize()
 	. = ..()
@@ -485,17 +484,59 @@ var/bomb_set
 		if(timing)
 			to_chat(usr, "<span class='warning'>Cannot alter the timing during countdown.</span>")
 			return
-
 		var/time = text2num(href_list["time"])
 		timeleft += time
 		timeleft = Clamp(timeleft, 300, 900)
 		return 1
 
+/obj/machinery/nuclearbomb/station/start_bomb()
+	for(var/inserter in inserters)
+		var/obj/machinery/self_destruct/sd = inserter
+		if(!istype(sd) || !sd.armed)
+			to_chat(usr, "<span class='warning'>An inserter has not been armed or is damaged.</span>")
+			return
+	visible_message("<span class='warning'>Warning. The self-destruct sequence override will be disabled [self_destruct_cutoff] seconds before detonation.</span>")
+	..()
+
+/obj/machinery/nuclearbomb/station/check_cutoff()
+	if(timeleft <= self_destruct_cutoff)
+		visible_message("<span class='warning'>Self-Destruct abort is no longer possible.</span>")
+		return
+	..()
+
 /obj/machinery/nuclearbomb/station/Destroy()
 	flash_tiles.Cut()
 	return ..()
 
-/obj/machinery/nuclearbomb/station/update_icon()
+/obj/machinery/nuclearbomb/station/Process()
+	..()
+	if(timeleft > 0 && GAME_STATE < RUNLEVEL_POSTGAME)
+		if(timeleft <= self_destruct_cutoff)
+			if(!announced)
+				priority_announcement.Announce("The self-destruct sequence has reached terminal countdown, abort systems have been disabled.", "Self-Destruct Control Computer")
+				announced = 1
+			if(world.time >= time_to_explosion)
+				var/range
+				var/high_intensity
+				var/low_intensity
+				if(timeleft <= (self_destruct_cutoff/2))
+					range = rand(2, 3)
+					high_intensity = rand(5,8)
+					low_intensity = rand(7,10)
+					time_to_explosion = world.time + 2 SECONDS
+				else
+					range = rand(1, 2)
+					high_intensity = rand(3, 6)
+					low_intensity = rand(5, 8)
+					time_to_explosion = world.time + 5 SECONDS
+				var/turf/T = pick_area_and_turf(GLOB.is_station_but_not_space_or_shuttle_area)
+				explosion(T, range, high_intensity, low_intensity)
+
+/obj/machinery/nuclearbomb/station/secure_device()
+	..()
+	announced = 0
+
+/obj/machinery/nuclearbomb/station/on_update_icon()
 	var/target_icon_state
 	if(lighthack)
 		target_icon_state = "rcircuit_off"

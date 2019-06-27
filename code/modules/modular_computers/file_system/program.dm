@@ -11,27 +11,43 @@
 	var/obj/item/modular_computer/computer	// Device that runs this program.
 	var/filedesc = "Unknown Program"		// User-friendly name of this program.
 	var/extended_desc = "N/A"				// Short description of this program's function.
+	var/category = PROG_MISC
 	var/program_icon_state = null			// Program-specific screen icon state
+	var/program_key_state = "standby_key"			// Program-specific keyboard icon state
 	var/program_menu_icon = "newwin"		// Icon to use for program's link in main menu
 	var/requires_ntnet = 0					// Set to 1 for program to require nonstop NTNet connection to run. If NTNet connection is lost program crashes.
 	var/requires_ntnet_feature = 0			// Optional, if above is set to 1 checks for specific function of NTNet (currently NTNET_SOFTWAREDOWNLOAD, NTNET_PEERTOPEER, NTNET_SYSTEMCONTROL and NTNET_COMMUNICATION)
 	var/ntnet_status = 1					// NTNet status, updated every tick by computer running this program. Don't use this for checks if NTNet works, computers do that. Use this for calculations, etc.
-	var/usage_flags = PROGRAM_ALL			// Bitflags (PROGRAM_CONSOLE, PROGRAM_LAPTOP, PROGRAM_TABLET combination) or PROGRAM_ALL
+	var/usage_flags = PROGRAM_ALL & ~PROGRAM_PDA	// Bitflags (PROGRAM_CONSOLE, PROGRAM_LAPTOP, PROGRAM_TABLET, PROGRAM_PDA combination) or PROGRAM_ALL
 	var/network_destination = null			// Optional string that describes what NTNet server/system this program connects to. Used in default logging.
 	var/available_on_ntnet = 1				// Whether the program can be downloaded from NTNet. Set to 0 to disable.
 	var/available_on_syndinet = 0			// Whether the program can be downloaded from SyndiNet (accessible via emagging the computer). Set to 1 to enable.
 	var/computer_emagged = 0				// Set to 1 if computer that's running us was emagged. Computer updates this every Process() tick
 	var/ui_header = null					// Example: "something.gif" - a header image that will be rendered in computer's UI when this program is running at background. Images are taken from /nano/images/status_icons. Be careful not to use too large images!
 	var/ntnet_speed = 0						// GQ/s - current network connectivity transfer rate
+	var/operator_skill = SKILL_MIN                  // Holder for skill value of current/recent operator for programs that tick.
+	var/democratic = 0
+	var/business = 0
+	var/required_module
+
 
 /datum/computer_file/program/New(var/obj/item/modular_computer/comp = null)
-	..()
+	..(null)
 	if(comp && istype(comp))
 		computer = comp
+	ADD_SAVED_VAR(program_state)
+	ADD_SAVED_VAR(computer)
+
+/datum/computer_file/program/after_load()
+	. = ..()
+	update_computer_icon()
 
 /datum/computer_file/program/Destroy()
 	computer = null
 	. = ..()
+
+/datum/computer_file/program/proc/ConnectedFaction()
+	return computer.ConnectedFaction()
 
 /datum/computer_file/program/nano_host()
 	return computer.nano_host()
@@ -46,6 +62,32 @@
 	temp.requires_ntnet_feature = requires_ntnet_feature
 	temp.usage_flags = usage_flags
 	return temp
+
+// Used by programs that manipulate files.
+/datum/computer_file/program/proc/get_file(var/filename)
+	var/obj/item/weapon/computer_hardware/hard_drive/HDD = computer.hard_drive
+	if(!HDD)
+		return
+	var/datum/computer_file/data/F = HDD.find_file_by_name(filename)
+	if(!istype(F))
+		return
+	return F
+
+/datum/computer_file/program/proc/create_file(var/newname, var/data = "", var/file_type = /datum/computer_file/data, var/list/metadata = null)
+	if(!newname)
+		return
+	var/obj/item/weapon/computer_hardware/hard_drive/HDD = computer.hard_drive
+	if(!HDD)
+		return
+	if(get_file(newname))
+		return
+
+	var/datum/computer_file/data/F = new file_type(md = metadata)
+	F.filename = newname
+	F.stored_data = data
+	F.calculate_size()
+	if(HDD.store_file(F))
+		return F
 
 // Relays icon update to the computer.
 /datum/computer_file/program/proc/update_computer_icon()
@@ -88,7 +130,7 @@
 // Check if the user can run program. Only humans can operate computer. Automatically called in run_program()
 // User has to wear their ID or have it inhand for ID Scan to work.
 // Can also be called manually, with optional parameter being access_to_check to scan the user's ID
-/datum/computer_file/program/proc/can_run(var/mob/living/user, var/loud = 0, var/access_to_check)
+/datum/computer_file/program/proc/can_run(var/mob/living/user, var/loud = 0, var/access_to_check, var/alt_computer)
 	// Defaults to required_access
 	if(!access_to_check)
 		access_to_check = required_access
@@ -101,6 +143,31 @@
 
 	if(!istype(user))
 		return 0
+	if(!computer)
+		computer = alt_computer
+	if(democratic)
+		if(!(computer && computer.network_card && computer.network_card.connected_network && istype(computer.network_card.connected_network.holder, /datum/world_faction/democratic)))
+			if(loud)
+				to_chat(user, "<span class='notice'>\The [computer] must be connected to the government network for this program to run.</span>")
+			return 0
+	if(business)
+		if(!(computer && computer.network_card && computer.network_card.connected_network && istype(computer.network_card.connected_network.holder, /datum/world_faction/business)))
+			if(loud)
+				to_chat(user, "<span class='notice'>\The [computer] must be connected to a business network for this program to run.</span>")
+			return 0
+		if(required_module)
+			if((computer && computer.network_card && computer.network_card.connected_network && computer.network_card.connected_network.holder))
+				var/datum/world_faction/business/business = computer.network_card.connected_network.holder
+				if(!istype(business.module, required_module))
+					if(loud)
+						to_chat(user, "<span class='notice'>\The [computer] must be connected to a business that has the correct module for this program..</span>")
+					return 0
+			else
+				to_chat(user, "<span class='notice'>\The [computer] must be connected to a business that has the correct module for this program..</span>")
+				return 0
+
+	if(!access_to_check) // No required_access, allow it.
+		return 1
 
 	var/obj/item/weapon/card/id/I = user.GetIdCard()
 	if(!I)
@@ -128,9 +195,11 @@
 // This is performed on program startup. May be overriden to add extra logic. Remember to include ..() call. Return 1 on success, 0 on failure.
 // When implementing new program based device, use this to run the program.
 /datum/computer_file/program/proc/run_program(var/mob/living/user)
-	if(can_run(user, 1) || !requires_access_to_run)
+	if(can_run(user, 1))
 		if(nanomodule_path)
 			NM = new nanomodule_path(src, new /datum/topic_manager/program(src), src)
+			if(user)
+				NM.using_access = user.GetAccess()
 		if(requires_ntnet && network_destination)
 			generate_network_log("Connection opened to [network_destination].")
 		program_state = PROGRAM_STATE_ACTIVE

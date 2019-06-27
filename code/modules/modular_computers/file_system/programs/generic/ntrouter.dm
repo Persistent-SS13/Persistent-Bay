@@ -5,20 +5,21 @@
 	program_menu_icon = "wrench"
 	extended_desc = "This program allows switching between bluespace networks."
 	size = 12
-	requires_ntnet = 0
-//	required_access = core_access_wireless_programs
-	available_on_ntnet = 0
+	requires_ntnet = FALSE
+	available_on_ntnet = FALSE
+	usage_flags = PROGRAM_ALL
 	nanomodule_path = /datum/nano_module/program/computer_ntrouter/
 
 /datum/nano_module/program/computer_ntrouter
 	name = "Network Selection"
 	available_to_ai = TRUE
 
-/datum/nano_module/program/computer_ntrouter/proc/format_networks()
+/datum/nano_module/program/computer_ntrouter/proc/format_networks(var/mob/user)
 	var/list/found_networks = list()
+	var/obj/item/weapon/card/id/id = user.get_idcard()
 	for(var/datum/world_faction/fact in GLOB.all_world_factions)
 		if(fact.network)
-			if(!fact.network.invisible)
+			if(!fact.network.invisible || (fact.get_stockholder(user.real_name)) || (id && (core_access_network_linking in id.GetAccess(fact.uid))))
 				found_networks |= fact.network
 	var/list/formatted = list()
 	for(var/datum/ntnet/network in found_networks)
@@ -43,7 +44,7 @@
 			has_password = 1
 		data["has_password"] = has_password
 		data["card_installed"] = 1
-		data["networks"] = format_networks()
+		data["networks"] = format_networks(user)
 		data["connected_to"] = program.computer.network_card.connected_to
 		var/regex/allregex = regex(".")
 		data["display_password"] = allregex.Replace(program.computer.network_card.password, "*")
@@ -62,8 +63,8 @@
 	else
 		data["card_installed"] = 0
 		data["connected"] = 0
-	
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "ntnet_router.tmpl", "Select Network", 575, 700, state = state)
 		if(host.update_layout())
@@ -94,10 +95,5 @@
 		program.computer.network_card.connected_to = network.net_uid
 		if(network.secured)
 			program.computer.network_card.password = input(usr, "This network requires a password","Enter network password","")
-		program.computer.network_card.get_network()
-		return 1
-	if(href_list["manual_connect"])
-		program.computer.network_card.connected_to = input(usr, "Enter the net_uid for the network","Enter net_uid","")
-		program.computer.network_card.password = input(usr,"Enter the password for the network. (Only used if required)","Enter password","")
 		program.computer.network_card.get_network()
 		return 1

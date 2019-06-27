@@ -35,7 +35,7 @@
 	// once all your ducks are in a row. So if we're already playing, only
 	// auto-activate if this has been put down by a maploader, not a creative admin
 	// see https://github.com/Baystation12/Baystation12/pull/9907#issuecomment-114896669
-	var/auto_activate = mapload || (ticker && ticker.current_state < GAME_STATE_PLAYING)
+	var/auto_activate = mapload || (GAME_STATE < RUNLEVEL_GAME)
 
 	if(auto_activate)
 		activate()
@@ -92,6 +92,7 @@
 
 /obj/effect/wingrille_spawn/reinforced/full
 	name = "reinforced window grille spawner - full tile"
+	icon_state = "rf-wingrille"
 	fulltile = TRUE
 	win_path = /obj/structure/window/reinforced/full
 
@@ -127,4 +128,4 @@
 
 /obj/effect/wingrille_spawn/reinforced/polarized/handle_window_spawn(var/obj/structure/window/reinforced/polarized/P)
 	if(id)
-		P.id = id
+		P.id_tag = id

@@ -1,0 +1,88 @@
+<h2>{{:data.name}} Personal Options</h2><br>
+{{:helper.link("Cryo Notifications", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
+{{:helper.link("Stock Ownership", '', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
+{{:helper.link("Nexus Account Level/Limits", '', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}	
+<br><br>
+<b>Current Account Balance:</b> {{:data.account_balance}}
+<hr>
+{{if data.menu == 1}}
+	<h4>Cryo/Lace Notifications</h4>
+	Nexus can inform you of new emails even when you are in cryo. Simply link a Cryo account to yourself to recieve these notifications.<br>
+	((If you have joined the Persistence SS13 discord this can be used to link your CKEY to your discord so that emails are sent directly to your discord account.))
+	<div class='item'>
+		<div class='itemLabel'>
+			Cryo Account Link
+		</div>
+		<div class='itemContent'>
+			{{:helper.link('Link', '', {'action' : 'select_cryo'})}}
+		</div>
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			Email Notifications
+		</div>
+		<div class='itemContent'>
+			{{:helper.link('On', '', {'action' : 'email_on'}, data.email_on ? 'selected' : null)}}{{:helper.link('Off', '', {'action' : 'email_off'}, data.email_on ? null : 'selected')}}
+		</div>
+	</div>
+	If this is turned on you will be notified through your lace and cryo account when you recieve a new email.
+	<b>Organization Notifcation Subscriptions</b>
+	<div class="statusDisplay"style="overflow: auto;">
+		{{for data.organizations}}
+			{{:helper.link(value.name, '', {'action' : 'toggle_subscribe', 'uid' : value.uid}, null, value.subscribed ? 'selected' : null)}}<br><br>
+		{{/for}}
+	</div>
+	If you are subscribed to an organizations notifications it will email you whenever a notification is made that you have access to.
+{{/if}}
+{{if data.menu == 2}}
+	<h4>Stock Ownership</h4>
+	<div class='item'>
+		<div class='itemLabel'>
+			Stock Limit
+		</div>
+		<div class='itemContent'>
+			{{:data.stock_owned}} / {{:data.stock_limit}}
+		</div>
+	</div>
+	<b>Current Holdings</b>
+	<div class="statusDisplay"style="overflow: auto;">
+		{{for data.holdings}}
+			{{:value.holding}} {{:helper.link('Surrender Stocks', 'cross', {'action' : 'surrender', 'ref' : value.ref})}}<br><br>
+		{{/for}}
+	</div>
+	When stocks are surrendered they are split between any remaining stockholders automatically. This will free up stock limit for you to use.
+{{/if}}
+{{if data.menu == 3}}
+	<h4>Nexus Account Level/Limits</h4><br><hr>
+	Your nexus account level controls how many stocks you can own and how many personal shuttles you can hold.<br>
+	<div class='item'>
+		<div class='itemLabel'>
+			 Nexus Account Level
+		</div>
+		<div class='itemContent'>
+			{{:data.level}}
+		</div>
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			Upgrade:
+		</div>
+		{{if data.max_level}}
+			<div class='itemContent'>
+				Max Level
+			</div>
+		{{else}}
+			<div class='itemContent'>
+				{{:helper.link(data.upgrade_cost, '', {'action' : 'upgrade'})}}
+			</div>
+		{{/if}}
+	</div>
+	{{:data.upgrade_desc}}
+	<br><hr><br>
+	<b>Personal Limits (Used/Available)</b>
+	<div class="statusDisplay"style="overflow: auto;">
+		<b>Stock Limit:</b>{{:data.stock_limit_used}} stocks / {{:data.stocks_limit}} stocks <br><br>
+		<b>Shuttle Limit:</b>{{:data.shuttle_limit_used}}  / {{:data.shuttle_limit}}<br><br>
+	</div>
+
+{{/if}}

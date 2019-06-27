@@ -9,7 +9,7 @@
 	icon_state = "conpipe-s"
 	anchored = 0
 	density = 0
-	matter = list(DEFAULT_WALL_MATERIAL = 1850)
+	matter = list(MATERIAL_STEEL = 1850)
 	level = 2
 	var/sortType = ""
 	var/ptype = 0
@@ -25,51 +25,51 @@
 		var/right = turn(dir, -90)
 
 		switch(ptype)
-			if(0)
+			if(DISPOSAL_TYPE_PIPE)
 				base_state = "pipe-s"
 				dpdir = dir | flip
-			if(1)
+			if(DISPOSAL_TYPE_BENT_PIPE)
 				base_state = "pipe-c"
 				dpdir = dir | right
-			if(2)
+			if(DISPOSAL_TYPE_JUNCTION)
 				base_state = "pipe-j1"
 				dpdir = dir | right | flip
-			if(3)
+			if(DISPOSAL_TYPE_FLIPPED_JUNCTION)
 				base_state = "pipe-j2"
 				dpdir = dir | left | flip
-			if(4)
+			if(DISPOSAL_TYPE_Y_JUNCTION)
 				base_state = "pipe-y"
 				dpdir = dir | left | right
-			if(5)
+			if(DISPOSAL_TYPE_TRUNK)
 				base_state = "pipe-t"
 				dpdir = dir
 			 // disposal bin has only one dir, thus we don't need to care about setting it
-			if(6)
+			if(DISPOSAL_TYPE_BIN)
 				if(anchored)
 					base_state = "disposal"
 				else
 					base_state = "condisposal"
 
-			if(7)
+			if(DISPOSAL_TYPE_OUTLET)
 				base_state = "outlet"
 				dpdir = dir
 
-			if(8)
+			if(DISPOSAL_TYPE_INTAKE)
 				base_state = "intake"
 				dpdir = dir
 
-			if(9)
+			if(DISPOSAL_TYPE_SORT)
 				base_state = "pipe-j1s"
 				dpdir = dir | right | flip
 
-			if(10)
+			if(DISPOSAL_TYPE_FLIPPED_SORT)
 				base_state = "pipe-j2s"
 				dpdir = dir | left | flip
 ///// Z-Level stuff
-			if(11)
+			if(DISPOSAL_TYPE_Z_UP)
 				base_state = "pipe-u"
 				dpdir = dir
-			if(12)
+			if(DISPOSAL_TYPE_Z_DOWN)
 				base_state = "pipe-d"
 				dpdir = dir
 ///// Z-Level stuff
@@ -79,7 +79,7 @@
 			if(14)
 				base_state = "pipe-tagger-partial"
 				dpdir = dir | flip
-			if(15)
+			if(DISPOSAL_TYPE_DIVERSION)
 				base_state = "pipe-j1s"
 				dpdir = dir | flip
 
@@ -108,6 +108,12 @@
 		set category = "Object"
 		set name = "Rotate Pipe"
 		set src in view(1)
+
+		if(!usr || !Adjacent(usr))
+			return
+
+		if(usr.incapacitated())
+			return
 
 		if(usr.stat)
 			return
@@ -158,7 +164,7 @@
 				return /obj/structure/disposaloutlet
 			if(8)
 				return /obj/machinery/disposal/deliveryChute
-			if(9)
+			if(DISPOSAL_TYPE_SORT)
 				switch(subtype)
 					if(0)
 						return /obj/structure/disposalpipe/sortjunction
@@ -166,7 +172,7 @@
 						return /obj/structure/disposalpipe/sortjunction/wildcard
 					if(2)
 						return /obj/structure/disposalpipe/sortjunction/untagged
-			if(10)
+			if(DISPOSAL_TYPE_FLIPPED_SORT)
 				switch(subtype)
 					if(0)
 						return /obj/structure/disposalpipe/sortjunction/flipped
@@ -175,16 +181,16 @@
 					if(2)
 						return /obj/structure/disposalpipe/sortjunction/untagged/flipped
 ///// Z-Level stuff
-			if(11)
+			if(DISPOSAL_TYPE_Z_UP)
 				return /obj/structure/disposalpipe/up
-			if(12)
+			if(DISPOSAL_TYPE_Z_DOWN)
 				return /obj/structure/disposalpipe/down
 ///// Z-Level stuff
-			if(13)
+			if(DISPOSAL_TYPE_TAGGER)
 				return /obj/structure/disposalpipe/tagger
-			if(14)
+			if(DISPOSAL_TYPE_PARTIAL_TAGGER)
 				return /obj/structure/disposalpipe/tagger/partial
-			if(15)
+			if(DISPOSAL_TYPE_DIVERSION)
 				return /obj/structure/disposalpipe/diversion_junction
 		return
 
@@ -269,9 +275,9 @@
 			playsound(src.loc, 'sound/items/Ratchet.ogg', 100, 1)
 			update()
 
-		else if(istype(I, /obj/item/weapon/weldingtool))
+		else if(istype(I, /obj/item/weapon/tool/weldingtool))
 			if(anchored)
-				var/obj/item/weapon/weldingtool/W = I
+				var/obj/item/weapon/tool/weldingtool/W = I
 				if(W.remove_fuel(0,user))
 					playsound(src.loc, 'sound/items/Welder2.ogg', 100, 1)
 					to_chat(user, "Welding the [nicetype] in place.")
@@ -330,3 +336,6 @@
 		return 1
 	else
 		return 0
+
+/obj/structure/disposalconstruct/AltClick()
+	rotate()

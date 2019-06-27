@@ -1,0 +1,128 @@
+// Pretty much everything here is stolen from the dna scanner FYI
+/obj/machinery/bodyscanner
+	name = "Body Scanner"
+	icon = 'icons/obj/Cryogenic2.dmi'
+	icon_state = "body_scanner_0"
+	density = TRUE
+	anchored = TRUE
+	idle_power_usage = 60
+	active_power_usage = 10000	//10 kW. It's a big all-body scanner.
+	circuit_type = /obj/item/weapon/circuitboard/bodyscanner
+	var/mob/living/carbon/human/occupant
+	var/locked
+
+/obj/machinery/bodyscanner/New()
+	..()
+	ADD_SAVED_VAR(occupant)
+	ADD_SAVED_VAR(locked)
+
+	ADD_SKIP_EMPTY(occupant)
+
+
+/obj/machinery/bodyscanner/examine(mob/user)
+	. = ..()
+	if (. && occupant && user.Adjacent(src))
+		occupant.examine(user)
+
+/obj/machinery/bodyscanner/relaymove(mob/user as mob)
+	..()
+	src.go_out()
+
+/obj/machinery/bodyscanner/verb/eject()
+	set src in oview(1)
+	set category = "Object"
+	set name = "Eject Body Scanner"
+
+	if (usr.incapacitated())
+		return
+	src.go_out()
+	add_fingerprint(usr)
+
+/obj/machinery/bodyscanner/verb/move_inside()
+	set src in oview(1)
+	set category = "Object"
+	set name = "Enter Body Scanner"
+
+	if(!user_can_move_target_inside(usr,usr))
+		return
+	usr.pulling = null
+	usr.client.perspective = EYE_PERSPECTIVE
+	usr.client.eye = src
+
+/obj/machinery/bodyscanner/proc/drop_contents()
+	for(var/obj/O in (contents - component_parts))
+		O.dropInto(loc)
+
+/obj/machinery/bodyscanner/proc/go_out()
+	if ((!( src.occupant ) || src.locked))
+		return
+	drop_contents()
+	if (src.occupant.client)
+		src.occupant.client.eye = src.occupant.client.mob
+		src.occupant.client.perspective = MOB_PERSPECTIVE
+	src.occupant.dropInto(loc)
+	src.occupant = null
+	update_use_power(POWER_USE_IDLE)
+	update_icon()
+	SetName(initial(name))
+
+/obj/machinery/bodyscanner/attackby(obj/item/grab/normal/G, user as mob)
+	if(default_deconstruction_screwdriver(user, G))
+		updateUsrDialog()
+		return
+	else if(default_deconstruction_crowbar(user, G))
+		return
+	else if(default_part_replacement(user, G))
+		return
+	else if(istype(G))
+		var/mob/M = G.affecting
+		if(!user_can_move_target_inside(M, user))
+			return	
+		qdel(G)
+	return ..()
+
+/obj/machinery/bodyscanner/proc/user_can_move_target_inside(var/mob/target, var/mob/user)
+	if(!istype(user) || !istype(target))
+		return FALSE
+	if(occupant)
+		to_chat(user, "<span class='warning'>The scanner is already occupied!</span>")
+		return FALSE
+	if(target.abiotic())
+		to_chat(user, "<span class='warning'>The subject cannot have abiotic items on.</span>")
+		return FALSE
+	if(target.buckled)
+		to_chat(user, "<span class='warning'>Unbuckle the subject before attempting to move them.</span>")
+		return FALSE
+
+	target.forceMove(src)
+	src.occupant = target
+
+	update_use_power(POWER_USE_ACTIVE)
+	update_icon()
+	drop_contents()
+	SetName("[name] ([occupant])")
+
+	src.add_fingerprint(user)
+	return TRUE
+
+/obj/machinery/bodyscanner/on_update_icon()
+	if(!occupant)
+		src.icon_state = "body_scanner_0"
+	else
+		src.icon_state = "body_scanner_1"
+
+//Like grap-put, but for mouse-drop.
+/obj/machinery/bodyscanner/MouseDrop_T(var/mob/target, var/mob/user)
+	if(!CanMouseDrop(target, user) || !istype(target))
+		return FALSE
+	user.visible_message("<span class='notice'>\The [user] begins placing \the [target] into \the [src].</span>", "<span class='notice'>You start placing \the [target] into \the [src].</span>")
+	if(!do_after(user, 30, src))
+		return
+	if(!user_can_move_target_inside(target, user))
+		return
+
+/obj/machinery/bodyscanner/Destroy()
+	if(occupant)
+		occupant.dropInto(loc)
+		occupant = null
+	. = ..()

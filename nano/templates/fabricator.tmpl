@@ -1,0 +1,179 @@
+{{:helper.link('Designs', null, {'menu' : 1}, data.menu == 1 ? 'selected' : null)}}{{:helper.link('Queue & Materials', null, {'menu' : 2}, data.menu == 2 ? 'selected' : null)}}{{:helper.link('Access & Linking', null, {'menu' : 3}, data.menu == 3 ? 'selected' : null)}}
+<br><br>
+<div class="statusDisplay" style="overflow: auto;">
+	<b>Currently Building: {{:data.current}}</b> ({{:data.builtperc}}% ready)
+</div>
+<br><br>
+{{if data.menu == 1}}
+	{{if data.design_name}}
+		<h2>{{:data.design_name}}</h2><br>
+		{{:helper.link('Back', null, {'back' : 1})}}<br><hr>
+		<div class='item'>
+			<div class='itemLabel'>
+				Description
+			</div>
+			<div class='itemContent'>
+				{{:data.design_description}}<br>
+				<img src='{{:data.design_icon}}' height=100 width=100>
+			</div>
+		</div>
+		<br>
+		<div class='item'>
+			<div class='itemLabel'>
+				Material Requirements
+			</div>
+			<div class='itemContent'>
+				{{:data.design_materials}}
+			</div>
+		</div>
+		<br>
+		{{if data.design_research}}
+			<div class='item'>
+				<div class='itemLabel'>
+					Research Requirement
+				</div>
+				<div class='itemContent'>
+					{{:data.design_research}}
+				</div>
+			</div>
+			{{if data.has_research}}
+				<div class='item'>
+					<div class='itemLabel'>
+						Tech Disk Uses
+					</div>
+					<div class='itemContent'>
+						{{:data.disk_uses}}
+					</div>
+				</div>
+			{{/if}}
+			<br>
+		{{/if}}
+		<div class='item'>
+			<div class='itemLabel'>
+				Build Time
+			</div>
+			<div class='itemContent'>
+				{{:data.design_buildtime}}
+			</div>
+		</div>
+		<br>
+		<hr>
+		{{:helper.link('Add to Queue', null, {'build' : 1})}}
+		
+	{{else}}
+		<h2>Designs</h2><br><hr>
+		<div class="item">
+			{{for data.categories}}
+				{{:helper.link(value, null, {'category' : value}, value == data.category ? 'selected' : null)}}
+			{{empty}}
+			There are no known designs
+			{{/for}}
+		</div>
+		<br><hr><br>
+		{{for data.buildable}}
+			{{if value.category == data.category}}
+				<div class="item">
+					<div class="itemLabel">
+						{{:helper.link(value.name, null, {'select' : value.ref})}}
+					</div>
+					<div class="itemContentMedium">
+						Resources:{{:value.resources}}<br>
+						{{if value.research}}
+							Research: {{:value.research}}
+						{{/if}}
+					</div>
+				</div>
+			{{/if}}
+		{{/for}}
+		
+	{{/if}}
+	
+{{/if}}
+{{if data.menu == 2}}
+	<h2>Queue & Materials</h2><br><hr><br>
+	<div class="item">
+		<b>Queue contains:</b>
+	</div>
+	{{if data.current}}
+		<div class="item">
+			<div class="itemLabelWide">
+				<b>Now: {{:data.current}}</b> ({{:data.builtperc}}% ready)
+			</div>
+			<div class="itemContentMedium">
+				{{:helper.link('Cancel', null, {'remove' : 1})}}
+			</div>
+		</div>
+		{{for data.queue}}
+			<div class="item">
+			<div class="itemLabelWide">
+				{{:index + 2}}: {{:value}}
+			</div>
+			<div class="itemContentMedium">
+				{{:helper.link('Remove', null, {'remove' : index + 2})}}
+			</div>
+		{{empty}}
+			<div class="item">
+				The queue is empty
+			</div>
+		{{/for}}
+	{{else}}
+		<div class="item">
+			Nothing
+		</div>
+	{{/if}}
+	<br><hr><br>
+	<b>Materials:</b>
+	{{for data.materials}}
+		<div class="item">
+			<div class="itemLabelWide">
+				{{:value.mat}}: {{:value.amt}}/{{:data.maxres}}
+			</div>
+			<div class="itemContentMedium">
+				{{:helper.link('x1', null, {'eject' : value.mat, 'amount' : 1}, value.amt >= 2000 ? null : 'disabled')}}
+				{{:helper.link('x5', null, {'eject' : value.mat, 'amount' : 5}, value.amt >= 10000 ? null : 'disabled')}}
+				{{:helper.link('x10', null, {'eject' : value.mat, 'amount' : 10}, value.amt >= 20000 ? null : 'disabled')}}
+				{{:helper.link('Stack', null, {'eject' : value.mat, 'amount' : 0})}}
+				{{:helper.link('All', null, {'eject' : value.mat, 'amount' : -1})}}
+			</div>
+		</div>
+	{{/for}}
+	{{if data.has_reagents}}
+		<b>Chemicals:</b>
+		{{for data.reagents}}
+			<div class="item">
+				<div class="itemLabelWide">
+					{{:value.reg}}: {{:value.amt}}
+				</div>
+			</div>
+		{{/for}}
+	{{/if}}
+{{/if}}
+{{if data.menu == 3}}
+	<h2>Access & Linking</h2><br><hr><br>
+	<div class='item'>
+		<div class='itemLabel'>
+			Linked Organization
+		</div>
+		{{if data.org}}
+			<div class='itemContent'>
+				{{:helper.link(data.org, null, {'nothing' : 1}, 'selected')}}{{:helper.link('**UNLINK**', null, {'unlink_org' : 1})}}
+			</div>
+		{{else}}
+			<div class='itemContent'>
+				{{:helper.link('**LINK ORGANIZATION**', null, {'link_org' : 1})}}
+			</div>
+		{{/if}}
+	</div>
+	This will link the fabricator to the organization your current ID card is synced to if you have core machine access.<br>Fabricators must be linked to an organization with a network capable of supporting them in order to function.
+	<br><br>
+	<div class='item'>
+		<div class='itemLabel'>
+			Production Access
+		</div>
+		<div class='itemContent'>
+			{{:helper.link(data.access, null, {'change_access' : 1})}}
+		</div>
+	</div>
+	Anyone with production access will be able to add and remove items to the build queue and remove materials from the machine.
+{{/if}}
+

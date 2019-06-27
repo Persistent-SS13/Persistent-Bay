@@ -7,6 +7,8 @@
 	force = 1
 	throwforce = 1
 	w_class = 1
+	damtype = DAM_BLUNT
+	mass = 0.2
 	slot_flags = SLOT_EARS
 	var/string_colour
 
@@ -14,7 +16,8 @@
 	icon_state = "coin[rand(1,10)]"
 	..()
 
-/obj/item/weapon/material/coin/update_icon()
+/obj/item/weapon/material/coin/on_update_icon()
+	..()
 	if(!isnull(string_colour))
 		var/image/I = image(icon = icon, icon_state = "coin_string_overlay")
 		I.appearance_flags |= RESET_COLOR
@@ -43,22 +46,22 @@
 
 // Subtypes.
 /obj/item/weapon/material/coin/gold
-	default_material = "gold"
+	default_material = MATERIAL_GOLD
 
 /obj/item/weapon/material/coin/silver
-	default_material = "silver"
+	default_material = MATERIAL_SILVER
 
 /obj/item/weapon/material/coin/diamond
-	default_material = "diamond"
+	default_material = MATERIAL_DIAMOND
 
 /obj/item/weapon/material/coin/iron
-	default_material = "iron"
+	default_material = MATERIAL_IRON
 
 /obj/item/weapon/material/coin/uranium
-	default_material = "uranium"
+	default_material = MATERIAL_URANIUM
 
 /obj/item/weapon/material/coin/platinum
-	default_material = "platinum"
+	default_material = MATERIAL_PLATINUM
 
 /obj/item/weapon/material/coin/phoron
-	default_material = "phoron"
+	default_material = MATERIAL_PHORON

@@ -6,7 +6,6 @@
 	var/obj/wrapped = null
 	density = 1
 	var/sortTag = null
-	flags = NOBLUDGEON
 	mouse_drag_pointer = MOUSE_ACTIVE_POINTER
 	var/examtext = null
 	var/nameset = 0
@@ -52,7 +51,7 @@
 				user.visible_message("\The [user] titles \the [src] with \a [W], marking down: \"[str]\"",\
 				"<span class='notice'>You title \the [src]: \"[str]\"</span>",\
 				"You hear someone scribbling a note.")
-				name = "[name] ([str])"
+				SetName("[name] ([str])")
 				if(!examtext && !nameset)
 					nameset = 1
 					update_icon()
@@ -73,8 +72,8 @@
 				"You hear someone scribbling a note.")
 	return
 
-/obj/structure/bigDelivery/update_icon()
-	overlays = new()
+/obj/structure/bigDelivery/on_update_icon()
+	overlays.Cut()
 	if(nameset || examtext)
 		var/image/I = new/image('icons/obj/storage.dmi',"delivery_label")
 		if(icon_state == "deliverycloset")
@@ -112,7 +111,7 @@
 
 /obj/structure/bigDelivery/Destroy()
 	if(wrapped) //sometimes items can disappear. For example, bombs. --rastaf0
-		wrapped.forceMove(get_turf(src))
+		wrapped.dropInto(loc)
 		if(istype(wrapped, /obj/structure/closet))
 			var/obj/structure/closet/O = wrapped
 			O.welded = 0
@@ -134,14 +133,14 @@
 	var/tag_x
 
 /obj/item/smallDelivery/proc/unwrap(var/mob/user)
-	if (!wrapped || !Adjacent(user))
+	if (!contents.len || !Adjacent(user))
 		return
-	wrapped.forceMove(user.loc)
-	user.drop_item()
-	if(ishuman(user))
-		user.put_in_hands(wrapped)
-	else
-		wrapped.forceMove(get_turf(src))
+
+	user.put_in_hands(wrapped)
+	// Take out any other items that might be in the package
+	for(var/obj/item/I in src)
+		user.put_in_hands(I)
+
 	qdel(src)
 
 /obj/item/smallDelivery/attack_robot(mob/user as mob)
@@ -177,7 +176,7 @@
 				user.visible_message("\The [user] titles \the [src] with \a [W], marking down: \"[str]\"",\
 				"<span class='notice'>You title \the [src]: \"[str]\"</span>",\
 				"You hear someone scribbling a note.")
-				name = "[name] ([str])"
+				SetName("[name] ([str])")
 				if(!examtext && !nameset)
 					nameset = 1
 					update_icon()
@@ -199,8 +198,8 @@
 				"You hear someone scribbling a note.")
 	return
 
-/obj/item/smallDelivery/update_icon()
-	overlays = new()
+/obj/item/smallDelivery/on_update_icon()
+	overlays.Cut()
 	if((nameset || examtext) && icon_state != "deliverycrate1")
 		var/image/I = new/image('icons/obj/storage.dmi',"delivery_label")
 		if(icon_state == "deliverycrate5")
@@ -232,12 +231,18 @@
 			to_chat(user, "<span class='notice'>It has a note attached which reads, \"[examtext]\"</span>")
 	return
 
-/obj/item/weapon/packageWrap
+/obj/item/stack/package_wrap
 	name = "package wrapper"
+	desc = "Heavy duty brown paper used to wrap packages to protect them during shipping."
+	singular_name = "sheet"
+	max_amount = 25
 	icon = 'icons/obj/items.dmi'
 	icon_state = "deliveryPaper"
 	w_class = ITEM_SIZE_NORMAL
-	var/amount = 25.0
+
+/obj/item/stack/package_wrap/twenty_five
+	amount = 25
+
 
 /obj/item/weapon/c_tube
 	name = "cardboard tube"
@@ -249,7 +254,7 @@
 	throw_speed = 4
 	throw_range = 5
 
-/obj/item/weapon/packageWrap/afterattack(var/obj/target as obj, mob/user as mob, proximity)
+/obj/item/stack/package_wrap/afterattack(var/obj/target as obj, mob/user as mob, proximity)
 	if(!proximity) return
 	if(!istype(target))	//this really shouldn't be necessary (but it is).	-Pete
 		return
@@ -265,7 +270,7 @@
 
 	if (istype(target, /obj/item) && !(istype(target, /obj/item/weapon/storage) && !istype(target,/obj/item/weapon/storage/box)))
 		var/obj/item/O = target
-		if (src.amount > 1)
+		if (src.get_amount() >= 1)
 			var/obj/item/smallDelivery/P = new /obj/item/smallDelivery(get_turf(O.loc))	//Aaannd wrap it up!
 			if(!istype(O.loc, /turf))
 				if(user.client)
@@ -277,60 +282,60 @@
 			if(i in list(1,2,3,4,5))
 				P.icon_state = "deliverycrate[i]"
 				switch(i)
-					if(1) P.name = "tiny parcel"
-					if(3) P.name = "normal-sized parcel"
-					if(4) P.name = "large parcel"
-					if(5) P.name = "huge parcel"
+					if(1) P.SetName("tiny parcel")
+					if(3) P.SetName("normal-sized parcel")
+					if(4) P.SetName("large parcel")
+					if(5) P.SetName("huge parcel")
 			if(i < 1)
 				P.icon_state = "deliverycrate1"
-				P.name = "tiny parcel"
+				P.SetName("tiny parcel")
 			if(i > 5)
 				P.icon_state = "deliverycrate5"
-				P.name = "huge parcel"
+				P.SetName("huge parcel")
 			P.add_fingerprint(usr)
 			O.add_fingerprint(usr)
 			src.add_fingerprint(usr)
-			src.amount -= 1
+			src.use(1)
 			user.visible_message("\The [user] wraps \a [target] with \a [src].",\
-			"<span class='notice'>You wrap \the [target], leaving [amount] units of paper on \the [src].</span>",\
+			"<span class='notice'>You wrap \the [target], leaving [src.get_amount()] units of paper on \the [src].</span>",\
 			"You hear someone taping paper around a small object.")
+		else
+			// Should be possible only to see this as a borg?
+			to_chat(user, "<span class='warning'>The synthesizer is out of paper.</span>")
 	else if (istype(target, /obj/structure/closet/crate))
 		var/obj/structure/closet/crate/O = target
-		if (src.amount > 3 && !O.opened)
+		if (src.get_amount() >= 3 && !O.opened)
 			var/obj/structure/bigDelivery/P = new /obj/structure/bigDelivery(get_turf(O.loc))
 			P.icon_state = "deliverycrate"
 			P.wrapped = O
 			O.forceMove(P)
-			src.amount -= 3
+			src.use(3)
 			user.visible_message("\The [user] wraps \a [target] with \a [src].",\
-			"<span class='notice'>You wrap \the [target], leaving [amount] units of paper on \the [src].</span>",\
+			"<span class='notice'>You wrap \the [target], leaving [src.get_amount()] units of paper on \the [src].</span>",\
 			"You hear someone taping paper around a large object.")
-		else if(src.amount < 3)
+		else if(src.get_amount() < 3)
 			to_chat(user, "<span class='warning'>You need more paper.</span>")
 	else if (istype (target, /obj/structure/closet))
 		var/obj/structure/closet/O = target
-		if (src.amount > 3 && !O.opened)
+		if (src.get_amount() >= 3 && !O.opened)
 			var/obj/structure/bigDelivery/P = new /obj/structure/bigDelivery(get_turf(O.loc))
 			P.wrapped = O
 			O.welded = 1
 			O.forceMove(P)
-			src.amount -= 3
+			src.use(3)
 			user.visible_message("\The [user] wraps \a [target] with \a [src].",\
-			"<span class='notice'>You wrap \the [target], leaving [amount] units of paper on \the [src].</span>",\
+			"<span class='notice'>You wrap \the [target], leaving [src.get_amount()] units of paper on \the [src].</span>",\
 			"You hear someone taping paper around a large object.")
-		else if(src.amount < 3)
+		else if(src.get_amount() < 3)
 			to_chat(user, "<span class='warning'>You need more paper.</span>")
 	else
 		to_chat(user, "<span class='notice'>The object you are trying to wrap is unsuitable for the sorting machinery!</span>")
-	if (src.amount <= 0)
+	if (src.get_amount() <= 0)
 		new /obj/item/weapon/c_tube( src.loc )
 		qdel(src)
 		return
 	return
 
-/obj/item/weapon/packageWrap/examine(mob/user)
-	if(..(user, 0))
-		to_chat(user, "<span class='notice'>There are [amount] units of package wrap left!</span>")
 	return
 
 /obj/item/device/destTagger
@@ -340,9 +345,9 @@
 	var/currTag = 0
 	w_class = ITEM_SIZE_SMALL
 	item_state = "electronic"
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT
-	matter = list(DEFAULT_WALL_MATERIAL = 100, "glass" = 34)
+	matter = list(MATERIAL_STEEL = 100, MATERIAL_GLASS = 34)
 
 /obj/item/device/destTagger/proc/openwindow(mob/user as mob)
 	var/dat = "<tt><center><h1><b>TagMaster 2.3</b></h1></center>"
@@ -365,15 +370,23 @@
 /obj/item/device/destTagger/OnTopic(user, href_list, state)
 	if(href_list["nextTag"] && href_list["nextTag"] in GLOB.tagger_locations)
 		src.currTag = href_list["nextTag"]
+		to_chat(user, "<span class='notice'>You set [src] to <b>[src.currTag]</b>.</span>")
+		playsound(src.loc, 'sound/machines/chime.ogg', 50, 1)
 		. = TOPIC_REFRESH
 	if(href_list["nextTag"] == "CUSTOM")
 		var/dest = input(user, "Please enter custom location.", "Location", src.currTag ? src.currTag : "None")
 		if(CanUseTopic(user, state))
-			if(dest != "None")
+			if(dest && lowertext(dest) != "none")
 				src.currTag = dest
+				to_chat(user, "<span class='notice'>You designate a custom location on [src], set to <b>[src.currTag]</b>.</span>")
+				playsound(src.loc, 'sound/machines/chime.ogg', 50, 1)
 			else
 				src.currTag = 0
+				to_chat(user, "<span class='notice'>You clear [src]'s custom location.</span>")
+				playsound(src.loc, 'sound/machines/chime.ogg', 50, 1)
 			. = TOPIC_REFRESH
+		else
+			. = TOPIC_HANDLED
 
 	if(. == TOPIC_REFRESH)
 		openwindow(user)
@@ -396,7 +409,7 @@
 /obj/machinery/disposal/deliveryChute/interact()
 	return
 
-/obj/machinery/disposal/deliveryChute/update_icon()
+/obj/machinery/disposal/deliveryChute/on_update_icon()
 	return
 
 /obj/machinery/disposal/deliveryChute/Bumped(var/atom/movable/AM) //Go straight into the chute
@@ -411,7 +424,10 @@
 			if(AM.loc.y != src.loc.y-1) return
 		if(WEST)
 			if(AM.loc.x != src.loc.x-1) return
-
+			
+	var/mob/living/L = AM
+	if (istype(L) && L.ckey)
+		log_and_message_admins("has flushed themselves down \the [src].", L)
 	if(istype(AM, /obj))
 		var/obj/O = AM
 		O.forceMove(src)
@@ -430,6 +446,17 @@
 	sleep(10)
 	playsound(src, 'sound/machines/disposalflush.ogg', 50, 0, 0)
 	sleep(5) // wait for animation to finish
+
+	if(prob(35))
+		for(var/mob/living/carbon/human/L in src)
+			var/list/obj/item/organ/external/crush = L.get_damageable_organs()
+			if(!crush.len)
+				return
+
+			var/obj/item/organ/external/E = pick(crush)
+
+			E.take_damage(45, DAM_BLUNT, used_weapon = "Blunt Trauma")
+			to_chat(L, "\The [src]'s mechanisms crush your [E.name]!")
 
 	H.init(src)	// copy the contents of disposer to holder
 
@@ -458,7 +485,7 @@
 			to_chat(user, "You attach the screws around the power connection.")
 			return
 	else if(isWelder(I) && c_mode==1)
-		var/obj/item/weapon/weldingtool/W = I
+		var/obj/item/weapon/tool/weldingtool/W = I
 		if(W.remove_fuel(1,user))
 			to_chat(user, "You start slicing the floorweld off the delivery chute.")
 			if(do_after(user,20, src))
@@ -480,3 +507,13 @@
 	if(trunk)
 		trunk.linked = null
 	..()
+
+/obj/item/stack/package_wrap/cyborg
+	name = "package wrapper synthesizer"
+	icon = 'icons/obj/items.dmi'
+	icon_state = "deliveryPaper"
+	gender = NEUTER
+	matter = null
+	uses_charge = 1
+	charge_costs = list(1)
+	stacktype = /obj/item/stack/package_wrap

@@ -3,6 +3,7 @@
 /obj/item/modular_computer
 	name = "Modular Computer"
 	desc = "A modular computer. You shouldn't see this."
+	obj_flags = OBJ_FLAG_DAMAGEABLE
 
 	var/enabled = 0											// Whether the computer is turned on.
 	var/screen_on = 1										// Whether the computer is active/opened/it's screen is on.
@@ -29,16 +30,15 @@
 	randpixel = 0											// And no random pixelshifting on-creation either.
 	var/icon_state_unpowered = null							// Icon state when the computer is turned off
 	var/icon_state_menu = "menu"							// Icon state overlay when the computer is turned on, but no program is loaded that would override the screen.
-	var/icon_state_screensaver = null
+	var/icon_state_screensaver = "standby"
 	var/max_hardware_size = 0								// Maximal hardware size. Currently, tablets have 1, laptops 2 and consoles 3. Limits what hardware types can be installed.
 	var/steel_sheet_cost = 5								// Amount of steel sheets refunded when disassembling an empty frame of this computer.
 	var/light_strength = 0									// Intensity of light this computer emits. Comparable to numbers light fixtures use.
 	var/list/idle_threads = list()							// Idle programs on background. They still receive process calls but can't be interacted with.
 
 	// Damage of the chassis. If the chassis takes too much damage it will break apart.
-	var/damage = 0				// Current damage level
-	var/broken_damage = 50		// Damage level at which the computer ceases to operate
-	var/max_damage = 100		// Damage level at which the computer breaks apart.
+	broken_threshold = 0.5		// Damage level at which the computer ceases to operate
+	max_health = 100
 
 	// Important hardware (must be installed for computer to work)
 	var/obj/item/weapon/computer_hardware/processor_unit/processor_unit				// CPU. Without it the computer won't run. Better CPUs can run more programs at once.
@@ -52,5 +52,21 @@
 	var/obj/item/weapon/computer_hardware/hard_drive/portable/portable_drive		// Portable data storage
 	var/obj/item/weapon/computer_hardware/ai_slot/ai_slot							// AI slot, an intellicard housing that allows modifications of AIs.
 	var/obj/item/weapon/computer_hardware/tesla_link/tesla_link						// Tesla Link, Allows remote charging from nearest APC.
-	var/obj/item/weapon/computer_hardware/dna_scanner/dna_scanner					// DNA scanner, for Cloning Control
-	var/obj/item/weapon/computer_hardware/logistic_processor/logistic_processor				// DNA scanner, for Cloning Control
+	var/obj/item/weapon/computer_hardware/logistic_processor/logistic_processor		// For command programs
+	var/obj/item/weapon/computer_hardware/scanner/scanner							// One of several optional scanner attachments.
+
+	var/modifiable = TRUE	// can't be modified or damaged if false
+
+	var/stores_pen = FALSE
+	var/obj/item/weapon/pen/stored_pen
+	//Pain and suffering
+	var/receives_updates = TRUE
+	var/updating = FALSE
+	var/updates = 0
+	var/update_progress = 0
+	var/update_postshutdown
+	var/list/terminals          // List of open terminal datums.
+
+/obj/item/modular_computer/proc/ConnectedFaction()
+	return network_card? network_card.connected_network : null
+

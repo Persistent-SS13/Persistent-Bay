@@ -10,7 +10,6 @@
 	icon = 'icons/obj/cooking_machines.dmi'
 	density = 1
 	anchored = 1
-	use_power = 1
 	idle_power_usage = 5
 
 	var/on_icon						// Icon state used when cooking.
@@ -41,6 +40,7 @@
 		to_chat(usr, "You can see \a [cooking_obj] inside.")
 
 /obj/machinery/cooker/attackby(var/obj/item/I, var/mob/user)
+	set waitfor = 0  //So that any remaining parts of calling proc don't have to wait for the long cooking time ahead.
 
 	if(!cook_type || (stat & (NOPOWER|BROKEN)))
 		to_chat(user, "<span class='warning'>\The [src] is not working.</span>")
@@ -83,7 +83,7 @@
 	// Gotta hurt.
 	if(istype(cooking_obj, /obj/item/weapon/holder))
 		for(var/mob/living/M in cooking_obj.contents)
-			M.apply_damage(rand(30,40), BURN, BP_CHEST)
+			M.apply_damage(rand(30,40), DAM_BURN, BP_CHEST)
 
 	// Not sure why a food item that passed the previous checks would fail to drop, but safety first.
 	if(!user.unEquip(I))
@@ -100,7 +100,8 @@
 	sleep(cook_time)
 
 	// Sanity checks.
-	check_cooking_obj()
+	if(check_cooking_obj())
+		return // Cooking failed/was terminated.
 
 	// RIP slow-moving held mobs.
 	if(istype(cooking_obj, /obj/item/weapon/holder))
@@ -141,7 +142,7 @@
 	if(!can_burn_food)
 		icon_state = off_icon
 		cooking = 0
-		result.forceMove(get_turf(src))
+		result.dropInto(loc)
 		cooking_obj = null
 	else
 		var/failed
@@ -173,7 +174,7 @@
 		cooking_obj = null
 		icon_state = off_icon
 		cooking = 0
-		return
+		return TRUE
 
 /obj/machinery/cooker/attack_hand(var/mob/user)
 
@@ -208,10 +209,10 @@
 
 /obj/machinery/cooker/proc/change_product_strings(var/obj/item/weapon/reagent_containers/food/snacks/product)
 	if(product.type == /obj/item/weapon/reagent_containers/food/snacks/variable) // Base type, generic.
-		product.name = "[cook_type] [cooking_obj.name]"
+		product.SetName("[cook_type] [cooking_obj.name]")
 		product.desc = "[cooking_obj.desc] It has been [cook_type]."
 	else
-		product.name = "[cooking_obj.name] [product.name]"
+		product.SetName("[cooking_obj.name] [product.name]")
 
 /obj/machinery/cooker/proc/change_product_appearance(var/obj/item/weapon/reagent_containers/food/snacks/product)
 	if(product.type == /obj/item/weapon/reagent_containers/food/snacks/variable) // Base type, generic.

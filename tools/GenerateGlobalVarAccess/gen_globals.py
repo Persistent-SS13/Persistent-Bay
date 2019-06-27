@@ -27,6 +27,7 @@ import hashlib
 import os
 import sys
 import re
+import io
 from distutils import spawn
 try:
 	import subprocess32 as subprocess
@@ -52,7 +53,7 @@ def main():
 
 	else:
 		tree = CompileFile(namespace.projectfile)
-		with open("dump.txt", "wt") as f:
+		with io.open("dump.txt", "wt", encoding='latin-1') as f:
 			f.write(tree)
 
 
@@ -83,7 +84,7 @@ def GenerateMD5(fname):
 def CompileFile(filename):
 	compiler_path = FindCompiler()
 
-	return subprocess.check_output([compiler_path, "-code_tree", filename], universal_newlines=True)
+	return subprocess.check_output([compiler_path, "-code_tree", filename]).decode(encoding='latin-1')
 
 def FindCompiler():
 	compiler_path = None;

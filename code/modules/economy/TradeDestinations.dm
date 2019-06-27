@@ -10,7 +10,7 @@ var/list/weighted_mundaneevent_locations = list()
 	var/list/willing_to_sell = list()
 	var/can_shuttle_here = 0		//one day crew from the exodus will be able to travel to this destination
 	var/list/viable_random_events = list()
-	var/list/temp_price_change[BIOMEDICAL]
+	var/list/temp_price_change[EC_BIOMEDICAL]
 	var/list/viable_mundane_events = list()
 
 /datum/trade_destination/proc/get_custom_eventstring(var/event_type)
@@ -23,8 +23,8 @@ var/list/weighted_mundaneevent_locations = list()
 	distance = 1.2
 	willing_to_buy = list()
 	willing_to_sell = list()
-	viable_random_events = list(SECURITY_BREACH, CORPORATE_ATTACK, AI_LIBERATION)
-	viable_mundane_events = list(ELECTION, RESIGNATION, CELEBRITY_DEATH)
+	viable_random_events = list(EC_SECURITY_BREACH, EC_CORPORATE_ATTACK, EC_AI_LIBERATION)
+	viable_mundane_events = list(EC_ELECTION, EC_RESIGNATION, EC_CELEBRITY_DEATH)
 
 /datum/trade_destination/anansi
 	name = "NSS Anansi"
@@ -32,11 +32,11 @@ var/list/weighted_mundaneevent_locations = list()
 	distance = 1.7
 	willing_to_buy = list()
 	willing_to_sell = list()
-	viable_random_events = list(SECURITY_BREACH, CULT_CELL_REVEALED, BIOHAZARD_OUTBREAK, PIRATES, ALIEN_RAIDERS)
-	viable_mundane_events = list(RESEARCH_BREAKTHROUGH, RESEARCH_BREAKTHROUGH, BARGAINS, GOSSIP)
+	viable_random_events = list(EC_SECURITY_BREACH, EC_CULT_CELL_REVEALED, EC_BIOHAZARD_OUTBREAK, EC_PIRATES, EC_ALIEN_RAIDERS)
+	viable_mundane_events = list(EC_RESEARCH_BREAKTHROUGH, EC_RESEARCH_BREAKTHROUGH, EC_BARGAINS, EC_GOSSIP)
 
 /datum/trade_destination/anansi/get_custom_eventstring(var/event_type)
-	if(event_type == RESEARCH_BREAKTHROUGH)
+	if(event_type == EC_RESEARCH_BREAKTHROUGH)
 		return "Thanks to research conducted on the NSS Anansi, Second Red Cross Society wishes to announce a major breakthough in the field of \
 		[pick("mind-machine interfacing","neuroscience","nano-augmentation","genetics")]. [GLOB.using_map.company_name] is expected to announce a co-exploitation deal within the fortnight."
 	return null
@@ -47,7 +47,7 @@ var/list/weighted_mundaneevent_locations = list()
 	distance = 0.1
 	willing_to_buy = list()
 	willing_to_sell = list()
-	viable_random_events = list(SECURITY_BREACH, AI_LIBERATION, PIRATES)
+	viable_random_events = list(EC_SECURITY_BREACH, EC_AI_LIBERATION, EC_PIRATES)
 
 /datum/trade_destination/redolant
 	name = "OAV Redolant"
@@ -55,11 +55,11 @@ var/list/weighted_mundaneevent_locations = list()
 	distance = 0.6
 	willing_to_buy = list()
 	willing_to_sell = list()
-	viable_random_events = list(INDUSTRIAL_ACCIDENT, PIRATES, CORPORATE_ATTACK)
-	viable_mundane_events = list(RESEARCH_BREAKTHROUGH, RESEARCH_BREAKTHROUGH)
+	viable_random_events = list(EC_INDUSTRIAL_ACCIDENT, EC_PIRATES, EC_CORPORATE_ATTACK)
+	viable_mundane_events = list(EC_RESEARCH_BREAKTHROUGH, EC_RESEARCH_BREAKTHROUGH)
 
 /datum/trade_destination/redolant/get_custom_eventstring(var/event_type)
-	if(event_type == RESEARCH_BREAKTHROUGH)
+	if(event_type == EC_RESEARCH_BREAKTHROUGH)
 		return "Thanks to research conducted on the OAV Redolant, Osiris Atmospherics wishes to announce a major breakthough in the field of \
 		[pick("phoron research","high energy flux capacitance","super-compressed materials","theoretical particle physics")]. [GLOB.using_map.company_name] is expected to announce a co-exploitation deal within the fortnight."
 	return null
@@ -70,8 +70,8 @@ var/list/weighted_mundaneevent_locations = list()
 	distance = 7.5
 	willing_to_buy = list()
 	willing_to_sell = list()
-	viable_random_events = list(PIRATES, INDUSTRIAL_ACCIDENT)
-	viable_mundane_events = list(TOURISM)
+	viable_random_events = list(EC_PIRATES, EC_INDUSTRIAL_ACCIDENT)
+	viable_mundane_events = list(EC_TOURISM)
 
 /datum/trade_destination/biesel
 	name = "Biesel"
@@ -79,8 +79,8 @@ var/list/weighted_mundaneevent_locations = list()
 	distance = 2.3
 	willing_to_buy = list()
 	willing_to_sell = list()
-	viable_random_events = list(RIOTS, INDUSTRIAL_ACCIDENT, BIOHAZARD_OUTBREAK, CULT_CELL_REVEALED, FESTIVAL, MOURNING)
-	viable_mundane_events = list(BARGAINS, GOSSIP, SONG_DEBUT, MOVIE_RELEASE, ELECTION, TOURISM, RESIGNATION, CELEBRITY_DEATH)
+	viable_random_events = list(EC_RIOTS, EC_INDUSTRIAL_ACCIDENT, EC_BIOHAZARD_OUTBREAK, EC_CULT_CELL_REVEALED, EC_FESTIVAL, EC_MOURNING)
+	viable_mundane_events = list(EC_BARGAINS, EC_GOSSIP, EC_SONG_DEBUT, EC_MOVIE_RELEASE, EC_ELECTION, EC_TOURISM, EC_RESIGNATION, EC_CELEBRITY_DEATH)
 
 /datum/trade_destination/new_gibson
 	name = "New Gibson"
@@ -88,8 +88,8 @@ var/list/weighted_mundaneevent_locations = list()
 	distance = 6.6
 	willing_to_buy = list()
 	willing_to_sell = list()
-	viable_random_events = list(RIOTS, INDUSTRIAL_ACCIDENT, BIOHAZARD_OUTBREAK, CULT_CELL_REVEALED, FESTIVAL, MOURNING)
-	viable_mundane_events = list(ELECTION, TOURISM, RESIGNATION)
+	viable_random_events = list(EC_RIOTS, EC_INDUSTRIAL_ACCIDENT, EC_BIOHAZARD_OUTBREAK, EC_CULT_CELL_REVEALED, EC_FESTIVAL, EC_MOURNING)
+	viable_mundane_events = list(EC_ELECTION, EC_TOURISM, EC_RESIGNATION)
 
 /datum/trade_destination/luthien
 	name = "Luthien"
@@ -97,8 +97,8 @@ var/list/weighted_mundaneevent_locations = list()
 	distance = 8.9
 	willing_to_buy = list()
 	willing_to_sell = list()
-	viable_random_events = list(WILD_ANIMAL_ATTACK, CULT_CELL_REVEALED, FESTIVAL, MOURNING, ANIMAL_RIGHTS_RAID, ALIEN_RAIDERS)
-	viable_mundane_events = list(ELECTION, TOURISM, BIG_GAME_HUNTERS, RESIGNATION)
+	viable_random_events = list(EC_WILD_ANIMAL_ATTACK, EC_CULT_CELL_REVEALED, EC_FESTIVAL, EC_MOURNING, EC_ANIMAL_RIGHTS_RAID, EC_ALIEN_RAIDERS)
+	viable_mundane_events = list(EC_ELECTION, EC_TOURISM, EC_BIG_GAME_HUNTERS, EC_RESIGNATION)
 
 /datum/trade_destination/reade
 	name = "Reade"
@@ -106,5 +106,5 @@ var/list/weighted_mundaneevent_locations = list()
 	distance = 7.5
 	willing_to_buy = list()
 	willing_to_sell = list()
-	viable_random_events = list(WILD_ANIMAL_ATTACK, CULT_CELL_REVEALED, FESTIVAL, MOURNING, ANIMAL_RIGHTS_RAID, ALIEN_RAIDERS)
-	viable_mundane_events = list(ELECTION, TOURISM, BIG_GAME_HUNTERS, RESIGNATION)
+	viable_random_events = list(EC_WILD_ANIMAL_ATTACK, EC_CULT_CELL_REVEALED, EC_FESTIVAL, EC_MOURNING, EC_ANIMAL_RIGHTS_RAID, EC_ALIEN_RAIDERS)
+	viable_mundane_events = list(EC_ELECTION, EC_TOURISM, EC_BIG_GAME_HUNTERS, EC_RESIGNATION)

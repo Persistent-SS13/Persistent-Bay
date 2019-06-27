@@ -15,6 +15,15 @@
 
 	var/list/ingredients = list()
 
+/obj/item/weapon/reagent_containers/food/snacks/csandwich/New()
+	. = ..()
+	ADD_SAVED_VAR(ingredients)
+	ADD_SKIP_EMPTY(ingredients)
+
+/obj/item/weapon/reagent_containers/food/snacks/csandwich/Initialize()
+	. = ..()
+	update()
+
 /obj/item/weapon/reagent_containers/food/snacks/csandwich/attackby(obj/item/W as obj, mob/user as mob)
 
 	var/sandwich_limit = 4
@@ -26,17 +35,17 @@
 		to_chat(user, "<span class='wwarning'>If you put anything else on \the [src] it's going to collapse.</span>")
 		return
 	else if(istype(W,/obj/item/weapon/material/shard))
+		if(!user.unEquip(W, src))
+			return
 		to_chat(user, "<span class='warning'>You hide [W] in \the [src].</span>")
-		user.drop_item()
-		W.loc = src
 		update()
 		return
 	else if(istype(W,/obj/item/weapon/reagent_containers/food/snacks))
+		if(!user.unEquip(W, src))
+			return
 		to_chat(user, "<span class='warning'>You layer [W] over \the [src].</span>")
 		var/obj/item/weapon/reagent_containers/F = W
 		F.reagents.trans_to_obj(src, F.reagents.total_volume)
-		user.drop_item()
-		W.loc = src
 		ingredients += W
 		update()
 		return
@@ -69,9 +78,9 @@
 	T.pixel_y = (ingredients.len * 2)+1
 	overlays += T
 
-	name = lowertext("[fullname] sandwich")
-	if(length(name) > 80) name = "[pick(list("absurd","colossal","enormous","ridiculous"))] sandwich"
-	w_class = n_ceil(Clamp((ingredients.len/2),2,4))
+	SetName(lowertext("[fullname] sandwich"))
+	if(length(name) > 80) SetName("[pick(list("absurd","colossal","enormous","ridiculous"))] sandwich")
+	w_class = Ceiling(Clamp((ingredients.len/2),2,4))
 
 /obj/item/weapon/reagent_containers/food/snacks/csandwich/Destroy()
 	for(var/obj/item/O in ingredients)

@@ -7,8 +7,10 @@
 	thrown_force_divisor = 0.75 // 15 with weight 20 (steel)
 	throw_speed = 10
 	throw_range = 15
-	sharp = 1
-	edge =  1
+	sharpness = 1
+	damtype = DAM_PIERCE
+	mass = 0.150
+	armor_penetration = 10
 
 /obj/item/weapon/material/star/New()
 	..()
@@ -21,4 +23,4 @@
 		M.adjustToxLoss(rand(urgh/2,urgh))
 
 /obj/item/weapon/material/star/ninja
-	default_material = "uranium"
+	default_material = MATERIAL_URANIUM

@@ -3,6 +3,7 @@
 	name = "explosive implant"
 	desc = "A military grade micro bio-explosive. Highly dangerous."
 	icon_state = "implant_evil"
+	origin_tech = list(TECH_MATERIAL = 1, TECH_BIO = 2, TECH_ILLEGAL = 3)
 	var/elevel
 	var/phrase
 	var/code = 13
@@ -132,7 +133,7 @@
 			if (part)
 				if (istype(part,/obj/item/organ/external/chest) ||	\
 					istype(part,/obj/item/organ/external/groin))
-					part.take_damage(60, used_weapon = "Explosion")
+					part.take_damage(60,  DAM_BOMB, used_weapon = "Explosion")
 				else
 					part.droplimb(0,DROPLIMB_BLUNT)
 			explosion(T, -1, -1, 2, 3)

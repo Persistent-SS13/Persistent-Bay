@@ -43,7 +43,7 @@
 			if(do_after_cooldown(target))
 				if(T == chassis.loc && src == chassis.selected)
 					cargo_holder.cargo += O
-					O.loc = chassis
+					O.forceMove(chassis)
 					O.anchored = 0
 					occupant_message("<span class='notice'>[target] succesfully loaded.</span>")
 					log_message("Loaded [O]. Cargo compartment capacity: [cargo_holder.cargo_capacity - cargo_holder.cargo.len]")
@@ -56,7 +56,7 @@
 			var/mob/living/M = target
 			if(M.stat>1) return
 			if(chassis.occupant.a_intent == I_HURT)
-				M.take_overall_damage(dam_force)
+				M.take_overall_damage(dam_force, DAM_BLUNT)
 				M.adjustOxyLoss(round(dam_force/2))
 				M.updatehealth()
 				occupant_message("<span class='warning'>You squeeze [target] with [src.name]. Something cracks.</span>")
@@ -107,18 +107,18 @@
 					if(locate(/obj/item/mecha_parts/mecha_equipment/tool/hydraulic_clamp) in chassis.equipment)
 						var/obj/structure/ore_box/ore_box = locate(/obj/structure/ore_box) in chassis:cargo
 						if(ore_box)
-							for(var/obj/item/weapon/ore/ore in range(chassis,1))
+							for(var/obj/item/stack/ore/ore in range(chassis,1))
 								if(get_dir(chassis,ore)&chassis.dir)
 									ore.Move(ore_box)
-				else if(istype(target, /turf/simulated/asteroid))
-					for(var/turf/simulated/asteroid/M in range(chassis,1))
+				else if(istype(target, /turf/simulated/floor/asteroid))
+					for(var/turf/simulated/floor/asteroid/M in range(chassis,1))
 						if(get_dir(chassis,M)&chassis.dir)
 							M.gets_dug()
 					log_message("Drilled through \the [target]")
 					if(locate(/obj/item/mecha_parts/mecha_equipment/tool/hydraulic_clamp) in chassis.equipment)
 						var/obj/structure/ore_box/ore_box = locate(/obj/structure/ore_box) in chassis:cargo
 						if(ore_box)
-							for(var/obj/item/weapon/ore/ore in range(chassis,1))
+							for(var/obj/item/stack/ore/ore in range(chassis,1))
 								if(get_dir(chassis,ore)&chassis.dir)
 									ore.Move(ore_box)
 				else if(target.loc == C)
@@ -160,17 +160,17 @@
 					if(locate(/obj/item/mecha_parts/mecha_equipment/tool/hydraulic_clamp) in chassis.equipment)
 						var/obj/structure/ore_box/ore_box = locate(/obj/structure/ore_box) in chassis:cargo
 						if(ore_box)
-							for(var/obj/item/weapon/ore/ore in range(chassis,1))
+							for(var/obj/item/stack/ore/ore in range(chassis,1))
 								if(get_dir(chassis,ore)&chassis.dir)
 									ore.Move(ore_box)
-				else if(istype(target,/turf/simulated/asteroid))
-					for(var/turf/simulated/asteroid/M in range(target,1))
+				else if(istype(target,/turf/simulated/floor/asteroid))
+					for(var/turf/simulated/floor/asteroid/M in range(target,1))
 						M.gets_dug()
 					log_message("Drilled through \the [target]")
 					if(locate(/obj/item/mecha_parts/mecha_equipment/tool/hydraulic_clamp) in chassis.equipment)
 						var/obj/structure/ore_box/ore_box = locate(/obj/structure/ore_box) in chassis:cargo
 						if(ore_box)
-							for(var/obj/item/weapon/ore/ore in range(target,1))
+							for(var/obj/item/stack/ore/ore in range(target,1))
 								ore.Move(ore_box)
 				else if(target.loc == C)
 					log_message("Drilled through \the [target]")
@@ -189,63 +189,64 @@
 	var/spray_amount = 5	//units of liquid per particle. 5 is enough to wet the floor - it's a big fire extinguisher, so should be fine
 	var/max_water = 1000
 
-	New()
-		create_reagents(max_water)
-		reagents.add_reagent(/datum/reagent/water, max_water)
-		..()
+/obj/item/mecha_parts/mecha_equipment/tool/extinguisher/New()
+	create_reagents(max_water)
+	reagents.add_reagent(/datum/reagent/water, max_water)
+	..()
 
-	action(atom/target) //copypasted from extinguisher. TODO: Rewrite from scratch.
-		if(!action_checks(target) || get_dist(chassis, target)>3) return
-		if(get_dist(chassis, target)>2) return
-		set_ready_state(0)
-		if(do_after_cooldown(target))
-			if( istype(target, /obj/structure/reagent_dispensers/watertank) && get_dist(chassis,target) <= 1)
-				var/obj/o = target
-				var/amount = o.reagents.trans_to_obj(src, 200)
-				occupant_message("<span class='notice'>[amount] units transferred into internal tank.</span>")
-				playsound(chassis, 'sound/effects/refill.ogg', 50, 1, -6)
-				return
+/obj/item/mecha_parts/mecha_equipment/tool/extinguisher/action(atom/target) //copypasted from extinguisher. TODO: Rewrite from scratch.
+	if(!action_checks(target) || get_dist(chassis, target)>3) return
+	if(get_dist(chassis, target)>2) return
+	set_ready_state(0)
+	if(do_after_cooldown(target))
+		if( istype(target, /obj/structure/reagent_dispensers) && get_dist(chassis,target) <= 1)
+			var/obj/o = target
+			var/amount = o.reagents.trans_to_obj(src, 200)
+			occupant_message("<span class='notice'>[amount] units transferred into internal tank.</span>")
+			playsound(chassis, 'sound/effects/refill.ogg', 50, 1, -6)
+			return
 
-			if (src.reagents.total_volume < 1)
-				occupant_message("<span class='warning'>\The [src] is empty.</span>")
-				return
+		if (src.reagents.total_volume < 1)
+			occupant_message("<span class='warning'>\The [src] is empty.</span>")
+			return
 
-			playsound(chassis, 'sound/effects/extinguish.ogg', 75, 1, -3)
+		playsound(chassis, 'sound/effects/extinguish.ogg', 75, 1, -3)
 
-			var/direction = get_dir(chassis,target)
+		addtimer(CALLBACK(src, .proc/do_spray, target), 0)
+		return 1
 
-			var/turf/T = get_turf(target)
-			var/turf/T1 = get_step(T,turn(direction, 90))
-			var/turf/T2 = get_step(T,turn(direction, -90))
+/obj/item/mecha_parts/mecha_equipment/tool/extinguisher/get_equip_info()
+	return "[..()] \[[src.reagents.total_volume]\]"
 
-			var/list/the_targets = list(T,T1,T2)
+/obj/item/mecha_parts/mecha_equipment/tool/extinguisher/on_reagent_change()
+	return
 
-			for(var/a = 1 to 5)
-				spawn(0)
-					var/obj/effect/effect/water/W = new /obj/effect/effect/water(get_turf(chassis))
-					var/turf/my_target
-					if(a == 1)
-						my_target = T
-					else if(a == 2)
-						my_target = T1
-					else if(a == 3)
-						my_target = T2
-					else
-						my_target = pick(the_targets)
-					W.create_reagents(5)
-					if(!W || !src)
-						return
-					reagents.trans_to_obj(W, spray_amount)
-					W.set_color()
-					W.set_up(my_target)
-			return 1
+/obj/item/mecha_parts/mecha_equipment/tool/extinguisher/proc/do_spray(var/atom/Target)
+	var/direction = get_dir(chassis,Target)
 
-	get_equip_info()
-		return "[..()] \[[src.reagents.total_volume]\]"
+	var/turf/T = get_turf(Target)
+	var/turf/T1 = get_step(T,turn(direction, 90))
+	var/turf/T2 = get_step(T,turn(direction, -90))
 
-	on_reagent_change()
-		return
-	/**
+	var/list/the_targets = list(T,T1,T2)
+
+	for(var/a = 1 to 5)
+		var/obj/effect/effect/water/W = new /obj/effect/effect/water(get_turf(chassis))
+		var/turf/my_target
+		if(a == 1)
+			my_target = T
+		else if(a == 2)
+			my_target = T1
+		else if(a == 3)
+			my_target = T2
+		else
+			my_target = pick(the_targets)
+		W.create_reagents(5)
+		if(!W || !src)
+			return
+		reagents.trans_to_obj(W, spray_amount)
+		W.set_color()
+		W.set_up(my_target)
 
 /obj/item/mecha_parts/mecha_equipment/tool/rcd
 	name = "mounted RCD"
@@ -348,7 +349,7 @@
 		return "[..()] \[<a href='?src=\ref[src];mode=0'>D</a>|<a href='?src=\ref[src];mode=1'>C</a>|<a href='?src=\ref[src];mode=2'>A</a>\]"
 
 
-	**/
+
 
 /obj/item/mecha_parts/mecha_equipment/teleporter
 	name = "teleporter"
@@ -414,7 +415,7 @@
 		P.icon = 'icons/obj/objects.dmi'
 		P.failchance = 0
 		P.icon_state = "anom"
-		P.name = "wormhole"
+		P.SetName("wormhole")
 		do_after_cooldown()
 		src = null
 		spawn(rand(150,300))
@@ -760,7 +761,7 @@
 				if(pow_chan)
 					var/delta = min(12, ER.chassis.cell.maxcharge-cur_charge)
 					ER.chassis.give_power(delta)
-					A.use_power(delta*ER.coeff, pow_chan)
+					A.use_power_oneoff(delta*ER.coeff, pow_chan)
 		return
 
 
@@ -865,11 +866,11 @@
 			return
 		var/datum/gas_mixture/GM = new
 		if(prob(10))
-			T.assume_gas("phoron", 100, 1500+T0C)
+			T.assume_gas(GAS_PHORON, 100, 1500+T0C)
 			T.visible_message("The [src] suddenly disgorges a cloud of heated phoron.")
 			destroy()
 		else
-			T.assume_gas("phoron", 5, istype(T) ? T.air.temperature : T20C)
+			T.assume_gas(GAS_PHORON, 5, istype(T) ? T.air.temperature : T20C)
 			T.visible_message("The [src] suddenly disgorges a cloud of phoron.")
 		T.assume_air(GM)
 		return
@@ -927,7 +928,7 @@
 
 	process(var/obj/item/mecha_parts/mecha_equipment/generator/nuclear/EG)
 		if(..())
-			radiation_repository.radiate(EG, (EG.rad_per_cycle * 3))
+			SSradiation.radiate(EG, (EG.rad_per_cycle * 3))
 		return 1
 
 
@@ -963,7 +964,7 @@
 					if(do_after_cooldown(target))
 						if(T == chassis.loc && src == chassis.selected)
 							cargo_holder.cargo += O
-							O.loc = chassis
+							O.forceMove(chassis)
 							O.anchored = 0
 							chassis.occupant_message("<span class='notice'>[target] succesfully loaded.</span>")
 							chassis.log_message("Loaded [O]. Cargo compartment capacity: [cargo_holder.cargo_capacity - cargo_holder.cargo.len]")
@@ -1010,6 +1011,11 @@
 		AM.forceMove(get_turf(src))
 		to_chat(AM, "<span class='danger'>You tumble out of the destroyed [src.name]!</span>")
 	return ..()
+
+/obj/item/mecha_parts/mecha_equipment/tool/passenger/after_load()
+	..()
+	if (chassis)
+		chassis.verbs |= /obj/mecha/proc/move_inside_passenger
 
 /obj/item/mecha_parts/mecha_equipment/tool/passenger/Exit(atom/movable/O)
 	return 0

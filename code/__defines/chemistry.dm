@@ -21,11 +21,10 @@
 #define IS_VOX     2
 #define IS_SKRELL  3
 #define IS_UNATHI  4
-#define IS_TAJARA  5
-#define IS_XENOS   6
-#define IS_SLIME   8
-#define IS_NABBER  9
-#define IS_PHOROSIAN 10
+#define IS_XENOS   5
+#define IS_SLIME   6
+#define IS_NABBER  7
+#define IS_PHOROSIAN 8
 
 #define CE_STABLE        "stable"       // Inaprovaline
 #define CE_ANTIBIOTIC    "antibiotic"   // Spaceacilin
@@ -44,8 +43,18 @@
 #define CE_TOXIN         "toxins"       // Generic toxins, stops autoheal.
 #define CE_BREATHLOSS    "breathloss"   // Breathing depression, makes you need more air
 #define CE_MIND    		 "mindbending"  // Stabilizes or wrecks mind. Used for hallucinations
-#define CE_CRYO			 "cryogenic"	// Prevents damage from being frozen
+#define CE_CRYO 	     "cryogenic"    // Prevents damage from being frozen
+#define CE_BLOCKAGE	     "blockage"     // Gets in the way of blood circulation, higher the worse
+#define CE_SQUEAKY		 "squeaky"      // Helium voice. Squeak squeak.
+#define CE_THIRDEYE      "thirdeye"     // Gives xray vision.
+#define CE_SEDATE        "sedate"       // Applies sedation effects, i.e. paralysis, inability to use items, etc.
+#define CE_COKE			 "cocaine"		// Cocaine like effects
+#define CE_PHORON		 "phoraine"		// Special phoron-drug events
+
 
 //reagent flags
 #define IGNORE_MOB_SIZE 0x1
 #define AFFECTS_DEAD    0x2
+
+#define HANDLE_REACTIONS(_reagents)  SSchemistry.active_holders[_reagents] = TRUE
+#define UNQUEUE_REACTIONS(_reagents) SSchemistry.active_holders -= _reagents

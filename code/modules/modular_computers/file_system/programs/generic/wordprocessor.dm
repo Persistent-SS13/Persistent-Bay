@@ -3,24 +3,28 @@
 	filedesc = "NanoWord"
 	extended_desc = "This program allows the editing and preview of text documents."
 	program_icon_state = "word"
+	program_key_state = "atmos_key"
 	size = 4
 	requires_ntnet = 0
-	available_on_ntnet = 1
+	available_on_ntnet = TRUE
 	nanomodule_path = /datum/nano_module/program/computer_wordprocessor/
 	var/browsing
 	var/open_file
 	var/loaded_data
 	var/error
 	var/is_edited
+	usage_flags = PROGRAM_ALL
+	category = PROG_OFFICE
 
-/datum/computer_file/program/wordprocessor/proc/get_file(var/filename)
-	var/obj/item/weapon/computer_hardware/hard_drive/HDD = computer.hard_drive
-	if(!HDD)
-		return
-	var/datum/computer_file/data/F = HDD.find_file_by_name(filename)
-	if(!istype(F))
-		return
-	return F
+/datum/computer_file/program/wordprocessor/New(comp)
+	..(comp)
+	ADD_SAVED_VAR(open_file)
+	ADD_SKIP_EMPTY(open_file)
+
+/datum/computer_file/program/wordprocessor/after_load()
+	. = ..()
+	if(open_file)
+		open_file(open_file)
 
 /datum/computer_file/program/wordprocessor/proc/open_file(var/filename)
 	var/datum/computer_file/data/F = get_file(filename)
@@ -32,7 +36,7 @@
 /datum/computer_file/program/wordprocessor/proc/save_file(var/filename)
 	var/datum/computer_file/data/F = get_file(filename)
 	if(!F) //try to make one if it doesn't exist
-		F = create_file(filename, loaded_data)
+		F = create_file(filename, loaded_data, /datum/computer_file/data/text)
 		return !isnull(F)
 	var/datum/computer_file/data/backup = F.clone()
 	var/obj/item/weapon/computer_hardware/hard_drive/HDD = computer.hard_drive
@@ -47,22 +51,6 @@
 	is_edited = 0
 	return 1
 
-/datum/computer_file/program/wordprocessor/proc/create_file(var/newname, var/data = "")
-	if(!newname)
-		return
-	var/obj/item/weapon/computer_hardware/hard_drive/HDD = computer.hard_drive
-	if(!HDD)
-		return
-	if(get_file(newname))
-		return
-	var/datum/computer_file/data/F = new/datum/computer_file/data()
-	F.filename = newname
-	F.filetype = "TXT"
-	F.stored_data = data
-	F.calculate_size()
-	if(HDD.store_file(F))
-		return F
-
 /datum/computer_file/program/wordprocessor/Topic(href, href_list)
 	if(..())
 		return 1
@@ -74,6 +62,7 @@
 	if(href_list["PRG_taghelp"])
 		to_chat(usr, "<span class='notice'>The hologram of a googly-eyed paper clip helpfully tells you:</span>")
 		var/help = {"
+		\[tab\] : Indents the text.
 		\[br\] : Creates a linebreak.
 		\[center\] - \[/center\] : Centers the text.
 		\[h1\] - \[/h1\] : First level heading.
@@ -94,10 +83,19 @@
 		\[grid\] - \[/grid\] : Table without visible borders, for layouts.
 		\[row\] - New table row.
 		\[cell\] - New table cell.
-		\[logo\] - Inserts NT logo image.
+		\[logo\] - Inserts the Nexus logo image.
+		\[exologo\] - Inserts EXO logo image.
+		\[ntlogo\] - Inserts the NT logo image.
 		\[bluelogo\] - Inserts blue NT logo image.
 		\[solcrest\] - Inserts SCG crest image.
-		\[terraseal\] - Inserts TCC seal"}
+		\[eclogo\] - Inserts the Expeditionary Corps logo.
+		\[daislogo\] - Inserts the Deimos Advanced Information Systems logo.
+		\[xynlogo\] - Inserts the Xyngergy logo.
+		\[iccgseal\] - Inserts ICCG seal
+		\[fleetlogo\] - Inserts the logo of the SCG Fleet
+		\[ocielogo\] - Inserts the logo of the Office of Civil Investigation and Enforcement
+		\[terraseal\] - Inserts TCC seal.
+		\[nfrseal\] - Inserts NFR seal."}
 
 		to_chat(usr, help)
 		return 1
@@ -132,7 +130,7 @@
 		var/newname = sanitize(input(usr, "Enter file name:", "New File") as text|null)
 		if(!newname)
 			return 1
-		var/datum/computer_file/data/F = create_file(newname)
+		var/datum/computer_file/data/F = create_file(newname, "", /datum/computer_file/data/text)
 		if(F)
 			open_file = F.filename
 			loaded_data = ""
@@ -145,7 +143,7 @@
 		var/newname = sanitize(input(usr, "Enter file name:", "Save As") as text|null)
 		if(!newname)
 			return 1
-		var/datum/computer_file/data/F = create_file(newname, loaded_data)
+		var/datum/computer_file/data/F = create_file(newname, loaded_data, /datum/computer_file/data/text)
 		if(F)
 			open_file = F.filename
 		else
@@ -227,7 +225,7 @@
 		data["filedata"] = pencode2html(PRG.loaded_data)
 		data["filename"] = "UNNAMED"
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "word_processor.tmpl", "Word Processor", 575, 700, state = state)
 		ui.auto_update_layout = 1

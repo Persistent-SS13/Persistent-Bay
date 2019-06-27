@@ -27,9 +27,9 @@
 	if(useMS)
 		if(prob(5))
 			// /obj/machinery/message_server/proc/send_pda_message(var/recipient = "",var/sender = "",var/message = "")
-			var/obj/item/device/pda/P
+			var/obj/item/modular_computer/pda/P
 			var/list/viables = list()
-			for(var/obj/item/device/pda/check_pda in sortAtom(PDAs))
+			for(var/obj/item/modular_computer/pda/check_pda in sortAtom(PDAs))
 				if (!check_pda.owner||check_pda.toff||check_pda == src||check_pda.hidden)
 					continue
 				viables.Add(check_pda)
@@ -48,7 +48,7 @@
 					"Once you are a player with MaxBet, you will also receive lucrative weekly and monthly promotions.",\
 					"You will be able to enjoy over 450 top-flight casino games at MaxBet.")
 				if(2)
-					sender = pick(300;"QuickDatingSystem",200;"Find your russian bride",50;"Tajaran beauties are waiting",50;"Find your secret skrell crush",50;"Beautiful unathi brides")
+					sender = pick(300;"QuickDatingSystem",200;"Find your russian bride",50;"Nabber beauties are waiting",50;"Find your secret skrell crush",50;"Beautiful unathi brides")
 					message = pick("Your profile caught my attention and I wanted to write and say hello (QuickDating).",\
 					"If you will write to me on my email [pick(first_names_female)]@[pick(last_names)].[pick("ru","ck","tj","ur","nt")] I shall necessarily send you a photo (QuickDating).",\
 					"I want that we write each other and I hope, that you will like my profile and you will answer me (QuickDating).",\
@@ -59,7 +59,7 @@
 					message = pick("Luxury watches for Blowout sale prices!",\
 					"Watches, Jewelry & Accessories, Bags & Wallets !",\
 					"Deposit T100 and get T300 totally free!",\
-					" 100K NT.|WOWGOLD õnly T89            <HOT>",\
+					" 100K NT.|WOWGOLD &otilde;nly T89            <HOT>",\
 					"We have been filed with a complaint from one of your customers in respect of their business relations with you.",\
 					"We kindly ask you to open the COMPLAINT REPORT (attached) to reply on this complaint..")
 				if(4)

@@ -17,16 +17,24 @@
 
 /obj/machinery/disease2/isolator/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/isolator(src)
-	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/weapon/computer_hardware/hard_drive/portable(src)
+	ADD_SAVED_VAR(isolating)
+	ADD_SAVED_VAR(state)
+	ADD_SAVED_VAR(sample)
+	ADD_SKIP_EMPTY(sample)
+
+/obj/machinery/disease2/isolator/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		component_parts = list()
+		component_parts += new /obj/item/weapon/circuitboard/isolator(src)
+		component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+		component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+		component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+		component_parts += new /obj/item/weapon/computer_hardware/hard_drive/portable(src)
 	RefreshParts()
 
 /obj/machinery/disease2/isolator/update_icon()
-	if (stat & (BROKEN|NOPOWER))
+	if (inoperable())
 		icon_state = "isolator"
 		return
 
@@ -38,31 +46,28 @@
 		icon_state = "isolator"
 
 /obj/machinery/disease2/isolator/attackby(var/obj/O as obj, var/mob/user)
-	if(!istype(O,/obj/item/weapon/reagent_containers/syringe)) return
-	var/obj/item/weapon/reagent_containers/syringe/S = O
-
-	if(sample)
-		to_chat(user, "\The [src] is already loaded.")
-		return
-
-	sample = S
-	user.drop_item()
-	S.loc = src
-
-	user.visible_message("[user] adds \a [O] to \the [src]!", "You add \a [O] to \the [src]!")
-	GLOB.nanomanager.update_uis(src)
-	update_icon()
-
-	src.attack_hand(user)
-
 	if(default_deconstruction_screwdriver(user, O))
-		return
-	if(default_deconstruction_crowbar(user, O))
-		return
-	..()
+		return 1
+	else if(default_deconstruction_crowbar(user, O))
+		return 1
+	else if(istype(O,/obj/item/weapon/reagent_containers/syringe))
+		var/obj/item/weapon/reagent_containers/syringe/S = O
+		if(sample)
+			to_chat(user, "\The [src] is already loaded.")
+			return
+		sample = S
+		user.drop_item()
+		S.forceMove(src)
+		user.visible_message("[user] adds \a [O] to \the [src]!", "You add \a [O] to \the [src]!")
+		SSnano.update_uis(src)
+		update_icon()
+		src.attack_hand(user)
+		return 1
+	else 
+		return ..()
 
 /obj/machinery/disease2/isolator/attack_hand(mob/user as mob)
-	if(stat & (NOPOWER|BROKEN)) return
+	if(inoperable()) return
 	ui_interact(user)
 
 /obj/machinery/disease2/isolator/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
@@ -88,10 +93,10 @@
 						if (ID in virusDB)
 							R = virusDB[ID]
 
-						var/datum/dna/A = B.data["donor"]
-						var/datum/dna/D = A.Clone()
+						var/weakref/W = B.data["donor"]
+						var/mob/living/carbon/human/D = W.resolve()
 						pathogen_pool.Add(list(list(\
-							"name" = "[D ? D.species : "Unidentified"] [B.name]", \
+							"name" = "[D ? D.get_species() : "Unidentified"] [B.name]", \
 							"dna" = B.data["blood_DNA"], \
 							"unique_id" = V.uniqueID, \
 							"reference" = "\ref[V]", \
@@ -117,7 +122,7 @@
 					"name" = entry.fields["name"], \
 					"description" = replacetext(desc, "\n", ""))
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "pathogenic_isolator.tmpl", src.name, 400, 500)
 		ui.set_initial_data(data)
@@ -126,6 +131,8 @@
 /obj/machinery/disease2/isolator/Process()
 	if (isolating > 0)
 		isolating -= 1
+		if(virus2)
+			infect_nearby(virus2)
 		if (isolating == 0)
 			if (virus2)
 				var/obj/item/weapon/virusdish/d = new /obj/item/weapon/virusdish(src.loc)
@@ -133,12 +140,12 @@
 				virus2 = null
 				ping("\The [src] pings, \"Viral strain isolated.\"")
 
-			GLOB.nanomanager.update_uis(src)
+			SSnano.update_uis(src)
 			update_icon()
 
-/obj/machinery/disease2/isolator/OnTopic(user, href_list)
+/obj/machinery/disease2/isolator/OnTopic(mob/user, href_list)
 	if (href_list["close"])
-		GLOB.nanomanager.close_user_uis(user, src, "main")
+		SSnano.close_user_uis(user, src, "main")
 		return TOPIC_HANDLED
 
 	if (href_list[HOME])
@@ -163,6 +170,7 @@
 	if(!sample) return TOPIC_HANDLED
 
 	if (href_list["isolate"])
+		operator_skill = user.get_skill_value(core_skill)
 		var/datum/disease2/disease/V = locate(href_list["isolate"])
 		if (V)
 			virus2 = V
@@ -184,7 +192,7 @@
 	switch (state)
 		if (HOME)
 			if (!sample) return
-			P.name = "paper - Patient Diagnostic Report"
+			P.SetName("paper - Patient Diagnostic Report")
 			P.info = {"
 				[virology_letterhead("Patient Diagnostic Report")]
 				<center><small><font color='red'><b>CONFIDENTIAL MEDICAL REPORT</b></font></small></center><br>
@@ -197,9 +205,9 @@
 			P.info += "<hr>"
 
 			for(var/datum/reagent/blood/B in sample.reagents.reagent_list)
-				var/datum/dna/A = B.data["donor"]
-				var/datum/dna/D = A.Clone()
-				P.info += "<large><u>[D ? D.species : "Unidentified"] [B.name]:</u></large><br>[B.data["blood_DNA"]]<br>"
+				var/weakref/W = B.data["donor"]
+				var/mob/living/carbon/human/D = W.resolve()
+				P.info += "<large><u>[D ? D.get_species() : "Unidentified"] [B.name]:</u></large><br>[B.data["blood_DNA"]]<br>"
 
 				var/list/virus = B.data["virus2"]
 				P.info += "<u>Pathogens:</u> <br>"
@@ -216,7 +224,7 @@
 "}
 
 		if (LIST)
-			P.name = "paper - Virus List"
+			P.SetName("paper - Virus List")
 			P.info = {"
 				[virology_letterhead("Virus List")]
 "}
@@ -234,7 +242,7 @@
 "}
 
 		if (ENTRY)
-			P.name = "paper - Viral Profile"
+			P.SetName("paper - Viral Profile")
 			P.info = {"
 				[virology_letterhead("Viral Profile")]
 				[entry.fields["description"]]

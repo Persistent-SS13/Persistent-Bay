@@ -1,0 +1,45 @@
+<h2>Lace Storage Control Panel</h2>
+<br><hr>
+
+{{if data.living}}
+
+	{{if data.faction}}
+		<h3>This Lace Storage unit is connected to {{:data.faction}}.</h3><br>
+		<div class='item'>
+			<div class='itemLabel'>
+				{{:helper.link("Disconnect", '', {'action' : 'disconnect'},  null)}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				{{:helper.link("Eject a Lace", '', {'action' : 'eject_lace'},  null)}}
+			</div>
+			<div class='itemContent'>
+				You'll be prompted to choose a lace to pick up.
+			</div>
+		</div>
+	{{/if}}
+
+{{else}}
+
+	<h3>Death Controls</h3><br>
+	Your conciousness burns inside this mechanical prison. You review your options.<br>
+	<div class='item'>
+		<div class='itemLabel'>
+			{{:helper.link("Rest Mind", '', {'action' : 'despawn'},  null)}}
+		</div>
+		<div class='itemContent'>
+			Not only the body that once was yours gets tired, your mind does too. Get your mind to rest.<br>
+			OOC Note: This allows you to go back to the Character Selection screen. Meanwhile, your lace won't be visible within this machine.
+		</div>
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			{{:helper.link("Ping Insurance", '', {'action' : 'ping_insurance'}, data.has_insurance ? null : 'disabled')}}
+		</div>
+		<div class='itemContent'>
+			Ping your insurance company of the position of your lace, so that you get replaced onto a body as soon as possible!
+		</div>
+	</div>
+	
+{{/if}}

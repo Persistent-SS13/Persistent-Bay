@@ -13,10 +13,18 @@
 	for(var/datum/wifi/receiver/button/B in connected_devices)
 		B.deactivate(user)
 
+/datum/wifi/sender/button/send_topic(mob/living/user, href_list)
+	for(var/datum/wifi/receiver/button/B in connected_devices)
+		B.receive_topic(user,href_list)
+
 /datum/wifi/receiver/button/proc/activate(mob/living/user)
 
 /datum/wifi/receiver/button/proc/deactivate(mob/living/user)
 	activate(user)		//override this if you want deactivate to actually do something
+
+/datum/wifi/receiver/button/receive_topic(mob/living/user, href_list)
+	if(parent)
+		parent.OnTopic(user,href_list)
 
 //-------------------------------
 // Doors
@@ -109,9 +117,9 @@
 //-------------------------------
 /datum/wifi/receiver/button/crematorium/activate(mob/living/user)
 	..()
-	var/obj/structure/crematorium/C = parent
+	var/obj/machinery/incinerator/crematorium/C = parent
 	if(istype(C))
-		C.cremate(user)
+		C.incinerate_start()
 
 //-------------------------------
 // Mounted Flash
@@ -144,16 +152,16 @@
 //-------------------------------
 /datum/wifi/receiver/button/igniter/activate(mob/living/user)
 	..()
-	var/obj/machinery/igniter/I = parent
-	if(istype(I))
-		if(!I.on)
-			I.ignite()
+	//var/obj/machinery/igniter/I = parent
+	//if(istype(I))
+	//	if(!I.ison())
+	//		I.turn_on()
 
 /datum/wifi/receiver/button/igniter/deactivate(mob/living/user)
-	if(istype(parent, /obj/machinery/igniter))
-		var/obj/machinery/igniter/I = parent
-		if(I.on)
-			I.ignite()
+	//if(istype(parent, /obj/machinery/igniter))
+	//	var/obj/machinery/igniter/I = parent
+	//	if(I.ison())
+	//		I.turn_off()
 
 //-------------------------------
 // Sparker
@@ -167,7 +175,7 @@
 
 //-------------------------------
 // Mass Driver
-//	Sender: carries out a sequence of first opening all connected doors, then activating all connected mass drivers, 
+//	Sender: carries out a sequence of first opening all connected doors, then activating all connected mass drivers,
 //			then closes all connected doors. It will wait before continuing the sequence after opening/closing the doors.
 //	Receiver: Triggers the parent mass dirver to activate.
 //-------------------------------

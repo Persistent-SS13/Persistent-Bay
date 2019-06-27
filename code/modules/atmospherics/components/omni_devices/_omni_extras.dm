@@ -16,7 +16,7 @@
 //--------------------------------------------
 // Omni port datum
 //
-// Used by omni devices to manage connections 
+// Used by omni devices to manage connections
 //  to other atmospheric objects.
 //--------------------------------------------
 /datum/omni_port
@@ -31,6 +31,8 @@
 	var/obj/machinery/atmospherics/node
 	var/datum/pipe_network/network
 
+	var/saved_netid
+
 /datum/omni_port/New(var/obj/machinery/atmospherics/omni/M, var/direction = NORTH)
 	..()
 	dir = direction
@@ -38,6 +40,12 @@
 		master = M
 	air = new
 	air.volume = 200
+
+/datum/omni_port/before_save()
+	..()
+
+/datum/omni_port/after_load()
+	..()
 
 /datum/omni_port/proc/connect()
 	if(node)
@@ -72,10 +80,10 @@
 			string = "East"
 		if(WEST)
 			string = "West"
-	
+
 	if(!capitalize && string)
 		string = lowertext(string)
-	
+
 	return string
 
 //returns a direction flag based on the string passed to it
@@ -97,17 +105,17 @@
 /proc/mode_to_gasid(var/mode)
 	switch(mode)
 		if(ATM_O2)
-			return list("oxygen")
+			return list(GAS_OXYGEN)
 		if(ATM_N2)
-			return list("nitrogen")
+			return list(GAS_NITROGEN)
 		if(ATM_CO2)
-			return list("carbon_dioxide")
+			return list(GAS_CO2)
 		if(ATM_P)
-			return list("phoron")
+			return list(GAS_PHORON)
 		if(ATM_N2O)
-			return list("sleeping_agent")
+			return list(GAS_N2O)
 		if(ATM_H2)
-			return list("hydrogen")
+			return list(GAS_HYDROGEN)
 		if(ATM_RG)
 			var/list/reagent_gases_list = list()
 			for(var/g in gas_data.gases) //This only fires when initially selecting the filter type, so impact on performance is minimal

@@ -27,7 +27,7 @@
 	var/obj/item/weapon/shield/I = new new_type()
 	I.icon_state = "buckler"
 	I.color = item_color
-	I.name = "Wizard's Shield"
+	I.SetName("Wizard's Shield")
 	I.base_block_chance = block_chance
 	return I
 
@@ -39,3 +39,6 @@
 	block_chance = 60
 
 	return "Your summoned shields will now block more often."
+
+/spell/targeted/equip_item/shield/tower
+	charge_max = 1

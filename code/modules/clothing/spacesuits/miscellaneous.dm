@@ -6,7 +6,19 @@
 	desc = "A special helmet designed for work in a hazardous, low-pressure environment. Only for the most fashionable of military figureheads."
 	flags_inv = HIDEFACE
 	permeability_coefficient = 0.01
-	armor = list(melee = 65, bullet = 50, laser = 50,energy = 25, bomb = 50, bio = 100, rad = 50)
+	armor  = list(
+		DAM_BLUNT 	= 65,
+		DAM_PIERCE 	= 55,
+		DAM_CUT 	= 65,
+		DAM_BULLET 	= 50,
+		DAM_LASER 	= 50,
+		DAM_ENERGY 	= 25,
+		DAM_BURN 	= 40,
+		DAM_BOMB 	= 50,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 50,
+		DAM_STUN 	= 2)
 
 //Captain's space suit This is not the proper path but I don't currently know enough about how this all works to mess with it.
 /obj/item/clothing/suit/armor/captain
@@ -20,14 +32,26 @@
 	w_class = ITEM_SIZE_HUGE
 	gas_transfer_coefficient = 0.01
 	permeability_coefficient = 0
-	item_flags = STOPPRESSUREDAMAGE
+	item_flags = ITEM_FLAG_STOPPRESSUREDAMAGE
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS
 	allowed = list(/obj/item/weapon/tank/emergency, /obj/item/device/flashlight,/obj/item/weapon/gun/energy, /obj/item/weapon/gun/projectile, /obj/item/ammo_magazine, /obj/item/ammo_casing, /obj/item/weapon/melee/baton,/obj/item/weapon/handcuffs)
-	armor = list(melee = 65, bullet = 50, laser = 50, energy = 25, bomb = 50, bio = 100, rad = 50)
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT|HIDETAIL
 	cold_protection = UPPER_TORSO | LOWER_TORSO | LEGS | FEET | ARMS | HANDS
 	min_cold_protection_temperature = SPACE_SUIT_MIN_COLD_PROTECTION_TEMPERATURE
 	siemens_coefficient = 0.7
+	armor  = list(
+		DAM_BLUNT 	= 65,
+		DAM_PIERCE 	= 55,
+		DAM_CUT 	= 65,
+		DAM_BULLET 	= 50,
+		DAM_LASER 	= 50,
+		DAM_ENERGY 	= 25,
+		DAM_BURN 	= 45,
+		DAM_BOMB 	= 50,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 50,
+		DAM_STUN 	= 2)
 
 /obj/item/clothing/suit/armor/captain/New()
 	..()
@@ -42,10 +66,22 @@
 		slot_l_hand_str = "syndicate-helm-black-red",
 		slot_r_hand_str = "syndicate-helm-black-red",
 		)
-	armor = list(melee = 65, bullet = 55, laser = 35,energy = 20, bomb = 30, bio = 100, rad = 60)
-	item_flags = STOPPRESSUREDAMAGE | THICKMATERIAL
+	item_flags = ITEM_FLAG_STOPPRESSUREDAMAGE | ITEM_FLAG_THICKMATERIAL
 	flags_inv = BLOCKHAIR
 	siemens_coefficient = 0.6
+	armor  = list(
+		DAM_BLUNT 	= 65,
+		DAM_PIERCE 	= 55,
+		DAM_CUT 	= 65,
+		DAM_BULLET 	= 55,
+		DAM_LASER 	= 35,
+		DAM_ENERGY 	= 20,
+		DAM_BURN 	= 15,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 60,
+		DAM_STUN 	= 1)
 
 //Space santa outfit suit
 /obj/item/clothing/head/helmet/space/santahat
@@ -53,7 +89,7 @@
 	desc = "Ho ho ho. Merrry X-mas!"
 	icon_state = "santahat"
 	item_state = "santahat"
-	item_flags = STOPPRESSUREDAMAGE
+	item_flags = ITEM_FLAG_STOPPRESSUREDAMAGE
 	flags_inv = BLOCKHAIR
 	body_parts_covered = HEAD
 
@@ -61,7 +97,7 @@
 	name = "Santa's suit"
 	desc = "Festive!"
 	icon_state = "santa"
-	item_flags = STOPPRESSUREDAMAGE
+	item_flags = ITEM_FLAG_STOPPRESSUREDAMAGE
 	allowed = list(/obj/item) //for stuffing exta special presents
 
 /obj/item/clothing/suit/space/santa/New()
@@ -74,20 +110,44 @@
 	desc = "Yarr."
 	icon_state = "pirate"
 	item_state = "pirate"
-	armor = list(melee = 60, bullet = 50, laser = 30,energy = 15, bomb = 30, bio = 30, rad = 30)
 	flags_inv = BLOCKHAIR
 	body_parts_covered = 0
 	siemens_coefficient = 0.9
+	armor  = list(
+		DAM_BLUNT 	= 60,
+		DAM_PIERCE 	= 50,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 50,
+		DAM_LASER 	= 30,
+		DAM_ENERGY 	= 15,
+		DAM_BURN 	= 15,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 30,
+		DAM_RADS 	= 30,
+		DAM_STUN 	= 0)
 
-/obj/item/clothing/suit/pirate
+/obj/item/clothing/suit/space/pirate
 	name = "pirate coat"
 	desc = "Yarr."
 	icon_state = "pirate"
 	w_class = ITEM_SIZE_NORMAL
 	allowed = list(/obj/item/weapon/gun,/obj/item/ammo_magazine,/obj/item/ammo_casing,/obj/item/weapon/melee/baton,/obj/item/weapon/handcuffs,/obj/item/weapon/tank/emergency)
-	armor = list(melee = 60, bullet = 50, laser = 30,energy = 15, bomb = 30, bio = 30, rad = 30)
 	siemens_coefficient = 0.9
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
+	armor  = list(
+		DAM_BLUNT 	= 60,
+		DAM_PIERCE 	= 50,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 50,
+		DAM_LASER 	= 30,
+		DAM_ENERGY 	= 15,
+		DAM_BURN 	= 15,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 30,
+		DAM_RADS 	= 30,
+		DAM_STUN 	= 1)
 
 /obj/item/clothing/suit/space/pirate/New()
 	..()
@@ -96,16 +156,27 @@
 //Orange emergency space suit
 /obj/item/clothing/head/helmet/space/emergency
 	name = "Emergency Space Helmet"
-	icon_state = "emergencyhelm"
-	item_state = "emergencyhelm"
+	icon_state = "spacebowl"
+	light_overlay = "yellow_light"
 	desc = "A simple helmet with a built in light, smells like mothballs."
 	flash_protection = FLASH_PROTECTION_NONE
 
 /obj/item/clothing/suit/space/emergency
 	name = "Emergency Softsuit"
-	icon_state = "syndicate-orange"
+	icon_state = "space_emergency"
 	desc = "A thin, ungainly softsuit colored in blaze orange for rescuers to easily locate, looks pretty fragile."
 
 /obj/item/clothing/suit/space/emergency/New()
 	..()
 	slowdown_per_slot[slot_wear_suit] = 4
+
+/obj/item/clothing/head/helmet/space/fishbowl
+	name = "spacesuit helmet"
+	desc = "A special helmet designed for work in a hazardous, low-pressure environment. The tinting can be toggled for flash protection at the cost of worse visibility."
+	icon_state = "spacebowl"
+	light_overlay = "yellow_light"
+	tinted = FALSE
+
+/obj/item/clothing/head/helmet/space/fishbowl/Initialize()
+	. = ..()
+	update_tint()

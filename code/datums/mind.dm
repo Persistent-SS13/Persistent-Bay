@@ -29,6 +29,8 @@
 
 */
 
+GLOBAL_LIST_EMPTY(minds)
+
 /datum/mind
 	var/key
 	var/name				//replaces mob/var/original_name
@@ -63,6 +65,8 @@
 	//put this here for easier tracking ingame
 	var/datum/money_account/initial_account
 
+	var/list/initial_email_login = list("login" = "", "password" = "")
+
 	//used for optional self-objectives that antagonists can give themselves, which are displayed at the end of the round.
 	var/ambitions
 
@@ -71,22 +75,26 @@
 	src.key = key
 	..()
 
+/datum/mind/Destroy()
+	GLOB.minds -= src
+	. = ..()
+
 /datum/mind/proc/transfer_to(mob/living/new_character)
 	if(!istype(new_character))
-		world.log << "## DEBUG: transfer_to(): Some idiot has tried to transfer_to() a non mob/living mob. Please inform Carn"
-	if(current)
-		new_character.save_slot = current.save_slot	//remove ourself from our old body's mind variable
-		if(current.client)
-			current.client.prefs.character_list[current.save_slot] = new_character
-		
+		log_debug("## DEBUG: transfer_to(): Some idiot has tried to transfer_to() a non mob/living mob. Please inform Carn")
+	var/mob/living/old = current
+	if(current)					//remove ourself from our old body's mind variable
 		if(changeling)
 			current.remove_changeling_powers()
 			current.verbs -= /datum/changeling/proc/EvolutionMenu
 		current.mind = null
 
-		GLOB.nanomanager.user_transferred(current, new_character) // transfer active NanoUI instances to new user
+		SSnano.user_transferred(current, new_character) // transfer active NanoUI instances to new user
 	if(new_character.mind)		//remove any mind currently in our new body's mind variable
 		new_character.mind.current = null
+	else
+		new_character.mind = new()
+	new_character.skillset.obtain_from_mob(current)	//handles moving skills over.
 
 	current = new_character		//link ourself to our new body
 	new_character.mind = src	//and link our new body to ourself
@@ -99,7 +107,12 @@
 
 	if(active)
 		new_character.key = key		//now transfer the key to link the client to our new body
+	if(old)
+		new_character.save_slot = old.save_slot	//remove ourself from our old body's mind variable
 
+		old.mind = null
+		old.ckey = null
+		old.stored_ckey = null
 /datum/mind/proc/store_memory(new_text)
 	memory += "[new_text]<BR>"
 
@@ -114,21 +127,19 @@
 		for(var/datum/objective/objective in objectives)
 			output += "<B>Objective #[obj_count]</B>: [objective.explanation_text]"
 			obj_count++
-	if(ambitions)
-		output += "<HR><B>Ambitions:</B> [ambitions]<br>"
+	if(SSgoals.ambitions[src])
+		var/datum/goal/ambition/ambition = SSgoals.ambitions[src]
+		output += "<HR><B>Ambitions:</B> [ambition.summarize()]<br>"
 	recipient << browse(output,"window=memory")
 
 /datum/mind/proc/edit_memory()
-	if(!ticker || !ticker.mode)
-		alert("Not before round-start!", "Alert")
-		return
 
 	var/out = "<B>[name]</B>[(current&&(current.real_name!=name))?" (as [current.real_name])":""]<br>"
 	out += "Mind currently owned by key: [key] [active?"(synced)":"(not synced)"]<br>"
 	out += "Assigned role: [assigned_role]. <a href='?src=\ref[src];role_edit=1'>Edit</a><br>"
 	out += "<hr>"
 	out += "Factions and special roles:<br><table>"
-	var/list/all_antag_types = all_antag_types()
+	var/list/all_antag_types = GLOB.all_antag_types_
 	for(var/antag_type in all_antag_types)
 		var/datum/antagonist/antag = all_antag_types[antag_type]
 		out += "[antag.get_panel_entry(src)]"
@@ -151,14 +162,81 @@
 	else
 		out += "None."
 	out += "<br><a href='?src=\ref[src];obj_add=1'>\[add\]</a><br><br>"
-	out += "<b>Ambitions:</b> [ambitions ? ambitions : "None"] <a href='?src=\ref[src];amb_edit=\ref[src]'>\[edit\]</a></br>"
+
+	var/datum/goal/ambition/ambition = SSgoals.ambitions[src]
+	out += "<b>Ambitions:</b> [ambition ? ambition.description : "None"] <a href='?src=\ref[src];amb_edit=\ref[src]'>\[edit\]</a></br>"
 	usr << browse(out, "window=edit_memory[src]")
 
+/datum/mind/proc/get_goal_from_href(var/href)
+	var/ind = isnum(href) ? href : text2num(href)
+	if(ind > 0 && ind <= LAZYLEN(goals))
+		return goals[ind]
+
 /datum/mind/Topic(href, href_list)
-	if(!check_rights(R_ADMIN))	return
+
+	var/is_admin =   FALSE
+	var/can_modify = FALSE
+	is_admin = check_rights(R_ADMIN, FALSE)
+	can_modify = is_admin
+
+	if(href_list["add_goal"])
+
+		var/mob/caller = locate(href_list["add_goal_caller"])
+		if(caller && caller == current) can_modify = TRUE
+
+		if(can_modify)
+			if(is_admin)
+				log_admin("[key_name_admin(usr)] added a random goal to [key_name(current)].")
+			var/did_generate_goal = generate_goals(assigned_job, TRUE, 1)
+			if(did_generate_goal)
+				to_chat(current, SPAN_NOTICE("You have received a new goal. Use <b>Show Goals</b> to view it."))
+		return TRUE // To avoid 'you are not an admin' spam.
+
+	if(href_list["abandon_goal"])
+		var/datum/goal/goal = get_goal_from_href(href_list["abandon_goal"])
+
+		var/mob/caller = locate(href_list["abandon_goal_caller"])
+		if(caller && caller == current) can_modify = TRUE
+
+		if(goal && can_modify)
+			if(usr == current)
+				to_chat(current, SPAN_NOTICE("<b>You have abandoned your goal:</b> '[goal.summarize(FALSE, FALSE)]'."))
+			else
+				to_chat(usr, SPAN_NOTICE("<b>You have removed a goal from \the [current]:</b> '[goal.summarize(FALSE, FALSE)]'."))
+				to_chat(current, SPAN_NOTICE("<b>A goal has been removed:</b> '[goal.summarize(FALSE, FALSE)]'."))
+			qdel(goal)
+		return TRUE
+
+	if(href_list["reroll_goal"])
+		var/datum/goal/goal = get_goal_from_href(href_list["reroll_goal"])
+
+		var/mob/caller = locate(href_list["reroll_goal_caller"])
+		if(caller && caller == current) can_modify = TRUE
+
+		if(goal && (goal in goals) && can_modify)
+			qdel(goal)
+			generate_goals(assigned_job, TRUE, 1)
+			if(goals)
+				goal = goals[LAZYLEN(goals)]
+				if(usr == current)
+					to_chat(usr, SPAN_NOTICE("<b>You have re-rolled a goal. Your new goal is:</b> '[goal.summarize(FALSE, FALSE)]'."))
+				else
+					to_chat(usr, SPAN_NOTICE("<b>You have re-rolled a goal for \the [current]. Their new goal is:</b> '[goal.summarize(FALSE, FALSE)]'."))
+					to_chat(current, SPAN_NOTICE("<b>A goal has been re-rolled. Your new goal is:</b> '[goal.summarize(FALSE, FALSE)]'."))
+		return TRUE
+
+	if(!is_admin) return
+
+	if(current && isliving(current))
+		if(href_list["set_psi_faculty"] && href_list["set_psi_faculty_rank"])
+			current.set_psi_rank(href_list["set_psi_faculty"], text2num(href_list["set_psi_faculty_rank"]))
+			log_and_message_admins("set [key_name(current)]'s [href_list["set_psi_faculty"]] faculty to [text2num(href_list["set_psi_faculty_rank"])].")
+			var/datum/admins/admin = GLOB.admins[usr.key]
+			if(istype(admin)) admin.show_player_panel(current)
+			return TRUE
 
 	if(href_list["add_antagonist"])
-		var/datum/antagonist/antag = all_antag_types()[href_list["add_antagonist"]]
+		var/datum/antagonist/antag = GLOB.all_antag_types_[href_list["add_antagonist"]]
 		if(antag)
 			if(antag.add_antagonist(src, 1, 1, 0, 1, 1)) // Ignore equipment and role type for this.
 				log_admin("[key_name_admin(usr)] made [key_name(src)] into a [antag.role_text].")
@@ -166,25 +244,30 @@
 				to_chat(usr, "<span class='warning'>[src] could not be made into a [antag.role_text]!</span>")
 
 	else if(href_list["remove_antagonist"])
-		var/datum/antagonist/antag = all_antag_types()[href_list["remove_antagonist"]]
+		var/datum/antagonist/antag = GLOB.all_antag_types_[href_list["remove_antagonist"]]
 		if(antag) antag.remove_antagonist(src)
 
 	else if(href_list["equip_antagonist"])
-		var/datum/antagonist/antag = all_antag_types()[href_list["equip_antagonist"]]
+		var/datum/antagonist/antag = GLOB.all_antag_types_[href_list["equip_antagonist"]]
 		if(antag) antag.equip(src.current)
 
 	else if(href_list["unequip_antagonist"])
-		var/datum/antagonist/antag = all_antag_types()[href_list["unequip_antagonist"]]
+		var/datum/antagonist/antag = GLOB.all_antag_types_[href_list["unequip_antagonist"]]
 		if(antag) antag.unequip(src.current)
 
 	else if(href_list["move_antag_to_spawn"])
-		var/datum/antagonist/antag = all_antag_types()[href_list["move_antag_to_spawn"]]
+		var/datum/antagonist/antag = GLOB.all_antag_types_[href_list["move_antag_to_spawn"]]
 		if(antag) antag.place_mob(src.current)
 
 	else if (href_list["role_edit"])
-		var/new_role = input("Select new role", "Assigned role", assigned_role) as null|anything in joblist
+		var/new_role = input("Select new role", "Assigned role", assigned_role) as null|anything in SSjobs.titles_to_datums
 		if (!new_role) return
-		assigned_role = new_role
+		var/datum/job/job = SSjobs.get_by_title(new_role)
+		if(job)
+			assigned_role = job.title
+			role_alt_title = new_role
+			if(current)
+				current.skillset.obtain_from_client(job, current.client)
 
 	else if (href_list["memory_edit"])
 		var/new_memo = sanitize(input("Write new memory", "Memory", memory) as null|message)
@@ -195,18 +278,24 @@
 		var/datum/mind/mind = locate(href_list["amb_edit"])
 		if(!mind)
 			return
-		var/new_ambition = input("Enter a new ambition", "Memory", mind.ambitions) as null|message
+
+		var/datum/goal/ambition/ambition = SSgoals.ambitions[src]
+		var/new_ambition = input("Enter a new ambition", "Memory", ambition ? html_decode(ambition.description) : "") as null|message
 		if(isnull(new_ambition))
 			return
 		new_ambition = sanitize(new_ambition)
 		if(mind)
-			mind.ambitions = new_ambition
 			if(new_ambition)
-				to_chat(mind.current, "<span class='warning'>Your ambitions have been changed by higher powers, they are now: [mind.ambitions]</span>")
-				log_and_message_admins("made [key_name(mind.current)]'s ambitions be '[mind.ambitions]'.")
+				if(!ambition)
+					ambition = new /datum/goal/ambition(mind)
+				ambition.description = new_ambition
+				to_chat(mind.current, "<span class='warning'>Your ambitions have been changed by higher powers, they are now: [ambition.description]</span>")
+				log_and_message_admins("made [key_name(mind.current)]'s ambitions be '[ambition.description]'.")
 			else
 				to_chat(mind.current, "<span class='warning'>Your ambitions have been unmade by higher powers.</span>")
 				log_and_message_admins("has cleared [key_name(mind.current)]'s ambitions.")
+				if(ambition)
+					qdel(ambition)
 		else
 			to_chat(usr, "<span class='warning'>The mind has ceased to be.</span>")
 
@@ -239,7 +328,7 @@
 				var/objective_type = "[objective_type_capital][objective_type_text]"//Add them together into a text string.
 
 				var/list/possible_targets = list("Free objective")
-				for(var/datum/mind/possible_target in ticker.minds)
+				for(var/datum/mind/possible_target in GLOB.minds)
 					if ((possible_target != src) && istype(possible_target.current, /mob/living/carbon/human))
 						possible_targets += possible_target.current
 
@@ -411,14 +500,14 @@
 			if("crystals")
 				if (usr.client.holder.rights & R_FUN)
 					var/obj/item/device/uplink/suplink = find_syndicate_uplink()
-					var/crystals
-					if (suplink)
-						crystals = suplink.uses
+					if(!suplink)
+						to_chat(usr, "<span class='warning'>Failed to find an uplink.</span>")
+						return
+					var/crystals = suplink.uses
 					crystals = input("Amount of telecrystals for [key]","Operative uplink", crystals) as null|num
-					if (!isnull(crystals))
-						if (suplink)
-							suplink.uses = crystals
-							log_and_message_admins("set the telecrystals for [key] to [crystals]")
+					if (!isnull(crystals) && !QDELETED(suplink))
+						suplink.uses = crystals
+						log_and_message_admins("set the telecrystals for [key] to [crystals]")
 
 	else if (href_list["obj_announce"])
 		var/obj_count = 1
@@ -451,13 +540,8 @@
 	var/is_currently_brigged = 0
 	if(istype(T.loc,/area/security/brig))
 		is_currently_brigged = 1
-		for(var/obj/item/weapon/card/id/card in current)
+		if(current.GetIdCard())
 			is_currently_brigged = 0
-			break // if they still have ID they're not brigged
-		for(var/obj/item/device/pda/P in current)
-			if(P.id)
-				is_currently_brigged = 0
-				break // if they still have ID they're not brigged
 
 	if(!is_currently_brigged)
 		brigged_since = -1
@@ -499,10 +583,7 @@
 	else
 		mind = new /datum/mind(key)
 		mind.original = src
-		if(ticker)
-			ticker.minds += mind
-		else
-			world.log << "## DEBUG: mind_initialize(): No ticker ready yet! Please inform Carn"
+		GLOB.minds += mind
 	if(!mind.name)	mind.name = real_name
 	mind.current = src
 	if(player_is_antag(mind))
@@ -511,7 +592,8 @@
 //HUMAN
 /mob/living/carbon/human/mind_initialize()
 	..()
-	if(!mind.assigned_role)	mind.assigned_role = "Assistant"	//defualt
+	if(!mind.assigned_role)
+		mind.assigned_role = GLOB.using_map.default_assistant_title
 
 //slime
 /mob/living/carbon/slime/mind_initialize()
@@ -530,7 +612,7 @@
 //BORG
 /mob/living/silicon/robot/mind_initialize()
 	..()
-	mind.assigned_role = "Cyborg"
+	mind.assigned_role = "Robot"
 
 //PAI
 /mob/living/silicon/pai/mind_initialize()

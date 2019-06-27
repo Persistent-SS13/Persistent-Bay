@@ -31,6 +31,16 @@
 /obj/machinery/camera/network/refugee
 	network = list(NETWORK_REFUGEE)
 
+/obj/machinery/camera/network/nexus
+	network = list(NETWORK_NEXUS)
+
+/obj/machinery/camera/network/nexus_security
+	icon_state = "xraycam" // Thanks to Krutchen for the icons.
+	network = list(NETWORK_NEXUS_SECURITY)
+/obj/machinery/camera/network/nexus_security/Initialize()
+	. = ..()
+	upgradeXRay()
+
 // EMP
 
 /obj/machinery/camera/emp_proof/Initialize()
@@ -103,4 +113,4 @@
 		mult++
 	if (isMotion())
 		mult++
-	active_power_usage = mult*initial(active_power_usage)
+	change_power_consumption(mult*initial(active_power_usage), POWER_USE_ACTIVE)

@@ -6,7 +6,19 @@
 	icon_state = "ntguard"
 	item_state = "r_suit"
 	worn_state = "ntguard"
-	armor = list(melee = 10, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 10,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 2,
+		DAM_BURN 	= 2,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 	siemens_coefficient = 0.9
 	item_icons = list(slot_w_uniform_str = 'icons/mob/nanotrasen.dmi')
 
@@ -17,16 +29,26 @@
 	item_state = "w_suit"
 	worn_state = "ntsmock"
 	permeability_coefficient = 0.50
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 10, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 1,
+		DAM_PIERCE 	= 1,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 2,
+		DAM_BURN 	= 2,
+		DAM_BOMB 	= 10,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 10,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 	item_icons = list(slot_w_uniform_str = 'icons/mob/nanotrasen.dmi')
-	starting_accessories = list(/obj/item/clothing/accessory/nt_tunic)
 
 /obj/item/clothing/under/rank/scientist/executive
 	name = "\improper Nanotrasen executive polo and pants"
 	desc = "A fashionable polo and pair of trousers made from expensive biohazard-resistant fabrics. The colors denote the wearer as a member of Nanotrasen's higher-ups."
 	icon_state = "ntsmockexec"
 	worn_state = "ntsmockexec"
-	starting_accessories = list(/obj/item/clothing/accessory/nt_tunic/exec)
 
 /obj/item/clothing/under/rank/ntwork
 	name = "\improper Nanotrasen coveralls"
@@ -34,7 +56,19 @@
 	icon_state = "ntwork"
 	item_state = "lb_suit"
 	worn_state = "ntwork"
-	armor = list(melee = 5, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 5, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 5,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 10,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 2,
+		DAM_BURN 	= 2,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 	item_icons = list(slot_w_uniform_str = 'icons/mob/nanotrasen.dmi')
 
 /obj/item/clothing/under/rank/ntpilot
@@ -52,4 +86,3 @@
 	item_state = "bl_suit"
 	worn_state = "ntsuit"
 	item_icons = list(slot_w_uniform_str = 'icons/mob/nanotrasen.dmi')
-	starting_accessories = list(/obj/item/clothing/accessory/toggleable/nanotrasen_jacket, /obj/item/clothing/accessory/nt)

@@ -21,7 +21,7 @@ Class Variables:
    power_channel (num)
 	  What channel to draw from when drawing power for power mode
 	  Possible Values:
-		 EQUIP:0 -- Equipment Channel
+		 EQUIP:1 -- Equipment Channel
 		 LIGHT:2 -- Lighting Channel
 		 ENVIRON:3 -- Environment Channel
 
@@ -51,28 +51,15 @@ Class Procs:
 
    Destroy()					 'game/machinery/machine.dm'
 
-   auto_use_power()			'game/machinery/machine.dm'
-	  This proc determines how power mode power is deducted by the machine.
-	  'auto_use_power()' is called by the 'master_controller' game_controller every
-	  tick.
-
-	  Return Value:
-		 return:1 -- if object is powered
-		 return:0 -- if object is not powered.
-
-	  Default definition uses 'use_power', 'power_channel', 'active_power_usage',
-	  'idle_power_usage', 'powered()', and 'use_power()' implement behavior.
-
-   powered(chan = EQUIP)		 'modules/power/power.dm'
+   powered(chan = EQUIP)		 'modules/power/power_usage.dm'
 	  Checks to see if area that contains the object has power available for power
 	  channel given in 'chan'.
 
-   use_power(amount, chan=EQUIP, autocalled)   'modules/power/power.dm'
+   use_power_oneoff(amount, chan=power_channel)   'modules/power/power_usage.dm'
 	  Deducts 'amount' from the power channel 'chan' of the area that contains the object.
-	  If it's autocalled then everything is normal, if something else calls use_power we are going to
-	  need to recalculate the power two ticks in a row.
+	  This is not a continuous draw, but rather will be cleared after one APC update.
 
-   power_change()			   'modules/power/power.dm'
+   power_change()			   'modules/power/power_usage.dm'
 	  Called by the area that contains the object when ever that area under goes a
 	  power state change (area runs out of power, or area channel is turned off).
 
@@ -86,28 +73,35 @@ Class Procs:
    assign_uid()			   'game/machinery/machine.dm'
 	  Called by machine to assign a value to the uid variable.
 
-   process()				  'game/machinery/machine.dm'
+   Process()				  'game/machinery/machine.dm'
 	  Called by the 'master_controller' once per game tick for each machine that is listed in the 'machines' list.
 
 
 	Compiled by Aygar
 */
+// Note that we update the area even if the area is unpowered.
+#define REPORT_POWER_CONSUMPTION_CHANGE(old_power, new_power)\
+	if(old_power != new_power){\
+		var/area/A = get_area(src);\
+		if(A) A.power_use_change(old_power, new_power, power_channel)}
 
 /obj/machinery
 	name = "machinery"
 	icon = 'icons/obj/stationobjs.dmi'
 	w_class = ITEM_SIZE_NO_CONTAINER
-
+	obj_flags = OBJ_FLAG_DAMAGEABLE
+	layer = MACHINERY_LAYER
 	var/stat = 0
 	var/emagged = 0
 	var/malf_upgraded = 0
-	var/use_power = 1
+	var/use_power = POWER_USE_IDLE
 		//0 = dont run the auto
 		//1 = run auto, use idle
 		//2 = run auto, use active
 	var/idle_power_usage = 0
 	var/active_power_usage = 0
 	var/power_channel = EQUIP //EQUIP, ENVIRON or LIGHT
+	var/power_init_complete = FALSE // Helps with bookkeeping when initializing atoms. Don't modify.
 	var/list/component_parts = null //list of all the parts used to build it, if made from certain kinds of frames.
 	var/uid
 	var/panel_open = 0
@@ -115,15 +109,72 @@ Class Procs:
 	var/interact_offline = 0 // Can the machine be interacted with while de-powered.
 	var/clicksound			// sound played on succesful interface use by a carbon lifeform
 	var/clickvol = 40		// sound played on succesful interface use
+	var/core_skill = SKILL_DEVICES //The skill used for skill checks for this machine (mostly so subtypes can use different skills).
+	var/operator_skill      // Machines often do all operations on Process(). This caches the user's skill while the operations are running.
 	var/multiplier = 0
+	var/datum/world_faction/faction
+	var/faction_uid
+	//Damage handling
+	max_health = 100
+	broken_threshold = 0.5 //Percentage of health remaining at which the machine goes into broken state
+	var/time_emped = 0		  //Time left being emped
+	var/emped_disabled_max_time = 5 MINUTES //Maximum time this machine can be disabled by EMP(Aka for severity 1)
+	var/frame_type = /obj/machinery/constructable_frame/machine_frame //The type of frame that will be left behind after deconstruction
+	var/obj/item/circuit_type = null //Convenience var for handling the obligatory circuit most machines need when spawning
+
+	//Initial Radio stuff
+	var/id_tag				= null	//Mappervar: Sets the initial id_tag.
+	var/frequency 		 	= null	//Mappervar: Sets the initial radio listening frequency.
+	var/range 				= null	//Mappervar: Sets the initial radio range.
+	var/radio_filter_out 	= null	//Mappervar: Sets the initial output radio filter.
+	var/radio_filter_in 	= null	//Mappervar: Sets the initial listening radio filter.
+	var/radio_check_id 		= TRUE	//Whether the machine checks it own id against the target id of a radio command before executing the command.
+
+/obj/machinery/New()
+	..()
+	ADD_SAVED_VAR(extensions)
+	ADD_SAVED_VAR(time_emped)
+	ADD_SAVED_VAR(panel_open)
+	ADD_SAVED_VAR(component_parts)
+	ADD_SAVED_VAR(use_power)
+	ADD_SAVED_VAR(malf_upgraded)
+	ADD_SAVED_VAR(emagged)
+	ADD_SAVED_VAR(stat)
+	ADD_SAVED_VAR(faction)
+	ADD_SKIP_EMPTY(faction_uid)
+	ADD_SAVED_VAR(id_tag)
+
+	ADD_SKIP_EMPTY(extensions)
+	ADD_SKIP_EMPTY(component_parts)
+	ADD_SKIP_EMPTY(faction)
+	ADD_SKIP_EMPTY(faction_uid)
+	ADD_SKIP_EMPTY(id_tag)
+
+/obj/machinery/after_load()
+	..()
+	RefreshParts()
+	update_health()
 
 /obj/machinery/Initialize(mapload, d=0)
 	. = ..()
+	if(!map_storage_loaded)
+		SetupParts()
+	REPORT_POWER_CONSUMPTION_CHANGE(0, get_power_usage())
+	GLOB.moved_event.register(src, src, .proc/update_power_on_move)
+	power_init_complete = TRUE
+	init_transmitter()
 	if(d)
 		set_dir(d)
-	START_PROCESSING(SSmachines, src)
+	START_PROCESSING(SSmachines, src) // It's safe to remove machines from here.
+	SSmachines.machinery += src // All machines should remain in this list, always.
+
+	if(faction_uid && !faction)
+		faction = get_faction(faction_uid)
 
 /obj/machinery/Destroy()
+	GLOB.moved_event.unregister(src, src, .proc/update_power_on_move)
+	REPORT_POWER_CONSUMPTION_CHANGE(get_power_usage(), 0)
+	SSmachines.machinery -= src
 	STOP_PROCESSING(SSmachines, src)
 	if(component_parts)
 		for(var/atom/A in component_parts)
@@ -131,56 +182,46 @@ Class Procs:
 				qdel(A)
 			else // Otherwise we assume they were dropped to the ground during deconstruction, and were not removed from the component_parts list by deconstruction code.
 				component_parts -= A
+	if(has_transmitter())
+		delete_transmitter()
+	faction = null
 	. = ..()
 
-/obj/machinery/Process()//If you dont use process or power why are you here
-	if(!(use_power || idle_power_usage || active_power_usage))
-		return PROCESS_KILL
+//Installs parts when creating a machine for the first time
+/obj/machinery/proc/SetupParts()
+	if(circuit_type)
+		var/obj/item/weapon/circuitboard/cboard = new circuit_type(src)
+		LAZYDISTINCTADD(component_parts, cboard) //only one circuit allowed
+		//Auto-add components from the circuit board components list
+		if(istype(cboard, /obj/item/weapon/circuitboard))
+			for(var/key in cboard.req_components)
+				//Add the specified amount of parts
+				for(var/i = 0, i < cboard.req_components[key], ++i )
+					LAZYADD(component_parts, new key(src))
+	RefreshParts()
 
-/obj/machinery/emp_act(severity)
-	if(use_power && stat == 0)
-		use_power(7500/severity)
-
-		var/obj/effect/overlay/pulse2 = new /obj/effect/overlay(loc)
-		pulse2.icon = 'icons/effects/effects.dmi'
-		pulse2.icon_state = "empdisable"
-		pulse2.name = "emp sparks"
-		pulse2.anchored = 1
-		pulse2.set_dir(pick(GLOB.cardinal))
-
-		spawn(10)
-			qdel(pulse2)
-	..()
-
-/obj/machinery/ex_act(severity)
-	switch(severity)
-		if(1.0)
-			qdel(src)
-			return
-		if(2.0)
-			if (prob(50))
-				qdel(src)
-				return
-		if(3.0)
-			if (prob(25))
-				qdel(src)
-				return
-		else
+/obj/machinery/proc/RefreshParts() //Placeholder proc for machines that are built using frames.
 	return
 
-//sets the use_power var and then forces an area power update
-/obj/machinery/proc/update_use_power(var/new_use_power)
-	use_power = new_use_power
+/obj/machinery/InsertedContents()
+	return (contents - component_parts)
 
-/obj/machinery/proc/auto_use_power()
-	if(!powered(power_channel))
-		return 0
-	if(src.use_power == 1)
-		use_power(idle_power_usage,power_channel, 1)
-	else if(src.use_power >= 2)
-		use_power(active_power_usage,power_channel, 1)
-	return 1
+/obj/machinery/proc/assign_uid()
+	uid = gl_uid
+	gl_uid++
 
+/obj/machinery/Process()
+	if(time_emped && world.realtime >= time_emped)
+		time_emped = 0
+		set_emped(FALSE)
+		emp_end()
+
+	// if(!(use_power || idle_power_usage || active_power_usage) && !interact_offline)
+	// 	return PROCESS_KILL
+
+//-----------------------------------------
+// Machine State
+//-----------------------------------------
 /proc/is_operable(var/obj/machinery/M, var/mob/user)
 	return istype(M) && M.operable()
 
@@ -190,11 +231,91 @@ Class Procs:
 /obj/machinery/proc/inoperable(var/additional_flags = 0)
 	return (stat & (NOPOWER|BROKEN|additional_flags))
 
+/obj/machinery/proc/set_broken(var/state)
+	src.stat = state? (src.stat | BROKEN) : (stat & ~BROKEN)
+	queue_icon_update()
+
+/obj/machinery/proc/set_emped(var/state)
+	src.stat = state? (src.stat | EMPED) : (stat & ~EMPED)
+	queue_icon_update()
+
+/obj/machinery/proc/set_maintenance(var/state)
+	src.stat = state? (src.stat | MAINT) : (stat & ~MAINT)
+	queue_icon_update()
+
+/obj/machinery/proc/ison()
+	return !isoff()
+
+/obj/machinery/proc/isactive()
+	return use_power == POWER_USE_ACTIVE
+
+/obj/machinery/proc/isidle()
+	return use_power == POWER_USE_IDLE
+
+/obj/machinery/proc/isoff()
+	return use_power == POWER_USE_OFF
+
+/obj/machinery/proc/turn_on()
+	turn_active()
+
+/obj/machinery/proc/turn_active()
+	update_use_power(POWER_USE_ACTIVE)
+	update_icon()
+
+/obj/machinery/proc/turn_idle()
+	update_use_power(POWER_USE_IDLE)
+	update_icon()
+
+/obj/machinery/proc/turn_off()
+	update_use_power(POWER_USE_OFF)
+	update_icon()
+
+//Flags
+/obj/machinery/isbroken()
+	return (stat & BROKEN)
+
+/obj/machinery/proc/ispowered()
+	return !(stat & NOPOWER)
+
+/obj/machinery/proc/ismaintenance()
+	return (stat & MAINT)
+
+/obj/machinery/proc/isemped()
+	return (stat & EMPED)
+
+//Defined at machinery level so that it can be used everywhere with little effort.
+/obj/machinery/proc/HasMultiplier()
+	return initial(multiplier) > 0
+
+//-----------------------------------------
+// Power System
+//-----------------------------------------
+//Most of the power stuff is in /module/power/power_usage.dm
+
+
+// increment the power usage stats for an area
+/obj/machinery/proc/use_power(var/amount, var/chan = -1) // defaults to power_channel
+	var/area/A = get_area(src)		// make sure it's in an area
+	if(!A || !isarea(A))
+		return
+	if(chan == -1)
+		chan = power_channel
+	A.use_power(amount, chan)
+
+//----------------------------------------
+// Interactions
+//----------------------------------------
+/obj/machinery/proc/can_connect(var/datum/world_faction/trying)
+	return 1
+
+/obj/machinery/proc/can_disconnect(var/datum/world_faction/trying, var/mob/M)
+	return 1
+
 /obj/machinery/CanUseTopic(var/mob/user)
-	if(stat & BROKEN)
+	if(isbroken())
 		return STATUS_CLOSE
 
-	if(!interact_offline && (stat & NOPOWER))
+	if(!interact_offline && !ispowered())
 		return STATUS_CLOSE
 
 	return ..()
@@ -205,8 +326,6 @@ Class Procs:
 
 /obj/machinery/CouldNotUseTopic(var/mob/user)
 	user.unset_machine()
-
-////////////////////////////////////////////////////////////////////////////////////////////
 
 /obj/machinery/attack_ai(mob/user as mob)
 	if(isrobot(user))
@@ -219,35 +338,23 @@ Class Procs:
 
 /obj/machinery/attack_hand(mob/user as mob)
 	if(inoperable(MAINT))
-		return 1
+		return TRUE
 	if(user.lying || user.stat)
-		return 1
-	if ( ! (istype(usr, /mob/living/carbon/human) || \
-			istype(usr, /mob/living/silicon)))
-		to_chat(usr, "<span class='warning'>You don't have the dexterity to do this!</span>")
-		return 1
-/*
-	//distance checks are made by atom/proc/DblClick
-	if ((get_dist(src, user) > 1 || !istype(src.loc, /turf)) && !istype(user, /mob/living/silicon))
-		return 1
-*/
+		return TRUE
+	if (!(istype(usr, /mob/living/carbon/human) || istype(usr, /mob/living/silicon)))
+		to_chat(usr, SPAN_WARNING("You don't have the dexterity to do this!"))
+		return TRUE
+
 	if (ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if(H.getBrainLoss() >= 55)
-			visible_message("<span class='warning'>[H] stares cluelessly at \the [src].</span>")
-			return 1
+			visible_message(SPAN_WARNING("[H] stares cluelessly at \the [src]."))
+			return TRUE
 		else if(prob(H.getBrainLoss()))
-			to_chat(user, "<span class='warning'>You momentarily forget how to use \the [src].</span>")
-			return 1
+			to_chat(user, SPAN_WARNING("You momentarily forget how to use \the [src]."))
+			return TRUE
 
 	return ..()
-
-/obj/machinery/proc/RefreshParts() //Placeholder proc for machines that are built using frames.
-	return
-
-/obj/machinery/proc/assign_uid()
-	uid = gl_uid
-	gl_uid++
 
 /obj/machinery/proc/state(var/msg)
 	for(var/mob/O in hearers(src, null))
@@ -256,7 +363,6 @@ Class Procs:
 /obj/machinery/proc/ping(text=null)
 	if (!text)
 		text = "\The [src] pings."
-
 	state(text, "blue")
 	playsound(src.loc, 'sound/machines/ping.ogg', 50, 0)
 
@@ -279,67 +385,14 @@ Class Procs:
 			return 1
 	return 0
 
-/obj/machinery/proc/default_deconstruction_crowbar(var/mob/user, var/obj/item/weapon/crowbar/C)
-	if(!istype(C))
-		return 0
-	if(!panel_open)
-		return 0
-	. = dismantle()
-
-/obj/machinery/proc/default_deconstruction_screwdriver(var/mob/user, var/obj/item/weapon/screwdriver/S)
-	if(!istype(S))
-		return 0
-	playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
-	panel_open = !panel_open
-	to_chat(user, "<span class='notice'>You [panel_open ? "open" : "close"] the maintenance hatch of \the [src].</span>")
-	update_icon()
-	return 1
-
-/obj/machinery/proc/default_part_replacement(var/mob/user, var/obj/item/weapon/storage/part_replacer/R)
-	if(!istype(R))
-		return 0
-	if(!component_parts)
-		return 0
-	if(panel_open)
-		var/obj/item/weapon/circuitboard/CB = locate(/obj/item/weapon/circuitboard) in component_parts
-		var/P
-		for(var/obj/item/weapon/stock_parts/A in component_parts)
-			for(var/T in CB.req_components)
-				if(ispath(A.type, T))
-					P = T
-					break
-			for(var/obj/item/weapon/stock_parts/B in R.contents)
-				if(istype(B, P) && istype(A, P))
-					if(B.rating > A.rating)
-						R.remove_from_storage(B, src)
-						R.handle_item_insertion(A, 1)
-						component_parts -= A
-						component_parts += B
-						B.loc = null
-						to_chat(user, "<span class='notice'>[A.name] replaced with [B.name].</span>")
-						break
-			update_icon()
-			RefreshParts()
-	else
-		to_chat(user, "<span class='notice'>Following parts detected in the machine:</span>")
-		for(var/var/obj/item/C in component_parts)
-			to_chat(user, "<span class='notice'>	[C.name]</span>")
-	return 1
-
 /obj/machinery/proc/dismantle()
 	playsound(loc, 'sound/items/Crowbar.ogg', 50, 1)
-	var/obj/machinery/constructable_frame/machine_frame/M = new /obj/machinery/constructable_frame/machine_frame(get_turf(src))
-	M.set_dir(src.dir)
-	M.state = 2
-	M.icon_state = "box_1"
 	for(var/obj/I in component_parts)
-		I.forceMove(get_turf(src))
-
+		I.dropInto(get_turf(src))
+	var/obj/M = new frame_type(get_turf(src), state = MACHINE_FRAME_CABLED)
+	M.set_dir(src.dir)
 	qdel(src)
 	return 1
-
-/obj/machinery/InsertedContents()
-	return (contents - component_parts)
 
 /datum/proc/apply_visual(mob/M)
 	return
@@ -354,10 +407,6 @@ Class Procs:
 	..()
 	if(clicksound && istype(user, /mob/living/carbon))
 		playsound(src, clicksound, clickvol)
-
-//Defined at machinery level so that it can be used everywhere with little effort.
-/obj/machinery/proc/HasMultiplier()
-	return initial(multiplier) > 0
 
 /obj/machinery/proc/GetMultiplierForm(var/obj/machinery/M)
 	var/dat = ""
@@ -384,5 +433,246 @@ Class Procs:
 		return 1
 	return 0
 
-/obj/machinery/after_load()
-	RefreshParts()
+/obj/machinery/proc/display_parts(mob/user)
+	to_chat(user, "<span class='notice'>Following parts detected in the machine:</span>")
+	for(var/var/obj/item/C in component_parts)
+		to_chat(user, "<span class='notice'>	[C.name]</span>")
+
+/obj/machinery/examine(mob/user)
+	. = ..(user)
+	if(component_parts && hasHUD(user, HUD_SCIENCE))
+		display_parts(user)
+
+//----------------------------------
+//	Default Interaction Procs
+//----------------------------------
+/obj/machinery/proc/default_deconstruction_crowbar(var/mob/user, var/obj/item/weapon/tool/crowbar/C)
+	if(!istype(C))
+		return 0
+	if(!panel_open)
+		return 0
+	. = dismantle()
+
+/obj/machinery/proc/default_deconstruction_screwdriver(var/mob/user, var/obj/item/weapon/tool/screwdriver/S)
+	if(!istype(S))
+		return 0
+	if(S.use_tool(user, src, 1 SECOND))
+		panel_open = !panel_open
+		to_chat(user, SPAN_NOTICE("You [panel_open ? "open" : "close"] the maintenance hatch of \the [src]."))
+		update_icon()
+		return 1
+
+/obj/machinery/proc/default_part_replacement(var/mob/user, var/obj/item/weapon/storage/part_replacer/R)
+	if(!istype(R))
+		return 0
+	if(!component_parts)
+		return 0
+	if(panel_open)
+		var/obj/item/weapon/circuitboard/CB = locate(/obj/item/weapon/circuitboard) in component_parts
+		var/P
+		for(var/obj/item/weapon/stock_parts/A in component_parts)
+			for(var/T in CB.req_components)
+				if(ispath(A.type, T))
+					P = T
+					break
+			for(var/obj/item/weapon/stock_parts/B in R.contents)
+				if(istype(B, P) && istype(A, P))
+					if(B.rating > A.rating)
+						R.remove_from_storage(B, src)
+						R.handle_item_insertion(A, 1)
+						component_parts -= A
+						component_parts += B
+						B.forceMove(null)
+						to_chat(user, SPAN_NOTICE("[A.name] replaced with [B.name]."))
+						break
+			update_icon()
+			RefreshParts()
+	else
+		display_parts(user)
+	return 1
+
+//----------------------------------
+//	Radio Remote Control
+//----------------------------------
+
+//Default code to initialize the transmitter
+/obj/machinery/proc/init_transmitter()
+	if(!has_transmitter() && frequency && (radio_filter_in || radio_filter_out))
+		create_transmitter(id_tag, frequency, radio_filter_in, range, radio_filter_out)
+
+/obj/machinery/proc/has_transmitter()
+	return src.HasExtension(RADIO_TRANSMITTER_TYPE)
+
+/obj/machinery/proc/get_transmitter()
+	return src.GetExtension(RADIO_TRANSMITTER_TYPE)
+
+/obj/machinery/proc/transmitter_ready()
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	return T && T.is_connected()
+
+/obj/machinery/proc/create_transmitter(var/id, var/frequency, var/filter = RADIO_DEFAULT, var/range = null, var/filterout = null)
+	if(has_transmitter())
+		delete_transmitter()
+	set_extension(src, RADIO_TRANSMITTER_TYPE, RADIO_TRANSMITTER_TYPE, frequency, id, range, filter, filterout)
+	//log_debug("Created radio transmitter for [src] \ref[src]. id: '[id]', frequency: [frequency], filter: [filter], range: [range? range : "null"], filterout: [filterout? filterout : filter]")
+
+/obj/machinery/proc/delete_transmitter()
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		qdel(T)
+
+/obj/machinery/proc/set_radio_frequency(var/freq as num)
+	src.frequency = freq
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.set_frequency(freq)
+
+/obj/machinery/proc/get_radio_frequency()
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.get_frequency()
+	return null
+
+/obj/machinery/proc/set_radio_id(var/id as text)
+	src.id_tag = id
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.set_id(id)
+
+/obj/machinery/proc/get_radio_id()
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.get_id()
+	return null
+
+/obj/machinery/proc/check_radio_match_id(var/datum/signal/signal)
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.match_id(signal)
+	return FALSE
+
+/obj/machinery/proc/set_radio_filter(var/filter as text)
+	src.radio_filter_in = filter
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.set_filter(filter)
+
+/obj/machinery/proc/set_radio_filter_out(var/filter as text)
+	src.radio_filter_out = filter
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.set_filter_out(filter)
+
+/obj/machinery/proc/get_radio_filter()
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.get_filter()
+	return null
+
+/obj/machinery/proc/get_radio_filter_out()
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.get_filter_out()
+	return null
+
+/obj/machinery/proc/set_radio_range(var/range as num)
+	src.range = range
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.set_range(range)
+
+/obj/machinery/proc/get_radio_range()
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.get_range()
+	return null
+
+//Send a signal using the radio transmitter to the target id tag, or to the same id_tag as the src machine
+/obj/machinery/proc/post_signal(var/list/data, var/overridefilter = null, var/overridetag = null, var/overridefreq = null)
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(!T)
+		log_debug("[src]\ref[src] tried to send a signal and there is no radio transmitter instantiated!")
+		return null
+
+	var/datum/signal/signal = new
+	signal.transmission_method = TRANSMISSION_RADIO //radio signal
+	signal.source = src
+	signal.data = data.Copy()
+	T.post_signal(signal, overridefilter, overridetag, overridefreq)
+	return TRUE
+
+//Sends a signal without a target id over a frequency and filter
+/obj/machinery/proc/broadcast_signal(var/list/data, var/overridefilter = null, var/overridefreq = null)
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(!T)
+		log_debug("[src]\ref[src] tried to send a signal and there is no radio transmitter instantiated!")
+		return null
+	var/datum/signal/signal = new
+	signal.transmission_method = TRANSMISSION_RADIO //radio signal
+	signal.source = src
+	signal.data = data.Copy()
+	T.broadcast_signal(signal, overridefilter, overridefreq)
+	return TRUE
+
+//Signals matching this one's frequency and etc are captured here
+/obj/machinery/receive_signal(var/datum/signal/signal, var/receive_method, var/receive_param)
+	if(!signal || !has_transmitter() || inoperable() || (signal && signal.source == src) || (signal && signal.source == null))
+		return
+	if( !radio_check_id || (radio_check_id && check_radio_match_id(signal)) )
+		//log_debug("[src]\ref[src] received signal from [signal.source]\ref[signal.source]. Signal tag is [signal_target_id(signal)], and our tag is [get_radio_id()]")
+		return OnSignal(signal)
+
+//Signals received by default go straight to the machine's topic handling, so handling radio signal is seamless.
+/obj/machinery/proc/OnSignal(var/datum/signal/signal)
+	return
+
+//Used to generate a id_tag that would be unique to the machine at that specific coordinate
+/obj/machinery/proc/make_loc_string_id(var/prefix)
+	return "[prefix]([x]:[y]:[z])"
+
+//----------------------------------
+// Damage procs
+//----------------------------------
+/obj/machinery/update_health(var/damagetype)
+	..()
+	//Determine if we're broken or not
+	if(health <= (max_health * broken_threshold))
+		broken(damagetype)
+
+//Called when the machine is broken
+/obj/machinery/broken(var/damagetype)
+	set_broken(TRUE)
+	update_icon()
+
+/obj/machinery/emp_act(severity)
+	if(use_power && operable())
+		set_emped(TRUE)
+		time_emped = (emped_disabled_max_time / severity)
+		use_power_oneoff(7500/severity)
+
+		var/obj/effect/overlay/pulse2 = new /obj/effect/overlay(loc)
+		pulse2.icon = 'icons/effects/effects.dmi'
+		pulse2.icon_state = "empdisable"
+		pulse2.name = "emp sparks"
+		pulse2.anchored = 1
+		pulse2.set_dir(pick(GLOB.cardinal))
+
+		spawn(10)
+			qdel(pulse2)
+	..()
+
+//Called in process after the emp wears off. Override in your subclass
+/obj/machinery/proc/emp_end()
+	update_icon()
+
+// This is really pretty crap and should be overridden for specific machines.
+/obj/machinery/water_act(var/depth)
+	..()
+	if(!(stat & (NOPOWER|BROKEN)) && !waterproof && (depth > FLUID_DEEP))
+		ex_act(3)
+
+/obj/machinery/Move()
+	. = ..()
+	if(. && !CanFluidPass())
+		fluid_update()
+#undef REPORT_POWER_CONSUMPTION_CHANGE

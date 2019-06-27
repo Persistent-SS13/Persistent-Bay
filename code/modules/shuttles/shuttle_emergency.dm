@@ -178,7 +178,7 @@
 
 /obj/machinery/computer/shuttle_control/emergency/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 	var/data[0]
-	var/datum/shuttle/autodock/ferry/emergency/shuttle = shuttle_controller.shuttles[shuttle_tag]
+	var/datum/shuttle/autodock/ferry/emergency/shuttle = SSshuttle.shuttles[shuttle_tag]
 	if (!istype(shuttle))
 		return
 
@@ -234,7 +234,7 @@
 		"user" = debug? user : null,
 	)
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 
 	if (!ui)
 		ui = new(user, src, ui_key, "escape_shuttle_control_console.tmpl", "Shuttle Control", 470, 420)
@@ -242,17 +242,16 @@
 		ui.open()
 		ui.set_auto_update(1)
 
-/obj/machinery/computer/shuttle_control/emergency/Topic(href, href_list)
-	if(..())
-		return 1
-
+/obj/machinery/computer/shuttle_control/emergency/OnTopic(user, href_list)
 	if(href_list["removeid"])
 		var/dna_hash = href_list["removeid"]
 		authorized -= dna_hash
+		. = TOPIC_REFRESH
 
-	if(!emagged && href_list["scanid"])
+	else if(!emagged && href_list["scanid"])
 		//They selected an empty entry. Try to scan their id.
-		if (ishuman(usr))
-			var/mob/living/carbon/human/H = usr
+		var/mob/living/carbon/human/H = user
+		if (istype(H))
 			if (!read_authorization(H.get_active_hand()))	//try to read what's in their hand first
 				read_authorization(H.wear_id)
+				. = TOPIC_REFRESH

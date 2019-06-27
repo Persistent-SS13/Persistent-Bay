@@ -4,6 +4,14 @@
 	tesla_link = new/obj/item/weapon/computer_hardware/tesla_link(src)
 	hard_drive = new/obj/item/weapon/computer_hardware/hard_drive/super(src)
 	network_card = new/obj/item/weapon/computer_hardware/network_card/wired(src)
+	scanner = new /obj/item/weapon/computer_hardware/scanner/paper(src)
+
+/obj/item/modular_computer/console/preset/install_default_programs()
+	..()
+	hard_drive.store_file(new /datum/computer_file/program/computerconfig)
+	hard_drive.store_file(new /datum/computer_file/program/filemanager)
+	hard_drive.store_file(new /datum/computer_file/program/ntnetdownload)
+	hard_drive.store_file(new /datum/computer_file/program/ntnetrouter)
 
 // Engineering
 /obj/item/modular_computer/console/preset/engineering/install_default_programs()
@@ -14,6 +22,12 @@
 	hard_drive.store_file(new/datum/computer_file/program/atmos_control())
 	hard_drive.store_file(new/datum/computer_file/program/rcon_console())
 	hard_drive.store_file(new/datum/computer_file/program/camera_monitor())
+
+// Telecomm
+/obj/item/modular_computer/console/preset/telecomm/install_default_programs()
+	..()
+//	hard_drive.store_file(new /datum/computer_file/program/ntnetmonitor())
+	set_autorun("ntmonitor")
 
 // Medical
 /obj/item/modular_computer/console/preset/medical/install_default_programs()
@@ -31,11 +45,11 @@
 
 /obj/item/modular_computer/console/preset/research/install_default_programs()
 	..()
-	hard_drive.store_file(new/datum/computer_file/program/ntnetmonitor())
+//	hard_drive.store_file(new/datum/computer_file/program/ntnetmonitor())
 	hard_drive.store_file(new/datum/computer_file/program/nttransfer())
 	hard_drive.store_file(new/datum/computer_file/program/chatclient())
 	hard_drive.store_file(new/datum/computer_file/program/camera_monitor())
-	hard_drive.store_file(new/datum/computer_file/program/aidiag())
+//	hard_drive.store_file(new/datum/computer_file/program/aidiag())
 	hard_drive.store_file(new/datum/computer_file/program/email_client())
 	hard_drive.store_file(new/datum/computer_file/program/wordprocessor())
 
@@ -46,13 +60,13 @@
 
 /obj/item/modular_computer/console/preset/sysadmin/install_default_programs()
 	..()
-	hard_drive.store_file(new/datum/computer_file/program/ntnetmonitor())
+//	hard_drive.store_file(new/datum/computer_file/program/ntnetmonitor())
 	hard_drive.store_file(new/datum/computer_file/program/nttransfer())
 	hard_drive.store_file(new/datum/computer_file/program/chatclient())
 	hard_drive.store_file(new/datum/computer_file/program/camera_monitor())
-	hard_drive.store_file(new/datum/computer_file/program/aidiag())
+//	hard_drive.store_file(new/datum/computer_file/program/aidiag())
 	hard_drive.store_file(new/datum/computer_file/program/email_client())
-	hard_drive.store_file(new/datum/computer_file/program/email_administration())
+//	hard_drive.store_file(new/datum/computer_file/program/email_administration())
 	hard_drive.store_file(new/datum/computer_file/program/records())
 	hard_drive.store_file(new/datum/computer_file/program/wordprocessor())
 
@@ -88,7 +102,7 @@
 	hard_drive.store_file(new/datum/computer_file/program/newsbrowser())
 	hard_drive.store_file(new/datum/computer_file/program/camera_monitor())
 	hard_drive.store_file(new/datum/computer_file/program/email_client())
-	hard_drive.store_file(new/datum/computer_file/program/supply())
+	hard_drive.store_file(new/datum/computer_file/program/materialmarket())
 	hard_drive.store_file(new/datum/computer_file/program/records())
 	hard_drive.store_file(new/datum/computer_file/program/wordprocessor())
 
@@ -104,7 +118,7 @@
 
 /obj/item/modular_computer/console/preset/supply/install_default_programs()
 	..()
-	hard_drive.store_file(new/datum/computer_file/program/supply())
+	hard_drive.store_file(new/datum/computer_file/program/materialmarket())
 	set_autorun("supply")
 
 // ERT
@@ -120,7 +134,7 @@
 	hard_drive.store_file(new/datum/computer_file/program/camera_monitor/ert())
 	hard_drive.store_file(new/datum/computer_file/program/alarm_monitor())
 	hard_drive.store_file(new/datum/computer_file/program/comm())
-	hard_drive.store_file(new/datum/computer_file/program/aidiag())
+//	hard_drive.store_file(new/datum/computer_file/program/aidiag())
 	hard_drive.store_file(new/datum/computer_file/program/records())
 	hard_drive.store_file(new/datum/computer_file/program/wordprocessor())
 
@@ -138,7 +152,7 @@
 	..()
 	hard_drive.store_file(new/datum/computer_file/program/camera_monitor/hacked())
 	hard_drive.store_file(new/datum/computer_file/program/alarm_monitor())
-	hard_drive.store_file(new/datum/computer_file/program/aidiag())
+//	hard_drive.store_file(new/datum/computer_file/program/aidiag())
 
 // Merchant
 /obj/item/modular_computer/console/preset/merchant/install_default_programs()
@@ -153,4 +167,4 @@
 	hard_drive.store_file(new/datum/computer_file/program/newsbrowser())
 	hard_drive.store_file(new/datum/computer_file/program/email_client())
 	hard_drive.store_file(new/datum/computer_file/program/wordprocessor())
-	hard_drive.store_file(new/datum/computer_file/program/library())
+//	hard_drive.store_file(new/datum/computer_file/program/library())

@@ -1,0 +1,105 @@
+<h2>{{:data.newsfeed_name}} News Feed</h2><hr>
+<br><br>
+{{:helper.link('Feed Settings', '', {'action' : 'change_menu', 'target' : '1'}, data.menu == 1 ? 'selected' : null)}}
+{{:helper.link('New Issue', '', {'action' : 'change_menu', 'target' : '2'}, data.menu == 2 ? 'selected' : null)}}
+{{:helper.link('New Article', '', {'action' : 'change_menu', 'target' : '3'}, data.menu == 3 ? 'selected' : null)}}
+{{if data.menu == 1}}
+	<div class='item'>
+		<div class='itemLabel'>
+			Newsfeed Visible:
+		</div>
+		<div class='itemContent'>
+			{{:helper.link('Invisible', '', {'action' : 'feed_invis'}, data.feed_invis ? 'selected' : null)}}{{:helper.link('Visible', '', {'action' : 'feed_vis'}, data.feed_invis ? null : 'selected')}}
+		</div>
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			Newsfeed Name:
+		</div>
+		<div class='itemContent'>
+			{{:helper.link(data.newsfeed_name, '', {'action' : 'feed_name'}, null)}}
+		</div>
+	</div>
+	<br>
+	<div class='item'>
+		<div class='itemLabel'>
+			Article Announcement:
+		</div>
+		<div class='itemContent'>
+			{{:helper.link(data.article_announcement, '', {'action' : 'feed_announcement'}, null)}}
+		</div>
+	</div>
+	This is the text that precedes the headline when a subscribed newscaster announces a new article being published. Example: "(From {{:data.newsfeed_name}}) {{:data.article_announcement}} (Headline of article)"
+	<br>
+{{/if}}
+{{if data.menu == 2}}
+
+	<div class='item'>
+		<div class='itemLabel'>
+			Issue Name:
+		</div>
+		<div class='itemContent'>
+			{{:helper.link(data.issue_name, '', {'action' : 'feed_issuename'}, null)}}
+		</div>
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			Available Articles:
+		</div>
+		<br><br>
+		<div class='block'>
+			{{for data.articles}}
+				{{:value.name}}
+			{{/for}}
+		</div>
+	</div>
+	
+	<br>
+	When you have enough articles to make the issue worth publishing, you can publish it and subscribed newscasters will announce its release.<br><br>
+	{{:helper.link("Publish", '', {'action' : 'feed_issuepublish'}, null)}}
+	<br><br>
+{{/if}}
+{{if data.menu == 3}}
+	<div class='item'>
+		News articles use the same formatting and file format as Nanoword, but they have access to the [IMG] and [IMG2] tags for embedding copied photos into news articles. 
+		<div class='itemLabel'>
+			Copied Image 1:
+		</div>
+		<div class='itemContent'>
+			{{:helper.link(data.copied_image1, '', {'action' : 'copy_image1'}, null)}}{{:helper.link("Remove", '', {'action' : 'delete_image1'}, null)}}
+		</div>
+		<div class='itemLabel'>
+			Copied Image 2:
+		</div>
+		<div class='itemContent'>
+			{{:helper.link(data.copied_image2, '', {'action' : 'copy_image2'}, null)}}{{:helper.link("Remove", '', {'action' : 'delete_image2'}, null)}}
+		</div>
+		<div class='itemLabel'>
+			Announce Article:
+		</div>
+		<div class='itemContent'>
+			{{:helper.link('Announcement', '', {'action' : 'announce_yes'}, data.announce ? 'selected' : null)}}{{:helper.link('No Announcement', '', {'action' : 'announce_no'}, data.announce ? null : 'selected')}}
+		</div>
+		<div class='itemLabel'>
+			Article Access Price:
+		</div>
+		<div class='itemContent'>
+			{{:helper.link(data.price, '', {'action' : 'change_price'}, null)}}
+		</div>
+		<h2>Headline: {{:data.headline}}</h2>
+		<div class='item'>
+		{{:helper.link('NEW', null, { "PRG_newfile" : 1 })}}
+		{{:helper.link('LOAD', null, { "PRG_loadmenu" : 1 })}}
+		{{:helper.link('SAVE DRAFT', null, { "PRG_saveasfile" : 1 })}}
+		</div>
+		<div class='item'>
+		{{:helper.link('EDIT', null, { "PRG_editfile" : 1 })}}
+		{{:helper.link('HEADLINE', null, { "PRG_editname" : 1 })}}
+		{{:helper.link('PUBLISH ARTICLE', null, { "PRG_publish" : 1 })}}
+		{{:helper.link('FORMATTING HELP', null, { "PRG_taghelp" : 1 })}}
+		</div><hr>
+		<div class='block'>
+			{{:data.filedata}}
+		</div>
+	</div>
+{{/if}}

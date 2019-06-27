@@ -8,15 +8,16 @@
 	icon_keyboard = "generic_key"
 	icon_screen = "comm_logs"
 	light_color = "#00b000"
-	density = 1
-	anchored = 1.0
+	density = TRUE
+	anchored = TRUE
 	circuit = /obj/item/weapon/circuitboard/atmoscontrol
-	req_access = list(access_ce)
+	req_access = list(core_access_engineering_programs)
 	var/list/monitored_alarm_ids = null
 	var/datum/nano_module/atmos_control/atmos_control
 
 /obj/machinery/computer/atmoscontrol/New()
 	..()
+	ADD_SAVED_VAR(monitored_alarm_ids)
 
 /obj/machinery/computer/atmoscontrol/laptop
 	name = "Atmospherics Laptop"
@@ -24,7 +25,7 @@
 	icon_state = "laptop"
 	icon_keyboard = "laptop_key"
 	icon_screen = "atmoslaptop"
-	density = 0
+	density = FALSE
 
 /obj/machinery/computer/atmoscontrol/attack_ai(var/mob/user as mob)
 	ui_interact(user)

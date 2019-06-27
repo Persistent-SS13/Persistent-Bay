@@ -4,65 +4,60 @@
 	anchored = 1
 	icon = 'icons/obj/virology.dmi'
 	icon_state = "incubator"
+	circuit_type = /obj/item/weapon/circuitboard/incubator
 	var/obj/item/weapon/virusdish/dish
 	var/obj/item/weapon/reagent_containers/glass/beaker = null
-	var/radiation = 0
-
-	var/on = 0
-	var/power = 0
-
-	var/foodsupply = 0
-	var/toxins = 0
+	var/radiation	= 0
+	var/foodsupply 	= 0
+	var/toxins 		= 0
 
 /obj/machinery/disease2/incubator/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/incubator(src)
-	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	RefreshParts()
+	ADD_SAVED_VAR(dish)
+	ADD_SAVED_VAR(beaker)
+	ADD_SAVED_VAR(radiation)
+	ADD_SAVED_VAR(foodsupply)
+	ADD_SAVED_VAR(toxins)
+
+	ADD_SKIP_EMPTY(dish)
+	ADD_SKIP_EMPTY(beaker)
 
 /obj/machinery/disease2/incubator/attackby(var/obj/O as obj, var/mob/user as mob)
-	if(istype(O, /obj/item/weapon/reagent_containers/glass) || istype(O,/obj/item/weapon/reagent_containers/syringe))
-
+	if(default_deconstruction_screwdriver(user, O))
+		return 1
+	else if(default_deconstruction_crowbar(user, O))
+		return 1
+	else if(istype(O, /obj/item/weapon/reagent_containers/glass) || istype(O,/obj/item/weapon/reagent_containers/syringe))
 		if(beaker)
 			to_chat(user, "\The [src] is already loaded.")
 			return
-
-		beaker = O
-		user.drop_item()
-		O.loc = src
-
-		user.visible_message("[user] adds \a [O] to \the [src]!", "You add \a [O] to \the [src]!")
-		GLOB.nanomanager.update_uis(src)
-
-		src.attack_hand(user)
-		return
-
-	if(istype(O, /obj/item/weapon/virusdish))
-
-		if(dish)
-			to_chat(user, "The dish tray is aleady full!")
+		if(!user.unEquip(O, src))
 			return
-
-		dish = O
-		user.drop_item()
-		O.loc = src
+		beaker = O
 
 		user.visible_message("[user] adds \a [O] to \the [src]!", "You add \a [O] to \the [src]!")
-		GLOB.nanomanager.update_uis(src)
+		SSnano.update_uis(src)
 
 		src.attack_hand(user)
+		return 1
+	else if(istype(O, /obj/item/weapon/virusdish))
+		if(dish)
+			to_chat(user, "The dish tray is already full!")
+			return
+		if(!user.unEquip(O, src))
+			return
+		dish = O
 
-	if(default_deconstruction_screwdriver(user, O))
-		return
-	if(default_deconstruction_crowbar(user, O))
-		return
-	..()
+		user.visible_message("[user] adds \a [O] to \the [src]!", "You add \a [O] to \the [src]!")
+		SSnano.update_uis(src)
+		src.attack_hand(user)
+		return 1
+	else 
+		return ..()
 
 /obj/machinery/disease2/incubator/attack_hand(mob/user as mob)
-	if(stat & (NOPOWER|BROKEN)) return
+	if(inoperable()) 
+		return
 	ui_interact(user)
 
 /obj/machinery/disease2/incubator/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
@@ -74,7 +69,7 @@
 	data["food_supply"] = foodsupply
 	data["radiation"] = radiation
 	data["toxins"] = min(toxins, 100)
-	data["on"] = on
+	data["on"] = ison()
 	data["system_in_use"] = foodsupply > 0 || radiation > 0 || toxins > 0
 	data["chemical_volume"] = beaker ? beaker.reagents.total_volume : 0
 	data["max_chemical_volume"] = beaker ? beaker.volume : 1
@@ -97,28 +92,36 @@
 			for (var/ID in virus)
 				data["blood_already_infected"] = virus[ID]
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "dish_incubator.tmpl", src.name, 400, 600)
 		ui.set_initial_data(data)
 		ui.open()
 
-/obj/machinery/disease2/incubator/Process()
-	if(dish && on && dish.virus2)
-		use_power(50,EQUIP)
-		if(!powered(EQUIP))
-			on = 0
-			icon_state = "incubator"
+/obj/machinery/disease2/incubator/on_update_icon()
+	..()
+	if(ison())
+		icon_state = "incubator_on"
+	else
+		icon_state = "incubator"
 
+/obj/machinery/disease2/incubator/Process()
+	if(inoperable())
+		return
+	
+	if(ison() && dish && dish.virus2)
+		use_power_oneoff(50,EQUIP)
+		var/threshold_mod = 0
 		if(foodsupply)
 			if(dish.growth + 3 >= 100 && dish.growth < 100)
 				ping("\The [src] pings, \"Sufficient viral growth density achieved.\"")
 
 			foodsupply -= 1
 			dish.growth += 3
-			GLOB.nanomanager.update_uis(src)
+			SSnano.update_uis(src)
 
 		if(radiation)
+			threshold_mod++
 			if(radiation > 50 & prob(5))
 				dish.virus2.majormutate()
 				if(dish.info)
@@ -129,61 +132,61 @@
 			else if(prob(5))
 				dish.virus2.minormutate()
 			radiation -= 1
-			GLOB.nanomanager.update_uis(src)
+			SSnano.update_uis(src)
 		if(toxins && prob(5))
 			dish.virus2.infectionchance -= 1
-			GLOB.nanomanager.update_uis(src)
+			SSnano.update_uis(src)
 		if(toxins > 50)
 			dish.growth = 0
 			dish.virus2 = null
-			GLOB.nanomanager.update_uis(src)
-	else if(!dish)
-		on = 0
-		icon_state = "incubator"
-		GLOB.nanomanager.update_uis(src)
+			SSnano.update_uis(src)
+		infect_nearby(dish.virus2, 10 * 2**threshold_mod, SKILL_BASIC + threshold_mod)
+	else if(ison() && !dish)
+		turn_idle()
+		SSnano.update_uis(src)
 
+	CHECK_TICK
 	if(beaker)
-		if(foodsupply < 100 && beaker.reagents.remove_reagent(/datum/reagent/nutriment/virus_food,5))
-			if(foodsupply + 10 <= 100)
-				foodsupply += 10
-			else
-				beaker.reagents.add_reagent(/datum/reagent/nutriment/virus_food,(100 - foodsupply)/2)
-				foodsupply = 100
-			GLOB.nanomanager.update_uis(src)
+		if (foodsupply < 100 && beaker.reagents.has_reagent(/datum/reagent/nutriment/virus_food))
+			var/food_needed = min(10, 100 - foodsupply) / 2
+			var/food_taken = min(food_needed, beaker.reagents.get_reagent_amount(/datum/reagent/nutriment/virus_food))
 
-		if (locate(/datum/reagent/toxin) in beaker.reagents.reagent_list && toxins < 100)
+			beaker.reagents.remove_reagent(/datum/reagent/nutriment/virus_food, food_taken)
+			foodsupply = min(100, foodsupply+(food_taken * 2))
+			SSnano.update_uis(src)
+
+		if ((locate(/datum/reagent/toxin) in beaker.reagents.reagent_list) && toxins < 100)
 			for(var/datum/reagent/toxin/T in beaker.reagents.reagent_list)
 				toxins += max(T.strength,1)
 				beaker.reagents.remove_reagent(T.type,1)
 				if(toxins > 100)
 					toxins = 100
 					break
-			GLOB.nanomanager.update_uis(src)
+			SSnano.update_uis(src)
 
-/obj/machinery/disease2/incubator/OnTopic(user, href_list)
+/obj/machinery/disease2/incubator/OnTopic(mob/user, href_list)
+	operator_skill = user.get_skill_value(core_skill)
 	if (href_list["close"])
-		GLOB.nanomanager.close_user_uis(user, src, "main")
+		SSnano.close_user_uis(user, src, "main")
 		return TOPIC_HANDLED
 
 	if (href_list["ejectchem"])
 		if(beaker)
-			beaker.dropInto(loc)
-			if(Adjacent(usr) && !issilicon(usr))
-				usr.put_in_hands(beaker)
+			user.put_in_hands(beaker)
 			beaker = null
 		return TOPIC_REFRESH
 
 	if (href_list["power"])
 		if (dish)
-			on = !on
-			icon_state = on ? "incubator_on" : "incubator"
+			if(ison())
+				turn_idle()
+			else
+				turn_active()
 		return TOPIC_REFRESH
 
 	if (href_list["ejectdish"])
 		if(dish)
-			dish.forceMove(loc)
-			if(Adjacent(usr) && !issilicon(usr))
-				usr.put_in_hands(dish)
+			user.put_in_hands(dish)
 			dish = null
 		return TOPIC_REFRESH
 
@@ -213,4 +216,3 @@
 
 		ping("\The [src] pings, \"Injection complete.\"")
 		return TOPIC_REFRESH
-

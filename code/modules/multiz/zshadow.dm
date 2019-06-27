@@ -12,7 +12,7 @@
 	opacity = 0					// Don't trigger lighting recalcs gah! TODO - consider multi-z lighting.
 	//auto_init = FALSE 			// We do not need to be initialize()d
 	var/mob/owner = null		// What we are a shadow of.
-
+	should_save = 0
 /mob/zshadow/can_fall()
 	return FALSE
 
@@ -72,11 +72,11 @@
 
 	// Clean up mob shadow if it has one
 	if(M.shadow)
+		var/client/C = src.client
+		if(C && C.eye == M.shadow)
+			src.reset_view(0)
 		qdel(M.shadow)
 		M.shadow = null
-		var/client/C = M.client
-		if(C && C.eye == shadow)
-			M.reset_view(0)
 
 //
 // Handle cases where the owner mob might have changed its icon or overlays.

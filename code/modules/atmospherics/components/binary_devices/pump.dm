@@ -13,42 +13,43 @@ Thus, the two variables affect pump operation are set in New():
 */
 
 /obj/machinery/atmospherics/binary/pump
-	icon = 'icons/atmos/pump.dmi'
-	icon_state = "map_off"
-	level = 1
+	name 		= "gas pump"
+	desc 		= "A gas pump."
+	icon 		= 'icons/atmos/pump.dmi'
+	icon_state 	= "map_off"
+	level 		= 1
+	mass		= 12.0 //kg
 
-	name = "gas pump"
-	desc = "A pump."
+	//Power
+	use_power 		= POWER_USE_OFF
+	idle_power_usage= 150				//internal circuitry, friction losses and stuff
+	power_rating 	= 7500				//7500 W ~ 10 HP
+
+	//Radio
+	frequency 		= null
+	id_tag 			= null
+	radio_filter_in = RADIO_ATMOSIA
+	radio_filter_out= RADIO_ATMOSIA
+	radio_check_id 	= TRUE
 
 	var/target_pressure = ONE_ATMOSPHERE
-
-	//var/max_volume_transfer = 10000
-
-	use_power = 0
-	idle_power_usage = 150		//internal circuitry, friction losses and stuff
-	power_rating = 7500			//7500 W ~ 10 HP
-
 	var/max_pressure_setting = MAX_PUMP_PRESSURE
 
-	var/frequency = 0
-	var/id = null
-	var/datum/radio_frequency/radio_connection
+/obj/machinery/atmospherics/binary/pump/on
+	icon_state = "map_on"
+	use_power = POWER_USE_IDLE
 
 /obj/machinery/atmospherics/binary/pump/New()
 	..()
 	air1.volume = ATMOS_DEFAULT_VOLUME_PUMP
 	air2.volume = ATMOS_DEFAULT_VOLUME_PUMP
+	ADD_SAVED_VAR(target_pressure)
 
-/obj/machinery/atmospherics/binary/pump/on
-	icon_state = "map_on"
-	use_power = 1
-
-
-/obj/machinery/atmospherics/binary/pump/update_icon()
-	if(!powered())
+/obj/machinery/atmospherics/binary/pump/on_update_icon()
+	if(!powered() || isoff())
 		icon_state = "off"
 	else
-		icon_state = "[use_power ? "on" : "off"]"
+		icon_state = "on"
 
 /obj/machinery/atmospherics/binary/pump/update_underlays()
 	if(..())
@@ -63,10 +64,12 @@ Thus, the two variables affect pump operation are set in New():
 	update_underlays()
 
 /obj/machinery/atmospherics/binary/pump/Process()
-	last_power_draw = 0
-	last_flow_rate = 0
+	. = ..()
+	//Those are done in the base class
+	// last_power_draw = 0
+	// last_flow_rate = 0
 
-	if((stat & (NOPOWER|BROKEN)) || !use_power)
+	if(inoperable() || isoff())
 		return
 
 	var/power_draw = -1
@@ -79,7 +82,7 @@ Thus, the two variables affect pump operation are set in New():
 
 	if (power_draw >= 0)
 		last_power_draw = power_draw
-		use_power(power_draw)
+		use_power_oneoff(power_draw)
 
 		if(network1)
 			network1.update = 1
@@ -89,42 +92,26 @@ Thus, the two variables affect pump operation are set in New():
 
 	return 1
 
-//Radio remote control
-
-/obj/machinery/atmospherics/binary/pump/proc/set_frequency(new_frequency)
-	radio_controller.remove_object(src, frequency)
-	frequency = new_frequency
-	if(frequency)
-		radio_connection = radio_controller.add_object(src, frequency, filter = RADIO_ATMOSIA)
-
 /obj/machinery/atmospherics/binary/pump/proc/broadcast_status()
-	if(!radio_connection)
+	if(!has_transmitter())
 		return 0
 
-	var/datum/signal/signal = new
-	signal.transmission_method = 1 //radio signal
-	signal.source = src
-
-	signal.data = list(
-		"tag" = id,
+	var/list/data = list(
+		// "tag" = id,
 		"device" = "AGP",
 		"power" = use_power,
 		"target_output" = target_pressure,
 		"sigtype" = "status"
 	)
-
-	radio_connection.post_signal(src, signal, filter = RADIO_ATMOSIA)
-
+	broadcast_signal(data)
 	return 1
 
 /obj/machinery/atmospherics/binary/pump/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
-	if(stat & (BROKEN|NOPOWER))
+	if(inoperable())
 		return
 
 	// this is the data which will be sent to the ui
-	var/data[0]
-
-	data = list(
+	var/list/data = list(
 		"on" = use_power,
 		"pressure_set" = round(target_pressure*100),	//Nano UI can't handle rounded non-integers, apparently.
 		"max_pressure" = max_pressure_setting,
@@ -134,7 +121,7 @@ Thus, the two variables affect pump operation are set in New():
 	)
 
 	// update the ui if it exists, returns null if no ui is passed/found
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		// the ui does not exist, so we'll create a new() one
 		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
@@ -143,23 +130,20 @@ Thus, the two variables affect pump operation are set in New():
 		ui.open()					// open the new ui window
 		ui.set_auto_update(1)		// auto update every Master Controller tick
 
-/obj/machinery/atmospherics/binary/pump/Initialize()
-	. = ..()
-	if(frequency)
-		set_frequency(frequency)
 
-/obj/machinery/atmospherics/binary/pump/receive_signal(datum/signal/signal)
-	if(!signal.data["tag"] || (signal.data["tag"] != id) || (signal.data["sigtype"]!="command"))
-		return 0
+
+/obj/machinery/atmospherics/binary/pump/OnSignal(datum/signal/signal)
+	if(!..() || signal.data["sigtype"] != "command")
+		return
 
 	if(signal.data["power"])
 		if(text2num(signal.data["power"]))
-			use_power = 1
+			update_use_power(POWER_USE_IDLE)
 		else
-			use_power = 0
+			update_use_power(POWER_USE_OFF)
 
 	if("power_toggle" in signal.data)
-		use_power = !use_power
+		update_use_power(!use_power)
 
 	if(signal.data["set_output_pressure"])
 		target_pressure = between(
@@ -183,7 +167,7 @@ Thus, the two variables affect pump operation are set in New():
 		return
 	src.add_fingerprint(usr)
 	if(!src.allowed(user))
-		to_chat(user, "<span class='warning'>Access denied.</span>")
+		to_chat(user, SPAN_WARNING("Access denied."))
 		return
 	usr.set_machine(src)
 	ui_interact(user)
@@ -193,20 +177,20 @@ Thus, the two variables affect pump operation are set in New():
 	if((. = ..())) return
 
 	if(href_list["power"])
-		use_power = !use_power
-		. = 1
+		update_use_power(!use_power)
+		. = TOPIC_REFRESH
 
 	switch(href_list["set_press"])
 		if ("min")
 			target_pressure = 0
-			. = 1
+			. = TOPIC_REFRESH
 		if ("max")
 			target_pressure = max_pressure_setting
-			. = 1
+			. = TOPIC_REFRESH
 		if ("set")
 			var/new_pressure = input(usr,"Enter new output pressure (0-[max_pressure_setting]kPa)","Pressure control",src.target_pressure) as num
 			src.target_pressure = between(0, new_pressure, max_pressure_setting)
-			. = 1
+			. = TOPIC_REFRESH
 
 	if(.)
 		src.update_icon()

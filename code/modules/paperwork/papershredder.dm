@@ -1,13 +1,17 @@
 /obj/machinery/papershredder
 	name = "paper shredder"
 	desc = "For those documents you don't want seen."
-	icon = 'icons/obj/bureaucracy.dmi'
+	icon = 'icons/obj/machines/paper_shredder.dmi'
 	icon_state = "papershredder0"
 	density = 1
 	anchored = 1
-	flags = OBJ_ANCHORABLE|OBJ_CLIMBABLE
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
+	obj_flags = OBJ_FLAG_ANCHORABLE | OBJ_FLAG_DAMAGEABLE
+	mass = 5
+	max_health = 30
 	var/max_paper = 10
 	var/paperamount = 0
+
 	var/list/shred_amounts = list(
 		/obj/item/weapon/photo = 1,
 		/obj/item/weapon/shreddedp = 1,
@@ -15,7 +19,12 @@
 		/obj/item/weapon/newspaper = 3,
 		/obj/item/weapon/card/id = 3,
 		/obj/item/weapon/paper_bundle = 3,
+		/obj/item/weapon/sample/print = 1
 		)
+
+/obj/machinery/papershredder/New()
+	. = ..()
+	ADD_SAVED_VAR(paperamount)
 
 /obj/machinery/papershredder/attackby(var/obj/item/W, var/mob/user)
 
@@ -39,13 +48,13 @@
 				to_chat(user, "<span class='danger'>\The [src] was too full, and shredded paper goes everywhere!</span>")
 				for(var/i=(paperamount-max_paper);i>0;i--)
 					var/obj/item/weapon/shreddedp/SP = get_shredded_paper()
-					SP.loc = get_turf(src)
+					SP.dropInto(loc)
 					SP.throw_at(get_edge_target_turf(src,pick(GLOB.alldirs)),1,5)
 				paperamount = max_paper
 			update_icon()
 			return
 	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if(WT.remove_fuel(0,user))
 			var/obj/item/stack/material/steel/new_item = new(usr.loc)
 			new_item.add_to_stacks(usr)
@@ -103,7 +112,7 @@
 	paperamount--
 	return new /obj/item/weapon/shreddedp(get_turf(src))
 
-/obj/machinery/papershredder/update_icon()
+/obj/machinery/papershredder/on_update_icon()
 	icon_state = "papershredder[max(0,min(5,Floor(paperamount/2)))]"
 
 /obj/item/weapon/shreddedp/attackby(var/obj/item/W as obj, var/mob/user)
@@ -136,7 +145,7 @@
 
 /obj/item/weapon/shreddedp
 	name = "shredded paper"
-	icon = 'icons/obj/bureaucracy.dmi'
+	icon = 'icons/obj/items/paper.dmi'
 	icon_state = "shredp"
 	randpixel = 5
 	throwforce = 0
@@ -146,4 +155,9 @@
 
 /obj/item/weapon/shreddedp/New()
 	..()
-	if(prob(65)) color = pick("#bababa","#7f7f7f")
+	ADD_SAVED_VAR(color)
+
+/obj/item/weapon/shreddedp/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		if(prob(65)) color = pick("#bababa","#7f7f7f")

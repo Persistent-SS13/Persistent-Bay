@@ -53,7 +53,7 @@
 	desc = "Suit for a cyborg costume."
 	icon_state = "death"
 	item_state = "death"
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	fire_resist = T0C+5200
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT
 
@@ -168,6 +168,79 @@
 	. = ..()
 	set_extension(src, /datum/extension/appearance, /datum/extension/appearance/cardborg)
 
+/obj/item/clothing/suit/skeleton
+	name = "skeleton costume"
+	desc = "A body-tight costume with the human skeleton lined out on it."
+	icon_state = "skelecost"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS|FEET|HANDS|EYES|HEAD|FACE
+	flags_inv = HIDEJUMPSUIT|HIDESHOES|HIDEGLOVES
+	item_state_slots = list(slot_r_hand_str = "judge", slot_l_hand_str = "judge")
+
+/obj/item/clothing/suit/engicost
+	name = "sexy engineering voidsuit costume"
+	desc = "It's supposed to look like an engineering voidsuit... It doesn't look like it could protect from much radiation."
+	icon_state = "engicost"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|FEET
+	flags_inv = HIDEJUMPSUIT|HIDESHOES
+	item_state_slots = list(slot_r_hand_str = "eng_voidsuit", slot_l_hand_str = "eng_voidsuit")
+
+/obj/item/clothing/suit/maxman
+	name = "doctor maxman costume"
+	desc = "A costume made to look like Dr. Maxman, the famous male-enhancement salesman. Complete with red do-rag and sleeveless labcoat."
+	icon_state = "maxman"
+	body_parts_covered = LOWER_TORSO|FEET|LEGS|HEAD
+	flags_inv = HIDEJUMPSUIT|HIDESHOES
+	item_state_slots = list(slot_r_hand_str = "leather_jacket", slot_l_hand_str = "leather_jacket")
+
+/obj/item/clothing/suit/iasexy
+	name = "sexy internal affairs suit"
+	desc = "Now where's your pen?~"
+	icon_state = "iacost"
+	body_parts_covered = UPPER_TORSO|FEET|LOWER_TORSO|EYES
+	flags_inv = HIDEJUMPSUIT|HIDESHOES
+	item_state_slots = list(slot_r_hand_str = "suit_black", slot_l_hand_str = "suit_black")
+
+/obj/item/clothing/suit/sexyminer
+	name = "sexy miner costume"
+	desc = "For when you need to get your rocks off."
+	icon_state = "sexyminer"
+	body_parts_covered = FEET|LOWER_TORSO|HEAD
+	flags_inv = HIDEJUMPSUIT|HIDESHOES
+	item_state_slots = list(slot_r_hand_str = "miner", slot_l_hand_str = "miner")
+
+/obj/item/clothing/suit/sumo
+	name = "inflatable sumo wrestler costume"
+	desc = "An inflated sumo wrestler costume. It's quite hot."
+	icon_state = "sumo"
+	body_parts_covered = FEET|LOWER_TORSO|UPPER_TORSO|LEGS|ARMS
+	flags_inv = HIDESHOES|HIDEJUMPSUIT
+	item_state_slots = list(slot_r_hand_str = "classicponcho", slot_l_hand_str = "classicponcho")
+	min_cold_protection_temperature = SPACE_SUIT_MIN_COLD_PROTECTION_TEMPERATURE
+
+/obj/item/clothing/suit/hackercost
+	name = "classic hacker costume"
+	desc = "You would feel insanely cool wearing this."
+	icon_state = "hackercost"
+	body_parts_covered = FEET|LOWER_TORSO|UPPER_TORSO|LEGS|ARMS|EYES
+	flags_inv = HIDESHOES|HIDEJUMPSUIT
+	item_state_slots = list(slot_r_hand_str = "leather_coat", slot_l_hand_str = "leather_coat")
+
+/obj/item/clothing/suit/lumber
+	name = "sexy lumberjack costume"
+	desc = "Smells of dusky pine. Includes chest hair and beard."
+	icon_state = "sexylumber"
+	body_parts_covered = FEET|LOWER_TORSO|FEET
+	flags_inv = HIDESHOES|HIDEJUMPSUIT
+	item_state_slots = list(slot_r_hand_str = "red_labcoat", slot_l_hand_str = "red_labcoat")
+
+/obj/item/clothing/suit/eccentricjudge
+	name = "eccentric judge robe"
+	desc = "For when you need to establish law and order, and on the side run a galactic empire."
+	icon_state = "eccentricjudge"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS|FEET
+	flags_inv = HIDEJUMPSUIT|HIDESHOES
+	item_state_slots = list(slot_r_hand_str = "judge", slot_l_hand_str = "judge")
+
 /*
  * Misc
  */
@@ -239,26 +312,13 @@
 /obj/item/clothing/under/stripper/stripper_pink
 	name = "pink swimsuit"
 	desc = "A rather skimpy pink swimsuit."
-	icon_state = "stripper_p_under"
+	icon_state = "stripper_p"
 	siemens_coefficient = 1
 
 /obj/item/clothing/under/stripper/stripper_green
 	name = "green swimsuit"
 	desc = "A rather skimpy green swimsuit."
-	icon_state = "stripper_g_under"
-	siemens_coefficient = 1
-
-/obj/item/clothing/suit/stripper/stripper_pink
-	name = "pink skimpy dress"
-	desc = "A rather skimpy pink dress."
-	icon_state = "stripper_p_over"
-	siemens_coefficient = 1
-
-/obj/item/clothing/suit/stripper/stripper_green
-	name = "green skimpy dress"
-	desc = "A rather skimpy green dress."
-	icon_state = "stripper_g_over"
-	//item_state = "stripper_g"
+	icon_state = "stripper_g"
 	siemens_coefficient = 1
 
 /obj/item/clothing/under/stripper/mankini
@@ -313,30 +373,35 @@
 /obj/item/clothing/suit/poncho/colored
 	name = "poncho"
 	desc = "A simple, comfortable poncho."
+	species_restricted = null
 	icon_state = "classicponcho"
 	item_state = "classicponcho"
 
 /obj/item/clothing/suit/poncho/colored/green
 	name = "green poncho"
 	desc = "A simple, comfortable cloak without sleeves. This one is green."
+	species_restricted = null
 	icon_state = "greenponcho"
 	item_state = "greenponcho"
 
 /obj/item/clothing/suit/poncho/colored/red
 	name = "red poncho"
 	desc = "A simple, comfortable cloak without sleeves. This one is red."
+	species_restricted = null
 	icon_state = "redponcho"
 	item_state = "redponcho"
 
 /obj/item/clothing/suit/poncho/colored/purple
 	name = "purple poncho"
 	desc = "A simple, comfortable cloak without sleeves. This one is purple."
+	species_restricted = null
 	icon_state = "purpleponcho"
 	item_state = "purpleponcho"
 
 /obj/item/clothing/suit/poncho/colored/blue
 	name = "blue poncho"
 	desc = "A simple, comfortable cloak without sleeves. This one is blue."
+	species_restricted = null
 	icon_state = "blueponcho"
 	item_state = "blueponcho"
 
@@ -353,14 +418,15 @@
 	siemens_coefficient = 0.7
 
 /obj/item/clothing/suit/storage/leather_jacket
-	name = "leather jacket"
+	name = "black leather jacket"
 	desc = "A black leather coat."
 	icon_state = "leather_jacket"
 	item_state = "leather_jacket"
 	body_parts_covered = UPPER_TORSO|ARMS
 
 /obj/item/clothing/suit/storage/leather_jacket/nanotrasen
-	desc = "A black leather coat. A corporate logo is proudly displayed on the back."
+	name = "\improper NanoTrasen black leather jacket"
+	desc = "A black leather coat. The NanoTrasen logo is proudly displayed on the back."
 	icon_state = "leather_jacket_nt"
 
 //This one has buttons for some reason
@@ -374,10 +440,21 @@
 	body_parts_covered = UPPER_TORSO|ARMS
 
 /obj/item/clothing/suit/storage/toggle/brown_jacket/nanotrasen
-	desc = "A brown leather coat. A corporate logo is proudly displayed on the back."
+	name = "\improper NanoTrasen leather jacket"
+	desc = "A brown leather coat. The NanoTrasen logo is proudly displayed on the back."
 	icon_state = "brown_jacket_nt"
 	icon_open = "brown_jacket_nt_open"
 	icon_closed = "brown_jacket_nt"
+
+/obj/item/clothing/suit/storage/toggle/agent_jacket
+	name = "agent jacket"
+	desc = "A black leather jacket belonging to an agent of the Office of Civil Investigation and Enforcement."
+	icon_state = "agent_jacket"
+	item_state = "agent_jacket"
+	icon_open = "agent_jacket_open"
+	icon_closed = "agent_jacket"
+	valid_accessory_slots = list(ACCESSORY_SLOT_INSIGNIA)
+	body_parts_covered = UPPER_TORSO|ARMS
 
 /obj/item/clothing/suit/storage/toggle/hoodie
 	name = "hoodie"
@@ -391,27 +468,27 @@
 
 /obj/item/clothing/suit/storage/toggle/hoodie/cti
 	name = "\improper CTI hoodie"
-	desc = "A warm, black sweatshirt.  It bears the letters CTI on the back, a lettering to the prestigious university in Tau Ceti, Ceti Technical Institute.  There is a blue supernova embroidered on the front, the emblem of CTI."
+	desc = "A warm, black sweatshirt.  It bears the letters 'CTI' on the back, a lettering to the prestigious university in Tau Ceti, Ceti Technical Institute.  There is a blue supernova embroidered on the front, the emblem of CTI."
 	icon_state = "cti_hoodie"
 	icon_open = "cti_hoodie_open"
 	icon_closed = "cti_hoodie"
 
 /obj/item/clothing/suit/storage/toggle/hoodie/mu
 	name = "\improper Mariner University hoodie"
-	desc = "A warm, gray sweatshirt.  It bears the letters MU on the front, a lettering to the well-known public college, Mariner University."
+	desc = "A warm, gray sweatshirt.  It bears the letters 'MU' on the front, a lettering to the well-known public college, Mariner University."
 	icon_state = "mu_hoodie"
 	icon_open = "mu_hoodie_open"
 	icon_closed = "mu_hoodie"
 
 /obj/item/clothing/suit/storage/toggle/hoodie/nt
-	name = "Nanotrasen hoodie"
-	desc = "A warm, blue sweatshirt.  It proudly bears the silver Nanotrasen insignia lettering on the back.  The edges are trimmed with silver."
+	name = "\improper NanoTrasen hoodie"
+	desc = "A warm, blue sweatshirt. It proudly bears the NanoTrasen logo on the back. The edges are trimmed with silver."
 	icon_state = "nt_hoodie"
 	icon_open = "nt_hoodie_open"
 	icon_closed = "nt_hoodie"
 
 /obj/item/clothing/suit/storage/toggle/hoodie/smw
-	name = "Space Mountain Wind hoodie"
+	name = "\improper Space Mountain Wind hoodie"
 	desc = "A warm, black sweatshirt.  It has the logo for the popular softdrink Space Mountain Wind on both the front and the back."
 	icon_state = "smw_hoodie"
 	icon_open = "smw_hoodie_open"
@@ -430,31 +507,42 @@
 
 /obj/item/clothing/suit/poncho/roles/security
 	name = "security poncho"
-	desc = "A simple, comfortable cloak without sleeves. This one is black and red, which are standard Nanotrasen Security colors."
+	desc = "A simple, comfortable cloak without sleeves. This one is black and red, which are standard Security colors."
+	species_restricted = null
 	icon_state = "secponcho"
 	item_state = "secponcho"
 
 /obj/item/clothing/suit/poncho/roles/medical
 	name = "medical poncho"
 	desc = "A simple, comfortable cloak without sleeves. This one is white with a blue tint, which are standard Medical colors."
+	species_restricted = null
 	icon_state = "medponcho"
 	item_state = "medponcho"
 
 /obj/item/clothing/suit/poncho/roles/engineering
 	name = "engineering poncho"
 	desc = "A simple, comfortable cloak without sleeves. This one is yellow and orange, which are standard Engineering colors."
+	species_restricted = null
 	icon_state = "engiponcho"
 	item_state = "engiponcho"
 
 /obj/item/clothing/suit/poncho/roles/science
 	name = "science poncho"
-	desc = "A simple, comfortable cloak without sleeves. This one is white with a few red stripes, which are standard Nanotrasen Science colors."
+	desc = "A simple, comfortable cloak without sleeves. This one is white with a few bottle green stripes, corporate colors."
+	species_restricted = null
 	icon_state = "sciponcho"
 	item_state = "sciponcho"
+
+/obj/item/clothing/suit/poncho/roles/science/nanotrasen
+	name = "\improper NanoTrasen poncho"
+	desc = "A simple, comfortable cloak without sleeves. This one is white with a few red stripes, colors of NanoTrasen. Go NanoTrasen!"
+	icon_state = "sciponcho_nt"
+	item_state = "sciponcho_nt"
 
 /obj/item/clothing/suit/poncho/roles/cargo
 	name = "cargo poncho"
 	desc = "A simple, comfortable cloak without sleeves. This one is tan and grey, which are standard Cargo colors."
+	species_restricted = null
 	icon_state = "cargoponcho"
 	item_state = "cargoponcho"
 
@@ -496,16 +584,23 @@
 	icon_open = "trackjacketwhite_open"
 	icon_closed = "trackjacketwhite"
 
+/obj/item/clothing/suit/storage/toggle/track/gcc
+	name = "GCC track jacket"
+	desc = "An Independent track jacket, for the truly cheeki breeki."
+	icon_state = "trackjackettcc"
+	icon_open = "trackjackettcc_open"
+	icon_closed = "trackjackettcc"
+
 /obj/item/clothing/suit/rubber
 	name = "human suit"
 	desc = "A Human suit made out of rubber."
 	icon_state = "mansuit"
-/*
-/obj/item/clothing/suit/rubber/tajaran
-	name = "tajara suit"
-	desc = "A Tajara suit made out of rubber."
+
+/obj/item/clothing/suit/rubber/cat
+	name = "cat suit"
+	desc = "A cat suit made out of rubber."
 	icon_state = "catsuit"
-*/
+
 /obj/item/clothing/suit/rubber/skrell
 	name = "skrell suit"
 	desc = "A Skrell suit made out of rubber."
@@ -515,3 +610,19 @@
 	name = "unathi suit"
 	desc = "A Unathi suit made out of rubber."
 	icon_state = "lizsuit"
+
+/obj/item/clothing/suit/hospital
+	name = "hospital gown"
+	desc = "A thin, long and loose robe-like garment worn by people undergoing active medical treatment."
+	icon_state = "hospitalgown"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+	allowed = null
+
+/obj/item/clothing/suit/hospital/blue
+	color = "#99ccff"
+
+/obj/item/clothing/suit/hospital/green
+	color = "#8dd7a3"
+
+/obj/item/clothing/suit/hospital/pink
+	color = "#ffb7db"

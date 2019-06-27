@@ -1,23 +1,33 @@
 //This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:31
 
 /obj/machinery/computer/pod
-	name = "pod launch control console"
-	desc = "A control console for launching pods. Some people prefer firing Mechas."
-	icon_screen = "mass_driver"
-	light_color = "#00b000"
-	circuit = /obj/item/weapon/circuitboard/pod
-	var/id = 1.0
+	name 				= "pod launch control console"
+	desc 				= "A control console for launching pods. Some people prefer firing Mechas."
+	icon_screen 		= "mass_driver"
+	light_color 		= "#00b000"
+	circuit 			= /obj/item/weapon/circuitboard/pod
+	//Radio
+	id_tag 				= null
+	frequency 			= POD_LAUNCHER_FREQ
+	radio_filter_in 	= RADIO_POD_LAUNCHER
+	radio_filter_out 	= RADIO_POD_LAUNCHER
+	radio_check_id 		= TRUE
+
 	var/obj/machinery/mass_driver/connected = null
 	var/timing = 0.0
 	var/time = 30.0
 	var/title = "Mass Driver Controls"
 
 
-/obj/machinery/computer/pod/New()
+/obj/machinery/computer/pod/Initialize()
+	. = ..()
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/computer/pod/LateInitialize()
 	..()
 	spawn( 5 )
 		for(var/obj/machinery/mass_driver/M in world)
-			if(M.id == id)
+			if(M.id_tag == src.id_tag)
 				connected = M
 			else
 		return
@@ -25,7 +35,7 @@
 
 
 /obj/machinery/computer/pod/proc/alarm()
-	if(stat & (NOPOWER|BROKEN))
+	if(inoperable())
 		return
 
 	if(!( connected ))
@@ -33,26 +43,26 @@
 		return
 
 	for(var/obj/machinery/door/blast/M in world)
-		if(M.id == id)
+		if(M.id_tag == id_tag)
 			M.open()
 
 	sleep(20)
 
 	for(var/obj/machinery/mass_driver/M in world)
-		if(M.id == id)
+		if(M.id_tag == id_tag)
 			M.power = connected.power
 			M.drive()
 
 	sleep(50)
 	for(var/obj/machinery/door/blast/M in world)
-		if(M.id == id)
+		if(M.id_tag == id_tag)
 			M.close()
 			return
 	return
 
 /*
 /obj/machinery/computer/pod/attackby(I as obj, user as mob)
-	if(istype(I, /obj/item/weapon/screwdriver))
+	if(istype(I, /obj/item/weapon/tool/screwdriver))
 		playsound(loc, 'sound/items/Screwdriver.ogg', 50, 1)
 		if(do_after(user, 20))
 			if(stat & BROKEN)
@@ -138,7 +148,6 @@
 		dat += "<BR>\n<A href = '?src=\ref[src];door=1'>Toggle Outer Door</A><BR>"
 	dat += "<BR><BR><A href='?src=\ref[user];mach_close=computer'>Close</A></TT></BODY></HTML>"
 	user << browse(dat, "window=computer;size=400x500")
-	add_fingerprint(usr)
 	onclose(user, "computer")
 	return
 
@@ -154,40 +163,42 @@
 			time = 0
 			timing = 0
 		updateDialog()
-	return
 
-
-/obj/machinery/computer/pod/Topic(href, href_list)
-	if(..())
-		return 1
-
+/obj/machinery/computer/pod/OnTopic(user, href_list)
 	if(href_list["power"])
 		var/t = text2num(href_list["power"])
 		t = min(max(0.25, t), 16)
 		if(connected)
 			connected.power = t
-	if(href_list["alarm"])
+		. = TOPIC_REFRESH
+	else if(href_list["alarm"])
 		alarm()
-	if(href_list["drive"])
+		. = TOPIC_REFRESH
+	else if(href_list["drive"])
 		for(var/obj/machinery/mass_driver/M in SSmachines.machinery)
-			if(M.id == id)
+			if(M.id_tag == id_tag)
 				M.power = connected.power
 				M.drive()
-
-	if(href_list["time"])
+		. = TOPIC_REFRESH
+	else if(href_list["time"])
 		timing = text2num(href_list["time"])
-	if(href_list["tp"])
+		. = TOPIC_REFRESH
+	else if(href_list["tp"])
 		var/tp = text2num(href_list["tp"])
 		time += tp
 		time = min(max(round(time), 0), 120)
-	if(href_list["door"])
+		. = TOPIC_REFRESH
+	else if(href_list["door"])
 		for(var/obj/machinery/door/blast/M in world)
-			if(M.id == id)
+			if(M.id_tag == id_tag)
 				if(M.density)
 					M.open()
 				else
 					M.close()
-	updateUsrDialog()
+		. = TOPIC_REFRESH
+
+	if(. == TOPIC_REFRESH)
+		updateUsrDialog()
 
 /obj/machinery/computer/pod/old
 	icon_state = "oldcomp"

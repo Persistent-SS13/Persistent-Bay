@@ -1,11 +1,12 @@
 /obj/item/weapon/storage/wallet
 	name = "wallet"
 	desc = "It can hold a few small and personal things."
-	icon = 'icons/obj/wallet.dmi'
+	icon = 'icons/obj/items/wallet.dmi'
 	icon_state = "wallet-white"
 	w_class = ITEM_SIZE_SMALL
 	max_w_class = ITEM_SIZE_SMALL //Don't worry, see can_hold[]
 	max_storage_space = 8
+	matter = list(MATERIAL_CLOTH = 1000)
 	can_hold = list(
 		/obj/item/weapon/spacecash,
 		/obj/item/weapon/card,
@@ -37,13 +38,17 @@
 		/obj/item/device/paicard,
 		/obj/item/weapon/stamp,
 		/obj/item/weapon/key,
-		/obj/item/clothing/accessory/badge)
+		/obj/item/clothing/accessory/badge,
+		/obj/item/clothing/accessory/medal,
+		/obj/item/clothing/accessory/armor/tag,
+		)
 	slot_flags = SLOT_ID
 
 	var/obj/item/weapon/card/id/front_id = null
 
 /obj/item/weapon/storage/wallet/leather
 	color = COLOR_SEDONA
+	matter = list(MATERIAL_LEATHER = 1000)
 
 /obj/item/weapon/storage/wallet/Destroy()
 	if(front_id)
@@ -56,7 +61,7 @@
 	if(.)
 		if(W == front_id)
 			front_id = null
-			name = initial(name)
+			SetName(initial(name))
 			update_icon()
 
 /obj/item/weapon/storage/wallet/handle_item_insertion(obj/item/W as obj, prevent_warning = 0)
@@ -64,10 +69,9 @@
 	if(.)
 		if(!front_id && istype(W, /obj/item/weapon/card/id))
 			front_id = W
-			name = "[name] ([front_id])"
 			update_icon()
 
-/obj/item/weapon/storage/wallet/update_icon()
+/obj/item/weapon/storage/wallet/on_update_icon()
 	overlays.Cut()
 	if(front_id)
 		var/tiny_state = "id-generic"
@@ -107,6 +111,7 @@
 /obj/item/weapon/storage/wallet/poly
 	name = "polychromic wallet"
 	desc = "You can recolor it! Fancy! The future is NOW!"
+	matter = list(MATERIAL_LEATHER = 1000)
 
 /obj/item/weapon/storage/wallet/poly/New()
 	..()

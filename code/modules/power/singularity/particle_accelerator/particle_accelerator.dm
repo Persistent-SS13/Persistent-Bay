@@ -84,16 +84,24 @@ So, hopefully this is helpful if any more icons are to be added/changed/wonderin
 	icon_state = "end_cap"
 	reference = "end_cap"
 
-/obj/structure/particle_accelerator/update_icon()
+/obj/structure/particle_accelerator/on_update_icon()
 	..()
 	return
 
+/obj/structure/particle_accelerator/AltClick()
+	rotate()
 
 /obj/structure/particle_accelerator/verb/rotate()
 	set name = "Rotate Clockwise"
 	set category = "Object"
 	set src in oview(1)
 
+	if(!usr || !Adjacent(usr))
+		return
+	
+	if(usr.incapacitated())
+		return
+	
 	if (src.anchored || usr:stat)
 		to_chat(usr, "It is fastened to the floor!")
 		return 0
@@ -157,7 +165,7 @@ So, hopefully this is helpful if any more icons are to be added/changed/wonderin
 		else
 	return
 
-/obj/structure/particle_accelerator/update_icon()
+/obj/structure/particle_accelerator/on_update_icon()
 	switch(construction_state)
 		if(0,1)
 			icon_state="[reference]"
@@ -257,7 +265,7 @@ So, hopefully this is helpful if any more icons are to be added/changed/wonderin
 	icon_state = "none"
 	anchored = 0
 	density = 1
-	use_power = 0
+	use_power = POWER_USE_OFF
 	idle_power_usage = 0
 	active_power_usage = 0
 	var/construction_state = 0
@@ -267,6 +275,8 @@ So, hopefully this is helpful if any more icons are to be added/changed/wonderin
 	var/strength = 0
 	var/desc_holder = null
 
+/obj/machinery/particle_accelerator/AltClick()
+	rotate()
 
 /obj/machinery/particle_accelerator/verb/rotate()
 	set name = "Rotate Clockwise"
@@ -290,7 +300,7 @@ So, hopefully this is helpful if any more icons are to be added/changed/wonderin
 	src.set_dir(turn(src.dir, 90))
 	return 1
 
-/obj/machinery/particle_accelerator/update_icon()
+/obj/machinery/particle_accelerator/on_update_icon()
 	return
 
 /obj/machinery/particle_accelerator/examine(mob/user)
@@ -384,10 +394,10 @@ So, hopefully this is helpful if any more icons are to be added/changed/wonderin
 		if(src.construction_state < 3)//Was taken apart, update state
 			update_state()
 			if(use_power)
-				use_power = 0
+				update_use_power(POWER_USE_OFF)
 		src.construction_state = temp_state
 		if(src.construction_state >= 3)
-			use_power = 1
+			update_use_power(POWER_USE_IDLE)
 		update_icon()
 		return 1
 	return 0

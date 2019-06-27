@@ -220,7 +220,7 @@
 /obj/item/mecha_parts/mecha_equipment/tool/syringe_gun
 	name = "syringe gun"
 	desc = "Exosuit-mounted chem synthesizer with syringe gun. Reagents inside are held in stasis, so no reactions will occur. (Can be attached to: Medical Exosuits)"
-	icon = 'icons/obj/gun.dmi'
+	icon = 'icons/obj/guns/syringegun.dmi'
 	icon_state = "syringegun"
 	var/list/syringes
 	var/list/known_reagents
@@ -238,7 +238,7 @@
 
 /obj/item/mecha_parts/mecha_equipment/tool/syringe_gun/New()
 	..()
-	flags |= NOREACT
+	atom_flags |= ATOM_FLAG_NO_REACT
 	syringes = new
 	known_reagents = list(/datum/reagent/inaprovaline="Inaprovaline",/datum/reagent/dylovene="Dylovene")
 	processed_reagents = new
@@ -251,7 +251,7 @@
 
 /obj/item/mecha_parts/mecha_equipment/tool/syringe_gun/critfail()
 	..()
-	flags &= ~NOREACT
+	atom_flags &= ~ATOM_FLAG_NO_REACT
 	return
 
 /obj/item/mecha_parts/mecha_equipment/tool/syringe_gun/get_equip_info()
@@ -302,7 +302,7 @@
 					S.icon_state = initial(S.icon_state)
 					S.icon = initial(S.icon)
 					S.reagents.trans_to_mob(M, S.reagents.total_volume, CHEM_BLOOD)
-					M.take_organ_damage(2)
+					M.apply_damage(2, DAM_PIERCE)
 					S.visible_message("<span class=\"attack\"> [M] was hit by the syringe!</span>")
 					break
 				else if(S.loc == trg)
@@ -334,9 +334,9 @@
 		for(var/i=1 to known_reagents.len)
 			if(m>=synth_speed)
 				break
-			var/reagent = F.get("reagent_[i]")
-			if(reagent && (reagent in known_reagents))
-				message = "[m ? ", " : null][known_reagents[reagent]]"
+			var/reagent = known_reagents[i]
+			if(F.get("reagent_[i]"))
+				message += "[m ? ", " : null][known_reagents[reagent]]"
 				processed_reagents += reagent
 				m++
 		if(processed_reagents.len)

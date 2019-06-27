@@ -10,8 +10,9 @@
 	icon_state = "smes"
 	density = 1
 	anchored = 1
-	use_power = 0
 	clicksound = "switch"
+	interact_offline = 1
+	circuit_type = /obj/item/weapon/circuitboard/smes
 
 	var/capacity = 5e6 // maximum charge
 	var/charge = 1e6 // actual charge
@@ -38,8 +39,8 @@
 	var/last_chrg
 	var/last_onln
 
-	var/damage = 0
-	var/maxdamage = 500 // Relatively resilient, given how expensive it is, but once destroyed produces small explosion.
+	//var/damage = 0
+	max_health = 500 // Relatively resilient, given how expensive it is, but once destroyed produces small explosion.
 
 	var/input_cut = 0
 	var/input_pulsed = 0
@@ -52,6 +53,19 @@
 	var/list/terminals = list()
 	var/should_be_mapped = 0 // If this is set to 0 it will send out warning on New()
 
+/obj/machinery/power/smes/New()
+	..()
+	if(!should_be_mapped)
+		warning("Non-buildable or Non-magical SMES at [src.x]X [src.y]Y [src.z]Z")
+	
+	ADD_SAVED_VAR(charge)
+	ADD_SAVED_VAR(input_attempt)
+	ADD_SAVED_VAR(input_level)
+	ADD_SAVED_VAR(output_attempt)
+	ADD_SAVED_VAR(output_level)
+	ADD_SAVED_VAR(name_tag)
+	ADD_SAVED_VAR(name_tag)
+
 /obj/machinery/power/smes/drain_power(var/drain_check, var/surge, var/amount = 0)
 
 	if(drain_check)
@@ -62,24 +76,24 @@
 	return smes_amt / CELLRATE
 
 
-/obj/machinery/power/smes/New()
-	..()
-	if(!should_be_mapped)
-		warning("Non-buildable or Non-magical SMES at [src.x]X [src.y]Y [src.z]Z")
-
 /obj/machinery/power/smes/Initialize()
 	. = ..()
-	for(var/d in GLOB.cardinal)
-		var/turf/T = get_step(src, d)
+	if(. != INITIALIZE_HINT_QDEL)
+		return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/power/smes/LateInitialize()
+	. = ..()
+	for(var/D in GLOB.cardinal)
+		var/turf/T = get_step(src, D)
 		for(var/obj/machinery/power/terminal/term in T)
-			if(term && term.dir == turn(d, 180) && !term.master)
+			if(term && term.dir == turn(D, 180) && !term.master)
 				terminals |= term
 				term.master = src
 				term.connect_to_network()
 	if(!terminals.len)
-		stat |= BROKEN
+		set_broken(TRUE)
 		return
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/power/smes/add_avail(var/amount)
 	if(..(amount))
@@ -87,34 +101,33 @@
 		return 1
 	return 0
 
-
 /obj/machinery/power/smes/disconnect_terminal(var/obj/machinery/power/terminal/term)
 	terminals -= term
 	term.master = null
 
-/obj/machinery/power/smes/update_icon()
+/obj/machinery/power/smes/on_update_icon()
 	overlays.Cut()
 	if(stat & BROKEN)	return
 
-	overlays += image('icons/obj/power.dmi', "smes-op[outputting]")
+	overlays += image(src.icon, "smes-op[outputting]")
 
 	if(inputting == 2)
-		overlays += image('icons/obj/power.dmi', "smes-oc2")
+		overlays += image(src.icon, "smes-oc2")
 	else if (inputting == 1)
-		overlays += image('icons/obj/power.dmi', "smes-oc1")
+		overlays += image(src.icon, "smes-oc1")
 	else if (input_attempt)
-		overlays += image('icons/obj/power.dmi', "smes-oc0")
+		overlays += image(src.icon, "smes-oc0")
 
 	var/clevel = chargedisplay()
 	if(clevel)
-		overlays += image('icons/obj/power.dmi', "smes-og[clevel]")
+		overlays += image(src.icon, "smes-og[clevel]")
 
 	if(outputting == 2)
-		overlays += image('icons/obj/power.dmi', "smes-op2")
+		overlays += image(src.icon, "smes-op2")
 	else if (outputting == 1)
-		overlays += image('icons/obj/power.dmi', "smes-op1")
+		overlays += image(src.icon, "smes-op1")
 	else
-		overlays += image('icons/obj/power.dmi', "smes-op0")
+		overlays += image(src.icon, "smes-op0")
 
 /obj/machinery/power/smes/proc/chargedisplay()
 	return round(5.5*charge/(capacity ? capacity : 5e6))
@@ -151,7 +164,7 @@
 
 	// only update icon if state changed
 	if(last_disp != chargedisplay() || last_chrg != inputting || last_onln != outputting)
-		update_icon()
+		queue_icon_update()
 
 	//store machine state to see if we need to update the icon overlays
 	last_disp = chargedisplay()
@@ -209,7 +222,7 @@
 	output_used -= total_restore
 
 	if(clev != chargedisplay() ) //if needed updates the icons overlay
-		update_icon()
+		queue_icon_update()
 	return
 
 //Will return 1 on failure
@@ -278,7 +291,7 @@
 /obj/machinery/power/smes/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
 
 	if(default_deconstruction_screwdriver(user, W))
-		return
+		return 1
 
 	if (!panel_open)
 		to_chat(user, "<span class='warning'>You need to open access hatch on [src] first!</span>")
@@ -287,7 +300,7 @@
 	if(isCoil(W) && !building_terminal)
 		building_terminal = 1
 		var/obj/item/stack/cable_coil/CC = W
-		if (CC.get_amount() < 10)
+		if (!CC.can_use(10))
 			to_chat(user, "<span class='warning'>You need more cables.</span>")
 			building_terminal = 0
 			return 0
@@ -303,16 +316,16 @@
 		return 0
 
 	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if(!WT.isOn())
 			to_chat(user, "Turn on \the [WT] first!")
 			return 0
-		if(!damage)
+		if(!isdamaged())
 			to_chat(user, "\The [src] is already fully repaired.")
 			return 0
-		if(WT.remove_fuel(0,user) && do_after(user, damage, src))
+		if(WT.use_tool(user, src, get_damages() * 10) && src)
 			to_chat(user, "You repair all structural damage to \the [src]")
-			damage = 0
+			set_health(max_health)
 		return 0
 	else if(isWirecutter(W) && !building_terminal)
 		building_terminal = 1
@@ -347,11 +360,11 @@
 					qdel(term)
 		building_terminal = 0
 		return 0
-	return 1
+	return ..()
 
 /obj/machinery/power/smes/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 
-	if(stat & BROKEN)
+	if(isbroken())
 		return
 
 	// this is the data which will be sent to the ui
@@ -374,7 +387,7 @@
 
 
 	// update the ui if it exists, returns null if no ui is passed/found
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		// the ui does not exist, so we'll create a new() one
 		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
@@ -442,20 +455,17 @@
 	if(!output_attempt)
 		outputting = 0
 
-/obj/machinery/power/smes/proc/take_damage(var/amount)
-	amount = max(0, round(amount))
-	damage += amount
-	if(damage > maxdamage)
-		visible_message("<span class='danger'>\The [src] explodes in large rain of sparks and smoke!</span>")
-		// Depending on stored charge percentage cause damage.
-		switch(Percentage())
-			if(75 to INFINITY)
-				explosion(get_turf(src), 1, 2, 4)
-			if(40 to 74)
-				explosion(get_turf(src), 0, 2, 3)
-			if(5 to 39)
-				explosion(get_turf(src), 0, 1, 2)
-		qdel(src) // Either way we want to ensure the SMES is deleted.
+/obj/machinery/power/smes/destroyed()
+	visible_message(SPAN_DANGER("\The [src] explodes in large rain of sparks and smoke!"))
+	// Depending on stored charge percentage cause damage.
+	switch(Percentage())
+		if(75 to INFINITY)
+			explosion(get_turf(src), 1, 2, 4)
+		if(40 to 74)
+			explosion(get_turf(src), 0, 2, 3)
+		if(5 to 39)
+			explosion(get_turf(src), 0, 1, 2)
+	qdel(src) // Either way we want to ensure the SMES is deleted.
 
 /obj/machinery/power/smes/emp_act(severity)
 	if(prob(50))
@@ -473,21 +483,14 @@
 	update_icon()
 	..()
 
-/obj/machinery/power/smes/bullet_act(var/obj/item/projectile/Proj)
-	if(Proj.damage_type == BRUTE || Proj.damage_type == BURN)
-		take_damage(Proj.damage)
-
-/obj/machinery/power/smes/ex_act(var/severity)
-	// Two strong explosions will destroy a SMES.
-	// Given the SMES creates another explosion on it's destruction it sounds fairly reasonable.
-	take_damage(250 / severity)
-
 /obj/machinery/power/smes/examine(var/mob/user)
 	. = ..()
 	to_chat(user, "The service hatch is [panel_open ? "open" : "closed"].")
-	if(!damage)
+	if(!isdamaged())
 		return
-	var/damage_percentage = round((damage / maxdamage) * 100)
+	if(stat & BROKEN)
+		to_chat(user, SPAN_WARNING("It appears to be broken.."))
+	var/damage_percentage = round((get_damages() / get_max_health()) * 100)
 	switch(damage_percentage)
 		if(75 to INFINITY)
 			to_chat(user, "<span class='danger'>It's casing is severely damaged, and sparking circuitry may be seen through the holes!</span>")

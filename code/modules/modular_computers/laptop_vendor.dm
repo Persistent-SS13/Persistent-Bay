@@ -2,9 +2,9 @@
 
 /obj/machinery/lapvend
 	name = "computer vendor"
-	desc = "A vending machine with a built-in microfabricator, capable of dispensing various NT-branded computers."
+	desc = "A vending machine with a built-in microfabricator, capable of dispensing various computers."
 	icon = 'icons/obj/vending.dmi'
-	icon_state = "robotics"
+	icon_state = "laptop"
 	layer = BELOW_OBJ_LAYER
 	anchored = 1
 	density = 1
@@ -27,6 +27,14 @@
 	var/dev_nanoprint = 0					// 0: None, 1: Standard
 	var/dev_card = 0						// 0: None, 1: Standard
 	var/dev_aislot = 0						// 0: None, 1: Standard
+
+/obj/machinery/lapvend/on_update_icon()
+	if(stat & BROKEN)
+		icon_state = "[initial(icon_state)]-broken"
+	else if(!(stat & NOPOWER))
+		icon_state = initial(icon_state)
+	else
+		icon_state = "[initial(icon_state)]-off"
 
 // Removes all traces of old order and allows you to begin configuration from scratch.
 /obj/machinery/lapvend/proc/reset_order()
@@ -252,7 +260,7 @@
 	if(state == 1 || state == 2)
 		data["totalprice"] = total_price
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "computer_fabricator.tmpl", "Personal Computer Vendor", 500, 400)
 		ui.set_initial_data(data)
@@ -266,6 +274,7 @@ obj/machinery/lapvend/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(state == 2)
 		if(process_payment(I,W))
 			fabricate_and_recalc_price(1)
+			flick("laptop-vend", src)
 			if((devtype == 1) && fabricated_laptop)
 				if(fabricated_laptop.battery_module)
 					fabricated_laptop.battery_module.charge_to_full()

@@ -32,7 +32,12 @@
 	if(!antag_indicator || !other.current || !recipient.current)
 		return
 	var/indicator = (faction_indicator && (other in faction_members)) ? faction_indicator : antag_indicator
-	return image('icons/mob/hud.dmi', loc = other.current, icon_state = indicator, layer = LIGHTING_LAYER+0.1)
+	var/image/I = image('icons/mob/hud.dmi', loc = other.current, icon_state = indicator, layer = LIGHTING_LAYER+0.1)
+	if(ishuman(other.current))
+		var/mob/living/carbon/human/H = other.current
+		I.pixel_x = H.species.antaghud_offset_x
+		I.pixel_y = H.species.antaghud_offset_y
+	return I
 
 /datum/antagonist/proc/update_all_icons()
 	if(!antag_indicator)
@@ -73,13 +78,12 @@
 						if(I.loc == player.current)
 							qdel(I)
 
-/datum/antagonist/proc/update_current_antag_max()
+/datum/antagonist/proc/update_current_antag_max(datum/game_mode/mode)
 	cur_max = hard_cap
-	if(ticker && ticker.mode)
-		if(ticker.mode.antag_tags && (id in ticker.mode.antag_tags))
-			cur_max = hard_cap_round
+	if(mode.antag_tags && (mode.antag_tags))
+		cur_max = hard_cap_round
 
-	if(ticker.mode.antag_scaling_coeff)
+	if(mode.antag_scaling_coeff)
 
 		var/count = 0
 		for(var/mob/living/M in GLOB.player_list)
@@ -88,4 +92,4 @@
 
 		// Minimum: initial_spawn_target
 		// Maximum: hard_cap or hard_cap_round
-		cur_max = max(initial_spawn_target,min(round(count/ticker.mode.antag_scaling_coeff),cur_max))
+		cur_max = max(initial_spawn_target,min(round(count/mode.antag_scaling_coeff),cur_max))

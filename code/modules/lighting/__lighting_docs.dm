@@ -11,7 +11,7 @@ Changes from tg DAL:
 
   - Code:
 	  - Instead of one flat luminosity var, light is represented by 3 atom vars:
-		  - light_range; range in tiles of the light, used for calculating falloff,
+		  - light_range; diameter in tiles of the light, used for calculating falloff, Cannot be 1.
 		  - light_power; multiplier for the brightness of lights,
 		  - light_color; hex string representing the RGB colour of the light.
 	  - setLuminousity() is now set_light() and takes the three variables above.
@@ -33,7 +33,7 @@ atom: (lighting_atom.dm)
   - var/datum/light_source/light; light source datum for this atom, only present if light_range && light_power
   - var/list/light_sources; light sources in contents that are shining through this object, including this object
 
-  - proc/set_light(l_range, l_power, l_color):
+  - proc/set_light(l_max_bright, l_inner_range, l_outer_range, l_falloff_curve, l_color):
 	  - Sets light_range/power/color to non-null args and calls update_light()
   - proc/set_opacity(new_opacity):
 	  - Sets opacity to new_opacity.

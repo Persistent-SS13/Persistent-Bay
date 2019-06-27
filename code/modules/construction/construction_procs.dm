@@ -29,10 +29,10 @@
 	qdel(progress)
 */
 
-/atom/proc/Weld(var/obj/item/weapon/weldingtool/W, var/mob/user, var/time = 25, var/outputMessage, var/skill = 5, var/minSkill = 0)
+/atom/proc/Weld(var/obj/item/weapon/tool/weldingtool/W, var/mob/user, var/time = 25, var/outputMessage, var/skill = 5, var/minSkill = 0)
 	if(!isWelder(W))
 		return 0
-	if(!W.remove_fuel(0,user))
+	if(!W.isOn())
 		to_chat(user, "<span class='notice'>The welding tool must be on to complete this task.</span>")
 		return 0
 	user.setClickCooldown(DEFAULT_QUICK_COOLDOWN)
@@ -77,15 +77,13 @@
 	if(do_after(user, time, src))
 		return 1
 
-/atom/proc/Crowbar(var/obj/item/W, var/mob/user, var/time = 5, var/outputMessage, var/skill = 5, var/minSkill = 0)
-	if(!isCrowbar(W))
+/atom/proc/Crowbar(var/obj/item/weapon/tool/T, var/mob/user, var/time = 5, var/outputMessage, var/skill = 5, var/minSkill = 0)
+	if(!isCrowbar(T))
 		return 0
 	user.setClickCooldown(DEFAULT_QUICK_COOLDOWN)
 	add_fingerprint(user)
-	playsound(get_turf(src), 'sound/items/Crowbar.ogg', 50, 1)
-	if(outputMessage)
+	if(T.use_tool(user, src, time))
 		to_chat(user, "<span class='notice'>[outputMessage]</span>")
-	if(do_after(user, time, src))
 		return 1
 
 /atom/proc/UseMaterial(var/obj/item/stack/material/W, var/mob/user, var/time = 10, var/outputMessage, var/skill = 1, var/minSkill = 0, var/amount)

@@ -136,7 +136,7 @@ proc/load_unit_test_changes()
 	//
 
 	log_unit_test("Awaiting the master process...")
-	while(Master.current_runlevel < RUNLEVEL_LOBBY)
+	while(Master.current_runlevel < RUNLEVEL_GAME)
 		sleep(world.tick_lag)
 	log_unit_test("Master process setup.")
 
@@ -144,7 +144,7 @@ proc/load_unit_test_changes()
 
 	sleep(1)
 
-	Master.SetRunLevel(RUNLEVEL_SETUP)
+//	Master.SetRunLevel(RUNLEVEL_SETUP)
 
 	log_unit_test("Round has been started.  Waiting 10 seconds to start tests.")
 	sleep(100)

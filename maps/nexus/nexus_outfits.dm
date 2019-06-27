@@ -22,8 +22,7 @@
 	id_type = /obj/item/weapon/card/id/civilian/citizens
 	pda_type = null
 
-/decl/hierarchy/outfit/phorosian/nexus
-	name = "Phorosian Gear"
+/decl/hierarchy/outfit/phorosian
 	l_ear = /obj/item/device/radio/headset/nexus/citizen
 	id_slot = slot_wear_id
 	id_type = /obj/item/weapon/card/id/civilian/citizens

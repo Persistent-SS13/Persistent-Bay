@@ -62,7 +62,7 @@
 	else
 		pass("All player preferences have unique keys.")
 	return 1
-
+/*
 /datum/unit_test/access_datums_shall_be_unique
 	name = "UNIQUENESS: Access Datums Shall Be Unique"
 
@@ -82,7 +82,7 @@
 	else
 		pass("All access datums are unique.")
 	return 1
-
+*/
 /datum/unit_test/outfit_datums_shall_have_unique_names
 	name = "UNIQUENESS: Outfit Datums Shall Have Unique Names"
 

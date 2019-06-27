@@ -8,6 +8,7 @@
 	anchored = 0
 	interact_offline = 0
 	volume = 500
+	circuit_type = /obj/item/weapon/circuitboard/gasgenerator
 	var/valve_open = 0
 	var/release_pressure = ONE_ATMOSPHERE
 	var/release_flow_rate = ATMOS_DEFAULT_VOLUME_PUMP
@@ -57,6 +58,11 @@
 			to_chat(usr, "<span class='notice'>You load \the [O] into \the [src]</span>")
 
 		update_icon()
+	if(isScrewdriver(O))
+		default_deconstruction_screwdriver(usr, O)
+	if(isCrowbar(O))
+		default_deconstruction_crowbar(usr, O)
+
 	..()
 
 /obj/machinery/portable_atmospherics/gas_generator/attack_ai(var/mob/usr)

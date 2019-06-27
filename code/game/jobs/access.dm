@@ -71,8 +71,11 @@
 /atom/movable/proc/GetIdCard()
 	return null
 
-/obj/proc/check_access(obj/item/I)
-	return check_access_list(I ? I.GetAccess(req_access_faction) : list())
+/obj/proc/check_access(obj/item/I, var/faction)
+	var/use_faction = req_access_faction
+	if(faction)
+		use_faction = faction
+	return check_access_list(I ? I.GetAccess(use_faction) : list())
 
 /obj/proc/check_access_list(var/list/L)
 	if(!req_access)		req_access = list()

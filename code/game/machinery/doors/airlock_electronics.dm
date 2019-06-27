@@ -191,8 +191,7 @@
 				last_configurator = usr.name
 				return TRUE
 			else
-				var/obj/item/weapon/card/id/I = usr.get_active_hand()
-				I = I ? I.GetIdCard() : null
+				var/obj/item/weapon/card/id/I = usr.GetIdCard()
 				if(!istype(I, /obj/item/weapon/card/id))
 					to_chat(usr, "<span class='warning'>[\src] flashes a yellow LED near the ID scanner. Did you remember to scan your ID or PDA?</span>")
 					return TRUE
@@ -206,6 +205,7 @@
 					locked = 0
 					last_configurator = I.registered_name
 				else
+					req_access_faction = ""
 					to_chat(usr, "<span class='warning'>[\src] flashes a red LED near the ID scanner, indicating your access has been denied.</span>")
 					return TRUE
 		if("lock")
@@ -247,6 +247,24 @@
 			// Can be reworked to have the electronics inherit a precise access set, but requires UI changes.
 	if(object.req_access_faction)
 		src.req_access_faction = object.req_access_faction
+
+/obj/item/weapon/airlock_electronics/attackby(var/obj/item/W, var/mob/user)
+	var/obj/item/weapon/card/id/I = W
+	if(istype(I, /obj/item/weapon/card/id) && (!req_access_faction || req_access_faction == ""))
+		connected_faction = get_faction(I.selected_faction)
+		if(!connected_faction)
+			to_chat(usr, "<span class='warning'>[\src] flashes a red LED near the ID scanner, indicating your access has been denied.</span>")
+			return TRUE
+		if(connected_faction.uid != req_access_faction) conf_access = list()
+		req_access_faction = connected_faction.uid
+		if (check_access(I))
+			locked = 0
+			last_configurator = I.registered_name
+		else
+			req_access_faction = ""
+			to_chat(usr, "<span class='warning'>[\src] flashes a red LED near the ID scanner, indicating your access has been denied.</span>")
+			return TRUE
+	..()
 
 /obj/item/weapon/airlock_electronics/keypad_electronics
  	name = "keypad airlock electronics"

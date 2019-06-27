@@ -140,7 +140,10 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 			id = "docking port"
 			visible_mode = 0
 		return
-
+	if(istype(W, /obj/item/weapon/card/id))
+		if(status == DOCKING_BEACON_STATUS_CONSTRUCTION)
+			var/obj/item/weapon/card/id/id = W
+			shuttle_owner = id.selected_faction
 	return ..()
 
 

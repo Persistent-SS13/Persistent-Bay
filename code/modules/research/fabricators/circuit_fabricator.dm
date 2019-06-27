@@ -92,13 +92,13 @@
 	id = "operating"
 	build_path = /obj/item/weapon/circuitboard/operating
 	build_type = MEDICALFAB
-	
+
 /datum/design/circuit/operatingtable
 	name = "operating table"
 	id = "operating table"
 	build_path = /obj/item/weapon/circuitboard/optable
 	build_type = MEDICALFAB
-	
+
 /datum/design/circuit/cryo_cell
 	name = "Cryocell"
 	id = "cryocell"
@@ -418,6 +418,12 @@
 	id = "circulator"
 	req_tech = list(TECH_ENGINEERING = 4, TECH_POWER = 4)
 	build_path = /obj/item/weapon/circuitboard/circulator
+	build_type = ENGIFAB
+
+/datum/design/circuit/gas_generator
+	name = "Gas generator"
+	id = "gasgen"
+	build_path = /obj/item/weapon/circuitboard/gasgenerator
 	build_type = ENGIFAB
 
 /datum/design/circuit/photocopier
@@ -931,6 +937,12 @@
 	id = "washing_machine"
 	req_tech = list(TECH_ENGINEERING = 4)
 	build_path = /obj/item/weapon/circuitboard/washing_machine
+
+/datum/design/circuit/operating_table
+	name = "operating table"
+	id = "operating_table"
+	req_tech = list(TECH_ENGINEERING = 4)
+	build_path = /obj/item/weapon/circuitboard/optable
 
 /**
 

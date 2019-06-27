@@ -100,6 +100,7 @@
 	. += new/datum/stack_recipe/ai_core(src)
 	. += new/datum/stack_recipe/furniture/crate(src)
 	. += new/datum/stack_recipe/grip(src)
+	. += new/datum/stack_recipe/anomaly_container(src)
 
 /material/stone/generate_recipes(var/reinforce_material)
 	. = ..()

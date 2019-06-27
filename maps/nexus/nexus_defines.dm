@@ -52,7 +52,6 @@
 	if(!istype(newchar))
 		return
 	if(src.intro_icon)
-		sound_to(newchar, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
 		var/obj/screen/cinematic
 		cinematic = new
 		cinematic.icon = src.intro_icon
@@ -71,6 +70,10 @@
 			newchar.client.screen -= cinematic
 
 	newchar.spawn_type = CHARACTER_SPAWN_TYPE_CRYONET
+	var/sound/mus = sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel)
+	mus.environment = -1 //Don't do silly reverb stuff
+	mus.status = SOUND_STREAM //Cheaper to do streams
+	sound_to(newchar, mus)
 	
 	spawn()
 		new /obj/effect/portal(get_turf(newchar), null, 5 SECONDS, 0)

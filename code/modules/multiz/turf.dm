@@ -205,6 +205,7 @@
 	GLOB.entered_event.unregister(below, src, /turf/simulated/open/proc/handle_move)
 	//Take care of shadow
 	for(var/mob/zshadow/M in src)
+		M.loc = null
 		qdel(M)
 
 //When turf changes, a bunch of things can take place

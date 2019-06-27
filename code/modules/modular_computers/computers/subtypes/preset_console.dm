@@ -34,7 +34,7 @@
 	..()
 	hard_drive.store_file(new/datum/computer_file/program/suit_sensors())
 	hard_drive.store_file(new/datum/computer_file/program/camera_monitor())
-	hard_drive.store_file(new/datum/computer_file/program/records())
+//	hard_drive.store_file(new/datum/computer_file/program/records())
 	hard_drive.store_file(new/datum/computer_file/program/wordprocessor())
 	set_autorun("sensormonitor")
 
@@ -67,7 +67,7 @@
 //	hard_drive.store_file(new/datum/computer_file/program/aidiag())
 	hard_drive.store_file(new/datum/computer_file/program/email_client())
 //	hard_drive.store_file(new/datum/computer_file/program/email_administration())
-	hard_drive.store_file(new/datum/computer_file/program/records())
+//	hard_drive.store_file(new/datum/computer_file/program/records())
 	hard_drive.store_file(new/datum/computer_file/program/wordprocessor())
 
 // Command
@@ -83,7 +83,7 @@
 	hard_drive.store_file(new/datum/computer_file/program/comm())
 	hard_drive.store_file(new/datum/computer_file/program/camera_monitor())
 	hard_drive.store_file(new/datum/computer_file/program/email_client())
-	hard_drive.store_file(new/datum/computer_file/program/records())
+//	hard_drive.store_file(new/datum/computer_file/program/records())
 	hard_drive.store_file(new/datum/computer_file/program/wordprocessor())
 
 // Security
@@ -91,7 +91,7 @@
 	..()
 	hard_drive.store_file(new/datum/computer_file/program/camera_monitor())
 	hard_drive.store_file(new/datum/computer_file/program/digitalwarrant())
-	hard_drive.store_file(new/datum/computer_file/program/records())
+//	hard_drive.store_file(new/datum/computer_file/program/records())
 	hard_drive.store_file(new/datum/computer_file/program/wordprocessor())
 
 // Civilian
@@ -103,7 +103,7 @@
 	hard_drive.store_file(new/datum/computer_file/program/camera_monitor())
 	hard_drive.store_file(new/datum/computer_file/program/email_client())
 	hard_drive.store_file(new/datum/computer_file/program/materialmarket())
-	hard_drive.store_file(new/datum/computer_file/program/records())
+//	hard_drive.store_file(new/datum/computer_file/program/records())
 	hard_drive.store_file(new/datum/computer_file/program/wordprocessor())
 
 // Offices
@@ -135,7 +135,7 @@
 	hard_drive.store_file(new/datum/computer_file/program/alarm_monitor())
 	hard_drive.store_file(new/datum/computer_file/program/comm())
 //	hard_drive.store_file(new/datum/computer_file/program/aidiag())
-	hard_drive.store_file(new/datum/computer_file/program/records())
+//	hard_drive.store_file(new/datum/computer_file/program/records())
 	hard_drive.store_file(new/datum/computer_file/program/wordprocessor())
 
 // Mercenary

@@ -337,6 +337,7 @@ department tags
 	desc = "Insignia denoting assignment to a department. These appear blank."
 	icon_state = "dept_exped"
 	on_rolled = list("down" = "none", "rolled" = "dept_exped_sleeves")
+	accessory_icons = list(slot_w_uniform_str = 'code/modules/torch/icons/mob/onmob_accessories_solgov.dmi', slot_wear_suit_str = 'code/modules/torch/icons/mob/onmob_accessories_solgov.dmi')
 	slot = ACCESSORY_SLOT_DEPT
 	removable = FALSE
 	sprite_sheets = list(
@@ -485,6 +486,7 @@ ranks - ec
 	name = "ranks"
 	desc = "Insignia denoting rank of some kind. These appear blank."
 	icon_state = "fleetrank"
+	accessory_icons = list(slot_w_uniform_str = 'code/modules/torch/icons/mob/onmob_accessories_solgov.dmi', slot_wear_suit_str = 'code/modules/torch/icons/mob/onmob_accessories_solgov.dmi')
 	on_rolled = list("down" = "none")
 	slot = ACCESSORY_SLOT_RANK
 	gender = PLURAL
@@ -554,6 +556,7 @@ ranks - fleet
 	name = "naval ranks"
 	desc = "Insignia denoting naval rank of some kind. These appear blank."
 	icon_state = "fleetrank"
+	accessory_icons = list(slot_w_uniform_str = 'code/modules/torch/icons/mob/onmob_accessories_solgov.dmi', slot_wear_suit_str = 'code/modules/torch/icons/mob/onmob_accessories_solgov.dmi')
 	on_rolled = list("down" = "none")
 
 /obj/item/clothing/accessory/solgov/rank/fleet/enlisted
@@ -667,6 +670,7 @@ ranks - marines
 	name = "army ranks"
 	desc = "Insignia denoting marine rank of some kind. These appear blank."
 	icon_state = "armyrank_enlisted"
+	accessory_icons = list(slot_w_uniform_str = 'code/modules/torch/icons/mob/onmob_accessories_solgov.dmi', slot_wear_suit_str = 'code/modules/torch/icons/mob/onmob_accessories_solgov.dmi')
 	on_rolled = list("down" = "none")
 
 /obj/item/clothing/accessory/solgov/rank/army/enlisted

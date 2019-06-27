@@ -17,8 +17,13 @@
 
 /obj/machinery/space_heater/New()
 	..()
+	ADD_SAVED_VAR(cell)
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(set_temperature)
+
+/obj/machinery/space_heater/SetupParts()
+	. = ..()
 	cell = new/obj/item/weapon/cell/high(src)
-	update_icon()
 
 /obj/machinery/space_heater/on_update_icon(var/rebuild_overlay = 0)
 	if(!on)

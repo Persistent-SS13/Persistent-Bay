@@ -4,7 +4,7 @@
 	name = "gas drill head"
 	desc = "An enormous drill designed for extruding gas deposits from asteroids."
 	icon_state = "gas_drill"
-
+	circuit_type = /obj/item/weapon/circuitboard/gasdrill
 	var/datum/gas_mixture/air_contents
 	var/volume = 1000
 
@@ -24,24 +24,15 @@
 		)
 
 /obj/machinery/mining/gas_drill/New()
-
 	..()
+	ADD_SAVED_VAR(air_contents)
 
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/gasdrill(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/weapon/stock_parts/micro_laser(src)
-	component_parts += new /obj/item/weapon/cell/high(src)
-
-	RefreshParts()
-
-/obj/machinery/mining/gas_drill/Initialize()
+/obj/machinery/mining/gas_drill/SetupParts()
+	. = ..()
 	if(!air_contents)
 		air_contents = new
 		air_contents.volume = volume
 		air_contents.temperature = T20C
-	. = ..()
 
 /obj/machinery/mining/gas_drill/Destroy()
 	QDEL_NULL(air_contents)

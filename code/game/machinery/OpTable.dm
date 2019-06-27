@@ -7,7 +7,7 @@
 	anchored = 1.0
 	idle_power_usage = 1
 	active_power_usage = 5
-
+	circuit_type = /obj/item/weapon/circuitboard/optable
 	var/suppressing = FALSE
 	var/mob/living/carbon/human/victim = null
 	var/strapped = 0.0
@@ -15,19 +15,11 @@
 
 /obj/machinery/optable/Initialize()
 	. = ..()
-	component_parts = list(
-		new /obj/item/weapon/circuitboard/optable(src),
-		new /obj/item/weapon/stock_parts/scanning_module(src),
-		new /obj/item/weapon/stock_parts/manipulator(src),
-		new /obj/item/weapon/stock_parts/manipulator(src),
-		new /obj/item/weapon/stock_parts/capacitor(src))
-	RefreshParts()
 	for(dir in list(NORTH,EAST,SOUTH,WEST))
 		computer = locate(/obj/machinery/computer/operating, get_step(src, dir))
 		if (computer)
 			computer.table = src
 			break
-
 
 /obj/machinery/optable/examine(var/mob/user)
 	. = ..()

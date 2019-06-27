@@ -213,11 +213,11 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	for(var/mob/new_player/player in GLOB.player_list)
 		if(player.panel)
 			player.panel.close()
-			player.new_player_panel()
-			if(player && player.ready && player.mind)
-				player.loadCharacter()
-			else
-				message_admins("skipping player [player], [player.ready], [player.mind]")
+		player.new_player_panel()
+		if(player && player.ready && player.mind)
+			player.loadCharacter()
+		else
+			message_admins("skipping player [player], [player.ready], [player.mind]")
 
 	callHook("roundstart")
 

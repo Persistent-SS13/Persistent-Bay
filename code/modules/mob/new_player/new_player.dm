@@ -400,7 +400,7 @@
 			chosen_slot = M.save_slot
 			to_chat(src, "<span class='notice'>A character is already in game.</span>")
 			Retrieve_Record(M.real_name)
-			if(GAME_STATE == RUNLEVEL_GAME)
+			if(GAME_STATE >= RUNLEVEL_GAME)
 				panel?.close()
 				load_panel?.close()
 				M.key = key
@@ -472,12 +472,12 @@
 		qdel(src)
 		return
 
+	sleep(50) //Wait possibly for the file to unlock???
 	var/mob/character = SScharacter_setup.load_character(chosen_slot, ckey)
-	if(!character)
-		sleep(100)
 	if(!character)
 		message_admins("[ckey] load character failed during join.")
 		to_chat(src, "Your character is not loading correctly. Contact Brawler.")
+		spawning = FALSE
 		return
 	Retrieve_Record(character.real_name)
 	var/turf/spawnTurf = locate(0,0,0) //Instead of null start with 0,0,0 because the unsafe spawn check will kick in and warn the user if there's something wrong

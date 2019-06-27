@@ -934,25 +934,6 @@
 /datum/chemical_reaction/aluminium_paint/send_data()
 	return "#f0f8ff"
 
-//Precursor Chem recipies.
-/datum/chemical_reaction/acetone_production
-	name = "Acetone Production"
-	result = /datum/reagent/acetone
-	required_reagents = list(/datum/reagent/oxygen = 1, /datum/reagent/carbon = 3, /datum/reagent/hydrogen = 6) //(CH3)2CO
-	result_amount = 1 //kinda expensive? balance later
-
-/datum/chemical_reaction/sulphuric_acid_prod
-	name = "Sulphuric Acid Production"
-	result = /datum/reagent/acid
-	required_reagents = list(/datum/reagent/sulfur = 1, /datum/reagent/oxygen = 4, /datum/reagent/hydrogen = 2) //H2SO4.
-	result_amount = 1
-
-/datum/chemical_reaction/hydrochloric_acid_prod
-	name = "Hydrochloric Acid production"
-	result = /datum/reagent/acid/hydrochloric
-	required_reagents = list(/datum/reagent/toxin/chlorine = 1, /datum/reagent/hydrogen = 1, /datum/reagent/water = 1)// 1:1 hydrogen chloride to water makes HCl acid.
-	result_amount = 1
-
 //Grey
 /datum/chemical_reaction/slime/spawn
 	name = "Slime Spawn"
@@ -1617,6 +1598,14 @@
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 	mix_message = "The solution roils as it rapidly ferments into a shockingly blue liquor."
+
+/datum/chemical_reaction/ale
+	name = "Ale"
+	result = /datum/reagent/ethanol/ale
+	required_reagents = list(/datum/reagent/nutriment/flour = 10)
+	catalysts = list(/datum/reagent/enzyme = 5)
+	result_amount = 10
+	mix_message = "The solution roils as it rapidly ferments into a foaming amber liquid."
 
 /datum/chemical_reaction/spacebeer
 	name = "Space Beer"
@@ -2314,41 +2303,3 @@
 	maximum_temperature = 200 CELSIUS
 	result_amount = 3
 
-
-/*
-	Soda
-*/
-//	C20H24N2O2
-/datum/chemical_reaction/quinine
-	result = /datum/reagent/quinine
-	required_reagents = list(/datum/reagent/carbon = 10, /datum/reagent/hydrogen = 12,  /datum/reagent/nitrogen = 1, /datum/reagent/oxygen = 1)
-
-/datum/chemical_reaction/tonic_water
-	result = /datum/reagent/drink/tonic
-	required_reagents = list(/datum/reagent/drink/sodawater = 2, /datum/reagent/sugar = 2, /datum/reagent/quinine = 1 )
-
-/datum/chemical_reaction/space_cola
-	result = /datum/reagent/drink/space_cola
-	required_reagents = list(/datum/reagent/drink/sodawater = 2, /datum/reagent/sugar = 4, /datum/reagent/glycerol = 1)
-
-/datum/chemical_reaction/spacemountainwind
-	result = /datum/reagent/drink/spacemountainwind
-	required_reagents = list(/datum/reagent/drink/space_cola = 2, /datum/reagent/drink/juice/orange = 1, /datum/reagent/drink/juice/lime = 1, /datum/reagent/drink/juice/lemon = 1 )
-
-/datum/chemical_reaction/lemon_lime
-	result = /datum/reagent/drink/lemon_lime
-	required_reagents = list(/datum/reagent/drink/space_cola = 2,  /datum/reagent/drink/juice/lime = 2, /datum/reagent/drink/juice/lemon = 2)
-	catalysts = list(/datum/reagent/drink/juice/orange = 1) //You wanted orange but it gave you lemon-lime C:
-
-/datum/chemical_reaction/space_up
-	result = /datum/reagent/drink/space_up
-	required_reagents = list(/datum/reagent/drink/space_cola = 2, /datum/reagent/frostoil = 1) //helps keep your cool
-	catalysts = list(/datum/reagent/fuel = 1) //Tastes like a hull breach apparently so *shrug*
-
-/datum/chemical_reaction/dr_gibb
-	result = /datum/reagent/drink/dr_gibb
-	required_reagents = list(/datum/reagent/drink/space_cola = 2, /datum/reagent/drink/juice/berry = 2) //Should be cherries, but we don't have cherry juice
-
-/datum/chemical_reaction/thirteenloko
-	result = /datum/reagent/ethanol/thirteenloko
-	required_reagents = list(/datum/reagent/drink/space_cola = 4, /datum/reagent/drink/coffee = 4, /datum/reagent/ethanol/grog = 4)

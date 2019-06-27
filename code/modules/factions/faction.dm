@@ -1,4 +1,4 @@
-GLOBAL_LIST_EMPTY(all_world_factions)
+GLOBAL_RAW(/list/datum/world_faction/all_world_factions); //Don't init as empty list, because it happens too late during init
 GLOBAL_LIST_EMPTY(all_business)
 
 GLOBAL_LIST_EMPTY(recent_articles)
@@ -379,6 +379,8 @@ var/PriorityQueue/all_feeds
 /datum/NewsStory/proc/allowed(var/real_name)
 	if(real_name in purchased)
 		return 1
+	if(!cost)
+		return 1
 	return 0
 
 
@@ -738,7 +740,7 @@ var/PriorityQueue/all_feeds
 	if(password)
 		var/datum/world_faction/found_faction
 		for(var/datum/world_faction/fac in GLOB.all_world_factions)
-			if(fac.uid == name)
+			if(fac && fac.uid == name)
 				found_faction = fac
 				break
 		if(!found_faction) return
@@ -746,7 +748,7 @@ var/PriorityQueue/all_feeds
 		return found_faction
 	var/datum/world_faction/found_faction
 	for(var/datum/world_faction/fac in GLOB.all_world_factions)
-		if(fac.uid == name)
+		if(fac && fac.uid == name)
 			found_faction = fac
 			break
 	return found_faction
@@ -934,7 +936,7 @@ var/PriorityQueue/all_feeds
 	nexus.network.password = ""
 	nexus.network.invisible = 0
 
-	GLOB.all_world_factions |= nexus
+	LAZYDISTINCTADD(GLOB.all_world_factions, nexus)
 
 
 /datum/world_faction/democratic/New()
@@ -1468,7 +1470,7 @@ var/PriorityQueue/all_feeds
 
 	limits.limit_shuttles = 3
 
-	limits.limit_area = 100000
+	limits.limit_area = 200000
 
 	limits.limit_tcomms = 5
 
@@ -1718,7 +1720,7 @@ var/PriorityQueue/all_feeds
 	if(holder)
 		if(stock_holders.len == 1) // last stock holder
 			stock_holders.Cut()
-			GLOB.all_world_factions -= src
+			LAZYREMOVE(GLOB.all_world_factions, src)
 			qdel(src)
 			return
 		else
@@ -2462,13 +2464,9 @@ var/PriorityQueue/all_feeds
 //Otherwise, when globabl variables are initialized, the all_world_faction list may or may not be overwritten on startup, when not loading a save.
 /obj/faction_spawner/Initialize()
 	..()
-	return INITIALIZE_HINT_LATELOAD
-
-/obj/faction_spawner/LateInitialize()
 	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
 		if(existing_faction.uid == uid)
-			qdel(src)
-			return
+			return INITIALIZE_HINT_QDEL
 	var/datum/world_faction/fact = new()
 	fact.name = name
 	fact.abbreviation = name_short
@@ -2483,17 +2481,16 @@ var/PriorityQueue/all_feeds
 	fact.network.invisible = network_invisible
 	fact.starter_outfit = starter_outfit
 	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
-	qdel(src)
-	return
+	return INITIALIZE_HINT_QDEL
 
 /obj/faction_spawner/democratic
 	var/purpose = ""
 
-/obj/faction_spawner/democratic/LateInitialize()
+/obj/faction_spawner/democratic/Initialize()
+	..()
 	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
 		if(existing_faction.uid == uid)
-			qdel(src)
-			return
+			return INITIALIZE_HINT_QDEL
 	var/datum/world_faction/democratic/fact = new()
 	fact.name = name
 	fact.abbreviation = name_short
@@ -2509,8 +2506,7 @@ var/PriorityQueue/all_feeds
 	fact.network.invisible = network_invisible
 	fact.starter_outfit = starter_outfit
 	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
-	qdel(src)
-	return
+	return INITIALIZE_HINT_QDEL
 
 
 
@@ -2883,7 +2879,7 @@ var/PriorityQueue/all_feeds
 	limit_drills = 5
 	limit_botany = 10
 	limit_shuttles = 10
-	limit_area = 100000
+	limit_area = 200000 //size of the nexus at most 3z levels of 255x255
 	limit_tcomms = 5
 	limit_tech_general = 4
 	limit_tech_engi = 4
@@ -3300,7 +3296,7 @@ var/PriorityQueue/all_feeds
 		levels |= new x()
 
 /datum/business_module/engineering
-	cost = 800
+	cost = 1400
 	name = "Engineering"
 	desc = "An engineering business has tools to develop areas of the station and construct shuttles plus the unique capacity to manage private radio communications. Engineering businesses can reserve larger spaces than other businesses and develop those into residential areas to be leased to individuals."
 	levels = list(/datum/machine_limits/eng/one, /datum/machine_limits/eng/two, /datum/machine_limits/eng/three, /datum/machine_limits/eng/four)
@@ -3322,7 +3318,7 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/medical
-	cost = 700
+	cost = 1200
 	name = "Medical"
 	desc = "A medical firm has unqiue capacity to develop medications and implants. Programs can be used to register clients under your care and recieve a weekly insurance payment from them, in exchange for tracking their health and responding to medical emergencies."
 	specs = list(/datum/business_spec/medical/pharma, /datum/business_spec/medical/paramedic)
@@ -3347,7 +3343,7 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/retail
-	cost = 700
+	cost = 1200
 	name = "Retail"
 	desc = "A retail business has exclusive production capacity so that they can sell clothing and furniture to individuals and organizations. With additional specialization they can branch out into combat equipment or engineering supplies, but they are reliant on the material market to supply their production."
 	levels = list(/datum/machine_limits/retail/one, /datum/machine_limits/retail/two, /datum/machine_limits/retail/three, /datum/machine_limits/retail/four)
@@ -3370,7 +3366,7 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/service
-	cost = 700
+	cost = 1100
 	name = "Service"
 	desc = "A service business has a fabricator that can produce culinary and botany equipment. A service business can serve food or drink and supply freshly grown plants for other organizations, a crucial source of cloth and biomass."
 	levels = list(/datum/machine_limits/service/one, /datum/machine_limits/service/two, /datum/machine_limits/service/three, /datum/machine_limits/service/four)
@@ -3396,7 +3392,7 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/mining
-	cost = 800
+	cost = 1400
 	name = "Mining"
 	desc = "Mining companies send teams out into the hostile outer-space armed with picks, drills and a variety of other EVA equipment plus weapons and armor to defend themselves. The ores they recover can be processed and then sold on the Material Marketplace to other organizations for massive profits."
 	levels = list(/datum/machine_limits/mining/one, /datum/machine_limits/mining/two, /datum/machine_limits/mining/three, /datum/machine_limits/mining/four)
@@ -3422,7 +3418,7 @@ var/PriorityQueue/all_feeds
 	weekly_objectives = list(/datum/module_objective/weekly/monsters)
 
 /datum/business_module/media
-	cost = 600
+	cost = 1100
 	name = "Media"
 	desc = "Media companies have simple production and tech capacities but exclusive access to programs that can publish books and news articles for paid redistribution. It is also much less expensive than other types, making it a good choice for generic business."
 	levels = list(/datum/machine_limits/media/one, /datum/machine_limits/media/two, /datum/machine_limits/media/three, /datum/machine_limits/media/four)

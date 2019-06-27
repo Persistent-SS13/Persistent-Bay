@@ -44,10 +44,9 @@ SUBSYSTEM_DEF(character_setup)
 	save_queue |= prefs
 
 /datum/controller/subsystem/character_setup/proc/save_character(var/ind, var/ckey, var/mob/living/carbon/human/H)
-	if(!istype(H))
-		return
 	var/savefile/S = CHAR_SAVE_FILE(ind, ckey)
 	H.before_save()
+	H.should_save = 1
 	to_file(S["name"], H.real_name)
 	to_file(S["mob"], H)
 	H.after_save()

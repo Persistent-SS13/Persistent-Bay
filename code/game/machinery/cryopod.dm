@@ -20,7 +20,7 @@
 	var/network = "default"
 	var/tmp/time_entered = 0
 	var/time_till_despawn = 60 SECONDS
-	var/tmp/atom/movable/occupant
+	var/mob/occupant
 	var/obj/item/device/radio/intercom/announce
 	var/obj/machinery/computer/cryopod/control_computer
 	var/tmp/last_no_computer_message = 0
@@ -405,6 +405,9 @@
 	SetName(initial(src.name))
 	icon_state = base_icon_state
 	var/mob/new_player/player = new()
+	player.loc = locate(200,200,19)
+	if(occupant.client)
+		occupant.client.eye = player
 	player.key = key
 	QDEL_NULL(occupant)
 

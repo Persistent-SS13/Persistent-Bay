@@ -25,6 +25,7 @@ datum/unit_test/human_breath/start_test()
 
 	if(!istype(T, /turf/space))	//If the above isn't a space turf then we force it to find one will most likely pick 1,1,1
 		T = locate(/turf/space)
+		log_debug("UNIT-TEST [src.name]: Could not locate a turf")
 	for(var/species_name in all_species)
 		var/datum/species/S = all_species[species_name]
 		var/mob/living/carbon/human/H = new(T, S.name)
@@ -35,12 +36,14 @@ datum/unit_test/human_breath/start_test()
 			L = H.internal_organs_by_name[species_organ]
 			L.last_successful_breath = -INFINITY
 			test_subjects[S.name] = list(H, damage_check(H, DAM_OXY))
+	log_debug("UNIT-TEST [src.name]: Returned")
 	return 1
 
 datum/unit_test/human_breath/check_result()
 	for(var/i in test_subjects)
 		var/mob/living/carbon/human/H = test_subjects[i][1]
 		if(H.life_tick < 10) 	// Finish Condition
+			log_debug("UNIT-TEST [src.name]: [H] life_tick [H.life_tick]")
 			return 0	// Return 0 to try again later.
 
 	var/failcount = 0

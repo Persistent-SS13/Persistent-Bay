@@ -20,7 +20,7 @@
 	var/network = "default"
 	var/tmp/time_entered = 0
 	var/time_till_despawn = 60 SECONDS
-	var/tmp/atom/movable/occupant
+	var/mob/occupant
 	var/obj/item/device/radio/intercom/announce
 	var/obj/machinery/computer/cryopod/control_computer
 	var/tmp/last_no_computer_message = 0

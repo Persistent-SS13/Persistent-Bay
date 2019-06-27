@@ -362,7 +362,7 @@ var/global/list/debug_data = list()
 			backup = 1
 	found_vars = list()
 	to_world("<font size=3 color='green'>Saving chunks..</font>")
-	for(var/z in 1 to SAVED_ZLEVELS)
+	for(var/z in GLOB.using_map.saved_zlevels)
 		fcopy("map_saves/z[z].sav", "backups/[dir]/z[z].sav")
 		fdel("map_saves/z[z].sav")
 		var/savefile/f = new("map_saves/z[z].sav")
@@ -512,7 +512,7 @@ var/global/list/debug_data = list()
 			turfs |= T
 		A.contents.Add(turfs)
 	f = null
-	for(var/z in 1 to SAVED_ZLEVELS)
+	for(var/z in GLOB.using_map.saved_zlevels)
 		var/starttime2 = REALTIMEOFDAY
 		f = new("map_saves/z[z].sav")
 		while(!f.eof)

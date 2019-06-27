@@ -209,7 +209,7 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 
 	GLOB.using_map.setup_economy()
 	Master.SetRunLevel(RUNLEVEL_GAME)
-	
+
 	for(var/mob/new_player/player in GLOB.player_list)
 		if(player.panel)
 			player.panel.close()

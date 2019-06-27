@@ -50,6 +50,7 @@ SUBSYSTEM_DEF(asteroid)
 	..(string)
 
 /datum/controller/subsystem/asteroid/fire()
+	/**
 	for(var/mob/living/M in monsters)
 		if(M.stat == DEAD || !asteroid_aggression["[M.z]"])
 			monsters -= M
@@ -239,7 +240,7 @@ SUBSYSTEM_DEF(asteroid)
 			return
 
 	current = 1
-
+	**/
 /datum/controller/subsystem/asteroid/proc/spawn_monster(var/turf/T, var/intensity)
 	var/mob/M = pick(dead_monsters)
 

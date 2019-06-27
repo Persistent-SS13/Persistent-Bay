@@ -346,6 +346,7 @@
 #include "code\datums\outfits\misc.dm"
 #include "code\datums\outfits\nanotrasen.dm"
 #include "code\datums\outfits\outfit.dm"
+#include "code\datums\outfits\phorosians.dm"
 #include "code\datums\outfits\pirates.dm"
 #include "code\datums\outfits\spec_op.dm"
 #include "code\datums\outfits\tournament.dm"

@@ -25,14 +25,8 @@
 /datum/computer_file/program/newsbrowser/proc/payArticle(var/obj/item/weapon/card/id/id, var/mob/user)
 	if(!loaded_article) return 0
 	var/transaction_amount = loaded_article.parent.parent.per_article
-	var/datum/money_account/account = get_account(id.associated_account_number)
+	var/datum/money_account/account = get_account(user.real_name)
 	if(!account) return
-	if(account.security_level != 0) //If card requires pin authentication (ie seclevel 1 or 2)
-		var/attempt_pin = input("Enter pin code", "Vendor transaction") as num
-		if(account.remote_access_pin != attempt_pin)
-			to_chat(user, "Unable to access account: incorrect credentials.")
-			return
-
 	if(transaction_amount > account.money)
 		to_chat(user, "Unable to complete transaction: insufficient funds.")
 		return
@@ -42,21 +36,15 @@
 		//transfer the money
 		var/datum/transaction/Te = new("[account.owner_name]", "Access to [loaded_article.name] ([loaded_article.parent.parent.name])", transaction_amount, "News Browser")
 		loaded_article.parent.parent.parent.central_account.do_transaction(Te)
-		
-		loaded_article.purchased |= id.registered_name
+
+		loaded_article.purchased |= user.real_name
 		return 1
 		
 /datum/computer_file/program/newsbrowser/proc/payIssue(var/obj/item/weapon/card/id/id, var/mob/user)
 	if(!loaded_issue) return 0
 	var/transaction_amount = loaded_issue.parent.per_issue
-	var/datum/money_account/account = get_account(id.associated_account_number)
+	var/datum/money_account/account = get_account(user.real_name)
 	if(!account) return
-	if(account.security_level != 0) //If card requires pin authentication (ie seclevel 1 or 2)
-		var/attempt_pin = input("Enter pin code", "Vendor transaction") as num
-		if(account.remote_access_pin != attempt_pin)
-			to_chat(user, "Unable to access account: incorrect credentials.")
-			return
-
 	if(transaction_amount > account.money)
 		to_chat(user, "Unable to complete transaction: insufficient funds.")
 		return
@@ -66,15 +54,16 @@
 		//transfer the money
 		var/datum/transaction/Te = new("[account.owner_name]", "Printed Issue [loaded_issue.name] ([loaded_issue.parent.name])", transaction_amount, "News Browser")
 		loaded_issue.parent.parent.central_account.do_transaction(Te)
-		var/obj/item/weapon/newspaper/newspaper = new(computer.loc)
+		var/obj/item/weapon/newspaper/newspaper = new /obj/item/weapon/newspaper(loc)
 		newspaper.name = loaded_issue.name
 		newspaper.desc = "An newspaper issue of [loaded_issue.parent.name]"
 		newspaper.linked_issue = loaded_issue
 		newspaper.feed_id = loaded_issue.parent.parent.name
 		newspaper.issue_id = loaded_issue.uid
-		playsound(get_turf(computer), pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
-		
+		playsound(loc, pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
+
 		return 1
+
 		
 		
 /datum/computer_file/program/newsbrowser/Topic(href, href_list)

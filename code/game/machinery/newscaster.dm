@@ -290,7 +290,7 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 		var/datum/transaction/Te = new("[account.owner_name]", "Access to [loaded_article.name] ([loaded_article.parent.parent.name])", transaction_amount, "News Browser")
 		loaded_article.parent.parent.parent.central_account.do_transaction(Te)
 
-		loaded_article.purchased |= id.registered_name
+		loaded_article.purchased |= user.real_name
 		return 1
 
 /obj/machinery/newscaster/proc/payIssue(var/mob/user)

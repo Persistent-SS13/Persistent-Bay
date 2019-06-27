@@ -16,7 +16,7 @@
 /obj/item/modular_computer/telescreen/preset/medical/install_default_programs()
 	..()
 	hard_drive.store_file(new/datum/computer_file/program/camera_monitor())
-	hard_drive.store_file(new/datum/computer_file/program/records())
+//	hard_drive.store_file(new/datum/computer_file/program/records())
 	hard_drive.store_file(new/datum/computer_file/program/suit_sensors())
 	set_autorun("sensormonitor")
 

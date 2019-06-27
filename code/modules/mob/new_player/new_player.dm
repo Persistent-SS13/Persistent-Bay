@@ -400,7 +400,7 @@
 			chosen_slot = M.save_slot
 			to_chat(src, "<span class='notice'>A character is already in game.</span>")
 			Retrieve_Record(M.real_name)
-			if(GAME_STATE == RUNLEVEL_GAME)
+			if(GAME_STATE >= RUNLEVEL_GAME)
 				panel?.close()
 				load_panel?.close()
 				M.key = key

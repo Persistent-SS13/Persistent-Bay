@@ -56,6 +56,7 @@
 #define MATERIAL_SULFUR                  "sulfur"
 #define MATERIAL_BSPACE_CRYSTAL          "bluespace crystal"
 #define MATERIAL_FIBERGLASS              "fiberglass"
+#define MATERIAL_GRAPHENE				 "graphene"
 
 //ORES
 #define MATERIAL_TETRAHEDRITE            "tetrahedrite"

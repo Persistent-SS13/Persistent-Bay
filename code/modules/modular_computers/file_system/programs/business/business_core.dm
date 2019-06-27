@@ -22,8 +22,7 @@
 	extended_desc = "Used by upper management to manage assignments and ranks."
 	required_access = core_access_leader
 	requires_ntnet = 1
-	size = 65
-	usage_flags = PROGRAM_CONSOLE
+	size = 12
 	business = 1
 	category = PROG_BUSINESS
 

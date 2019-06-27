@@ -37,7 +37,7 @@
 		cloneNM.menu = 2
 		
 	if(href_list["finish"])
-		if(cloneNM.get_contributed() < 5000)
+		if(cloneNM.get_contributed() < 1000)
 			to_chat(usr, "Not enough funding.")
 		if(!pod || !mdscan || !mdscan.stored_dna)
 			cloneNM.cancel_contracts()
@@ -72,9 +72,9 @@
 		if(!mdscan || !mdscan.stored_dna)
 			cloneNM.cancel_contracts()
 			cloneNM.menu = 1
-		var/cost = round(input("How much ethericoin should be the funding contract be for?", "Funding", 5000-cloneNM.get_contributed()) as null|num)
-		if(cost > 5000-cloneNM.get_contributed())
-			cost = 5000-cloneNM.get_contributed()
+		var/cost = round(input("How much ethericoin should be the funding contract be for?", "Funding", 1000-cloneNM.get_contributed()) as null|num)
+		if(cost > 1000-cloneNM.get_contributed())
+			cost = 1000-cloneNM.get_contributed()
 		if(!cost || cost < 0)
 			return 0
 		var/choice = input(usr,"This will create a funding contract for [cost] ethericoin.") in list("Confirm", "Cancel")
@@ -166,7 +166,7 @@
 	data["menu"] = menu
 	var/commitment = get_contributed()
 	data["commitment"] = commitment
-	data["finishable"] = commitment >= 5000
+	data["finishable"] = commitment >= 1000
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "cloning_management.tmpl", "Cloning Management", 400, 450, state = state)

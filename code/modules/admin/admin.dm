@@ -924,6 +924,21 @@ var/global/floorIsLava = 0
 		cryo.occupant = H
 		cryo.despawn_occupant(1)
 **/
+/datum/admins/proc/auditbusiness()
+	set category = "Server"
+	set desc="Audit Stocks"
+	set name="Audit Stocks"
+
+	if(!check_rights(R_ADMIN))
+		return
+	for(var/datum/world_faction/business/faction in GLOB.all_world_factions)
+		var/total_stocks = 0
+		for(var/x in faction.stock_holders)
+			var/datum/stockholder/holder = faction.stock_holders[x]
+			total_stocks += holder.stocks
+
+			if(total_stocks > 100)
+				message_admins("[faction.name] has over 100 STOCKS. investigate and correct the issue.")
 
 
 /datum/admins/proc/delete_record()
@@ -1049,8 +1064,8 @@ var/global/floorIsLava = 0
 	if(!check_rights(R_ADMIN))
 		return
 	Load_World()
-**/	
-	
+**/
+
 /datum/admins/proc/toggleoocdead()
 	set category = "Server"
 	set desc="Toggle Dead OOC."
@@ -1230,7 +1245,7 @@ var/global/floorIsLava = 0
 	set desc = "Spawn every possible custom closet. Do not do this on live."
 	set category = "Debug"
 
-	if(!check_rights(R_SPAWN))	
+	if(!check_rights(R_SPAWN))
 		return
 
 	if((input(usr, "Are you sure you want to spawn all these closets?", "So Many Closets") as null|anything in list("No", "Yes")) == "Yes")

@@ -1,4 +1,4 @@
-GLOBAL_RAW(/list/datum/world_faction/all_world_factions); //Don't init as empty list, because it happens too late during init
+GLOBAL_RAW(/list/datum/world_faction/all_world_factions);GLOBAL_UNMANAGED(all_world_factions, null); //Don't init as empty list, because it happens too late during init
 GLOBAL_LIST_EMPTY(all_business)
 
 GLOBAL_LIST_EMPTY(recent_articles)

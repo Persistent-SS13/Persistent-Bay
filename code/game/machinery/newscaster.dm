@@ -327,6 +327,7 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 			loaded_article = locate(href_list["target"])
 			if(loaded_article)
 				loaded_feed = loaded_article.parent.parent
+				loaded_article.view_story(usr)
 		if("selectIssue")
 			loaded_issue = locate(href_list["target"])
 		if("selectFeed")

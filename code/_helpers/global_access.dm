@@ -385,8 +385,6 @@
 			return global.decls_repository;
 		if("default_material_composition")
 			return global.default_material_composition;
-		if("default_mobloc")
-			return global.default_mobloc;
 		if("default_onmob_icons")
 			return global.default_onmob_icons;
 		if("default_pai_software")
@@ -1384,8 +1382,6 @@
 			global.decls_repository=newval;
 		if("default_material_composition")
 			global.default_material_composition=newval;
-		if("default_mobloc")
-			global.default_mobloc=newval;
 		if("default_onmob_icons")
 			global.default_onmob_icons=newval;
 		if("default_pai_software")
@@ -2190,7 +2186,6 @@
 	"debug_verbs",
 	"decls_repository",
 	"default_material_composition",
-	"default_mobloc",
 	"default_onmob_icons",
 	"default_pai_software",
 	"defer_powernet_rebuild",

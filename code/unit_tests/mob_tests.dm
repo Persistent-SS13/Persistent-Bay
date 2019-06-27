@@ -61,20 +61,11 @@ datum/unit_test/human_breath/check_result()
 
 // ============================================================================
 
-/var/default_mobloc = null
-
-proc/create_test_mob_with_mind(var/turf/mobloc = null, var/mobtype = /mob/living/carbon/human)
+/datum/unit_test/proc/create_test_mob_with_mind(var/turf/mobloc = null, var/mobtype = /mob/living/carbon/human)
 	var/list/test_result = list("result" = FAILURE, "msg"    = "", "mobref" = null)
 
 	if(isnull(mobloc))
-		if(!default_mobloc)
-			for(var/turf/simulated/floor/tiled/T in world)
-				T.update_air_properties()
-				var/pressure = T.zone.air.return_pressure()
-				if(90 < pressure && pressure < 120) // Find a turf between 90 and 120
-					default_mobloc = T
-					break
-		mobloc = default_mobloc
+		mobloc = get_safe_turf()
 	if(!mobloc)
 		test_result["msg"] = "Unable to find a location to create test mob"
 		return test_result
@@ -92,7 +83,7 @@ proc/create_test_mob_with_mind(var/turf/mobloc = null, var/mobtype = /mob/living
 //Generic Check
 // TODO: Need to make sure I didn't just recreate the wheel here.
 
-proc/damage_check(var/mob/living/M, var/damage_type)
+/datum/unit_test/proc/damage_check(var/mob/living/M, var/damage_type)
 	var/loss = null
 
 	if(IsDamageTypeBrute(damage_type))
@@ -349,22 +340,27 @@ datum/unit_test/mob_damage/skrell/pierce
 datum/unit_test/mob_damage/skrell/fire
 	name = "MOB: Skrell Fire Damage Check"
 	damagetype = DAM_BURN
+	expected_vulnerability = ARMORED
 
 datum/unit_test/mob_damage/skrell/laser
 	name = "MOB: Skrell Laser damage check"
 	damagetype = DAM_LASER
+	expected_vulnerability = ARMORED
 
 datum/unit_test/mob_damage/skrell/energy
 	name = "MOB: Skrell Energy damage check"
 	damagetype = DAM_ENERGY
+	expected_vulnerability = ARMORED
 
 datum/unit_test/mob_damage/skrell/tox
 	name = "MOB: Skrell Toxins Damage Check"
 	damagetype = DAM_BIO
+	expected_vulnerability = ARMORED
 
 datum/unit_test/mob_damage/skrell/oxy
 	name = "MOB: Skrell Oxygen Damage Check"
 	damagetype = DAM_OXY
+	expected_vulnerability = EXTRA_VULNERABLE
 
 datum/unit_test/mob_damage/skrell/clone
 	name = "MOB: Skrell Clone Damage Check"
@@ -703,7 +699,7 @@ datum/unit_test/species_base_skin/start_test()
 
 	return 1	// return 1 to show we're done and don't want to recheck the result.
 
-
+/*
 /datum/unit_test/mob_nullspace
 	name = "MOB: Mob in nullspace shall not cause runtimes"
 	var/list/test_subjects = list()
@@ -727,6 +723,7 @@ datum/unit_test/species_base_skin/start_test()
 	// No failure state, we just rely on the general runtime check to fail the entire build for us
 	pass("Mob nullspace test concluded.")
 	return TRUE
+*/
 /datum/unit_test/mob_organ_size
 	name = "MOB: Internal organs fit inside external organs."
 

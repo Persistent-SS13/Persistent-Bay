@@ -1,4 +1,4 @@
-GLOBAL_LIST_EMPTY(all_world_factions)
+GLOBAL_RAW(/list/datum/world_faction/all_world_factions); //Don't init as empty list, because it happens too late during init
 GLOBAL_LIST_EMPTY(all_business)
 
 GLOBAL_LIST_EMPTY(recent_articles)
@@ -738,7 +738,7 @@ var/PriorityQueue/all_feeds
 	if(password)
 		var/datum/world_faction/found_faction
 		for(var/datum/world_faction/fac in GLOB.all_world_factions)
-			if(fac.uid == name)
+			if(fac && fac.uid == name)
 				found_faction = fac
 				break
 		if(!found_faction) return
@@ -746,7 +746,7 @@ var/PriorityQueue/all_feeds
 		return found_faction
 	var/datum/world_faction/found_faction
 	for(var/datum/world_faction/fac in GLOB.all_world_factions)
-		if(fac.uid == name)
+		if(fac && fac.uid == name)
 			found_faction = fac
 			break
 	return found_faction
@@ -934,7 +934,7 @@ var/PriorityQueue/all_feeds
 	nexus.network.password = ""
 	nexus.network.invisible = 0
 
-	GLOB.all_world_factions |= nexus
+	LAZYDISTINCTADD(GLOB.all_world_factions, nexus)
 
 
 /datum/world_faction/democratic/New()
@@ -1468,7 +1468,7 @@ var/PriorityQueue/all_feeds
 
 	limits.limit_shuttles = 3
 
-	limits.limit_area = 100000
+	limits.limit_area = 200000
 
 	limits.limit_tcomms = 5
 
@@ -1718,7 +1718,7 @@ var/PriorityQueue/all_feeds
 	if(holder)
 		if(stock_holders.len == 1) // last stock holder
 			stock_holders.Cut()
-			GLOB.all_world_factions -= src
+			LAZYREMOVE(GLOB.all_world_factions, src)
 			qdel(src)
 			return
 		else
@@ -2462,13 +2462,9 @@ var/PriorityQueue/all_feeds
 //Otherwise, when globabl variables are initialized, the all_world_faction list may or may not be overwritten on startup, when not loading a save.
 /obj/faction_spawner/Initialize()
 	..()
-	return INITIALIZE_HINT_LATELOAD
-
-/obj/faction_spawner/LateInitialize()
 	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
 		if(existing_faction.uid == uid)
-			qdel(src)
-			return
+			return INITIALIZE_HINT_QDEL
 	var/datum/world_faction/fact = new()
 	fact.name = name
 	fact.abbreviation = name_short
@@ -2483,17 +2479,16 @@ var/PriorityQueue/all_feeds
 	fact.network.invisible = network_invisible
 	fact.starter_outfit = starter_outfit
 	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
-	qdel(src)
-	return
+	return INITIALIZE_HINT_QDEL
 
 /obj/faction_spawner/democratic
 	var/purpose = ""
 
-/obj/faction_spawner/democratic/LateInitialize()
+/obj/faction_spawner/democratic/Initialize()
+	..()
 	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
 		if(existing_faction.uid == uid)
-			qdel(src)
-			return
+			return INITIALIZE_HINT_QDEL
 	var/datum/world_faction/democratic/fact = new()
 	fact.name = name
 	fact.abbreviation = name_short
@@ -2509,8 +2504,7 @@ var/PriorityQueue/all_feeds
 	fact.network.invisible = network_invisible
 	fact.starter_outfit = starter_outfit
 	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
-	qdel(src)
-	return
+	return INITIALIZE_HINT_QDEL
 
 
 
@@ -2883,7 +2877,7 @@ var/PriorityQueue/all_feeds
 	limit_drills = 5
 	limit_botany = 10
 	limit_shuttles = 10
-	limit_area = 100000
+	limit_area = 200000 //size of the nexus at most 3z levels of 255x255
 	limit_tcomms = 5
 	limit_tech_general = 4
 	limit_tech_engi = 4

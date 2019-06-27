@@ -210,6 +210,7 @@ Some standard magazines, speedloaders and clips
 	caliber = CALIBER_9MM
 	ammo_type = /obj/item/ammo_casing/c9mm
 	max_ammo = 8
+	multiple_sprites = 1
 /obj/item/ammo_magazine/box/c9mm/empty
 	initial_ammo = 0
 /obj/item/ammo_magazine/box/c9mm/rubber
@@ -231,6 +232,7 @@ Some standard magazines, speedloaders and clips
 	caliber = CALIBER_9MM
 	ammo_type = /obj/item/ammo_casing/c9mm
 	max_ammo = 20
+	multiple_sprites = 1
 /obj/item/ammo_magazine/box/c9mm/_20/empty
 	initial_ammo = 0
 /obj/item/ammo_magazine/box/c9mm/_20/rubber
@@ -265,6 +267,7 @@ Some standard magazines, speedloaders and clips
 	matter = list(MATERIAL_STEEL = 2250)
 	ammo_type = /obj/item/ammo_casing/c45
 	max_ammo = 10
+	multiple_sprites = 1
 /obj/item/ammo_magazine/box/c45/empty
 	initial_ammo = 0
 /obj/item/ammo_magazine/box/c45/rubber

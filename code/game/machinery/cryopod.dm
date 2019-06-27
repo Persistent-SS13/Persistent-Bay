@@ -55,9 +55,6 @@
 
 /obj/machinery/cryopod/SetupParts()
 	announce = new /obj/item/device/radio/intercom(src)
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/matter_bin(src))
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/scanning_module(src))
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/console_screen(src))
 	. = ..()
 
 /obj/machinery/cryopod/Destroy()

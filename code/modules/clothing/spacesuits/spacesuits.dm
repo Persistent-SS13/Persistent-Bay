@@ -4,6 +4,7 @@
 
 /obj/item/clothing/head/helmet/space
 	name = "EVA softsuit helmet"
+	icon = 'icons/mob/onmob/head/softsuits.dmi'
 	icon_state = "civ_softhelm"
 	desc = "A flimsy helmet designed for work in a hazardous, low-pressure environment."
 	item_flags = ITEM_FLAG_STOPPRESSUREDAMAGE | ITEM_FLAG_THICKMATERIAL | ITEM_FLAG_AIRTIGHT
@@ -107,6 +108,7 @@
 /obj/item/clothing/suit/space
 	name = "EVA softsuit"
 	desc = "Your average general use softsuit. Though lacking in protection that modern voidsuits give, its cheap cost and portable size makes it perfect for those still getting used to life on the frontier."
+	icon = 'icons/mob/onmob/suits/softsuits.dmi'
 	icon_state = "civ_softsuit"
 	item_icons = list(
 		slot_l_hand_str = 'icons/mob/onmob/items/lefthand_spacesuits.dmi',

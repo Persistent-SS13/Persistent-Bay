@@ -100,7 +100,7 @@
 
 /stat_silicon_subsystem/New(var/mob/living/silicon/loc, var/subsystem_type, var/ui_state)
 	if(!istype(loc))
-		CRASH("Unexpected location. Expected /mob/living/silicon, was [loc.type].")
+		CRASH("Unexpected location. Expected /mob/living/silicon, was [loc ? loc.type : "null"].")
 	src.ui_state = ui_state
 	subsystem = new subsystem_type(loc)
 	name = subsystem.name

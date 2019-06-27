@@ -11,6 +11,7 @@
 	magazine_type = /obj/item/ammo_magazine/box/c9mm/_20/empty
 	allowed_magazines = /obj/item/ammo_magazine/box/c9mm
 	one_hand_penalty = 2
+	slot_flags = SLOT_BELT | SLOT_HOLSTER
 
 	firemodes = list(
 		list(mode_name="semi auto",      burst=1, fire_delay=null, move_delay=null, one_hand_penalty=0, burst_accuracy=null, dispersion=null),

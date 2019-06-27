@@ -48,7 +48,7 @@
 			var/mob/cold_critt = new content_path(src)
 			if(cold_critt in SSmobs.mob_list)
 				STOP_PROCESSING(SSmobs, cold_critt)
-	//..()
+	..()
 
 /obj/structure/closet/crate/cryo/attack_hand(mob/user)
 	if(src.opened == 0 && src.sealed == TRUE) 

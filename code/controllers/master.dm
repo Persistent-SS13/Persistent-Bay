@@ -209,7 +209,7 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 
 	GLOB.using_map.setup_economy()
 	Master.SetRunLevel(RUNLEVEL_GAME)
-	
+
 	for(var/mob/new_player/player in GLOB.player_list)
 		if(player.panel)
 			player.panel.close()
@@ -226,7 +226,7 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	if(isnull(old_runlevel))
 		old_runlevel = "NULL"
 
-	current_runlevel = log(2, new_runlevel) + 1
+	current_runlevel = new_runlevel
 	report_progress("MC: Runlevel changed from [old_runlevel] to [current_runlevel]")
 	if(current_runlevel < 1)
 		CRASH("Attempted to set invalid runlevel: [new_runlevel]")

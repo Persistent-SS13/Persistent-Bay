@@ -97,7 +97,7 @@
 	//Process will handle the printing
 
 /obj/machinery/organ_printer/Process()
-	if(!..() || !ispath(printing))
+	if(!..() || !islist(printing))
 		return
 
 	if(world.time >= time_print_end)

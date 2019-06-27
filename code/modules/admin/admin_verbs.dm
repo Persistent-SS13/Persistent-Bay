@@ -975,6 +975,7 @@ var/list/admin_verbs_mentor = list(
 			to_chat(src, "<b>Enabled maint drones.</b>")
 			message_admins("Admin [key_name_admin(usr)] has enabled maint drones.", 1)
 
+
 /client/proc/man_up(mob/T as mob in SSmobs.mob_list)
 	set category = "Fun"
 	set name = "Man Up"
@@ -985,6 +986,7 @@ var/list/admin_verbs_mentor = list(
 
 	log_and_message_admins("told [key_name(T)] to man up and deal with it.")
 
+/**
 /client/proc/global_man_up()
 	set category = "Fun"
 	set name = "Man Up Global"
@@ -995,7 +997,7 @@ var/list/admin_verbs_mentor = list(
 		sound_to(T, 'sound/voice/ManUp1.ogg')
 
 	log_and_message_admins("told everyone to man up and deal with it.")
-
+**/.
 /client/proc/give_spell(mob/T as mob in SSmobs.mob_list) // -- Urist
 	set category = "Fun"
 	set name = "Give Spell"

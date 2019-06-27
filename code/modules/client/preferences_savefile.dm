@@ -26,7 +26,7 @@
 	// if(!path)
 	path = load_path_pref(client_ckey, "preferences.sav")
 	if(!fexists(path))		return 0
-	var/savefile/S = new /savefile(path)
+	var/savefile/S = new(path)
 	if(!S)					return 0
 	S.cd = "/"
 
@@ -40,7 +40,7 @@
 	//if(!path || (path && (length(path) == 0) ) )
 	path = load_path_pref(client_ckey, "preferences.sav")
 	testing("preferences/save_preferences() : Set path to (path = [path])")
-	var/savefile/S = new /savefile(path)
+	var/savefile/S = new (path)
 	if(!S)					return 0
 	S.cd = "/"
 

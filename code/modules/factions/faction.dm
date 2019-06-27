@@ -1893,6 +1893,7 @@ var/PriorityQueue/all_feeds
 	possible |= module.spec.hourly_objectives
 	var/chose_type = pick(possible)
 	hourly_objective = new chose_type()
+	hourly_objective.parent = src
 	hourly_assigned = world.realtime
 /datum/world_faction/business/proc/assign_daily_objective()
 	var/list/possible = list()
@@ -1900,6 +1901,7 @@ var/PriorityQueue/all_feeds
 	possible |= module.spec.daily_objectives
 	var/chose_type = pick(possible)
 	daily_objective = new chose_type()
+	daily_objective.parent = src
 	daily_assigned = world.realtime
 /datum/world_faction/business/proc/assign_weekly_objective()
 	var/list/possible = list()
@@ -1907,6 +1909,7 @@ var/PriorityQueue/all_feeds
 	possible |= module.spec.weekly_objectives
 	var/chose_type = pick(possible)
 	weekly_objective = new chose_type()
+	weekly_objective.parent = new chose_type()
 	weekly_assigned = world.realtime
 
 /datum/world_faction/business/New()
@@ -2534,6 +2537,7 @@ var/PriorityQueue/all_feeds
 		if(parent)
 			var/datum/transaction/Te = new("Completed Objective", "Nexus Economic Stimulus", payout, "Nexus Economic Module")
 			parent.central_account.do_transaction(Te)
+			parent.research.points += research_payout
 		return 1
 
 /datum/module_objective/proc/get_status()

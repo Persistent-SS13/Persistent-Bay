@@ -405,6 +405,9 @@
 	SetName(initial(src.name))
 	icon_state = base_icon_state
 	var/mob/new_player/player = new()
+	player.loc = locate(200,200,19)
+	if(occupant.client)
+		occupant.client.eye = player
 	player.key = key
 	QDEL_NULL(occupant)
 

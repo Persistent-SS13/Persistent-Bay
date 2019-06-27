@@ -52,8 +52,6 @@ datum/preferences
 	..()
 
 /datum/preferences/proc/setup()
-	if(!length(GLOB.skills))
-		decls_repository.get_decl(/decl/hierarchy/skill)
 	player_setup = new(src)
 	gender = pick(MALE, FEMALE)
 	real_name = random_name(gender,species)
@@ -62,11 +60,13 @@ datum/preferences
 	if(client && !IsGuestKey(client.key))
 		src.load_path_pref(client.key)
 		load_preferences()
-		load_and_update_character()
+	//	load_and_update_character()
 	sanitize_preferences()
 	if(client && istype(client.mob, /mob/new_player))
 		var/mob/new_player/np = client.mob
 		np.new_player_panel(TRUE)
+	if(!length(GLOB.skills))
+		decls_repository.get_decl(/decl/hierarchy/skill)
 
 /datum/preferences/proc/load_and_update_character(var/slot)
 	load_character(slot)

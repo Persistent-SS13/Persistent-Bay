@@ -54,13 +54,13 @@
 		//transfer the money
 		var/datum/transaction/Te = new("[account.owner_name]", "Printed Issue [loaded_issue.name] ([loaded_issue.parent.name])", transaction_amount, "News Browser")
 		loaded_issue.parent.parent.central_account.do_transaction(Te)
-		var/obj/item/weapon/newspaper/newspaper = new /obj/item/weapon/newspaper(loc)
+		var/obj/item/weapon/newspaper/newspaper = new /obj/item/weapon/newspaper(program.computer.loc)
 		newspaper.name = loaded_issue.name
 		newspaper.desc = "An newspaper issue of [loaded_issue.parent.name]"
 		newspaper.linked_issue = loaded_issue
 		newspaper.feed_id = loaded_issue.parent.parent.name
 		newspaper.issue_id = loaded_issue.uid
-		playsound(loc, pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
+		playsound(program.computer.loc, pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
 
 		return 1
 

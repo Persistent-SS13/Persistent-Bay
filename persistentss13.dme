@@ -2325,7 +2325,6 @@
 #include "code\modules\modular_computers\file_system\programs\generic\ntrouter.dm"
 #include "code\modules\modular_computers\file_system\programs\generic\nttransfer.dm"
 #include "code\modules\modular_computers\file_system\programs\generic\personal.dm"
-#include "code\modules\modular_computers\file_system\programs\generic\records.dm"
 #include "code\modules\modular_computers\file_system\programs\generic\reports.dm"
 #include "code\modules\modular_computers\file_system\programs\generic\scanner.dm"
 #include "code\modules\modular_computers\file_system\programs\generic\stockmarket.dm"

@@ -275,18 +275,11 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 	if(istype(user, /mob/living/carbon/human) || istype(user,/mob/living/silicon) )
 		ui_interact(user)
 
-/obj/machinery/newscaster/proc/payArticle(var/obj/item/weapon/card/id/id, var/mob/user)
+/obj/machinery/newscaster/proc/payArticle(var/mob/user)
 	if(!loaded_article) return 0
 	var/transaction_amount = loaded_article.parent.parent.per_article
-	var/datum/money_account/account = get_account(id.associated_account_number)
+	var/datum/money_account/account = get_account(user.real_name)
 	if(!account) return
-	if(account.security_level != 0) //If card requires pin authentication (ie seclevel 1 or 2)
-		var/attempt_pin = input("Enter pin code", "Vendor transaction") as num
-		if(account.remote_access_pin != attempt_pin)
-			to_chat(user, "Unable to access account: incorrect credentials.")
-			return
-
-
 	if(transaction_amount > account.money)
 		to_chat(user, "Unable to complete transaction: insufficient funds.")
 		return
@@ -300,17 +293,11 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 		loaded_article.purchased |= id.registered_name
 		return 1
 
-/obj/machinery/newscaster/proc/payIssue(var/obj/item/weapon/card/id/id, var/mob/user)
+/obj/machinery/newscaster/proc/payIssue(var/mob/user)
 	if(!loaded_issue) return 0
 	var/transaction_amount = loaded_issue.parent.per_issue
-	var/datum/money_account/account = get_account(id.associated_account_number)
+	var/datum/money_account/account = get_account(user.real_name)
 	if(!account) return
-	if(account.security_level != 0) //If card requires pin authentication (ie seclevel 1 or 2)
-		var/attempt_pin = input("Enter pin code", "Vendor transaction") as num
-		if(account.remote_access_pin != attempt_pin)
-			to_chat(user, "Unable to access account: incorrect credentials.")
-			return
-
 	if(transaction_amount > account.money)
 		to_chat(user, "Unable to complete transaction: insufficient funds.")
 		return

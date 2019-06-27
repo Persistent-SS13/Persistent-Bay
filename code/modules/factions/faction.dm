@@ -379,6 +379,8 @@ var/PriorityQueue/all_feeds
 /datum/NewsStory/proc/allowed(var/real_name)
 	if(real_name in purchased)
 		return 1
+	if(!cost)
+		return 1
 	return 0
 
 
@@ -3300,7 +3302,7 @@ var/PriorityQueue/all_feeds
 		levels |= new x()
 
 /datum/business_module/engineering
-	cost = 800
+	cost = 1400
 	name = "Engineering"
 	desc = "An engineering business has tools to develop areas of the station and construct shuttles plus the unique capacity to manage private radio communications. Engineering businesses can reserve larger spaces than other businesses and develop those into residential areas to be leased to individuals."
 	levels = list(/datum/machine_limits/eng/one, /datum/machine_limits/eng/two, /datum/machine_limits/eng/three, /datum/machine_limits/eng/four)
@@ -3322,7 +3324,7 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/medical
-	cost = 700
+	cost = 1200
 	name = "Medical"
 	desc = "A medical firm has unqiue capacity to develop medications and implants. Programs can be used to register clients under your care and recieve a weekly insurance payment from them, in exchange for tracking their health and responding to medical emergencies."
 	specs = list(/datum/business_spec/medical/pharma, /datum/business_spec/medical/paramedic)
@@ -3347,7 +3349,7 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/retail
-	cost = 700
+	cost = 1200
 	name = "Retail"
 	desc = "A retail business has exclusive production capacity so that they can sell clothing and furniture to individuals and organizations. With additional specialization they can branch out into combat equipment or engineering supplies, but they are reliant on the material market to supply their production."
 	levels = list(/datum/machine_limits/retail/one, /datum/machine_limits/retail/two, /datum/machine_limits/retail/three, /datum/machine_limits/retail/four)
@@ -3370,7 +3372,7 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/service
-	cost = 700
+	cost = 1100
 	name = "Service"
 	desc = "A service business has a fabricator that can produce culinary and botany equipment. A service business can serve food or drink and supply freshly grown plants for other organizations, a crucial source of cloth and biomass."
 	levels = list(/datum/machine_limits/service/one, /datum/machine_limits/service/two, /datum/machine_limits/service/three, /datum/machine_limits/service/four)
@@ -3396,7 +3398,7 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/mining
-	cost = 800
+	cost = 1400
 	name = "Mining"
 	desc = "Mining companies send teams out into the hostile outer-space armed with picks, drills and a variety of other EVA equipment plus weapons and armor to defend themselves. The ores they recover can be processed and then sold on the Material Marketplace to other organizations for massive profits."
 	levels = list(/datum/machine_limits/mining/one, /datum/machine_limits/mining/two, /datum/machine_limits/mining/three, /datum/machine_limits/mining/four)
@@ -3422,7 +3424,7 @@ var/PriorityQueue/all_feeds
 	weekly_objectives = list(/datum/module_objective/weekly/monsters)
 
 /datum/business_module/media
-	cost = 600
+	cost = 1100
 	name = "Media"
 	desc = "Media companies have simple production and tech capacities but exclusive access to programs that can publish books and news articles for paid redistribution. It is also much less expensive than other types, making it a good choice for generic business."
 	levels = list(/datum/machine_limits/media/one, /datum/machine_limits/media/two, /datum/machine_limits/media/three, /datum/machine_limits/media/four)

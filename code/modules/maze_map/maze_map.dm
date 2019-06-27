@@ -113,6 +113,10 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 /datum/zlevel_data/proc/on_inactive()
 	for(var/mob/m in current_monsters)
 		STOP_PROCESSING(SSmobs, m)
+	for(var/obj/structure/closet/crate/cryo/O in current_obj) //Despawn unsealed abandoned crates
+		if(O.sealed == FALSE)
+			current_obj -= O
+			qdel(O)
 
 /datum/zlevel_data/proc/on_active()
 	if (!isWild())

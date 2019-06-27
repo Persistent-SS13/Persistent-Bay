@@ -61,20 +61,11 @@ datum/unit_test/human_breath/check_result()
 
 // ============================================================================
 
-/var/default_mobloc = null
-
-proc/create_test_mob_with_mind(var/turf/mobloc = null, var/mobtype = /mob/living/carbon/human)
+/datum/unit_test/proc/create_test_mob_with_mind(var/turf/mobloc = null, var/mobtype = /mob/living/carbon/human)
 	var/list/test_result = list("result" = FAILURE, "msg"    = "", "mobref" = null)
 
 	if(isnull(mobloc))
-		if(!default_mobloc)
-			for(var/turf/simulated/floor/tiled/T in world)
-				T.update_air_properties()
-				var/pressure = T.zone.air.return_pressure()
-				if(90 < pressure && pressure < 120) // Find a turf between 90 and 120
-					default_mobloc = T
-					break
-		mobloc = default_mobloc
+		mobloc = get_safe_turf()
 	if(!mobloc)
 		test_result["msg"] = "Unable to find a location to create test mob"
 		return test_result
@@ -92,7 +83,7 @@ proc/create_test_mob_with_mind(var/turf/mobloc = null, var/mobtype = /mob/living
 //Generic Check
 // TODO: Need to make sure I didn't just recreate the wheel here.
 
-proc/damage_check(var/mob/living/M, var/damage_type)
+/datum/unit_test/proc/damage_check(var/mob/living/M, var/damage_type)
 	var/loss = null
 
 	if(IsDamageTypeBrute(damage_type))

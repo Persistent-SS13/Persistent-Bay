@@ -83,7 +83,7 @@
 	unwielded_force_divisor = 0.25
 	sharpness = 2
 	attack_cooldown_modifier = 2
-	force_wielded = 30
+	force_wielded = 15
 	attack_verb = list("attacked", "chopped", "cleaved", "torn", "cut")
 	applies_material_colour = 0
 	damtype = DAM_CUT

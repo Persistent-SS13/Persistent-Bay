@@ -23,7 +23,7 @@
 
 /obj/item/clothing/accessory/New()
 	. = ..()
-	ADD_SAVED_VAR(has_suit)
+	//Accessories are updated in the parent clothing item on load
 
 /obj/item/clothing/accessory/Destroy()
 	on_removed()

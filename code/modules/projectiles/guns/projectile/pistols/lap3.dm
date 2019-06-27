@@ -5,6 +5,7 @@
 	icon_state = "pistol"
 	item_state = null
 	w_class = ITEM_SIZE_SMALL
+	slot_flags = SLOT_BELT | SLOT_HOLSTER | SLOT_POCKET
 	caliber = CALIBER_9MM
 	silenced = FALSE
 	fire_delay = 4

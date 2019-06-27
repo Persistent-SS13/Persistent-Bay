@@ -13,6 +13,10 @@
 	mass = 20
 	damthreshold_brute 	= 5
 
+/obj/structure/ore_box/New()
+	. = ..()
+	ADD_SAVED_VAR(stored_ore)
+
 /obj/structure/ore_box/after_load()
 	..()
 	update_ore_count()

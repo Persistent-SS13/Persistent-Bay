@@ -17,6 +17,7 @@
 	accuracy_power = 8
 	one_hand_penalty = 2
 	bulk = 3
+	slot_flags = SLOT_HOLSTER
 
 /obj/item/weapon/gun/projectile/revolver/AltClick()
 	if(CanPhysicallyInteract(usr))

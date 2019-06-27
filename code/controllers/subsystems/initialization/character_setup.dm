@@ -13,24 +13,27 @@ SUBSYSTEM_DEF(character_setup)
 	var/list/save_queue = list()
 
 /datum/controller/subsystem/character_setup/Initialize()
-	if(newplayers_requiring_init.len)
+	wait = 3 //Tick faster at first to handle logging in players
+	. = ..()
+	//In 10 seconds slow down to once a second
+	spawn(10 SECONDS)
+		wait = 1 SECOND
+
+/datum/controller/subsystem/character_setup/fire(resumed = FALSE)
+	if(LAZYLEN(newplayers_requiring_init))
 		for(var/i in 1 to newplayers_requiring_init.len)
 			var/mob/new_player/new_player = newplayers_requiring_init[1]
 			if(new_player)
 				new_player.deferred_login()
 				newplayers_requiring_init -= new_player
-	if(prefs_awaiting_setup.len)
+	if(LAZYLEN(prefs_awaiting_setup))
 		for(var/i in 1 to prefs_awaiting_setup.len)
 			var/datum/preferences/prefs = prefs_awaiting_setup[1]
 			if(prefs)
 				prefs.setup()
 				prefs_awaiting_setup -= prefs
 
-	. = ..()
-
-
-/datum/controller/subsystem/character_setup/fire(resumed = FALSE)
-	while(save_queue.len)
+	while(LAZYLEN(save_queue))
 		var/datum/preferences/prefs = save_queue[save_queue.len]
 		save_queue.len--
 
@@ -44,10 +47,9 @@ SUBSYSTEM_DEF(character_setup)
 	save_queue |= prefs
 
 /datum/controller/subsystem/character_setup/proc/save_character(var/ind, var/ckey, var/mob/living/carbon/human/H)
-	if(!istype(H))
-		return
 	var/savefile/S = CHAR_SAVE_FILE(ind, ckey)
 	H.before_save()
+	H.should_save = 1
 	to_file(S["name"], H.real_name)
 	to_file(S["mob"], H)
 	H.after_save()

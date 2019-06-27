@@ -120,9 +120,6 @@
 	var/list/icon_keys = list()		//keys
 	var/list/ammo_states = list()	//values
 
-/obj/item/ammo_magazine/box
-	w_class = ITEM_SIZE_NORMAL
-
 /obj/item/ammo_magazine/Initialize()
 	. = ..()
 	if(multiple_sprites)

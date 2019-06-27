@@ -37,21 +37,31 @@ datum/preferences
 	var/bonus_slots = 0
 	var/bonus_notes = ""
 	var/datum/browser/prefspanel
-	
+
 	var/rules_agree = 0
 	var/guide_agree = 0
+
 /datum/preferences/New(client/C)
 	if(istype(C))
 		client = C
 		client_ckey = C.ckey
 		SScharacter_setup.preferences_datums += src
 		if(SScharacter_setup.initialized)
+			testing("preferences/New(): Created and directly setup preferences for [client_ckey]")
 			setup()
 		else
+			testing("preferences/New(): Created and queued preference setup for [client_ckey]")
 			SScharacter_setup.prefs_awaiting_setup += src
 	..()
 
+/datum/preferences/Destroy()
+	if(LAZYLEN(SScharacter_setup.prefs_awaiting_setup))
+		testing("preferences/Destroy(): was called for [client_ckey]")
+		SScharacter_setup.prefs_awaiting_setup -= src
+	. = ..()
+
 /datum/preferences/proc/setup()
+	testing("preferences/setup(): was called for [client_ckey]")
 	if(!length(GLOB.skills))
 		decls_repository.get_decl(/decl/hierarchy/skill)
 	player_setup = new(src)
@@ -62,11 +72,13 @@ datum/preferences
 	if(client && !IsGuestKey(client.key))
 		src.load_path_pref(client.key)
 		load_preferences()
-		load_and_update_character()
+	//	load_and_update_character()
 	sanitize_preferences()
 	if(client && istype(client.mob, /mob/new_player))
 		var/mob/new_player/np = client.mob
 		np.new_player_panel(TRUE)
+	if(!length(GLOB.skills))
+		decls_repository.get_decl(/decl/hierarchy/skill)
 
 /datum/preferences/proc/load_and_update_character(var/slot)
 	load_character(slot)
@@ -132,7 +144,7 @@ datum/preferences
 	if(href_list["save"])
 		if(!cultural_info)
 			log_error("Something went very wrong with cultural info!!!")
-			return 
+			return
 		if(!real_name)
 			to_chat(usr, "You must select a valid character name")
 			return
@@ -150,8 +162,8 @@ datum/preferences
 			return
 		if(!cultural_info[TAG_AMBITION])
 			to_chat(usr, "You must select an ambition for your character.")
-			return	
-			
+			return
+
 		save_character()
 		save_preferences()
 		close_browser(usr, "window=saves")
@@ -411,7 +423,7 @@ datum/preferences
 
 
 /datum/preferences/proc/delete_character(var/slot)
-	if(!slot) 
+	if(!slot)
 		return
 	SScharacter_setup.delete_character(slot, client.ckey)
 	if(character_list && (character_list.len >= slot))

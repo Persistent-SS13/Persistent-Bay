@@ -89,6 +89,11 @@
 		MATERIAL_HYDROGEN,
 		)
 
+/obj/item/weapon/New()
+	. = ..()
+	ADD_SAVED_VAR(build_from_parts)
+	ADD_SAVED_VAR(hardware_color)
+
 /obj/item/weapon/pickaxe/Initialize()
 	if(build_from_parts)
 		icon_state = "pick_hardware"

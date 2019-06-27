@@ -10,6 +10,7 @@
 	interact_offline = 1
 	layer = ABOVE_HUMAN_LAYER
 	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE
+	circuit_type = /obj/item/weapon/circuitboard/cryo_cell
 
 	var/on = 0
 	idle_power_usage = 20
@@ -38,14 +39,6 @@
 	update_icon()
 	initialize_directions = dir
 	atmos_init()
-	component_parts = list(
-		new /obj/item/weapon/circuitboard/cryo_cell(src),
-		new /obj/item/weapon/stock_parts/scanning_module(src),
-		new /obj/item/weapon/stock_parts/manipulator(src),
-		new /obj/item/weapon/stock_parts/manipulator(src),
-		new /obj/item/weapon/stock_parts/console_screen(src),
-		new /obj/item/pipe(src))
-	RefreshParts()
 	if(node) return
 	var/node_connect = dir
 	for(var/obj/machinery/atmospherics/target in get_step(src,node_connect))

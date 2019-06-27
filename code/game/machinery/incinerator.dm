@@ -15,6 +15,7 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 	use_power = POWER_USE_IDLE
 	idle_power_usage = 10 //10 Watts for idle
 	active_power_usage = 4 KILOWATTS //4,000w when active
+	circuit_type = /obj/item/weapon/circuitboard/incinerator
 
 	//Radio
 	id_tag = null
@@ -40,16 +41,17 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 
 /obj/machinery/incinerator/New()
 	..()
-	map_storage_saved_vars += ";radio_connection"
 	burn_chamber_air = new()
 	burn_chamber_air.volume = 100
 	if(loc)
 		burn_chamber_air.merge(loc.return_air().remove_volume(burn_chamber_air.volume))
 	if(id_tag && !frequency)
 		frequency = INCINERATOR_FREQ
+	ADD_SAVED_VAR(burn_chamber_air)
+	ADD_SAVED_VAR(input_dir)
+	ADD_SAVED_VAR(autoincinerate)
 
 /obj/machinery/incinerator/Initialize()
-	setup_parts()
 	. = ..()
 
 /obj/machinery/incinerator/Destroy()
@@ -57,14 +59,6 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 		loc.return_air().merge(burn_chamber_air)
 	QDEL_NULL(burn_chamber_air)
 	return ..()
-
-/obj/machinery/incinerator/proc/setup_parts()
-	if(!component_parts)
-		component_parts = list()
-		component_parts += new/obj/item/device/assembly/igniter()
-		component_parts += new/obj/item/weapon/stock_parts/micro_laser()
-		component_parts += new/obj/item/weapon/stock_parts/micro_laser()
-	RefreshParts()
 
 /obj/machinery/incinerator/ex_act(severity)
 	switch(severity)

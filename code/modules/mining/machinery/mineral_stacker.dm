@@ -4,22 +4,19 @@
 	console = /obj/machinery/computer/mining
 	input_turf =  EAST
 	output_turf = WEST
+	circuit_type = /obj/item/weapon/circuitboard/mining_stacker
 	var/stack_amt = 50
 	var/list/stacks
 
 /obj/machinery/mineral/stacking_machine/New()
 	..()
+	ADD_SAVED_VAR(stack_amt)
+	ADD_SAVED_VAR(stacks)
 
 /obj/machinery/mineral/stacking_machine/Initialize()
 	. = ..()
 	if(!stacks)
 		stacks = list()
-	if(!map_storage_loaded)
-		component_parts = list(
-			new /obj/item/weapon/stock_parts/matter_bin(src),
-			new /obj/item/weapon/stock_parts/manipulator(src),
-			new /obj/item/weapon/circuitboard/mining_stacker(src)
-			)
 
 /obj/machinery/mineral/stacking_machine/Process()
 	if(input_turf)

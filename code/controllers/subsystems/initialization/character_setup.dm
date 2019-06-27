@@ -26,7 +26,7 @@ SUBSYSTEM_DEF(character_setup)
 				prefs.setup()
 				prefs_awaiting_setup -= prefs
 
-		. = ..()
+	. = ..()
 
 
 /datum/controller/subsystem/character_setup/fire(resumed = FALSE)

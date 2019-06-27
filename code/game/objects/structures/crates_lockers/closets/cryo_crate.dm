@@ -42,6 +42,8 @@
 /obj/structure/closet/crate/cryo/New()
 	if(sealed)
 		content_path = select_cont()
+    
+	..()
 
 /obj/structure/closet/crate/cryo/attack_hand(mob/user)
 	if(src.opened == 0 && src.sealed == TRUE) 

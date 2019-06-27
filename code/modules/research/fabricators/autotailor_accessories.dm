@@ -199,11 +199,6 @@
 	id = "stie_yellow"
 	build_path = /obj/item/clothing/accessory/yellow
 
-/datum/design/item/autotailor/accessories/attach/cliptie_red_black
-	name = "Tie - red & black w. clip"
-	id = "cliptie_red_black"
-	build_path = /obj/item/clothing/accessory/red
-
 /datum/design/item/autotailor/accessories/attach/cliptie_nt
 	name = "Tie - NT"
 	id = "cliptie_nt"

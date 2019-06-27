@@ -464,7 +464,9 @@
 
 	if(client.holder && (client.holder.rights & R_ADMIN))
 		is_admin = 1
-
+	else
+		to_chat(src, "Observing is restricted in persistence.")
+		return
 	if(is_admin && stat == DEAD)
 		is_admin = 0
 

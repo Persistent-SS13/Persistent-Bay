@@ -21,7 +21,7 @@ var/PriorityQueue/all_feeds
 	var/datum/world_faction/business/connected_faction = get_faction(contract.org_uid)
 	if(connected_faction && istype(connected_faction))
 		var/datum/stockholder/holder = connected_faction.get_stockholder_datum(contract.created_by)
-		if(holder.stocks < contract.ownership)
+		if(!holder || holder.stocks < contract.ownership)
 			contract.cancelled = 1
 			contract.linked = null
 			contract.update_icon()
@@ -1724,7 +1724,7 @@ var/PriorityQueue/all_feeds
 		else
 			var/remainder = holder.stocks % (stock_holders.len-1)
 			var/division = (holder.stocks-remainder)/(stock_holders.len-1)
-			stock_holders -= holder
+			stock_holders -= real_name
 			for(var/datum/stockholder/secondholder in stock_holders)
 				secondholder.stocks += division
 			if(remainder)
@@ -1893,6 +1893,7 @@ var/PriorityQueue/all_feeds
 	possible |= module.spec.hourly_objectives
 	var/chose_type = pick(possible)
 	hourly_objective = new chose_type()
+	hourly_objective.parent = src
 	hourly_assigned = world.realtime
 /datum/world_faction/business/proc/assign_daily_objective()
 	var/list/possible = list()
@@ -1900,6 +1901,7 @@ var/PriorityQueue/all_feeds
 	possible |= module.spec.daily_objectives
 	var/chose_type = pick(possible)
 	daily_objective = new chose_type()
+	daily_objective.parent = src
 	daily_assigned = world.realtime
 /datum/world_faction/business/proc/assign_weekly_objective()
 	var/list/possible = list()
@@ -1907,6 +1909,7 @@ var/PriorityQueue/all_feeds
 	possible |= module.spec.weekly_objectives
 	var/chose_type = pick(possible)
 	weekly_objective = new chose_type()
+	weekly_objective.parent = new chose_type()
 	weekly_assigned = world.realtime
 
 /datum/world_faction/business/New()
@@ -2097,7 +2100,7 @@ var/PriorityQueue/all_feeds
 		if(holder.real_name == real_name) return 1
 
 /datum/stock_proposal/proc/is_started_by(var/real_name)
-	if(started_by.real_name == real_name) return 1
+	if(started_by == real_name) return 1
 
 
 /datum/stock_proposal/proc/get_support()
@@ -2126,8 +2129,18 @@ var/PriorityQueue/all_feeds
 			break
 	if(!debts)
 		debts = list()
+	if(central_account)
+		central_account.connected_business = src
 	..()
 
+/datum/world_faction/business/after_load()
+	if(CEO)
+		if(!CEO.accesses.len)
+			var/datum/accesses/access = new()
+			access.name = "CEO"
+			access.pay = 45
+			CEO.accesses |= access
+	..()
 /datum/world_faction/proc/get_limits()
 	return limits
 
@@ -2524,6 +2537,7 @@ var/PriorityQueue/all_feeds
 		if(parent)
 			var/datum/transaction/Te = new("Completed Objective", "Nexus Economic Stimulus", payout, "Nexus Economic Module")
 			parent.central_account.do_transaction(Te)
+			parent.research.points += research_payout
 		return 1
 
 /datum/module_objective/proc/get_status()
@@ -3294,7 +3308,7 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/revenue, /datum/module_objective/hourly/employees, /datum/module_objective/hourly/cost, /datum/module_objective/hourly/contract)
 	daily_objectives = list(/datum/module_objective/daily/revenue, /datum/module_objective/daily/employees, /datum/module_objective/daily/cost, /datum/module_objective/daily/contract)
 	weekly_objectives = list(/datum/module_objective/weekly/revenue, /datum/module_objective/weekly/employees, /datum/module_objective/weekly/cost, /datum/module_objective/weekly/contract)
-	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/clothing/gloves/insulated/cheap = 2, /obj/item/weapon/storage/belt/utility/full = 2)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/clothing/gloves/insulated/cheap = 2, /obj/item/weapon/storage/belt/utility/full = 2)
 
 /datum/business_spec/eng/realestate
 	name = "Real-Estate"
@@ -3316,7 +3330,7 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/visitors, /datum/module_objective/hourly/employees, /datum/module_objective/hourly/cost, /datum/module_objective/hourly/contract)
 	daily_objectives = list(/datum/module_objective/daily/visitors, /datum/module_objective/daily/employees, /datum/module_objective/daily/cost, /datum/module_objective/daily/contract)
 	weekly_objectives = list(/datum/module_objective/weekly/visitors, /datum/module_objective/weekly/employees, /datum/module_objective/weekly/cost, /datum/module_objective/weekly/contract)
-	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/weapon/storage/firstaid/surgery/full = 1, /obj/item/clothing/gloves/latex = 2, /obj/item/device/scanner/health = 2)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/weapon/storage/firstaid/surgery/full = 1, /obj/item/clothing/gloves/latex = 2, /obj/item/device/scanner/health = 2)
 
 /datum/business_spec/medical/paramedic
 	name = "Paramedic"
@@ -3341,7 +3355,7 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/visitors, /datum/module_objective/hourly/employees, /datum/module_objective/hourly/cost, /datum/module_objective/hourly/sales, /datum/module_objective/weekly/fabricate, /datum/module_objective/hourly/revenue)
 	daily_objectives = list(/datum/module_objective/daily/visitors, /datum/module_objective/daily/employees, /datum/module_objective/daily/cost, /datum/module_objective/daily/sales, /datum/module_objective/weekly/fabricate, /datum/module_objective/daily/revenue)
 	weekly_objectives = list(/datum/module_objective/weekly/visitors, /datum/module_objective/weekly/employees, /datum/module_objective/weekly/cost, /datum/module_objective/weekly/sales, /datum/module_objective/weekly/fabricate, /datum/module_objective/weekly/revenue)
-	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 4, /obj/item/stack/material/glass/ten = 4)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 4, /obj/item/stack/material/glass/ten = 4)
 
 /datum/business_spec/retail/combat
 	name = "Combat"
@@ -3364,7 +3378,7 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/sales, /datum/module_objective/hourly/cost)
 	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/sales, /datum/module_objective/daily/cost)
 	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/sales, /datum/module_objective/weekly/cost)
-	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 3, /obj/item/stack/material/glass/ten = 3, /obj/item/seeds/potatoseed = 1, /obj/item/seeds/towermycelium = 1)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 3, /obj/item/stack/material/glass/ten = 3, /obj/item/seeds/potatoseed = 1, /obj/item/seeds/towermycelium = 1)
 
 /datum/business_spec/service/culinary
 	name = "Culinary"
@@ -3390,7 +3404,7 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/travel, /datum/module_objective/hourly/cost)
 	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/travel, /datum/module_objective/daily/cost)
 	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/travel, /datum/module_objective/weekly/cost)
-	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/weapon/pickaxe = 2, /obj/item/clothing/head/helmet/space/mining = 2, /obj/item/clothing/suit/space/mining = 2)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/weapon/pickaxe = 2, /obj/item/clothing/head/helmet/space/mining = 2, /obj/item/clothing/suit/space/mining = 2)
 
 
 
@@ -3416,7 +3430,7 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/sales)
 	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/sales)
 	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/sales)
-	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/device/camera = 2, /obj/item/weapon/paper_bin = 1, /obj/item/weapon/pen = 2)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/device/camera = 2, /obj/item/weapon/paper_bin = 1, /obj/item/weapon/pen = 2)
 
 
 /datum/business_spec/media/journalism

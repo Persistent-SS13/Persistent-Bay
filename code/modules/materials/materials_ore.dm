@@ -1,27 +1,6 @@
 #define ORE_STACK_MAX_OVERLAYS 10 //The maximum amount of ores overlay we'll ever have on the ore stack icon
 
 //-----------------------------------------
-// OLD Ore
-//-----------------------------------------
-/obj/item/weapon/ore
-	name = "DEPRECATED_ORE"
-	icon_state = "lump"
-	icon = 'icons/obj/materials/ore.dmi'
-	randpixel = 8
-	w_class = ITEM_SIZE_SMALL
-	var/material/material
-	var/datum/geosample/geologic_data
-
-/obj/item/weapon/ore/after_load() //Remove me after first save reload!
-	var/obj/item/stack/ore/newore = new()
-	//Pass our details to the new ore
-	newore.material = src.material
-	newore.geologic_data = src.geologic_data
-	newore.drop_to_stacks(loc)
-	qdel(src)
-
-
-//-----------------------------------------
 // Stackable Ore
 //-----------------------------------------
 /obj/item/stack/ore
@@ -43,9 +22,11 @@
 	if(_mat)
 		set_material_data_byname(_mat)
 	..(newloc)
+	ADD_SAVED_VAR(material)
 
 /obj/item/stack/ore/after_load()
 	..()
+	material = SSmaterials.get_material_by_name(material.name)
 	set_material_data(material)
 	update_icon()
 

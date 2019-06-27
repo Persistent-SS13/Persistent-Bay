@@ -892,8 +892,6 @@
 			sleep(1)
 			qdel(src)
 		status = LIGHT_BROKEN
-	else if(prob(min(60, switchcount*switchcount*0.01)))
-		status = LIGHT_BURNED
 	else if(sound_on)
 		playsound(src, sound_on, 75)
 	return status

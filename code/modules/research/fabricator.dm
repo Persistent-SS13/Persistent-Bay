@@ -79,6 +79,10 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	if(!istype(circuit))
 		CRASH("[src]\ref[src] no circuit found for the fabricator")
 
+/obj/machinery/fabricator/Destroy()
+	..()
+	QDEL_NULL(src)
+
 /obj/machinery/fabricator/Process()
 	..()
 	if(stat)

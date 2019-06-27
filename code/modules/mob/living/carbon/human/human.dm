@@ -167,11 +167,13 @@
 	GLOB.human_mob_list -= src
 	QDEL_NULL_LIST(worn_underwear)
 	for(var/organ in internal_organs)
+#ifndef UNIT_TEST
 		if(src.loc && istype(organ, /obj/item/organ/internal/stack))
 			var/obj/item/organ/internal/stack/lace = organ
 			lace.removed()
 			lace.loc = loc
 			continue
+#endif
 		qdel(organ)
 	for(var/organ in organs)
 		qdel(organ)

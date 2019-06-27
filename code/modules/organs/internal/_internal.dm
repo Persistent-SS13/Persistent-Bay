@@ -134,7 +134,7 @@
 /obj/item/organ/internal/proc/take_internal_damage(var/amount, var/silent = FALSE)
 	if(BP_IS_ROBOTIC(src))
 		rem_health(amount * 0.8)
-	else if(owner && !silent && can_feel_pain() && (get_damages() > min_bruised_damage/2 || prob(10)) )
+	else
 		rem_health(amount)
 
 		//only show this if the organ is not robotic

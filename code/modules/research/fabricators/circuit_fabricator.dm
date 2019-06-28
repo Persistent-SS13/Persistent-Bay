@@ -938,12 +938,6 @@
 	req_tech = list(TECH_ENGINEERING = 4)
 	build_path = /obj/item/weapon/circuitboard/washing_machine
 
-/datum/design/circuit/operating_table
-	name = "operating table"
-	id = "operating_table"
-	req_tech = list(TECH_ENGINEERING = 4)
-	build_path = /obj/item/weapon/circuitboard/optable
-
 /**
 
 /datum/design/aimodule

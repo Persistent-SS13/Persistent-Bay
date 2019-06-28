@@ -66,7 +66,11 @@
 	build_path = /obj/item/weapon/storage/bag/plasticbag
 	materials = list(MATERIAL_PLASTIC = 0.5 SHEETS)
 
-/datum/design/item/consumerfab/consumer/wrapping_paper
+/datum/design/item/consumerfab/consumer/package_wrap_paper
+	build_path = /obj/item/stack/package_wrap/twenty_five
+	materials = list(MATERIAL_WOOD = 0.5 SHEETS)
+
+/datum/design/item/consumerfab/consumer/wrapping_paper/gift
 	build_path = /obj/item/weapon/wrapping_paper
 	materials = list(MATERIAL_WOOD = 0.5 SHEETS)
 

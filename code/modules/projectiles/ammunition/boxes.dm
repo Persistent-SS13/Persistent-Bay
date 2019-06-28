@@ -123,6 +123,9 @@ Some standard magazines, speedloaders and clips
 /obj/item/ammo_magazine/speedloader/c44/emp
 	labels = list("emp")
 	ammo_type = /obj/item/ammo_casing/c44/emp
+/obj/item/ammo_magazine/speedloader/c44/nullglass
+	labels = list("psi")
+	ammo_type = /obj/item/ammo_casing/c44/nullglass
 
 //----------------------------------
 //	standard .50 speedloader
@@ -356,6 +359,7 @@ Some standard magazines, speedloaders and clips
 	ammo_type = /obj/item/ammo_casing/c556
 	max_ammo = 50
 	multiple_sprites = 1
+	slot_flags = SLOT_BELT
 /obj/item/ammo_magazine/box/machinegun/empty
 	initial_ammo = 0
 

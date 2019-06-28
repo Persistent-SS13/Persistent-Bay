@@ -18,9 +18,11 @@
 	var/disallow_occupant_types = list()
 
 	var/network = "default"
-	var/tmp/time_entered = 0
 	var/time_till_despawn = 60 SECONDS
-	var/tmp/atom/movable/occupant
+	var/tmp/time_despawn = 0 //Time in world.time to despawn the occupant
+
+
+	var/mob/occupant
 	var/obj/item/device/radio/intercom/announce
 	var/obj/machinery/computer/cryopod/control_computer
 	var/tmp/last_no_computer_message = 0
@@ -114,7 +116,7 @@
 			C.SetStasis(2)
 
 		//Allow a one minute gap between entering the pod and actually despawning.
-		if ((world.time - time_entered) < time_till_despawn)
+		if (time_despawn > world.time)
 			return
 
 		var/mob/M = occupant
@@ -273,8 +275,7 @@
 
 	occupant = A
 	A.forceMove(src)
-	time_entered = world.time
-
+	time_despawn = world.time + time_till_despawn
 	src.add_fingerprint(user)
 
 /obj/machinery/cryopod/proc/ejectOccupant()
@@ -402,10 +403,14 @@
 		to_file(E["mob"], character)
 		to_file(E["records"], Retrieve_Record(name))
 
+	time_despawn = 0
 	SetName(initial(src.name))
 	icon_state = base_icon_state
 	var/mob/new_player/player = new()
 	player.key = key
+	player.loc = locate(200,200,19)
+	if(occupant && occupant.client)
+		occupant.client.eye = player
 	QDEL_NULL(occupant)
 
 

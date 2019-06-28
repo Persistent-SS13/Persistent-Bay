@@ -54,6 +54,10 @@
 	name = "light armor plate"
 	desc = "A basic armor plate made of steel-reinforced synthetic fibers. Attaches to a plate carrier."
 	icon = 'icons/obj/clothing/obj_suit_modular_armor.dmi'
+	accessory_icons = list(slot_wear_suit_str = 'icons/mob/onmob/onmob_modular_armor.dmi')
+	item_state_slots = list(
+		slot_wear_suit_str = "blank", //don't show an icon
+	)
 	icon_state = "armor_light"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO
 	armor  = list(

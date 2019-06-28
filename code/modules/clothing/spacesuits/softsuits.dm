@@ -318,7 +318,7 @@
 	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank/emergency,/obj/item/device/suit_cooling_unit,/obj/item/stack/flag,/obj/item/weapon/storage/excavation,/obj/item/weapon/pickaxe,/obj/item/device/scanner/health,/obj/item/device/measuring_tape,/obj/item/device/ano_scanner,/obj/item/device/depth_scanner,/obj/item/device/core_sampler,/obj/item/device/gps,/obj/item/weapon/pinpointer/radio,/obj/item/device/radio/beacon,/obj/item/weapon/pickaxe/xeno/hand,/obj/item/weapon/storage/bag/fossils)
 
 //Emergency softsuit
-/obj/item/clothing/head/helmet/space/emergency
+/obj/item/clothing/head/helmet/space/emergency/alt
 	name = "emergency softsuit"
 	icon = 'icons/obj/clothing/head/softsuits.dmi'
 	icon_state = "crisis_softhelm"
@@ -328,7 +328,7 @@
 	desc = "A simple helmet with a built in light, smells like mothballs."
 	flash_protection = FLASH_PROTECTION_NONE
 
-/obj/item/clothing/suit/space/emergency
+/obj/item/clothing/suit/space/emergency/alt
 	name = "emergency softsuit"
 	icon = 'icons/obj/clothing/suit/softsuits.dmi'
 	icon_state = "crisis_softsuit"
@@ -351,33 +351,6 @@
 		DAM_STUN 	= 0)
 	allowed = list(/obj/item/weapon/tank/emergency)
 
-/obj/item/clothing/suit/space/emergency/New()
-	..()
-	slowdown_per_slot[slot_wear_suit] = 4
-
-/obj/item/clothing/suit/space/emergency/fishbowl
-	name = "retro emergency softsuit"
-	icon = 'icons/obj/clothing/obj_suit.dmi'
-	item_icons = list(
-		slot_wear_suit_str = 'icons/mob/onmob/onmob_suit.dmi',
-		)
-	icon_state = "space_emergency"
-	desc = "A thin, ungainly softsuit colored in blaze orange for rescuers to easily locate, looks pretty fragile."
-	armor  = list(
-		DAM_BLUNT 	= 5,
-		DAM_PIERCE 	= 1,
-		DAM_CUT 	= 5,
-		DAM_BULLET 	= 5,
-		DAM_LASER 	= 2,
-		DAM_ENERGY 	= 5,
-		DAM_BURN 	= 5,
-		DAM_BOMB 	= 0,
-		DAM_EMP 	= 0,
-		DAM_BIO 	= 50,
-		DAM_RADS 	= 0,
-		DAM_STUN 	= 0)
-	allowed = list(/obj/item/weapon/tank/emergency)
-
-/obj/item/clothing/suit/space/emergency/New()
+/obj/item/clothing/suit/space/emergency/alt/New()
 	..()
 	slowdown_per_slot[slot_wear_suit] = 4

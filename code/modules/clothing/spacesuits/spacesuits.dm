@@ -5,7 +5,7 @@
 /obj/item/clothing/head/helmet/space
 	name = "Space helmet"
 	icon = 'icons/obj/clothing/obj_head.dmi'
-	icon_state = "spacebowl_dark"
+	icon_state = "space"
 	desc = "A flimsy helmet designed for work in a hazardous, low-pressure environment."
 	item_flags = ITEM_FLAG_STOPPRESSUREDAMAGE | ITEM_FLAG_THICKMATERIAL | ITEM_FLAG_AIRTIGHT
 	flags_inv = BLOCKHAIR

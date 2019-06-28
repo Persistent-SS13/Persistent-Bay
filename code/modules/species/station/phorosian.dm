@@ -92,10 +92,16 @@
 	available_cultural_info = list(
 		TAG_CULTURE = list(
 			CULTURE_PHOROSIAN,
+		),
+		TAG_AMBITION = list(
+			AMBITION_FREEDOM,
+			AMBITION_OPPORTUNITY,
+			AMBITION_KNOWLEDGE
 		)
 	)
 	default_cultural_info = list(
 		TAG_CULTURE = CULTURE_PHOROSIAN,
+		TAG_AMBITION = AMBITION_FREEDOM,
 	)
 	// force_cultural_info = list(
 	// 	TAG_CULTURE = list(

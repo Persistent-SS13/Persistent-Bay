@@ -2,6 +2,9 @@
 	name = "EVA softsuit helmet"
 	icon = 'icons/obj/clothing/head/softsuits.dmi'
 	icon_state = "civ_softhelm"
+	item_icons = list(
+		slot_head_str = 'icons/mob/onmob/head/softsuits.dmi',
+		)
 	desc = "A flimsy helmet designed for work in a hazardous, low-pressure environment."
 	permeability_coefficient = 0
 	armor  = list(
@@ -18,11 +21,13 @@
 		DAM_RADS 	= 10,
 		DAM_STUN 	= 0)
 
-
-/obj/item/clothing/suit/space
+/obj/item/clothing/suit/space/civilian
 	name = "EVA softsuit"
 	desc = "Your average general use softsuit. Though lacking in protection that modern voidsuits give, its cheap cost and portable size makes it perfect for those still getting used to life on the frontier."
 	icon = 'icons/obj/clothing/suit/softsuits.dmi'
+	item_icons = list(
+		slot_wear_suit_str = 'icons/mob/onmob/suit/softsuits.dmi',
+		)
 	icon_state = "civ_softsuit"
 	item_state_slots = list(
 		slot_l_hand_str = "s_suit",
@@ -54,6 +59,9 @@
 		slot_l_hand_str = "eng_helm",
 		slot_r_hand_str = "eng_helm",
 		)
+	item_icons = list(
+		slot_head_str = 'icons/mob/onmob/head/softsuits.dmi',
+		)
 	armor  = list(
 		DAM_BLUNT 	= 10,
 		DAM_PIERCE 	= 5,
@@ -70,8 +78,12 @@
 
 /obj/item/clothing/suit/space/engineering
 	name = "engineering softsuit"
+	icon = 'icons/obj/clothing/suit/softsuits.dmi'
 	icon_state = "eng_softsuit"
 	desc = "A general use softsuit. The cloth fibers on this suit can protect the user from minor amounts of radiation."
+	item_icons = list(
+		slot_wear_suit_str = 'icons/mob/onmob/suit/softsuits.dmi',
+		)
 	item_state_slots = list(
 		slot_l_hand_str = "eng_voidsuit",
 		slot_r_hand_str = "eng_voidsuit",
@@ -101,6 +113,9 @@
 		slot_l_hand_str = "sec_helm",
 		slot_r_hand_str = "sec_helm",
 		)
+	item_icons = list(
+		slot_head_str = 'icons/mob/onmob/head/softsuits.dmi',
+		)
 	siemens_coefficient = 0.8 //barely stronger than average softsuits, slightly weaker than sec voidsuits
 	armor  = list(
 		DAM_BLUNT 	= 15,
@@ -118,8 +133,12 @@
 
 /obj/item/clothing/suit/space/security
 	name = "security softsuit"
+	icon = 'icons/obj/clothing/suit/softsuits.dmi'
 	icon_state = "sec_softsuit"
 	desc = "A general use softsuit equipped with heat-resistent fabric."
+	item_icons = list(
+		slot_wear_suit_str = 'icons/mob/onmob/suit/softsuits.dmi',
+		)
 	item_state_slots = list(
 		slot_l_hand_str = "sec_voidsuit",
 		slot_r_hand_str = "sec_voidsuit",
@@ -150,6 +169,9 @@
 		slot_l_hand_str = "medical_helm",
 		slot_r_hand_str = "medical_helm",
 		)
+	item_icons = list(
+		slot_head_str = 'icons/mob/onmob/head/softsuits.dmi',
+		)
 	armor  = list(
 		DAM_BLUNT 	= 10,
 		DAM_PIERCE 	= 5,
@@ -166,8 +188,12 @@
 
 /obj/item/clothing/suit/space/medical
 	name = "medical softsuit"
+	icon = 'icons/obj/clothing/suit/softsuits.dmi'
 	icon_state = "med_softsuit"
 	desc = "A general use softsuit that sacrafices some (presumably) non-essential systems in turn for enhanced mobility."
+	item_icons = list(
+		slot_wear_suit_str = 'icons/mob/onmob/suit/softsuits.dmi',
+		)
 	item_state_slots = list(
 		slot_l_hand_str = "medical_voidsuit",
 		slot_r_hand_str = "medical_voidsuit",
@@ -201,6 +227,9 @@
 		slot_l_hand_str = "mining_helm",
 		slot_r_hand_str = "mining_helm",
 		)
+	item_icons = list(
+		slot_head_str = 'icons/mob/onmob/head/softsuits.dmi',
+		)
 	armor  = list(
 		DAM_BLUNT 	= 20,
 		DAM_PIERCE 	= 10,
@@ -217,8 +246,12 @@
 
 /obj/item/clothing/suit/space/mining
 	name = "mining softsuit"
+	icon = 'icons/obj/clothing/suit/softsuits.dmi'
 	icon_state = "miner_softsuit"
 	desc = "A general use softsuit with extra thick fabric. Something tells you its not thick enough."
+	item_icons = list(
+		slot_wear_suit_str = 'icons/mob/onmob/suit/softsuits.dmi',
+		)
 	item_state_slots = list(
 		slot_l_hand_str = "mining_voidsuit",
 		slot_r_hand_str = "mining_voidsuit",
@@ -243,6 +276,9 @@
 	name = "scientist softsuit helmet"
 	icon = 'icons/obj/clothing/head/softsuits.dmi'
 	icon_state = "sci_softhelm"
+	item_icons = list(
+		slot_head_str = 'icons/mob/onmob/head/softsuits.dmi',
+		)
 	desc = "A flimsy helmet that provides basic protection from radiation."
 	armor  = list(
 		DAM_BLUNT 	= 10,
@@ -260,7 +296,11 @@
 
 /obj/item/clothing/suit/space/science
 	name = "scientist softsuit"
+	icon = 'icons/obj/clothing/suit/softsuits.dmi'
 	icon_state = "sci_softsuit"
+	item_icons = list(
+		slot_wear_suit_str = 'icons/mob/onmob/suit/softsuits.dmi',
+		)
 	desc = "A general use softsuit retrofitted with basic radiation shielding."
 	armor  = list(
 		DAM_BLUNT 	= 10,
@@ -282,12 +322,46 @@
 	name = "emergency softsuit"
 	icon = 'icons/obj/clothing/head/softsuits.dmi'
 	icon_state = "crisis_softhelm"
+	item_icons = list(
+		slot_head_str = 'icons/mob/onmob/head/softsuits.dmi',
+		)
 	desc = "A simple helmet with a built in light, smells like mothballs."
 	flash_protection = FLASH_PROTECTION_NONE
 
 /obj/item/clothing/suit/space/emergency
 	name = "emergency softsuit"
+	icon = 'icons/obj/clothing/suit/softsuits.dmi'
 	icon_state = "crisis_softsuit"
+	item_icons = list(
+		slot_wear_suit_str = 'icons/mob/onmob/suit/softsuits.dmi',
+		)
+	desc = "A thin, ungainly softsuit colored in blaze orange for rescuers to easily locate, looks pretty fragile."
+	armor  = list(
+		DAM_BLUNT 	= 5,
+		DAM_PIERCE 	= 1,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 2,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 50,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
+	allowed = list(/obj/item/weapon/tank/emergency)
+
+/obj/item/clothing/suit/space/emergency/New()
+	..()
+	slowdown_per_slot[slot_wear_suit] = 4
+
+/obj/item/clothing/suit/space/emergency/fishbowl
+	name = "retro emergency softsuit"
+	icon = 'icons/obj/clothing/obj_suit.dmi'
+	item_icons = list(
+		slot_wear_suit_str = 'icons/mob/onmob/onmob_suit.dmi',
+		)
+	icon_state = "space_emergency"
 	desc = "A thin, ungainly softsuit colored in blaze orange for rescuers to easily locate, looks pretty fragile."
 	armor  = list(
 		DAM_BLUNT 	= 5,

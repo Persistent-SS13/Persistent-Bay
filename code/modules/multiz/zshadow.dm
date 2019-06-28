@@ -1,3 +1,5 @@
+GLOBAL_LIST_EMPTY(all_zshadows) //Keep track of the bastards
+
 /mob  // TODO: rewrite as obj. If more efficient
 	var/mob/zshadow/shadow
 
@@ -13,6 +15,7 @@
 	//auto_init = FALSE 			// We do not need to be initialize()d
 	var/mob/owner = null		// What we are a shadow of.
 	should_save = 0
+
 /mob/zshadow/can_fall()
 	return FALSE
 
@@ -20,12 +23,15 @@
 	if(!istype(L))
 		qdel(src)
 		return
+	if(L.shadow)
+		qdel(src)
+		return
 	..() // I'm cautious about this, but its the right thing to do.
+	GLOB.all_zshadows += src
 	owner = L
 	sync_icon(L)
 	GLOB.dir_set_event.register(L, src, /mob/zshadow/proc/update_dir)
 	GLOB.invisibility_set_event.register(L, src, /mob/zshadow/proc/update_invisibility)
-
 
 /mob/Destroy()
 	if(shadow)
@@ -34,6 +40,10 @@
 	. = ..()
 
 /mob/zshadow/Destroy()
+	src.loc = null
+	if(owner)
+		owner.shadow = null
+	GLOB.all_zshadows -= src
 	GLOB.dir_set_event.unregister(owner, src, /mob/zshadow/proc/update_dir)
 	GLOB.invisibility_set_event.unregister(owner, src, /mob/zshadow/proc/update_invisibility)
 	. = ..()

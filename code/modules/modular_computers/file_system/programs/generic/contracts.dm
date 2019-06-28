@@ -155,9 +155,9 @@
 			if(!selected_desc || selected_desc == "")
 				return
 			var/obj/item/weapon/paper/contract/recurring/contract = new()
-			contract.sign_type = selected_paytype
+			contract.sign_type = selected_type
 			var/text_signtype
-			switch(selected_paytype)
+			switch(selected_type)
 				if(CONTRACT_BUSINESS)
 					text_signtype = "Organization"
 				else

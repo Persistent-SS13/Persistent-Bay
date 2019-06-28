@@ -362,7 +362,7 @@
 	weight = 23
 	stack_origin_tech = list(TECH_MATERIAL = 2)
 	hitsound = 'sound/weapons/smash.ogg'
-	alloy_materials = list(MATERIAL_STEEL = 2500, MATERIAL_PLATINUM = 1250)
+	alloy_materials = list(MATERIAL_IRON = 1250, MATERIAL_PLATINUM = 1250, MATERIAL_GRAPHITE = 1250)
 	alloy_product = TRUE
 	ore_smelts_to = MATERIAL_PLASTEEL
 
@@ -474,7 +474,7 @@
 		/datum/reagent/copper = 12,
 		/datum/reagent/aluminum = 12,
 		)
-	ore_matter = list(MATERIAL_COPPER = 1200, MATERIAL_GOLD = 1200, MATERIAL_ALUMINUM = 1200)
+	ore_matter = list(MATERIAL_COPPER = 1200, MATERIAL_GOLD = 1200, MATERIAL_ALUMINIUM = 1200)
 
 /material/tetrahedrite
 	name = MATERIAL_TETRAHEDRITE

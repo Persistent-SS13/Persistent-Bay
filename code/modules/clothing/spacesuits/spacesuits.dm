@@ -3,12 +3,13 @@
 //      Meaning the the suit is defined directly after the corrisponding helmet. Just like below!
 
 /obj/item/clothing/head/helmet/space
-	name = "EVA softsuit helmet"
+	name = "Space helmet"
 	icon = 'icons/obj/clothing/obj_head.dmi'
 	icon_state = "spacebowl_dark"
 	desc = "A flimsy helmet designed for work in a hazardous, low-pressure environment."
 	item_flags = ITEM_FLAG_STOPPRESSUREDAMAGE | ITEM_FLAG_THICKMATERIAL | ITEM_FLAG_AIRTIGHT
 	flags_inv = BLOCKHAIR
+	item_icons = list(slot_head_str = 'icons/mob/onmob/onmob_head.dmi')
 	item_state_slots = list(
 		slot_l_hand_str = "s_helmet",
 		slot_r_hand_str = "s_helmet",
@@ -112,6 +113,7 @@
 	icon_state = "space"
 	item_icons = list(
 		slot_l_hand_str = 'icons/mob/onmob/items/lefthand_spacesuits.dmi',
+		slot_wear_suit_str = 'icons/mob/onmob/onmob_suit.dmi',
 		slot_r_hand_str = 'icons/mob/onmob/items/righthand_spacesuits.dmi',
 		)
 	item_state_slots = list(

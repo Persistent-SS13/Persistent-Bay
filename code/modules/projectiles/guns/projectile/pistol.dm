@@ -6,6 +6,7 @@
 	allowed_magazines = null
 	max_shells = 0
 	accuracy_power = 7
+	slot_flags = SLOT_BELT | SLOT_HOLSTER
 	var/empty_icon = TRUE  //If it should change icon when empty
 	var/ammo_indicator = FALSE
 

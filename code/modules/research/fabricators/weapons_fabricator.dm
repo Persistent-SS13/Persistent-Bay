@@ -513,10 +513,19 @@
 	build_path = /obj/item/weapon/gun/energy/pulse_rifle/carbine
 	research = "pulse_1"
 
-/datum/design/item/weaponfab/weapons/guns/pulse/skrell // tier 4.5
+
+//
+// Not sure if those should be in the fab as-is, so I made them use a "skrell"  research
+//
+/datum/design/item/weaponfab/weapons/guns/energy/pistol/skrell // tier 1
+	materials = list(MATERIAL_PLASTEEL = 6 SHEETS, MATERIAL_GOLD = 4 SHEETS, MATERIAL_PHORON = 2 SHEETS, MATERIAL_DIAMOND = 1 SHEETS)
+	build_path = /obj/item/weapon/gun/energy/gun/skrell
+	research = "skrell_1"
+
+/datum/design/item/weaponfab/weapons/guns/pulse/skrell // tier 2
 	materials = list(MATERIAL_PLASTEEL = 20 SHEETS, MATERIAL_GOLD = 20 SHEETS, MATERIAL_PHORON = 20 SHEETS, MATERIAL_DIAMOND = 20 SHEETS, MATERIAL_URANIUM = 20 SHEETS)
 	build_path = /obj/item/weapon/gun/energy/pulse_rifle/skrell
-	research = "pulse_2"
+	research = "skrell_2"
 
 
 

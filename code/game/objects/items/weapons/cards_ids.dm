@@ -616,6 +616,8 @@ var/const/NO_EMAG_ACT = -50
 	return
 /obj/item/weapon/card/id/GetFaction()
 	return selected_faction
+
+
 /obj/item/weapon/card/id/GetAccess(var/faction_uid)
 	if(!valid) return list()
 	if(!faction_uid || faction_uid == "")
@@ -623,7 +625,7 @@ var/const/NO_EMAG_ACT = -50
 	var/list/final_access[0]
 	var/datum/world_faction/faction = get_faction(faction_uid)
 	if(faction)
-		if(faction.get_leadername() == registered_name)
+		if(sanitize(faction.get_leadername()) == sanitize(registered_name))
 			faction.rebuild_all_access()
 			for(var/x in faction.all_access)
 				final_access |= text2num(x)

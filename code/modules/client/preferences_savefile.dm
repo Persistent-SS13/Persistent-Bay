@@ -1,20 +1,20 @@
 #define SAVEFILE_VERSION_MIN	8
 #define SAVEFILE_VERSION_MAX	17
 
-/datum/preferences/proc/load_path(ckey,filename="preferences.sav")
+/datum/preferences/proc/load_path_pref(ckey,filename="preferences.sav")
 	if(!ckey)	return
-	path = load_path(ckey, filename)
+	path = "data/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 	char_save_path = "data/player_saves/[copytext(ckey,1,2)]/[ckey]/"
 	savefile_version = SAVEFILE_VERSION_MAX
-
+	return path
 /datum/preferences/proc/beta_path(ckey,filename="preferences.sav")
 	if(!ckey) return
-	path =  beta_path(ckey, filename)
+	path =  "exports/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 	savefile_version = SAVEFILE_VERSION_MAX
 
 /datum/preferences/proc/exit_path(ckey,filename="preferences.sav")
 	if(!ckey)	return
-	path = exit_path(ckey, filename)
+	path = "exits/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 	savefile_version = SAVEFILE_VERSION_MAX
 
 /datum/preferences/proc/character_load_path(slot)
@@ -24,9 +24,9 @@
 
 /datum/preferences/proc/load_preferences()
 	// if(!path)
-	path = load_path(client_ckey, "")
+	path = load_path_pref(client_ckey, "preferences.sav")
 	if(!fexists(path))		return 0
-	var/savefile/S = new /savefile(path)
+	var/savefile/S = new(path)
 	if(!S)					return 0
 	S.cd = "/"
 
@@ -38,9 +38,9 @@
 /datum/preferences/proc/save_preferences()
 	testing("preferences/save_preferences() : Attempting to save prefs (ckey = [client_ckey], path = [path])")
 	//if(!path || (path && (length(path) == 0) ) )
-	path = load_path(client_ckey, "")
+	path = load_path_pref(client_ckey, "preferences.sav")
 	testing("preferences/save_preferences() : Set path to (path = [path])")
-	var/savefile/S = new /savefile(path)
+	var/savefile/S = new (path)
 	if(!S)					return 0
 	S.cd = "/"
 
@@ -95,7 +95,7 @@
 	//return S
 
 /datum/preferences/proc/sanitize_preferences()
-	player_setup.sanitize_setup()
+	player_setup.sanitize_setup() //Leave it runtime if it must
 	if(!bonus_slots) bonus_slots = 0
 	if(!bonus_notes) bonus_notes = ""
 	return 1

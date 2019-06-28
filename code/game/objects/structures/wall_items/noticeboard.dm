@@ -55,16 +55,7 @@ var/const/NBOARD_MAX_NOTICES = 5
 
 //attaching papers!!
 /obj/structure/noticeboard/attackby(var/obj/item/weapon/O as obj, var/mob/user as mob)
-	if(istype(O, /obj/item/weapon/paper) || istype(O, /obj/item/weapon/photo))
-		if(notices < NBOARD_MAX_NOTICES)
-			O.add_fingerprint(user)
-			add_fingerprint(user)
-			user.drop_from_inventory(O,src)
-			update_icon()
-			to_chat(user, "<span class='notice'>You pin the paper to the noticeboard.</span>")
-		else
-			to_chat(user, "<span class='notice'>You reach to pin your paper to the board but hesitate. You are certain your paper will not be seen among the many others already attached.</span>")
-	else if(isWrench(O))
+	if(isWrench(O))
 		to_chat(user, "You remove the [src] from the wall!")
 		new /obj/item/frame/noticeboard(get_turf(user))
 		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)

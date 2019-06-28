@@ -267,6 +267,7 @@ var/const/RADIO_STATUS_DISPLAY  = "radio_status_display"
 var/const/RADIO_INCINERATOR  	= "radio_incinerator"
 var/const/RADIO_POD_LAUNCHER	= "radio_podlauncher"
 var/const/RADIO_FOAM_DISPENSER	= "radio_foam_dispenser"
+var/const/RADIO_RECYCLER		= "radio_recycler"
 
 var/global/datum/controller/radio/radio_controller
 

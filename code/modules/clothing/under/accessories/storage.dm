@@ -15,9 +15,9 @@
 	ADD_SAVED_VAR(hold)
 
 /obj/item/clothing/accessory/storage/Initialize()
-	. = ..()
 	if(!map_storage_loaded)
 		create_storage()
+	. = ..()
 
 /obj/item/clothing/accessory/storage/proc/create_storage()
 	hold = new/obj/item/weapon/storage/internal/pockets(src, slots, max_w_class)

@@ -80,6 +80,8 @@ GLOBAL_LIST_INIT(possible_cable_colours, SetupCableColors())
 
 	var/invalid_cable_coils = list(
 		/obj/item/stack/cable_coil/single,
+		/obj/item/stack/cable_coil/five,
+		/obj/item/stack/cable_coil/thirty,
 		/obj/item/stack/cable_coil/cut,
 		/obj/item/stack/cable_coil/cyborg,
 		/obj/item/stack/cable_coil/random

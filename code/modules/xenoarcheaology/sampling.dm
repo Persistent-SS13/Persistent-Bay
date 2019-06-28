@@ -23,6 +23,14 @@
 
 /datum/geosample/New(var/turf/simulated/mineral/container)
 	UpdateTurf(container)
+	ADD_SAVED_VAR(age)
+	ADD_SAVED_VAR(age_thousand)
+	ADD_SAVED_VAR(age_million)
+	ADD_SAVED_VAR(age_billion)
+	ADD_SAVED_VAR(artifact_id)
+	ADD_SAVED_VAR(artifact_distance)
+	ADD_SAVED_VAR(source_mineral)
+	ADD_SAVED_VAR(find_presence)
 
 /datum/geosample/proc/UpdateTurf(var/turf/simulated/mineral/container)
 	if(!istype(container))

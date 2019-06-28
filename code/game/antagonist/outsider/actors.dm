@@ -33,7 +33,7 @@ GLOBAL_DATUM_INIT(actor, /datum/antagonist/actor, new)
 	player.equip_to_slot_or_del(C,slot_wear_id)
 
 	return 1
-
+/**
 /client/verb/join_as_actor()
 	set category = "IC"
 	set name = "Join as Actor"
@@ -54,3 +54,4 @@ GLOBAL_DATUM_INIT(actor, /datum/antagonist/actor, new)
 		return
 
 	to_chat(usr, "You must be observing or be a new player to spawn as an actor.")
+**/

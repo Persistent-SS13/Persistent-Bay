@@ -1,6 +1,7 @@
 //Engineering softsuit
 /obj/item/clothing/head/helmet/space/engineering
 	name = "engineering softsuit helmet"
+	icon = 'icons/mob/onmob/head/softsuits.dmi'
 	icon_state = "eng_softhelm"
 	desc = "A flimsy helmet with basic radiation shielding. Its visor protects the user from bright UV lights."
 	item_state_slots = list(
@@ -23,6 +24,7 @@
 
 /obj/item/clothing/suit/space/engineering
 	name = "engineering softsuit"
+	icon = 'icons/mob/onmob/suits/softsuits.dmi'
 	icon_state = "eng_softsuit"
 	desc = "A general use softsuit. The cloth fibers on this suit can protect the user from minor amounts of radiation."
 	item_state_slots = list(
@@ -47,6 +49,7 @@
 //Security softsuit
 /obj/item/clothing/head/helmet/space/security
 	name = "security softsuit helmet"
+	icon = 'icons/mob/onmob/head/softsuits.dmi'
 	icon_state = "sec_softhelm"
 	desc = "A flimsy helmet equipped with heat-resistent fabric."
 	item_state_slots = list(
@@ -70,6 +73,7 @@
 
 /obj/item/clothing/suit/space/security
 	name = "security softsuit"
+	icon = 'icons/mob/onmob/suits/softsuits.dmi'
 	icon_state = "sec_softsuit"
 	desc = "A general use softsuit equipped with heat-resistent fabric."
 	item_state_slots = list(
@@ -95,6 +99,7 @@
 //Medical softsuit
 /obj/item/clothing/head/helmet/space/medical
 	name = "medical softsuit helmet"
+	icon = 'icons/mob/onmob/head/softsuits.dmi'
 	icon_state = "med_softhelm"
 	desc = "A flimsy helmet that protects the user just enough to be considered spaceworthy."
 	item_state_slots = list(
@@ -117,6 +122,7 @@
 
 /obj/item/clothing/suit/space/medical
 	name = "medical softsuit"
+	icon = 'icons/mob/onmob/suits/softsuits.dmi'
 	icon_state = "med_softsuit"
 	desc = "A general use softsuit that sacrafices some (presumably) non-essential systems in turn for enhanced mobility."
 	item_state_slots = list(
@@ -145,6 +151,7 @@
 //Mining softsuit
 /obj/item/clothing/head/helmet/space/mining
 	name = "mining softsuit helmet"
+	icon = 'icons/mob/onmob/head/softsuits.dmi'
 	icon_state = "miner_softhelm"
 	desc = "A flimsy helmet with extra thick fabric, you still aren't sure if it'll be enough to protect you."
 	item_state_slots = list(
@@ -167,6 +174,7 @@
 
 /obj/item/clothing/suit/space/mining
 	name = "mining softsuit"
+	icon = 'icons/mob/onmob/suits/softsuits.dmi'
 	icon_state = "miner_softsuit"
 	desc = "A general use softsuit with extra thick fabric. Something tells you its not thick enough."
 	item_state_slots = list(
@@ -191,6 +199,7 @@
 //Science softsuit, we don't have xenoarch but that's the only thing i can base its stats off of
 /obj/item/clothing/head/helmet/space/science
 	name = "scientist softsuit helmet"
+	icon = 'icons/mob/onmob/head/softsuits.dmi'
 	icon_state = "sci_softhelm"
 	desc = "A flimsy helmet that provides basic protection from radiation."
 	armor  = list(
@@ -209,6 +218,7 @@
 
 /obj/item/clothing/suit/space/science
 	name = "scientist softsuit"
+	icon = 'icons/mob/onmob/suits/softsuits.dmi'
 	icon_state = "sci_softsuit"
 	desc = "A general use softsuit retrofitted with basic radiation shielding."
 	armor  = list(
@@ -229,6 +239,7 @@
 //Emergency softsuit 
 /obj/item/clothing/head/helmet/space/emergency
 	name = "emergency softsuit"
+	icon = 'icons/mob/onmob/head/softsuits.dmi'
 	icon_state = "crisis_softhelm"
 	desc = "A simple helmet with a built in light, smells like mothballs."
 	flash_protection = FLASH_PROTECTION_NONE

@@ -11,16 +11,25 @@
 	amount = 1
 	max_amount = 500
 	var/material/material
+	var/saved_material
 
 /obj/item/stack/material_dust/New(var/newloc, var/amount, var/_mat)
 	if(_mat)
 		set_material_data_byname(_mat)
 	..(newloc, amount)
-	ADD_SAVED_VAR(material)
+	ADD_SAVED_VAR(saved_material)
 
+/obj/item/stack/material_dust/before_save()
+	. = ..()
+	if(material)
+		saved_material = material.name
+/obj/item/stack/material_dust/after_save()
+	. = ..()
+	saved_material = null
 /obj/item/stack/material_dust/after_load()
 	..()
-	set_material_data(material)
+	if(saved_material) //Added the check for previous versions of materials
+		set_material_data(saved_material) 
 
 /obj/item/stack/material_dust/Initialize()
 	. = ..()

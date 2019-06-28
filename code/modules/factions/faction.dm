@@ -1,4 +1,4 @@
-GLOBAL_LIST_EMPTY(all_world_factions)
+GLOBAL_RAW(/list/datum/world_faction/all_world_factions);GLOBAL_UNMANAGED(all_world_factions, null); //Don't init as empty list, because it happens too late during init
 GLOBAL_LIST_EMPTY(all_business)
 
 GLOBAL_LIST_EMPTY(recent_articles)
@@ -21,7 +21,7 @@ var/PriorityQueue/all_feeds
 	var/datum/world_faction/business/connected_faction = get_faction(contract.org_uid)
 	if(connected_faction && istype(connected_faction))
 		var/datum/stockholder/holder = connected_faction.get_stockholder_datum(contract.created_by)
-		if(holder.stocks < contract.ownership)
+		if(!holder || holder.stocks < contract.ownership)
 			contract.cancelled = 1
 			contract.linked = null
 			contract.update_icon()
@@ -166,9 +166,8 @@ var/PriorityQueue/all_feeds
 			else
 				to_chat(usr, "Insufficent funds to sign contract.")
 				return
-
-	..()
-
+	else
+		..()
 
 
 
@@ -210,6 +209,26 @@ var/PriorityQueue/all_feeds
 		icon_state = "contract-pending"
 	else
 		icon_state = "contract"
+		
+/obj/item/weapon/paper/contract/recurring/show_content(mob/user, forceshow)
+	var/can_read = (istype(user, /mob/living/carbon/human) || isghost(user) || istype(user, /mob/living/silicon)) || forceshow
+	if(!forceshow && istype(user,/mob/living/silicon/ai))
+		var/mob/living/silicon/ai/AI = user
+		can_read = get_dist(src, AI.camera) < 2
+	var/info2 = info
+	if(cancelled || !linked)
+		info2 += "<br>This contract has been cancelled. This can be shredded."
+	else if(approved)
+		info2 += "<br>This contract has been finalized. This is just for record keeping."
+	else if(signed)
+		info2 += "<br>This contract has been signed and is pending finalization."
+	else if(src.Adjacent(user) && !signed)
+		info2 += "<br><A href='?src=\ref[src];pay=1'>Scan lace to sign contract.</A>"
+	else
+		info2 += "<br>Scan lace to sign contract."
+	user << browse("<HTML><HEAD><TITLE>[name]</TITLE></HEAD><BODY bgcolor='[color]'>[can_read ? info2 : stars(info)][stamps]</BODY></HTML>", "window=[name]")
+	onclose(user, "[name]")
+		
 /obj/item/weapon/paper/contract/show_content(mob/user, forceshow)
 	var/can_read = (istype(user, /mob/living/carbon/human) || isghost(user) || istype(user, /mob/living/silicon)) || forceshow
 	if(!forceshow && istype(user,/mob/living/silicon/ai))
@@ -378,6 +397,8 @@ var/PriorityQueue/all_feeds
 
 /datum/NewsStory/proc/allowed(var/real_name)
 	if(real_name in purchased)
+		return 1
+	if(!cost)
 		return 1
 	return 0
 
@@ -738,7 +759,7 @@ var/PriorityQueue/all_feeds
 	if(password)
 		var/datum/world_faction/found_faction
 		for(var/datum/world_faction/fac in GLOB.all_world_factions)
-			if(fac.uid == name)
+			if(fac && fac.uid == name)
 				found_faction = fac
 				break
 		if(!found_faction) return
@@ -746,7 +767,7 @@ var/PriorityQueue/all_feeds
 		return found_faction
 	var/datum/world_faction/found_faction
 	for(var/datum/world_faction/fac in GLOB.all_world_factions)
-		if(fac.uid == name)
+		if(fac && fac.uid == name)
 			found_faction = fac
 			break
 	return found_faction
@@ -934,7 +955,7 @@ var/PriorityQueue/all_feeds
 	nexus.network.password = ""
 	nexus.network.invisible = 0
 
-	GLOB.all_world_factions |= nexus
+	LAZYDISTINCTADD(GLOB.all_world_factions, nexus)
 
 
 /datum/world_faction/democratic/New()
@@ -1468,7 +1489,7 @@ var/PriorityQueue/all_feeds
 
 	limits.limit_shuttles = 3
 
-	limits.limit_area = 100000
+	limits.limit_area = 200000
 
 	limits.limit_tcomms = 5
 
@@ -1718,13 +1739,13 @@ var/PriorityQueue/all_feeds
 	if(holder)
 		if(stock_holders.len == 1) // last stock holder
 			stock_holders.Cut()
-			GLOB.all_world_factions -= src
+			LAZYREMOVE(GLOB.all_world_factions, src)
 			qdel(src)
 			return
 		else
 			var/remainder = holder.stocks % (stock_holders.len-1)
 			var/division = (holder.stocks-remainder)/(stock_holders.len-1)
-			stock_holders -= holder
+			stock_holders -= real_name
 			for(var/datum/stockholder/secondholder in stock_holders)
 				secondholder.stocks += division
 			if(remainder)
@@ -1893,6 +1914,7 @@ var/PriorityQueue/all_feeds
 	possible |= module.spec.hourly_objectives
 	var/chose_type = pick(possible)
 	hourly_objective = new chose_type()
+	hourly_objective.parent = src
 	hourly_assigned = world.realtime
 /datum/world_faction/business/proc/assign_daily_objective()
 	var/list/possible = list()
@@ -1900,6 +1922,7 @@ var/PriorityQueue/all_feeds
 	possible |= module.spec.daily_objectives
 	var/chose_type = pick(possible)
 	daily_objective = new chose_type()
+	daily_objective.parent = src
 	daily_assigned = world.realtime
 /datum/world_faction/business/proc/assign_weekly_objective()
 	var/list/possible = list()
@@ -1907,6 +1930,7 @@ var/PriorityQueue/all_feeds
 	possible |= module.spec.weekly_objectives
 	var/chose_type = pick(possible)
 	weekly_objective = new chose_type()
+	weekly_objective.parent = new chose_type()
 	weekly_assigned = world.realtime
 
 /datum/world_faction/business/New()
@@ -2097,7 +2121,7 @@ var/PriorityQueue/all_feeds
 		if(holder.real_name == real_name) return 1
 
 /datum/stock_proposal/proc/is_started_by(var/real_name)
-	if(started_by.real_name == real_name) return 1
+	if(started_by == real_name) return 1
 
 
 /datum/stock_proposal/proc/get_support()
@@ -2126,8 +2150,18 @@ var/PriorityQueue/all_feeds
 			break
 	if(!debts)
 		debts = list()
+	if(central_account)
+		central_account.connected_business = src
 	..()
 
+/datum/world_faction/business/after_load()
+	if(CEO)
+		if(!CEO.accesses.len)
+			var/datum/accesses/access = new()
+			access.name = "CEO"
+			access.pay = 45
+			CEO.accesses |= access
+	..()
 /datum/world_faction/proc/get_limits()
 	return limits
 
@@ -2449,13 +2483,9 @@ var/PriorityQueue/all_feeds
 //Otherwise, when globabl variables are initialized, the all_world_faction list may or may not be overwritten on startup, when not loading a save.
 /obj/faction_spawner/Initialize()
 	..()
-	return INITIALIZE_HINT_LATELOAD
-
-/obj/faction_spawner/LateInitialize()
 	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
 		if(existing_faction.uid == uid)
-			qdel(src)
-			return
+			return INITIALIZE_HINT_QDEL
 	var/datum/world_faction/fact = new()
 	fact.name = name
 	fact.abbreviation = name_short
@@ -2470,17 +2500,16 @@ var/PriorityQueue/all_feeds
 	fact.network.invisible = network_invisible
 	fact.starter_outfit = starter_outfit
 	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
-	qdel(src)
-	return
+	return INITIALIZE_HINT_QDEL
 
 /obj/faction_spawner/democratic
 	var/purpose = ""
 
-/obj/faction_spawner/democratic/LateInitialize()
+/obj/faction_spawner/democratic/Initialize()
+	..()
 	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
 		if(existing_faction.uid == uid)
-			qdel(src)
-			return
+			return INITIALIZE_HINT_QDEL
 	var/datum/world_faction/democratic/fact = new()
 	fact.name = name
 	fact.abbreviation = name_short
@@ -2496,8 +2525,7 @@ var/PriorityQueue/all_feeds
 	fact.network.invisible = network_invisible
 	fact.starter_outfit = starter_outfit
 	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
-	qdel(src)
-	return
+	return INITIALIZE_HINT_QDEL
 
 
 
@@ -2524,6 +2552,7 @@ var/PriorityQueue/all_feeds
 		if(parent)
 			var/datum/transaction/Te = new("Completed Objective", "Nexus Economic Stimulus", payout, "Nexus Economic Module")
 			parent.central_account.do_transaction(Te)
+			parent.research.points += research_payout
 		return 1
 
 /datum/module_objective/proc/get_status()
@@ -2869,7 +2898,7 @@ var/PriorityQueue/all_feeds
 	limit_drills = 5
 	limit_botany = 10
 	limit_shuttles = 10
-	limit_area = 100000
+	limit_area = 200000 //size of the nexus at most 3z levels of 255x255
 	limit_tcomms = 5
 	limit_tech_general = 4
 	limit_tech_engi = 4
@@ -3286,7 +3315,7 @@ var/PriorityQueue/all_feeds
 		levels |= new x()
 
 /datum/business_module/engineering
-	cost = 800
+	cost = 1400
 	name = "Engineering"
 	desc = "An engineering business has tools to develop areas of the station and construct shuttles plus the unique capacity to manage private radio communications. Engineering businesses can reserve larger spaces than other businesses and develop those into residential areas to be leased to individuals."
 	levels = list(/datum/machine_limits/eng/one, /datum/machine_limits/eng/two, /datum/machine_limits/eng/three, /datum/machine_limits/eng/four)
@@ -3294,7 +3323,7 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/revenue, /datum/module_objective/hourly/employees, /datum/module_objective/hourly/cost, /datum/module_objective/hourly/contract)
 	daily_objectives = list(/datum/module_objective/daily/revenue, /datum/module_objective/daily/employees, /datum/module_objective/daily/cost, /datum/module_objective/daily/contract)
 	weekly_objectives = list(/datum/module_objective/weekly/revenue, /datum/module_objective/weekly/employees, /datum/module_objective/weekly/cost, /datum/module_objective/weekly/contract)
-	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/clothing/gloves/insulated/cheap = 2, /obj/item/weapon/storage/belt/utility/full = 2)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/clothing/gloves/insulated/cheap = 2, /obj/item/weapon/storage/belt/utility/full = 2)
 
 /datum/business_spec/eng/realestate
 	name = "Real-Estate"
@@ -3308,7 +3337,7 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/medical
-	cost = 700
+	cost = 1200
 	name = "Medical"
 	desc = "A medical firm has unqiue capacity to develop medications and implants. Programs can be used to register clients under your care and recieve a weekly insurance payment from them, in exchange for tracking their health and responding to medical emergencies."
 	specs = list(/datum/business_spec/medical/pharma, /datum/business_spec/medical/paramedic)
@@ -3316,7 +3345,7 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/visitors, /datum/module_objective/hourly/employees, /datum/module_objective/hourly/cost, /datum/module_objective/hourly/contract)
 	daily_objectives = list(/datum/module_objective/daily/visitors, /datum/module_objective/daily/employees, /datum/module_objective/daily/cost, /datum/module_objective/daily/contract)
 	weekly_objectives = list(/datum/module_objective/weekly/visitors, /datum/module_objective/weekly/employees, /datum/module_objective/weekly/cost, /datum/module_objective/weekly/contract)
-	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/weapon/storage/firstaid/surgery/full = 1, /obj/item/clothing/gloves/latex = 2, /obj/item/device/scanner/health = 2)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/weapon/storage/firstaid/surgery/full = 1, /obj/item/clothing/gloves/latex = 2, /obj/item/device/scanner/health = 2)
 
 /datum/business_spec/medical/paramedic
 	name = "Paramedic"
@@ -3333,15 +3362,15 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/retail
-	cost = 700
+	cost = 1200
 	name = "Retail"
 	desc = "A retail business has exclusive production capacity so that they can sell clothing and furniture to individuals and organizations. With additional specialization they can branch out into combat equipment or engineering supplies, but they are reliant on the material market to supply their production."
 	levels = list(/datum/machine_limits/retail/one, /datum/machine_limits/retail/two, /datum/machine_limits/retail/three, /datum/machine_limits/retail/four)
 	specs = list(/datum/business_spec/retail/combat, /datum/business_spec/retail/bigstore)
-	hourly_objectives = list(/datum/module_objective/hourly/visitors, /datum/module_objective/hourly/employees, /datum/module_objective/hourly/cost, /datum/module_objective/hourly/sales, /datum/module_objective/weekly/fabricate, /datum/module_objective/hourly/revenue)
-	daily_objectives = list(/datum/module_objective/daily/visitors, /datum/module_objective/daily/employees, /datum/module_objective/daily/cost, /datum/module_objective/daily/sales, /datum/module_objective/weekly/fabricate, /datum/module_objective/daily/revenue)
+	hourly_objectives = list(/datum/module_objective/hourly/visitors, /datum/module_objective/hourly/employees, /datum/module_objective/hourly/cost, /datum/module_objective/hourly/sales, /datum/module_objective/hourly/fabricate, /datum/module_objective/hourly/revenue)
+	daily_objectives = list(/datum/module_objective/daily/visitors, /datum/module_objective/daily/employees, /datum/module_objective/daily/cost, /datum/module_objective/daily/sales, /datum/module_objective/daily/fabricate, /datum/module_objective/daily/revenue)
 	weekly_objectives = list(/datum/module_objective/weekly/visitors, /datum/module_objective/weekly/employees, /datum/module_objective/weekly/cost, /datum/module_objective/weekly/sales, /datum/module_objective/weekly/fabricate, /datum/module_objective/weekly/revenue)
-	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 4, /obj/item/stack/material/glass/ten = 4)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 4, /obj/item/stack/material/glass/ten = 4)
 
 /datum/business_spec/retail/combat
 	name = "Combat"
@@ -3356,7 +3385,7 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/service
-	cost = 700
+	cost = 1100
 	name = "Service"
 	desc = "A service business has a fabricator that can produce culinary and botany equipment. A service business can serve food or drink and supply freshly grown plants for other organizations, a crucial source of cloth and biomass."
 	levels = list(/datum/machine_limits/service/one, /datum/machine_limits/service/two, /datum/machine_limits/service/three, /datum/machine_limits/service/four)
@@ -3364,7 +3393,7 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/sales, /datum/module_objective/hourly/cost)
 	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/sales, /datum/module_objective/daily/cost)
 	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/sales, /datum/module_objective/weekly/cost)
-	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 3, /obj/item/stack/material/glass/ten = 3, /obj/item/seeds/potatoseed = 1, /obj/item/seeds/towermycelium = 1)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 3, /obj/item/stack/material/glass/ten = 3, /obj/item/seeds/potatoseed = 1, /obj/item/seeds/towermycelium = 1)
 
 /datum/business_spec/service/culinary
 	name = "Culinary"
@@ -3382,7 +3411,7 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/mining
-	cost = 800
+	cost = 1400
 	name = "Mining"
 	desc = "Mining companies send teams out into the hostile outer-space armed with picks, drills and a variety of other EVA equipment plus weapons and armor to defend themselves. The ores they recover can be processed and then sold on the Material Marketplace to other organizations for massive profits."
 	levels = list(/datum/machine_limits/mining/one, /datum/machine_limits/mining/two, /datum/machine_limits/mining/three, /datum/machine_limits/mining/four)
@@ -3390,7 +3419,7 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/travel, /datum/module_objective/hourly/cost)
 	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/travel, /datum/module_objective/daily/cost)
 	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/travel, /datum/module_objective/weekly/cost)
-	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/weapon/pickaxe = 2, /obj/item/clothing/head/helmet/space/mining = 2, /obj/item/clothing/suit/space/mining = 2)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/weapon/pickaxe = 2, /obj/item/clothing/head/helmet/space/mining = 2, /obj/item/clothing/suit/space/mining = 2)
 
 
 
@@ -3408,7 +3437,7 @@ var/PriorityQueue/all_feeds
 	weekly_objectives = list(/datum/module_objective/weekly/monsters)
 
 /datum/business_module/media
-	cost = 600
+	cost = 1100
 	name = "Media"
 	desc = "Media companies have simple production and tech capacities but exclusive access to programs that can publish books and news articles for paid redistribution. It is also much less expensive than other types, making it a good choice for generic business."
 	levels = list(/datum/machine_limits/media/one, /datum/machine_limits/media/two, /datum/machine_limits/media/three, /datum/machine_limits/media/four)
@@ -3416,7 +3445,7 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/sales)
 	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/sales)
 	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/sales)
-	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/device/camera = 2, /obj/item/weapon/paper_bin = 1, /obj/item/weapon/pen = 2)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/device/camera = 2, /obj/item/weapon/paper_bin = 1, /obj/item/weapon/pen = 2)
 
 
 /datum/business_spec/media/journalism

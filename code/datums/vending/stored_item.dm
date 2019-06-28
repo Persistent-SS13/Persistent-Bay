@@ -7,7 +7,7 @@
 
 /datum/stored_items/New(var/atom/storing_object, var/path, var/name = null, var/amount = 0)
 	if(!istype(storing_object))
-		CRASH("Unexpected storing object.")
+		CRASH("Unexpected storing object. [storing_object]\ref[storing_object] of type [storing_object ? storing_object.type : "null"]. path: [path], name: [name], amount: [amount]")
 	src.storing_object = storing_object
 	src.item_path = path
 	src.amount = amount

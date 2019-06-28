@@ -619,17 +619,17 @@ var/global/floorIsLava = 0
 
 
 
-/datum/admins/proc/Jobbans()
-	if(!check_rights(R_BAN))	return
+// /datum/admins/proc/Jobbans()
+// 	if(!check_rights(R_BAN))	return
 
-	var/dat = "<B>Job Bans!</B><HR><table>"
-	for(var/t in jobban_keylist)
-		var/r = t
-		if( findtext(r,"##") )
-			r = copytext( r, 1, findtext(r,"##") )//removes the description
-		dat += text("<tr><td>[t] (<A href='?src=\ref[src];removejobban=[r]'>unban</A>)</td></tr>")
-	dat += "</table>"
-	usr << browse(dat, "window=ban;size=400x400")
+// 	var/dat = "<B>Job Bans!</B><HR><table>"
+// 	for(var/t in jobban_keylist)
+// 		var/r = t
+// 		if( findtext(r,"##") )
+// 			r = copytext( r, 1, findtext(r,"##") )//removes the description
+// 		dat += text("<tr><td>[t] (<A href='?src=\ref[src];removejobban=[r]'>unban</A>)</td></tr>")
+// 	dat += "</table>"
+// 	usr << browse(dat, "window=ban;size=400x400")
 
 /datum/admins/proc/Game()
 	if(!check_rights(0))	return
@@ -786,21 +786,21 @@ var/global/floorIsLava = 0
 	log_and_message_admins("toggled OOC.")
 	SSstatistics.add_field_details("admin_verb","TOOC") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
-/datum/admins/proc/toggleaooc()
-	set category = "Server"
-	set desc="Globally Toggles AOOC"
-	set name="Toggle AOOC"
+// /datum/admins/proc/toggleaooc()
+// 	set category = "Server"
+// 	set desc="Globally Toggles AOOC"
+// 	set name="Toggle AOOC"
 
-	if(!check_rights(R_ADMIN))
-		return
+// 	if(!check_rights(R_ADMIN))
+// 		return
 
-	config.aooc_allowed = !(config.aooc_allowed)
-	if (config.aooc_allowed)
-		to_world("<B>The AOOC channel has been globally enabled!</B>")
-	else
-		to_world("<B>The AOOC channel has been globally disabled!</B>")
-	log_and_message_admins("toggled AOOC.")
-	SSstatistics.add_field_details("admin_verb","TAOOC") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+// 	config.aooc_allowed = !(config.aooc_allowed)
+// 	if (config.aooc_allowed)
+// 		to_world("<B>The AOOC channel has been globally enabled!</B>")
+// 	else
+// 		to_world("<B>The AOOC channel has been globally disabled!</B>")
+// 	log_and_message_admins("toggled AOOC.")
+// 	SSstatistics.add_field_details("admin_verb","TAOOC") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /datum/admins/proc/togglelooc()
 	set category = "Server"
@@ -924,6 +924,21 @@ var/global/floorIsLava = 0
 		cryo.occupant = H
 		cryo.despawn_occupant(1)
 **/
+/datum/admins/proc/auditbusiness()
+	set category = "Server"
+	set desc="Audit Stocks"
+	set name="Audit Stocks"
+
+	if(!check_rights(R_ADMIN))
+		return
+	for(var/datum/world_faction/business/faction in GLOB.all_world_factions)
+		var/total_stocks = 0
+		for(var/x in faction.stock_holders)
+			var/datum/stockholder/holder = faction.stock_holders[x]
+			total_stocks += holder.stocks
+
+			if(total_stocks > 100)
+				message_admins("[faction.name] has over 100 STOCKS. investigate and correct the issue.")
 
 
 /datum/admins/proc/delete_record()
@@ -1049,8 +1064,8 @@ var/global/floorIsLava = 0
 	if(!check_rights(R_ADMIN))
 		return
 	Load_World()
-**/	
-	
+**/
+
 /datum/admins/proc/toggleoocdead()
 	set category = "Server"
 	set desc="Toggle Dead OOC."
@@ -1082,14 +1097,14 @@ var/global/floorIsLava = 0
 	log_and_message_admins(long_message)
 	SSstatistics.add_field_details("admin_verb","THUB") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc
 
-/datum/admins/proc/toggletraitorscaling()
-	set category = "Server"
-	set desc="Toggle traitor scaling"
-	set name="Toggle Traitor Scaling"
-	config.traitor_scaling = !config.traitor_scaling
-	log_admin("[key_name(usr)] toggled Traitor Scaling to [config.traitor_scaling].")
-	message_admins("[key_name_admin(usr)] toggled Traitor Scaling [config.traitor_scaling ? "on" : "off"].", 1)
-	SSstatistics.add_field_details("admin_verb","TTS") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+// /datum/admins/proc/toggletraitorscaling()
+// 	set category = "Server"
+// 	set desc="Toggle traitor scaling"
+// 	set name="Toggle Traitor Scaling"
+// 	config.traitor_scaling = !config.traitor_scaling
+// 	log_admin("[key_name(usr)] toggled Traitor Scaling to [config.traitor_scaling].")
+// 	message_admins("[key_name_admin(usr)] toggled Traitor Scaling [config.traitor_scaling ? "on" : "off"].", 1)
+// 	SSstatistics.add_field_details("admin_verb","TTS") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /datum/admins/proc/toggleenter()
 	set category = "Server"
@@ -1117,54 +1132,54 @@ var/global/floorIsLava = 0
 	world.update_status()
 	SSstatistics.add_field_details("admin_verb","TAI") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
-/datum/admins/proc/toggleaban()
-	set category = "Server"
-	set desc="Respawn basically"
-	set name="Toggle Respawn"
-	config.abandon_allowed = !(config.abandon_allowed)
-	if(config.abandon_allowed)
-		to_world("<B>You may now respawn.</B>")
-	else
-		to_world("<B>You may no longer respawn :(</B>")
-	log_and_message_admins("toggled respawn to [config.abandon_allowed ? "On" : "Off"].")
-	world.update_status()
-	SSstatistics.add_field_details("admin_verb","TR") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+// /datum/admins/proc/toggleaban()
+// 	set category = "Server"
+// 	set desc="Respawn basically"
+// 	set name="Toggle Respawn"
+// 	config.abandon_allowed = !(config.abandon_allowed)
+// 	if(config.abandon_allowed)
+// 		to_world("<B>You may now respawn.</B>")
+// 	else
+// 		to_world("<B>You may no longer respawn :(</B>")
+// 	log_and_message_admins("toggled respawn to [config.abandon_allowed ? "On" : "Off"].")
+// 	world.update_status()
+// 	SSstatistics.add_field_details("admin_verb","TR") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
-/datum/admins/proc/toggle_aliens()
-	set category = "Server"
-	set desc="Toggle alien mobs"
-	set name="Toggle Aliens"
-	if(!check_rights(R_ADMIN))
-		return
+// /datum/admins/proc/toggle_aliens()
+// 	set category = "Server"
+// 	set desc="Toggle alien mobs"
+// 	set name="Toggle Aliens"
+// 	if(!check_rights(R_ADMIN))
+// 		return
 
-	config.aliens_allowed = !config.aliens_allowed
-	log_admin("[key_name(usr)] toggled Aliens to [config.aliens_allowed].")
-	message_admins("[key_name_admin(usr)] toggled Aliens [config.aliens_allowed ? "on" : "off"].", 1)
-	SSstatistics.add_field_details("admin_verb","TA") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+// 	config.aliens_allowed = !config.aliens_allowed
+// 	log_admin("[key_name(usr)] toggled Aliens to [config.aliens_allowed].")
+// 	message_admins("[key_name_admin(usr)] toggled Aliens [config.aliens_allowed ? "on" : "off"].", 1)
+// 	SSstatistics.add_field_details("admin_verb","TA") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
-/datum/admins/proc/toggle_alien_eggs()
-	set category = "Server"
-	set desc="Toggle xenomorph egg laying"
-	set name="Toggle Alien Eggs"
+// /datum/admins/proc/toggle_alien_eggs()
+// 	set category = "Server"
+// 	set desc="Toggle xenomorph egg laying"
+// 	set name="Toggle Alien Eggs"
 
-	if(!check_rights(R_ADMIN))
-		return
-	config.alien_eggs_allowed = !config.alien_eggs_allowed
-	log_admin("[key_name(usr)] toggled Alien Egg Laying to [config.alien_eggs_allowed].")
-	message_admins("[key_name_admin(usr)] toggled Alien Egg Laying [config.alien_eggs_allowed ? "on" : "off"].", 1)
-	SSstatistics.add_field_details("admin_verb","AEA") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+// 	if(!check_rights(R_ADMIN))
+// 		return
+// 	config.alien_eggs_allowed = !config.alien_eggs_allowed
+// 	log_admin("[key_name(usr)] toggled Alien Egg Laying to [config.alien_eggs_allowed].")
+// 	message_admins("[key_name_admin(usr)] toggled Alien Egg Laying [config.alien_eggs_allowed ? "on" : "off"].", 1)
+// 	SSstatistics.add_field_details("admin_verb","AEA") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 
-/datum/admins/proc/toggle_space_ninja()
-	set category = "Server"
-	set desc="Toggle space ninjas spawning."
-	set name="Toggle Space Ninjas"
-	if(!check_rights(R_ADMIN))
-		return
+// /datum/admins/proc/toggle_space_ninja()
+// 	set category = "Server"
+// 	set desc="Toggle space ninjas spawning."
+// 	set name="Toggle Space Ninjas"
+// 	if(!check_rights(R_ADMIN))
+// 		return
 
-	config.ninjas_allowed = !config.ninjas_allowed
-	log_and_message_admins("toggled Space Ninjas [config.ninjas_allowed ? "on" : "off"].")
-	SSstatistics.add_field_details("admin_verb","TSN") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+// 	config.ninjas_allowed = !config.ninjas_allowed
+// 	log_and_message_admins("toggled Space Ninjas [config.ninjas_allowed ? "on" : "off"].")
+// 	SSstatistics.add_field_details("admin_verb","TSN") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /datum/admins/proc/adjump()
 	set category = "Server"
@@ -1230,7 +1245,7 @@ var/global/floorIsLava = 0
 	set desc = "Spawn every possible custom closet. Do not do this on live."
 	set category = "Debug"
 
-	if(!check_rights(R_SPAWN))	
+	if(!check_rights(R_SPAWN))
 		return
 
 	if((input(usr, "Are you sure you want to spawn all these closets?", "So Many Closets") as null|anything in list("No", "Yes")) == "Yes")
@@ -1373,18 +1388,18 @@ var/global/floorIsLava = 0
 	log_and_message_admins("toggled welder vision.")
 	SSstatistics.add_field_details("admin_verb","TTWH") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
-/datum/admins/proc/toggleguests()
-	set category = "Server"
-	set desc="Guests can't enter"
-	set name="Toggle guests"
-	config.guests_allowed = !(config.guests_allowed)
-	if (!(config.guests_allowed))
-		to_world("<B>Guests may no longer enter the game.</B>")
-	else
-		to_world("<B>Guests may now enter the game.</B>")
-	log_admin("[key_name(usr)] toggled guests game entering [config.guests_allowed?"":"dis"]allowed.")
-	log_and_message_admins("toggled guests game entering [config.guests_allowed?"":"dis"]allowed.")
-	SSstatistics.add_field_details("admin_verb","TGU") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+// /datum/admins/proc/toggleguests()
+// 	set category = "Server"
+// 	set desc="Guests can't enter"
+// 	set name="Toggle guests"
+// 	config.guests_allowed = !(config.guests_allowed)
+// 	if (!(config.guests_allowed))
+// 		to_world("<B>Guests may no longer enter the game.</B>")
+// 	else
+// 		to_world("<B>Guests may now enter the game.</B>")
+// 	log_admin("[key_name(usr)] toggled guests game entering [config.guests_allowed?"":"dis"]allowed.")
+// 	log_and_message_admins("toggled guests game entering [config.guests_allowed?"":"dis"]allowed.")
+// 	SSstatistics.add_field_details("admin_verb","TGU") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /datum/admins/proc/output_ai_laws()
 	var/ai_number = 0
@@ -1640,13 +1655,13 @@ datum/admins/var/obj/item/weapon/paper/admin/faxreply // var to hold fax replies
 		faxreply = null
 	return
 
-/datum/admins/proc/generate_beacon()
-	set category = "Debug"
-	set desc = "Spawn the Nexus Gov + a beacon at (100,100,1)"
-	set name = "Generate Faction Beacon"
-	spawn_nexus_gov()
-	var/obj/structure/frontier_beacon/beacon
-	beacon = new /obj/structure/frontier_beacon(locate(100,100,1)) //
-	beacon.req_access_faction = "nexus"
-	to_chat(usr, "<b>Frontier Beacon and Nexus.)</b>")
-	return
+// /datum/admins/proc/generate_beacon()
+// 	set category = "Debug"
+// 	set desc = "Spawn the Nexus Gov + a beacon at (100,100,1)"
+// 	set name = "Generate Faction Beacon"
+// 	spawn_nexus_gov()
+// 	var/obj/structure/frontier_beacon/beacon
+// 	beacon = new /obj/structure/frontier_beacon(locate(100,100,1)) //
+// 	beacon.req_access_faction = "nexus"
+// 	to_chat(usr, "<b>Frontier Beacon and Nexus.)</b>")
+// 	return

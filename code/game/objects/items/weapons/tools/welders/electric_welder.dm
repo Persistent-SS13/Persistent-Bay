@@ -75,7 +75,7 @@
 		T.hotspot_expose(700, 5)
 
 /obj/item/weapon/tool/weldingtool/electric/on_update_icon()
-	icon_state = initial(icon_state) + (welding? 1 : "")
+	icon_state = initial(icon_state) + (welding? "1" : "")
 	item_state = welding ? "welder1" : "welder"
 	update_tank_underlay()
 	var/mob/M = loc

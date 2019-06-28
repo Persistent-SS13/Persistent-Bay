@@ -1,6 +1,5 @@
 /obj/machinery/power/apc/nexus
 	req_access_faction = NEXUS_FACTION_CITIZEN
-	faction_uid = NEXUS_FACTION_CITIZEN
 
 /obj/machinery/power/apc/nexus/high
 	cell_type = /obj/item/weapon/cell/high

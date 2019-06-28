@@ -35,7 +35,7 @@
 
 /obj/machinery/door_timer/LateInitialize()
 	for(var/obj/machinery/door/window/brigdoor/M in SSmachines.machinery)
-		if (M.id == src.id)
+		if (M.id_tag == src.id_tag)
 			targets += M
 
 	for(var/obj/machinery/flasher/F in SSmachines.machinery)
@@ -43,7 +43,7 @@
 			targets += F
 
 	for(var/obj/structure/closet/secure_closet/brig/C in world)
-		if(C.id == src.id)
+		if(C.id == src.id_tag)
 			targets += C
 
 	if(targets.len==0)

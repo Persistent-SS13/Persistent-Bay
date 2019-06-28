@@ -4,16 +4,35 @@
 	icon = 'icons/obj/xenoarchaeology.dmi'
 	icon_state = "anomaly_container"
 	density = 1
+	matter = list(MATERIAL_PLASTEEL = 10 SHEETS)
 
 	var/obj/machinery/artifact/contained
 
+/obj/structure/anomaly_container/New()
+	. = ..()
+	ADD_SAVED_VAR(contained)
+
+/obj/structure/anomaly_container/Destroy()
+	contained = null
+	. = ..()
+
 /obj/structure/anomaly_container/Initialize()
 	. = ..()
-	spawn(20)
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/structure/anomaly_container/LateInitialize()
+	. = ..()
 	if(!map_storage_loaded)
 		var/obj/machinery/artifact/A = locate() in loc
 		if(A)
 			contain(A)
+
+/obj/structure/anomaly_container/attackby(obj/item/O, mob/user)
+	if(default_deconstruction_wrench(O, user, 10 SECONDS))
+		dismantle()
+		return 1
+	else
+		return ..()
 
 /obj/structure/anomaly_container/attack_hand(var/mob/user)
 	release()

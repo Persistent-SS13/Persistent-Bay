@@ -11,6 +11,7 @@ var/const/OUTPUT_DELAY = 5 SECONDS //intervals between material being outputed b
 	layer = MOB_LAYER+1 // Overhead
 	anchored = 1
 	density = 1
+	circuit_type = /obj/item/weapon/circuitboard/recycler
 	var/safety_mode = 0 // Temporality stops the machine if it detects a mob
 	var/grinding = 0
 	var/icon_name = "grinder-o"
@@ -30,19 +31,33 @@ var/const/OUTPUT_DELAY = 5 SECONDS //intervals between material being outputed b
 	idle_power_usage = 100 //Watts
 	active_power_usage = 800 //Watts
 
+	//Radio stuff
+	id_tag 				= null
+	frequency 			= MISC_MACHINE_FREQ
+	radio_filter_in 	= RADIO_RECYCLER
+	radio_filter_out 	= RADIO_RECYCLER
+	radio_check_id 		= TRUE
+
 /obj/machinery/recycler/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/recycler(null)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(null)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(null)
-	update_icon()
+	ADD_SAVED_VAR(blood)
+	ADD_SAVED_VAR(stored_material)
+	ADD_SAVED_VAR(eat_dir)
+	ADD_SAVED_VAR(efficiency)
+
+/obj/machinery/recycler/SetupReagents()
+	. = ..()
 	if(!reagents)
 		create_reagents(500)
+
+/obj/machinery/recycler/Initialize()
+	. = ..()
 	assign_uid() //used for looping sound
+	queue_icon_update()
 
 /obj/machinery/recycler/Destroy()
 	dump_materials()
+	QDEL_NULL(sound_looping)
 	return ..()
 
 /obj/machinery/recycler/examine()
@@ -75,7 +90,7 @@ var/const/OUTPUT_DELAY = 5 SECONDS //intervals between material being outputed b
 		playsound(loc, "sparks", 75, 1, -1)
 		to_chat(user, "<span class='notice'>You use the cryptographic sequencer on the [name].</span>")
 
-/obj/machinery/recycler/update_icon()
+/obj/machinery/recycler/on_update_icon()
 	..()
 	var/is_powered = operable()
 	if(safety_mode)
@@ -334,5 +349,14 @@ var/const/OUTPUT_DELAY = 5 SECONDS //intervals between material being outputed b
 		istype(AM, /mob/living/carbon/human/farwa) ||\
 		istype(AM, /mob/living/carbon/human/neaera) ||\
 		isslime(AM)? TRUE : FALSE
+
+/obj/machinery/recycler/OnSignal(datum/signal/signal)
+	. = ..()
+	if(signal.data["activate"])
+		if(ison())
+			turn_off()
+		else if(isoff())
+			turn_idle()
+		update_sound()
 
 #undef RECYCLER_MAX_SANE_CONTAINER_DEPTH

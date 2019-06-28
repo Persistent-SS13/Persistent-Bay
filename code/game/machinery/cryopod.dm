@@ -18,9 +18,11 @@
 	var/disallow_occupant_types = list()
 
 	var/network = "default"
-	var/tmp/time_entered = 0
 	var/time_till_despawn = 60 SECONDS
-	var/tmp/atom/movable/occupant
+	var/tmp/time_despawn = 0 //Time in world.time to despawn the occupant
+	var/tmp/despawning = FALSE //Poor man's mutex, to prevent despawn from being called twice and break the save
+
+	var/mob/occupant
 	var/obj/item/device/radio/intercom/announce
 	var/obj/machinery/computer/cryopod/control_computer
 	var/tmp/last_no_computer_message = 0
@@ -55,9 +57,6 @@
 
 /obj/machinery/cryopod/SetupParts()
 	announce = new /obj/item/device/radio/intercom(src)
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/matter_bin(src))
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/scanning_module(src))
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/console_screen(src))
 	. = ..()
 
 /obj/machinery/cryopod/Destroy()
@@ -74,7 +73,7 @@
 	. = ..()
 
 /obj/machinery/cryopod/before_save()
-	if(occupant)
+	if(occupant && !despawning)
 		despawn_occupant()
 	..()
 
@@ -114,7 +113,7 @@
 			C.SetStasis(2)
 
 		//Allow a one minute gap between entering the pod and actually despawning.
-		if ((world.time - time_entered) < time_till_despawn)
+		if (time_despawn > world.time)
 			return
 
 		var/mob/M = occupant
@@ -273,8 +272,7 @@
 
 	occupant = A
 	A.forceMove(src)
-	time_entered = world.time
-
+	time_despawn = world.time + time_till_despawn
 	src.add_fingerprint(user)
 
 /obj/machinery/cryopod/proc/ejectOccupant()
@@ -288,10 +286,13 @@
 /obj/machinery/cryopod/proc/despawn_occupant(var/autocryo = 0)
 	if(!occupant)
 		return 0
+	if(despawning)
+		log_error("[src]\ref[src] tried to despawn occupant [occupant]\ref[occupant] twice!")
+		return 0
 
+	despawning = TRUE //Make sure we don't try to despawn twice at the same time for whatever reasons
 	var/mob/character
 	var/key
-	var/name = ""
 	var/saveslot = 0
 	var/islace = istype(occupant, /obj/item/organ/internal/stack)
 	occupant.should_save = 1
@@ -330,59 +331,6 @@
 	if(!saveslot)
 		saveslot = SScharacter_setup.find_character_save_slot(occupant, key)
 
-	//Ignore all items not on the preservation list.
-	var/list/items = occupant.contents.Copy()
-
-	for(var/obj/item/W in items)
-
-		var/preserve = null
-		// Snowflaaaake.
-		if(istype(W, /obj/item/device/mmi))
-			var/obj/item/device/mmi/brain = W
-			if(brain.brainmob && brain.brainmob.client && brain.brainmob.key)
-				preserve = 1
-			else
-				continue
-		else
-			for(var/T in preserve_items)
-				if(istype(W,T))
-					preserve = 1
-					break
-
-		if(preserve)
-			if(control_computer)
-				control_computer.add_retrievable(W, src)
-			else
-				W.forceMove(get_turf(src))
-
-
-	//Update any existing objectives involving this mob.
-	for(var/datum/objective/O in all_objectives)
-		// We don't want revs to get objectives that aren't for heads of staff. Letting
-		// them win or lose based on cryo is silly so we remove the objective.
-		if(O.target == character.mind)
-			if(O.owner && O.owner.current)
-				to_chat(O.owner.current, "<span class='warning'>You get the feeling your target is no longer within your reach...</span>")
-			qdel(O)
-
-	//Handle job slot/tater cleanup.
-	if(character.mind)
-		if(character.mind.assigned_job)
-			character.mind.assigned_job.clear_slot()
-
-		if(character.mind.objectives.len)
-			character.mind.objectives = null
-			character.mind.special_role = null
-
-	// Titles should really be fetched from data records
-	//  and records should not be fetched by name as there is no guarantee names are unique
-	var/role_alt_title =  (islace)? "LMI" : ((character.mind)? character.mind.role_alt_title : "Unknown")
-
-	if(control_computer)
-		control_computer.frozen_crew += "[character.real_name], [role_alt_title] - [stationtime2text()]"
-		control_computer._admin_logs += "[key_name(character)] ([role_alt_title]) at [stationtime2text()]"
-	log_and_message_admins("[key_name(character)] ([role_alt_title]) entered cryostorage.")
-
 	announce.autosay("[character.real_name] [on_store_message]", "[on_store_name]", character.GetFaction())
 	visible_message("<span class='notice'>\The [initial(name)] hums and hisses as it moves [character.real_name] into storage.</span>", 3)
 
@@ -391,23 +339,18 @@
 		control_computer.add_lace(occupant, src)
 
 	SScharacter_setup.save_character(saveslot, key, character)
-	if(req_access_faction == "betaquad")
-		var/savefile/E = new(beta_path(key, "[saveslot].sav"))
-		to_file(E["name"], name)
-		to_file(E["mob"], character)
-		to_file(E["records"], Retrieve_Record(name))
-	if(req_access_faction == "exiting")
-		var/savefile/E = new(beta_path(key, "[saveslot].sav"))
-		to_file(E["name"], name)
-		to_file(E["mob"], character)
-		to_file(E["records"], Retrieve_Record(name))
-
 	SetName(initial(src.name))
 	icon_state = base_icon_state
 	var/mob/new_player/player = new()
+	player.loc = locate(200,200,19)
+	if(occupant.client)
+		occupant.client.eye = player
 	player.key = key
+	player.loc = locate(200,200,19)
+	if(occupant && occupant.client)
+		occupant.client.eye = player
 	QDEL_NULL(occupant)
-
+	despawning = FALSE
 
 /*
  * Cryogenic refrigeration unit. Basically a despawner.

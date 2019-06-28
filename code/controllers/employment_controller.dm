@@ -74,4 +74,3 @@ var/datum/controller/employment_controller/employment_controller
 			if(!employee || !employee.client) continue
 			if(employee.real_name in paydata)
 				to_chat(employee, "Your neural lace buzzes letting you know you've been paid [paydata[employee.real_name]]$$ for work done in the last half hour.")
-

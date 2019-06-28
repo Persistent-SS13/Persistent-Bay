@@ -1,6 +1,53 @@
+/obj/item/clothing/head/helmet/space/civilian
+	name = "EVA softsuit helmet"
+	icon = 'icons/obj/clothing/head/softsuits.dmi'
+	icon_state = "civ_softhelm"
+	desc = "A flimsy helmet designed for work in a hazardous, low-pressure environment."
+	permeability_coefficient = 0
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 2,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 10,
+		DAM_STUN 	= 0)
+
+
+/obj/item/clothing/suit/space
+	name = "EVA softsuit"
+	desc = "Your average general use softsuit. Though lacking in protection that modern voidsuits give, its cheap cost and portable size makes it perfect for those still getting used to life on the frontier."
+	icon = 'icons/obj/clothing/suit/softsuits.dmi'
+	icon_state = "civ_softsuit"
+	item_state_slots = list(
+		slot_l_hand_str = "s_suit",
+		slot_r_hand_str = "s_suit",
+	)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 2,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 10,
+		DAM_STUN 	= 0)
+
+
+
 //Engineering softsuit
 /obj/item/clothing/head/helmet/space/engineering
 	name = "engineering softsuit helmet"
+	icon = 'icons/obj/clothing/head/softsuits.dmi'
 	icon_state = "eng_softhelm"
 	desc = "A flimsy helmet with basic radiation shielding. Its visor protects the user from bright UV lights."
 	item_state_slots = list(
@@ -47,6 +94,7 @@
 //Security softsuit
 /obj/item/clothing/head/helmet/space/security
 	name = "security softsuit helmet"
+	icon = 'icons/obj/clothing/head/softsuits.dmi'
 	icon_state = "sec_softhelm"
 	desc = "A flimsy helmet equipped with heat-resistent fabric."
 	item_state_slots = list(
@@ -95,6 +143,7 @@
 //Medical softsuit
 /obj/item/clothing/head/helmet/space/medical
 	name = "medical softsuit helmet"
+	icon = 'icons/obj/clothing/head/softsuits.dmi'
 	icon_state = "med_softhelm"
 	desc = "A flimsy helmet that protects the user just enough to be considered spaceworthy."
 	item_state_slots = list(
@@ -145,6 +194,7 @@
 //Mining softsuit
 /obj/item/clothing/head/helmet/space/mining
 	name = "mining softsuit helmet"
+	icon = 'icons/obj/clothing/head/softsuits.dmi'
 	icon_state = "miner_softhelm"
 	desc = "A flimsy helmet with extra thick fabric, you still aren't sure if it'll be enough to protect you."
 	item_state_slots = list(
@@ -191,6 +241,7 @@
 //Science softsuit, we don't have xenoarch but that's the only thing i can base its stats off of
 /obj/item/clothing/head/helmet/space/science
 	name = "scientist softsuit helmet"
+	icon = 'icons/obj/clothing/head/softsuits.dmi'
 	icon_state = "sci_softhelm"
 	desc = "A flimsy helmet that provides basic protection from radiation."
 	armor  = list(
@@ -226,9 +277,10 @@
 		DAM_STUN 	= 0)
 	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank/emergency,/obj/item/device/suit_cooling_unit,/obj/item/stack/flag,/obj/item/weapon/storage/excavation,/obj/item/weapon/pickaxe,/obj/item/device/scanner/health,/obj/item/device/measuring_tape,/obj/item/device/ano_scanner,/obj/item/device/depth_scanner,/obj/item/device/core_sampler,/obj/item/device/gps,/obj/item/weapon/pinpointer/radio,/obj/item/device/radio/beacon,/obj/item/weapon/pickaxe/xeno/hand,/obj/item/weapon/storage/bag/fossils)
 
-//Emergency softsuit 
+//Emergency softsuit
 /obj/item/clothing/head/helmet/space/emergency
 	name = "emergency softsuit"
+	icon = 'icons/obj/clothing/head/softsuits.dmi'
 	icon_state = "crisis_softhelm"
 	desc = "A simple helmet with a built in light, smells like mothballs."
 	flash_protection = FLASH_PROTECTION_NONE

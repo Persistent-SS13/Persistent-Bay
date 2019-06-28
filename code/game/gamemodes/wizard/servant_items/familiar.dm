@@ -10,6 +10,6 @@
 	armor = list(melee = 30, bullet = 5, laser = 10, energy = 30, bomb = 0, bio = 0, rad = 0)
 	species_restricted = list(SPECIES_HUMAN)
 
-/obj/item/clothing/under/familiargard/New()
+/obj/item/clothing/under/familiargarb/New()
 	..()
 	slowdown_per_slot[slot_w_uniform] = -3

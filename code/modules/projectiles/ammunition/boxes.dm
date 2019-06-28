@@ -123,6 +123,9 @@ Some standard magazines, speedloaders and clips
 /obj/item/ammo_magazine/speedloader/c44/emp
 	labels = list("emp")
 	ammo_type = /obj/item/ammo_casing/c44/emp
+/obj/item/ammo_magazine/speedloader/c44/nullglass
+	labels = list("psi")
+	ammo_type = /obj/item/ammo_casing/c44/nullglass
 
 //----------------------------------
 //	standard .50 speedloader
@@ -210,6 +213,7 @@ Some standard magazines, speedloaders and clips
 	caliber = CALIBER_9MM
 	ammo_type = /obj/item/ammo_casing/c9mm
 	max_ammo = 8
+	multiple_sprites = 1
 /obj/item/ammo_magazine/box/c9mm/empty
 	initial_ammo = 0
 /obj/item/ammo_magazine/box/c9mm/rubber
@@ -231,6 +235,7 @@ Some standard magazines, speedloaders and clips
 	caliber = CALIBER_9MM
 	ammo_type = /obj/item/ammo_casing/c9mm
 	max_ammo = 20
+	multiple_sprites = 1
 /obj/item/ammo_magazine/box/c9mm/_20/empty
 	initial_ammo = 0
 /obj/item/ammo_magazine/box/c9mm/_20/rubber
@@ -265,6 +270,7 @@ Some standard magazines, speedloaders and clips
 	matter = list(MATERIAL_STEEL = 2250)
 	ammo_type = /obj/item/ammo_casing/c45
 	max_ammo = 10
+	multiple_sprites = 1
 /obj/item/ammo_magazine/box/c45/empty
 	initial_ammo = 0
 /obj/item/ammo_magazine/box/c45/rubber
@@ -353,6 +359,7 @@ Some standard magazines, speedloaders and clips
 	ammo_type = /obj/item/ammo_casing/c556
 	max_ammo = 50
 	multiple_sprites = 1
+	slot_flags = SLOT_BELT
 /obj/item/ammo_magazine/box/machinegun/empty
 	initial_ammo = 0
 

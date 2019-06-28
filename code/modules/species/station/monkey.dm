@@ -50,7 +50,8 @@
 	force_cultural_info = list(
 		TAG_CULTURE =   CULTURE_MONKEY,
 		TAG_HOMEWORLD = HOME_SYSTEM_STATELESS,
-		TAG_FACTION =   FACTION_TEST_SUBJECTS
+		TAG_FACTION =   FACTION_TEST_SUBJECTS,
+		TAG_AMBITION = AMBITION_OPPORTUNITY, //Get some bannanas
 	)
 
 /datum/species/monkey/New()

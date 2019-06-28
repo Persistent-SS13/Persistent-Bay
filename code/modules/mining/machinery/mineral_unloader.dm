@@ -3,18 +3,7 @@
 	icon_state = "unloader"
 	input_turf =  WEST
 	output_turf = EAST
-
-/obj/machinery/mineral/unloading_machine/New()
-	..()
-
-/obj/machinery/mineral/unloading_machine/Initialize()
-	. = ..()
-	if(!map_storage_loaded)
-		component_parts = list(
-			new /obj/item/weapon/stock_parts/manipulator(src),
-			new /obj/item/weapon/stock_parts/manipulator(src),
-			new /obj/item/weapon/circuitboard/mining_unloader(src)
-			)
+	circuit_type = /obj/item/weapon/circuitboard/mining_unloader
 
 /obj/machinery/mineral/unloading_machine/Process()
 	if(input_turf && output_turf)

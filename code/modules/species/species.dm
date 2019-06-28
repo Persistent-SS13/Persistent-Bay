@@ -231,7 +231,7 @@
 		TAG_HOMEWORLD = list(HOME_SYSTEM_STATELESS),
 		TAG_FACTION =   list(FACTION_OTHER),
 		TAG_RELIGION =  list(RELIGION_OTHER, RELIGION_ATHEISM, RELIGION_AGNOSTICISM),
-		TAG_AMBITION = list(AMBITION_FREEDOM)
+		TAG_AMBITION = list(AMBITION_FREEDOM),
 	)
 	var/list/force_cultural_info =                list()
 	var/list/default_cultural_info =              list()

@@ -1,6 +1,7 @@
 /obj/item/weapon/gun/projectile/silenced
 	name = "silenced .45 pistol"
 	desc = "A handgun with an integral silencer. Compatible with standard mags."
+	icon = 'icons/obj/weapons/guns/silenced_pistol.dmi'
 	icon_state = "silenced_pistol"
 	w_class = ITEM_SIZE_NORMAL
 	caliber = CALIBER_45

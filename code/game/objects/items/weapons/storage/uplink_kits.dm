@@ -181,7 +181,7 @@
 
 /obj/item/weapon/storage/secure/briefcase/heavysniper
 	startswith = list(
-		/obj/item/weapon/gun/projectile/heavysniper,
+		/obj/item/weapon/gun/projectile/boltaction/heavysniper,
 		/obj/item/weapon/storage/box/ammo/sniperammo
 	)
 

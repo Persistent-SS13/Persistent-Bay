@@ -223,7 +223,7 @@ var/global/list/debug_data = list()
 
 	for(var/ind in 1 to loading.len)
 		var/variable = loading[ind]
-		if(f.dir.Find("[variable]"))
+		if(hasvar(src, variable) && f.dir.Find("[variable]"))
 			from_file(f["[variable]"],vars[variable])
 	if("[src.type]" in debug_data)
 		var/amount = debug_data["[src.type]"][1]

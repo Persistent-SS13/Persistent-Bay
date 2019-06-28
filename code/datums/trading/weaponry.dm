@@ -21,7 +21,7 @@
 	possible_trading_items = list(/obj/item/weapon/gun/projectile/pistol     = TRADER_ALL,
 								/obj/item/weapon/gun/projectile/pistol/m1911 = TRADER_ALL,
 								/obj/item/weapon/gun/projectile/pistol/sec   = TRADER_ALL,
-								/obj/item/weapon/gun/projectile/pistol/sec/MK       = TRADER_BLACKLIST,
+								/obj/item/weapon/gun/projectile/pistol/sec/MK   = TRADER_ALL,
 								/obj/item/weapon/gun/projectile/shotgun/pump = TRADER_SUBTYPES_ONLY,
 								/obj/item/ammo_magazine                      = TRADER_SUBTYPES_ONLY,
 								/obj/item/ammo_magazine/box/c762/empty       = TRADER_BLACKLIST,

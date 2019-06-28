@@ -172,3 +172,39 @@
 	name = "Science softsuit helmet"
 	id = "sci_softhelmet"
 	build_path = /obj/item/clothing/head/helmet/space/science
+
+/datum/design/item/voidfab/softsuit/helmet/emergency/fishbowl
+	name = "emergency fishbowl softsuit helmet"
+	id = "emr_softhelm_fish"
+	build_path = /obj/item/clothing/head/helmet/space
+/datum/design/item/voidfab/softsuit/suit/emergency/fishbowl
+	name = "emergency fishbowl softsuit"
+	id = "emr_softsuit_fish"
+	build_path = /obj/item/clothing/suit/space/emergency/fishbowl
+	
+/datum/design/item/voidfab/softsuit/helmet/emergency
+	name = "emergency softsuit helmet"
+	id = "emr_softhelm"
+	build_path = /obj/item/clothing/head/helmet/space/emergency
+/datum/design/item/voidfab/softsuit/suit/emergency
+	name = "emergency softsuit"
+	id = "emr_softsuit"
+	build_path = /obj/item/clothing/suit/space/emergency
+
+/datum/design/item/voidfab/softsuit/helmet/civilian
+	name = "civilian softsuit helmet"
+	id = "civ_softhelm"
+	build_path = /obj/item/clothing/head/helmet/space/civilian
+/datum/design/item/voidfab/softsuit/suit/civilian
+	name = "civilian softsuit"
+	id = "civ_softsuit"
+	build_path = /obj/item/clothing/suit/space/civilian 
+
+/datum/design/item/voidfab/softsuit/helmet/civilian/alt
+	name = "civilian fishbowl softsuit helmet"
+	id = "civ_softhelm_fish"
+	build_path = /obj/item/clothing/head/helmet/space
+/datum/design/item/voidfab/softsuit/suit/civilian/alt
+	name = "civilian fishbowl softsuit"
+	id = "civ_softsuit_fish"
+	build_path = /obj/item/clothing/suit/space

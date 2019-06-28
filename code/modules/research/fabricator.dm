@@ -79,6 +79,10 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	if(!istype(circuit))
 		CRASH("[src]\ref[src] no circuit found for the fabricator")
 
+/obj/machinery/fabricator/Destroy()
+	..()
+	QDEL_NULL(src)
+
 /obj/machinery/fabricator/Process()
 	..()
 	if(stat)
@@ -159,11 +163,12 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 			data["design_icon"] = user.browse_rsc_icon(selected_design.builds.icon, selected_design.builds.icon_state)
 			if(selected_design.research && selected_design.research != "")
 				var/datum/tech_entry/entry = SSresearch.files.get_tech_entry(selected_design.research)
-				if(!has_research(selected_design.research))
-					data["design_research"] = "<font color='red'>" + entry.name + "</font>"
-				else
-					data["design_research"] = "<font color='green'>" + entry.name + "</font>"
-				data["disk_uses"] = get_uses()
+				if(entry)
+					if(!has_research(selected_design.research))
+						data["design_research"] = "<font color='red'>" + entry.name + "</font>"
+					else
+						data["design_research"] = "<font color='green'>" + entry.name + "</font>"
+					data["disk_uses"] = get_uses()
 
 	if(menu == 2)
 		data["queue"] = get_queue_names()

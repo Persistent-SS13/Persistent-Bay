@@ -14,7 +14,8 @@
 	amount = 1
 	max_amount = 250
 
-	var/material/material
+	var/tmp/material/material
+	var/saved_material //Material name to save. Since saving material datum is not a good idea
 	var/datum/geosample/geologic_data
 	stacktype = /obj/item/stack/ore
 
@@ -22,13 +23,27 @@
 	if(_mat)
 		set_material_data_byname(_mat)
 	..(newloc)
-	ADD_SAVED_VAR(material)
+	ADD_SAVED_VAR(saved_material)
+	ADD_SAVED_VAR(geologic_data)
 
 /obj/item/stack/ore/after_load()
 	..()
-	material = SSmaterials.get_material_by_name(material.name)
-	set_material_data(material)
-	update_icon()
+	if(saved_material)
+		set_material_data_byname(saved_material)
+	else if(!material)
+		log_error("Loaded [src]\ref[src] with null material!")
+
+/obj/item/stack/ore/before_save()
+	. = ..()
+	if(material)
+		saved_material = material.name
+/obj/item/stack/ore/after_save()
+	. = ..()
+	saved_material = null //we don't need it anymore
+
+/obj/item/stack/ore/Initialize()
+	. = ..()
+	queue_icon_update()
 
 /obj/item/stack/ore/proc/set_material_data_byname(var/material_name)
 	set_material_data(SSmaterials.get_material_by_name(material_name))
@@ -60,7 +75,7 @@
 /obj/item/stack/ore/get_material()
 	return material
 
-/obj/item/stack/ore/update_icon()
+/obj/item/stack/ore/on_update_icon()
 	var/icstate = "lump"
 	var/iccolor = src.color
 	if(material)

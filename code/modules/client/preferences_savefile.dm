@@ -3,18 +3,18 @@
 
 /datum/preferences/proc/load_path_pref(ckey,filename="preferences.sav")
 	if(!ckey)	return
-	path = load_path(ckey, filename)
+	path = "data/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 	char_save_path = "data/player_saves/[copytext(ckey,1,2)]/[ckey]/"
 	savefile_version = SAVEFILE_VERSION_MAX
 	return path
 /datum/preferences/proc/beta_path(ckey,filename="preferences.sav")
 	if(!ckey) return
-	path =  beta_path(ckey, filename)
+	path =  "exports/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 	savefile_version = SAVEFILE_VERSION_MAX
 
 /datum/preferences/proc/exit_path(ckey,filename="preferences.sav")
 	if(!ckey)	return
-	path = exit_path(ckey, filename)
+	path = "exits/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 	savefile_version = SAVEFILE_VERSION_MAX
 
 /datum/preferences/proc/character_load_path(slot)
@@ -26,7 +26,7 @@
 	// if(!path)
 	path = load_path_pref(client_ckey, "preferences.sav")
 	if(!fexists(path))		return 0
-	var/savefile/S = new /savefile(path)
+	var/savefile/S = new(path)
 	if(!S)					return 0
 	S.cd = "/"
 
@@ -40,7 +40,7 @@
 	//if(!path || (path && (length(path) == 0) ) )
 	path = load_path_pref(client_ckey, "preferences.sav")
 	testing("preferences/save_preferences() : Set path to (path = [path])")
-	var/savefile/S = new /savefile(path)
+	var/savefile/S = new (path)
 	if(!S)					return 0
 	S.cd = "/"
 
@@ -77,9 +77,8 @@
 		// S.cd = GLOB.using_map.character_load_path(S, default_slot)
 
 	loaded_character = S
-	return 1
-
 	**/
+	return 1
 
 //This saves the initial character after creation is complete
 /datum/preferences/proc/save_character()
@@ -96,8 +95,7 @@
 	//return S
 
 /datum/preferences/proc/sanitize_preferences()
-	if(player_setup)
-		player_setup.sanitize_setup()
+	player_setup.sanitize_setup() //Leave it runtime if it must
 	if(!bonus_slots) bonus_slots = 0
 	if(!bonus_notes) bonus_notes = ""
 	return 1

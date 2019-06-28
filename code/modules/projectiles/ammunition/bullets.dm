@@ -111,6 +111,15 @@
 	projectile_type = /obj/item/projectile/ion/small
 	matter = list(MATERIAL_STEEL = 130, MATERIAL_URANIUM = 100, /datum/reagent/aluminum = 3)
 
+/obj/item/ammo_casing/c44/nullglass
+	name = ".44 haywire round"
+	desc = "A .44 magnum casing with a nullglass coating"
+	icon_state = "empcasing"
+	projectile_type = /obj/item/projectile/bullet/nullglass
+	matter = list(MATERIAL_STEEL = 130, MATERIAL_NULLGLASS = 100, /datum/reagent/aluminum = 3)
+/obj/item/ammo_casing/c44/nullglass/disrupts_psionics()
+	return src
+
 //--------------------------------
 //	.45 Rounds
 //--------------------------------

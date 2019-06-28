@@ -286,7 +286,7 @@
 				/obj/item/weapon/gun/projectile/revolver/mateba = 2,
 				/obj/item/weapon/gun/projectile/shotgun/doublebarrel = 4,
 				/obj/item/weapon/gun/projectile/shotgun/doublebarrel/sawn = 3,
-				/obj/item/weapon/gun/projectile/heavysniper = 1,
+				/obj/item/weapon/gun/projectile/boltaction/heavysniper = 1,
 				/obj/item/weapon/gun/projectile/shotgun/pump/combat = 2,
 	)
 

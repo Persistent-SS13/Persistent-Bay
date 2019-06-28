@@ -2,6 +2,7 @@
 /obj/item/clothing/head/helmet/space/void
 	name = "voidsuit helmet"
 	desc = "A primitive dark red space suit helmet. Its simple, yet effective design is an all time favorite for novice explorers throughout the generations."
+	icon = 'icons/obj/clothing/obj_head.dmi'
 	icon_state = "void"
 
 	heat_protection = HEAD
@@ -36,6 +37,7 @@
 
 /obj/item/clothing/suit/space/void
 	name = "voidsuit"
+	icon = 'icons/obj/clothing/obj_suit.dmi'
 	icon_state = "void"
 	//item_state = "syndie_hardsuit"
 	w_class = ITEM_SIZE_HUGE//bulky item

@@ -26,12 +26,12 @@
 		list(mode_name="short bursts",   burst=5, fire_delay=null, move_delay=4,    one_hand_penalty=5, burst_accuracy=list(0,-1,-1,-1,-2), dispersion=list(0.6, 0.6, 1.0, 1.0, 1.2)),
 		)
 
-/obj/item/weapon/gun/projectile/automatic/sec_smg/on_update_icon()
+/obj/item/weapon/gun/projectile/automatic/wt550/on_update_icon()
 	..()
 	if(ammo_magazine)
-		icon_state = "wt550-[round(ammo_magazine.stored_ammo.len,4)]"
+		icon_state = "[initial(icon_state)]-[round(ammo_magazine.stored_ammo.len,4)]"
 	else
-		icon_state = "wt550"
+		icon_state = initial(icon_state)
 
 //----------------------------------
 //	9mm top mounted smg Magazine

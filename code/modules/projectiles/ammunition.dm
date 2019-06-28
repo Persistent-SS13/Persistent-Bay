@@ -98,7 +98,7 @@
 	icon_state = "357"
 	icon = 'icons/obj/ammo.dmi'
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
-	slot_flags = SLOT_BELT
+	slot_flags = SLOT_BELT | SLOT_POCKET
 	item_state = "syringe_kit"
 	matter = list(MATERIAL_STEEL = 500)
 	throwforce = 5

@@ -20,7 +20,7 @@
 	var/network = "default"
 	var/time_till_despawn = 60 SECONDS
 	var/tmp/time_despawn = 0 //Time in world.time to despawn the occupant
-
+	var/tmp/despawning = FALSE //Poor man's mutex, to prevent despawn from being called twice and break the save
 
 	var/mob/occupant
 	var/obj/item/device/radio/intercom/announce
@@ -76,7 +76,7 @@
 	. = ..()
 
 /obj/machinery/cryopod/before_save()
-	if(occupant)
+	if(occupant && !despawning)
 		despawn_occupant()
 	..()
 
@@ -289,7 +289,11 @@
 /obj/machinery/cryopod/proc/despawn_occupant(var/autocryo = 0)
 	if(!occupant)
 		return 0
+	if(despawning)
+		log_error("[src]\ref[src] tried to despawn occupant [occupant]\ref[occupant] twice!")
+		return 0
 
+	despawning = TRUE //Make sure we don't try to despawn twice at the same time for whatever reasons
 	var/mob/character
 	var/key
 	var/name = ""
@@ -412,7 +416,7 @@
 	if(occupant && occupant.client)
 		occupant.client.eye = player
 	QDEL_NULL(occupant)
-
+	despawning = FALSE
 
 /*
  * Cryogenic refrigeration unit. Basically a despawner.

@@ -48,9 +48,9 @@
 
 /obj/item/weapon/gun/projectile/boltaction/imprifle/impriflesawn/update_icon()
 	if(bolt_open)
-		icon_state = "308boltsawed_alt"
+		icon_state = "[initial(icon_state)]-open"
 	else
-		icon_state = "308boltsawed"
+		icon_state = initial(icon_state)
 //rifle construction
 
 /obj/item/weapon/imprifleframe/imprifleframesawn

@@ -188,6 +188,7 @@
 	icon_state = "centrifuge"
 	anchored = 1
 	density = 1
+	circuit_type = /obj/item/weapon/circuitboard/honey_extractor
 
 	var/processing = 0
 	var/honey = 0
@@ -222,12 +223,19 @@
 			honey += processing
 			processing = 0
 			time_end_processing = 0
+			update_use_power(POWER_USE_IDLE)
 
 /obj/machinery/honey_extractor/attackby(var/obj/item/I, var/mob/user)
-	if(processing)
-		to_chat(user, "<span class='notice'>\The [src] is currently spinning, wait until it's finished.</span>")
-		return
+	if(default_deconstruction_screwdriver(user, I))
+		return 1
+	else if(default_deconstruction_crowbar(user, I))
+		return 1
+	else if(default_part_replacement(user, I))
+		return 1
 	else if(istype(I, /obj/item/honey_frame))
+		if(processing)
+			to_chat(user, "<span class='notice'>\The [src] is currently spinning, wait until it's finished.</span>")
+			return 
 		var/obj/item/honey_frame/H = I
 		if(!H.honey)
 			to_chat(user, "<span class='notice'>\The [H] is empty, put it into a beehive.</span>")
@@ -237,7 +245,12 @@
 		qdel(H)
 		time_end_processing = world.time + 5 SECONDS
 		update_icon()
+		update_use_power(POWER_USE_ACTIVE)
+		return 1
 	else if(istype(I, /obj/item/weapon/reagent_containers/glass))
+		if(processing)
+			to_chat(user, "<span class='notice'>\The [src] is currently spinning, wait until it's finished.</span>")
+			return 
 		if(!honey)
 			to_chat(user, "<span class='notice'>There is no honey in \the [src].</span>")
 			return
@@ -248,12 +261,14 @@
 		user.visible_message("<span class='notice'>\The [user] collects honey from \the [src] into \the [G].</span>", "<span class='notice'>You collect [transferred] units of honey from \the [src] into \the [G].</span>")
 		return 1
 
+	return ..()
+
 /obj/machinery/honey_extractor/on_update_icon()
 	. = ..()
 	if(processing)
-		icon_state = "centrifuge_moving"
+		icon_state = "[initial(icon_state)]_moving"
 	else
-		icon_state = "centrifuge"
+		icon_state = initial(icon_state)
 
 /obj/item/bee_smoker
 	name = "bee smoker"
@@ -268,7 +283,6 @@
 	icon = 'icons/obj/beekeeping.dmi'
 	icon_state = "honeyframe"
 	w_class = ITEM_SIZE_SMALL
-
 	var/honey = 0
 
 /obj/item/honey_frame/New()

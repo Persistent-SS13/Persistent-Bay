@@ -442,6 +442,10 @@ var/const/NO_EMAG_ACT = -50
 /obj/item/weapon/card/id/proc/prevent_tracking()
 	return 0
 
+/obj/item/weapon/card/id/after_load()
+	if(!selected_faction)
+		selected_faction = "nexus"
+
 /obj/item/weapon/card/id/proc/devalidate()
 	rank = "Devalidated"
 	assignment = "Devalidated"
@@ -454,7 +458,10 @@ var/const/NO_EMAG_ACT = -50
 		user << browse_rsc(front, "front.png")
 		user << browse_rsc(side, "side.png")
 	var/datum/browser/popup = new(user, "idcard", name, 600, 250)
-	popup.set_content(dat())
+	if(user.real_name == registered_name)
+		popup.set_content(self_dat())
+	else
+		popup.set_content(dat())
 	popup.set_title_image(usr.browse_rsc_icon(src.icon, src.icon_state))
 	popup.open()
 	return
@@ -528,7 +535,7 @@ var/const/NO_EMAG_ACT = -50
 			log_warning("human.set_id_info(): there is no bank account for [ckey], [src]\ref[src]. Skipping adding it to the id card!")
 	else
 		log_warning("human.set_id_info(): there is no mind for [src]\ref[src]. Skipping adding bank account to the id card!")
-	
+
 	var/datum/computer_file/report/crew_record/record = get_crewmember_record(real_name)
 	if(record)
 		id_card.sync_from_record(record)
@@ -545,8 +552,11 @@ var/const/NO_EMAG_ACT = -50
 		dat += text("Branch: []</A><BR>\n", military_branch ? military_branch.name : "\[UNSET\]")
 	if(GLOB.using_map.flags & MAP_HAS_RANK)
 		dat += text("Rank: []</A><BR>\n", military_rank ? military_rank.name : "\[UNSET\]")
+	var/datum/world_faction/faction = get_faction(selected_faction)
+	if(faction)
+		dat += text("Connected Organization: []</A><BR>\n", faction.name)
+		dat += text("Title: []</A><BR>\n", assignment)
 
-	dat += text("Assignment: []</A><BR>\n", assignment)
 	dat += text("Fingerprint: []</A><BR>\n", fingerprint_hash)
 	dat += text("Blood Type: []<BR>\n", blood_type)
 	dat += text("DNA Hash: []<BR><BR>\n", dna_hash)
@@ -554,6 +564,49 @@ var/const/NO_EMAG_ACT = -50
 		dat +="<td align = center valign = top>Photo:<br><img src=front.png height=80 width=80 border=4><img src=side.png height=80 width=80 border=4></td>"
 	dat += "</tr></table>"
 	return jointext(dat,null)
+
+/obj/item/weapon/card/id/proc/self_dat()
+	var/list/dat = list("<table><tr><td>")
+	dat += text("Name: []</A><BR>", "[formal_name_prefix][registered_name][formal_name_suffix]")
+	dat += text("Sex: []</A><BR>\n", sex)
+	dat += text("Age: []</A><BR>\n", age)
+
+	if(GLOB.using_map.flags & MAP_HAS_BRANCH)
+		dat += text("Branch: []</A><BR>\n", military_branch ? military_branch.name : "\[UNSET\]")
+	if(GLOB.using_map.flags & MAP_HAS_RANK)
+		dat += text("Rank: []</A><BR>\n", military_rank ? military_rank.name : "\[UNSET\]")
+	var/datum/world_faction/faction = get_faction(selected_faction)
+	if(faction)
+		dat += text("Connected Organization: []</A><BR>\n", faction.name)
+		dat += text("Title: []</A><BR>\n", assignment)
+		dat  += "<A href='byond://?src=\ref[src];changeorg=1'>Connect to different organization.</A><BR>"
+	dat += text("Fingerprint: []</A><BR>\n", fingerprint_hash)
+	dat += text("Blood Type: []<BR>\n", blood_type)
+	dat += text("DNA Hash: []<BR><BR>\n", dna_hash)
+	if(front && side)
+		dat +="<td align = center valign = top>Photo:<br><img src=front.png height=80 width=80 border=4><img src=side.png height=80 width=80 border=4></td>"
+	dat += "</tr></table>"
+	return jointext(dat,null)
+
+/obj/item/weapon/card/id/Topic(href, href_list)
+	if(href_list["changeorg"])
+		if(usr.real_name == registered_name)
+			var/list/choices = list()
+			for(var/datum/world_faction/faction in GLOB.all_world_factions)
+				if(Retrieve_Record_Faction(registered_name, faction))
+					choices |= faction
+			var/datum/world_faction/choice = input(usr, "Choose an organization to connect to.","ID Reconnect",null) as null|anything in choices
+			if(choice && in_range(usr, src))
+				var/datum/computer_file/report/crew_record/record = Retrieve_Record_Faction(registered_name, choice)
+				selected_faction = choice.uid
+				if(record) sync_from_record(record)
+				var/datum/browser/popup = new(usr, "idcard", name, 600, 250)
+				if(usr.real_name == registered_name)
+					popup.set_content(self_dat())
+				else
+					popup.set_content(dat())
+				popup.set_title_image(usr.browse_rsc_icon(src.icon, src.icon_state))
+				popup.open()
 
 /obj/item/weapon/card/id/attack_self(mob/user as mob)
 	user.visible_message("\The [user] shows you: \icon[src] [src.name]. The assignment on the card: <font color=navy>[get_faction_tag(selected_faction)]</font>-([src.assignment])",\
@@ -563,6 +616,8 @@ var/const/NO_EMAG_ACT = -50
 	return
 /obj/item/weapon/card/id/GetFaction()
 	return selected_faction
+
+
 /obj/item/weapon/card/id/GetAccess(var/faction_uid)
 	if(!valid) return list()
 	if(!faction_uid || faction_uid == "")
@@ -570,7 +625,7 @@ var/const/NO_EMAG_ACT = -50
 	var/list/final_access[0]
 	var/datum/world_faction/faction = get_faction(faction_uid)
 	if(faction)
-		if(faction.get_leadername() == registered_name)
+		if(sanitize(faction.get_leadername()) == sanitize(registered_name))
 			faction.rebuild_all_access()
 			for(var/x in faction.all_access)
 				final_access |= text2num(x)

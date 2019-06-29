@@ -98,7 +98,6 @@ var/list/floor_light_cache = list()
 		if(light_outer_range != default_light_outer_range || light_max_bright != default_light_max_bright || light_color != default_light_colour)
 			set_light(default_light_max_bright, default_light_inner_range, default_light_outer_range, l_color = default_light_colour)
 	else
-		turn_off()
 		if(light_outer_range || light_max_bright)
 			set_light(0)
 

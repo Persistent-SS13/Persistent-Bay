@@ -175,6 +175,46 @@
 	id = "sci_softhelmet"
 	build_path = /obj/item/clothing/head/helmet/space/science
 
+/datum/design/item/voidfab/softsuit/helmet/fishbowl
+	name = "fishbowl softsuit helmet"
+	id = "softhelm_fish"
+	build_path = /obj/item/clothing/head/helmet/space/fishbowl
+
+/datum/design/item/voidfab/softsuit/helmet/emergency/fishbowl
+	name = "emergency fishbowl softsuit helmet"
+	id = "emr_softhelm_fish"
+	build_path = /obj/item/clothing/head/helmet/space/emergency
+/datum/design/item/voidfab/softsuit/suit/emergency/fishbowl
+	name = "emergency fishbowl softsuit"
+	id = "emr_softsuit_fish"
+	build_path = /obj/item/clothing/suit/space/emergency
+	
+/datum/design/item/voidfab/softsuit/helmet/emergency
+	name = "emergency softsuit helmet"
+	id = "emr_softhelm"
+	build_path = /obj/item/clothing/head/helmet/space/emergency/alt
+/datum/design/item/voidfab/softsuit/suit/emergency
+	name = "emergency softsuit"
+	id = "emr_softsuit"
+	build_path = /obj/item/clothing/suit/space/emergency/alt
+
+/datum/design/item/voidfab/softsuit/helmet/civilian
+	name = "civilian softsuit helmet"
+	id = "civ_softhelm"
+	build_path = /obj/item/clothing/head/helmet/space/civilian
+/datum/design/item/voidfab/softsuit/suit/civilian
+	name = "civilian softsuit"
+	id = "civ_softsuit"
+	build_path = /obj/item/clothing/suit/space/civilian 
+
+/datum/design/item/voidfab/softsuit/helmet/civilian/alt
+	name = "civilian alternate softsuit helmet"
+	id = "civ_softhelm_alt"
+	build_path = /obj/item/clothing/head/helmet/space
+/datum/design/item/voidfab/softsuit/suit/civilian/alt
+	name = "civilian alternate softsuit"
+	id = "civ_softsuit_alt"
+	build_path = /obj/item/clothing/suit/space
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -198,6 +238,11 @@
 	name = "double-capacity air tank"
 	build_path = /obj/item/weapon/tank/emergency/oxygen/engi/empty
 	materials = list(MATERIAL_STEEL = 5 SHEETS)
+
+/datum/design/item/genfab/eva/oxygen_candle
+	name = "oxygen candle"
+	build_path = /obj/item/device/oxycandle
+	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_IRON = 0.5 SHEET, MATERIAL_ROCK_SALT = 1 SHEET) //An actual oxy candle uses iron powder and sodium cholorate, then heats to 300c to generate oxygen
 
 /datum/design/item/genfab/eva/adv/jetpack // tier 1
 	name = "Blue Jetpack"	//Just a fancy name for a jetpack, heh
@@ -275,22 +320,27 @@
 	time = 10
 /datum/design/item/genfab/miningtools/adv
 
+/datum/design/item/genfab/miningtools/flag
+	materials = list(MATERIAL_CLOTH = 1 SHEETS)
+	build_path = /obj/item/stack/flag
 
 /datum/design/item/genfab/miningtools/flag/red
-	materials = list(MATERIAL_CLOTH = 1 SHEETS)
 	build_path = /obj/item/stack/flag/red
 
 /datum/design/item/genfab/miningtools/flag/yellow
-	materials = list(MATERIAL_CLOTH = 1 SHEETS)
 	build_path = /obj/item/stack/flag/yellow
 
 /datum/design/item/genfab/miningtools/flag/green
-	materials = list(MATERIAL_CLOTH = 1 SHEETS)
 	build_path = /obj/item/stack/flag/green
 
 /datum/design/item/genfab/miningtools/flag/solgov
-	materials = list(MATERIAL_CLOTH = 1 SHEETS)
 	build_path = /obj/item/stack/flag/solgov
+
+/datum/design/item/genfab/miningtools/flag/blue
+	build_path = /obj/item/stack/flag/blue
+
+/datum/design/item/genfab/miningtools/flag/teal
+	build_path = /obj/item/stack/flag/teal
 
 /datum/design/item/engifab/miningtools/lantern
 	build_path = /obj/item/device/flashlight/lantern
@@ -308,6 +358,14 @@
 /datum/design/item/genfab/miningtools/hammer // 40
 	materials = list(MATERIAL_STEEL = 2 SHEETS)
 	build_path = /obj/item/weapon/pickaxe/hammer
+
+/datum/design/item/genfab/miningtools/shovel
+	build_path = /obj/item/weapon/shovel
+	materials = list(MATERIAL_WOOD = 1 SHEET, MATERIAL_STEEL = 1 SHEET)
+
+/datum/design/item/genfab/miningtools/spade
+	build_path = /obj/item/weapon/shovel/spade
+	materials = list(MATERIAL_STEEL = 2 SHEET)
 
 
 /datum/design/item/genfab/miningtools/adv/drill // 30

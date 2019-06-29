@@ -15,13 +15,11 @@
 	var/delay = 10
 	req_access = list(core_access_science_programs) //Only the R&D can change server settings.
 
-/obj/machinery/r_n_d/server/Initialize()
+/obj/machinery/r_n_d/server/New()
 	. = ..()
-	if(!map_storage_loaded)
-		LAZYADD(component_parts, new /obj/item/weapon/stock_parts/scanning_module(src))
-		LAZYADD(component_parts, new /obj/item/stack/cable_coil(src))
-		LAZYADD(component_parts, new /obj/item/stack/cable_coil(src))
-	RefreshParts()
+	ADD_SAVED_VAR(files)
+	ADD_SAVED_VAR(id_with_upload_string)
+	ADD_SAVED_VAR(id_with_download_string)
 
 /obj/machinery/r_n_d/server/Destroy()
 	griefProtection()

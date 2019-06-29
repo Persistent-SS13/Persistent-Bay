@@ -16,8 +16,8 @@ var/global/list/debug_data = list()
 	var/area_type = "/area"
 	var/name
 	var/list/turfs = list()
-	map_storage_saved_vars = "area_type;name;turfs"
-
+	map_storage_saved_vars = "area_type;name;turfs;shuttle"
+	var/shuttle
 /obj/item/map_storage_debugger
 	name = "DEBUG ITEM"
 	desc = "DEBUG ITEM"
@@ -223,7 +223,7 @@ var/global/list/debug_data = list()
 
 	for(var/ind in 1 to loading.len)
 		var/variable = loading[ind]
-		if(f.dir.Find("[variable]"))
+		if(hasvar(src, variable) && f.dir.Find("[variable]"))
 			from_file(f["[variable]"],vars[variable])
 	if("[src.type]" in debug_data)
 		var/amount = debug_data["[src.type]"][1]
@@ -381,6 +381,7 @@ var/global/list/debug_data = list()
 		holder.area_type = A.type
 		holder.name = A.name
 		holder.turfs = A.get_turf_coords()
+		holder.shuttle = A.shuttle
 		formatted_areas += holder
 	var/list/zones = list()
 	to_world("<font size=3 color='green'>Saving zones..</font>")
@@ -427,7 +428,6 @@ var/global/list/debug_data = list()
 /proc/Retrieve_Record(var/key, var/func = 1) // 2 = ATM account
 	for(var/datum/computer_file/report/crew_record/record2 in GLOB.all_crew_records)
 		if(record2.get_name() == key)
-			message_admins("retrieve_record ran for existing record [key]")
 			return record2
 	if(!fexists("record_saves/[key].sav")) return
 	var/savefile/f = new("record_saves/[key].sav")
@@ -452,6 +452,7 @@ var/global/list/debug_data = list()
 		v.linked_account = account
 	if(v.linked_account)
 		v.linked_account = v.linked_account.after_load()
+
 	for(var/datum/computer_file/report/crew_record/record2 in GLOB.all_crew_records)
 		if(record2.get_name() == v.get_name())
 			if(v.linked_account && !record2.linked_account || (record2.linked_account && v.linked_account && record2.linked_account.money < v.linked_account))
@@ -464,6 +465,10 @@ var/global/list/debug_data = list()
 
 
 /proc/Retrieve_Record_Faction(var/key, var/datum/world_faction/faction)
+	if(!faction) return
+	for(var/datum/computer_file/report/crew_record/record2 in faction.records.faction_records)
+		if(record2.get_name() == key)
+			return record2
 	if(!fexists("record_saves/[faction.uid]/[key].sav")) return
 	var/savefile/f = new("record_saves/[faction.uid]/[key].sav")
 	var/v
@@ -490,13 +495,14 @@ var/global/list/debug_data = list()
 	from_file(f["contract_database"],GLOB.contract_database)
 	if(!GLOB.contract_database)
 		GLOB.contract_database = new()
-	
+
 	from_file(f["next_account_number"],next_account_number)
 	var/list/areas
 	from_file(f["areas"],areas)
 	for(var/datum/area_holder/holder in areas)
 		var/area/A = new holder.area_type
 		A.name = holder.name
+		A.shuttle = holder.shuttle
 		var/list/turfs = list()
 		for(var/ind in 1 to holder.turfs.len)
 			var/list/coords = holder.turfs[ind]
@@ -554,7 +560,6 @@ var/global/list/debug_data = list()
 		for(var/x in xi to xi + SAVECHUNK_SIZEX)
 			var/turf/T = locate(x,y,z)
 			from_file(f["[x]-[y]"],T)
-
 //TODO; make this better.
 /proc/Load_Initialize()
 	for(var/ind in 1 to all_loaded.len)

@@ -7,6 +7,7 @@
 	extended_desc = "Used to manage everything business related."
 	requires_ntnet = TRUE
 	size = 8
+	category = PROG_BUSINESS
 
 /datum/nano_module/program/business
 	name = "Business control program"

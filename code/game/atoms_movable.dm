@@ -240,9 +240,6 @@
 		return master.attack_hand(user)
 
 /atom/movable/proc/touch_map_edge()
-	#define worldWidth 5
-	#define worldLength 5
-	#define worldHeight 2
 
 	var/new_x = x
 	var/new_y = y
@@ -262,16 +259,36 @@
 				new_z = data.E_connect
 
 		else if (y <= TRANSITIONEDGE-1) 					// South
-			new_y = world.maxy - TRANSITIONEDGE - 1
+			new_y = TRANSITIONEDGE + 1
 			var/datum/zlevel_data/data = SSmazemap.map_data["[z]"]
 			if(data && data.S_connect)
 				new_z = data.S_connect
+				new_y = world.maxy - TRANSITIONEDGE - 1
 		else if (y >= (world.maxy + 1 - TRANSITIONEDGE))	// North
-			new_y = TRANSITIONEDGE + 1
+			new_y = world.maxy - TRANSITIONEDGE - 1
 			var/datum/zlevel_data/data = SSmazemap.map_data["[z]"]
 			if(data && data.N_connect)
 				new_z = data.N_connect
 				new_y = TRANSITIONEDGE + 1
+		var/turf/T = locate(new_x, new_y, new_z)
+		if(T)
+			forceMove(T)
+
+/mob/simple_animal/hostile/touch_map_edge()
+
+	var/new_x = x
+	var/new_y = y
+	var/new_z = z
+	if(new_z)
+		if(x <= TRANSITIONEDGE-1) 						// West
+			new_x = TRANSITIONEDGE + 1
+		else if (x >= (world.maxx + 1 - TRANSITIONEDGE))	// East
+			new_x = world.maxx - TRANSITIONEDGE - 1
+
+		else if (y <= TRANSITIONEDGE-1) 					// South
+			new_y = TRANSITIONEDGE + 1
+		else if (y >= (world.maxy + 1 - TRANSITIONEDGE))	// North
+			new_y = world.maxy - TRANSITIONEDGE - 1
 		var/turf/T = locate(new_x, new_y, new_z)
 		if(T)
 			forceMove(T)
@@ -327,10 +344,11 @@
 		var/turf/T = locate(new_x, new_y, new_z)
 		if(T)
 			forceMove(T)
-**/
+
 #undef worldWidth
 #undef worldLength
 #undef worldHeight
+*/
 
 //Called by a weapon's "afterattack" proc when an attack has succeeded. Returns blocked damage
 /atom/movable/proc/hit_with_weapon(obj/item/I, mob/living/user, var/effective_force)

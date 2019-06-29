@@ -1,4 +1,4 @@
-GLOBAL_LIST_EMPTY(all_world_factions)
+GLOBAL_RAW(/list/datum/world_faction/all_world_factions);GLOBAL_UNMANAGED(all_world_factions, null); //Don't init as empty list, because it happens too late during init
 GLOBAL_LIST_EMPTY(all_business)
 
 GLOBAL_LIST_EMPTY(recent_articles)
@@ -21,7 +21,7 @@ var/PriorityQueue/all_feeds
 	var/datum/world_faction/business/connected_faction = get_faction(contract.org_uid)
 	if(connected_faction && istype(connected_faction))
 		var/datum/stockholder/holder = connected_faction.get_stockholder_datum(contract.created_by)
-		if(holder.stocks < contract.ownership)
+		if(!holder || holder.stocks < contract.ownership)
 			contract.cancelled = 1
 			contract.linked = null
 			contract.update_icon()
@@ -70,7 +70,7 @@ var/PriorityQueue/all_feeds
 		can_read = get_dist(src, AI.camera) < 2
 	var/info2 = info
 	if(sign_type == CONTRACT_PERSON)
-		if(cancelled || !linked)
+		if(cancelled)
 			info2 += "<br>This contract has been cancelled. This can be shredded."
 		else if(approved)
 			info2 += "<br>This contract has been finalized. This is just for record keeping."
@@ -102,7 +102,7 @@ var/PriorityQueue/all_feeds
 	if(href_list["pay"])
 		if(signed) return
 		if(sign_type == CONTRACT_BUSINESS)
-			var/obj/item/weapon/card/id/id = usr.get_idcard()
+			var/obj/item/weapon/card/id/id = usr.GetIdCard()
 			if(id)
 				if(id.selected_faction == contract_payee)
 					to_chat(usr, "An organization cannot sign its own contract.")
@@ -166,9 +166,8 @@ var/PriorityQueue/all_feeds
 			else
 				to_chat(usr, "Insufficent funds to sign contract.")
 				return
-
-	..()
-
+	else
+		..()
 
 
 
@@ -210,6 +209,7 @@ var/PriorityQueue/all_feeds
 		icon_state = "contract-pending"
 	else
 		icon_state = "contract"
+		
 /obj/item/weapon/paper/contract/show_content(mob/user, forceshow)
 	var/can_read = (istype(user, /mob/living/carbon/human) || isghost(user) || istype(user, /mob/living/silicon)) || forceshow
 	if(!forceshow && istype(user,/mob/living/silicon/ai))
@@ -378,6 +378,8 @@ var/PriorityQueue/all_feeds
 
 /datum/NewsStory/proc/allowed(var/real_name)
 	if(real_name in purchased)
+		return 1
+	if(!cost)
 		return 1
 	return 0
 
@@ -738,7 +740,7 @@ var/PriorityQueue/all_feeds
 	if(password)
 		var/datum/world_faction/found_faction
 		for(var/datum/world_faction/fac in GLOB.all_world_factions)
-			if(fac.uid == name)
+			if(fac && fac.uid == name)
 				found_faction = fac
 				break
 		if(!found_faction) return
@@ -746,7 +748,7 @@ var/PriorityQueue/all_feeds
 		return found_faction
 	var/datum/world_faction/found_faction
 	for(var/datum/world_faction/fac in GLOB.all_world_factions)
-		if(fac.uid == name)
+		if(fac && fac.uid == name)
 			found_faction = fac
 			break
 	return found_faction
@@ -762,7 +764,7 @@ var/PriorityQueue/all_feeds
 	for(var/obj/item/organ/internal/stack/stack in connected_laces)
 		if(stack.owner)
 			to_chat(stack.owner, "Your neural lace vibrates letting you know that [src.name] is closed for business and you have been automatically clocked out.")
-		if(employment_log > 100)
+		if(employment_log.len > 100)
 			employment_log.Cut(1,2)
 		employment_log += "At [stationdate2text()] [stationtime2text()] [stack.owner.real_name] clocked out."
 	connected_laces.Cut()
@@ -860,6 +862,34 @@ var/PriorityQueue/all_feeds
 	var/datum/NewsFeed/feed
 	var/datum/LibraryDatabase/library
 
+	var/list/people_to_notify = list()
+
+/datum/world_faction/proc/apc_alarm(var/obj/machinery/power/apc/apc)
+	var/subject = "APC Alarm at [apc.area.name] ([apc.connected_faction.name])"
+	var/body = "On [stationtime2text()] the APC at [apc.area.name] for [apc.connected_faction.name] went into alarm. If you want to unsubscribe to notifications like this use the personal modification program."
+	for(var/name in people_to_notify)
+		Send_Email(name, sender = src.name, subject, body)
+	for(var/obj/item/organ/internal/stack/stack in connected_laces)
+		if(stack.owner)
+			to_chat(stack.owner, "Your neural lace buzzes letting you know that the APC at [apc.area.name] has gone into alarm.")
+
+/datum/world_faction/proc/employee_health_alarm(var/mob/M)
+	for(var/datum/world_faction/faction in GLOB.all_world_factions)
+		if(faction == src) continue
+		if(M.real_name in faction.service_medical_personal) continue
+		if(uid in faction.service_medical_personal)
+			faction.health_alarm(M)
+
+/datum/world_faction/proc/health_alarm(var/mob/M)
+	var/subject = "Critical Health Alarm for [M.real_name]"
+	var/body = "On [stationtime2text()] [M.real_name] is in critical health status. If you want to unsubscribe to notifications like this use the personal modification program."
+	for(var/name in people_to_notify)
+		Send_Email(name, sender = src.name, subject, body)
+	for(var/obj/item/organ/internal/stack/stack in connected_laces)
+		if(stack.owner)
+			to_chat(stack.owner, "Your neural lace buzzes letting you know that [M.real_name] is in critical health status.")
+
+
 /proc/spawn_nexus_gov()
 	var/datum/world_faction/democratic/nexus = new()
 	nexus.name = "Nexus City Government"
@@ -906,18 +936,15 @@ var/PriorityQueue/all_feeds
 	nexus.network.password = ""
 	nexus.network.invisible = 0
 
-	GLOB.all_world_factions |= nexus
+	LAZYDISTINCTADD(GLOB.all_world_factions, nexus)
 
 
 /datum/world_faction/democratic/New()
 	..()
 
-	councillor_assignment = new()
-	judge_assignment = new()
-	governor_assignment = new()
-	councillor_assignment.payscale = 30
-	judge_assignment.payscale = 30
-	governor_assignment.payscale = 45
+	councillor_assignment = new("Councillor", 30)
+	judge_assignment = new("Judge", 30)
+	governor_assignment = new("Governor", 45)
 	councillor_assignment.name = "Councillor"
 	judge_assignment.name = "Judge"
 	governor_assignment.name = "Governor"
@@ -938,6 +965,50 @@ var/PriorityQueue/all_feeds
 	special_category.parent = src
 	special_category.command_faction = 1
 	limits = new /datum/machine_limits/democracy()
+
+	name = "Nexus City Government"
+	abbreviation = "NEXUS"
+	short_tag = "NEX"
+	purpose = "To represent the citizenship of Nexus and keep the station operating."
+	uid = "nexus"
+	gov = new()
+	var/datum/election/gov/gov_elect = new()
+	gov_elect.ballots |= gov
+
+	waiting_elections |= gov_elect
+
+	var/datum/election/council_elect = new()
+	var/datum/democracy/councillor/councillor1 = new()
+	councillor1.title = "Councillor of Justice and Criminal Matters"
+	city_council |= councillor1
+	council_elect.ballots |= councillor1
+
+	var/datum/democracy/councillor/councillor2 = new()
+	councillor2.title = "Councillor of Budget and Tax Measures"
+	city_council |= councillor2
+	council_elect.ballots |= councillor2
+
+	var/datum/democracy/councillor/councillor3 = new()
+	councillor3.title = "Councillor of Commerce and Business Relations"
+	city_council |= councillor3
+	council_elect.ballots |= councillor3
+
+	var/datum/democracy/councillor/councillor4 = new()
+	councillor4.title = "Councillor for Culture and Ethical Oversight"
+	city_council |= councillor4
+	council_elect.ballots |= councillor4
+
+	var/datum/democracy/councillor/councillor5 = new()
+	councillor5.title = "Councillor for the Domestic Affairs"
+	city_council |= councillor5
+	council_elect.ballots |= councillor5
+
+	waiting_elections |= council_elect
+
+	network.name = "NEXUSGOV-NET"
+	network.net_uid = "nexus"
+	network.password = ""
+	network.invisible = 0
 
 /datum/world_faction/democratic
 
@@ -1399,7 +1470,7 @@ var/PriorityQueue/all_feeds
 
 	limits.limit_shuttles = 3
 
-	limits.limit_area = 100000
+	limits.limit_area = 200000
 
 	limits.limit_tcomms = 5
 
@@ -1649,13 +1720,13 @@ var/PriorityQueue/all_feeds
 	if(holder)
 		if(stock_holders.len == 1) // last stock holder
 			stock_holders.Cut()
-			GLOB.all_world_factions -= src
+			LAZYREMOVE(GLOB.all_world_factions, src)
 			qdel(src)
 			return
 		else
 			var/remainder = holder.stocks % (stock_holders.len-1)
 			var/division = (holder.stocks-remainder)/(stock_holders.len-1)
-			stock_holders -= holder
+			stock_holders -= real_name
 			for(var/datum/stockholder/secondholder in stock_holders)
 				secondholder.stocks += division
 			if(remainder)
@@ -1824,6 +1895,7 @@ var/PriorityQueue/all_feeds
 	possible |= module.spec.hourly_objectives
 	var/chose_type = pick(possible)
 	hourly_objective = new chose_type()
+	hourly_objective.parent = src
 	hourly_assigned = world.realtime
 /datum/world_faction/business/proc/assign_daily_objective()
 	var/list/possible = list()
@@ -1831,6 +1903,7 @@ var/PriorityQueue/all_feeds
 	possible |= module.spec.daily_objectives
 	var/chose_type = pick(possible)
 	daily_objective = new chose_type()
+	daily_objective.parent = src
 	daily_assigned = world.realtime
 /datum/world_faction/business/proc/assign_weekly_objective()
 	var/list/possible = list()
@@ -1838,6 +1911,7 @@ var/PriorityQueue/all_feeds
 	possible |= module.spec.weekly_objectives
 	var/chose_type = pick(possible)
 	weekly_objective = new chose_type()
+	weekly_objective.parent = new chose_type()
 	weekly_assigned = world.realtime
 
 /datum/world_faction/business/New()
@@ -1900,7 +1974,9 @@ var/PriorityQueue/all_feeds
 		var/datum/stockholder/holder = stock_holders[real_name]
 		return holder
 
-/datum/world_faction/business/proc/get_stockholder(var/real_name)
+/datum/world_faction/proc/get_stockholder(var/real_name)
+	return 0
+/datum/world_faction/business/get_stockholder(var/real_name)
 	if(real_name in stock_holders)
 		var/datum/stockholder/holder = stock_holders[real_name]
 		return holder.stocks
@@ -1940,6 +2016,10 @@ var/PriorityQueue/all_feeds
 			leader_name = ""
 		if(STOCKPROPOSAL_CEOREPLACE)
 			leader_name = proposal.target
+			if(!get_record(proposal.target))
+				var/datum/computer_file/report/crew_record/record = new()
+				if(record.load_from_global(proposal.target))
+					records.faction_records |= record
 		if(STOCKPROPOSAL_CEOWAGE)
 			var/datum/accesses/access = CEO.accesses[1]
 			access.pay = proposal.target
@@ -2022,7 +2102,7 @@ var/PriorityQueue/all_feeds
 		if(holder.real_name == real_name) return 1
 
 /datum/stock_proposal/proc/is_started_by(var/real_name)
-	if(started_by.real_name == real_name) return 1
+	if(started_by == real_name) return 1
 
 
 /datum/stock_proposal/proc/get_support()
@@ -2051,8 +2131,18 @@ var/PriorityQueue/all_feeds
 			break
 	if(!debts)
 		debts = list()
+	if(central_account)
+		central_account.connected_business = src
 	..()
 
+/datum/world_faction/business/after_load()
+	if(CEO)
+		if(!CEO.accesses.len)
+			var/datum/accesses/access = new()
+			access.name = "CEO"
+			access.pay = 45
+			CEO.accesses |= access
+	..()
 /datum/world_faction/proc/get_limits()
 	return limits
 
@@ -2068,7 +2158,7 @@ var/PriorityQueue/all_feeds
 	var/new_claimed_area = 0
 
 	for(var/obj/machinery/power/apc/apc in limits.apcs)
-		if(!apc.area) continue
+		if(!apc.area || apc.area.shuttle) continue
 		var/list/apc_turfs = get_area_turfs(apc.area)
 		new_claimed_area += apc_turfs.len
 	limits.claimed_area = new_claimed_area
@@ -2276,6 +2366,13 @@ var/PriorityQueue/all_feeds
 /datum/assignment_category/proc/create_account()
 	account = create_account(name, 0)
 
+
+/datum/assignment/New(var/title, var/pay)
+	if(title && pay)
+		var/datum/accesses/access = new()
+		access.name = title
+		access.pay = pay
+		accesses |= access
 /datum/assignment
 	var/name = ""
 	var/list/accesses[0]
@@ -2367,13 +2464,9 @@ var/PriorityQueue/all_feeds
 //Otherwise, when globabl variables are initialized, the all_world_faction list may or may not be overwritten on startup, when not loading a save.
 /obj/faction_spawner/Initialize()
 	..()
-	return INITIALIZE_HINT_LATELOAD
-
-/obj/faction_spawner/LateInitialize()
 	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
 		if(existing_faction.uid == uid)
-			qdel(src)
-			return
+			return INITIALIZE_HINT_QDEL
 	var/datum/world_faction/fact = new()
 	fact.name = name
 	fact.abbreviation = name_short
@@ -2388,17 +2481,16 @@ var/PriorityQueue/all_feeds
 	fact.network.invisible = network_invisible
 	fact.starter_outfit = starter_outfit
 	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
-	qdel(src)
-	return
+	return INITIALIZE_HINT_QDEL
 
 /obj/faction_spawner/democratic
 	var/purpose = ""
 
-/obj/faction_spawner/democratic/LateInitialize()
+/obj/faction_spawner/democratic/Initialize()
+	..()
 	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
 		if(existing_faction.uid == uid)
-			qdel(src)
-			return
+			return INITIALIZE_HINT_QDEL
 	var/datum/world_faction/democratic/fact = new()
 	fact.name = name
 	fact.abbreviation = name_short
@@ -2414,8 +2506,7 @@ var/PriorityQueue/all_feeds
 	fact.network.invisible = network_invisible
 	fact.starter_outfit = starter_outfit
 	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
-	qdel(src)
-	return
+	return INITIALIZE_HINT_QDEL
 
 
 
@@ -2442,6 +2533,7 @@ var/PriorityQueue/all_feeds
 		if(parent)
 			var/datum/transaction/Te = new("Completed Objective", "Nexus Economic Stimulus", payout, "Nexus Economic Module")
 			parent.central_account.do_transaction(Te)
+			parent.research.points += research_payout
 		return 1
 
 /datum/module_objective/proc/get_status()
@@ -2787,7 +2879,7 @@ var/PriorityQueue/all_feeds
 	limit_drills = 5
 	limit_botany = 10
 	limit_shuttles = 10
-	limit_area = 100000
+	limit_area = 200000 //size of the nexus at most 3z levels of 255x255
 	limit_tcomms = 5
 	limit_tech_general = 4
 	limit_tech_engi = 4
@@ -3179,7 +3271,7 @@ var/PriorityQueue/all_feeds
 	limits = new limits()
 
 /datum/business_module
-	var/cost = 500
+	var/cost = 750
 	var/name = ""
 	var/desc = ""
 	var/current_level = 1
@@ -3191,6 +3283,7 @@ var/PriorityQueue/all_feeds
 	var/list/daily_objectives = list()
 	var/list/weekly_objectives = list()
 
+	var/list/starting_items = list()
 
 /datum/business_module/New()
 	var/list/specs_c = specs.Copy()
@@ -3203,7 +3296,7 @@ var/PriorityQueue/all_feeds
 		levels |= new x()
 
 /datum/business_module/engineering
-	cost = 500
+	cost = 1400
 	name = "Engineering"
 	desc = "An engineering business has tools to develop areas of the station and construct shuttles plus the unique capacity to manage private radio communications. Engineering businesses can reserve larger spaces than other businesses and develop those into residential areas to be leased to individuals."
 	levels = list(/datum/machine_limits/eng/one, /datum/machine_limits/eng/two, /datum/machine_limits/eng/three, /datum/machine_limits/eng/four)
@@ -3211,6 +3304,8 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/revenue, /datum/module_objective/hourly/employees, /datum/module_objective/hourly/cost, /datum/module_objective/hourly/contract)
 	daily_objectives = list(/datum/module_objective/daily/revenue, /datum/module_objective/daily/employees, /datum/module_objective/daily/cost, /datum/module_objective/daily/contract)
 	weekly_objectives = list(/datum/module_objective/weekly/revenue, /datum/module_objective/weekly/employees, /datum/module_objective/weekly/cost, /datum/module_objective/weekly/contract)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/clothing/gloves/insulated/cheap = 2, /obj/item/weapon/storage/belt/utility/full = 2)
+
 /datum/business_spec/eng/realestate
 	name = "Real-Estate"
 	desc = "With this specialization the engineering business gains another 200 tiles of area limit plus a consumer fabricator limit and two levels of consumer tech limit so that you can better furnish interiors."
@@ -3223,13 +3318,15 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/medical
-	cost = 500
+	cost = 1200
 	name = "Medical"
 	desc = "A medical firm has unqiue capacity to develop medications and implants. Programs can be used to register clients under your care and recieve a weekly insurance payment from them, in exchange for tracking their health and responding to medical emergencies."
+	specs = list(/datum/business_spec/medical/pharma, /datum/business_spec/medical/paramedic)
 	levels = list(/datum/machine_limits/medical/one, /datum/machine_limits/medical/two, /datum/machine_limits/medical/three, /datum/machine_limits/medical/four)
 	hourly_objectives = list(/datum/module_objective/hourly/visitors, /datum/module_objective/hourly/employees, /datum/module_objective/hourly/cost, /datum/module_objective/hourly/contract)
 	daily_objectives = list(/datum/module_objective/daily/visitors, /datum/module_objective/daily/employees, /datum/module_objective/daily/cost, /datum/module_objective/daily/contract)
 	weekly_objectives = list(/datum/module_objective/weekly/visitors, /datum/module_objective/weekly/employees, /datum/module_objective/weekly/cost, /datum/module_objective/weekly/contract)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/weapon/storage/firstaid/surgery/full = 1, /obj/item/clothing/gloves/latex = 2, /obj/item/device/scanner/health = 2)
 
 /datum/business_spec/medical/paramedic
 	name = "Paramedic"
@@ -3238,6 +3335,7 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/travel)
 	daily_objectives = list(/datum/module_objective/daily/travel)
 	weekly_objectives = list(/datum/module_objective/weekly/travel)
+
 /datum/business_spec/medical/pharma
 	name = "Pharmacy"
 	desc = "This specialization gives the business capacity for a service fabricator and two botany trays that can produce reagents that can be further refined into valuable and effective medicines. It also grants 200 extra tiles to the area limit so you can have larger medical facilities."
@@ -3245,14 +3343,16 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/retail
-	cost = 500
+	cost = 1200
 	name = "Retail"
 	desc = "A retail business has exclusive production capacity so that they can sell clothing and furniture to individuals and organizations. With additional specialization they can branch out into combat equipment or engineering supplies, but they are reliant on the material market to supply their production."
 	levels = list(/datum/machine_limits/retail/one, /datum/machine_limits/retail/two, /datum/machine_limits/retail/three, /datum/machine_limits/retail/four)
 	specs = list(/datum/business_spec/retail/combat, /datum/business_spec/retail/bigstore)
-	hourly_objectives = list(/datum/module_objective/hourly/visitors, /datum/module_objective/hourly/employees, /datum/module_objective/hourly/cost, /datum/module_objective/hourly/sales, /datum/module_objective/weekly/fabricate, /datum/module_objective/hourly/revenue)
-	daily_objectives = list(/datum/module_objective/daily/visitors, /datum/module_objective/daily/employees, /datum/module_objective/daily/cost, /datum/module_objective/daily/sales, /datum/module_objective/weekly/fabricate, /datum/module_objective/daily/revenue)
+	hourly_objectives = list(/datum/module_objective/hourly/visitors, /datum/module_objective/hourly/employees, /datum/module_objective/hourly/cost, /datum/module_objective/hourly/sales, /datum/module_objective/hourly/fabricate, /datum/module_objective/hourly/revenue)
+	daily_objectives = list(/datum/module_objective/daily/visitors, /datum/module_objective/daily/employees, /datum/module_objective/daily/cost, /datum/module_objective/daily/sales, /datum/module_objective/daily/fabricate, /datum/module_objective/daily/revenue)
 	weekly_objectives = list(/datum/module_objective/weekly/visitors, /datum/module_objective/weekly/employees, /datum/module_objective/weekly/cost, /datum/module_objective/weekly/sales, /datum/module_objective/weekly/fabricate, /datum/module_objective/weekly/revenue)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 4, /obj/item/stack/material/glass/ten = 4)
+
 /datum/business_spec/retail/combat
 	name = "Combat"
 	desc = "The Combat specialization gives limits for a combat fabricator and an early combat tech limit which will increase as the business network expands. You can also maintain a shuttle, but you'll need to purchase the EVA equipment elsewhere."
@@ -3266,7 +3366,7 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/service
-	cost = 400
+	cost = 1100
 	name = "Service"
 	desc = "A service business has a fabricator that can produce culinary and botany equipment. A service business can serve food or drink and supply freshly grown plants for other organizations, a crucial source of cloth and biomass."
 	levels = list(/datum/machine_limits/service/one, /datum/machine_limits/service/two, /datum/machine_limits/service/three, /datum/machine_limits/service/four)
@@ -3274,6 +3374,7 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/sales, /datum/module_objective/hourly/cost)
 	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/sales, /datum/module_objective/daily/cost)
 	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/sales, /datum/module_objective/weekly/cost)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 3, /obj/item/stack/material/glass/ten = 3, /obj/item/seeds/potatoseed = 1, /obj/item/seeds/towermycelium = 1)
 
 /datum/business_spec/service/culinary
 	name = "Culinary"
@@ -3291,14 +3392,16 @@ var/PriorityQueue/all_feeds
 
 
 /datum/business_module/mining
-	cost = 500
+	cost = 1400
 	name = "Mining"
 	desc = "Mining companies send teams out into the hostile outer-space armed with picks, drills and a variety of other EVA equipment plus weapons and armor to defend themselves. The ores they recover can be processed and then sold on the Material Marketplace to other organizations for massive profits."
 	levels = list(/datum/machine_limits/mining/one, /datum/machine_limits/mining/two, /datum/machine_limits/mining/three, /datum/machine_limits/mining/four)
-	specs = list(/datum/machine_limits/mining/spec/massdrill, /datum/machine_limits/mining/spec/monsterhunter)
+	specs = list(/datum/business_spec/mining/massdrill, /datum/business_spec/mining/monsterhunter)
 	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/travel, /datum/module_objective/hourly/cost)
 	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/travel, /datum/module_objective/daily/cost)
 	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/travel, /datum/module_objective/weekly/cost)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/weapon/pickaxe = 2, /obj/item/clothing/head/helmet/space/mining = 2, /obj/item/clothing/suit/space/mining = 2)
+
 
 
 /datum/business_spec/mining/massdrill
@@ -3307,7 +3410,7 @@ var/PriorityQueue/all_feeds
 	limits = /datum/machine_limits/mining/spec/massdrill
 
 /datum/business_spec/mining/monsterhunter
-	name = "Monster Hunt"
+	name = "Monster Hunter"
 	desc = "This specialization gives the business capacity for a medical fabricator and tech that can produce machines and equipment to keep employees alive while fighting the top tier of monsters. Travel to the outer reaches and dig for riches, let the monsters come to you."
 	limits = /datum/machine_limits/retail/spec/bigstore
 	hourly_objectives = list(/datum/module_objective/hourly/monsters)
@@ -3315,7 +3418,7 @@ var/PriorityQueue/all_feeds
 	weekly_objectives = list(/datum/module_objective/weekly/monsters)
 
 /datum/business_module/media
-	cost = 350
+	cost = 1100
 	name = "Media"
 	desc = "Media companies have simple production and tech capacities but exclusive access to programs that can publish books and news articles for paid redistribution. It is also much less expensive than other types, making it a good choice for generic business."
 	levels = list(/datum/machine_limits/media/one, /datum/machine_limits/media/two, /datum/machine_limits/media/three, /datum/machine_limits/media/four)
@@ -3323,6 +3426,9 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/sales)
 	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/sales)
 	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/sales)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/device/camera = 2, /obj/item/weapon/paper_bin = 1, /obj/item/weapon/pen = 2)
+
+
 /datum/business_spec/media/journalism
 	name = "Journalism"
 	desc = "Specializing in Journalism gives capacity for an EVA fabricator and shuttle, plus a medical fabricator with basic medical tech limitation. Explore every corner of Nexus-space, but best to carry basic medical supplies."
@@ -3330,6 +3436,9 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/publish_article)
 	daily_objectives = list(/datum/module_objective/daily/article_viewers)
 	weekly_objectives = list(/datum/module_objective/weekly/article_viewers)
+
+
+
 /datum/business_spec/media/bookpublishing
 	name = "Publishing"
 	desc = "The Publishing specialization grants 200 extra tiles to the area limit and an engineering fabricator and tech limit. You can build a proper library and publishing house, or perhaps some other artistic facility."

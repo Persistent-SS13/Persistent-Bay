@@ -69,7 +69,7 @@
 #define EVENT_LEVEL_MAJOR    3
 
 //General-purpose life speed define for plants.
-#define HYDRO_SPEED_MULTIPLIER 1
+#define HYDRO_SPEED_MULTIPLIER 0.5
 
 #define DEFAULT_JOB_TYPE /datum/job/assistant
 
@@ -144,6 +144,9 @@
 #define PROG_UTIL 		"Utility"
 #define PROG_SEC 		"Security"
 #define PROG_MONITOR	"Monitoring"
+#define PROG_BUSINESS	"Business"
+#define PROG_GOVERNMENT	"Govenment"
+#define PROG_JUSTICE	"Justice"
 
 // Caps for NTNet logging. Less than 10 would make logging useless anyway, more than 500 may make the log browser too laggy. Defaults to 100 unless user changes it.
 #define MAX_NTNET_LOGS 500
@@ -266,4 +269,4 @@
 #define STOCKPROPOSAL_UNPUBLIC 8
 
 //Economic stuff
-#define DEFAULT_NEW_CHARACTER_MONEY 500
+#define DEFAULT_NEW_CHARACTER_MONEY 1000

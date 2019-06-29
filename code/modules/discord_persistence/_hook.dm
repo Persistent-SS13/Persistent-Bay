@@ -1,5 +1,5 @@
 /*
-Discord Bot designer specially for the Persistence needs!
+Discord Bot designed specially for the Persistence needs!
 
 On launch, this is currently only used for mailing notifications and linking accounts.
 
@@ -18,6 +18,7 @@ GLOBAL_DATUM_INIT(discord_api, /datum/discord_api, new)
 	var/database/db
 	var/queueTable = "discord_queue"
 	var/usersTable = "discord_users"
+	var/arg_sep = @"[[sep]]"
 
 /datum/discord_api/New()
 	src.connectToDb()
@@ -30,8 +31,16 @@ GLOBAL_DATUM_INIT(discord_api, /datum/discord_api, new)
 			src.connectToDb()
 
 //The main proc where the magic happens. Sends a message to the database to be read by the Bot
-/datum/discord_api/proc/send_message(msg)
-	var/database/query/q = new("INSERT INTO [queueTable] VALUES('[msg]') ")
+/datum/discord_api/proc/send_message(cmd, cmd_args, message)
+	var/cmd_args_str = ""
+	var/first = TRUE
+	for (var/a in cmd_args)
+		if (first)
+			first = FALSE
+		else
+			cmd_args_str += src.arg_sep
+		cmd_args_str += a
+	var/database/query/q = new("INSERT INTO [queueTable] VALUES(?, ?, ?) ", cmd, cmd_args_str, message)
 	if(!q.Execute(db))
 		message_admins(src.db.ErrorMsg())
 		return
@@ -44,17 +53,20 @@ GLOBAL_DATUM_INIT(discord_api, /datum/discord_api, new)
 	if (g.Execute(GLOB.discord_api.db) && g.NextRow())
 		var/list/data = g.GetRowData()
 		var/discordID = data["userID"]
-		var/msg = "MAIL|[discordID]|[sender_name]|[receiver_name]|[message.title]|\n\n[message.stored_data]"
-		src.send_message(msg)
+		var/list/cmd_args = list(discordID, sender_name, receiver_name, message.title)
+		src.send_message("MAIL", cmd_args, message.stored_data)
 
-//A broadcast bot, for the broadcasting needs. (This was mainly for testing, probably should have no use at all.)
+/datum/discord_api/proc/broadcast(message)
+	src.send_message("BROADCAST", list(), message)
+
+//A broadcast bot, for the broadcasting needs. (This was mainly for testing, probably should have no use at all.) EDIT: It is actually fun portraying as the all seeing AI
 /datum/admins/proc/discord_broadcast()
 	set category = "Admin"
 	set name = "Broadcast to Discord"
 	set desc = "VERY EARLY DEV"
 	var/msg = input(usr, "Message:", "Discord") as text|null
 	if (msg)
-		GLOB.discord_api.send_message("BROADCAST|[msg]")
+		GLOB.discord_api.broadcast(msg)
 
 
 /client/verb/linkdiscord()
@@ -62,23 +74,11 @@ GLOBAL_DATUM_INIT(discord_api, /datum/discord_api, new)
 	set name = "Discord Account - Associate"
 	set desc = "Link your discord account to your BYOND account."
 
-	var/userID = input(usr, "Discord User ID:", "Discord") as text|null
-	if (userID)
-		userID = "\"[userID]\""
-		var/database/query/g = new("SELECT * FROM [GLOB.discord_api.usersTable] WHERE ckey = ? OR userID = ?", usr.ckey, userID)
-		if (g.Execute(GLOB.discord_api.db) && g.NextRow())
-			to_chat(usr, SPAN_WARNING("Could not complete your Discord Account link request. It seems you have already linked this BYOND account OR this discord ID is already linked to another account."))
-		else
-			var/database/query/q = new("INSERT INTO [GLOB.discord_api.usersTable] VALUES(?,?,0) ", userID, usr.ckey)
-			if(!q.Execute(GLOB.discord_api.db))
-				message_admins(q.ErrorMsg())
-				return
-			to_chat(usr, SPAN_NOTICE("Your account has been successfuly linked. To finish the process, however, you MUST validate your link on your discord. Just type in '!validatelink YOUR_CKEY' on the official discord server. (Or by PMing the Bot with that command.)"))
+	usr.client.link_discord()
 
 /client/proc/link_discord()
-	var/userID = input(usr, "Discord User ID:", "Discord") as text|null
+	var/userID = input(usr, "Enter your Discord ID. You can get this by typing !getid in the main discord server.", "Enter Discord ID") as text|null
 	if (userID)
-		userID = "\"[userID]\""
 		var/database/query/g = new("SELECT * FROM [GLOB.discord_api.usersTable] WHERE ckey = ? OR userID = ?", usr.ckey, userID)
 		if (g.Execute(GLOB.discord_api.db) && g.NextRow())
 			to_chat(usr, SPAN_WARNING("Could not complete your Discord Account link request. It seems you have already linked this BYOND account OR this discord ID is already linked to another account."))

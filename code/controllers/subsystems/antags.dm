@@ -7,7 +7,7 @@ SUBSYSTEM_DEF(antags)
 	for(var/antag_type in GLOB.all_antag_types_)
 		var/datum/antagonist/antag = GLOB.all_antag_types_[antag_type]
 		antag.Initialize()
-	. = ..()
+	return ..()
 
 /datum/controller/subsystem/antags/stat_entry(msg)
 	..("[GLOB.all_antag_types_.len] antag datums")

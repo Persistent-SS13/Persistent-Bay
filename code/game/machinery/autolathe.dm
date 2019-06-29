@@ -11,6 +11,7 @@
 	clicksound = "keyboard"
 	clickvol = 30
 	multiplier = 1
+	circuit_type = /obj/item/weapon/circuitboard/autolathe
 
 	var/list/machine_recipes
 	var/list/stored_material = list(MATERIAL_STEEL = 0, MATERIAL_GLASS = 0)
@@ -30,19 +31,14 @@
 /obj/machinery/autolathe/New()
 	..()
 	wires = new(src)
-	//Create parts for lathe.
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/autolathe(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	RefreshParts()
+	ADD_SAVED_VAR(stored_material)
+	ADD_SAVED_VAR(storage_capacity)
+	ADD_SAVED_VAR(hacked)
+	ADD_SAVED_VAR(disabled)
+	ADD_SAVED_VAR(shocked)
 
 /obj/machinery/autolathe/Destroy()
-	qdel(wires)
-	wires = null
+	QDEL_NULL(wires)
 	return ..()
 
 /obj/machinery/autolathe/proc/update_recipe_list()

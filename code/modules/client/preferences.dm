@@ -38,18 +38,30 @@ datum/preferences
 	var/bonus_notes = ""
 	var/datum/browser/prefspanel
 
+	var/rules_agree = 0
+	var/guide_agree = 0
+
 /datum/preferences/New(client/C)
 	if(istype(C))
 		client = C
 		client_ckey = C.ckey
 		SScharacter_setup.preferences_datums += src
 		if(SScharacter_setup.initialized)
+			testing("preferences/New(): Created and directly setup preferences for [client_ckey]")
 			setup()
 		else
+			testing("preferences/New(): Created and queued preference setup for [client_ckey]")
 			SScharacter_setup.prefs_awaiting_setup += src
 	..()
 
+/datum/preferences/Destroy()
+	if(LAZYLEN(SScharacter_setup.prefs_awaiting_setup))
+		testing("preferences/Destroy(): was called for [client_ckey]")
+		SScharacter_setup.prefs_awaiting_setup -= src
+	. = ..()
+
 /datum/preferences/proc/setup()
+	testing("preferences/setup(): was called for [client_ckey]")
 	if(!length(GLOB.skills))
 		decls_repository.get_decl(/decl/hierarchy/skill)
 	player_setup = new(src)
@@ -58,13 +70,15 @@ datum/preferences
 	b_type = RANDOM_BLOOD_TYPE
 
 	if(client && !IsGuestKey(client.key))
-		src.load_path(client.key)
+		src.load_path_pref(client.key)
 		load_preferences()
-		load_and_update_character()
+	//	load_and_update_character()
 	sanitize_preferences()
 	if(client && istype(client.mob, /mob/new_player))
 		var/mob/new_player/np = client.mob
 		np.new_player_panel(TRUE)
+	if(!length(GLOB.skills))
+		decls_repository.get_decl(/decl/hierarchy/skill)
 
 /datum/preferences/proc/load_and_update_character(var/slot)
 	load_character(slot)
@@ -130,18 +144,28 @@ datum/preferences
 	if(href_list["save"])
 		if(!cultural_info)
 			log_error("Something went very wrong with cultural info!!!")
-			return 
+			return
 		if(!real_name)
 			to_chat(usr, "You must select a valid character name")
 			return
-		if(!cultural_info[TAG_HOMEWORLD])
-			to_chat(usr, "You must choose a valid early life/homeworld")
+		if(!rules_agree)
+			to_chat(usr, "You must read the rules and verify that you have read them.")
 			return
-		if(!faction)
-			to_chat(usr, "You must choose a valid employer.")
+		if(!welcome_accept)
+			to_chat(usr, "You should read the welcome message and then certify you are ready to play persistence.")
 			return
-		save_preferences()
+		if(!guide_agree)
+			to_chat(usr, "You must agree to play a reasonable character, stay in character and follow our guidelines.")
+			return
+		if(!cultural_info[TAG_CULTURE])
+			to_chat(usr, "You must select an early life for your character.")
+			return
+		if(!cultural_info[TAG_AMBITION])
+			to_chat(usr, "You must select an ambition for your character.")
+			return
+
 		save_character()
+		save_preferences()
 		close_browser(usr, "window=saves")
 		if(panel)
 			panel.close()
@@ -182,6 +206,52 @@ datum/preferences
 	ShowChoices(usr)
 	return 1
 
+/datum/preferences/proc/copy_import(mob/living/carbon/human/character, mob/living/carbon/human/character2)
+	character.set_species(character2.get_species())
+	character.fully_replace_character_name(character2.real_name)
+	character.gender = character2.gender
+	character.age = character2.age
+
+	character.b_type = character2.b_type
+//	character.b_type = b_type
+
+	character.r_eyes = character2.r_eyes
+	character.g_eyes = character2.g_eyes
+	character.b_eyes = character2.b_eyes
+
+	character.h_style = character2.h_style
+	character.r_hair = character2.r_hair
+	character.g_hair = character2.g_hair
+	character.b_hair = character2.b_hair
+
+	character.f_style = character2.f_style
+	character.r_facial = character2.r_facial
+	character.g_facial = character2.g_facial
+	character.b_facial = character2.b_facial
+
+	character.r_skin = character2.r_skin
+	character.g_skin = character2.g_skin
+	character.b_skin = character2.b_skin
+
+	character.s_tone = character2.s_tone
+	character.s_base = character2.s_base
+
+	character.h_style = character2.h_style
+	character.f_style = character2.f_style
+	character.species.handle_limbs_setup(character)
+
+	character.force_update_limbs()
+	character.update_mutations(0)
+	character.update_body(0)
+	character.update_underwear(0)
+	character.update_hair(0)
+	character.update_icons()
+
+	if(!character.isSynthetic())
+		character.nutrition = rand(140,360)
+
+
+
 /datum/preferences/proc/copy_to(mob/living/carbon/human/character, is_preview_copy = FALSE)
 	// Sanitizing rather than saving as someone might still be editing when copy_to occurs.
 	player_setup.sanitize_setup()
@@ -203,7 +273,9 @@ datum/preferences
 
 	character.gender = gender
 	character.age = age
-	character.b_type = b_type
+
+	character.b_type = pick(valid_bloodtypes)
+//	character.b_type = b_type
 
 	character.r_eyes = r_eyes
 	character.g_eyes = g_eyes
@@ -351,7 +423,7 @@ datum/preferences
 
 
 /datum/preferences/proc/delete_character(var/slot)
-	if(!slot) 
+	if(!slot)
 		return
 	SScharacter_setup.delete_character(slot, client.ckey)
 	if(character_list && (character_list.len >= slot))

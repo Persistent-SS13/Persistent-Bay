@@ -188,7 +188,7 @@
 	var/spawn_type = CHARACTER_SPAWN_TYPE_CRYONET // 1 = cryobed, 2 = newplayer spawn, 3 = lace storage... this should be set to 2 for new players
 	var/spawn_loc // set to a faction_uid to have them spawn in that factions spawners
 	var/spawn_loc_2 // this is used for secondary cryobed networks
-	
+	var/spawn_cit
 	var/datum/skillset/skillset = /datum/skillset
 
 	var/last_radio_sound = -INFINITY

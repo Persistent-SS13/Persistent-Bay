@@ -39,14 +39,14 @@ datum/preferences
 		var/decl/cultural_info/check = SSculture.get_culture(pref.cultural_info[TAG_CULTURE])
 		if(check)
 			pref.real_name = check.sanitize_name(pref.real_name, pref.species)
-			if(!pref.real_name)
-				pref.real_name = random_name(pref.gender, pref.species)
+	//		if(!pref.real_name)
+	//			pref.real_name = random_name(pref.gender, pref.species)
 
 /datum/category_item/player_setup_item/physical/basic/content()
 	. = list()
 	. += "* = Required Field<br><br>"
 	. += "<b>*Full Name:</b> "
-	. += "<a href='?src=\ref[src];rename=1'><b>[pref.real_name]</b></a><br>"
+	. += "<a href='?src=\ref[src];rename=1'><b>[pref.real_name ? pref.real_name : "*UNSET*"]</b></a><br>"
 	. += "<a href='?src=\ref[src];random_name=1'>Randomize Name</A><br>"
 	//. += "<a href='?src=\ref[src];always_random_name=1'>Always Random Name: [pref.be_random_name ? "Yes" : "No"]</a>"
 	. += "<hr>"
@@ -65,6 +65,7 @@ datum/preferences
 		if (!isnull(raw_name) && CanUseTopic(user))
 
 			var/decl/cultural_info/check = SSculture.get_culture(pref.cultural_info[TAG_CULTURE])
+			if(!check) check = new()
 			var/new_name = check.sanitize_name(raw_name, pref.species)
 			if(new_name)
 				if(Retrieve_Record(new_name))

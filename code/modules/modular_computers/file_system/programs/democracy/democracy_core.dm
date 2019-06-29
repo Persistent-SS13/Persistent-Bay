@@ -25,6 +25,7 @@
 	size = 65
 	usage_flags = PROGRAM_CONSOLE
 	democratic = 1
+	category = PROG_GOVERNMENT
 
 /datum/nano_module/program/democracy_core
 	name = "Executive Government Control"
@@ -120,7 +121,7 @@
 			data["title"] = selected_assignment.name
 			data["cryonetwork"] = selected_assignment.cryo_net
 			data["selected_rank"] = selected_rank
-			if(selected_rank < selected_assignment.ranks.len+1)
+			if(selected_rank < selected_assignment.accesses.len)
 				data["increase_button"] = 1
 			if(selected_rank != 1)
 				data["decrease_button"] = 1
@@ -597,6 +598,8 @@
 				if(copy2)
 					copy.expense_limit = copy2.expense_limit
 					copy.accesses = copy2.accesses.Copy()
+				copy.name = select_name
+				copy.pay = new_pay
 				to_chat(usr, "Rank successfully created.")
 		if("delete_rank")
 			if(selected_assignment.accesses.len < 2)
@@ -604,7 +607,7 @@
 				return 0
 			var/choice2 = input(usr, "Are you sure you want to delete the highest rank?") in list("Confirm", "Cancel")
 			if(choice2 == "Cancel") return 1
-			selected_assignment.accesses.Cut(selected_assignment.accesses.len-1, selected_assignment.accesses.len)
+			selected_assignment.accesses.Cut(selected_assignment.accesses.len)
 			to_chat(usr, "Rank successfully deleted.")
 		if("pick_access")
 			var/datum/access_category/category = locate(href_list["selected_ref"])
@@ -661,11 +664,20 @@
 			if(choice)
 				selected_assignment.cryo_net = choice
 		if("increase_selected_rank")
-			if(selected_rank < selected_assignment.ranks.len+1)
+			if(selected_rank < selected_assignment.accesses.len)
 				selected_rank++
 		if("decrease_selected_rank")
 			if(selected_rank != 1)
 				selected_rank--
+		if("change_expense_limit")
+			var/datum/accesses/copy = selected_assignment.accesses[selected_rank]
+			if(istype(copy))
+				var/new_pay = input("Enter new expense limit. Expenses are used when approving orders and paying invoices with an expense card.","Change expense limit") as null|num
+				if(!new_pay && new_pay != 0) return 1
+				copy.expense_limit = new_pay
+			else
+				selected_assignment.accesses[selected_rank] = new /datum/accesses()
+		
 		if("print_expense")
 			if(connected_faction.last_expense_print > world.realtime)
 				to_chat(usr, "Your  print was rejected. You have printed an expense card in the last 3 minutes.")

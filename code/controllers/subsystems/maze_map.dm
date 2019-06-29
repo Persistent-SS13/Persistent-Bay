@@ -1,25 +1,16 @@
 SUBSYSTEM_DEF(mazemap)
 	name = "Maze Map"
 	wait = 3 MINUTES
-//	next_fire = 3 HOURS	// To prevent saving upon start.
-	var/init = 0
-	var/list/map_data = list()
-	var/list/activity_checklist
+
 	var/stat_active_wild_maps = 0
 
+	var/list/map_data = list()
+	var/list/activity_checklist
+	
 /datum/controller/subsystem/mazemap/stat_entry()
 	..("Maze Map Running")
 
-
-/datum/controller/subsystem/mazemap/fire()
-	if(!init)
-		init = 1
-		inits()
-		return
-	check_activity()
-	update_levels()
-
-/datum/controller/subsystem/mazemap/proc/inits()
+/datum/controller/subsystem/mazemap/Initialize(start_timeofday)
 	map_data["1"] = new /datum/zlevel_data/one()
 	map_data["2"] = new /datum/zlevel_data/two()
 	map_data["3"] = new /datum/zlevel_data/three()
@@ -77,7 +68,13 @@ SUBSYSTEM_DEF(mazemap)
 			if(transition_dir)
 				barrier.alpha = 50
 		transition_dir = 0
+	return ..()
+	
 
+/datum/controller/subsystem/mazemap/fire()
+	check_activity()
+	update_levels()
+	
 /datum/controller/subsystem/mazemap/proc/check_activity()
 	activity_checklist = list()
 	for (var/client/C in GLOB.clients)
@@ -91,7 +88,7 @@ SUBSYSTEM_DEF(mazemap)
 	stat_active_wild_maps = 0 // For stat purposes
 	for(var/z in map_data)
 		var/datum/zlevel_data/data = map_data[z]
-		if (activity_checklist[z] == TRUE)
+		if (activity_checklist["[z]"] == TRUE)
 			data.set_active()
 			stat_active_wild_maps++
 		else

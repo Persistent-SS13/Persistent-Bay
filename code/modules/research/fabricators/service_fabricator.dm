@@ -3,7 +3,7 @@
 	name = "Service Equipment Fabricator" // Self-explanatory
 	desc = "A machine used for the production of voidsuits and other spacesuits, plus equipment for mining and salvage." // Self-explanatory
 	circuit_type = /obj/item/weapon/circuitboard/fabricator/servicefab // Circuit for the machine. These, as well as their designs, should be defined in fabricator_circuits.dm
-	build_type = CONSUMERFAB // The identifer for what gets built in what fabricator. A new one *MUST* be defined in _defines/research.dm for each fabricator.
+	build_type = SERVICEFAB // The identifer for what gets built in what fabricator. A new one *MUST* be defined in _defines/research.dm for each fabricator.
 						 					 // More than one can be assigned per design, however, if you want something to be able to be built in more than one fabricator eg. Power Cells
 	metal_load_anim = TRUE				// Determines if a sheet loading animation will be applied when loading metals. If you're using a non-standard icon and don't
 										// want to sprite a new loading animation as well, set this to FALSE.
@@ -69,6 +69,11 @@
 	build_path = /obj/item/weapon/material/minihoe
 	materials = list(MATERIAL_STEEL = 0.75 SHEET)
 
+/datum/design/item/servicefab/botanytools/plant_scanner
+	name = "plant scanner"
+	build_path = /obj/item/device/scanner/plant
+	materials = list(MATERIAL_ALUMINIUM = 0.5 SHEET, MATERIAL_COPPER = 0.5 SHEET, MATERIAL_GLASS = 0.5 SHEET)
+
 /datum/design/item/servicefab/botanytools/plantbgone
 	name = "Plant-B-Gone (empty)"
 	build_path = /obj/item/weapon/reagent_containers/spray/plantbgone
@@ -78,6 +83,9 @@
 	build_path = /obj/item/weapon/material/scythe
 	materials = list(MATERIAL_STEEL = 3 SHEET, MATERIAL_WOOD = 2 SHEET)
 
+/datum/design/item/servicefab/botanytools/tray // tier 2
+	materials = list(MATERIAL_STEEL = 8 SHEET, MATERIAL_GLASS = 5 SHEETS, MATERIAL_COPPER = 1 SHEET)
+	build_path = /obj/machinery/portable_atmospherics/hydroponics
 
 /datum/design/item/servicefab/botanytools/flora_gun // tier 2
 	req_tech = list(TECH_MATERIAL = 2, TECH_BIO = 3, TECH_POWER = 3)
@@ -94,6 +102,22 @@
 /datum/design/item/servicefab/botanytools/clippers
 	build_path = /obj/item/weapon/tool/wirecutters/clippers
 	materials = list(MATERIAL_STEEL = 1 SHEET)
+	
+/datum/design/item/servicefab/botanytools/beehiveassembly
+	build_path = /obj/item/beehive_assembly
+	materials = list(MATERIAL_WOOD = 4 SHEET)
+
+/datum/design/item/servicefab/botanytools/beesmoker
+	build_path = /obj/item/bee_smoker
+	materials = list(MATERIAL_STEEL = 2 SHEET)
+	
+/datum/design/item/servicefab/botanytools/beeframe
+	build_path = /obj/item/honey_frame
+	materials = list(MATERIAL_WOOD = 1 SHEET)
+
+// /datum/design/item/servicefab/botanytools/disks
+// 	build_path = /obj/item/weapon/disk/botany
+// 	materials = list(MATERIAL_PLASTIC = 0.05 SHEET, MATERIAL_ALUMINIUM = 0.05 SHEET, MATERIAL_COPPER 0.05 SHEET)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -19,6 +19,26 @@
 
 
 
+/obj/machinery/fabricator/weapon_fabricator/can_connect(var/datum/world_faction/trying, var/mob/M)
+	var/datum/machine_limits/limits = trying.get_limits()
+	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(trying.uid)))
+		to_chat(M, "You do not have access to link machines to [trying.name].")
+		return 0
+	if(limits.limit_ammofab <= limits.ammofabs.len)
+		if(M)
+			to_chat(M, "[trying.name] cannot connect any more machines of this type.")
+		return 0
+	limits.ammofabs |= src
+	req_access_faction = trying.uid
+	connected_faction = trying
+
+/obj/machinery/fabricator/weapon_fabricator/can_disconnect(var/datum/world_faction/trying, var/mob/M)
+	var/datum/machine_limits/limits = trying.get_limits()
+	limits.engfabs -= src
+	req_access_faction = ""
+	connected_faction = null
+	if(M) to_chat(M, "The machine has been disconnected.")
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -273,6 +293,10 @@
 /datum/design/item/weaponfab/weapons/guns/pistol // tier 0
 	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GOLD = 1.5 SHEETS, MATERIAL_COPPER = 1.5 SHEETS)
 	build_path = /obj/item/weapon/gun/projectile/pistol/sec
+/datum/design/item/weaponfab/weapons/guns/pistol/MK // tier 0, the MK is a cheap knock-off with a high jam chance apparently
+	name = "defective MK58"
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_COPPER = 5 SHEETS)
+	build_path = /obj/item/weapon/gun/projectile/pistol/sec/MK
 /datum/design/item/weaponfab/weapons/guns/pistol/m1911 // tier 1 RESKIN of pistol
 	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GOLD = 1.5 SHEETS, MATERIAL_COPPER = 1.5 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/pistol/m1911
@@ -326,13 +350,17 @@
 	research = "pistol_4"
 
 //	Revolvers
-/datum/design/item/weaponfab/weapons/guns/revolver/holdout // tier 1, .22lr revolver
+/datum/design/item/weaponfab/weapons/guns/revolver/holdout // tier 0, shitty .22lr revolver
 	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GOLD = 3 SHEETS, MATERIAL_COPPER = 2.5 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/revolver/holdout
-	research = "pistol_1"
+
 /datum/design/item/weaponfab/weapons/guns/revolver/c38 // tier 1
 	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GOLD = 3 SHEETS, MATERIAL_COPPER = 2.5 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/revolver/medium
+	research = "pistol_1"
+/datum/design/item/weaponfab/weapons/guns/revolver/c38_detective // tier 1
+	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GOLD = 3 SHEETS, MATERIAL_COPPER = 2.5 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/revolver/detective
 	research = "pistol_1"
 
 /datum/design/item/weaponfab/weapons/guns/revolver/c357 // tier 2
@@ -354,6 +382,11 @@
 	build_path = /obj/item/weapon/gun/projectile/revolver/mateba
 	research = "pistol_4"
 
+/datum/design/item/weaponfab/weapons/guns/revolver/foundation // tier 5? Just some hiddne shit
+	materials = list(MATERIAL_PLASTEEL = 6 SHEETS, MATERIAL_GOLD = 5 SHEETS, MATERIAL_DIAMOND = 4 SHEETS, MATERIAL_PHORON = 3 SHEETS, MATERIAL_NULLGLASS = 5 SHEETS)
+	build_path = /obj/item/weapon/gun/projectile/revolver/foundation
+	research = "pistol_5"
+
 //	Shotguns
 /datum/design/item/weaponfab/weapons/guns/shotgun/doublebarrel // tier 1.5
 	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_WOOD = 4 SHEETS, MATERIAL_GOLD = 3.5 SHEET, MATERIAL_COPPER = 3 SHEET)
@@ -363,9 +396,13 @@
 	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GOLD = 4 SHEETS, MATERIAL_DIAMOND = 1 SHEETS)
 	build_path = /obj/item/weapon/gun/projectile/shotgun/pump
 	research = "shotgun_2"
+/datum/design/item/weaponfab/weapons/guns/shotgun/pump/exploration // tier 2
+	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GOLD = 4 SHEETS, MATERIAL_DIAMOND = 1 SHEETS)
+	build_path = /obj/item/weapon/gun/projectile/shotgun/pump/exploration
+	research = "shotgun_2"
 /datum/design/item/weaponfab/weapons/guns/shotgun/combat // tier 3
 	materials = list(MATERIAL_STEEL = 10 SHEETS, MATERIAL_GOLD = 8 SHEETS, MATERIAL_DIAMOND = 4 SHEETS)
-	build_path = /obj/item/weapon/gun/projectile/shotgun/doublebarrel
+	build_path = /obj/item/weapon/gun/projectile/shotgun/pump/combat
 	research = "shotgun_3"
 
 //	SMG
@@ -401,9 +438,13 @@
 	research = "autos_4"
 
 //	Sniper
+/datum/design/item/weaponfab/weapons/guns/automatic/heavysniper/replica // tier 0, Knock-off 9mm replica, basically an expensive pipe rifle
+	materials = list(MATERIAL_PLASTEEL = 5 SHEETS)
+	build_path = /obj/item/weapon/gun/projectile/boltaction/heavysniper/ant
+
 /datum/design/item/weaponfab/weapons/guns/automatic/heavysniper // tier 4
 	materials = list(MATERIAL_PLASTEEL = 10 SHEETS, MATERIAL_GOLD = 8 SHEETS, MATERIAL_DIAMOND = 3 SHEETS, MATERIAL_PHORON = 11 SHEETS)
-	build_path = /obj/item/weapon/gun/projectile/heavysniper
+	build_path = /obj/item/weapon/gun/projectile/boltaction/heavysniper
 	research = "antimaterial"
 
 // END BALLISTIC WEAPONS
@@ -412,7 +453,6 @@
 
 
 // ENERGY WEAPONS
-
 
 /datum/design/item/weaponfab/weapons/guns/energy/small // TIER 2
 	materials = list(MATERIAL_PLASTEEL = 4 SHEETS, MATERIAL_GOLD = 2 SHEETS, MATERIAL_PHORON = 1 SHEETS, MATERIAL_DIAMOND = 1 SHEETS)
@@ -437,6 +477,11 @@
 /datum/design/item/weaponfab/weapons/guns/laser_carbine // tier 3.5
 	materials = list(MATERIAL_PLASTEEL = 8 SHEETS, MATERIAL_GOLD = 6 SHEETS, MATERIAL_PHORON = 4 SHEETS, MATERIAL_DIAMOND = 2 SHEETS)
 	build_path = /obj/item/weapon/gun/energy/laser
+	research = "energy_2"
+
+/datum/design/item/weaponfab/weapons/guns/energy_revolver // tier 3.5
+	materials = list(MATERIAL_PLASTEEL = 8 SHEETS, MATERIAL_GOLD = 6 SHEETS, MATERIAL_PHORON = 4 SHEETS, MATERIAL_DIAMOND = 2 SHEETS)
+	build_path = /obj/item/weapon/gun/energy/revolver/secure
 	research = "energy_2"
 
 /datum/design/item/weaponfab/weapons/guns/energy/ionrifle/pistol // tier 3.5
@@ -468,6 +513,19 @@
 	build_path = /obj/item/weapon/gun/energy/pulse_rifle/carbine
 	research = "pulse_1"
 
+
+//
+// Not sure if those should be in the fab as-is, so I made them use a "skrell"  research
+//
+/datum/design/item/weaponfab/weapons/guns/energy/pistol/skrell // tier 1
+	materials = list(MATERIAL_PLASTEEL = 6 SHEETS, MATERIAL_GOLD = 4 SHEETS, MATERIAL_PHORON = 2 SHEETS, MATERIAL_DIAMOND = 1 SHEETS)
+	build_path = /obj/item/weapon/gun/energy/gun/skrell
+	research = "skrell_1"
+
+/datum/design/item/weaponfab/weapons/guns/pulse/skrell // tier 2
+	materials = list(MATERIAL_PLASTEEL = 20 SHEETS, MATERIAL_GOLD = 20 SHEETS, MATERIAL_PHORON = 20 SHEETS, MATERIAL_DIAMOND = 20 SHEETS, MATERIAL_URANIUM = 20 SHEETS)
+	build_path = /obj/item/weapon/gun/energy/pulse_rifle/skrell
+	research = "skrell_2"
 
 
 
@@ -1441,6 +1499,12 @@
 	id = "c44r"
 	build_path = /obj/item/ammo_casing/c44/rubber
 	materials = list(MATERIAL_PLASTIC = 75)
+
+/datum/design/item/weaponfab/c44/nullglass
+	name = "Nullglass .44 Bullet"
+	id = "c44ng"
+	build_path = /obj/item/ammo_casing/c44/nullglass
+	materials = list(MATERIAL_NULLGLASS = 75)
 
 /datum/design/item/weaponfab/c45
 	name = ".45 Bullet"

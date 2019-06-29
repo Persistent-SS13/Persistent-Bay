@@ -122,3 +122,19 @@
 	on_floor = 1
 	difficulty = 2
 	send_material_data = 1
+
+/datum/stack_recipe/mopbucket
+	title = "mop bucket"
+	result_type = /obj/structure/mopbucket
+	req_amount = 10
+	on_floor = 1
+	difficulty = 2
+
+/datum/stack_recipe/anomaly_container
+	title = "anomaly container"
+	result_type = /obj/structure/anomaly_container
+	req_amount = 10
+	on_floor = 1
+	one_per_turf = 1
+	difficulty = 3
+	time = 20 SECONDS

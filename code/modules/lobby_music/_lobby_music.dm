@@ -18,7 +18,7 @@
 	if(license)
 		var/license_url = license_to_url[license]
 		to_chat(listener, "<span class='good'>License: [license_url ? "<a href='[license_url]'>[license]</a>" : license]</span>")
-	var/sound/track = sound(song, repeat = 1, wait = 0, volume = 70, channel = GLOB.lobby_sound_channel)
+	var/sound/track = sound(song, repeat = 1, wait = 0, volume = 30, channel = GLOB.lobby_sound_channel)
 	track.priority = 254 //Should take over anything else trying to play stuff on the lobby channel
 	track.status = SOUND_STREAM //Better for playing music, uses less resources
 	track.environment = 0 //Avoid having the music affected by areas on the map (was a bug)

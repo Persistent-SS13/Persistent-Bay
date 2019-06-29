@@ -16,6 +16,14 @@
 	var/equalize_avg_temp = 0
 	var/flow_amount = 0
 
+/obj/effect/fluid/New()
+	. = ..()
+	ADD_SAVED_VAR(fluid_amount)
+	ADD_SAVED_VAR(equalizing_fluids)
+	ADD_SAVED_VAR(equalize_avg_depth)
+	ADD_SAVED_VAR(equalize_avg_temp)
+	ADD_SAVED_VAR(flow_amount)
+
 /obj/effect/fluid/ex_act()
 	return
 

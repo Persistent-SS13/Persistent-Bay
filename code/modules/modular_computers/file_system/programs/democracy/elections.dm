@@ -8,6 +8,7 @@
 	requires_ntnet = TRUE
 	size = 12
 	democratic = 1
+	category = PROG_GOVERNMENT
 
 /datum/nano_module/program/election
 	name = "Nexus City Elections and Nominations"
@@ -39,7 +40,7 @@
 				data["upcoming_election"] = "This saturday, at 10:00 AM to 10:00 PM the Governor will be elected. The Council election is next saturday."
 			else
 				data["upcoming_election"] = "This saturday, at 10:00 AM to 10:00 PM the Council will be elected. The Governor election is next saturday."
-			
+
 			var/list/formatted_ballots[0]
 			var/list/all_ballots = list()
 			all_ballots |= connected_faction.gov
@@ -53,7 +54,7 @@
 		if(!ballot)
 			ballot = connected_faction.is_councillor(user.real_name)
 		if(connected_faction.is_judge(user.real_name))
-			data["judge"] = 1 
+			data["judge"] = 1
 		else if(ballot)
 			data["elected"] = 1
 			data["reelection"] = ballot.seeking_reelection
@@ -70,7 +71,14 @@
 					data["candidate_desc"] = candidate.desc
 			else
 				data["eligible"] = 1
-		
+				var/list/formatted_ballots[0]
+				var/list/all_ballots = list()
+				all_ballots |= connected_faction.gov
+				all_ballots |= connected_faction.city_council
+				for(var/datum/democracy/ballot2 in all_ballots)
+					formatted_ballots[++formatted_ballots.len] = list("name" = "[ballot2.title] ([ballot2.candidates.len])", "ref" = "\ref[ballot2]")
+				if(formatted_ballots.len)
+					data["ballots"] = formatted_ballots
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "elections.tmpl", name, 600, 500, state = state)
@@ -97,7 +105,7 @@
 				return 0
 			var/datum/democracy/ballot = locate(href_list["ref"])
 			if(ballot)
-				
+
 				var/choice = input(usr,"Are you sure you want to pay 500$$ to enter the election for [ballot.title]?") in list("Confirm", "Cancel")
 				if(choice == "Confirm")
 					var/desc = sanitize(input(usr, "Enter Candidacy Description. Maximum 300 Characters", "Candidacy Description", "") as message|null, 300)
@@ -135,7 +143,7 @@
 				var/datum/candidate/candidate = pairing[1]
 				if(candidate)
 					candidate.desc = desc
-		if("elected_changedesc")			
+		if("elected_changedesc")
 			var/desc = sanitize(input(usr, "Enter Candidacy Description. Maximum 300 Characters", "Candidacy Description", "") as message|null, 300)
 			if(!desc)
 				desc = ""
@@ -143,8 +151,8 @@
 			if(pairing && pairing.len == 2)
 				var/datum/candidate/candidate = pairing[1]
 				if(candidate)
-					candidate.desc = desc		
-					
+					candidate.desc = desc
+
 		if("select_reelect")
 			var/datum/democracy/ballot = connected_faction.is_governor(user.real_name)
 			if(!ballot)
@@ -166,4 +174,3 @@
 						ballot.candidates -= candidate
 						break
 
-	

@@ -9,9 +9,9 @@
 		return
 
 	if(reinf_material)
-		construction_stage = 6
+		state = 6
 	else
-		construction_stage = null
+		state = null
 	if(!material)
 		material = SSmaterials.get_material_by_name(DEFAULT_WALL_MATERIAL)
 	if(material)
@@ -71,8 +71,8 @@
 
 	if(reinf_material)
 		var/reinf_color = paint_color ? paint_color : reinf_material.icon_colour
-		if(construction_stage != null && construction_stage < 6)
-			I = image('icons/turf/wall_masks.dmi', "reinf_construct-[construction_stage]")
+		if(state != null && state < 6)
+			I = image('icons/turf/wall_masks.dmi', "reinf_construct-[state]")
 			I.color = reinf_color
 			overlays += I
 		else

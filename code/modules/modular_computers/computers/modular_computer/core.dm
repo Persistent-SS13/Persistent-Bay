@@ -3,7 +3,7 @@
 		last_power_usage = 0
 		return 0
 
-	if(get_health() <= (break_threshold * get_max_health()))
+	if(get_health() <= (broken_threshold * get_max_health()))
 		shutdown_computer()
 		return 0
 
@@ -165,7 +165,7 @@
 	if(tesla_link)
 		tesla_link.enabled = 1
 	var/issynth = issilicon(user) // Robots and AIs get different activation messages.
-	if(get_health() <= (break_threshold * get_max_health()))
+	if(get_health() <= (broken_threshold * get_max_health()))
 		if(issynth)
 			to_chat(user, "You send an activation signal to \the [src], but it responds with an error code. It must be damaged.")
 		else
@@ -197,7 +197,7 @@
 // Returns 0 for No Signal, 1 for Low Signal and 2 for Good Signal. 3 is for wired connection (always-on)
 /obj/item/modular_computer/proc/get_ntnet_status(var/specific_action = 0)
 	if(network_card)
-		return network_card.get_signal(specific_action)
+		return network_card.connected_network
 	else
 		return 0
 

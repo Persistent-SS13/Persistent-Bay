@@ -1,6 +1,7 @@
 /obj/item/clothing/under/fed
 	desc = "A federation standard utility uniform."
 	name = "\improper Federation utility uniform"
+	item_icons = list(slot_w_uniform_str = 'icons/mob/uniform.dmi')
 	icon_state = "greenutility"
 	item_state = "greenutility"
 	worn_state = "greenutility"

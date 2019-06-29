@@ -8,7 +8,7 @@
 	requires_ntnet = 1
 	size = 12
 	democratic = 1
-
+	category = PROG_GOVERNMENT
 
 /datum/nano_module/program/tax_laws
 	name = "Nexus City Tax Code"

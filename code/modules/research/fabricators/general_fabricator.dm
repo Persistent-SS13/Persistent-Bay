@@ -63,104 +63,173 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
+//
+//Bottles
+//
 /datum/design/item/genfab/container/catering/bottle
 	build_type = SERVICEFAB
 /datum/design/item/genfab/container/catering/bottle/gin
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/gin
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/gin/empty
 
 /datum/design/item/genfab/container/catering/bottle/whiskey
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/whiskey
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/whiskey/empty
 
 /datum/design/item/genfab/container/catering/bottle/specialwhiskey
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/specialwhiskey
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/specialwhiskey/empty
 
 /datum/design/item/genfab/container/catering/bottle/vodka
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/vodka
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/vodka/empty
+
+/datum/design/item/genfab/container/catering/bottle/premiumvodka
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/premiumvodka/empty
 
 /datum/design/item/genfab/container/catering/bottle/tequilla
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/tequilla
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/tequilla/empty
 
 /datum/design/item/genfab/container/catering/bottle/bottleofnothing
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/bottleofnothing
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/bottleofnothing/empty
 
 /datum/design/item/genfab/container/catering/bottle/patron
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/patron
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/patron/empty
 
 /datum/design/item/genfab/container/catering/bottle/rum
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/rum
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/rum/empty
 
 /datum/design/item/genfab/container/catering/bottle/tequilla
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/tequilla
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/tequilla/empty
 
 /datum/design/item/genfab/container/catering/bottle/vermouth
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/vermouth
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/vermouth/empty
 
 /datum/design/item/genfab/container/catering/bottle/kahlua
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/kahlua
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/kahlua/empty
 
 /datum/design/item/genfab/container/catering/bottle/goldschlager
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/goldschlager
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/goldschlager/empty
 
 /datum/design/item/genfab/container/catering/bottle/cognac
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/cognac
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/cognac/empty
 
 /datum/design/item/genfab/container/catering/bottle/wine
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/wine
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/wine/empty
+
+/datum/design/item/genfab/container/catering/bottle/premiumwine
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/premiumwine/empty
 
 /datum/design/item/genfab/container/catering/bottle/absinthe
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/absinthe
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/absinthe/empty
 
 /datum/design/item/genfab/container/catering/bottle/melonliquor
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/melonliquor
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/melonliquor/empty
 
 /datum/design/item/genfab/container/catering/bottle/bluecuracao
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/bluecuracao
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/bluecuracao/empty
 
 /datum/design/item/genfab/container/catering/bottle/herbal
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/herbal
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/herbal/empty
 
 /datum/design/item/genfab/container/catering/bottle/grenadine
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/grenadine
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/grenadine/empty
 
 /datum/design/item/genfab/container/catering/bottle/cola
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/cola
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/cola/empty
 
 /datum/design/item/genfab/container/catering/bottle/space_up
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/space_up
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/space_up/empty
 
 /datum/design/item/genfab/container/catering/bottle/space_mountain_wind
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/space_mountain_wind
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/space_mountain_wind/empty
 
 /datum/design/item/genfab/container/catering/bottle/pwine
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/pwine
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/pwine/empty
 	name = "bottle of wine (skull label)"
 
+/datum/design/item/genfab/container/catering/bottle/oiljug
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/oiljug/empty
+
+//
+//Condiment Bottles
+//
+/datum/design/item/genfab/container/catering/condiment
+	materials = list(MATERIAL_PLASTIC = 0.1 SHEETS)
+	build_path = /obj/item/weapon/reagent_containers/food/condiment
+
+/datum/design/item/genfab/container/catering/condiment/enzyme
+	build_path = /obj/item/weapon/reagent_containers/food/condiment/enzyme/empty
+/datum/design/item/genfab/container/catering/condiment/barbecue
+	build_path = /obj/item/weapon/reagent_containers/food/condiment/barbecue/empty
+/datum/design/item/genfab/container/catering/condiment/sugar
+	build_path = /obj/item/weapon/reagent_containers/food/condiment/sugar/empty
+/datum/design/item/genfab/container/catering/condiment/ketchup
+	build_path = /obj/item/weapon/reagent_containers/food/condiment/ketchup/empty
+/datum/design/item/genfab/container/catering/condiment/cornoil
+	build_path = /obj/item/weapon/reagent_containers/food/condiment/cornoil/empty
+/datum/design/item/genfab/container/catering/condiment/vinegar
+	build_path = /obj/item/weapon/reagent_containers/food/condiment/vinegar/empty
+/datum/design/item/genfab/container/catering/condiment/mayo
+	build_path = /obj/item/weapon/reagent_containers/food/condiment/mayo/empty
+/datum/design/item/genfab/container/catering/condiment/frostoil
+	build_path = /obj/item/weapon/reagent_containers/food/condiment/frostoil/empty
+/datum/design/item/genfab/container/catering/condiment/capsaicin
+	build_path = /obj/item/weapon/reagent_containers/food/condiment/capsaicin/empty
+
+/datum/design/item/genfab/container/catering/condiment/small
+	materials = list(MATERIAL_PLASTIC = 0.05 SHEETS)
+	build_path = /obj/item/weapon/reagent_containers/food/condiment/small/empty
+/datum/design/item/genfab/container/catering/condiment/small/saltshaker
+	build_path = /obj/item/weapon/reagent_containers/food/condiment/small/saltshaker/empty
+/datum/design/item/genfab/container/catering/condiment/small/peppermill
+	build_path = /obj/item/weapon/reagent_containers/food/condiment/small/peppermill/empty
+/datum/design/item/genfab/container/catering/condiment/small/sugar
+	build_path = /obj/item/weapon/reagent_containers/food/condiment/small/sugar/empty
+
+//
+//Cartons
+//
 /datum/design/item/genfab/container/catering/carton
 	materials = list(MATERIAL_CARDBOARD = 0.1 SHEETS)
 
 /datum/design/item/genfab/container/catering/carton/orangejuice
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/orangejuice
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/orangejuice/empty
 
 /datum/design/item/genfab/container/catering/carton/cream
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/cream
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/cream/empty
 
 /datum/design/item/genfab/container/catering/carton/tomatojuice
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/tomatojuice
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/tomatojuice/empty
 
 /datum/design/item/genfab/container/catering/carton/limejuice
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/limejuice
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/limejuice/empty
 
+/datum/design/item/genfab/container/catering/carton/milk
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/milk/empty
+
+/datum/design/item/genfab/container/catering/carton/milk/smallcarton
+	materials = list(MATERIAL_CARDBOARD = 0.05 SHEETS)
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/milk/smallcarton/empty
+
+/datum/design/item/genfab/container/catering/carton/milk/smallcarton/chocolate
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/milk/smallcarton/chocolate/empty
+
+/datum/design/item/genfab/container/catering/carton/soymilk
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/soymilk/empty
+
+//
+//Small Bottles
+//
 /datum/design/item/genfab/container/catering/bottle/small
 	materials = list(MATERIAL_GLASS = 0.1 SHEETS)
 
 /datum/design/item/genfab/container/catering/bottle/small/beer
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/small/beer
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/small/beer/empty
 
 /datum/design/item/genfab/container/catering/bottle/small/ale
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/small/ale
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/small/ale/empty
 
 
-
+//
+//Sci stuff
+//
 /datum/design/item/genfab/container/sci/spraybottle
 	build_path = /obj/item/weapon/reagent_containers/spray
 
@@ -171,8 +240,11 @@
 /datum/design/item/genfab/container/sci/bucket
 	build_path = /obj/item/weapon/reagent_containers/glass/bucket
 
-/datum/design/item/genfab/container/jar
+/datum/design/item/genfab/container/glassjar
 	build_path = /obj/item/glass_jar
+
+/datum/design/item/genfab/container/jar
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/jar
 
 /datum/design/item/genfab/container/sci/beaker
 	build_path = /obj/item/weapon/reagent_containers/glass/beaker
@@ -190,10 +262,6 @@
 /datum/design/item/genfab/container/sci/syringe
 	build_path = /obj/item/weapon/reagent_containers/syringe
 
-/datum/design/item/genfab/container/holywater
-	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/holywater
-
-
 /datum/design/item/genfab/container/beerkeg
 	build_path = /obj/structure/reagent_dispensers/beerkeg/empty
 	materials = list(MATERIAL_ALUMINIUM = 20 SHEET)
@@ -207,9 +275,13 @@
 /datum/design/item/genfab/container/carafe
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/carafe
 
+//------------
+// CUPS
+//------------
 /datum/design/item/genfab/container/coffeecup
 	research = "coffeecups"
 	build_type = list(CONSUMERFAB, SERVICEFAB)
+	materials = list(MATERIAL_PLASTIC = 0.2 SHEETS)
 /datum/design/item/genfab/container/coffeecup/simple
 	research = null
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup
@@ -221,13 +293,18 @@
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/green
 
 /datum/design/item/genfab/container/coffeecup/tall
+	materials = list(MATERIAL_PLASTIC = 0.4 SHEETS)
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/tall
 
 /datum/design/item/genfab/container/coffeecup/heart
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/heart
 
 /datum/design/item/genfab/container/coffeecup/metal
+	materials = list(MATERIAL_ALUMINIUM = 0.2 SHEETS)
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/metal
+
+/datum/design/item/genfab/container/coffeecup/punitelli
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/punitelli/empty
 
 /datum/design/item/genfab/container/coffeecup/rainbow
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/rainbow
@@ -250,11 +327,28 @@
 /datum/design/item/genfab/container/coffeecup/britcup
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/britcup
 
-
 /datum/design/item/genfab/container/coffeecup/diona
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/diona
 
+/datum/design/item/genfab/container/coffeecup/corp
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/corp
 
+/datum/design/item/genfab/container/coffeecup/golden_cup
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/golden_cup
+	materials = list(MATERIAL_GOLD = 0.5 SHEET)
+
+/datum/design/item/genfab/container/coffeecup/teacup
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/teacup
+	materials = list(MATERIAL_SAND = 0.2 SHEETS)
+
+/datum/design/item/genfab/container/coffeecup/teacup/tall
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/tea
+	materials = list(MATERIAL_PLASTIC = 0.4 SHEETS)
+
+
+//-------
+//Glasses
+//-------
 /datum/design/item/genfab/container/drinkingglass
 	build_type = list(CONSUMERFAB, SERVICEFAB)
 
@@ -282,27 +376,44 @@
 /datum/design/item/genfab/container/drinkingglass/wine
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/wine
 
+/datum/design/item/genfab/container/drinkingglass/plastic_cup
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffee/empty
+	materials = list(MATERIAL_PLASTIC = 0.1 SHEET)
+
+/datum/design/item/genfab/container/drinkingglass/plastic_cup/hotchoco
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/h_chocolate/empty
+
+/datum/design/item/genfab/container/drinkingglass/paper_cup
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/sillycup
+	materials = list(MATERIAL_WOOD = 0.1 SHEET)
+
+//---------
+//Others
+//--------
 /datum/design/item/genfab/container/drinkingglass/shaker
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/shaker
 	materials = list(MATERIAL_ALUMINIUM = 0.45 SHEET)
 
 /datum/design/item/genfab/container/drinkingglass/teapot
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/teapot
+	materials = list(MATERIAL_STEEL = 0.5 SHEET)
 
 /datum/design/item/genfab/container/drinkingglass/pitcher
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/pitcher
+	materials = list(MATERIAL_STEEL = 0.25 SHEET)
 
+//-------
+//Flasks
+//-------
 /datum/design/item/genfab/container/drinkingglass/flask
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/flask
-	materials = list(MATERIAL_STEEL = 0.2 SHEET)
+	materials = list(MATERIAL_ALUMINIUM = 0.2 SHEET)
 	research = "flasks"
 /datum/design/item/genfab/container/drinkingglass/flask/shiny
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/flask/shiny
 
-
 /datum/design/item/genfab/container/drinkingglass/flask/lithium
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/flask/lithium
-
 
 /datum/design/item/genfab/container/drinkingglass/flask/detflask
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/flask/detflask
@@ -311,11 +422,14 @@
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/flask/barflask
 
 /datum/design/item/genfab/container/drinkingglass/flask/vacuumflask
+	materials = list(MATERIAL_ALUMINIUM = 0.2 SHEET, MATERIAL_GLASS = 0.1 SHEET)
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/flask/vacuumflask
 
 /datum/design/item/genfab/container/drinkingglass/flask/fitnessflask
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/fitnessflask
 
+/datum/design/item/genfab/container/drinkingglass/flask/holyflask
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/holywater/empty
 
 /datum/design/item/genfab/container/sci/pills
 	build_path = /obj/item/weapon/reagent_containers/pill
@@ -334,6 +448,75 @@
 	research = "bluespace_beaker"
 
 
+//-----------
+//Soda Cans
+//-----------
+/datum/design/item/genfab/container/cans
+	materials = list(MATERIAL_ALUMINIUM = 0.4 SHEETS)
+
+/datum/design/item/genfab/container/cans/cola
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/cans/cola/empty
+
+/datum/design/item/genfab/container/cans/waterbottle
+	materials = list(MATERIAL_PLASTIC = 0.4 SHEETS)
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/cans/waterbottle/empty
+
+/datum/design/item/genfab/container/cans/space_mountain_wind
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/cans/space_mountain_wind/empty
+
+/datum/design/item/genfab/container/cans/thirteenloko
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/cans/thirteenloko/empty
+
+/datum/design/item/genfab/container/cans/dr_gibb
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/cans/dr_gibb/empty
+
+/datum/design/item/genfab/container/cans/starkist
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/cans/starkist/empty
+
+/datum/design/item/genfab/container/cans/space_up
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/cans/space_up/empty
+
+/datum/design/item/genfab/container/cans/lemon_lime
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/cans/lemon_lime/empty
+
+/datum/design/item/genfab/container/cans/iced_tea
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/cans/iced_tea/empty
+
+/datum/design/item/genfab/container/cans/iced_tea
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/cans/iced_tea/empty
+
+/datum/design/item/genfab/container/cans/iced_tea
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/cans/iced_tea/empty
+
+/datum/design/item/genfab/container/cans/grape_juice
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/cans/grape_juice/empty
+
+/datum/design/item/genfab/container/cans/tonic
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/cans/tonic/empty
+
+/datum/design/item/genfab/container/cans/sodawater
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/cans/sodawater/empty
+
+/datum/design/item/genfab/container/cans/syndicolax
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/cans/syndicolax/empty
+
+/datum/design/item/genfab/container/cans/artbru
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/cans/artbru/empty
+
+/datum/design/item/genfab/container/cans/syndicola
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/cans/syndicola/empty
+
+/datum/design/item/genfab/container/cans/boda
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/square/boda/empty
+
+/datum/design/item/genfab/container/cans/bodaplus
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/square/bodaplus/empty
+
+/datum/design/item/genfab/container/cans/speer
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/cans/speer/empty
+
+/datum/design/item/genfab/container/cans/ale
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/cans/ale/empty
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -431,16 +614,74 @@
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
 	build_path = /obj/item/weapon/computer_hardware/battery_module/micro
 
+/**
 /datum/design/item/genfab/computer/adv/logistic_processor
 	name = "Advanced Logistic Processor"
 	req_tech = list(TECH_DATA = 5, TECH_ENGINEERING = 4)
 	materials = list(MATERIAL_STEEL = 5000, MATERIAL_GLASS = 1000, MATERIAL_PHORON = 3000, MATERIAL_DIAMOND = 3000, MATERIAL_URANIUM = 3000)
 	build_path = /obj/item/weapon/computer_hardware/logistic_processor
 
-// /datum/design/item/genfab/computer/adv/dna_scanner // tier 0
-// 	name = "DNA scanner port"
-// 	materials = list(MATERIAL_STEEL = 01 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
-// 	build_path = /obj/item/weapon/computer_hardware/dna_scanner
+
+/datum/design/item/genfab/computer/adv/dna_scanner // tier 0
+ 	name = "DNA scanner port"
+ 	materials = list(MATERIAL_STEEL = 01 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
+ 	build_path = /obj/item/weapon/computer_hardware/dna_scanner
+**/
+
+
+
+// Processor unit
+/datum/design/item/genfab/computer/cpu/
+	name = "computer processor unit"
+	id = "cpu_normal"
+	req_tech = list(TECH_DATA = 3, TECH_ENGINEERING = 2)
+	materials = list(MATERIAL_STEEL = 1600)
+	build_path = /obj/item/weapon/computer_hardware/processor_unit
+
+/datum/design/item/genfab/computer/cpu/small
+	name = "computer microprocessor unit"
+	id = "cpu_small"
+	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_COPPER = 5 SHEETS)
+	build_path = /obj/item/weapon/computer_hardware/processor_unit/small
+
+/datum/design/item/genfab/computer/adv/cpu/photonic
+	name = "computer photonic processor unit"
+	id = "pcpu_normal"
+	req_tech = list(TECH_DATA = 5, TECH_ENGINEERING = 4)
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_COPPER = 5 SHEETS, MATERIAL_PHORON = 1 SHEET)
+	build_path = /obj/item/weapon/computer_hardware/processor_unit/photonic
+
+/datum/design/item/genfab/computer/adv/cpu/photonic/small
+	name = "computer photonic microprocessor unit"
+	id = "pcpu_small"
+	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 3)
+	materials = list(MATERIAL_STEEL = 2, MATERIAL_COPPER = 2 SHEETS)
+	build_path = /obj/item/weapon/computer_hardware/processor_unit/photonic/small
+
+/datum/design/item/genfab/computer/netcard/basic
+	name = "basic network card"
+	id = "netcard_basic"
+	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 1)
+	build_type = CIRCUITFAB
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 1 SHEET)
+	build_path = /obj/item/weapon/computer_hardware/network_card
+
+/datum/design/item/genfab/computer/adv/netcard/advanced
+	name = "advanced network card"
+	id = "netcard_advanced"
+	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 2)
+	build_type = CIRCUITFAB
+	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_COPPER = 2 SHEETS)
+	build_path = /obj/item/weapon/computer_hardware/network_card/advanced
+
+/datum/design/item/genfab/computer/adv/netcard/wired
+	name = "wired network card"
+	id = "netcard_wired"
+	req_tech = list(TECH_DATA = 5, TECH_ENGINEERING = 3)
+	build_type = CIRCUITFAB
+	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_COPPER = 5 SHEETS)
+	build_path = /obj/item/weapon/computer_hardware/network_card/wired
 
 // /datum/design/item/genfab/computer/adv/pda
 // 	name = "PDA design"

@@ -67,6 +67,22 @@
 		if(SSsupply.shuttle)
 			CRASH("A supply shuttle is already defined.")
 		SSsupply.shuttle = src
+	
+	ADD_SAVED_VAR(name)
+	ADD_SAVED_VAR(warmup_time)
+	ADD_SAVED_VAR(flags)
+	ADD_SAVED_VAR(multiz)
+	ADD_SAVED_VAR(ceiling_type)
+	ADD_SAVED_VAR(knockdown)
+	ADD_SAVED_VAR(finalized)
+	ADD_SAVED_VAR(owner)
+	ADD_SAVED_VAR(ownertype)
+	ADD_SAVED_VAR(size)
+	ADD_SAVED_VAR(defer_initialisation)
+	ADD_SAVED_VAR(logging_home_tag)
+	ADD_SAVED_VAR(logging_access)
+	ADD_SAVED_VAR(mothershuttle)
+	ADD_SAVED_VAR(motherdock)
 
 /datum/shuttle/proc/setup()
 	var/list/areas = list()
@@ -304,10 +320,17 @@
 
 	// Move the shuttle
 //	message_admins("dock_interior [bridge.dock.dock_interior].")
-//	if(bridge.dock.dock_interior == 1)
-	translate_turfs(turf_translation, current_location.base_area, current_location.base_turf)
-//	else
-//		translate_turfs(turf_translation, current_location.base_area, /turf/space)
+	var/barea = locate(world.area)
+	var/bturf = /turf/space
+
+	//If the location is a landmark
+	if(istype(current_location))
+		barea = current_location.base_area 
+		bturf = bridge.dock.dock_interior == 1? current_location.base_turf : /turf/space
+	else if(bridge.dock.dock_interior == 1)
+		bturf = /turf/simulated/floor/plating
+		barea = get_area(current_location)
+	translate_turfs(turf_translation, barea, bturf)
 
 	// Reset interior lighting
 	var/obj/machinery/docking_beacon/dest_dock

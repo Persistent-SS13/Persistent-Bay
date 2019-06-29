@@ -559,3 +559,14 @@
 	taste_description = "nothing"
 	reagent_state = LIQUID
 	color = COLOR_GRAY15
+
+//	C20H24N2O2
+/datum/reagent/quinine
+	name = "Quinine"
+	description = "A very bitter, uv fluorescent powder. Used in making tonic water."
+	taste_description = "bitterness"
+	taste_mult = 4
+	reagent_state = SOLID
+	color = COLOR_BROWN_ORANGE
+	heating_point = T0C + 177
+	metabolism = 0.02 //Takes a while to get flushed// 8-14h - kidneys

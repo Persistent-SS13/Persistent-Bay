@@ -35,6 +35,8 @@
 	//Optional transition area
 	if(landmark_transition)
 		landmark_transition = SSshuttle.get_landmark(landmark_transition)
+	
+	ADD_SAVED_VAR(flags)
 
 /datum/shuttle/autodock/Destroy()
 	next_location = null

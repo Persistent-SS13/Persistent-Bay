@@ -7,7 +7,7 @@
 	extended_desc = "Used by individuals to control things about their Nexus Account and personal holdings."
 	requires_ntnet = 1
 	size = 12
-
+	usage_flags = PROGRAM_ALL
 /datum/nano_module/program/personal
 	name = "Personal Options"
 	available_to_ai = TRUE
@@ -63,7 +63,7 @@
 		ui.set_initial_data(data)
 		ui.open()
 
-/datum/nano_module/program/management/Topic(href, href_list)
+/datum/nano_module/program/personal/Topic(href, href_list)
 	if(..())
 		return 1
 	. = SSnano.update_uis(src)
@@ -78,10 +78,11 @@
 		if("email_off")
 			R.notifications = 0
 		if("toggle_subscribe")
-			if(href_list["uid"] in R.subscribed_orgs)
-				R.subscribed_orgs -= href_list["uid"]
+			var/datum/world_faction/faction = get_faction(href_list["uid"])
+			if(usr.real_name in faction.people_to_notify)
+				faction.people_to_notify -= usr.real_name
 			else
-				R.subscribed_orgs |= href_list["uid"]
+				faction.people_to_notify |= usr.real_name
 		if("surrender")
 			var/datum/world_faction/business/faction = locate(href_list["ref"])
 			if(istype(faction))

@@ -1,5 +1,5 @@
 /mob/living/simple_animal/hostile/creature
-	name = "greed"
+	name = "GREED" // never uncapitalize GREED
 	desc = "A sanity-destroying otherthing."
 	icon = 'icons/mob/critter.dmi'
 	speak_emote = list("gibbers")
@@ -12,8 +12,8 @@
 	move_to_delay = 12
 	destroy_surroundings = 1
 
-	melee_damage_lower = 40
-	melee_damage_upper = 60
+	melee_damage_lower = 20
+	melee_damage_upper = 30
 	attacktext = "chomped"
 	attack_sound = 'sound/weapons/bite.ogg'
 

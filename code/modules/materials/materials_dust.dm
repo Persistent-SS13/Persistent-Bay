@@ -11,17 +11,29 @@
 	amount = 1
 	max_amount = 500
 	var/material/material
+	var/saved_material
 
-/obj/item/stack/material_dust/New(var/newloc, var/_mat)
+/obj/item/stack/material_dust/New(var/newloc, var/amount, var/_mat)
 	if(_mat)
 		set_material_data_byname(_mat)
-	..(newloc)
-	map_storage_saved_vars += ";material"
+	..(newloc, amount)
+	ADD_SAVED_VAR(saved_material)
 
+/obj/item/stack/material_dust/before_save()
+	. = ..()
+	if(material)
+		saved_material = material.name
+/obj/item/stack/material_dust/after_save()
+	. = ..()
+	saved_material = null
 /obj/item/stack/material_dust/after_load()
 	..()
-	set_material_data(material)
-	update_icon()
+	if(saved_material) //Added the check for previous versions of materials
+		set_material_data(saved_material) 
+
+/obj/item/stack/material_dust/Initialize()
+	. = ..()
+	queue_icon_update()
 
 /obj/item/stack/material_dust/proc/set_material_data_byname(var/material_name)
 	set_material_data(SSmaterials.get_material_by_name(material_name))

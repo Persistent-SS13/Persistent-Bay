@@ -14,11 +14,12 @@
 	name = "Network Selection"
 	available_to_ai = TRUE
 
-/datum/nano_module/program/computer_ntrouter/proc/format_networks()
+/datum/nano_module/program/computer_ntrouter/proc/format_networks(var/mob/user)
 	var/list/found_networks = list()
+	var/obj/item/weapon/card/id/id = user.GetIdCard()
 	for(var/datum/world_faction/fact in GLOB.all_world_factions)
 		if(fact.network)
-			if(!fact.network.invisible)
+			if(!fact.network.invisible || (fact.get_stockholder(user.real_name)) || (id && (core_access_network_linking in id.GetAccess(fact.uid))))
 				found_networks |= fact.network
 	var/list/formatted = list()
 	for(var/datum/ntnet/network in found_networks)
@@ -43,7 +44,7 @@
 			has_password = 1
 		data["has_password"] = has_password
 		data["card_installed"] = 1
-		data["networks"] = format_networks()
+		data["networks"] = format_networks(user)
 		data["connected_to"] = program.computer.network_card.connected_to
 		var/regex/allregex = regex(".")
 		data["display_password"] = allregex.Replace(program.computer.network_card.password, "*")
@@ -94,10 +95,5 @@
 		program.computer.network_card.connected_to = network.net_uid
 		if(network.secured)
 			program.computer.network_card.password = input(usr, "This network requires a password","Enter network password","")
-		program.computer.network_card.get_network()
-		return 1
-	if(href_list["manual_connect"])
-		program.computer.network_card.connected_to = input(usr, "Enter the net_uid for the network","Enter net_uid","")
-		program.computer.network_card.password = input(usr,"Enter the password for the network. (Only used if required)","Enter password","")
 		program.computer.network_card.get_network()
 		return 1

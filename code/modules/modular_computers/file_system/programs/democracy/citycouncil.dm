@@ -8,6 +8,7 @@
 	requires_ntnet = TRUE
 	size = 12
 	democratic = 1
+	category = PROG_GOVERNMENT
 
 /datum/nano_module/program/citycouncil
 	name = "Nexus City Council Control"
@@ -107,9 +108,9 @@
 							billtype = "(Criminal Law) "
 						else if(vote.bill_type == 3)
 							billtype = "(Tax Policy) "
-						else if(selected_vote.bill_type == 4)
+						else if(vote.bill_type == 4)
 							billtype = "(Judge Removal) "
-						else if(selected_vote.bill_type == 5)
+						else if(vote.bill_type == 5)
 							billtype = "(Judge Nomination) "
 						formatted_votes[++formatted_votes.len] = list("name" = "[billtype][vote.name] ([vote.yes_votes.len] Yea / [vote.no_votes.len] Nay)", "ref" = "\ref[vote]")
 					data["votes"] = formatted_votes

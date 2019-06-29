@@ -149,7 +149,7 @@
 	reinf_material = other.reinf_material
 	girder_material = other.girder_material
 	girder_reinf_material = other.girder_reinf_material
-	construction_stage = other.construction_stage
+	state = other.state
 	can_open = other.can_open
 	blocks_air = other.blocks_air
 	return 1

@@ -25,7 +25,7 @@
 	if(should_have_organ(BP_BRAIN))
 		var/obj/item/organ/internal/brain/sponge = internal_organs_by_name[BP_BRAIN]
 		if(sponge)
-			sponge.set_health(amount)
+			sponge.set_health(sponge.get_max_health() - amount)
 			updatehealth()
 
 /mob/living/carbon/human/getBrainLoss()
@@ -189,8 +189,11 @@
 	var/heal = amount < 0
 	amount = abs(amount)
 
-	if(!heal && (CE_ANTITOX in chem_effects))
-		amount *= 1 - (chem_effects[CE_ANTITOX] * 0.25)
+	if (!heal)
+		amount = amount * species.toxins_mod
+		if (CE_ANTITOX in chem_effects)
+			amount *= 1 - (chem_effects[CE_ANTITOX] * 0.25)
+
 
 	var/list/pick_organs = shuffle(internal_organs.Copy())
 

@@ -533,7 +533,7 @@
 		return FALSE
 
 /obj/structure/closet/proc/CanToggleLock(var/mob/user, var/obj/item/weapon/card/id/id_card)
-	return allowed(user) || (istype(id_card) && check_access_list(id_card.GetAccess()))
+	return allowed(user) || (istype(id_card) && check_access_list(id_card.GetAccess(req_access_faction)))
 
 /obj/structure/closet/AltClick(var/mob/user)
 	if(!src.opened)
@@ -649,6 +649,6 @@
 				else
 					req_access |= text2num(href_list["selected_access"])
 		if("select_faction")
-			var/obj/item/weapon/card/id/id_card = usr.get_idcard()
+			var/obj/item/weapon/card/id/id_card = usr.GetIdCard()
 			if(id_card)
 				req_access_faction = id_card.selected_faction

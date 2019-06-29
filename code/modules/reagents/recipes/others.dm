@@ -1,23 +1,46 @@
-// /datum/chemical_reaction/silicate
-// 	name = "Silicate"
-// 	result = /datum/reagent/silicate
-// 	required_reagents = list(/datum/reagent/aluminum = 1, /datum/reagent/silicon = 1, /datum/reagent/acetone = 1)
-// 	result_amount = 3
 
-/datum/chemical_reaction/mutagen
-	name = "Unstable mutagen"
-	result = /datum/reagent/mutagen
-	required_reagents = list(/datum/reagent/radium = 1, /datum/reagent/phosphorus = 1, /datum/reagent/acid/hydrochloric = 1)
-	result_amount = 3
+//C2 H6 O
+/*
+/datum/chemical_reaction/ethanol
+	name = "pure ethanol"
+	result = /datum/reagent/ethanol
+	result_amount = 1
+	required_reagents = list(/datum/reagent/carbon = 2, /datum/reagent/hydrogen = 6, /datum/reagent/oxygen = 1)
+	minimum_temperature = T0C + 100 //Normally you'd wanna distill. But this will do
+	maximum_temperature = T0C + 150
+*/
+//Alternate, more true to life reaction by fermentation and "distilation"
+/datum/chemical_reaction/ethanol2
+	name = "pure ethanol"
+	result = /datum/reagent/ethanol
+	result_amount = 6
+	required_reagents = list(/datum/reagent/sugar = 4, /datum/reagent/water = 4, /datum/reagent/enzyme = 2)
+	minimum_temperature = T0C + 100 //Normally you'd wanna distill. But this will do
+	maximum_temperature = T0C + 150
 
-/datum/chemical_reaction/glycerol
-	name = "Glycerol"
-	result = /datum/reagent/glycerol
-	required_reagents = list(/datum/reagent/nutriment/cornoil = 3, /datum/reagent/acid = 1)
+//Precursor Chem recipies.
+/datum/chemical_reaction/acetone_production
+	name = "Acetone Production"
+	result = /datum/reagent/acetone
+	required_reagents = list(/datum/reagent/oxygen = 1, /datum/reagent/carbon = 3, /datum/reagent/hydrogen = 6) //(CH3)2CO
+	result_amount = 1 //kinda expensive? balance later
+
+/datum/chemical_reaction/sulphuric_acid_prod
+	name = "Sulphuric Acid Production"
+	result = /datum/reagent/acid
+	required_reagents = list(/datum/reagent/sulfur = 1, /datum/reagent/oxygen = 4, /datum/reagent/hydrogen = 2) //H2SO4.
 	result_amount = 1
 
-/datum/chemical_reaction/oxyphoron
-	name = "Oxyphoron"
-	result = /datum/reagent/toxin/phoron/oxygen
-	required_reagents = list(/datum/reagent/water = 1, /datum/reagent/toxin/phoron = 1)
-	result_amount = 2
+/datum/chemical_reaction/hydrochloric_acid_prod
+	name = "Hydrochloric Acid production"
+	result = /datum/reagent/acid/hydrochloric
+	required_reagents = list(/datum/reagent/toxin/chlorine = 1, /datum/reagent/hydrogen = 1, /datum/reagent/water = 1)// 1:1 hydrogen chloride to water makes HCl acid.
+	result_amount = 1
+
+/datum/chemical_reaction/ice
+	name = "water ice"
+	result = /datum/reagent/drink/ice
+	result_amount = 1
+	required_reagents = list(/datum/reagent/water = 1)
+	minimum_temperature = T0C
+	maximum_temperature = T0C - 150

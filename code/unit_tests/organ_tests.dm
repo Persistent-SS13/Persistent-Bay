@@ -4,7 +4,7 @@
 	name = "ORGAN: Max Health Is Setup"
 
 /datum/unit_test/max_health_setup/start_test()
-	var/list/skipped_organ_types = list(/obj/item/organ/external, /obj/item/organ/internal)
+	var/list/skipped_organ_types = list(/obj/item/organ/external, /obj/item/organ/internal, /obj/item/organ/external/stump)
 
 	var/list/failed_organ_types = list()
 	for(var/organ_type in (subtypesof(/obj/item/organ) - skipped_organ_types))

@@ -6,8 +6,48 @@
 	name = CULTURE_HUMAN
 	description = "You are from one of various planetary cultures of humankind."
 	language = LANGUAGE_GALCOM
-	secondary_langs = list(LANGUAGE_HUMAN_EURO, LANGUAGE_SIGN, LANGUAGE_GUTTER, LANGUAGE_HUMAN_ARABIC, LANGUAGE_HUMAN_CHINESE, LANGUAGE_HUMAN_IBERIAN, LANGUAGE_HUMAN_INDIAN, LANGUAGE_HUMAN_RUSSIAN, LANGUAGE_SPACER)
+	secondary_langs = list(LANGUAGE_SIGN, LANGUAGE_GUTTER, LANGUAGE_SPACER)
+	starting_citizenship = CITIZEN
 
+/decl/cultural_info/culture/human/earth_poor
+	name = CULTURE_HUMAN_EARTH_POOR
+	description = "Automation has replaced the need for almost all basic labors in the Sol System. The billions who cant find a place \
+	in the new paradigm are known as the 'underclass'. You have been struggling to survive in one of the many areas where the underclass \
+	rule each other through violence and fear. Survival has hardened you and given you a set of skills the elites would never recognize. <br><b>You will start on the bottom floor of nexus as a resident. The area is tougher but you will enjoy more freedom from the government. You will not be able to vote in elections without gaining citizenship.</b>"
+	starting_citizenship = RESIDENT
+/decl/cultural_info/culture/human/earth_middle
+	name = CULTURE_HUMAN_EARTH_MIDDLE
+	description = "Society in the capital system is driven by untold millions of administrators, lesser academics, soldiers and functionaries that perform \
+	skilled or creative tasks that are not capable of being automated. You have acted in one of these middling roles with enough competence to maintain \
+	your standing within the Sol middle class. Everything you have could be taken if you voiced an unpopular opinion or if your role in society falls out of favor with the ruling elite."
+
+/decl/cultural_info/culture/human/earth_high
+	name = CULTURE_HUMAN_EARTH_HIGH
+	description = "At the top of the golden spires that hang over the sprawling underclass slums, a class of technocratic elites control the levers of power by referring decisions to annointed experts. \
+	Councils select amongst themselves who is most qualified to be running the grand instituions of Solgov. As a young student you were bright enough and charming enough to attend an exclusive academy of higher learning \
+	where graduates become minor members of the ruling elite. You have attained a position of some promiennce, but your actions and viewpoints are under constant scrutiny. Many people would benefit from your fall from grace."
+
+/decl/cultural_info/culture/human/colonist
+	name = CULTURE_HUMAN_COLONY
+	description = "Between Earth and Sol are a handful of human colonies that have been the frontline in the many wars between SolGov and the Terran Federation. \
+	Both the SolGov and the Terran Federation lay claim to the entirety of human space, these border worlds being the easiest targets are often the first to be invaded by their military forces. \
+	These colonies are small, cramped and infected with crime and corrupt governance. You have found work but not safety, the wars and the gangs do not spare workers."
+
+/decl/cultural_info/culture/human/agartha_middle
+	name = CULTURE_HUMAN_AGARTHA_MIDDLE
+	description = "In the capital system of the terrans, society is being carved out of the rampant jungles that cover the surface of Agartha. \
+	Constant development of the capital is hoisted by a billion-strong workforce that claims whatever people or resources aren't taken by the Terran warmachine. \
+	You have survived as an Agarthan worker, either unable or unwilling to join the Terran Military. You have food and shelter, but your work is dangerous and unrewarding. Without career military service, you are still a second class citizen."
+
+/decl/cultural_info/culture/human/agartha_poor
+	name = CULTURE_HUMAN_AGARTHA_POOR
+	description = "On Agartha, anti-war and anti-state movements operate in the shadows despite the best efforts of the Terran secret police. Anyone who opposes the Terran Federation and its war effort in the \
+	'liberation' of the Sol Colonies and the seat of humanty of Earth are forced underground. Peaceful protest, anti-state espionage and violent unrest are all tactics of the various dissident movements. \
+	As a dissident in the Terran state, your views of the state or war have forced you to the absolute bottom of society. The secret police may already know of your involvement in these unlawful and persecuted groups, you live life in constant fear of the repercussions. <br><b>You will start on the bottom floor of nexus as a resident. The area is tougher but you will enjoy more freedom from the government. You will not be able to vote in elections without gaining citizenship.</b>"
+	starting_citizenship = RESIDENT
+
+
+/**
 /decl/cultural_info/culture/human/martian_surfacer
 	name = CULTURE_HUMAN_MARTIAN
 	description = "You are from the surface of Mars. Raised in one of the many farming communities or one of the great cities such as Olympus. Most of the surfacers \
@@ -144,3 +184,5 @@
 	#undef LTR
 	#undef NUM
 	#undef NAME
+
+**/

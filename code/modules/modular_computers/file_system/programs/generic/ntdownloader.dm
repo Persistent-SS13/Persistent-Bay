@@ -106,6 +106,7 @@
 	// Download speed according to connectivity state. NTNet server is assumed to be on unlimited speed so we're limited by our local connectivity
 	download_netspeed = 0
 	// Speed defines are found in misc.dm
+	/**
 	switch(ntnet_status)
 		if(1)
 			download_netspeed = NTNETSPEED_LOWSIGNAL
@@ -113,6 +114,9 @@
 			download_netspeed = NTNETSPEED_HIGHSIGNAL
 		if(3)
 			download_netspeed = NTNETSPEED_ETHERNET
+	**/
+	if(ntnet_status)
+		download_netspeed = NTNETSPEED_HIGHSIGNAL
 	download_completion += download_netspeed
 
 /datum/computer_file/program/ntnetdownload/Topic(href, href_list)
@@ -173,10 +177,10 @@
 		var/list/category_list[0]
 		for(var/datum/computer_file/program/P in ntnet_global.available_software_by_category[category])
 			// Only those programs our user can run will show in the list
-			if(!P.can_run(user, 0, null, program.computer))
-				continue
-			if(!P.is_supported_by_hardware(my_computer.hardware_flag, 1, user))
-				continue
+	//		if(!P.can_run(user, 0, null, program.computer))
+	//			continue
+	//		if(!P.is_supported_by_hardware(my_computer.hardware_flag, 0, user))
+	//			continue
 			category_list.Add(list(list(
 			"filename" = P.filename,
 			"filedesc" = P.filedesc,

@@ -9,8 +9,9 @@
 	required_access = core_access_reassignment
 	requires_ntnet = TRUE
 	size = 8
-
-/datum/computer_file/program/card_mod/can_run(var/mob/living/user, var/loud = 0, var/access_to_check)
+	category = PROG_COMMAND
+	
+/datum/computer_file/program/card_mod/can_run(var/mob/living/user, var/loud = 0, var/access_to_check, var/alt_computer)
 	// Defaults to required_access
 	if(!access_to_check)
 		access_to_check = required_access
@@ -30,16 +31,17 @@
 		if(loud)
 			to_chat(user, "<span class='notice'>\The [computer] flashes an \"RFID Error - Unable to scan ID\" warning.</span>")
 		return 0
-	if(computer && computer.network_card && computer.network_card.connected_network && computer.network_card.connected_network.holder)
-
+	
+	var/obj/item/weapon/computer_hardware/network_card/ncard = computer?.network_card
+	if(ncard && ncard.connected_network && ncard.connected_network.holder)
 		for(var/access in accesses_to_check)
-			if(access in I.GetAccess(computer.network_card.connected_network.holder.uid))
+			if(access in I.GetAccess(ncard.connected_network.holder.uid))
 				return 1
 		if(loud)
 			to_chat(user, "<span class='notice'>\The [computer] flashes an \"Access Denied\" warning.</span>")
-	else
+	else if(ncard)
 		for(var/access in accesses_to_check)
-			if(access in I.GetAccess(computer.network_card.connected_network.holder.uid))
+			if(access in I.GetAccess(ncard.connected_network.holder.uid))
 				return 1
 			else if(loud)
 				to_chat(user, "<span class='notice'>\The [computer] flashes an \"Access Denied\" warning.</span>")
@@ -115,7 +117,7 @@
 			data["current_rank"] = record.rank
 			var/promote_button = 0
 			var/demote_button = 0
-			var/max_rank = assignment.ranks.len + 1
+			var/max_rank = assignment.accesses.len + 1
 			if(user_id_card)
 				for(var/name in record.promote_votes)
 					if(name == user_id_card.registered_name)
@@ -139,7 +141,12 @@
 			data["promote_button"] = promote_button
 			data["demote_button"] = demote_button
 			var/expense_limit = 0
-			var/datum/accesses/expenses = assignment.accesses[record.rank]
+			var/use_rank = 1
+			if(!record.rank || record.rank > assignment.accesses.len)
+				use_rank = assignment.accesses.len
+			if(!use_rank)
+				message_admins("Broken assignment [assignment.uid] held by [record.get_name()]")
+			var/datum/accesses/expenses = assignment.accesses[use_rank]
 			if(expenses)
 				expense_limit = expenses.expense_limit
 			data["expense_limit"] = expense_limit
@@ -424,7 +431,7 @@
 					if(!isleader && assignment.authority_restriction > user_assignment.edit_authority)
 						to_chat(usr, "Your assignment does not have the authority to assign [assignment.name].")
 						return 0
-					if(check_rights(R_ADMIN, 0, user) || connected_faction.in_command(user_id_card.registered_name) || (user_assignment && user_assignment.parent.name == assignment.parent.name) || isleader)
+					if(check_rights(R_ADMIN, 0, user) || (user_id_card && connected_faction.in_command(user_id_card.registered_name)) || (user_assignment && user_assignment.parent && user_assignment.parent.name == assignment.parent.name) || isleader)
 						module.record.assignment_data[module.record.assignment_uid] = "[module.record.rank]"
 						module.record.assignment_uid = assignment.uid
 						module.record.rank = text2num(module.record.assignment_data[assignment.uid])

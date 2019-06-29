@@ -8,9 +8,12 @@
 
 	var/id = ""
 
+	var/citizenship_type
+	
 /obj/structure/frontier_beacon/New()
 	..()
 	GLOB.frontierbeacons |= src
+	ADD_SAVED_VAR(citizenship_type)
 
 /obj/structure/frontier_beacon/Destroy()
 	. = ..()

@@ -2,7 +2,7 @@
 	desc = "Similar in both appearance and use of the NT Mk58, the MK pistol is an cheap knock off that preys on the unsuspecting firearm buyers."
 	jam_chance = 35
 
-/obj/item/weapon/gun/projectile/heavysniper/ant
+/obj/item/weapon/gun/projectile/boltaction/heavysniper/ant
 	name = "anti-material rifle"
 	desc = "A portable anti-armour rifle fitted with a scope, the HI PTR-7 Rifle was originally designed to used against armoured exosuits. It is capable of punching through windows and non-reinforced walls with ease. Fires armor piercing 14.5mm shells. This replica however fires 9mm rounds."
 	ammo_type = /obj/item/ammo_casing/c9mm

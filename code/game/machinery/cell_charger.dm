@@ -10,6 +10,7 @@
 	circuit_type = /obj/item/weapon/circuitboard/machinery/cell_charger
 	var/obj/item/weapon/cell/charging = null
 	var/chargelevel = -1
+	var/time_next_update = 0 //Time when the charger perform a full icon update
 
 /obj/machinery/cell_charger/New()
 	..()
@@ -19,7 +20,7 @@
 /obj/machinery/cell_charger/Destroy()
 	if(charging)
 		charging.forceMove(get_turf(src))
-	qdel()
+	charging = null
 	return ..()
 
 /obj/machinery/cell_charger/on_update_icon()
@@ -79,6 +80,14 @@
 		to_chat(user, "You [anchored ? "attach" : "detach"] the cell charger [anchored ? "to" : "from"] the ground")
 		playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
 
+/obj/machinery/cell_charger/set_anchored(new_anchored)
+	. = ..()
+	if(!anchored && charging)
+		charging.dropInto(get_turf(src))
+		charging = null
+		chargelevel = -1
+	set_power()
+
 /obj/machinery/cell_charger/attack_hand(mob/user)
 	if(charging)
 		user.put_in_hands(charging)
@@ -120,5 +129,6 @@
 	if(!charging)
 		return PROCESS_KILL
 	charging.give(active_power_usage*CELLRATE)
-	if((world.time % 10) == 0) //Only update every 1 seconds pls
+	if(time_next_update <= world.time)
 		queue_icon_update()
+		time_next_update = world.time + 2 SECONDS //Only update the icon every 2 seconds

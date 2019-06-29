@@ -13,6 +13,8 @@
 	atom_holder = holder
 	if(!storage)
 		src.storage = storage
+	else
+		log_error("extension/holster/New(): Created a [src]\ref[src] without a proper storage pocket linked!")
 	src.sound_in = sound_in || src.sound_in
 	src.sound_out = sound_out || src.sound_out
 	if(!can_holster)
@@ -25,9 +27,15 @@
 
 	ADD_SKIP_EMPTY(holstered)
 
-/datum/extension/holster/Destroy()
+/datum/extension/holster/after_load()
 	. = ..()
+	atom_holder.verbs += /atom/proc/holster_verb
+
+/datum/extension/holster/Destroy()
+	storage = null
+	holstered = null
 	atom_holder.verbs -= /atom/proc/holster_verb
+	. = ..()
 
 /datum/extension/holster/proc/can_holster(var/obj/item/I)
 	if(can_holster)

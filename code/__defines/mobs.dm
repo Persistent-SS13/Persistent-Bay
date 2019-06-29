@@ -281,9 +281,6 @@
 #define SYNTH_HEAT_LEVEL_2 1000
 #define SYNTH_HEAT_LEVEL_3 2000
 
-#define CORPSE_CAN_REENTER 1
-#define CORPSE_CAN_REENTER_AND_RESPAWN 2
-
 #define SPECIES_HUMAN       "Human"
 #define SPECIES_DIONA       "Diona"
 #define SPECIES_VOX         "Vox"
@@ -348,3 +345,4 @@
 #define CHARACTER_SPAWN_TYPE_CRYONET         1 //Will spawn at a cryopod of the last network and faction stored in the character
 #define CHARACTER_SPAWN_TYPE_FRONTIER_BEACON 2 //Will spawn at a frontier beacon of the same faction as the character's default faction
 #define CHARACTER_SPAWN_TYPE_LACE_STORAGE    3 //Will spawn at the lace storage
+#define CHARACTER_SPAWN_TYPE_IMPORT    4 //frontier beacon

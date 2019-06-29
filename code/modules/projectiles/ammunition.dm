@@ -98,7 +98,7 @@
 	icon_state = "357"
 	icon = 'icons/obj/ammo.dmi'
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
-	slot_flags = SLOT_BELT
+	slot_flags = SLOT_BELT | SLOT_POCKET
 	item_state = "syringe_kit"
 	matter = list(MATERIAL_STEEL = 500)
 	throwforce = 5
@@ -119,9 +119,6 @@
 	//because BYOND doesn't support numbers as keys in associative lists
 	var/list/icon_keys = list()		//keys
 	var/list/ammo_states = list()	//values
-
-/obj/item/ammo_magazine/box
-	w_class = ITEM_SIZE_NORMAL
 
 /obj/item/ammo_magazine/Initialize()
 	. = ..()

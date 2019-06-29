@@ -1,20 +1,20 @@
 #define SAVEFILE_VERSION_MIN	8
 #define SAVEFILE_VERSION_MAX	17
 
-/datum/preferences/proc/load_path(ckey,filename="preferences.sav")
+/datum/preferences/proc/load_path_pref(ckey,filename="preferences.sav")
 	if(!ckey)	return
-	path = load_path(ckey, filename)
+	path = "data/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 	char_save_path = "data/player_saves/[copytext(ckey,1,2)]/[ckey]/"
 	savefile_version = SAVEFILE_VERSION_MAX
-
+	return path
 /datum/preferences/proc/beta_path(ckey,filename="preferences.sav")
 	if(!ckey) return
-	path =  beta_path(ckey, filename)
+	path =  "exports/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 	savefile_version = SAVEFILE_VERSION_MAX
 
 /datum/preferences/proc/exit_path(ckey,filename="preferences.sav")
 	if(!ckey)	return
-	path = exit_path(ckey, filename)
+	path = "exits/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 	savefile_version = SAVEFILE_VERSION_MAX
 
 /datum/preferences/proc/character_load_path(slot)
@@ -24,9 +24,9 @@
 
 /datum/preferences/proc/load_preferences()
 	// if(!path)
-	path = load_path(client_ckey, "")
+	path = load_path_pref(client_ckey, "preferences.sav")
 	if(!fexists(path))		return 0
-	var/savefile/S = new /savefile(path)
+	var/savefile/S = new(path)
 	if(!S)					return 0
 	S.cd = "/"
 
@@ -38,9 +38,9 @@
 /datum/preferences/proc/save_preferences()
 	testing("preferences/save_preferences() : Attempting to save prefs (ckey = [client_ckey], path = [path])")
 	//if(!path || (path && (length(path) == 0) ) )
-	path = load_path(client_ckey, "")
+	path = load_path_pref(client_ckey, "preferences.sav")
 	testing("preferences/save_preferences() : Set path to (path = [path])")
-	var/savefile/S = new /savefile(path)
+	var/savefile/S = new (path)
 	if(!S)					return 0
 	S.cd = "/"
 
@@ -95,7 +95,7 @@
 	//return S
 
 /datum/preferences/proc/sanitize_preferences()
-	player_setup.sanitize_setup()
+	player_setup.sanitize_setup() //Leave it runtime if it must
 	if(!bonus_slots) bonus_slots = 0
 	if(!bonus_notes) bonus_notes = ""
 	return 1
@@ -112,39 +112,36 @@
 	email.login = "[replacetext(H.real_name, " ", "_")]@[pick(GLOB.using_map.usable_email_tlds)]"
 	email.password = chosen_password
 	H.mind.initial_email_login = list("login" = email.login, "password" = email.password)
-	//testing("created email for [H], [email.login], [email.password]")
-	var/faction_uid = GLOB.using_map.default_faction_uid
-	var/datum/world_faction/F = get_faction(src.faction)
-	if(F)
-		faction_uid = F.uid
-		var/datum/money_account/M = create_account(H.real_name, F.get_new_character_money(H), null)
-		M.remote_access_pin = chosen_pin
-		H.mind.store_memory( {"
-<b>Your email account is :</b> [email.login]<br>
-<b>Your email password is :</b> [email.password]<br>
-<b>Your account number is:</b> #[M.account_number]<br>
-<b>Your account pin is:</b> [M.remote_access_pin]<br>
-"})
-		H.mind.initial_account = M
 
+	var/datum/world_faction/F = get_faction(GLOB.using_map.default_faction_uid)
+	src.faction = GLOB.using_map.default_faction_uid
+	if(!F)
+		log_warning("setup_new_accounts(): Couldn't find faction [GLOB.using_map.default_faction_uid]")
+
+	//testing("created email for [H], [email.login], [email.password]")
+	var/datum/money_account/M = create_account(H.real_name, F.get_new_character_money(H), null)
+	M.remote_access_pin = chosen_pin
+	H.mind.initial_account = M
 	//After the bank account and email accounts are made, create the record.
 	// Since the record contains both.
 	var/datum/computer_file/report/crew_record/record = CreateModularRecord(H)
 	//testing("created modular record for [H], [record]")
+	record.ckey = client.ckey
 	var/datum/computer_file/report/crew_record/record2 = new()
 	if(!record2.load_from_global(real_name))
 		message_admins("record for [real_name] failed to load in character creation..")
 	else if(F)
 		F.records.faction_records |= record
-		
+
 	//ID stuff is handled by the outfit code later on, when the actual final ID is spawned
 
-	if(src.faction)
-		H.spawn_loc = faction_uid
+	if(F)
+		H.spawn_loc = F.uid
 		//testing("Setting spawn loc for [H]. Got faction name: [H.spawn_loc], and faction uid [src.faction]")
 	else
 		H.spawn_loc = "null"
 		log_warning("[H]'s spawn_loc is null! Got faction: [src.faction]'")
+
 
 //Creates the dummy mob used to store initial character data in the save file
 /datum/preferences/proc/create_initial_character()
@@ -155,7 +152,7 @@
 	if(!H.mind)
 		H.mind = new()
 
-	//Languages
+	//Languages + culture are copied
 	for(var/token in cultural_info)
 		H.set_cultural_value(token, cultural_info[token], defer_language_update = TRUE)
 
@@ -167,6 +164,7 @@
 			if(is_species_lang || ((!(chosen_language.flags & RESTRICTED) || check_rights(R_ADMIN, 0, client))))
 				H.add_language(lang)
 	H.update_languages()
+	H.update_citizenship()
 
 	//DNA should be last
 	H.dna.ResetUIFrom(H)
@@ -190,7 +188,6 @@
 	H.force_update_limbs()
 	H.update_eyes()
 	H.regenerate_icons()
-	
 	return H
 
 #undef SAVEFILE_VERSION_MAX

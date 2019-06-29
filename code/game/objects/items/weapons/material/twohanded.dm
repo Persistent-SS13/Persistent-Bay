@@ -56,7 +56,7 @@
 
 /obj/item/weapon/material/twohanded/New()
 	..()
-	update_icon()
+	queue_icon_update()
 
 /obj/item/weapon/material/twohanded/get_parry_chance(mob/user)
 	. = ..()
@@ -81,9 +81,9 @@
 
 	force_divisor = 0.525
 	unwielded_force_divisor = 0.25
-	sharpness = 1
-
-	force_wielded = 30
+	sharpness = 2
+	attack_cooldown_modifier = 2
+	force_wielded = 15
 	attack_verb = list("attacked", "chopped", "cleaved", "torn", "cut")
 	applies_material_colour = 0
 	damtype = DAM_CUT

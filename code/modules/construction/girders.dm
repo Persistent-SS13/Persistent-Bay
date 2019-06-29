@@ -19,7 +19,10 @@
 	anchored = 1
 
 /obj/structure/girder/New(var/newloc, var/mat, var/r_mat)
-	..()
+	..(newloc)
+	material = istext(mat) ? SSmaterials.get_material_by_name(mat) : mat
+	reinf_material = istext(r_mat) ?  SSmaterials.get_material_by_name(r_mat) : r_mat
+
 	ADD_SAVED_VAR(state)
 	ADD_SAVED_VAR(reinf_material)
 	ADD_SAVED_VAR(cover)
@@ -43,7 +46,7 @@
 	anchored = TRUE
 	cover = initial(cover)
 	health = min(health,max_health)
-	state = 0
+	state = 2
 	if(reinf_material)
 		reinforce_girder()
 
@@ -118,12 +121,9 @@
 				state = 1
 				update_icon()
 				return 1
-			if(UseMaterial(W, user, null, "You start applying the material.", null, null, 4))
-				to_chat(user, "<span class='notice'>You finish applying the material.</span>")
-				var/obj/item/stack/material/st = W
-				if(construct_wall(st, user))
-					qdel(src)
-				return
+			if(ConstructWall(W, user))
+				qdel(src)
+				return 1
 			if(Screwdriver(W, user, 0))
 				to_chat(user, "<span class='notice'>\The [src] can now be reinforced.</span>")
 				state = 3
@@ -133,15 +133,8 @@
 			if(reinforce_with_material(W, user))
 				state = 4
 				return 1
-			if(!reinf_material && Screwdriver(W, user, 0))
+			if(Screwdriver(W, user, 0))
 				to_chat(user, "<span class='notice'>\The [src] can now be constructed.</span>")
-				state = 2
-				update_icon()
-				return 1
-			if(reinf_material && Wirecutter(W, user, 5, "You start removing \the [reinf_material.display_name]."))
-				to_chat(user, "<span class='notice'>You finish removing \the [reinf_material.display_name].</span>")
-				new reinf_material.stack_type(src, 6)
-				reinf_material = null
 				state = 2
 				update_icon()
 				return 1
@@ -153,7 +146,8 @@
 				return 1
 			if(Crowbar(W, user, 5, "You start prying \the [reinf_material.display_name] up."))
 				to_chat(user, "<span class='notice'>You finish prying \the [reinf_material.display_name].</span>")
-				new reinf_material.stack_type(src, 2)
+				new reinf_material.stack_type(get_turf(src), 4)
+				reinf_material = null
 				state = 3
 				update_icon()
 				return 1
@@ -180,11 +174,8 @@
 				update_icon()
 				return 1
 		if(7)
-			if(UseMaterial(W, user, 20, "You start applying the material to \the [src]", null, null, 4))
-				to_chat(user, "<span class='notice'>You apply the material to \the [src].</span>")
-				var/obj/item/stack/material/st = W
-				if(construct_wall(st, user))
-					qdel(src)
+			if(ConstructWall(W, user))
+				qdel(src)
 				return 1
 			if(Weld(W, user))
 				to_chat(user, "<span class='notice'>You unweld the material from \the [src]</span>")
@@ -193,68 +184,55 @@
 				return 1
 	return ..()
 
-/obj/structure/girder/proc/construct_wall(obj/item/stack/material/S, mob/user)
+/obj/structure/girder/proc/ConstructWall(var/obj/item/stack/material/S, var/mob/user)
 	if(!istype(S))
-		log_warning("girder/construct_wall(): Got invalid type material stack! [S]")
-		return 
-	if(S.get_amount() < 2)
-		to_chat(user, "<span class='notice'>There isn't enough material here to construct a wall.</span>")
 		return 0
 
 	var/material/M = SSmaterials.get_material_by_name(S.default_type)
-	if(!istype(M))
-		return 0
-
-	var/wall_fake
-	add_hiddenprint(usr)
 
 	if(M.integrity < 50)
 		to_chat(user, "<span class='notice'>This material is too soft for use in wall construction.</span>")
 		return 0
 
-	to_chat(user, "<span class='notice'>You begin adding the plating...</span>")
+	if(!UseMaterial(S, user, null, "You start applying the material.", null, null, 4))
+		return 0
 
-	if(!do_after(user,40,src) || !S.use(2))
-		return 1 //once we've gotten this far don't call parent attackby()
+	to_chat(user, "<span class='notice'>You finish applying the material.</span>")
+	add_hiddenprint(usr)
+	
 
-	if(anchored)
-		to_chat(user, "<span class='notice'>You added the plating!</span>")
-	else
-		to_chat(user, "<span class='notice'>You create a false wall! Push on it to open or close the passage.</span>")
-		wall_fake = 1
-
-	var/turf/Tsrc = get_turf(src)
-	Tsrc.ChangeTurf(/turf/simulated/wall)
+	var/turf/myTurf = get_turf(src)
+	myTurf.ChangeTurf(/turf/simulated/wall)
 	var/turf/simulated/wall/T = get_turf(src)
 	T.set_material(M, null) //Don't set the reinforced material yet
 	T.girder_material = material
 	T.girder_reinf_material = reinf_material
-	T.construction_stage = 0
-	if(wall_fake)
-		T.can_open = 1
-	T.add_hiddenprint(usr)
 	T.update_material(1)
+	T.state = 0
+	T.can_open = !anchored
+	T.add_hiddenprint(usr)
 	T.update_icon()
 	return 1
 
-/obj/structure/girder/proc/reinforce_with_material(obj/item/stack/material/S, mob/user) //if the verb is removed this can be renamed.
+/obj/structure/girder/proc/reinforce_with_material(obj/item/stack/material/S, mob/user)
+	if(!istype(S))
+		return 0
+
 	if(reinf_material)
-		to_chat(user, "<span class='notice'>\The [src] is already reinforced.</span>")
+		to_chat(user, SPAN_NOTICE("This girder has already been reinforced."))
 		return 0
 
-	if(S.get_amount() < 2)
-		to_chat(user, "<span class='notice'>There isn't enough material here to reinforce the girder.</span>")
+	var/material/M = SSmaterials.get_material_by_name(S.default_type)
+
+	if(M.integrity < 50)
+		to_chat(user, "<span class='notice'>This material is too soft for use in girder reinforcement.</span>")
 		return 0
 
-	var/material/M = S.material
-	if(!istype(M) || M.integrity < 50)
-		to_chat(user, "You cannot reinforce \the [src] with that; it is too soft.")
+	if(!UseMaterial(S, user, null, "You start applying the reinforcement.", null, null, 4))
 		return 0
 
-	to_chat(user, "<span class='notice'>Now reinforcing...</span>")
-	if (!do_after(user, 4 SECONDS, src) || !S.use(2))
-		return 1 //don't call parent attackby() past this point
-	to_chat(user, "<span class='notice'>You added reinforcement!</span>")
+	to_chat(user, "<span class='notice'>You finish applying the reinforcement.</span>")
+	add_hiddenprint(usr)
 
 	reinf_material = M
 	reinforce_girder()
@@ -263,7 +241,7 @@
 /obj/structure/girder/proc/reinforce_girder()
 	cover = 75
 	update_material(1)
-	state = 2
+	state = 7
 	update_icon()
 
 /obj/structure/girder/proc/update_material(var/update_Integrity)
@@ -289,7 +267,7 @@
 	armor[DAM_BOMB]  = explosionArmor()
 	armor[DAM_BURN]  = burnArmor()
 	armor[DAM_BLUNT] = bruteArmor()
-	queue_icon_update()
+	on_update_icon()
 
 /obj/structure/girder/make_debris()
 	var/curturf = get_turf(src)

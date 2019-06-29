@@ -154,10 +154,11 @@
 	ADD_SAVED_VAR(temp_chem_holder)
 	ADD_SAVED_VAR(labelled)
 	ADD_SAVED_VAR(seed)
-	ADD_SAVED_VAR(connected_faction)
 
 /obj/machinery/portable_atmospherics/hydroponics/after_load()
 	..()
+	if(req_access_faction)
+		connected_faction = get_faction(req_access_faction)
 	queue_icon_update()
 
 /obj/machinery/portable_atmospherics/hydroponics/AltClick()
@@ -191,7 +192,6 @@
 	req_access_faction = trying.uid
 	connected_faction = trying
 
-
 /obj/machinery/portable_atmospherics/hydroponics/can_disconnect(var/datum/world_faction/trying, var/mob/M)
 	var/datum/machine_limits/limits = trying.get_limits()
 	limits.botany -= src
@@ -199,21 +199,22 @@
 	connected_faction = null
 	if(M) to_chat(M, "The machine has been disconnected.")
 
-
-
 /obj/machinery/portable_atmospherics/hydroponics/Initialize()
 	. = ..()
-	if(!temp_chem_holder)
-		temp_chem_holder = new()
-		temp_chem_holder.create_reagents(100)
-	temp_chem_holder.atom_flags |= ATOM_FLAG_OPEN_CONTAINER
-	if (!reagents) create_reagents(200)
 	if(mechanical)
 		connect()
 	queue_icon_update()
 	STOP_PROCESSING(SSmachines, src)
 	START_PROCESSING(SSplants, src)
 	return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/portable_atmospherics/hydroponics/SetupReagents()
+	. = ..()
+	if(!temp_chem_holder)
+		temp_chem_holder = new()
+		temp_chem_holder.create_reagents(100)
+		temp_chem_holder.atom_flags |= ATOM_FLAG_OPEN_CONTAINER
+	if (!reagents) create_reagents(200)
 
 /obj/machinery/portable_atmospherics/hydroponics/Destroy()
 	STOP_PROCESSING(SSplants, src)
@@ -551,7 +552,7 @@
 			if(seed)
 				var/needed_skill = seed.mysterious ? SKILL_ADEPT : SKILL_BASIC
 				if(!user.skill_check(SKILL_BOTANY, needed_skill))
-					health -= rand(40,60)
+					plant_health -= rand(40,60)
 					check_health(1)
 			update_icon()
 		else
@@ -628,7 +629,7 @@
 	var/needed_skill = seed.mysterious ? SKILL_ADEPT : SKILL_BASIC
 	if(prob(user.skill_fail_chance(SKILL_BOTANY, 40, needed_skill)))
 		dead = 1
-		health = 0
+		plant_health = 0
 
 	qdel(S)
 	check_health()
@@ -667,7 +668,7 @@
 
 		if(dead)
 			to_chat(user, "<span class='danger'>The [seed.display_name] plant is dead.</span>")
-		else if(health <= (seed.get_trait(TRAIT_ENDURANCE)/ 2))
+		else if(plant_health <= (seed.get_trait(TRAIT_ENDURANCE)/ 2))
 			to_chat(user, "The [seed.display_name] plant looks <span class='danger'>unhealthy</span>.")
 
 	if(mechanical && Adjacent(user))

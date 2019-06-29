@@ -35,6 +35,7 @@
 	name = "lantern"
 	icon_state = "lantern"
 	desc = "A mining lantern."
+	matter = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_GLASS = 0.25 SHEETS)
 
 /**********'pickaxes' but theyre drills actually***************/
 
@@ -60,6 +61,38 @@
 	var/excavation_amount = 200
 	var/build_from_parts = FALSE
 	var/hardware_color
+	var/list/ore_types = list(
+		MATERIAL_PITCHBLENDE,
+		MATERIAL_PLATINUM,
+		MATERIAL_HEMATITE,
+		MATERIAL_GRAPHITE,
+		MATERIAL_DIAMOND,
+		MATERIAL_GOLD,
+		MATERIAL_SILVER,
+		MATERIAL_PHORON,
+		MATERIAL_QUARTZ,
+		MATERIAL_PYRITE,
+		MATERIAL_SPODUMENE,
+		MATERIAL_CINNABAR,
+		MATERIAL_PHOSPHORITE,
+		MATERIAL_ROCK_SALT,
+		MATERIAL_POTASH,
+		MATERIAL_BAUXITE,
+		MATERIAL_TUNGSTEN,
+		MATERIAL_TETRAHEDRITE,
+		MATERIAL_FREIBERGITE,
+		MATERIAL_BSPACE_CRYSTAL,
+		MATERIAL_ILMENITE,
+		MATERIAL_GALENA,
+		MATERIAL_CASSITERITE,
+		MATERIAL_SPHALERITE,
+		MATERIAL_HYDROGEN,
+		)
+
+/obj/item/weapon/New()
+	. = ..()
+	ADD_SAVED_VAR(build_from_parts)
+	ADD_SAVED_VAR(hardware_color)
 
 /obj/item/weapon/pickaxe/Initialize()
 	if(build_from_parts)
@@ -226,6 +259,16 @@
 	icon_state = "tealflag"
 	fringe = "tealflag_fringe"
 	light_color = COLOR_TEAL
+
+/obj/item/stack/flag/New(loc, amount)
+	. = ..()
+	ADD_SAVED_VAR(upright)
+	ADD_SAVED_VAR(fringe)
+	ADD_SKIP_EMPTY(fringe)
+	
+/obj/item/stack/flag/after_load()
+	. = ..()
+	queue_icon_update()
 
 /obj/item/stack/flag/attackby(var/obj/item/W, var/mob/user)
 	if(upright)

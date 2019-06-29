@@ -116,7 +116,7 @@ SUBSYSTEM_DEF(jobs)
 	syndicate_code_phrase = generate_code_phrase()
 	syndicate_code_response	= generate_code_phrase()
 
-	. = ..()
+	return ..()
 
 /datum/controller/subsystem/jobs/proc/guest_jobbans(var/job)
 	for(var/dept in list(COM, MSC, SEC))

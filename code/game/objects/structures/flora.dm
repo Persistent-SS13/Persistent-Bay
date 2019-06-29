@@ -1,3 +1,16 @@
+/obj/structure/flora
+	var/can_cut = TRUE
+	var/cut_time = 2 SECONDS
+
+/obj/structure/flora/attackby(obj/item/O as obj, mob/user as mob)
+	if(can_cut && isHatchet(O))
+		to_chat(user, "You start chopping down \the [src]..")
+		if(do_after(user, cut_time, src))
+			to_chat(user, "You cut \the [src] to pieces.")
+			dismantle()
+		return 1
+	return ..()
+
 //trees
 /obj/structure/flora/tree
 	name = "tree"
@@ -13,6 +26,10 @@
 	name = "pine tree"
 	icon = 'icons/obj/flora/pinetrees.dmi'
 	icon_state = "pine_1"
+
+/obj/structure/flora/tree/dismantle()
+	refund_matter()
+	. = ..()
 
 /obj/structure/flora/tree/pine/New()
 	..()
@@ -75,6 +92,7 @@
 	anchored = 1
 	max_health = 25
 	mass = 5
+	parts = /obj/item/weapon/material/stick //drop a stick
 
 /obj/structure/flora/bush/New()
 	..()
@@ -95,7 +113,8 @@
 	icon_state = "firstbush_1"
 	anchored = 1
 	max_health = 25
-	mass = 5
+	mass = 2
+	parts = /obj/item/weapon/material/stick //drop a stick
 
 /obj/structure/flora/ausbushes/New()
 	..()
@@ -218,6 +237,7 @@
 	layer = ABOVE_HUMAN_LAYER
 	max_health = 50
 	mass = 8
+	can_cut = FALSE
 
 /obj/structure/flora/pottedplant/fern
 	name = "potted fern"

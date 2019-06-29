@@ -5,6 +5,8 @@ GLOBAL_VAR_INIT(default_physical_status, "Active")
 GLOBAL_LIST_INIT(security_statuses, list("None", "Released", "Parolled", "Incarcerated", "Arrest"))
 GLOBAL_VAR_INIT(default_security_status, "None")
 GLOBAL_VAR_INIT(arrest_security_status, "Arrest")
+GLOBAL_VAR_INIT(default_citizenship, RESIDENT)
+GLOBAL_LIST_INIT(citizenship_statuses, list(RESIDENT, CITIZEN, PRISONER))
 #define GETTER_SETTER(PATH, KEY) /datum/computer_file/report/crew_record/proc/get_##KEY(){var/datum/report_field/F = locate(/datum/report_field/##PATH/##KEY) in fields; if(F) return F.get_value()} \
 /datum/computer_file/report/crew_record/proc/set_##KEY(given_value){var/datum/report_field/F = locate(/datum/report_field/##PATH/##KEY) in fields; if(F) F.set_value(given_value)}
 #define SETUP_FIELD(NAME, KEY, PATH, ACCESS, ACCESS_EDIT) GETTER_SETTER(PATH, KEY); /datum/report_field/##PATH/##KEY;\
@@ -28,6 +30,7 @@ FIELD_SHORT("Job", job, null, core_access_reassignment)
 FIELD_LIST("Sex", sex, record_genders(), null, core_access_reassignment)
 FIELD_NUM("Age", age, null, core_access_reassignment)
 FIELD_LIST_EDIT("Status", status, GLOB.physical_statuses, null, core_access_medical_programs)
+FIELD_LIST_EDIT("Citizenship", citizenship, GLOB.citizenship_statuses, null, core_access_reassignment)
 
 FIELD_SHORT("Species",species, null, core_access_reassignment)
 FIELD_LIST("Branch", branch, record_branches(), null, core_access_reassignment)
@@ -60,6 +63,7 @@ FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_synd
 	var/shuttle_limit = 0
 	var/cost = 0
 
+	
 /datum/personal_limits/one
 	stock_limit = 125
 
@@ -127,6 +131,26 @@ FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_synd
 		else
 			var/datum/personal_limits/limit = new /datum/personal_limits/one()
 			return limit.stock_limit
+			
+/datum/computer_file/report/crew_record/proc/get_shuttle_limit()
+	switch(network_level)
+		if(1)
+			var/datum/personal_limits/limit = new /datum/personal_limits/one()
+			return limit.shuttle_limit
+		if(2)
+			var/datum/personal_limits/limit = new /datum/personal_limits/two()
+			return limit.shuttle_limit
+		if(3)
+			var/datum/personal_limits/limit = new /datum/personal_limits/three()
+			return limit.shuttle_limit
+		if(4)
+			var/datum/personal_limits/limit = new /datum/personal_limits/four()
+			return limit.shuttle_limit
+		else
+			var/datum/personal_limits/limit = new /datum/personal_limits/one()
+			return limit.shuttle_limit
+			
+			
 /datum/computer_file/report/crew_record/proc/get_upgrade_cost()
 	switch(network_level)
 		if(1)
@@ -147,8 +171,6 @@ FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_synd
 			return "Increase stock limit to 225 and gain another personal shuttle."
 		if(3)
 			return "Increase stock limit to 275 and gain another personal shuttle."
-
-
 
 // Kept as a computer file for possible future expansion into servers.
 /datum/computer_file/report/crew_record
@@ -172,15 +194,16 @@ FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_synd
 	var/worked = 0
 	var/expenses = 0
 	var/datum/computer_file/data/email_account/email
-	var/citizenship = 1 // 1 = resident, 2 = citizen, 3 = prisoner (todo convert all magic numbers in ss13 to defines
+	var/citizenship = RESIDENT 
 	var/ckey
 
 
 	var/network_level = 1
 	var/notifications = 1 // whether or not to be notified when a new email is sent
 	var/list/subscribed_orgs = list()
-
-
+	var/list/shuttles = list()
+	var/last_health_alarm = 0
+	
 /datum/computer_file/report/crew_record/New()
 	..()
 	for(var/T in subtypesof(/datum/report_field/))
@@ -364,6 +387,8 @@ FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_synd
 	set_age(card.age)
 	set_status(GLOB.default_physical_status)
 	set_species(card.species)
+	set_citizenship(GLOB.default_citizenship)
+	
 	// Medical record
 	set_bloodtype(card.blood_type)
 	set_medRecord("No record supplied")
@@ -396,6 +421,7 @@ FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_synd
 	set_age(record.get_age())
 	set_status(record.get_status())
 	set_species(record.get_species())
+	set_citizenship(record.get_citizenship())
 
 	// Medical record
 	set_bloodtype(record.get_bloodtype())
@@ -456,6 +482,7 @@ FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_synd
 	set_branch(H ? (H.char_branch && H.char_branch.name) : "None")
 	set_rank(H ? (H.char_rank && H.char_rank.name) : "None")
 	set_public_record(H && H.public_record && !jobban_isbanned(H, "Records") ? html_decode(H.public_record) : "No record supplied")
+	set_citizenship(H ? H.citizenship : GLOB.default_citizenship )
 
 	// Medical record
 	set_bloodtype(H ? H.b_type : "Unset")

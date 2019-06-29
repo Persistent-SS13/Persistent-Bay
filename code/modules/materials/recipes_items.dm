@@ -257,3 +257,11 @@
 	result_type = /obj/item/weapon/material/clipboard
 	req_amount = 5
 	send_material_data = 1
+
+/datum/stack_recipe/rifle_frame
+	title = "rifle stock"
+	result_type = /obj/item/weapon/imprifleframe
+	req_amount = 10
+	difficulty = 3
+	send_material_data = 1
+	time = 20 SECONDS

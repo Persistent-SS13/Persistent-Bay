@@ -13,7 +13,7 @@
 	. = ..()
 	queue_icon_update()
 
-/obj/structure/hygiene/sink/kitchen/update_icon()
+/obj/structure/hygiene/sink/kitchen/on_update_icon()
 	. = ..()
 	switch(dir)
 		if(NORTH)

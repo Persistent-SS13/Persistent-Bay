@@ -15,6 +15,7 @@
 	var/icon_state_charging = "recharger1"
 	var/icon_state_idle = "recharger0" //also when unpowered
 	var/portable = 1
+	var/tmp/time_next_update = 0 //Since we reaaaaally don't need to update our state every single ticks, use this
 
 /obj/machinery/recharger/New()
 	..()
@@ -28,17 +29,19 @@
 /obj/machinery/recharger/Destroy()
 	if(charging)
 		charging.forceMove(get_turf(src))
+	charging = null
 	return ..()
 
 obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
-	if(istype(user,/mob/living/silicon))
-		return
-
-	if(portable && isWrench(G))
-		anchored = !anchored
-		to_chat(user, "You [anchored ? "attached" : "detached"] the recharger.")
-		playsound(loc, 'sound/items/Ratchet.ogg', 75, 1)
-		return
+	if(default_deconstruction_screwdriver(user, G))
+		updateUsrDialog()
+		return 1
+	if(default_deconstruction_crowbar(user, G))
+		return 1
+	if(default_part_replacement(user, G))
+		return 1
+	if(portable && default_wrench_floor_bolts(user, G, 1 SECOND))
+		return 1
 
 	for(var/disallowed_type in disallowed_devices)
 		if(istype(G, disallowed_type)) return // Could potentially just use if(G.type in disallowed_devices), but we want to check for subtypes
@@ -74,16 +77,6 @@ obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 				update_icon()
 				return
 
-/obj/machinery/recharger/attackby(var/obj/item/O as obj, var/mob/user as mob)
-	if(default_deconstruction_screwdriver(user, O))
-		updateUsrDialog()
-		return 1
-	if(default_deconstruction_crowbar(user, O))
-		return 1
-	if(default_part_replacement(user, O))
-		return 1
-	return ..()
-
 /obj/machinery/recharger/attack_hand(mob/user as mob)
 	if(istype(user,/mob/living/silicon))
 		return
@@ -96,26 +89,37 @@ obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 		charging = null
 		update_icon()
 
-/obj/machinery/recharger/Process()
-	if(inoperable() || !anchored)
-		update_use_power(POWER_USE_OFF)
-		update_icon()
-		return
-
-	if(!charging)
+/obj/machinery/recharger/power_change()
+	. = ..()
+	if(powered())
 		update_use_power(POWER_USE_IDLE)
-		update_icon()
 	else
+		update_use_power(POWER_USE_OFF)
+	queue_icon_update()
+
+/obj/machinery/recharger/set_anchored(new_anchored)
+	. = ..()
+	if(anchored && operable())
+		update_use_power(POWER_USE_IDLE)
+	else
+		update_use_power(POWER_USE_OFF)
+
+/obj/machinery/recharger/Process()
+	. = ..()
+	if(inoperable() || !anchored)
+		return
+	//Since a lot of these are on the map, and don't change that often, we really don't care about updating each ticks..
+	if(charging && time_next_update <= world.time)
 		var/obj/item/weapon/cell/C = get_charging_cell()
 		if(istype(C))
 			if(!C.fully_charged())
 				C.give(active_power_usage*CELLRATE)
 				update_use_power(POWER_USE_ACTIVE)
-				update_icon()
-			else
+				queue_icon_update()
+			else if(!isidle()) //Don't spam updates if its already idle...
 				update_use_power(POWER_USE_IDLE)
-				update_icon()
-			return
+				queue_icon_update()
+		time_next_update = world.time + 2 SECONDS
 
 /obj/machinery/recharger/emp_act(severity)
 	if(inoperable() || !anchored)
@@ -131,30 +135,30 @@ obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 /obj/machinery/recharger/proc/get_charging_cell()
 	if(!charging)
 		return
-	. = charging
-	if(istype(charging, /obj/item/device/suit_sensor_jammer))
-		var/obj/item/device/suit_sensor_jammer/J = charging
-		. = J.bcell
-	else if(istype(charging, /obj/item/weapon/melee/baton))
-		var/obj/item/weapon/melee/baton/B = charging
-		. = B.bcell
-	else if(istype(charging, /obj/item/modular_computer))
-		var/obj/item/modular_computer/C = charging
-		. = C.battery_module.battery
-	else if(istype(charging, /obj/item/weapon/gun/energy))
-		var/obj/item/weapon/gun/energy/E = charging
-		. = E.power_supply
-	else if(istype(charging, /obj/item/weapon/computer_hardware/battery_module))
-		var/obj/item/weapon/computer_hardware/battery_module/BM = charging
-		. = BM.battery
-	else if(istype(charging, /obj/item/weapon/shield_diffuser))
-		var/obj/item/weapon/shield_diffuser/SD = charging
-		. = SD.cell
-	else if(istype(charging, /obj/item/weapon/gun/magnetic/railgun))
-		var/obj/item/weapon/gun/magnetic/railgun/RG = charging
-		. = RG.cell
+	. = charging.get_cell()
+	// if(istype(charging, /obj/item/device/suit_sensor_jammer))
+	// 	var/obj/item/device/suit_sensor_jammer/J = charging
+	// 	. = J.bcell
+	// else if(istype(charging, /obj/item/weapon/melee/baton))
+	// 	var/obj/item/weapon/melee/baton/B = charging
+	// 	. = B.bcell
+	// else if(istype(charging, /obj/item/modular_computer))
+	// 	var/obj/item/modular_computer/C = charging
+	// 	. = C.battery_module.battery
+	// else if(istype(charging, /obj/item/weapon/gun/energy))
+	// 	var/obj/item/weapon/gun/energy/E = charging
+	// 	. = E.power_supply
+	// else if(istype(charging, /obj/item/weapon/computer_hardware/battery_module))
+	// 	var/obj/item/weapon/computer_hardware/battery_module/BM = charging
+	// 	. = BM.battery
+	// else if(istype(charging, /obj/item/weapon/shield_diffuser))
+	// 	var/obj/item/weapon/shield_diffuser/SD = charging
+	// 	. = SD.cell
+	// else if(istype(charging, /obj/item/weapon/gun/magnetic/railgun))
+	// 	var/obj/item/weapon/gun/magnetic/railgun/RG = charging
+	// 	. = RG.cell
 
-/obj/machinery/recharger/update_icon()	//we have an update_icon() in addition to the stuff in process to make it feel a tiny bit snappier.
+/obj/machinery/recharger/on_update_icon()	//we have an update_icon() in addition to the stuff in process to make it feel a tiny bit snappier.
 	if(charging)
 		var/obj/item/weapon/cell/C = get_charging_cell()
 		if(C && C.fully_charged())
@@ -185,7 +189,7 @@ obj/machinery/recharger/examine(mob/user)
 	portable = 0
 	circuit_type = /obj/item/weapon/circuitboard/machinery/rechargerwall
 
-/obj/machinery/recharger/wallcharger/update_icon()
+/obj/machinery/recharger/wallcharger/on_update_icon()
 	..()
 	switch(dir)
 		if(NORTH)
@@ -195,10 +199,10 @@ obj/machinery/recharger/examine(mob/user)
 			src.pixel_x = 0
 			src.pixel_y = 24
 		if(EAST)
-			src.pixel_x = -32
+			src.pixel_x = -24
 			src.pixel_y = 0
 		if(WEST)
-			src.pixel_x = 32
+			src.pixel_x = 24
 			src.pixel_y = 0
 
 #undef allowed_devices

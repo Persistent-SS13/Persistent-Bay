@@ -12,14 +12,29 @@
 	var/obj/item/weapon/cell/cell = /obj/item/weapon/cell
 	var/recharging = FALSE
 	origin_tech = list(TECH_POWER = 6, TECH_ENGINEERING = 4)
-	matter = list(MATERIAL_STEEL = 1000, MATERIAL_GLASS = 700)
+	matter = list(MATERIAL_ALUMINIUM = 2 SHEETS, MATERIAL_GRAPHITE = 1 SHEET, MATERIAL_COPPER = 2 SHEETS, MATERIAL_STEEL = 0.5 SHEETS)
 	slot_flags = SLOT_BELT
+
+/obj/item/inducer/empty
+	cell = null
+
+/obj/item/inducer/New()
+	. = ..()
+	ADD_SAVED_VAR(opened)
+	ADD_SAVED_VAR(failsafe)
+	ADD_SAVED_VAR(cell)
 
 /obj/item/inducer/Initialize()
 	. = ..()
 	if(ispath(cell))
 		cell = new cell(src)
-	update_icon()
+	queue_icon_update()
+
+/obj/item/inducer/Destroy()
+	. = ..()
+	if(!ispath(cell))
+		qdel(cell)
+	cell = null
 
 /obj/item/inducer/proc/induce(obj/item/weapon/cell/target)
 	var/obj/item/weapon/cell/MyC = get_cell()
@@ -165,11 +180,6 @@
 			overlays += image(icon, "inducer-nobat")
 		else
 			overlays += image(icon,"inducer-bat")
-
-/obj/item/inducer/Destroy()
-	. = ..()
-	if(!ispath(cell))
-		QDEL_NULL(cell)
 
 // module version
 

@@ -110,7 +110,7 @@
 	spread_chance = seed.get_trait(TRAIT_POTENCY)
 	spread_distance = (growth_type ? round(spread_chance*0.6) : round(spread_chance*0.3))
 	possible_children = seed.get_trait(TRAIT_POTENCY)
-	update_icon()
+	queue_icon_update()
 
 	START_PROCESSING(SSvines, src)
 
@@ -122,7 +122,7 @@
 // Plants will sometimes be spawned in the turf adjacent to the one they need to end up in, for the sake of correct dir/etc being set.
 /obj/effect/vine/proc/finish_spreading()
 	set_dir(calc_dir())
-	update_icon()
+	queue_icon_update()
 	START_PROCESSING(SSvines, src)
 	// Some plants eat through plating.
 	if(islist(seed.chems) && !isnull(seed.chems[/datum/reagent/acid/polyacid]))

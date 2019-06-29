@@ -7,6 +7,9 @@
 	extended_desc = "A program to access the stockmarket where ownership of businesses can be bought and sold."
 	size = 21
 	requires_ntnet = TRUE
+	category = PROG_BUSINESS
+	usage_flags = PROGRAM_ALL
+
 
 /datum/nano_module/program/stockmarket
 	name = "Public Stockmarket"

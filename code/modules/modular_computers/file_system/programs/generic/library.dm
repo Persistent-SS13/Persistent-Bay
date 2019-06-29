@@ -18,6 +18,7 @@ The answer was five and a half years -ZeroBits
 	available_on_ntnet = 1
 
 	nanomodule_path = /datum/nano_module/library
+	category = PROG_OFFICE
 
 /datum/nano_module/library
 	name = "Library"

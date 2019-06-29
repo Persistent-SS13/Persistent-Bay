@@ -2,8 +2,9 @@
 <br><hr>
 {{if data.living}}
 	{{:helper.link("General Info", 'wrench', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
-	{{:helper.link("Money Account", 'locked', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
-	{{:helper.link("Nexus Elections System", 'locked', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}	
+	{{:helper.link("Money Account/Transfers", 'locked', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}
+	{{:helper.link("Nexus Elections System", 'locked', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}
+	
 	{{if data.menu == 1}}
 		<h3>General Info</h3><br>
 		<div class='item'>
@@ -57,6 +58,14 @@
 			</div>
 			<div class='itemContent'>
 				{{:data.account_balance}}$$
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Money Transfer:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link('Start Transfer', '', {'action' : 'transfer'})}}
 			</div>
 		</div>
 		<br><br>

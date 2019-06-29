@@ -464,7 +464,9 @@
 
 	if(client.holder && (client.holder.rights & R_ADMIN))
 		is_admin = 1
-
+	else
+		to_chat(src, "Observing is restricted in persistence.")
+		return
 	if(is_admin && stat == DEAD)
 		is_admin = 0
 
@@ -1222,7 +1224,7 @@
 /mob/proc/get_id_name(var/if_no_id = "Unknown")
 	return if_no_id
 
-/mob/proc/get_idcard()
+/mob/GetIdCard()
 	return
 
 /mob/proc/is_cloaked()
@@ -1238,7 +1240,7 @@
 
 	if(isliving(src)) //Needs to be a mob verb to prevent error messages when using hotkeys
 		var/mob/living/M = src
-		
+
 		for(var/datum/computer_file/report/crew_record/record in GLOB.all_crew_records)
 			if(record.get_name() == M.real_name)
 				if(record.linked_account && istype(record.linked_account, /datum/money_account))
@@ -1261,7 +1263,7 @@
 	else
 		to_chat(src, "<span class='warning'>This verb may only be used by living mobs, sorry.</span>")
 	return
-	
+
 //For mobs with organs
 /mob/proc/sync_organ_dna()
 	return
@@ -1309,7 +1311,7 @@
 	ADD_SAVED_VAR(spawn_type)
 	ADD_SAVED_VAR(spawn_loc)
 	ADD_SAVED_VAR(spawn_loc_2)
-
+	ADD_SAVED_VAR(spawn_cit)
 	ADD_SKIP_EMPTY(dna)
 	ADD_SKIP_EMPTY(l_hand)
 	ADD_SKIP_EMPTY(r_hand)

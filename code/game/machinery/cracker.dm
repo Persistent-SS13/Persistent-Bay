@@ -10,6 +10,8 @@
 	use_power = POWER_USE_IDLE
 	idle_power_usage = 100
 	active_power_usage = 10000
+	circuit_type = /obj/item/weapon/circuitboard/cracker
+
 
 	var/list/reagent_buffer = list()
 	var/tmp/fluid_consumption_per_tick = 100
@@ -17,6 +19,12 @@
 	var/tmp/max_reagents = 100
 	var/tmp/deuterium_generation_chance = 10
 	var/tmp/deuterium_generation_amount = 1
+
+/obj/machinery/portable_atmospherics/cracker/New()
+	. = ..()
+	ADD_SAVED_VAR(reagent_buffer)
+
+	ADD_SKIP_EMPTY(reagent_buffer)
 
 /obj/machinery/portable_atmospherics/cracker/on_update_icon()
 	icon_state = (use_power == POWER_USE_ACTIVE) ? "cracker_on" : "cracker"
@@ -59,7 +67,7 @@
 	if(stat & (BROKEN|NOPOWER))
 		if(use_power == POWER_USE_ACTIVE)
 			update_use_power(POWER_USE_IDLE)
-		update_icon()
+		queue_icon_update()
 		return
 
 	if(use_power == POWER_USE_IDLE)

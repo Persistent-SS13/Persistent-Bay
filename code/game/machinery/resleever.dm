@@ -10,9 +10,9 @@
 	req_access = list(core_access_medical_programs)
 	circuit_type = /obj/item/weapon/circuitboard/resleever
 
-	icon_state = "body_scanner_0"
-	var/empty_state = "body_scanner_0"
-	var/occupied_state = "body_scanner_1"
+	icon_state = "resleever_open"
+	var/empty_state = "resleever_open"
+	var/occupied_state = "resleever_closed"
 	var/allow_occupant_types = list(/mob/living/carbon/human)
 	var/disallow_occupant_types = list()
 

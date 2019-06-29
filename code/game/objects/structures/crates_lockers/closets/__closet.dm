@@ -649,6 +649,6 @@
 				else
 					req_access |= text2num(href_list["selected_access"])
 		if("select_faction")
-			var/obj/item/weapon/card/id/id_card = usr.get_idcard()
+			var/obj/item/weapon/card/id/id_card = usr.GetIdCard()
 			if(id_card)
 				req_access_faction = id_card.selected_faction

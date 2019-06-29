@@ -934,6 +934,25 @@
 /datum/chemical_reaction/aluminium_paint/send_data()
 	return "#f0f8ff"
 
+//Precursor Chem recipies.
+/datum/chemical_reaction/acetone_production
+	name = "Acetone Production"
+	result = /datum/reagent/acetone
+	required_reagents = list(/datum/reagent/oxygen = 1, /datum/reagent/carbon = 3, /datum/reagent/hydrogen = 6) //(CH3)2CO
+	result_amount = 6
+
+/datum/chemical_reaction/sulphuric_acid_prod
+	name = "Sulphuric Acid Production"
+	result = /datum/reagent/acid
+	required_reagents = list(/datum/reagent/sulfur = 1, /datum/reagent/oxygen = 4, /datum/reagent/hydrogen = 2) //H2SO4.
+	result_amount = 1
+
+/datum/chemical_reaction/hydrochloric_acid_prod
+	name = "Hydrochloric Acid production"
+	result = /datum/reagent/acid/hydrochloric
+	required_reagents = list(/datum/reagent/toxin/chlorine = 1, /datum/reagent/hydrogen = 1, /datum/reagent/water = 1)// 1:1 hydrogen chloride to water makes HCl acid.
+	result_amount = 1
+
 //Grey
 /datum/chemical_reaction/slime/spawn
 	name = "Slime Spawn"

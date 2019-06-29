@@ -12,7 +12,8 @@
 	common = list(
 	/mob/living/simple_animal/mouse,
 	/mob/living/simple_animal/lizard,
-	/mob/living/simple_animal/chick)
+	/mob/living/simple_animal/chick
+	)
 
 	uncommon = list(
 	/mob/living/simple_animal/cat,
@@ -20,7 +21,8 @@
 	/mob/living/simple_animal/crab,
 	/mob/living/simple_animal/chicken,
 	/mob/living/simple_animal/cat/kitten,
-	/mob/living/simple_animal/corgi/puppy)
+	/mob/living/simple_animal/corgi/puppy
+	)
 
 	rare = list(
 	/mob/living/simple_animal/hostile/retaliate/goat,
@@ -29,7 +31,8 @@
 	/mob/living/carbon/human/farwa,
 	/mob/living/simple_animal/cow,
 	/mob/living/carbon/human/neaera,
-	/mob/living/carbon/human/stok)
+	/mob/living/carbon/human/stok
+	)
 
 	special = list(
 	/mob/living/simple_animal/hostile/carp)
@@ -39,7 +42,6 @@
 	common = list(/obj/item/seeds/grapeseed,
 	/obj/item/seeds/peanutseed,
 	/obj/item/seeds/cabbageseed,
-	/obj/item/seeds/shandseed,
 	/obj/item/seeds/berryseed,
 	/obj/item/seeds/blueberryseed,
 	/obj/item/seeds/eggplantseed,
@@ -50,10 +52,8 @@
 	/obj/item/seeds/wheatseed,
 	/obj/item/seeds/riceseed,
 	/obj/item/seeds/carrotseed,
-	/obj/item/seeds/reishimycelium,
 	/obj/item/seeds/chantermycelium,
 	/obj/item/seeds/plumpmycelium,
-	/obj/item/seeds/weeds,
 	/obj/item/seeds/harebell,
 	/obj/item/seeds/sunflowerseed,
 	/obj/item/seeds/lavenderseed,
@@ -66,7 +66,9 @@
 	/obj/item/seeds/cherryseed,
 	/obj/item/seeds/peppercornseed,
 	/obj/item/seeds/garlicseed,
-	/obj/item/seeds/onionseed
+	/obj/item/seeds/onionseed,
+	/obj/item/seeds/algaeseed,
+	/obj/item/seeds/badtobaccoseed
 	)
 
 	uncommon = list(/obj/item/seeds/nettleseed,
@@ -79,7 +81,6 @@
 	/obj/item/seeds/bloodtomatoseed,
 	/obj/item/seeds/bluetomatoseed,
 	/obj/item/seeds/poppyseed,
-	/obj/item/seeds/libertymycelium,
 	/obj/item/seeds/towermycelium,
 	/obj/item/seeds/glowshroom,
 	/obj/item/seeds/ambrosiavulgarisseed,
@@ -87,6 +88,8 @@
 	/obj/item/seeds/lemonseed,
 	/obj/item/seeds/orangeseed,
 	/obj/item/seeds/grassseed,
+	/obj/item/seeds/shandseed,
+	/obj/item/seeds/reishimycelium,
 	/obj/item/seeds/tobaccoseed
 	)
 
@@ -96,7 +99,9 @@
 	/obj/item/seeds/amanitamycelium,
 	/obj/item/seeds/icepepperseed,
 	/obj/item/seeds/bluespacetomatoseed,
-	/obj/item/seeds/finetobaccoseed
+	/obj/item/seeds/finetobaccoseed,
+	/obj/item/seeds/libertymycelium,
+	/obj/item/bee_pack
 	)
 
 	special = list(/obj/item/seeds/kudzuseed,

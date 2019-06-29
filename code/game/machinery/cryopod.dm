@@ -18,8 +18,10 @@
 	var/disallow_occupant_types = list()
 
 	var/network = "default"
-	var/tmp/time_entered = 0
 	var/time_till_despawn = 60 SECONDS
+	var/tmp/time_despawn = 0 //Time in world.time to despawn the occupant
+	var/tmp/despawning = FALSE //Poor man's mutex, to prevent despawn from being called twice and break the save
+
 	var/mob/occupant
 	var/obj/item/device/radio/intercom/announce
 	var/obj/machinery/computer/cryopod/control_computer
@@ -71,7 +73,7 @@
 	. = ..()
 
 /obj/machinery/cryopod/before_save()
-	if(occupant)
+	if(occupant && !despawning)
 		despawn_occupant()
 	..()
 
@@ -111,7 +113,7 @@
 			C.SetStasis(2)
 
 		//Allow a one minute gap between entering the pod and actually despawning.
-		if ((world.time - time_entered) < time_till_despawn)
+		if (time_despawn > world.time)
 			return
 
 		var/mob/M = occupant
@@ -270,8 +272,7 @@
 
 	occupant = A
 	A.forceMove(src)
-	time_entered = world.time
-
+	time_despawn = world.time + time_till_despawn
 	src.add_fingerprint(user)
 
 /obj/machinery/cryopod/proc/ejectOccupant()
@@ -285,7 +286,11 @@
 /obj/machinery/cryopod/proc/despawn_occupant(var/autocryo = 0)
 	if(!occupant)
 		return 0
+	if(despawning)
+		log_error("[src]\ref[src] tried to despawn occupant [occupant]\ref[occupant] twice!")
+		return 0
 
+	despawning = TRUE //Make sure we don't try to despawn twice at the same time for whatever reasons
 	var/mob/character
 	var/key
 	var/saveslot = 0
@@ -341,8 +346,11 @@
 	if(occupant.client)
 		occupant.client.eye = player
 	player.key = key
+	player.loc = locate(200,200,19)
+	if(occupant && occupant.client)
+		occupant.client.eye = player
 	QDEL_NULL(occupant)
-
+	despawning = FALSE
 
 /*
  * Cryogenic refrigeration unit. Basically a despawner.

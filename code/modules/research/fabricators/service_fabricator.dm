@@ -69,6 +69,11 @@
 	build_path = /obj/item/weapon/material/minihoe
 	materials = list(MATERIAL_STEEL = 0.75 SHEET)
 
+/datum/design/item/servicefab/botanytools/plant_scanner
+	name = "plant scanner"
+	build_path = /obj/item/device/scanner/plant
+	materials = list(MATERIAL_ALUMINIUM = 0.5 SHEET, MATERIAL_COPPER = 0.5 SHEET, MATERIAL_GLASS = 0.5 SHEET)
+
 /datum/design/item/servicefab/botanytools/plantbgone
 	name = "Plant-B-Gone (empty)"
 	build_path = /obj/item/weapon/reagent_containers/spray/plantbgone
@@ -97,6 +102,22 @@
 /datum/design/item/servicefab/botanytools/clippers
 	build_path = /obj/item/weapon/tool/wirecutters/clippers
 	materials = list(MATERIAL_STEEL = 1 SHEET)
+	
+/datum/design/item/servicefab/botanytools/beehiveassembly
+	build_path = /obj/item/beehive_assembly
+	materials = list(MATERIAL_WOOD = 4 SHEET)
+
+/datum/design/item/servicefab/botanytools/beesmoker
+	build_path = /obj/item/bee_smoker
+	materials = list(MATERIAL_STEEL = 2 SHEET)
+	
+/datum/design/item/servicefab/botanytools/beeframe
+	build_path = /obj/item/honey_frame
+	materials = list(MATERIAL_WOOD = 1 SHEET)
+
+// /datum/design/item/servicefab/botanytools/disks
+// 	build_path = /obj/item/weapon/disk/botany
+// 	materials = list(MATERIAL_PLASTIC = 0.05 SHEET, MATERIAL_ALUMINIUM = 0.05 SHEET, MATERIAL_COPPER 0.05 SHEET)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

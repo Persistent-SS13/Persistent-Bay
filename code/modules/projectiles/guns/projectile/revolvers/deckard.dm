@@ -2,6 +2,7 @@
 /obj/item/weapon/gun/projectile/revolver/deckard
 	name = "\improper Deckard .44"
 	desc = "A custom-built revolver, based off the semi-popular Detective Special model."
+	icon = 'icons/obj/weapons/guns/pistol_deckard.dmi'
 	icon_state = "deckard-empty"
 	ammo_type = /obj/item/ammo_magazine/speedloader/c44
 

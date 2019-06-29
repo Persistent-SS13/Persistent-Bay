@@ -175,7 +175,7 @@
 	desc = "A special helmet designed for work in a hazardous, low-pressure environment. The tinting can be toggled for flash protection at the cost of worse visibility."
 	icon_state = "spacebowl"
 	light_overlay = "yellow_light"
-	tinted = FALSE
+	tinted = TRUE
 
 /obj/item/clothing/head/helmet/space/fishbowl/Initialize()
 	. = ..()

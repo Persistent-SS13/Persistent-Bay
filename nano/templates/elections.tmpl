@@ -21,8 +21,9 @@
 		</div>
 		<h4>Candidates</h4><br>
 		<div class="statusDisplay" style="overflow: auto;">
-			{{if data.ballots}}
+			{{if data.candidates}}
 				{{for data.candidates}}
+					<br><hr><br>
 					{{:value.name}}<br><br>
 					{{:value.desc}}
 				{{/for}}

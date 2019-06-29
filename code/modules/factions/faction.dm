@@ -70,7 +70,7 @@ var/PriorityQueue/all_feeds
 		can_read = get_dist(src, AI.camera) < 2
 	var/info2 = info
 	if(sign_type == CONTRACT_PERSON)
-		if(cancelled || !linked)
+		if(cancelled)
 			info2 += "<br>This contract has been cancelled. This can be shredded."
 		else if(approved)
 			info2 += "<br>This contract has been finalized. This is just for record keeping."
@@ -102,7 +102,7 @@ var/PriorityQueue/all_feeds
 	if(href_list["pay"])
 		if(signed) return
 		if(sign_type == CONTRACT_BUSINESS)
-			var/obj/item/weapon/card/id/id = usr.get_idcard()
+			var/obj/item/weapon/card/id/id = usr.GetIdCard()
 			if(id)
 				if(id.selected_faction == contract_payee)
 					to_chat(usr, "An organization cannot sign its own contract.")
@@ -209,25 +209,6 @@ var/PriorityQueue/all_feeds
 		icon_state = "contract-pending"
 	else
 		icon_state = "contract"
-		
-/obj/item/weapon/paper/contract/recurring/show_content(mob/user, forceshow)
-	var/can_read = (istype(user, /mob/living/carbon/human) || isghost(user) || istype(user, /mob/living/silicon)) || forceshow
-	if(!forceshow && istype(user,/mob/living/silicon/ai))
-		var/mob/living/silicon/ai/AI = user
-		can_read = get_dist(src, AI.camera) < 2
-	var/info2 = info
-	if(cancelled || !linked)
-		info2 += "<br>This contract has been cancelled. This can be shredded."
-	else if(approved)
-		info2 += "<br>This contract has been finalized. This is just for record keeping."
-	else if(signed)
-		info2 += "<br>This contract has been signed and is pending finalization."
-	else if(src.Adjacent(user) && !signed)
-		info2 += "<br><A href='?src=\ref[src];pay=1'>Scan lace to sign contract.</A>"
-	else
-		info2 += "<br>Scan lace to sign contract."
-	user << browse("<HTML><HEAD><TITLE>[name]</TITLE></HEAD><BODY bgcolor='[color]'>[can_read ? info2 : stars(info)][stamps]</BODY></HTML>", "window=[name]")
-	onclose(user, "[name]")
 		
 /obj/item/weapon/paper/contract/show_content(mob/user, forceshow)
 	var/can_read = (istype(user, /mob/living/carbon/human) || isghost(user) || istype(user, /mob/living/silicon)) || forceshow

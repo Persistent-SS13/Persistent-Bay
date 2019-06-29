@@ -53,16 +53,12 @@
 
 /datum/metabolism_effects/proc/check_reagent(datum/reagent/RT, var/volume, var/removed)
 	// Addiction
-
-	var/datum/reagent/addict_reagent = (RT.parent_substance ? new RT.parent_substance : new RT)
 	var/datum/reagent/ref_reagent = new RT
+	var/datum/reagent/addict_reagent = (ref_reagent.parent_substance ? new ref_reagent.parent_substance : ref_reagent)
 
-	message_admins("Checking Reagent: [addict_reagent] : [removed]")
-	var/add_addiction_prob = Root(ref_reagent.addiction_median_dose/removed, 50)
-	message_admins("Addiction Prob: [addict_reagent]: [add_addiction_prob]")
-	if(prob(add_addiction_prob))
-		if(!is_type_in_list(addict_reagent, addiction_levels))
-
+	if(!is_type_in_list(addict_reagent, addiction_levels))
+		var/add_addiction_prob = Root(ref_reagent.addiction_median_dose/removed, 50)
+		if(prob(add_addiction_prob))
 			addiction_levels.Add(addict_reagent)
 			addiction_levels[addict_reagent] = 10
 			withdrawal_levels.Add(addict_reagent)
@@ -71,12 +67,11 @@
 			last_doses.Add(addict_reagent)
 			last_doses[addict_reagent] = parent.life_tick
 
-	if(is_type_in_list(addict_reagent, addiction_levels))
+	else
 		for(var/addiction in addiction_levels)
 			var/datum/reagent/A = addiction
 			if(istype(addict_reagent, A))
 				addiction_levels[A] += (ref_reagent.addictiveness) * removed
-				message_admins("Adding addiction level: [A] : [(A.addictiveness) * removed]")
 				last_doses[A] = parent.life_tick
 				withdrawal_levels[A] = 0
 
@@ -87,7 +82,6 @@
 
 	for(var/addiction in addiction_levels)
 		var/datum/reagent/R = addiction
-		message_admins("Addiction Levels: [R] : [addiction_levels[R]]")
 		if(!R)
 			addiction_levels.Remove(R)
 			withdrawal_levels.Remove(R)
@@ -116,7 +110,7 @@
 	else switch(withdrawal_levels[R])
 		if(0 to 100)
 			if(prob(5))
-				to_chat(parent, SPAN_NOTICE("You feel like having some [R.addiction_display_name] right about now.")) // We'll give players an indication that their addiction is going away
+				if(prob(50)) to_chat(parent, SPAN_NOTICE("You feel like having some [R.addiction_display_name] right about now.")) // We'll give players an indication that their addiction is going away
 				addiction_levels[R]--
 		if(100 to 400)
 			if(prob(5))

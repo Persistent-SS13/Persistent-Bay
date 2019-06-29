@@ -123,7 +123,7 @@
 			if(CHEM_TOUCH)
 				affect_touch(M, alien, effective)
 
-	if(addictiveness && (removed > 0))
+	if(addictiveness && (removed > 0 && config.addiction))
 		M.metabolism_effects.check_reagent(src.type, volume, removed) // Handles addiction and withdrawal
 
 	if(volume)

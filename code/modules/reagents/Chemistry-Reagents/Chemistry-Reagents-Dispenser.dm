@@ -113,7 +113,7 @@
 	var/halluci = 0
 
 	addictiveness = 1
-	addiction_median_dose = 50
+	addiction_median_dose = 150
 	parent_substance = /datum/reagent/ethanol
 	addiction_display_name = "Alcohol"
 

@@ -2,7 +2,7 @@
 
 /datum/shuttle
 	var/name = ""
-	var/warmup_time = 10
+	var/warmup_time = 1 SECOND
 	var/moving_status = SHUTTLE_IDLE
 
 	var/list/shuttle_area //can be both single area type or a list of areas
@@ -39,15 +39,15 @@
 	if(_name)
 		src.name = _name
 
-	var/list/areas = list()
-	if(!islist(shuttle_area))
-		shuttle_area = list(shuttle_area)
-	for(var/T in shuttle_area)
-		var/area/A = locate(T)
-		if(!istype(A))
-			CRASH("Shuttle \"[name]\" couldn't locate area [T].")
-		areas += A
-	shuttle_area = areas
+	// var/list/areas = list()
+	// if(!islist(shuttle_area))
+	// 	shuttle_area = list(shuttle_area)
+	// for(var/T in shuttle_area)
+	// 	var/area/A = locate(T)
+	// 	if(!istype(A))
+	// 		CRASH("Shuttle \"[name]\" couldn't locate area [T].")
+	// 	areas += A
+	// shuttle_area = areas
 
 	if(initial_location)
 		current_location = initial_location
@@ -262,9 +262,7 @@
 //If you want to conditionally cancel shuttle launches, that logic must go in short_jump(), long_jump() or attempt_move()
 /datum/shuttle/proc/shuttle_moved(var/obj/effect/shuttle_landmark/destination, var/list/turf_translation)
 
-//	log_debug("move_shuttle() called for [shuttle_tag] leaving [origin] en route to [destination].")
-//	log_degug("area_coming_from: [origin]")
-//	log_debug("destination: [destination]")
+	log_debug("move_shuttle() called for [src.name] leaving [src.current_location] en route to [destination].")
 	if((flags & SHUTTLE_FLAGS_ZERO_G))
 		var/new_grav = 1
 		if(destination.flags & SLANDMARK_FLAG_ZERO_G)
@@ -322,12 +320,13 @@
 //	message_admins("dock_interior [bridge.dock.dock_interior].")
 	var/barea = locate(world.area)
 	var/bturf = /turf/space
+	log_debug("[src]\ref[src], base turf: [bturf], base area: [barea]")
 
 	//If the location is a landmark
 	if(istype(current_location))
 		barea = current_location.base_area 
-		bturf = bridge.dock.dock_interior == 1? current_location.base_turf : /turf/space
-	else if(bridge.dock.dock_interior == 1)
+		bturf = bridge.dock.dock_interior? current_location.base_turf : /turf/space
+	else if(bridge.dock.dock_interior)
 		bturf = /turf/simulated/floor/plating
 		barea = get_area(current_location)
 	translate_turfs(turf_translation, barea, bturf)

@@ -336,7 +336,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 					var/list/formatted_candidates
 					for(var/datum/candidate/candidate in selected_ballot.candidates)
 						formatted_candidates[++formatted_candidates.len] = list("name" = candidate.real_name,"pitch" = candidate.desc, "ref" = "\ref[candidate]")
-
+					data["candidates"] = formatted_candidates
 				else
 					var/list/formatted_ballots[0]
 					for(var/datum/democracy/ballot in nexus.current_election.ballots)

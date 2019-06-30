@@ -149,7 +149,7 @@
 	..(newloc, MATERIAL_SLAG)
 /obj/item/stack/ore/copper/New(var/newloc)
 	..(newloc, MATERIAL_TETRAHEDRITE)
-/obj/item/weapon/ore/rutile/New(var/newloc)
+/obj/item/stack/ore/rutile/New(var/newloc)
 	..(newloc, MATERIAL_RUTILE)
 
 //-----------------------------------------

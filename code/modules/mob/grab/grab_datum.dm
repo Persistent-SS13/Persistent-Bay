@@ -166,6 +166,8 @@
 	var/mob/living/carbon/human/affecting = G.affecting
 	var/mob/living/carbon/human/assailant = G.assailant
 	var/adir = get_dir(assailant, affecting)
+	if(!affecting || !assailant )
+		return 0 
 
 	if(same_tile)
 		affecting.forceMove(assailant.loc)
@@ -186,7 +188,8 @@
 			animate(affecting, pixel_x =-shift, pixel_y = 0, 5, 1, LINEAR_EASING)
 			G.draw_affecting_under()
 
-	affecting.reset_plane_and_layer()
+	if(affecting)
+		affecting.reset_plane_and_layer()
 
 /datum/grab/proc/reset_position(var/obj/item/grab/G)
 	var/mob/living/carbon/human/affecting = G.affecting

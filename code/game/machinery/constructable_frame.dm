@@ -190,7 +190,7 @@
 				state = MACHINE_FRAME_CABLED
 				circuit.forceMove(src.loc)
 				circuit = null
-				if(components.len == 0)
+				if(!length(components))
 					to_chat(user, "<span class='notice'>You remove the circuit board.</span>")
 				else
 					to_chat(user, "<span class='notice'>You remove the circuit board and other components.</span>")

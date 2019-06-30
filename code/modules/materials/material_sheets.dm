@@ -52,7 +52,7 @@
 
 	//testing("Initialized [src] \ref[src], [src.default_type] - ([src.material]), [src.default_reinf_type] - ([src.reinf_material])")
 	update_strings()
-	update_icon()
+	queue_icon_update()
 
 /obj/item/stack/material/list_recipes(mob/user, recipes_sublist)
 	if(!material)

@@ -61,9 +61,17 @@
 			usr.put_in_l_hand(src)
 	src.add_fingerprint(usr)
 
+/obj/item/clothing/after_load()
+	var/list/real_accessories = list()
+	for(var/obj/item/clothing/accessory/A in accessories)
+		real_accessories |= A
+	accessories = real_accessories
+	..()
+
 /obj/item/clothing/examine(var/mob/user)
 	. = ..(user)
 	for(var/obj/item/clothing/accessory/A in accessories)
+	
 		to_chat(user, "\icon[A] \A [A] is attached to it.")
 	switch(ironed_state)
 		if(WRINKLES_WRINKLY)
@@ -89,7 +97,7 @@
  *  items on spawn
  */
 /obj/item/clothing/proc/attach_accessory(mob/user, obj/item/clothing/accessory/A)
-	accessories += A
+	accessories |= A
 	A.on_attached(src, user)
 	if(A.removable)
 		src.verbs |= /obj/item/clothing/proc/removetie_verb

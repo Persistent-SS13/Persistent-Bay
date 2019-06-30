@@ -511,7 +511,7 @@
 
 
 
-	else if(istype(O, /obj/item/weapon/card/id))
+	else if(istype(O, /obj/item/weapon/card/id) && mechanical)
 		var/obj/item/weapon/card/id/id = O
 		if(!req_access_faction || req_access_faction == "")
 			var/datum/world_faction/faction = get_faction(id.selected_faction)
@@ -652,7 +652,7 @@
 
 /obj/machinery/portable_atmospherics/hydroponics/examine(mob/user)
 	. = ..(user)
-	if(!connected_faction)
+	if(mechanical && !connected_faction)
 		to_chat(user, "The tray is not connected to an organization and so it is not growing correctly.")
 	if(!seed)
 		to_chat(user, "\The [src] is empty.")

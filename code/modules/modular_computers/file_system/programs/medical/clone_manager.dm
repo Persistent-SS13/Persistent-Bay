@@ -155,9 +155,10 @@
 	var/list/data = host.initial_data()
 	var/scanner_status = 1
 	var/obj/item/weapon/computer_hardware/scanner/medical/mdscan = program.computer.scanner
-	if(!mdscan || !mdscan.check_functionality()) scanner_status = 0
+	if(!mdscan || !mdscan.check_functionality()) 
+		scanner_status = 0
 	data["has_scanner"] = scanner_status
-	if(mdscan)
+	if(istype(mdscan))
 		data["has_dna"] = !isnull(mdscan.stored_dna)
 		if(mdscan.stored_dna)
 			data["dna"] = mdscan.stored_dna.unique_enzymes

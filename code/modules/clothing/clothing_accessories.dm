@@ -89,7 +89,7 @@
  *  items on spawn
  */
 /obj/item/clothing/proc/attach_accessory(mob/user, obj/item/clothing/accessory/A)
-	accessories += A
+	accessories |= A
 	A.on_attached(src, user)
 	if(A.removable)
 		src.verbs |= /obj/item/clothing/proc/removetie_verb

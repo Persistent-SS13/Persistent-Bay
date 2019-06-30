@@ -355,6 +355,8 @@
 		update_icon(0)
 
 /obj/machinery/light/proc/set_emergency_lighting(var/enable)
+	if(!lightbulb)
+		return 0
 	if(enable)
 		if(LIGHTMODE_EMERGENCY in lightbulb.lighting_modes)
 			set_mode(LIGHTMODE_EMERGENCY)

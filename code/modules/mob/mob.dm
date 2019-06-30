@@ -48,7 +48,8 @@
 	zone_sel = null
 
 /mob/Initialize()
-	move_intent = decls_repository.get_decl(move_intent) //Do it very early, because subclasses need it in initialize
+	if(ispath(move_intent))
+		move_intent = decls_repository.get_decl(move_intent) //Do it very early, because subclasses need it in initialize
 	. = ..()
 	if(!map_storage_loaded)
 		skillset = new skillset(src)

@@ -35,9 +35,9 @@
 	. = ..()
 
 	if(silicon_radio)
-		silicon_radio = new silicon_radio(src)
+		silicon_radio = new(src)
 	if(silicon_camera)
-		silicon_camera = new silicon_camera(src)
+		silicon_camera = new(src)
 
 	add_language(LANGUAGE_GALCOM)
 	default_language = all_languages[LANGUAGE_GALCOM]

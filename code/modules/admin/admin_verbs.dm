@@ -983,6 +983,7 @@ var/list/admin_verbs_mentor = list(
 
 	to_chat(T, "<span class='notice'><b><font size=3>Man up and deal with it.</font></b></span>")
 	to_chat(T, "<span class='notice'>Move on.</span>")
+	sound_to(T, 'sound/voice/ManUp1.ogg')
 
 	log_and_message_admins("told [key_name(T)] to man up and deal with it.")
 
@@ -997,7 +998,7 @@ var/list/admin_verbs_mentor = list(
 		sound_to(T, 'sound/voice/ManUp1.ogg')
 
 	log_and_message_admins("told everyone to man up and deal with it.")
-**/.
+**/
 /client/proc/give_spell(mob/T as mob in SSmobs.mob_list) // -- Urist
 	set category = "Fun"
 	set name = "Give Spell"

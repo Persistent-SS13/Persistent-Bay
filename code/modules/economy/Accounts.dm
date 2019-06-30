@@ -56,7 +56,7 @@
 			connected_business.revenue_objectives(T.amount)
 	else
 		if(istype(connected_business))
-			connected_business.cost_objectives(T.amount)
+			connected_business.cost_objectives(-T.amount)
 	if(T.amount > 0 && nexus_account && nexus_account != src)
 		nexus.pay_tax(src, T.amount)
 

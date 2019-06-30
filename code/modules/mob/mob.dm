@@ -48,7 +48,8 @@
 	zone_sel = null
 
 /mob/Initialize()
-	move_intent = decls_repository.get_decl(move_intent) //Do it very early, because subclasses need it in initialize
+	if(ispath(move_intent))
+		move_intent = decls_repository.get_decl(move_intent) //Do it very early, because subclasses need it in initialize
 	. = ..()
 	if(!map_storage_loaded)
 		skillset = new skillset(src)
@@ -1224,7 +1225,7 @@
 /mob/proc/get_id_name(var/if_no_id = "Unknown")
 	return if_no_id
 
-/mob/proc/get_idcard()
+/mob/GetIdCard()
 	return
 
 /mob/proc/is_cloaked()
@@ -1240,7 +1241,7 @@
 
 	if(isliving(src)) //Needs to be a mob verb to prevent error messages when using hotkeys
 		var/mob/living/M = src
-		
+
 		for(var/datum/computer_file/report/crew_record/record in GLOB.all_crew_records)
 			if(record.get_name() == M.real_name)
 				if(record.linked_account && istype(record.linked_account, /datum/money_account))
@@ -1263,7 +1264,7 @@
 	else
 		to_chat(src, "<span class='warning'>This verb may only be used by living mobs, sorry.</span>")
 	return
-	
+
 //For mobs with organs
 /mob/proc/sync_organ_dna()
 	return

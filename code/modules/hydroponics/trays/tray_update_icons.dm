@@ -50,7 +50,7 @@
 		//Draw the cover.
 		if(closed_system)
 			new_overlays += "hydrocover2"
-		if(seed && health <= (seed.get_trait(TRAIT_ENDURANCE) / 2))
+		if(seed && plant_health <= (seed.get_trait(TRAIT_ENDURANCE) / 2))
 			new_overlays += "over_lowhealth3"
 		if(waterlevel <= 10)
 			new_overlays += "over_lowwater3"
@@ -72,11 +72,17 @@
 
 	overlays |= new_overlays
 
-	// Update bioluminescence.
-	if(seed && seed.get_trait(TRAIT_BIOLUM))
-		set_light(0.5, 0.1, 3, l_color = seed.get_trait(TRAIT_BIOLUM_COLOUR))
+	if(mechanical)
+		if(seed && closed_system)
+			set_light(tray_light / 10.0, tray_light / 2.0, 10, 1.2, COLOR_RESEARCH)
+		else
+			set_light(0)
 	else
-		set_light(0)
+		// Update bioluminescence. //Should do this a better way imo
+		if(seed && seed.get_trait(TRAIT_BIOLUM))
+			set_light(0.5, 0.1, 3, l_color = seed.get_trait(TRAIT_BIOLUM_COLOUR))
+		else
+			set_light(0)
 
 /obj/machinery/portable_atmospherics/hydroponics/proc/get_overlay_stage()
 	. = 1

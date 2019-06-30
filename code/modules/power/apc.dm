@@ -194,6 +194,8 @@
 		var/datum/world_faction/F = get_faction(req_access_faction)
 		if(can_connect(F, force = TRUE))
 			connect_to_network()
+		else
+			log_error("[src]\ref[src] failed to link to faction [req_access_faction]!(Faction returned was [F]\ref[F])")
 	if(operating)
 		src.update()
 

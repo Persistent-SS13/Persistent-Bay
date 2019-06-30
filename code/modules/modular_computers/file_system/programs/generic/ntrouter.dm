@@ -16,7 +16,7 @@
 
 /datum/nano_module/program/computer_ntrouter/proc/format_networks(var/mob/user)
 	var/list/found_networks = list()
-	var/obj/item/weapon/card/id/id = user.get_idcard()
+	var/obj/item/weapon/card/id/id = user.GetIdCard()
 	for(var/datum/world_faction/fact in GLOB.all_world_factions)
 		if(fact.network)
 			if(!fact.network.invisible || (fact.get_stockholder(user.real_name)) || (id && (core_access_network_linking in id.GetAccess(fact.uid))))

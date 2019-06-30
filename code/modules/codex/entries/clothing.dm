@@ -1,15 +1,29 @@
 
 // Clothing armour values.
 /obj/item/clothing
+	// var/global/list/armour_to_descriptive_term = list(
+	// 	"melee" = "blunt force",
+	// 	"bullet" = "ballistics",
+	// 	"laser" = "lasers",
+	// 	"energy" = "energy",
+	// 	"bomb" = "explosions",
+	// 	"bio" = "biohazards",
+	// 	"rad" = "radiation"
+	// 	)
 	var/global/list/armour_to_descriptive_term = list(
-		"melee" = "blunt force",
-		"bullet" = "ballistics",
-		"laser" = "lasers",
-		"energy" = "energy",
-		"bomb" = "explosions",
-		"bio" = "biohazards",
-		"rad" = "radiation"
+		DAM_BLUNT = "blunt force",
+		DAM_PIERCE = "piercing force",
+		DAM_CUT = "shearing force",
+		DAM_BULLET = "ballistics",
+		DAM_LASER = "lasers",
+		DAM_ENERGY = "energy",
+		DAM_EMP = "EMP",
+		DAM_BURN = "burns",
+		DAM_BOMB = "explosions",
+		DAM_BIO = "biohazards",
+		DAM_RADS = "radiation"
 		)
+
 
 /obj/item/clothing/get_mechanics_info()
 	var/list/armor_strings = list()

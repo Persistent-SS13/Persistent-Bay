@@ -8,6 +8,7 @@
 	icon_gib = "carp_gib"
 	speak_chance = 0
 	turns_per_move = 3
+	meat_amount = 5
 	meat_type = /obj/item/weapon/reagent_containers/food/snacks/fish/poison
 	response_help = "pets the"
 	response_disarm = "gently pushes aside the"

@@ -19,11 +19,11 @@
 	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
 	starting_pressure = list(GAS_OXYGEN = 10*ONE_ATMOSPHERE)
 	volume = 180
+	matter = list(MATERIAL_STEEL = 2000)
 
 /obj/item/weapon/tank/oxygen/yellow
 	desc = "A tank of oxygen. This one is yellow."
 	icon_state = "oxygen_f"
-	matter = list(MATERIAL_STEEL = 850)
 	starting_pressure = list(GAS_OXYGEN = 0)
 
 /obj/item/weapon/tank/oxygen/red
@@ -41,6 +41,7 @@
 	w_class = ITEM_SIZE_HUGE
 	starting_pressure = list(GAS_OXYGEN = 10*ONE_ATMOSPHERE*O2STANDARD, GAS_N2O = 10*ONE_ATMOSPHERE*N2STANDARD)
 	volume = 270
+	matter = list(MATERIAL_STEEL = 3000)
 
 /*
  * Air
@@ -51,6 +52,7 @@
 	icon_state = "oxygen"
 	starting_pressure = list(GAS_OXYGEN = 6*ONE_ATMOSPHERE*O2STANDARD, GAS_NITROGEN = 6*ONE_ATMOSPHERE*N2STANDARD)
 	volume = 180
+	matter = list(MATERIAL_STEEL = 2000)
 
 /*
  * Phoron
@@ -64,6 +66,7 @@
 	slot_flags = null	//they have no straps!
 	starting_pressure = list(GAS_PHORON = 3*ONE_ATMOSPHERE)
 	volume = 180
+	matter = list(MATERIAL_STEEL = 2500)
 
 /obj/item/weapon/tank/phoron/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	..()
@@ -86,7 +89,8 @@
 	gauge_icon = null
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = null
-	starting_pressure = list("hydrogen" = 3*ONE_ATMOSPHERE)
+	starting_pressure = list(GAS_HYDROGEN = 3*ONE_ATMOSPHERE)
+	matter = list(MATERIAL_STEEL = 2500)
 
 /obj/item/weapon/tank/hydrogen/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	..()
@@ -124,7 +128,7 @@
 	melee_accuracy_bonus = -10
 	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
 	volume = 40
-	matter = list(MATERIAL_STEEL = 250)
+	matter = list(MATERIAL_STEEL = 800)
 
 /obj/item/weapon/tank/emergency/oxygen
 	name = "emergency oxygen tank"
@@ -137,7 +141,7 @@
 	name = "extended-capacity emergency oxygen tank"
 	icon_state = "emergency_engi"
 	volume = 60
-	matter = list(MATERIAL_STEEL = 350)
+	matter = list(MATERIAL_STEEL = 950)
 
 /obj/item/weapon/tank/emergency/oxygen/double
 	name = "double emergency oxygen tank"
@@ -145,7 +149,7 @@
 	gauge_icon = "indicator_emergency_double"
 	volume = 90
 	w_class = ITEM_SIZE_NORMAL
-	matter = list(MATERIAL_STEEL = 500)
+	matter = list(MATERIAL_STEEL = 1200)
 
 /obj/item/weapon/tank/emergency/nitrogen
 	name = "emergency nitrogen tank"
@@ -159,7 +163,7 @@
 	icon_state = "emergency_double_nitrogen"
 	gauge_icon = "indicator_emergency_double"
 	volume = 70
-	matter = list(MATERIAL_STEEL = 500)
+	matter = list(MATERIAL_STEEL = 1200)
 
 /obj/item/weapon/tank/emergency/phoron
 	name = "emergency phoron tank"
@@ -178,12 +182,39 @@
 	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
 	starting_pressure = list(GAS_NITROGEN = 6*ONE_ATMOSPHERE)
 	volume = 180
+	matter = list(MATERIAL_STEEL = 2000)
 
 /*
  * Empty Tanks
  */
-/obj/item/weapon/tank/oxygen/empty
-	starting_pressure = 0
 
+/obj/item/weapon/tank/oxygen/empty
+	starting_pressure = null
+/obj/item/weapon/tank/oxygen/yellow/empty
+	starting_pressure = null
+/obj/item/weapon/tank/oxygen/red/empty
+	starting_pressure = null
+/obj/item/weapon/tank/emergency/oxygen/empty
+	starting_pressure = null
 /obj/item/weapon/tank/emergency/oxygen/engi/empty
-	starting_pressure = 0
+	starting_pressure = null
+/obj/item/weapon/tank/emergency/oxygen/double/empty
+	starting_pressure = null
+/obj/item/weapon/tank/emergency/empty
+	starting_pressure = null
+
+/obj/item/weapon/tank/hydrogen/empty //fuel
+	starting_pressure = null
+
+/obj/item/weapon/tank/phoron/empty //fuel tank
+	starting_pressure = null
+/obj/item/weapon/tank/emergency/phoron/empty
+	starting_pressure = null
+
+/obj/item/weapon/tank/nitrogen/empty
+	starting_pressure = null
+/obj/item/weapon/tank/emergency/nitrogen/empty
+	starting_pressure = null
+/obj/item/weapon/tank/emergency/nitrogen/double/empty
+	starting_pressure = null
+

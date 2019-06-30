@@ -347,8 +347,16 @@
 /datum/design/item/engifab/engitools/adv/inducer
 	name = "inducer"
 	build_path = /obj/item/inducer/empty
-	materials = list(MATERIAL_ALUMINIUM = 2 SHEETS, MATERIAL_GRAPHITE = 1 SHEET, MATERIAL_COPPER = 2 SHEETS, MATERIAL_STEEL = 0.5 SHEETS)
+	materials = list(MATERIAL_ALUMINIUM = 500, MATERIAL_GRAPHITE = 250, MATERIAL_COPPER = 2000, MATERIAL_STEEL = 250)
 
+/datum/design/item/engifab/engitools/adv/hydrogen_tank
+	name = "Hydrogen fuel tank"
+	build_path = /obj/item/weapon/tank/hydrogen/empty
+	materials = list(MATERIAL_STEEL = 2500)
+/datum/design/item/engifab/engitools/adv/phoron_tank
+	name = "Phoron fuel tank"
+	build_path = /obj/item/weapon/tank/phoron/empty
+	materials = list(MATERIAL_STEEL = 2500)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

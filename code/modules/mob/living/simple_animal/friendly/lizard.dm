@@ -19,6 +19,7 @@
 	possession_candidate = 1
 	can_escape = 1
 	meat_type = /obj/item/weapon/reagent_containers/food/snacks/meat
+	meat_amount = 1
 	pass_flags = PASS_FLAG_TABLE
 	density = 0
 	minbodytemp = T0C - 50	//Below -50 Degrees Celcius

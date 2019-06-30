@@ -7,9 +7,10 @@
 	mob_size = MOB_SMALL
 	speak_chance = 0
 	turns_per_move = 1
-	maxHealth = 5
-	health = 5
+	maxHealth = 25
+	health = 25
 	meat_type = /obj/item/weapon/reagent_containers/food/snacks/hugemushroomslice
+	meat_amount = 5
 	response_help  = "pets"
 	response_disarm = "gently pushes aside"
 	response_harm   = "whacks"

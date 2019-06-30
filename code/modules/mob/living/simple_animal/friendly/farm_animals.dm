@@ -19,7 +19,8 @@
 	response_harm   = "kicks"
 	faction = "goat"
 	attacktext = "kicked"
-	health = 40
+	maxHealth = 150
+	health = 150
 	melee_damage_lower = 1
 	melee_damage_upper = 5
 	var/datum/reagents/udder = null
@@ -100,12 +101,14 @@
 	turns_per_move = 5
 	see_in_dark = 6
 	meat_type = /obj/item/weapon/reagent_containers/food/snacks/meat/beef
-	meat_amount = 6
+	meat_amount = 10
 	response_help  = "pets"
 	response_disarm = "gently pushes aside"
 	response_harm   = "kicks"
 	attacktext = "kicked"
-	health = 50
+	maxHealth = 200
+	health = 200
+	mass = 680.4 //1,500 lbs
 	var/datum/reagents/udder = null
 
 /mob/living/simple_animal/cow/New()
@@ -166,7 +169,8 @@
 	response_disarm = "gently pushes aside"
 	response_harm   = "kicks"
 	attacktext = "kicked"
-	health = 1
+	health = 20
+	maxHealth = 20
 	density = 0
 	var/amount_grown = 0
 	pass_flags = PASS_FLAG_TABLE | PASS_FLAG_GRILLE
@@ -202,12 +206,13 @@ var/global/chicken_count = 0
 	speak_chance = 2
 	turns_per_move = 3
 	meat_type = /obj/item/weapon/reagent_containers/food/snacks/meat/chicken
-	meat_amount = 2
+	meat_amount = 4
 	response_help  = "pets"
 	response_disarm = "gently pushes aside"
 	response_harm   = "kicks"
 	attacktext = "kicked"
-	health = 10
+	health = 80
+	maxHealth = 80
 	density = 0
 	var/eggsleft = 0
 	var/body_color

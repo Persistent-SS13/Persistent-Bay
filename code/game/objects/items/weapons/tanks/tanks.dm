@@ -601,7 +601,8 @@ var/list/global/tank_gauge_cache = list()
 	air_contents.add_thermal_energy(15000)
 
 /obj/item/device/tankassemblyproxy/on_update_icon()
-	tank.update_icon()
+	if(tank)
+		tank.update_icon()
 
 /obj/item/device/tankassemblyproxy/HasProximity(atom/movable/AM as mob|obj)
 	if(assembly)

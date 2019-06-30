@@ -480,11 +480,11 @@
 /obj/machinery/mining/brace/proc/connect()
 
 	var/turf/T = get_step(get_turf(src), src.dir)
-
-	for(var/thing in T.contents)
-		if(istype(thing, /obj/machinery/mining/))
-			connected = thing
-			break
+	if(T)
+		for(var/thing in T.contents)
+			if(istype(thing, /obj/machinery/mining/))
+				connected = thing
+				break
 
 	if(!connected)
 		return

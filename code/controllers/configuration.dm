@@ -238,6 +238,8 @@ var/list/gamemode_cache = list()
 
 	var/allow_unsafe_narrates = FALSE //Whether admins can use unsanitized narration; when true, allows HTML etc.
 
+	var/addiction = TRUE //Whether addiction and withdrawal effects will tick. Toggling this off will NOT remove already present addictions, but will prevent them from having any effect.
+
 /datum/configuration/New()
 	var/list/L = typesof(/datum/game_mode) - /datum/game_mode
 	for (var/T in L)

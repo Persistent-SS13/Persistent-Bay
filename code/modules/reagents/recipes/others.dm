@@ -55,7 +55,7 @@
 
 /datum/chemical_reaction/hydrochloric_acid_production_alt
 	name = "Heated Hydrochloric Acid Production"
-	result = /datum/reagent/acid
+	result = /datum/reagent/acid/hydrochloric
 	required_reagents = list(/datum/reagent/water = 2, /datum/reagent/toxin/chlorine = 1)
 	result_amount = 3
 

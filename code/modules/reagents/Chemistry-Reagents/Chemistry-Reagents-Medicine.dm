@@ -267,6 +267,11 @@
 	var/pain_power = 80 //magnitide of painkilling effect
 	var/effective_dose = 0.5 //how many units it need to process to reach max power
 
+	addictiveness = 2
+	addiction_median_dose = 120
+	parent_substance = /datum/reagent/tramadol
+	addiction_display_name = "Opioids"
+
 /datum/reagent/tramadol/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	var/effectiveness = 1
 	if(M.chem_doses[type] < effective_dose) //some ease-in ease-out for the effect
@@ -323,6 +328,9 @@
 	overdose = 20
 	pain_power = 200
 	effective_dose = 2
+
+	addictiveness = 4
+	addiction_median_dose = 60
 
 /datum/reagent/deletrathol
 	name = "Deletrathol"
@@ -479,6 +487,9 @@
 	color = "#ff3300"
 	metabolism = REM * 0.15
 	overdose = REAGENTS_OVERDOSE * 0.5
+
+	addictiveness = 3
+	addiction_median_dose = 30
 
 /datum/reagent/hyperzine/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -723,6 +734,9 @@
 	overdose = 6
 	scannable = 1
 	data = 0
+
+	addictiveness = 1
+	addiction_median_dose = 40 // very small amounts of nicotine ever enter the blood.
 
 /datum/reagent/nicotine/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)

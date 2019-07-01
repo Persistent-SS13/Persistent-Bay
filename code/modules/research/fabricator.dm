@@ -61,6 +61,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 		atom_flags |= ATOM_FLAG_OPEN_CONTAINER
 	ADD_SAVED_VAR(materials)
 	ADD_SAVED_VAR(circuit)
+	ADD_SAVED_VAR(files)
 
 	ADD_SKIP_EMPTY(materials)
 

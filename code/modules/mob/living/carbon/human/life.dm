@@ -601,6 +601,7 @@
 		if(touching) touching.metabolize()
 		if(bloodstr) bloodstr.metabolize()
 		if(ingested) metabolize_ingested_reagents()
+		if(metabolism_effects && config.addiction) metabolism_effects.process()
 
 	// Trace chemicals
 	for(var/T in chem_doses)

@@ -1,16 +1,19 @@
-/obj/structure/closet/crate/cryo
+/obj/structure/cryo_crate
 	name = "cryogenic crate"
 	desc = "A crate which can sustain life and preserve objects in space, this one is still sealed."
-	closet_appearance = null
 	icon = 'icons/obj/closets/cryocrate.dmi'
-	icon_state = "base"
+	icon_state = "sealed"
+	w_class = ITEM_SIZE_NO_CONTAINER
 	health = 300
+	density = TRUE
+	anchored = FALSE
+	mass = 15
 	var/content_path = null
 	var/symbol = null
 	var/sealed = TRUE
 	var/amount = 1
 
-/obj/structure/closet/crate/cryo/proc/select_cont()
+/obj/structure/cryo_crate/proc/select_cont()
 	var/datum/t_picked = pick(100;/datum/rarity/critters, 100;/datum/rarity/seeds)
 		
 	///datum/rarity/artifacts
@@ -39,18 +42,18 @@
 
 	return pick(r_picked)
 
-/obj/structure/closet/crate/cryo/New()
+/obj/structure/cryo_crate/New()
 	if(sealed)
 		content_path = select_cont()
 	
 	..()
 
-/obj/structure/closet/crate/cryo/attack_hand(mob/user)
-	if(src.opened == 0 && src.sealed == TRUE) 
+/obj/structure/cryo_crate/attack_hand(mob/user)
+	if(src.sealed == TRUE) 
 		var/choice = alert("Caution! [src]'s seal is still unbroken, are you sure you want to open it?",,"No","Yes")
 		if(choice == "Yes")
 			name = "unsealed cryogenic crate"
-			desc = "A crate which can sustain life and preserve objects in space, this one's already unsealed."
+			desc = "[src] once perserved cargo in the void of space, now its only scrap metal."
 			flick("cryocrate_opening",src)
 			visible_message("<span class='warning'>[src] opens with a hiss as the pressure equalizes and its systems shut down!</span>")
 			playsound(src,'sound/machines/hiss.ogg',40,1)
@@ -59,7 +62,7 @@
 			steam.attach(src)
 			steam.start()
 			sealed = FALSE
-			icon_state = "open"
+			icon_state = "unsealed"
 			sleep(10)
 			//Check so that its not accidently opened in space, effects, etc.
 			for(var/i = 1, i <= amount, i++)
@@ -67,15 +70,30 @@
 		if(choice == "No")
 			return
 
-/obj/structure/closet/crate/cryo/examine(mob/user)
+/obj/structure/cryo_crate/attackby(obj/item/W as obj, mob/user as mob)
+	if(isWelder(W))
+		var/obj/item/weapon/tool/weldingtool/WT = W
+		if(WT.remove_fuel(5,user))
+			playsound(loc, 'sound/items/Welder.ogg', 50, 1)
+			to_chat(user, "<span class='notice'>You begin to deconstruct \the [src]...</span>")
+			if (do_after(user, 40, src))
+				playsound(loc, 'sound/items/Welder2.ogg', 50, 1)
+				user.visible_message( \
+					"<span class='notice'>\The [user] deconstructs \the [src].</span>", \
+					"<span class='notice'>You have deconstructed \the [src].</span>")
+				new /obj/item/stack/material/steel(loc, 5)
+				qdel(src)
+	else
+		..()
+
+/obj/structure/cryo_crate/examine(mob/user)
 	to_chat(user, "[desc]")
-	if(get_dist(user, src) < 3)
-		to_chat(user, "On [src]'s door is emblazoned a [symbol].")
+	if(get_dist(user, src) < 3 && sealed == TRUE)
+		to_chat(user, "On [src]'s hatch is emblazoned a small [symbol].")
 	//Gives some indication of the contents while remaining mysterious.
 
-/obj/structure/closet/crate/cryo/attack_ghost(mob/ghost)
+/obj/structure/cryo_crate/attack_ghost(mob/ghost)
 	if(ghost.client && ghost.client.inquisitive_ghost)
 		ghost.examinate(src)
-		if (!src.opened)
-			to_chat(ghost, "It contains: [content_path].")
+		to_chat(ghost, "It contains: [content_path].")
 

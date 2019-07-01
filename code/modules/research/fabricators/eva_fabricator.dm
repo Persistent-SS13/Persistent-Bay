@@ -229,15 +229,49 @@
 
 ///////////////////////////////////////////////////////////////
 
+/*Tanks*/
 /datum/design/item/genfab/eva/tank
-	name = "air tank"
+	name = "Blue EVA air tank"
 	build_path = /obj/item/weapon/tank/oxygen/empty
-	materials = list(MATERIAL_STEEL = 2 SHEETS)
+	materials = list(MATERIAL_STEEL = 2000)
+/datum/design/item/genfab/eva/tank/yellow
+	name = "Yellow EVA air tank"
+	build_path = /obj/item/weapon/tank/oxygen/yellow/empty
+/datum/design/item/genfab/eva/tank/red
+	name = "Red EVA air tank"
+	build_path = /obj/item/weapon/tank/oxygen/red/empty
+/datum/design/item/genfab/eva/tank/nitrogen //Its a bit of a different size or something
+	name = "Red EVA nitrogen tank"
+	build_path = /obj/item/weapon/tank/nitrogen/empty
 
-/datum/design/item/genfab/eva/adv/tank_double
-	name = "double-capacity air tank"
+/datum/design/item/genfab/eva/adv/tank/small
+	name = "Small blue emergency tank"
+	build_path = /obj/item/weapon/tank/emergency/empty
+	materials = list(MATERIAL_STEEL = 850)
+/datum/design/item/genfab/eva/adv/tank/small/orange
+	name = "Small orange emergency tank"
+	build_path = /obj/item/weapon/tank/emergency/phoron/empty
+/datum/design/item/genfab/eva/adv/tank/small/red
+	name = "Small red emergency tank"
+	build_path = /obj/item/weapon/tank/emergency/nitrogen/empty
+/datum/design/item/genfab/eva/adv/tank/small/phoron
+	name = "Small red emergency phoron tank(phorosian)"
+	build_path = /obj/item/weapon/tank/emergency/phoron/empty
+
+/datum/design/item/genfab/eva/adv/tank/small/extended
+	name = "Extended-capacity small yellow air tank"
 	build_path = /obj/item/weapon/tank/emergency/oxygen/engi/empty
-	materials = list(MATERIAL_STEEL = 5 SHEETS)
+	materials = list(MATERIAL_STEEL = 950)
+
+/datum/design/item/genfab/eva/adv/tank/double
+	name = "Double-capacity small yellow air tank"
+	build_path = /obj/item/weapon/tank/emergency/oxygen/double/empty
+	materials = list(MATERIAL_STEEL = 1200)
+/datum/design/item/genfab/eva/adv/tank/double/red
+	name = "Double-capacity small red air tank"
+	build_path = /obj/item/weapon/tank/emergency/nitrogen/double/empty
+/*End tanks*/
+
 
 /datum/design/item/genfab/eva/oxygen_candle
 	name = "oxygen candle"

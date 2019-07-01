@@ -112,6 +112,11 @@
 	var/targ_temp = 310
 	var/halluci = 0
 
+	addictiveness = 1
+	addiction_median_dose = 150
+	parent_substance = /datum/reagent/ethanol
+	addiction_display_name = "Alcohol"
+
 	glass_name = "ethanol"
 	glass_desc = "A well-known alcohol with a variety of applications."
 	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_FUEL | XGM_GAS_REAGENT_GAS

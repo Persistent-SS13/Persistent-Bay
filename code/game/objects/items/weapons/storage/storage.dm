@@ -106,11 +106,11 @@
 
 /obj/item/weapon/storage/proc/close(mob/user as mob)
 	hide_from(user)
-	if(storage_ui)
+	if(istype(storage_ui))
 		storage_ui.after_close(user)
 
 /obj/item/weapon/storage/proc/close_all()
-	if(storage_ui)
+	if(istype(storage_ui))
 		storage_ui.close_all()
 
 /obj/item/weapon/storage/proc/storage_space_used()
@@ -223,7 +223,7 @@
 	if(!istype(W)) return 0
 	new_location = new_location || get_turf(src)
 
-	if(storage_ui)
+	if(istype(storage_ui))
 		storage_ui.on_pre_remove(usr, W)
 
 	if(ismob(loc))
@@ -245,7 +245,7 @@
 
 // Only do ui functions for now; the obj is responsible for anything else.
 /obj/item/weapon/storage/proc/on_item_deletion(obj/item/W)
-	if(storage_ui)
+	if(istype(storage_ui))
 		storage_ui.on_pre_remove(null, W) // Supposed to be able to handle null user.
 		update_ui_after_item_removal()
 	queue_icon_update()
@@ -308,7 +308,8 @@
 		src.open(user)
 	else
 		..()
-		storage_ui.on_hand_attack(user)
+		if(istype(storage_ui))
+			storage_ui.on_hand_attack(user)
 	src.add_fingerprint(user)
 	return
 

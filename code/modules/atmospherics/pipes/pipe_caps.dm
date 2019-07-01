@@ -57,6 +57,8 @@
 	overlays += icon_manager.get_atmos_icon("pipe", , pipe_color, "cap")
 
 /obj/machinery/atmospherics/pipe/cap/atmos_init()
+	if(!loc)
+		return //Don't bother initing nullspace pipes
 	..()
 	for(var/obj/machinery/atmospherics/target in get_step(src, dir))
 		if(target.initialize_directions & get_dir(target,src))

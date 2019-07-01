@@ -21,7 +21,7 @@
 
 /datum/nano_module/program/stockmarket/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/list/data = host.initial_data()
-	var/datum/computer_file/report/crew_record/R = Retrieve_Record(usr.real_name)
+	var/datum/computer_file/report/crew_record/R = Retrieve_Record(user.real_name)
 	if(menu == 1)
 		var/list/formatted_stocks[0]
 		for(var/datum/world_faction/business/entry in GLOB.all_world_factions)
@@ -37,12 +37,12 @@
 		var/list/formatted_holdings[0]
 		for(var/datum/world_faction/business/entry in GLOB.all_world_factions)
 			for(var/datum/stock_order/order in entry.buyorders.L)
-				if(order.real_name == usr.real_name)
+				if(order.real_name == user.real_name)
 					formatted_orders[++formatted_orders.len] = list("name" = "Order to buy [order.volume] [entry.uid] at $$[order.price] per stock.", "ref" = "\ref[entry]", "ref2" = "\ref[order]")
 			for(var/datum/stock_order/order in entry.sellorders.L)
-				if(order.real_name == usr.real_name)
+				if(order.real_name == user.real_name)
 					formatted_orders[++formatted_orders.len] = list("name" = "Order to sell [order.volume] [entry.uid] at [order.price] per stock.", "ref" = "\ref[entry]", "ref2" = "\ref[order]")
-			var/stock_hold = entry.get_stockholder(usr.real_name)
+			var/stock_hold = entry.get_stockholder(user.real_name)
 			if(stock_hold)
 				formatted_holdings[++formatted_holdings.len] = list("name" = "[stock_hold] stocks in [entry.uid] ([entry.name])")
 		data["holdings"] = formatted_holdings
@@ -53,7 +53,7 @@
 			return
 		data["selected_stock"] = selected_stock.uid
 		data["stock_name"] = selected_stock.name
-		data["holdings"] = selected_stock.get_stockholder(usr.real_name)
+		data["holdings"] = selected_stock.get_stockholder(user.real_name)
 		var/bestbuy = selected_stock.get_best_buy()
 		if(isnull(bestbuy)) bestbuy = "none"
 		var/bestsell = selected_stock.get_best_sell()

@@ -5,13 +5,11 @@
 	icon_state = "shark"
 	icon_living = "shark"
 	icon_dead = "shark_dead"
-	meat_amount = 10
 	turns_per_move = 2
 	move_to_delay = 2
 	attack_same = 1
 	speed = 1
 	mob_size = MOB_LARGE
-
 	pixel_x = -16
 
 	health = 150
@@ -23,6 +21,8 @@
 	can_escape = 1
 
 	break_stuff_probability = 55
+	meat_amount = 10
+	meat_type = /obj/item/weapon/reagent_containers/food/snacks/fish/shark
 
 /mob/living/simple_animal/hostile/carp/pike/carp_randomify()
 	return

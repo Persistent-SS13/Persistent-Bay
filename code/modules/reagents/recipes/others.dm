@@ -37,6 +37,30 @@
 	required_reagents = list(/datum/reagent/toxin/chlorine = 1, /datum/reagent/hydrogen = 1, /datum/reagent/water = 1)// 1:1 hydrogen chloride to water makes HCl acid.
 	result_amount = 1
 
+/datum/chemical_reaction/acetone_production_alt
+	name = "Heated Acetone Production"
+	result = /datum/reagent/acetone
+	required_reagents = list(/datum/reagent/water = 2, /datum/reagent/carbon = 1)
+	result_amount = 3
+
+	minimum_temperature = T0C + 100
+
+/datum/chemical_reaction/sulphuric_acid_production_alt
+	name = "Heated Sulphuric Acid Production"
+	result = /datum/reagent/acid
+	required_reagents = list(/datum/reagent/water = 2, /datum/reagent/sulfur = 1)
+	result_amount = 3
+
+	minimum_temperature = T0C + 100
+
+/datum/chemical_reaction/hydrochloric_acid_production_alt
+	name = "Heated Hydrochloric Acid Production"
+	result = /datum/reagent/acid
+	required_reagents = list(/datum/reagent/water = 2, /datum/reagent/toxin/chlorine = 1)
+	result_amount = 3
+
+	minimum_temperature = T0C + 100
+
 /datum/chemical_reaction/ice
 	name = "water ice"
 	result = /datum/reagent/drink/ice

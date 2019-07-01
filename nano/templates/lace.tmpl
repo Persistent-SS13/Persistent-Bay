@@ -102,7 +102,7 @@
 		<h3>Nexus Elections System</h3><br><hr>
 		{{if data.current_election}}
 			{{if data.selected_ballot}}
-				<h4>{{:data.election_name}} ({:data.ballot_name}})</h4><br>
+				<h4>{{:data.election_name}} {{:data.ballot_name}}}</h4><br>
 				{{:helper.link('Back', '', {'action' : 'deselect_ballot'})}}<br><br><hr>
 				{{for data.candidates}}
 					<b>{{:value.name}}</b><br>

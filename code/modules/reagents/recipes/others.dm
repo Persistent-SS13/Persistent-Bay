@@ -22,8 +22,8 @@
 /datum/chemical_reaction/acetone_production
 	name = "Acetone Production"
 	result = /datum/reagent/acetone
-	required_reagents = list(/datum/reagent/oxygen = 1, /datum/reagent/carbon = 3, /datum/reagent/hydrogen = 6) //(CH3)2CO
-	result_amount = 1 //kinda expensive? balance later
+	required_reagents = list(/datum/reagent/oxygen = 1, /datum/reagent/carbon = 1, /datum/reagent/hydrogen = 1) //(CH3)2CO
+	result_amount = 3 //kinda expensive? balance later
 
 /datum/chemical_reaction/sulphuric_acid_prod
 	name = "Sulphuric Acid Production"

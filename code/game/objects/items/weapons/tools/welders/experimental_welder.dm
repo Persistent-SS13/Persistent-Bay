@@ -15,7 +15,7 @@
 	welding_efficiency = 0.5 //Welds faster, for less fuel
 
 /obj/item/weapon/tool/weldingtool/experimental/on_update_icon()
-	icon_state = initial(icon_state) + (welding? 1 : "")
+	icon_state = initial(icon_state) + (welding? "1" : "")
 	item_state = welding ? "welder1" : "welder"
 	update_tank_underlay()
 	var/mob/M = loc

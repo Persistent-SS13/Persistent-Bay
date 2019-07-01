@@ -66,6 +66,10 @@
 	build_path = /obj/item/bodybag/cryobag
 	materials = list(MATERIAL_CLOTH = 2 SHEETS, MATERIAL_PHORON = 1 SHEET)
 
+/datum/design/item/medicalfab/meditools/adv/rescuebag
+	build_path = /obj/item/bodybag/rescue
+	materials = list(MATERIAL_CLOTH = 2 SHEETS, MATERIAL_PHORON = 1 SHEET)
+
 
 
 /datum/design/item/medicalfab/meditools/penlight

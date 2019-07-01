@@ -11,8 +11,9 @@
 
 /obj/item/girderpart/New(var/newloc, var/mat)
 	..()
-	material = mat
-	color = material.icon_colour
+	if(mat)
+		material = mat
+		color = material.icon_colour
 	ADD_SAVED_VAR(saved_material)
 
 /obj/item/girderpart/Initialize()
@@ -30,7 +31,8 @@
 
 /obj/item/girderpart/before_save()
 	. = ..()
-	saved_material = material?.name
+	if(material)
+		saved_material = material.name
 
 /obj/item/girderpart/after_save()
 	. = ..()

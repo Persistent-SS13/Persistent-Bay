@@ -462,6 +462,10 @@
 	overdose = REAGENTS_OVERDOSE
 	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
+
+	addictiveness = 10
+	addiction_median_dose = 10
+
 /datum/reagent/space_drugs/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
 		return

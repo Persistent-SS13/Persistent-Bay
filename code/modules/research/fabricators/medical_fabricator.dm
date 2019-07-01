@@ -46,17 +46,38 @@
 
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+//////////////////////DESIGNS///////////////////////
+////////////////////////////////////////////////////
 
-// MEDICAL EQUIPMENT
+// Medicines
+/datum/design/item/medicalfab/medicines
+	category = "Medicines"
 
+/datum/design/item/medicalfab/medicines/bruise_pack
+	build_path = /obj/item/stack/medical/bruise_pack
+	materials = list(MATERIAL_CLOTH = 5 SHEETS)
+
+/datum/design/item/medicalfab/medicines/ointment
+	build_path = /obj/item/stack/medical/ointment
+	materials = list(MATERIAL_PLASTIC = 2 SHEETS)
+	chemicals = list(/datum/reagent/kelotane = 5)
+
+/datum/design/item/medicalfab/medicines/atk
+	build_path = /obj/item/stack/medical/advanced/bruise_pack
+	materials = list(MATERIAL_CLOTH = 5 SHEETS)
+	chemicals = list(/datum/reagent/bicaridine = 10)
+
+/datum/design/item/medicalfab/medicines/abt
+	build_path = /obj/item/stack/medical/advanced/ointment
+	materials = list(MATERIAL_CLOTH = 5 SHEETS)
+	chemicals = list(/datum/reagent/dermaline = 10)
+
+// Tools etc.
 /datum/design/item/medicalfab/meditools
 	category = "Medical Equipment"
 
 /datum/design/item/medicalfab/meditools/adv
-
-//////////////////////////////////////////////////////////////////////////
-
 
 /datum/design/item/medicalfab/meditools/bodybag
 	build_path = /obj/item/bodybag

@@ -21,7 +21,7 @@
 	material_flags = USE_MATERIAL_COLOR
 	stacktype = /obj/item/stack/material/rods
 	default_type = MATERIAL_STEEL
-	materials_per_unit = list(MATERIAL_STEEL = 1875)
+	materials_per_unit = list(MATERIAL_STEEL = 0.5 SHEET)
 
 /obj/item/stack/material/rods/ten
 	amount = 10
@@ -97,3 +97,10 @@
 /obj/item/stack/material/rods/add()
 	. = ..()
 	update_icon()
+
+/obj/item/stack/material/is_same(obj/item/stack/material/rods/M)
+	if(!istype(M))
+		return FALSE
+	if(material != M.material)
+		return FALSE
+	

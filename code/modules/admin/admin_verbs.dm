@@ -172,6 +172,7 @@ var/list/admin_verbs_server = list(
 	/datum/admins/proc/adrev,
 	/datum/admins/proc/adspawn,
 	/datum/admins/proc/adjump,
+	/datum/admins/proc/toggle_addiction,
 	// /datum/admins/proc/toggle_aliens,
 	// /datum/admins/proc/toggle_alien_eggs,
 	// /datum/admins/proc/toggle_space_ninja,

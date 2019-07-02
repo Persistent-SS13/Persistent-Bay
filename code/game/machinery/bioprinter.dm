@@ -6,20 +6,15 @@
 	desc = "It's a machine that prints organs."
 	icon = 'icons/obj/surgery.dmi'
 	icon_state = "bioprinter"
-
 	anchored = 1
 	density = 1
 	idle_power_usage = 40
 	active_power_usage = 300
-
-	circuit_type = /obj/item/weapon/circuitboard/bioprinter
 	var/stored_matter = 0
 	var/max_stored_matter = 0
-	var/print_delay = 100
-	var/obj/item/organ/printing = null
+	var/print_delay = 10 SECONDS
+	var/printing = null //key of the organ being printed
 	var/time_print_end = 0
-
-	// These should be subtypes of /obj/item/organ
 	var/list/products = list()
 
 /obj/machinery/organ_printer/attackby(var/obj/item/O, var/mob/user)
@@ -36,7 +31,7 @@
 	overlays.Cut()
 	if(panel_open)
 		overlays += "[icon_state]_panel_open"
-	if(printing)
+	else if(printing)
 		overlays += "[icon_state]_working"
 
 /obj/machinery/organ_printer/New()
@@ -44,6 +39,7 @@
 	ADD_SAVED_VAR(stored_matter)
 	ADD_SAVED_VAR(printing)
 	ADD_SAVED_VAR(time_print_end)
+	ADD_SAVED_VAR(matter_in_use)
 
 	ADD_SKIP_EMPTY(stored_matter)
 	ADD_SKIP_EMPTY(printing)
@@ -78,35 +74,62 @@
 	print_delay = max(0,print_delay)
 	. = ..()
 
-/obj/machinery/organ_printer/attack_hand(mob/user, var/choice = null)
-	if(printing || inoperable())
-		return
+/obj/machinery/organ_printer/proc/printer_status()
+	return 	{"Matter levels: [round(stored_matter,1)]/[max_stored_matter] units<BR>
+Time left: [time_print_end != 0? (time_print_end - world.time)/10 : "N/A"] second(s)<BR>"}
 
-	if(!choice)
-		choice = input("What would you like to print?") as null|anything in products
+/obj/machinery/organ_printer/interact(mob/user)
+	if(!panel_open)
+		var/list/dat = list()
+		dat += "[src.name]: "
+		dat += printer_status()
+		dat += "<BR><BR>"
+		
+		dat += "Print options: <br /><div>"
+		for(var/key in products)
+			var/list/P = products[key]
+			if(P && P.len)
+				dat += "<div class='item'>[key] - [P[2]]u <a href='?src=\ref[src];print=[key]'>Print</a></div>"
+		dat += "</div>"
+		dat += "<SPAN><A HREF='?src=\ref[src];cancel=1'>Cancel</A></SPAN>"
+		user.set_machine(src)
+		var/datum/browser/popup = new(usr, "organ_printer", "[src.name] menu")
+		popup.set_content(jointext(dat, null))
+		popup.open()
 
-	if(!choice || printing || inoperable())
-		return
-
-	if(!can_print(choice))
-		return
-
-	stored_matter -= products[choice][2]
-	printing = products[choice]
-	update_use_power(POWER_USE_ACTIVE)
-	//Process will handle the printing
-
-/obj/machinery/organ_printer/Process()
-	if(!..() || !islist(printing))
-		return
-
-	if(world.time >= time_print_end)
-		update_use_power(POWER_USE_IDLE)
-		if(!printing || inoperable() )
-			return
-		print_organ(printing)
+/obj/machinery/organ_printer/OnTopic(mob/user, href_list, datum/topic_state/state)
+	. = ..()
+	if(href_list["print"] && !printing)
+		var/prod = sanitize(href_list["print"])
+		if(can_print(prod))
+			printing = prod
+			time_print_end = world.time + print_delay
+			update_use_power(POWER_USE_ACTIVE)
+			update_icon()
+			updateUsrDialog()
+		else
+			state("Not enough matter for completing the task!")
+		return TOPIC_HANDLED
+	if(href_list["cancel"] && printing)
 		printing = null
 		time_print_end = 0
+		update_use_power(POWER_USE_IDLE)
+		update_icon()
+		updateUsrDialog()
+		return TOPIC_REFRESH
+
+/obj/machinery/organ_printer/Process()
+	if(inoperable())
+		return
+
+	if(printing && (world.time >= time_print_end))
+		time_print_end = 0
+		stored_matter -= products[printing][2]
+		print_organ(printing)
+		printing = null
+		update_use_power(POWER_USE_IDLE)
+		queue_icon_update()
+	updateUsrDialog()
 
 /obj/machinery/organ_printer/proc/can_print(var/choice)
 	if(stored_matter < products[choice][2])
@@ -159,17 +182,18 @@
 	if(istype(W, /obj/item/stack/material) && W.get_material_name() == matter_type)
 		if((max_stored_matter-stored_matter) < matter_amount_per_sheet)
 			to_chat(user, "<span class='warning'>\The [src] is too full.</span>")
-			return
+			return 1
 		var/obj/item/stack/S = W
 		var/space_left = max_stored_matter - stored_matter
 		var/sheets_to_take = min(S.amount, Floor(space_left/matter_amount_per_sheet))
 		if(sheets_to_take <= 0)
 			to_chat(user, "<span class='warning'>\The [src] is too full.</span>")
-			return
+			return 1
 		stored_matter = min(max_stored_matter, stored_matter + (sheets_to_take*matter_amount_per_sheet))
 		to_chat(user, "<span class='info'>\The [src] processes \the [W]. Levels of stored matter now: [stored_matter]</span>")
 		S.use(sheets_to_take)
-		return
+		updateUsrDialog()
+		return 1
 	return ..()
 // END ROBOT ORGAN PRINTER
 
@@ -178,11 +202,12 @@
 	name = "bioprinter"
 	desc = "It's a machine that prints replacement organs."
 	icon_state = "bioprinter"
+	circuit_type = /obj/item/weapon/circuitboard/bioprinter
 	var/list/amount_list = list(
 		/obj/item/weapon/reagent_containers/food/snacks/meat = 50,
 		/obj/item/weapon/reagent_containers/food/snacks/rawcutlet = 15
 		)
-	var/datum/dna/loaded_dna //DNA sample
+	var/loaded_dna //DNA uni identity hash
 	var/datum/species/loaded_species //For quick refrencing
 
 /obj/machinery/organ_printer/flesh/can_print(var/choice)
@@ -224,19 +249,17 @@
 		O.w_class = max(O.w_class + mob_size_difference(O.species.mob_size, MOB_MEDIUM), 1)
 
 	visible_message("<span class='info'>\The [src] churns for a moment, injects its stored DNA into the biomass, then spits out \a [O].</span>")
+	updateUsrDialog()
 	return O
 
-/obj/machinery/organ_printer/flesh/attack_hand(mob/user)
+/obj/machinery/organ_printer/flesh/printer_status()
+	return {"[..()]Loaded dna: [loaded_dna? loaded_dna : "<span class='bad'>N/A</span>"] <BR>
+Loaded specie: [loaded_species? loaded_species.name : "<span class='bad'>N/A</span>"]<BR>"}
+
+/obj/machinery/organ_printer/flesh/can_print(choice)
 	if(!loaded_dna || !loaded_species)
-		visible_message("<span class='info'>\The [src] displays a warning: 'No DNA saved. Insert a blood sample.'</span>")
-		return
-
-	var/choice = input("What [loaded_species.name] organ would you like to print?") as null|anything in products
-
-	if(!choice)
-		return
-
-	..(user, choice)
+		return FALSE
+	. = ..()
 
 /obj/machinery/organ_printer/flesh/attackby(obj/item/weapon/W, mob/user)
 	// Load with matter for printing.
@@ -249,6 +272,7 @@
 				return
 			stored_matter += min(amount_list[path], max_stored_matter - stored_matter)
 			to_chat(user, SPAN_INFO("\The [src] processes \the [W]. Levels of stored biomass now: [stored_matter]"))
+			updateUsrDialog()
 			qdel(W)
 			return
 
@@ -258,11 +282,11 @@
 		var/datum/reagent/blood/injected = locate() in S.reagents.reagent_list //Grab some blood
 		if(injected && injected.data)
 			loaded_dna = injected.get_dna()
+			loaded_species = all_species[injected.data["species"]]
 			to_chat(user, SPAN_INFO("You inject the blood sample into the bioprinter."))
-
-		if(istype(loaded_dna) && loaded_dna.species)
-			loaded_species = all_species[loaded_dna.species]
+			S.reagents.remove_any(5) //blood samples are 5u I guess
 			products = get_possible_products()
+			updateUsrDialog()
 		return
 	return ..()
 

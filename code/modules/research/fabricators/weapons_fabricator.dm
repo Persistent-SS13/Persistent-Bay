@@ -192,6 +192,13 @@
 	build_path = /obj/item/weapon/gun/launcher/grenade
 	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_SILVER = 2 SHEETS, MATERIAL_GOLD = 2 SHEETS, MATERIAL_DIAMOND = 4 SHEETS, MATERIAL_PHORON = 0.5 SHEET)
 
+
+/datum/design/item/weaponfab/weapons/guns/automatic/z8 // tier 4
+	materials = list(MATERIAL_PLASTEEL = 12 SHEETS, MATERIAL_GOLD = 10 SHEETS, MATERIAL_DIAMOND = 8 SHEETS, MATERIAL_PHORON = 4 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/automatic/z8
+	research = "autos_4"
+
+
 // icons are a bit ugly
 
 /datum/design/item/weaponfab/weapons/hook
@@ -432,16 +439,12 @@
 	build_path = /obj/item/weapon/gun/projectile/automatic/sts35
 	research = "autos_3"
 
-/datum/design/item/weaponfab/weapons/guns/automatic/z8 // tier 4
-	materials = list(MATERIAL_PLASTEEL = 12 SHEETS, MATERIAL_GOLD = 10 SHEETS, MATERIAL_DIAMOND = 8 SHEETS, MATERIAL_PHORON = 4 SHEETS) //TODO
-	build_path = /obj/item/weapon/gun/projectile/automatic/z8
-	research = "autos_4"
-
 //	Sniper
+/**
 /datum/design/item/weaponfab/weapons/guns/automatic/heavysniper/replica // tier 0, Knock-off 9mm replica, basically an expensive pipe rifle
 	materials = list(MATERIAL_PLASTEEL = 5 SHEETS)
 	build_path = /obj/item/weapon/gun/projectile/boltaction/heavysniper/ant
-
+**/
 /datum/design/item/weaponfab/weapons/guns/automatic/heavysniper // tier 4
 	materials = list(MATERIAL_PLASTEEL = 10 SHEETS, MATERIAL_GOLD = 8 SHEETS, MATERIAL_DIAMOND = 3 SHEETS, MATERIAL_PHORON = 11 SHEETS)
 	build_path = /obj/item/weapon/gun/projectile/boltaction/heavysniper

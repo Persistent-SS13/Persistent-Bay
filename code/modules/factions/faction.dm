@@ -127,8 +127,10 @@ var/PriorityQueue/all_feeds
 
 							GLOB.contract_database.add_contract(new_contract)
 							signed = 1
+							approved = 1
 							info = replacetext(info, "*Unsigned*", "[connected_faction.uid]")
 							signed_by = usr.real_name
+							update_icon()
 						else
 							to_chat(usr, "Insufficent funds to sign contract.")
 							return

@@ -72,7 +72,11 @@ SUBSYSTEM_DEF(market)
 	return ""
 
 /datum/contract_database
-	var/list/all_contracts
+	var/list/all_contracts = list()
+	
+/datum/contract_database/after_load()
+	if(!islist(all_contracts))
+		all_contracts = list()
 
 /datum/contract_database/proc/add_contract(var/datum/recurring_contract/contract)
 	var/datum/world_faction/business/faction = get_faction(contract.payee)

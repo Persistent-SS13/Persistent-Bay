@@ -66,7 +66,7 @@
 //
 //Bottles
 //
-/datum/design/item/genfab/container/catering/bottle
+/datum/design/item/genfab/container/catering
 	build_type = SERVICEFAB
 /datum/design/item/genfab/container/catering/bottle/gin
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/gin/empty

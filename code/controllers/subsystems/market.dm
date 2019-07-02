@@ -80,13 +80,17 @@ SUBSYSTEM_DEF(market)
 
 /datum/contract_database/proc/add_contract(var/datum/recurring_contract/contract)
 	var/datum/world_faction/business/faction = get_faction(contract.payee)
-	if(istype(faction))
-		faction.contract_objectives(contract.payer, contract.payer_type)
 	if(contract.auto_pay)
 		if(contract.handle_payment())
 			contract.add_services()
 			all_contracts |= contract
-
+			if(istype(faction))
+				faction.contract_objectives(contract.payer, contract.payer_type)
+	else
+		contract.add_services()
+		all_contracts |= contract
+		if(istype(faction))
+			faction.contract_objectives(contract.payer, contract.payer_type)
 /datum/contract_database/proc/get_contracts(var/uid, var/typee)
 	var/list/contracts = list()
 	for(var/datum/recurring_contract/contract in all_contracts)

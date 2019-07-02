@@ -8,6 +8,15 @@
 	var/list/L //the actual queue
 	var/cmp //the weight function used to order the queue
 	map_storage_saved_vars = "L;cmp"
+	
+	
+/PriorityQueue/Write(savefile/f)
+	StandardWrite(f)
+
+/PriorityQueue/Read(savefile/f)
+	StandardRead(f)
+	
+	
 /PriorityQueue/New(compare)
 	L = new()
 	cmp = compare

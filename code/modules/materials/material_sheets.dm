@@ -110,7 +110,7 @@
 	return
 
 /obj/item/stack/material/proc/is_same(obj/item/stack/material/M)
-	if(!istype(M))
+	if(!istype(M, stacktype))
 		return FALSE
 	if(matter_multiplier != M.matter_multiplier)
 		return FALSE
@@ -174,14 +174,18 @@
 //--------------------------------
 //	Generic
 //--------------------------------
-/obj/item/stack/material/generic
-	icon_state = "sheet"
-	plural_icon_state = "sheet-mult"
-	max_icon_state = "sheet-max"
+///obj/item/stack/material/generic
+	// icon_state = "sheet"
+	// plural_icon_state = "sheet-mult"
+	// max_icon_state = "sheet-max"
 
 /obj/item/stack/material/generic/Initialize()
 	. = ..()
-	if(material) color = material.icon_colour
+	// if(material) color = material.icon_colour
+	//This should make any existing stacks of generic material on the save turn into regular old material stacks
+	if(material && loc)
+		material.place_sheet(get_turf(src), amount)
+	return INITIALIZE_HINT_QDEL
 
 //--------------------------------
 //	Iron

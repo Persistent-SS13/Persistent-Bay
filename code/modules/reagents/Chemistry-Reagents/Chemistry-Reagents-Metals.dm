@@ -189,3 +189,10 @@
 				new /obj/effect/decal/cleanable/greenglow(T)
 			return
 
+/datum/reagent/boron
+	name = "boron"
+	description = "A rare mineral found in asteroids."
+	taste_description = "boring"
+	taste_mult = 4
+	reagent_state = SOLID
+	color = COLOR_GRAY20

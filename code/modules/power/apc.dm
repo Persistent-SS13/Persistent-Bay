@@ -255,7 +255,7 @@
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
 
-	if((area && !area.shuttle) && (!force || (limits.limit_area <= (turfs.len + trying.get_claimed_area()) ) ) )
+	if((area && !area.shuttle) && (!force && (limits.limit_area <= (turfs.len + trying.get_claimed_area()) ) ) )
 		if(M)
 			to_chat(M, "[trying.name] cannot connect this APC as it will exceed its area limit.")
 		return 0

@@ -109,15 +109,29 @@
 	desc = "A pair of synthweave-ablative gloves. Durable and resistant."
 	name = "\improper guard gloves"
 	icon_state = "bggloves"
-	item_state = "blueguard"
+	item_state = "bluegloves"
 	force = 5
-	armor = list(melee = 80, bullet = 30, laser = 50,energy = 30, bomb = 0, bio = 10, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 80,
+		DAM_PIERCE 	= 70,
+		DAM_CUT 	= 80,
+		DAM_BULLET 	= 30,
+		DAM_LASER 	= 50,
+		DAM_ENERGY 	= 30,
+		DAM_BURN 	= 30,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 10,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
+	matter = list(MATERIAL_LEATHER = 0.5 SHEETS, MATERIAL_PLASTEEL = 0.5 SHEETS)
 
 /obj/item/clothing/gloves/thick/botany
 	desc = "These leather work gloves protect against thorns, barbs, prickles, spikes and other harmful objects of floral origin."
 	name = "thick leather gloves"
-	icon_state = MATERIAL_LEATHER
+	icon_state = "leather"
 	item_state = "ggloves"
+	matter = list(MATERIAL_LEATHER = 2000)
 
 /obj/item/clothing/gloves/thick/botany/modified
 	item_flags = ITEM_FLAG_PREMODIFIED
@@ -130,6 +144,7 @@
 	siemens_coefficient = 1.1 //thin latex gloves, much more conductive than fabric gloves (basically a capacitor for AC)
 	permeability_coefficient = 0.03
 	germ_level = 0
+	matter = list(MATERIAL_LEATHER = 2000)
 
 /obj/item/clothing/gloves/latex/modified
 	item_flags = ITEM_FLAG_PREMODIFIED

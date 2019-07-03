@@ -17,6 +17,7 @@
 				)
 	construction_difficulty = 2
 	sale_price = 2
+	integrity = 50
 
 /material/gold
 	name = MATERIAL_GOLD
@@ -29,6 +30,7 @@
 	weight = 25
 	hardness = 25
 	integrity = 100
+	integrity = 35
 	melting_point = 1337
 	stack_origin_tech = list(TECH_MATERIAL = 4)
 	sheet_singular_name = "ingot"
@@ -67,6 +69,7 @@
 		)
 	construction_difficulty = 2
 	sale_price = 1
+	integrity = 50
 
 /material/silver
 	name = MATERIAL_SILVER
@@ -95,6 +98,7 @@
 	ore_icon_overlay = "shiny"
 	ore_matter = list(MATERIAL_SILVER = 1200)
 	sale_price = 2
+	integrity = 75
 
 /material/steel/holographic
 	name = "holo" + MATERIAL_STEEL
@@ -142,6 +146,7 @@
 	sale_price = 3
 	ore_smelts_to = MATERIAL_OSMIUM
 	melting_point = 3306
+	integrity = 500
 
 /material/tritium
 	name = MATERIAL_TRITIUM
@@ -219,6 +224,7 @@
 	sale_price = 5
 	ore_matter = list(MATERIAL_PLATINUM = 1000)
 	melting_point = 2041
+	integrity = 80
 
 /material/iron
 	name = MATERIAL_IRON
@@ -308,6 +314,33 @@
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
 	energy_combustion = 5.3
+
+/material/boron
+	name = MATERIAL_BORON
+	integrity = 300
+	weight = 25
+	hardness = 30
+	melting_point = 2349 //K
+	icon_colour = COLOR_GRAY15
+	ore_smelts_to = MATERIAL_BORON
+	ore_result_amount = 10
+	ore_spread_chance = 15
+	ore_name = MATERIAL_BORON
+	ore_scan_icon = "mineral_common"
+	stack_origin_tech = list(TECH_MATERIAL = 5)
+	xarch_ages = list(
+		"thousand" = 999,
+		"million" = 999,
+		"billion" = 13,
+		"billion_lower" = 10
+		)
+	xarch_source_mineral = MATERIAL_BORON
+	ore_icon_overlay = "nugget"
+	chem_products = list(/datum/reagent/boron = 20)
+	sheet_singular_name = "ingot"
+	sheet_plural_name = "ingots"
+	sale_price = 2
+	ore_matter = list(MATERIAL_BORON = 2000)
 
 //-------------------------------------
 //	Alloys

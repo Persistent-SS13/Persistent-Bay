@@ -15,15 +15,22 @@
 	if(planttype)
 		plantname = planttype
 	..()
+	ADD_SAVED_VAR(plantname)
+	ADD_SAVED_VAR(seed)
+	ADD_SAVED_VAR(potency)
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/SetupReagents()
+	. = ..()
 	fill_reagents()
 
 /obj/item/weapon/reagent_containers/food/snacks/grown/Initialize()
 	. = ..()
-	if(!SSplants)
-		log_error("<span class='danger'>Plant controller does not exist and [src] requires it. Aborting.</span>")
-		return INITIALIZE_HINT_QDEL
-
-	seed = SSplants.seeds[plantname]
+	if(!map_storage_loaded)
+		//Only get plant type from SSPlant if we're newly created. Otherwise keep our stored properties
+		if(!SSplants)
+			log_error("<span class='danger'>Plant controller does not exist and [src] requires it. Aborting.</span>")
+			return INITIALIZE_HINT_QDEL
+		seed = SSplants.seeds[plantname]
 
 	if(!seed)
 		return INITIALIZE_HINT_QDEL

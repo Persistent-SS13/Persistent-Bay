@@ -56,7 +56,8 @@
 #define MATERIAL_SULFUR                  "sulfur"
 #define MATERIAL_BSPACE_CRYSTAL          "bluespace crystal"
 #define MATERIAL_FIBERGLASS              "fiberglass"
-#define MATERIAL_GRAPHENE				 "graphene"
+#define MATERIAL_GRAPHENE                "graphene"
+#define MATERIAL_BORON                   "boron"
 
 //ORES
 #define MATERIAL_TETRAHEDRITE            "tetrahedrite"
@@ -70,6 +71,16 @@
 #define MATERIAL_BAUXITE                 "bauxite"
 #define MATERIAL_PITCHBLENDE             "pitchblende"
 #define MATERIAL_HEMATITE                "hematite"
+
+//ICES
+#define MATERIAL_ICES_WATER              "water ice"
+#define MATERIAL_ICES_NITROGEN           "nitrogen ice"
+#define MATERIAL_ICES_AMONIA             "amonia ice"
+#define MATERIAL_ICES_HYDROGEN           "hydrogen ice"
+#define MATERIAL_ICES_SULFUR_DIOXIDE     "sulfur dioxide ice"
+#define MATERIAL_ICES_CARBON_DIOXIDE     "carbon dioxide ice"
+#define MATERIAL_ICES_METHANE            "methane ice"
+#define MATERIAL_ICES_ACETONE            "acetone ice"
 
 //woods
 #define MATERIAL_WOOD                    "wood"

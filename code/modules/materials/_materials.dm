@@ -73,13 +73,13 @@
 	var/ignition_point           // K, point at which the material catches on fire.
 	var/energy_combustion = 8    // MJ/kilo-unit Basically the heat energy given off for burning 1,000 units of said material(8 is given for generic trash on wikipedia)
 	var/melting_point = 1800     // K, walls will take damage if they're next to a fire hotter than this
-	var/brute_armor = 2	 		 // Brute damage to a wall is divided by this value if the wall is reinforced by this material.
-	var/burn_armor				 // Same as above, but for Burn damage type. If blank brute_armor's value is used.
+	var/brute_armor = 2          // Brute damage to a wall is divided by this value if the wall is reinforced by this material.
+	var/burn_armor = 0           // Same as above, but for Burn damage type. If blank brute_armor's value is used.
 	var/integrity = 150          // General-use HP value for products.
 	var/opacity = 1              // Is the material transparent? 0.5< makes transparent walls/doors.
 	var/explosion_resistance = 5 // Only used by walls currently.
 	var/conductive = 1           // Objects with this var add CONDUCTS to flags on spawn.
-	var/luminescence
+	var/luminescence = 0
 	var/list/alloy_materials     // If set, material can be produced via alloying these materials in these amounts.
 	var/units_per_sheet = SHEET_MATERIAL_AMOUNT
 
@@ -98,7 +98,7 @@
 	// Noise made when you hit structure made of this material.
 	var/hitsound = 'sound/weapons/genhit.ogg'
 	// Path to resulting stacktype. Todo remove need for this.
-	var/stack_type = /obj/item/stack/material/generic
+	var/stack_type = /obj/item/stack/material
 	// Wallrot crumble message.
 	var/rotting_touch_message = "crumbles under your touch"
 	// Modifies skill checks when constructing with this material.

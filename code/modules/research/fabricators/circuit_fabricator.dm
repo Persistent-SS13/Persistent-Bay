@@ -117,6 +117,21 @@
 	req_tech = list(TECH_DATA = 3, TECH_MAGNET = 2, TECH_BIO = 2)
 	build_path = /obj/item/weapon/circuitboard/crew
 	build_type = MEDICALFAB
+
+/datum/design/circuit/reagent_heater
+	name = "reagent heater"
+	id = "rheater"
+	req_tech = list(TECH_DATA = 3, TECH_MAGNET = 2, TECH_BIO = 2)
+	build_path = /obj/item/weapon/circuitboard/reagent_heater
+	build_type = MEDICALFAB
+
+/datum/design/circuit/reagent_cooler
+	name = "reagent cooler"
+	id = "rcooler"
+	req_tech = list(TECH_DATA = 3, TECH_MAGNET = 2, TECH_BIO = 2)
+	build_path = /obj/item/weapon/circuitboard/reagent_heater/cooler
+	build_type = MEDICALFAB
+
 /*
 /datum/design/circuit/bioprinter
 	name = "bioprinter"

@@ -138,3 +138,12 @@
 	one_per_turf = 1
 	difficulty = 3
 	time = 20 SECONDS
+
+/datum/stack_recipe/orebox
+	title = "ore box"
+	result_type = /obj/structure/ore_box
+	req_amount = 10
+	on_floor = 1
+	one_per_turf = 1
+	difficulty = 3
+	time = 20 SECONDS

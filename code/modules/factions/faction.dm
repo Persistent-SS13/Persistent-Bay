@@ -33,6 +33,10 @@ var/PriorityQueue/all_feeds
 			contract.update_icon()
 			return 0
 		if(contract.finalize())
+			var/datum/computer_file/report/crew_record/Rec = Retrieve_Record(contract.created_by)
+			if(Rec && Rec.linked_account)
+				var/datum/transaction/T = new("Stock Contract", "Stock Contract", contract.required_cash, "Stock Contract")
+				Rec.linked_account.do_transaction(T)
 			var/datum/stockholder/newholder
 			newholder = connected_faction.get_stockholder_datum(contract.signed_by)
 			if(!newholder)
@@ -43,7 +47,7 @@ var/PriorityQueue/all_feeds
 			holder.stocks -= contract.ownership
 			if(!holder.stocks)
 				connected_faction.stock_holders -= holder.real_name
-
+			return 1
 /obj/item/weapon/paper/contract/recurring
 	var/sign_type = CONTRACT_BUSINESS
 	var/contract_payee = ""
@@ -127,8 +131,10 @@ var/PriorityQueue/all_feeds
 
 							GLOB.contract_database.add_contract(new_contract)
 							signed = 1
+							approved = 1
 							info = replacetext(info, "*Unsigned*", "[connected_faction.uid]")
 							signed_by = usr.real_name
+							update_icon()
 						else
 							to_chat(usr, "Insufficent funds to sign contract.")
 							return
@@ -209,7 +215,7 @@ var/PriorityQueue/all_feeds
 		icon_state = "contract-pending"
 	else
 		icon_state = "contract"
-		
+
 /obj/item/weapon/paper/contract/show_content(mob/user, forceshow)
 	var/can_read = (istype(user, /mob/living/carbon/human) || isghost(user) || istype(user, /mob/living/silicon)) || forceshow
 	if(!forceshow && istype(user,/mob/living/silicon/ai))

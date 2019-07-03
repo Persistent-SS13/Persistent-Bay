@@ -26,7 +26,7 @@
 			/obj/item/weapon/reagent_containers/food/snacks/meat = 50),
 		"Nutrients" = list(
 			/obj/item/weapon/reagent_containers/glass/bottle/eznutrient = 60,
-			/obj/item/weapon/reagent_containers/glass/bottle/left4zed = 120,
+		//	/obj/item/weapon/reagent_containers/glass/bottle/left4zed = 120,
 			/obj/item/weapon/reagent_containers/glass/bottle/robustharvest = 120),
 		"Materials" = list(
 			/obj/item/stack/material/cardboard/ten = 250,

@@ -570,3 +570,50 @@
 	color = COLOR_BROWN_ORANGE
 	heating_point = T0C + 177
 	metabolism = 0.02 //Takes a while to get flushed// 8-14h - kidneys
+
+/datum/reagent/hydrogen_peroxide
+	name = "hydrogen peroxide"
+	description = "A very common chemical with some disinfectant properties."
+	taste_description = "stingy"
+	taste_mult = 2
+	reagent_state = LIQUID
+	heating_point = T0C + 150
+	color = COLOR_BLUE_LIGHT
+	touch_met = 5
+/datum/reagent/hydrogen_peroxide/affect_touch(var/mob/living/carbon/M, var/alien, var/removed)
+	if(M.germ_level < INFECTION_LEVEL_TWO) // rest and antibiotics is required to cure serious infections
+		M.germ_level -= min(removed, M.germ_level)
+	for(var/obj/item/I in M.contents)
+		I.was_bloodied = null
+	M.was_bloodied = null
+/datum/reagent/hydrogen_peroxide/touch_obj(var/obj/O)
+	O.germ_level -= min(volume, O.germ_level)
+	O.was_bloodied = null
+/datum/reagent/hydrogen_peroxide/touch_turf(var/turf/T)
+	T.germ_level -= min(volume, T.germ_level)
+	for(var/obj/item/I in T.contents)
+		I.was_bloodied = null
+	for(var/obj/effect/decal/cleanable/blood/B in T)
+		qdel(B)
+
+
+/datum/reagent/methanol
+	name = "methanol"
+	description = "Methyl alcohol, cause blindness if injested.."
+	taste_description = "cold"
+	taste_mult = 4
+	reagent_state = LIQUID
+	heating_point = T0C + 64
+	color = COLOR_BLUE_LIGHT
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_FUEL | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
+	gas_specific_heat = 15
+
+/datum/reagent/methanol/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+	if(!M || !length(M.organs_by_name))
+		return
+	M.adjustToxLoss(removed * 2)
+	var/obj/item/organ/internal/eyes/E = M.organs_by_name[BP_EYES]
+	if(E && !BP_IS_ROBOTIC(E))
+		E.take_internal_damage(removed * 2)  //Methanol causes blindness
+

@@ -2,6 +2,8 @@
 	var/lifetime = 0.2 SECONDS
 
 /obj/effect/temporary/item_pickup_ghost/Initialize(var/mapload, var/obj/item/picked_up)
+	if(!picked_up)
+		return INITIALIZE_HINT_QDEL //Don't do it then
 	. = ..(mapload, lifetime, picked_up.icon, picked_up.icon_state)
 	pixel_x = picked_up.pixel_x
 	pixel_y = picked_up.pixel_y

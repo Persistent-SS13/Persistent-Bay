@@ -953,6 +953,12 @@
 	req_tech = list(TECH_ENGINEERING = 4)
 	build_path = /obj/item/weapon/circuitboard/washing_machine
 
+/datum/design/circuit/honey_extractor
+	name = "honey extractor"
+	id = "honey_extractor"
+	req_tech = list(TECH_BIO = 4)
+	build_path = /obj/item/weapon/circuitboard/honey_extractor
+
 /**
 
 /datum/design/aimodule

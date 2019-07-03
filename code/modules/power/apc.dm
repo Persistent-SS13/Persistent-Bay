@@ -194,6 +194,8 @@
 		var/datum/world_faction/F = get_faction(req_access_faction)
 		if(can_connect(F, force = TRUE))
 			connect_to_network()
+		else
+			log_error("[src]\ref[src] failed to link to faction [req_access_faction]!(Faction returned was [F]\ref[F])")
 	if(operating)
 		src.update()
 
@@ -253,7 +255,7 @@
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
 
-	if((area && !area.shuttle) && (!force || (limits.limit_area <= (turfs.len + trying.get_claimed_area()) ) ) )
+	if((area && !area.shuttle) && (!force && (limits.limit_area <= (turfs.len + trying.get_claimed_area()) ) ) )
 		if(M)
 			to_chat(M, "[trying.name] cannot connect this APC as it will exceed its area limit.")
 		return 0

@@ -349,6 +349,10 @@
 	player.loc = locate(200,200,19)
 	if(occupant && occupant.client)
 		occupant.client.eye = player
+	if(istype(occupant, /mob/))
+		var/mob/M = occupant
+		M.stored_ckey = null
+		M.ckey = null
 	QDEL_NULL(occupant)
 	despawning = FALSE
 

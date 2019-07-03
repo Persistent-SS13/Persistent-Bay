@@ -172,6 +172,7 @@ var/list/admin_verbs_server = list(
 	/datum/admins/proc/adrev,
 	/datum/admins/proc/adspawn,
 	/datum/admins/proc/adjump,
+	/datum/admins/proc/toggle_addiction,
 	// /datum/admins/proc/toggle_aliens,
 	// /datum/admins/proc/toggle_alien_eggs,
 	// /datum/admins/proc/toggle_space_ninja,
@@ -623,7 +624,7 @@ var/list/admin_verbs_mentor = list(
 			var/light_impact_range = input("Light impact range (in tiles):") as num
 			var/flash_range = input("Flash range (in tiles):") as num
 			explosion(epicenter, devastation_range, heavy_impact_range, light_impact_range, flash_range)
-	log_and_message_admins("created an admin explosion at [epicenter.loc].")
+	log_and_message_admins("created an admin explosion at [epicenter? epicenter.loc : "null"].")
 	SSstatistics.add_field_details("admin_verb","DB") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /client/proc/give_disease2(mob/T as mob in SSmobs.mob_list) // -- Giacom
@@ -983,6 +984,7 @@ var/list/admin_verbs_mentor = list(
 
 	to_chat(T, "<span class='notice'><b><font size=3>Man up and deal with it.</font></b></span>")
 	to_chat(T, "<span class='notice'>Move on.</span>")
+	sound_to(T, 'sound/voice/ManUp1.ogg')
 
 	log_and_message_admins("told [key_name(T)] to man up and deal with it.")
 
@@ -997,7 +999,7 @@ var/list/admin_verbs_mentor = list(
 		sound_to(T, 'sound/voice/ManUp1.ogg')
 
 	log_and_message_admins("told everyone to man up and deal with it.")
-**/.
+**/
 /client/proc/give_spell(mob/T as mob in SSmobs.mob_list) // -- Urist
 	set category = "Fun"
 	set name = "Give Spell"

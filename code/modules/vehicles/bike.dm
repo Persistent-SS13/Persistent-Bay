@@ -257,7 +257,7 @@
 	if(stopped)
 		return
 
-	playsound(src.loc, 'sound/machines/motorloop.ogg', 12, 0, 2,  is_ambience = 1)
+	playsound(src.loc, 'sound/machines/motorloop.ogg', 12, 0, 2)
 
 	if(world.time >= (l_move_time + move_delay))
 		Move(get_step(src, dir))

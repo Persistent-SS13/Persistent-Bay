@@ -12,6 +12,7 @@
 	ADD_SAVED_VAR(handcuffed)
 	ADD_SAVED_VAR(surgeries_in_progress)
 	ADD_SAVED_VAR(touching)
+	ADD_SAVED_VAR(metabolism_effects)
 	ADD_SAVED_VAR(nutrition)
 	ADD_SAVED_VAR(internal_organs_by_name) //Save only organs by name, since we don't want useless duplicate lists of organs
 	ADD_SAVED_VAR(organs_by_name)
@@ -32,6 +33,7 @@
 		bloodstr = new/datum/reagents/metabolism(120, src, CHEM_BLOOD)
 		touching = new/datum/reagents/metabolism(1000, src, CHEM_TOUCH)
 		reagents = bloodstr
+		metabolism_effects = new/datum/metabolism_effects(src)
 
 	if (!default_language && species_language)
 		default_language = all_languages[species_language]
@@ -60,6 +62,7 @@
 
 /mob/living/carbon/Destroy()
 	QDEL_NULL(touching)
+	QDEL_NULL(metabolism_effects)
 	bloodstr = null // We don't qdel(bloodstr) because it's the same as qdel(reagents)
 	QDEL_NULL_LIST(internal_organs)
 	QDEL_NULL_LIST(hallucinations)
@@ -74,8 +77,9 @@
 /mob/living/carbon/rejuvenate()
 	bloodstr.clear_reagents()
 	touching.clear_reagents()
+	metabolism_effects.clear_effects()
 	var/datum/reagents/R = get_ingested_reagents()
-	if(istype(R)) 
+	if(istype(R))
 		R.clear_reagents()
 	if(!(src.species.species_flags & SPECIES_FLAG_NO_HUNGER))
 		nutrition = 400

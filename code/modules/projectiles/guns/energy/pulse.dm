@@ -71,7 +71,7 @@
 	to_chat(user, "<span class='warning'>[src.name] has three settings, and they are all DESTROY.</span>")
 	
 /obj/item/weapon/gun/energy/pulse_rifle/skrell
-	name = "skrellian carbine"
+	name = "skrellian VT-3 carbine"
 	icon = 'icons/obj/guns/skrell_carbine.dmi'
 	icon_state = "skrell_carbine"
 	item_state = "skrell_carbine"

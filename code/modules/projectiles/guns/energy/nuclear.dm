@@ -1,5 +1,5 @@
 /obj/item/weapon/gun/energy/gun
-	name = "energy gun"
+	name = "LAEP90 Perun pistol"
 	desc = "Another bestseller of Lawson Arms and the FTU, the LAEP90 Perun is a versatile energy based sidearm, capable of switching between low, medium and high power projectile settings. In other words: stun, shock or kill."
 	icon = 'icons/obj/guns/energy_gun.dmi'
 	icon_state = "energystun100"
@@ -19,7 +19,7 @@
 	load_method = ENERGY_LOAD_HOTSWAP_CELL
 		
 /obj/item/weapon/gun/energy/gun/skrell
-	name = "skrellian handgun"
+	name = "skrellian XV-5 handgun"
 	desc = "A common Skrellian side-arm, the Xuxquu*'Voom-5, or XV-5, is a more traditional energy weapon, tuned to dispense beams in three different wavelengths."
 	w_class = ITEM_SIZE_NORMAL
 	slot_flags = SLOT_BELT
@@ -41,7 +41,7 @@
 		)
 
 /obj/item/weapon/gun/energy/gun/small
-	name = "energy pistol"
+	name = "LAEP90-C pistol"
 	desc = "A smaller model of the versatile LAEP90 Perun, the LAEP90-C packs considerable utility in a smaller package. Best used in situations where full-sized sidearms are inappropriate."
 	icon = 'icons/obj/guns/small_egun.dmi'
 	icon_state = "smallgunstun"

@@ -138,7 +138,7 @@ obj/item/weapon/gun/energy/retro
 	load_method = ENERGY_LOAD_HOTSWAP_CELL
 
 /obj/item/weapon/gun/energy/sniperrifle
-	name = "marksman energy rifle"
+	name = "HI DMR 9E energy rifle"
 	desc = "The HI DMR 9E is an older design of Hephaestus Industries. A designated marksman rifle capable of shooting powerful ionized beams, this is a weapon to kill from a distance."
 	icon = 'icons/obj/guns/laser_sniper.dmi'
 	icon_state = "sniper"

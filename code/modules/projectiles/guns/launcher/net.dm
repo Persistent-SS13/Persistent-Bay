@@ -1,5 +1,5 @@
 /obj/item/weapon/gun/launcher/net
-	name = "net gun"
+	name = "XX-1 \"Varmint Catcher\" net gun"
 	desc = "Specially made-to-order by Xenonomix, the XX-1 \"Varmint Catcher\" is designed to trap even the most unruly of creatures for safe transport."
 	icon_state = "netgun"
 	item_state = "netgun"

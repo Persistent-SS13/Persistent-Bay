@@ -5,6 +5,7 @@
 	caliber = CALIBER_CAPS
 	origin_tech = list(TECH_COMBAT = 1, TECH_MATERIAL = 1)
 	ammo_type = /obj/item/ammo_casing/cap
+	matter = list(MATERIAL_PLASTIC = 500)
 
 /obj/item/weapon/gun/projectile/revolver/capgun/attackby(obj/item/weapon/tool/W, mob/user)
 	if(!isWirecutter(W) || icon_state == "revolver")

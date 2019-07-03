@@ -9,6 +9,7 @@
 	size = 12
 	democratic = 1
 	category = PROG_GOVERNMENT
+	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP | PROGRAM_TELESCREEN
 
 /datum/nano_module/program/citycouncil
 	name = "Nexus City Council Control"

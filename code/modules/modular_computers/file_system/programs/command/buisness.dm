@@ -6,8 +6,9 @@
 	program_menu_icon = "key"
 	extended_desc = "Used to manage everything business related."
 	requires_ntnet = TRUE
-	size = 8
+	size = 4
 	category = PROG_BUSINESS
+	usage_flags = PROGRAM_ALL
 
 /datum/nano_module/program/business
 	name = "Business control program"

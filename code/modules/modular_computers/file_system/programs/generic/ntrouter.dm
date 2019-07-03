@@ -4,7 +4,7 @@
 	program_icon_state = "comm_monitor"
 	program_menu_icon = "wrench"
 	extended_desc = "This program allows switching between bluespace networks."
-	size = 12
+	size = 1
 	requires_ntnet = FALSE
 	available_on_ntnet = FALSE
 	usage_flags = PROGRAM_ALL

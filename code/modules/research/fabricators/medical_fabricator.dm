@@ -91,7 +91,15 @@
 	build_path = /obj/item/bodybag/rescue
 	materials = list(MATERIAL_CLOTH = 2 SHEETS, MATERIAL_PHORON = 1 SHEET)
 
+/datum/design/item/medicalfab/meditools/dropper
+	name = "dropper"
+	build_path = /obj/item/weapon/reagent_containers/dropper
+	materials = list(MATERIAL_GLASS = 60)
 
+/datum/design/item/medicalfab/meditools/dropper_industrial
+	name = "industrial size dropper"
+	build_path = /obj/item/weapon/reagent_containers/dropper/industrial
+	materials = list(MATERIAL_GLASS = 120, MATERIAL_PLASTIC = 10)
 
 /datum/design/item/medicalfab/meditools/penlight
 	build_path = /obj/item/device/flashlight/pen

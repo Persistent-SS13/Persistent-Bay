@@ -266,9 +266,6 @@
 	build_path = /obj/structure/reagent_dispensers/beerkeg/empty
 	materials = list(MATERIAL_ALUMINIUM = 20 SHEET)
 
-/datum/design/item/genfab/container/sci/dropper
-	build_path = /obj/item/weapon/reagent_containers/dropper
-
 /datum/design/item/genfab/container/pitcher
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/pitcher
 

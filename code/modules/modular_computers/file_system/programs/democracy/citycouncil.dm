@@ -303,7 +303,7 @@
 					taxtitle = "Business Income Tax"
 				else
 					taxtitle = "Personal Income Tax"
-				vote.tax = taxee
+				vote.tax = tax_type
 				vote.taxtype = 2
 				vote.name = "Progressive [taxtitle] Policy"
 				vote.body = "<br>"
@@ -339,7 +339,7 @@
 					taxtitle = "Business Income Tax"
 				else
 					taxtitle = "Personal Income Tax"
-				vote.tax = taxee
+				vote.tax = tax_type
 				vote.taxtype = 1
 				vote.name = "Flat [taxtitle] Policy"
 				vote.body = "Flat Tax Rate: [tax_flat_rate]<br>"

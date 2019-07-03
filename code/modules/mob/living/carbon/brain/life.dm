@@ -75,6 +75,7 @@
 	var/datum/reagents/metabolism/ingested = get_ingested_reagents()
 	if(istype(ingested)) ingested.metabolize()
 	if(bloodstr) bloodstr.metabolize()
+	metabolism_effects.process()
 
 	handle_confused()
 	// decrement dizziness counter, clamped to 0

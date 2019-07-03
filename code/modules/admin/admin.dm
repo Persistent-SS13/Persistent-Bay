@@ -1132,6 +1132,18 @@ var/global/floorIsLava = 0
 	world.update_status()
 	SSstatistics.add_field_details("admin_verb","TAI") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
+/datum/admins/proc/toggle_addiction()
+	set category = "Server"
+	set desc="Toggle addiction and withdrawal effects"
+	set name="Toggle Addiction"
+
+	if(!check_rights(R_ADMIN))
+		return
+	config.addiction = !config.addiction
+	log_admin("[key_name(src)] has turned addiction and withdrawal effects [config.addiction ? "on" : "off"].")
+	message_admins("[key_name_admin(src)] has turned addiction and withdrawal effects [config.addiction ? "on" : "off"].", 1)
+	SSstatistics.add_field_details("admin_verb", "TAD")
+  
 // /datum/admins/proc/toggleaban()
 // 	set category = "Server"
 // 	set desc="Respawn basically"
@@ -1168,7 +1180,6 @@ var/global/floorIsLava = 0
 // 	log_admin("[key_name(usr)] toggled Alien Egg Laying to [config.alien_eggs_allowed].")
 // 	message_admins("[key_name_admin(usr)] toggled Alien Egg Laying [config.alien_eggs_allowed ? "on" : "off"].", 1)
 // 	SSstatistics.add_field_details("admin_verb","AEA") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-
 
 // /datum/admins/proc/toggle_space_ninja()
 // 	set category = "Server"

@@ -66,7 +66,7 @@
 //
 //Bottles
 //
-/datum/design/item/genfab/container/catering/bottle
+/datum/design/item/genfab/container/catering
 	build_type = SERVICEFAB
 /datum/design/item/genfab/container/catering/bottle/gin
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/bottle/gin/empty
@@ -663,7 +663,6 @@
 	name = "basic network card"
 	id = "netcard_basic"
 	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 1)
-	build_type = CIRCUITFAB
 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 1 SHEET)
 	build_path = /obj/item/weapon/computer_hardware/network_card
 
@@ -671,7 +670,6 @@
 	name = "advanced network card"
 	id = "netcard_advanced"
 	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 2)
-	build_type = CIRCUITFAB
 	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_COPPER = 2 SHEETS)
 	build_path = /obj/item/weapon/computer_hardware/network_card/advanced
 
@@ -679,7 +677,6 @@
 	name = "wired network card"
 	id = "netcard_wired"
 	req_tech = list(TECH_DATA = 5, TECH_ENGINEERING = 3)
-	build_type = CIRCUITFAB
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_COPPER = 5 SHEETS)
 	build_path = /obj/item/weapon/computer_hardware/network_card/wired
 

@@ -139,6 +139,7 @@
 	. += new/datum/stack_recipe/rifle_frame(src)
 	. += new/datum/stack_recipe/stick(src)
 	. += new/datum/stack_recipe/noticeboard(src)
+	. += new/datum/stack_recipe/orebox(src)
 
 /material/wood/mahogany/generate_recipes(var/reinforce_material)
 	. = ..()

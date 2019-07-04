@@ -2776,6 +2776,7 @@
 #include "code\modules\reagents\reagent_containers\glass\bottle\robot.dm"
 #include "code\modules\reagents\reagent_generation\carbonator.dm"
 #include "code\modules\reagents\reagent_generation\enzyme_incubator.dm"
+#include "code\modules\reagents\recipes\alcohol.dm"
 #include "code\modules\reagents\recipes\drugs.dm"
 #include "code\modules\reagents\recipes\food.dm"
 #include "code\modules\reagents\recipes\materials.dm"

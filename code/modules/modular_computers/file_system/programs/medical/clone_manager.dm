@@ -11,6 +11,10 @@
 	size = 20
 	var/obj/machinery/clonepod/pod
 
+/datum/computer_file/program/clone_manager/Destroy()
+	pod = null
+	. = ..()
+
 /datum/computer_file/program/clone_manager/Topic(href, href_list)
 	if(..())
 		return 1
@@ -20,7 +24,7 @@
 	var/obj/item/weapon/computer_hardware/scanner/medical/mdscan = computer.scanner
 	if(href_list["connect"])
 		var/found = 0
-		for(var/obj/machinery/clonepod/pod in view(4,computer.loc))
+		for(var/obj/machinery/clonepod/pod in view(4, get_turf(computer)))
 			if(pod.stat || !pod.anchored) 
 				continue
 			found = 1

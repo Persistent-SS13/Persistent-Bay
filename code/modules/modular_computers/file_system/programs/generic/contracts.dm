@@ -5,7 +5,7 @@
 	program_icon_state = "supply"
 	program_menu_icon = "cart"
 	extended_desc = "A program where existing contracts with the organization can be viewed and reprinted, and new contracts can be drafted."
-	size = 21
+	size = 8
 	requires_ntnet = TRUE
 	required_access = core_access_contracts
 

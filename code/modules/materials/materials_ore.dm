@@ -45,6 +45,9 @@
 	. = ..()
 	queue_icon_update()
 
+/obj/item/stack/ore/get_storage_cost()
+	return ceil(base_storage_cost(w_class) * amount / 50)
+
 /obj/item/stack/ore/proc/set_material_data_byname(var/material_name)
 	set_material_data(SSmaterials.get_material_by_name(material_name))
 

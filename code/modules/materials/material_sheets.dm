@@ -12,6 +12,8 @@
 	randpixel = 3
 	icon = 'icons/obj/materials.dmi'
 
+	stacktype = /obj/item/stack/material
+
 	var/default_type = MATERIAL_STEEL
 	var/material/material
 	var/default_reinf_type
@@ -45,8 +47,6 @@
 		if(!src.reinf_material)
 			log_warning(" /obj/item/stack/material/Initialize() : Missing or invalid reinf_material type([src.default_reinf_type])!")
 
-	if(!stacktype)
-		stacktype = src.material.stack_type
 	if(islist(src.material.stack_origin_tech))
 		origin_tech = src.material.stack_origin_tech.Copy()
 
@@ -110,7 +110,7 @@
 	return
 
 /obj/item/stack/material/proc/is_same(obj/item/stack/material/M)
-	if(!istype(M, stacktype))
+	if((stacktype != M.stacktype))
 		return FALSE
 	if(matter_multiplier != M.matter_multiplier)
 		return FALSE

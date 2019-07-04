@@ -110,7 +110,7 @@
 		overlays += overlay_image(icon, "pick_handle", flags=RESET_COLOR)
 	. = ..()
 
-//obj/item/weapon/pickaxe/hammer
+/obj/item/weapon/pickaxe/hammer
 	name = "sledgehammer"
 	desc = "A mining hammer made of reinforced metal. You feel like smashing your boss in the face with this."
 

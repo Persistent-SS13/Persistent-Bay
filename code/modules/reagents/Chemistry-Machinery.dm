@@ -345,7 +345,7 @@
 
 	name = "\improper All-In-One Grinder"
 	icon = 'icons/obj/kitchen.dmi'
-	icon_state = "juicer1"
+	icon_state = "juicer0"
 	layer = BELOW_OBJ_LAYER
 	density = 0
 	anchored = 0
@@ -367,12 +367,12 @@
 	ADD_SAVED_VAR(holdingitems)
 	ADD_SKIP_EMPTY(holdingitems)
 
-/obj/machinery/reagentgrinder/SetupParts()
+/obj/machinery/reagentgrinder/Initialize()
 	. = ..()
-	beaker = locate(/obj/item/weapon/reagent_containers/glass/beaker/large) in component_parts
+	queue_icon_update()
 
 /obj/machinery/reagentgrinder/on_update_icon()
-	icon_state = "juicer"+num2text(!isnull(beaker))
+	icon_state = "juicer" + num2text(!isnull(beaker))
 
 /obj/machinery/reagentgrinder/attackby(var/obj/item/O as obj, var/mob/user as mob)
 
@@ -430,9 +430,17 @@
 		src.updateUsrDialog()
 		return 0
 
-	if(istype(O,/obj/item/stack/material))
-		var/obj/item/stack/material/stack = O
-		var/material/material = stack.material
+	if(istype(O,/obj/item/stack/material) || istype(O, /obj/item/stack/ore) || istype(O, /obj/item/stack/ore/ices))
+		var/material/material
+		if(istype(O, /obj/item/stack/ore))
+			var/obj/item/stack/ore/stack = O
+			material = stack.material
+		else if(istype(O,/obj/item/stack/material))
+			var/obj/item/stack/material/stack = O
+			material = stack.material
+		if(istype(O, /obj/item/stack/ore/ices))
+			var/obj/item/stack/ore/ices/stack  = O
+			material = stack.material
 		if(!length(material.chem_products))
 			to_chat(user, "\The [material.name] is unable to produce any usable reagents.")
 			return 1
@@ -562,10 +570,20 @@
 		if(remaining_volume <= 0)
 			break
 
-		var/obj/item/stack/material/stack = O
-		if(istype(stack))
-			var/material/material = stack.material
-			if(!material.chem_products.len)
+		if(istype(O, /obj/item/stack/material) || istype(O, /obj/item/stack/ore) || istype(O, /obj/item/stack/ore/ices))
+			var/material/material
+			var/obj/item/stack/ST = O
+
+			if(istype(O, /obj/item/stack/material))
+				var/obj/item/stack/material/stack = O
+				material = stack.material
+			if(istype(O, /obj/item/stack/ore))
+				var/obj/item/stack/ore/stack = O
+				material = stack.material
+			if(istype(O, /obj/item/stack/ore/ices))
+				var/obj/item/stack/ore/stack = O
+				material = stack.material
+			if(!material || (material && !LAZYLEN(material.chem_products) ) )
 				break
 
 			var/list/chem_products = material.chem_products
@@ -573,11 +591,11 @@
 			for(var/chem in chem_products)
 				sheet_volume += chem_products[chem]
 
-			var/amount_to_take = max(0,min(stack.amount,round(remaining_volume/sheet_volume)))
+			var/amount_to_take = max(0,min(ST.amount,round(remaining_volume/sheet_volume)))
 			if(amount_to_take)
-				stack.use(amount_to_take)
-				if(QDELETED(stack))
-					holdingitems -= stack
+				ST.use(amount_to_take)
+				if(QDELETED(ST))
+					holdingitems -= ST
 				for(var/chem in chem_products)
 					beaker.reagents.add_reagent(chem, (amount_to_take*chem_products[chem]*skill_factor))
 				continue

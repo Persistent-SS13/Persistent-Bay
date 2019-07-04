@@ -266,7 +266,7 @@
 // you don't have to reimplement anything that constructs a new similar stack just to change the constructor call..
 /obj/item/stack/proc/create_new(var/location, var/newamount)
 	var/obj/item/stack/newstack = new src.type(location, newamount)
-	newstack.color = color
+	newstack.copy_from(src)
 	src.update_icon()
 	return newstack
 

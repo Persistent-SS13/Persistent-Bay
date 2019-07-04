@@ -5,7 +5,7 @@
 	program_icon_state = "generic"
 	program_key_state = "generic_key"
 	program_menu_icon = "contact"
-	size = 4
+	size = 2
 	requires_ntnet = TRUE
 	available_on_ntnet = TRUE
 	usage_flags = PROGRAM_ALL

@@ -21,6 +21,11 @@
 	var/plural_name
 	var/matter_multiplier = 1
 
+/obj/item/stack/material/New(loc, amount)
+	. = ..()
+	ADD_SAVED_VAR(material)
+	ADD_SAVED_VAR(reinf_material)
+
 /obj/item/stack/material/Initialize(mapload, var/amount, var/material, var/reinf_material)
 	. = ..()
 	//testing("Initialized [src] \ref[src], mapload=[mapload], amount=[amount], material=[src.material], reinf_material=[src.reinf_material]")
@@ -105,7 +110,7 @@
 	return
 
 /obj/item/stack/material/proc/is_same(obj/item/stack/material/M)
-	if(!istype(M))
+	if(!istype(M, stacktype))
 		return FALSE
 	if(matter_multiplier != M.matter_multiplier)
 		return FALSE
@@ -169,14 +174,18 @@
 //--------------------------------
 //	Generic
 //--------------------------------
-/obj/item/stack/material/generic
-	icon_state = "sheet"
-	plural_icon_state = "sheet-mult"
-	max_icon_state = "sheet-max"
+///obj/item/stack/material/generic
+	// icon_state = "sheet"
+	// plural_icon_state = "sheet-mult"
+	// max_icon_state = "sheet-max"
 
 /obj/item/stack/material/generic/Initialize()
 	. = ..()
-	if(material) color = material.icon_colour
+	// if(material) color = material.icon_colour
+	//This should make any existing stacks of generic material on the save turn into regular old material stacks
+	if(material && loc)
+		material.place_sheet(get_turf(src), amount)
+	return INITIALIZE_HINT_QDEL
 
 //--------------------------------
 //	Iron

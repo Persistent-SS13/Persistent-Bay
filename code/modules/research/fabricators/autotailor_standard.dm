@@ -2332,3 +2332,8 @@
 	name = "turtleneck sweater"
 
 
+/datum/design/item/autotailor/tunic/executive_tunic
+	name = "Tunic - black executive tunic"
+	id = "executive_tunic"
+	build_path = /obj/item/clothing/accessory/tunic/exec
+	materials = list(MATERIAL_CLOTH = 4000)

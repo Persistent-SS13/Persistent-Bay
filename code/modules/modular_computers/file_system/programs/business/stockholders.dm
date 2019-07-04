@@ -6,10 +6,10 @@
 	nanomodule_path = /datum/nano_module/program/stockholders
 	extended_desc = "Used by stockholders to create and vote on proposals, and create private stock sales."
 	requires_ntnet = 1
-	size = 12
+	size = 2
 	business = 1
 	category = PROG_BUSINESS
-
+	usage_flags = PROGRAM_ALL
 
 /datum/nano_module/program/stockholders
 	name = "Business Stockholders Panel"

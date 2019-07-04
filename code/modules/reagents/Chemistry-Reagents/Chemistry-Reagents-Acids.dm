@@ -120,6 +120,7 @@
 	color = "#808080"
 	power = 8	//Reacts with skin fat and protein decompose skin
 	meltdose = 12
+	max_damage = 8
 
 //--------------------------------
 //	Polytrinic Acid
@@ -132,4 +133,17 @@
 	color = "#8e18a9"
 	power = 10
 	meltdose = 4
-	max_damage = 60
+	max_damage = 15
+
+//--------------------------------
+//	Acetic Acid
+//--------------------------------
+/datum/reagent/acid/acetic
+	name = "Acetic acid"
+	description = "A weak acid notably used in making vinegar."
+	taste_description = "acid"
+	reagent_state = LIQUID
+	color = COLOR_BLUE_LIGHT
+	power = 2
+	meltdose = 500
+	max_damage = 1

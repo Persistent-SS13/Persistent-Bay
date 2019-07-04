@@ -6,9 +6,9 @@
 	nanomodule_path = /datum/nano_module/program/newbusiness
 	extended_desc = "Used to register new businesses."
 	requires_ntnet = 1
-	size = 12
+	size = 5
 	category = PROG_BUSINESS
-
+	usage_flags = PROGRAM_ALL
 
 /datum/nano_module/program/newbusiness
 	name = "Create a new business"

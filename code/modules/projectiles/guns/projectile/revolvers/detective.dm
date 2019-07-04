@@ -6,3 +6,5 @@
 	caliber = CALIBER_38
 	origin_tech = list(TECH_COMBAT = 2, TECH_MATERIAL = 2)
 	ammo_type = /obj/item/ammo_casing/c38
+	matter = list(MATERIAL_STEEL = 2500, MATERIAL_ALUMINIUM = 500)
+	mass = 910 GRAMS

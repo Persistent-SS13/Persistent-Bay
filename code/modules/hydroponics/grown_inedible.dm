@@ -9,13 +9,7 @@
 	var/potency = 1
 
 /obj/item/weapon/grown/New(newloc,planttype)
-
 	..()
-
-	var/datum/reagents/R = new/datum/reagents(50)
-	reagents = R
-	R.my_atom = src
-
 	//Handle some post-spawn var stuff.
 	if(planttype)
 		plantname = planttype
@@ -31,6 +25,12 @@
 			if(reagent_data.len > 1 && potency > 0)
 				rtotal += round(potency/reagent_data[2])
 			reagents.add_reagent(rid,max(1,rtotal))
+	ADD_SAVED_VAR(plantname)
+	ADD_SAVED_VAR(potency)
+
+/obj/item/weapon/grown/SetupReagents()
+	. = ..()
+	create_reagents(50)
 
 /obj/item/weapon/corncob
 	name = "corn cob"

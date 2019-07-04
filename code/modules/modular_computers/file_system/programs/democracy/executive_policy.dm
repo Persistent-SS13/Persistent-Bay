@@ -9,6 +9,7 @@
 	size = 12
 	democratic = 1
 	category = PROG_GOVERNMENT
+	usage_flags = PROGRAM_ALL
 
 /datum/nano_module/program/executive_policy
 	name = "Nexus City Executive Policy"

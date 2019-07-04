@@ -21,6 +21,11 @@
 	var/plural_name
 	var/matter_multiplier = 1
 
+/obj/item/stack/material/New(loc, amount)
+	. = ..()
+	ADD_SAVED_VAR(material)
+	ADD_SAVED_VAR(reinf_material)
+
 /obj/item/stack/material/Initialize(mapload, var/amount, var/material, var/reinf_material)
 	. = ..()
 	//testing("Initialized [src] \ref[src], mapload=[mapload], amount=[amount], material=[src.material], reinf_material=[src.reinf_material]")

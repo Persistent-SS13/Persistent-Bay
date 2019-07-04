@@ -6,9 +6,10 @@
 	nanomodule_path = /datum/nano_module/program/election
 	extended_desc = "Used to nominate yourself for election and control your nomination."
 	requires_ntnet = TRUE
-	size = 12
+	size = 2
 	democratic = 1
 	category = PROG_GOVERNMENT
+	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP | PROGRAM_TELESCREEN
 
 /datum/nano_module/program/election
 	name = "Nexus City Elections and Nominations"

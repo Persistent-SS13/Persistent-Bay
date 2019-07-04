@@ -349,12 +349,12 @@
 /datum/design/item/weaponfab/weapons/guns/pistol/gyrojet // tier 3, but its not very good
 	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/pistol/gyropistol
-	research = "pistol_3"
+	research = "pistol_2"
 
 /datum/design/item/weaponfab/weapons/guns/pistol/magnum_pistol // tier 4
 	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/pistol/magnum_pistol
-	research = "pistol_4"
+	research = "pistol_2"
 
 //	Revolvers
 /datum/design/item/weaponfab/weapons/guns/revolver/holdout // tier 0, shitty .22lr revolver
@@ -378,16 +378,16 @@
 /datum/design/item/weaponfab/weapons/guns/revolver/c44 // tier 3
 	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GOLD = 3 SHEETS, MATERIAL_COPPER = 2.5 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/revolver/webley
-	research = "pistol_3"
+	research = "pistol_2"
 /datum/design/item/weaponfab/weapons/guns/revolver/deckard44 // tier 3
 	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GOLD = 3 SHEETS, MATERIAL_COPPER = 2.5 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/revolver/deckard
-	research = "pistol_3"
+	research = "pistol_2"
 
 /datum/design/item/weaponfab/weapons/guns/revolver/mateba50 // tier 4
 	materials = list(MATERIAL_PLASTEEL = 6 SHEETS, MATERIAL_GOLD = 5 SHEETS, MATERIAL_DIAMOND = 4 SHEETS, MATERIAL_PHORON = 1 SHEETS)
 	build_path = /obj/item/weapon/gun/projectile/revolver/mateba
-	research = "pistol_4"
+	research = "pistol_2"
 
 /datum/design/item/weaponfab/weapons/guns/revolver/foundation // tier 5? Just some hiddne shit
 	materials = list(MATERIAL_PLASTEEL = 6 SHEETS, MATERIAL_GOLD = 5 SHEETS, MATERIAL_DIAMOND = 4 SHEETS, MATERIAL_PHORON = 3 SHEETS, MATERIAL_NULLGLASS = 5 SHEETS)

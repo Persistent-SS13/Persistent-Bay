@@ -206,6 +206,9 @@
 			var/choice = input(usr,"Choose which cryo network [src] should use.","Choose Cryo-net",null) as null|anything in choices
 			if(choice)
 				network = choice
+	if(href_list["despawn"])
+		if(user == occupant)
+			despawn_occupant()
 
 /obj/machinery/cryopod/examine(mob/user)
 	. = ..()
@@ -257,7 +260,7 @@
 
 		src.add_fingerprint(M)
 		M.stop_pulling()
-		to_chat(M, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
+		to_chat(M, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b>(<a href='?src=\ref[src];despawn=1'>despawn now</a>)</span>")
 
 	if(istype(A, /obj/item/organ/internal/stack))
 		var/obj/item/organ/internal/stack/S = A
@@ -354,6 +357,7 @@
 		M.stored_ckey = null
 		M.ckey = null
 	QDEL_NULL(occupant)
+	time_despawn = 0
 	despawning = FALSE
 
 /*

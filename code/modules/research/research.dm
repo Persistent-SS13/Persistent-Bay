@@ -671,6 +671,8 @@ research holder datum.
 	points = 750
 	uid = "pistol_2"
 	prereqs = list("pistol_1", "shotgun_2")
+	
+	
 /datum/tech_entry/combat/proj/automatic/rifle
 	name = "The Assault Rifle"
 	desc = "It's an incredibly effective and supremely cool assault rifle. This is what you've been waiting for. Unlocks assault rifle designs for the appropriate fabricators."

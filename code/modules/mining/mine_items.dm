@@ -110,7 +110,7 @@
 		overlays += overlay_image(icon, "pick_handle", flags=RESET_COLOR)
 	. = ..()
 
-/obj/item/weapon/pickaxe/hammer
+//obj/item/weapon/pickaxe/hammer
 	name = "sledgehammer"
 	desc = "A mining hammer made of reinforced metal. You feel like smashing your boss in the face with this."
 
@@ -118,7 +118,7 @@
 	name = "advanced mining drill" // Can dig sand as well!
 	icon_state = "handdrill"
 	item_state = "jackhammer"
-	digspeed = 30
+	digspeed = 95
 	origin_tech = list(TECH_MATERIAL = 2, TECH_POWER = 3, TECH_ENGINEERING = 2)
 	desc = "Yours is the drill that will pierce through the rock walls."
 	drill_verb = "drilling"
@@ -127,7 +127,7 @@
 	name = "sonic jackhammer"
 	icon_state = "jackhammer"
 	item_state = "jackhammer"
-	digspeed = 20 //faster than drill, but cannot dig
+	digspeed = 85 //faster than drill, but cannot dig
 	origin_tech = list(TECH_MATERIAL = 3, TECH_POWER = 2, TECH_ENGINEERING = 2)
 	desc = "Cracks rocks with sonic blasts, perfect for killing cave lizards."
 	drill_verb = "hammering"
@@ -136,7 +136,7 @@
 	name = "diamond mining drill"
 	icon_state = "diamonddrill"
 	item_state = "jackhammer"
-	digspeed = 5 //Digs through walls, girders, and can dig up sand
+	digspeed = 75 //Digs through walls, girders, and can dig up sand
 	origin_tech = list(TECH_MATERIAL = 6, TECH_POWER = 4, TECH_ENGINEERING = 5)
 	desc = "Yours is the drill that will pierce the heavens!"
 	drill_verb = "drilling"
@@ -145,7 +145,7 @@
 	name = "cyborg mining drill"
 	icon_state = "diamonddrill"
 	item_state = "jackhammer"
-	digspeed = 15
+	digspeed = 75
 	desc = ""
 	drill_verb = "drilling"
 
@@ -155,7 +155,7 @@
 	desc = "This makes no metallurgic sense."
 	icon_state = "pick_preview"
 	item_state = "pickaxe"
-	digspeed = 30
+	digspeed = 135
 	origin_tech = list(TECH_MATERIAL = 3)
 	drill_verb = "picking"
 	sharpness = 2
@@ -167,7 +167,7 @@
 	desc = "This makes no metallurgic sense."
 	icon_state = "pick_preview"
 	item_state = "pickaxe"
-	digspeed = 20
+	digspeed = 120
 	origin_tech = list(TECH_MATERIAL = 4)
 	drill_verb = "picking"
 	sharpness = 1
@@ -179,7 +179,7 @@
 	desc = "A pickaxe with a diamond pick head."
 	icon_state = "pick_preview"
 	item_state = "pickaxe"
-	digspeed = 10
+	digspeed = 110
 	origin_tech = list(TECH_MATERIAL = 6, TECH_ENGINEERING = 4)
 	drill_verb = "picking"
 	sharpness = 3

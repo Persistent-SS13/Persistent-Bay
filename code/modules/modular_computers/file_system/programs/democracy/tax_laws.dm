@@ -6,9 +6,10 @@
 	nanomodule_path = /datum/nano_module/program/tax_laws
 	extended_desc = "Used to view the current tax laws passed by the Council.."
 	requires_ntnet = 1
-	size = 12
+	size = 5
 	democratic = 1
 	category = PROG_GOVERNMENT
+	usage_flags = PROGRAM_ALL
 
 /datum/nano_module/program/tax_laws
 	name = "Nexus City Tax Code"

@@ -9,3 +9,6 @@
 	accuracy = 1
 	bulk = 1
 	fire_delay = 10
+	one_hand_penalty = 1
+	matter = list(MATERIAL_STEEL = 3000)
+	mass = 1.2 KILOGRAMS

@@ -165,8 +165,8 @@
 			contract.contract_payee = connected_faction.uid
 			contract.contract_desc = selected_desc
 			contract.contract_title = selected_title
-			contract.auto_pay = selected_paytype
-			contract.pay_amount = selected_pay
+			contract.contract_paytype = selected_paytype
+			contract.contract_pay = selected_pay
 			contract.additional_function = selected_service
 			contract.name = "[connected_faction.name] Contract"
 			var/text_pay = ""

@@ -101,6 +101,7 @@
 	. = ..()
 
 /turf/simulated/Entered(atom/A, atom/OL)
+	. = ..()
 	if (istype(A,/mob/living))
 		var/mob/living/M = A
 
@@ -135,7 +136,7 @@
 				bloodDNA = null
 
 		if(M.lying)
-			return ..()
+			return
 
 		if(src.wet)
 
@@ -163,8 +164,6 @@
 				M.inertia_dir = 0
 		else
 			M.inertia_dir = 0
-
-	..()
 
 //returns 1 if made bloody, returns 0 otherwise
 /turf/simulated/add_blood(mob/living/carbon/human/M as mob)

@@ -462,9 +462,9 @@ var/PriorityQueue/all_feeds
 	story.parent = current_issue
 	if(story.announce)
 		for(var/obj/machinery/newscaster/caster in allCasters)
-			caster.newsAlert("(From [name]) [announcement] ([story.name])")
+			caster.newsAlert("(From [name]) [announcement] ([story.name])")			
 	GLOB.recent_articles |= story
-
+	GLOB.discord_api.broadcast("(From [name]) [announcement] ([story.name])")		
 
 /datum/LibraryDatabase
 	var/list/books = list()
@@ -1226,10 +1226,21 @@ var/PriorityQueue/all_feeds
 	votes -= vote
 
 /datum/world_faction/democratic/proc/defeat_vote(var/datum/council_vote/vote)
+	var/subject = "Law Defeated ([vote.name])"
+	var/body = "A law has been defeated on [stationtime2text()], [stationdate2text()]."
+	notify_council(subject,body)
 	votes -= vote
 
 /datum/world_faction/democratic/proc/start_vote(var/datum/council_vote/vote)
+	var/subject = "New Law Proposal ([vote.name])"
+	var/body = "A new law has been proposed on [stationtime2text()], [stationdate2text()] by [vote.sponsor]. Please view it as soon as possible."
+	notify_council(subject,body)
 	votes |= vote
+
+/datum/world_faction/democratic/proc/notify_council(var/subject, var/body)
+	for(var/datum/democracy/councillor in city_council)
+		Send_Email(councillor.real_name, "Nexus City Government", subject, body)
+	Send_Email(gov.real_name, "Nexus City Government", subject, body)
 
 /datum/world_faction/democratic/proc/has_vote(var/real_name)
 	for(var/datum/council_vote/vote in votes)
@@ -1251,22 +1262,26 @@ var/PriorityQueue/all_feeds
 /datum/world_faction/democratic/proc/repeal_policy(var/datum/council_vote/vote)
 	policy -= vote
 	command_announcement.Announce("Governor [vote.signer] has repealed an executive policy! [vote.name].","Governor Action")
-
+	GLOB.discord_api.broadcast("Governor [vote.signer] has repealed an executive policy! [vote.name].")
 /datum/world_faction/democratic/proc/pass_policy(var/datum/council_vote/vote)
 	policy |= vote
 	command_announcement.Announce("Governor [vote.signer] has passed an executive policy! [vote.name].","Governor Action")
-
+	GLOB.discord_api.broadcast("Governor [vote.signer] has passed an executive policy! [vote.name].")
+	
 /datum/world_faction/democratic/proc/pass_nomination_judge(var/datum/democracy/judge)
 	judges |= judge
 	command_announcement.Announce("The government has approved the nomination of [judge.real_name] for judge. They are now Judge [judge.real_name].","Nomination Pass")
-
+	GLOB.discord_api.broadcast("The government has approved the nomination of [judge.real_name] for judge. They are now Judge [judge.real_name].")
 /datum/world_faction/democratic/proc/pass_impeachment_judge(var/datum/democracy/judge)
 	judges -= judge
-	command_announcement.Announce("The government has voted to remove [judge.real_name] from their position of  judge.","Impeachment")
-
+	command_announcement.Announce("The government has voted to remove [judge.real_name] from their position of judge.","Impeachment")
+	GLOB.discord_api.broadcast("The government has voted to remove [judge.real_name] from their position of judge.")
 /datum/world_faction/democratic/proc/pass_vote(var/datum/council_vote/vote)
 	votes -= vote
 	vote.time_signed = world.realtime
+	var/subject = "Law passed ([vote.name])"
+	var/body = "A law has been passed on [stationtime2text()], [stationdate2text()]."
+	notify_council(subject,body)
 	if(vote.bill_type == 3)
 		if(vote.tax == 2)
 			if(vote.taxtype == 2)
@@ -1280,10 +1295,12 @@ var/PriorityQueue/all_feeds
 				tax_bprog4_amount = vote.progamount4
 				tax_type_b = 2
 				command_announcement.Announce("The government has just passed a new progressive tax policy for business income.","Business Tax")
+				GLOB.discord_api.broadcast("The government has just passed a new progressive tax policy for business income.")
 			else
 				tax_bflat_rate = vote.flatrate
 				tax_type_b = 1
 				command_announcement.Announce("The government has just passed a new flat tax policy for business income.","Business Tax")
+				GLOB.discord_api.broadcast("The government has just passed a new flat tax policy for business income.")
 		else
 			if(vote.taxtype == 2)
 				tax_pprog1_rate = vote.prograte1
@@ -1296,10 +1313,12 @@ var/PriorityQueue/all_feeds
 				tax_pprog4_amount = vote.progamount4
 				tax_type_p = 2
 				command_announcement.Announce("The government has just passed a new progressive tax policy for personal income.","Personal Income Tax")
+				GLOB.discord_api.broadcast("The government has just passed a new progressive tax policy for personal income.")
 			else
 				tax_pflat_rate = vote.flatrate
 				tax_type_p = 1
 				command_announcement.Announce("The government has just passed a new flat tax policy for personal income.","Personal Income Tax")
+				GLOB.discord_api.broadcast("The government has just passed a new flat tax policy for personal income.")
 	else if(vote.bill_type == 4)
 		for(var/datum/democracy/judge in judges)
 			if(judge.real_name == vote.impeaching)
@@ -1315,12 +1334,13 @@ var/PriorityQueue/all_feeds
 
 	else if(vote.bill_type == 1)
 		criminal_laws |= vote
-		command_announcement.Announce("The government has just passed a new criminal law.","New Criminal Law")
+		command_announcement.Announce("The government has just passed a new criminal law. [vote.name]","New Criminal Law")
+		GLOB.discord_api.broadcast("The government has just passed a new criminal law. [vote.name]")
 
 	else if(vote.bill_type == 2)
 		civil_laws |= vote
-		command_announcement.Announce("The government has just passed a new civil law.","New Civil Law")
-
+		command_announcement.Announce("The government has just passed a new civil law. [vote.name]","New Civil Law")
+		GLOB.discord_api.broadcast("The government has just passed a new civil law. [vote.name]")
 
 /datum/council_vote
 	var/name = "" // title of votes

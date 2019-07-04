@@ -92,7 +92,7 @@
 /datum/design/item/engifab/engitools/simple/tape_roll
 	name = "Tape Roll"
 	build_path = /obj/item/weapon/tape_roll
-	materials = list(MATERIAL_PLASTIC = 8 SHEET)
+	materials = list(MATERIAL_PLASTIC = 3 SHEETS)
 
 /datum/design/item/engifab/engitools/simple/cone
 	name = "warning cone"
@@ -438,38 +438,37 @@
 	materials = list(MATERIAL_GLASS = 1 SHEET)
 
 /datum/design/item/engifab/parts/igniter
-	name = "Igniter"
+	name = "Igniter assembly"
 	id = "igniter"
 	build_path = /obj/item/device/assembly/igniter
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_COPPER = 1 SHEET)
 
 /datum/design/item/engifab/parts/signaler
-	name = "Signaler"
+	name = "Radio signaler assembly"
 	id = "signaler"
 	build_path = /obj/item/device/assembly/signaler
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_COPPER = 0.5 SHEET)
 
 /datum/design/item/engifab/parts/sensor_infra
-	name = "Infrared sensor"
+	name = "Infrared sensor assemnbly"
 	id = "infrared_sensor"
 	build_path = /obj/item/device/assembly/infra
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 0.5 SHEET)
 
 /datum/design/item/engifab/parts/voice
+	name = "Voice activated sensor assembly"
 	build_path = /obj/item/device/assembly/voice
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 0.5 SHEET)
 
-
-
 /datum/design/item/engifab/parts/timer
-	name = "Timer"
+	name = "Timer assembly"
 	id = "timer"
 	build_path = /obj/item/device/assembly/timer
 	category = "Parts"
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 0.5 SHEET)
 
 /datum/design/item/engifab/parts/sensor_prox
-	name = "Proximity sensor"
+	name = "Proximity sensor seembly"
 	id = "proximity_sensor"
 	build_path = /obj/item/device/assembly/prox_sensor
 	category = "Parts"
@@ -621,17 +620,17 @@
 	build_path = /obj/item/weapon/stock_parts/micro_laser/ultra
 	research = "ultra_micro_laser"
 /datum/design/item/engifab/parts/basic_sensor
-	name = "Basic sensor"
+	name = "Basic scanning module"
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_GLASS = 0.75 SHEETS)
 	build_path = /obj/item/weapon/stock_parts/scanning_module
 
 /datum/design/item/engifab/parts/adv_sensor
-	name = "Advanced sensor"
+	name = "Advanced scanning module"
 	req_tech = list(TECH_MAGNET = 3)
 	build_path = /obj/item/weapon/stock_parts/scanning_module/adv
 	research = "adv_sensor"
 /datum/design/item/engifab/parts/phasic_sensor
-	name = "Phasic sensor"
+	name = "Phasic scanning module"
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 10 SHEETS, MATERIAL_SILVER = 4 SHEETS, MATERIAL_PHORON = 5 SHEETS)
 	build_path = /obj/item/weapon/stock_parts/scanning_module/phasic
 	research = "phasic_sensor"

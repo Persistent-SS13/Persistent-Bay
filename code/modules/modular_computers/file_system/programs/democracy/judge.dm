@@ -6,9 +6,10 @@
 	nanomodule_path = /datum/nano_module/program/judge
 	extended_desc = "Used by judges to manage trials and render verdicts."
 	requires_ntnet = 1
-	size = 12
+	size = 6
 	democratic = 1
 	category = PROG_JUSTICE
+	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP | PROGRAM_TELESCREEN | PROGRAM_TABLET
 
 /datum/nano_module/program/judge
 	name = "Nexus City Judge Controls"

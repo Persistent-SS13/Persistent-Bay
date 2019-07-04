@@ -12,6 +12,8 @@
 	slot_flags = SLOT_EARS
 	matter = list(MATERIAL_GLASS = 60)
 	volume = 5
+	item_flags = ITEM_FLAG_NO_BLUDGEON
+	force = 0
 
 	afterattack(var/obj/target, var/mob/user, var/proximity)
 		if(!target.reagents || !proximity) return

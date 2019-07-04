@@ -5,7 +5,7 @@
 	program_icon_state = "supply"
 	program_menu_icon = "cart"
 	extended_desc = "A program to access the material marketplace where telepads can be used to buy and sell materials."
-	size = 6
+	size = 4
 	requires_ntnet = TRUE
 	required_access = core_access_materials
 	category = PROG_BUSINESS

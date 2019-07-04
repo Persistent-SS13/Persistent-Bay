@@ -5,7 +5,7 @@
 	program_icon_state = "supply"
 	program_menu_icon = "cart"
 	extended_desc = "A program where existing contracts with the organization can be viewed and reprinted, and new contracts can be drafted."
-	size = 21
+	size = 8
 	requires_ntnet = TRUE
 	required_access = core_access_contracts
 
@@ -165,6 +165,8 @@
 			contract.contract_payee = connected_faction.uid
 			contract.contract_desc = selected_desc
 			contract.contract_title = selected_title
+			contract.auto_pay = selected_paytype
+			contract.pay_amount = selected_pay
 			contract.additional_function = selected_service
 			contract.name = "[connected_faction.name] Contract"
 			var/text_pay = ""

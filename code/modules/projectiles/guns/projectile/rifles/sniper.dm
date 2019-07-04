@@ -1,5 +1,5 @@
 /obj/item/weapon/gun/projectile/boltaction/heavysniper
-	name = "anti-materiel rifle"
+	name = "HI PTR-7 anti-material rifle"
 	desc = "A portable anti-armour rifle fitted with a scope, the HI PTR-7 Rifle was originally designed to used against armoured exosuits. It is capable of punching through windows and non-reinforced walls with ease. Fires armor piercing 14.5mm shells."
 	icon = 'icons/obj/weapons/guns/heavysniper.dmi'
 	icon_state = "heavysniper"
@@ -22,7 +22,7 @@
 	fire_delay = 12
 
 /obj/item/weapon/gun/projectile/boltaction/heavysniper/ant
-	name = "anti-material rifle"
+	name = "HI PTR-7 anti-material rifle"
 	desc = "A portable anti-armour rifle fitted with a scope, the HI PTR-7 Rifle was originally designed to used against armoured exosuits. It is capable of punching through windows and non-reinforced walls with ease. Fires armor piercing 14.5mm shells. This replica however fires 9mm rounds."
 	ammo_type = /obj/item/ammo_casing/c9mm
 	caliber = CALIBER_9MM

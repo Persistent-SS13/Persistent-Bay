@@ -21,8 +21,8 @@
 
 /obj/machinery/fabricator/eva_fabricator/can_connect(var/datum/world_faction/trying, var/mob/M)
 	var/datum/machine_limits/limits = trying.get_limits()
-	
-	
+
+
 	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(trying.uid)))
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
@@ -188,7 +188,7 @@
 	name = "emergency fishbowl softsuit"
 	id = "emr_softsuit_fish"
 	build_path = /obj/item/clothing/suit/space/emergency
-	
+
 /datum/design/item/voidfab/softsuit/helmet/emergency
 	name = "emergency softsuit helmet"
 	id = "emr_softhelm"
@@ -205,7 +205,7 @@
 /datum/design/item/voidfab/softsuit/suit/civilian
 	name = "civilian softsuit"
 	id = "civ_softsuit"
-	build_path = /obj/item/clothing/suit/space/civilian 
+	build_path = /obj/item/clothing/suit/space/civilian
 
 /datum/design/item/voidfab/softsuit/helmet/civilian/alt
 	name = "civilian alternate softsuit helmet"
@@ -389,9 +389,9 @@
 	materials = list(MATERIAL_STEEL = 2 SHEETS)
 	build_path = /obj/item/weapon/pickaxe
 
-/datum/design/item/genfab/miningtools/hammer // 40
-	materials = list(MATERIAL_STEEL = 2 SHEETS)
-	build_path = /obj/item/weapon/pickaxe/hammer
+//	/datum/design/item/genfab/miningtools/hammer // 40
+//		materials = list(MATERIAL_STEEL = 2 SHEETS)
+//		build_path = /obj/item/weapon/pickaxe/hammer
 
 /datum/design/item/genfab/miningtools/shovel
 	build_path = /obj/item/weapon/shovel
@@ -407,7 +407,7 @@
 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_DIAMOND = 3 SHEETS)
 	build_path = /obj/item/weapon/pickaxe/drill
 	research = "mining_1"
-	
+
 /datum/design/item/genfab/miningtools/adv/jackhammer // 20
 	req_tech = list(TECH_MATERIAL = 3, TECH_POWER = 2, TECH_ENGINEERING = 2)
 	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_COPPER = 2 SHEETS, MATERIAL_SILVER = 1 SHEETS)
@@ -425,8 +425,8 @@
 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_DIAMOND = 3 SHEETS)
 	build_path = /obj/item/weapon/pickaxe/diamonddrill
 	research = "mining_4"
-	
-	
+
+
 /datum/design/item/genfab/miningtools/adv/plasmacutter
 	req_tech = list(TECH_MATERIAL = 4, TECH_PHORON = 3, TECH_ENGINEERING = 3)
 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 1 SHEETS, MATERIAL_GOLD = 1 SHEETS, MATERIAL_PHORON = 2 SHEETS)

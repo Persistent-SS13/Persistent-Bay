@@ -109,11 +109,11 @@
 		color = hardware_color
 		overlays += overlay_image(icon, "pick_handle", flags=RESET_COLOR)
 	. = ..()
-
-//obj/item/weapon/pickaxe/hammer
+/*
+/obj/item/weapon/pickaxe/hammer
 	name = "sledgehammer"
 	desc = "A mining hammer made of reinforced metal. You feel like smashing your boss in the face with this."
-
+*/
 /obj/item/weapon/pickaxe/drill
 	name = "advanced mining drill" // Can dig sand as well!
 	icon_state = "handdrill"

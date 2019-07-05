@@ -24,47 +24,30 @@
 	noblend_objects = list(/obj/machinery/door/window)
 
 /obj/structure/wall_frame/New(var/new_loc, var/materialtype)
+	if(!materialtype)
+		materialtype = DEFAULT_WALL_MATERIAL
+
+	material = materialtype
 	..()
 
-//	if(!materialtype)
-//		materialtype = DEFAULT_WALL_MATERIAL
-//	material = SSmaterials.get_material_by_name(materialtype)
-//	health = material.integrity
+/obj/structure/wall_frame/Initialize()
+	if(!material)
+		material = DEFAULT_WALL_MATERIAL
+		
+	if(istext(material))
+		material = SSmaterials.get_material_by_name(material)
 
-/obj/structure/wall_frame/Initialize(var/mapload, var/new_loc, var/materialtype = null)
-	. = ..()
-	if(!map_storage_loaded) //Handles parameters passed to new when not loading the map
-		if(!materialtype)
-			materialtype = DEFAULT_WALL_MATERIAL
-		//Since people keeps passing strings for some reasons lets double check
-		if(istext(materialtype))
-			material = SSmaterials.get_material_by_name(materialtype)
-			ASSERT(material)
-		else if(istype(materialtype, /material))
-			material = materialtype
-		max_health = material.integrity
-		health = max_health
+	max_health = material.integrity
+
 	update_connections(TRUE)
 	queue_icon_update()
+	. = ..()
 
 /obj/structure/wall_frame/examine(mob/user)
-	. = ..(user)
-
-	if(!.)
-		return
-
-	if(health == material.integrity)
-		to_chat(user, "<span class='notice'>It seems to be in fine condition.</span>")
-	else
-		var/dam = health / material.integrity
-		if(dam <= 0.3)
-			to_chat(user, "<span class='notice'>It's got a few dents and scratches.</span>")
-		else if(dam <= 0.7)
-			to_chat(user, "<span class='warning'>A few pieces of panelling have fallen off.</span>")
-		else
-			to_chat(user, "<span class='danger'>It's nearly falling to pieces.</span>")
 	if(paint_color)
 		to_chat(user, "<span class='notice'>It has a smooth coat of paint applied.</span>")
+
+	. = ..()
 
 /obj/structure/wall_frame/attackby(var/obj/item/weapon/W, var/mob/user)
 	src.add_fingerprint(user)
@@ -112,9 +95,6 @@
 // icon related
 
 /obj/structure/wall_frame/on_update_icon()
-	if(!istype(material, /material))
-		log_warning("[src]\ref[src] ([x], [y], [z]) has no valid material([material? material.type : null]::[material]) during icon update!!")
-		return
 	overlays.Cut()
 	var/image/I
 
@@ -136,6 +116,8 @@
 				I = image(icon, "stripe[connections[i]]", dir = 1<<(i-1))
 			I.color = stripe_color
 			overlays += I
+
+	SetName("[material.display_name] [initial(name)]")
 
 /obj/structure/wall_frame/hull/Initialize()
 	. = ..()

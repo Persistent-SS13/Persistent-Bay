@@ -252,7 +252,7 @@
 						"body" = pencode2html(message.stored_data),
 						"source" = message.source,
 						"timestamp" = message.timestamp,
-						"uid" = message.uid
+						"ref" = "\ref[message.uid]"
 					)))
 				data["messages"] = all_messages
 				data["messagecount"] = all_messages.len
@@ -451,7 +451,7 @@
 		return 1
 
 	if(href_list["view"])
-		var/datum/computer_file/data/email_message/M = find_message_by_fuid(href_list["view"])
+		var/datum/computer_file/data/email_message/M = locate(href_list["view"])
 		if(istype(M))
 			M.unread = 0
 			current_message = M

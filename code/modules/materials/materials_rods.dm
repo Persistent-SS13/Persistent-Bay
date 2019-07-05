@@ -39,9 +39,9 @@
 
 /obj/item/stack/material/rods/Initialize()
 	. = ..()
-	queue_icon_update()
-	throwforce = round(0.25*material.get_edge_damage())
-	force = round(0.5*material.get_blunt_damage())
+
+	throwforce = round(0.25 * material.get_edge_damage())
+	force = round(0.5 * material.get_blunt_damage())
 
 /obj/item/stack/material/rods/attackby(obj/item/W as obj, mob/user as mob)
 	if(isWelder(W))
@@ -89,18 +89,3 @@
 	if(!istype(user.loc,/turf)) return 0
 
 	place_grille(user, user.loc, src)
-
-/obj/item/stack/material/rods/use()
-	. = ..()
-	update_icon()
-
-/obj/item/stack/material/rods/add()
-	. = ..()
-	update_icon()
-
-/obj/item/stack/material/is_same(obj/item/stack/material/rods/M)
-	if(!istype(M))
-		return FALSE
-	if(material != M.material)
-		return FALSE
-	

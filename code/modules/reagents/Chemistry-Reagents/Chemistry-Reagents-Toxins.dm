@@ -628,9 +628,9 @@
 		if(prob(15))
 			to_chat(M, "[pick(shroom_dose_messages)]")
 
-/datum/reagent/stimulant
-	name = "Stimulant"
-	description = "A recreational stimulant."
+/datum/reagent/phorostimulant
+	name = "Phorostim"
+	description = "A recreational stimulant derived from phoron."
 	taste_description = "sharpness"
 	reagent_state = LIQUID
 	color = "#ff3300"
@@ -654,7 +654,14 @@
 		"You feel like cleaning something.",
 		"Your heart races like the wind.",
 		"You find yourself blinking a lot.",
-		"You can barely feel your face."
+		"You can barely feel your face.",
+		"The world flashes a pleasant orange.",
+		"You think about space.",
+		"You think about stone.",
+		"Something alive flashes in the corner of your eye.",
+		"The floor rumbles beneath you.",
+		"You feel the urge to go on an adventure.",
+		"You feel the urge to mine."
 	)	
 
 /datum/reagent/stimulant/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)

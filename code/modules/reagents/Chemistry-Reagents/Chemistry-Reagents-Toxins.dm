@@ -566,7 +566,10 @@
 	overdose = REAGENTS_OVERDOSE
 	metabolism = REM * 0.5
 	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
-
+	
+	addictiveness = 2
+	addiction_median_dose = 5
+	
 /datum/reagent/psilocybin/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
 		return

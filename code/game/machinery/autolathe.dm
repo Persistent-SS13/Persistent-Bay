@@ -1,6 +1,7 @@
 /obj/machinery/autolathe
 	name = "autolathe"
 	desc = "It produces items using metal and glass."
+	icon = 'icons/obj/machines/autolathe.dmi'
 	icon_state = "autolathe"
 	density = 1
 	anchored = 1
@@ -10,9 +11,10 @@
 	clicksound = "keyboard"
 	clickvol = 30
 	multiplier = 1
+	circuit_type = /obj/item/weapon/circuitboard/autolathe
 
 	var/list/machine_recipes
-	var/list/stored_material = list(DEFAULT_WALL_MATERIAL = 0, "glass" = 0)
+	var/list/stored_material = list(MATERIAL_STEEL = 0, MATERIAL_GLASS = 0)
 	var/list/storage_capacity = 0
 	var/show_category = "All"
 
@@ -29,19 +31,14 @@
 /obj/machinery/autolathe/New()
 	..()
 	wires = new(src)
-	//Create parts for lathe.
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/autolathe(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	RefreshParts()
+	ADD_SAVED_VAR(stored_material)
+	ADD_SAVED_VAR(storage_capacity)
+	ADD_SAVED_VAR(hacked)
+	ADD_SAVED_VAR(disabled)
+	ADD_SAVED_VAR(shocked)
 
 /obj/machinery/autolathe/Destroy()
-	qdel(wires)
-	wires = null
+	QDEL_NULL(wires)
 	return ..()
 
 /obj/machinery/autolathe/proc/update_recipe_list()
@@ -163,38 +160,53 @@
 
 	//Resources are being loaded.
 	var/obj/item/eating = O
-	if(!eating.matter)
-		to_chat(user, "\The [eating] does not contain significant amounts of useful materials and cannot be accepted.")
+
+	var/list/taking_matter
+	if(istype(eating, /obj/item/stack/material))
+		var/obj/item/stack/material/mat = eating
+		taking_matter = list()
+		for(var/matname in eating.matter)
+			taking_matter[matname] = Floor(eating.matter[matname]/mat.amount)
+	else
+		taking_matter = eating.matter
+
+	var/found_useful_mat
+	if(LAZYLEN(taking_matter))
+		for(var/material in taking_matter)
+			if(!isnull(stored_material[material])) //Checks if the matter is actually useable. Currently copper, steel, and glass.
+				found_useful_mat = TRUE
+				break
+
+	if(!found_useful_mat)
+		to_chat(user, "<span class='warning'>\The [eating] does not contain any accessible useful materials and cannot be accepted.</span>")
 		return
 
 	var/filltype = 0       // Used to determine message.
 	var/total_used = 0     // Amount of material used.
 	var/mass_per_sheet = 0 // Amount of material constituting one sheet.
 
-	for(var/material in eating.matter)
-		if(!stored_material[material])
-			stored_material[material] = 0
+	for(var/material in taking_matter)
+
 		if(stored_material[material] >= storage_capacity)
 			continue
 
-		var/total_material = eating.matter[material]
+		var/total_material = taking_matter[material]
 
 		//If it's a stack, we eat multiple sheets.
 		if(istype(eating,/obj/item/stack))
 			var/obj/item/stack/stack = eating
 			total_material *= stack.get_amount()
-		else
-			total_material *= 0.7 + (1 - mat_efficiency)	//everything else gets a multiplier of 0.7 + 0.1 for each manipulator level above 1, totals a maximum of 0.9
-			total_material = round(total_material)
 
 		if(stored_material[material] + total_material > storage_capacity)
 			total_material = storage_capacity - stored_material[material]
 			filltype = 1
 		else
 			filltype = 2
+
 		stored_material[material] += total_material
 		total_used += total_material
-		mass_per_sheet += eating.matter[material]
+		mass_per_sheet += taking_matter[material]
+
 	if(!filltype)
 		to_chat(user, "<span class='notice'>\The [src] is full. Please remove material from the autolathe in order to insert more.</span>")
 		return
@@ -208,12 +220,11 @@
 	if(istype(eating,/obj/item/stack))
 		var/obj/item/stack/stack = eating
 		stack.use(max(1, round(total_used/mass_per_sheet))) // Always use at least 1 to prevent infinite materials.
-	else
-		user.remove_from_mob(O)
+	else if(user.unEquip(O))
+		O.loc = null
 		qdel(O)
 
 	updateUsrDialog()
-	return
 
 /obj/machinery/autolathe/attack_hand(mob/user as mob)
 	user.set_machine(src)
@@ -287,14 +298,16 @@
 				if(!src) return
 				//Create the desired item.
 				var/obj/item/I = new making.path(loc)
-				if(stack_multiplier > 1 && istype(I, /obj/item/stack))
+				if(istype(I, /obj/item/stack))
 					var/obj/item/stack/S = I
-					S.amount = stack_multiplier
-					S.update_icon()
-				//Time to prevent free materials at higher levels, 0.8 cost multiplier + 0.9 gain multiplier hmmmm yumyum spicey
-				if(!istype(I, /obj/item/stack))
-					for(var/material in I.matter)
-						I.matter[material] = round(I.matter[material] * actual_efficiency)
+					if(stack_multiplier > 1)
+						S.amount = stack_multiplier
+						S.update_icon()
+					for(var/material in I.matter) //Time to prevent free materials at higher levels, 0.8 cost multiplier + 0.9 gain multiplier hmmmm yumyum spicey
+						S.matter[material] = round(S.matter[material] * actual_efficiency)
+
+					S.update_strings() //Updates matter values for material strings.
+
 				//Fancy autolathe animation.
 				flick("autolathe_n", src)
 		spawn(longest_spawn)
@@ -316,20 +329,18 @@
 	for(var/obj/item/weapon/stock_parts/manipulator/M in component_parts)
 		man_rating += M.rating
 
-	var/material/M = get_material_by_name(DEFAULT_WALL_MATERIAL)
-	var/obj/item/stack/material/S = M.stack_type
-	storage_capacity = mb_rating * initial(S.perunit) * 15
+	storage_capacity = mb_rating * 15 SHEETS
 	build_time = 45 / man_rating
 	mat_efficiency = 1.1 - man_rating * 0.1	//You get a slight discount on items with better parts, also affects the recycling penalty of the autolathe (AKA use the recycler)
 
 /obj/machinery/autolathe/dismantle()
 	for(var/mat in stored_material)
-		var/material/M = get_material_by_name(mat)
+		var/material/M = SSmaterials.get_material_by_name(mat)
 		if(!istype(M))
 			continue
-		var/obj/item/stack/material/S = new M.stack_type(get_turf(src))
-		if(stored_material[mat] > S.perunit)
-			S.amount = round(stored_material[mat] / S.perunit)
+		var/obj/item/stack/material/S = M.place_sheet(get_turf(src), 1, M.name)
+		if(stored_material[mat] > ONE_SHEET)
+			S.set_amount(round(stored_material[mat] / ONE_SHEET))
 		else
 			qdel(S)
 	..()

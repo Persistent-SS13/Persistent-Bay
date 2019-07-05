@@ -1,18 +1,3 @@
-/obj/effect/shield_impact
-	name = "shield impact"
-	icon = 'icons/obj/machines/shielding.dmi'
-	icon_state = "shield_impact"
-	anchored = 1
-	plane = ABOVE_HUMAN_PLANE
-	layer = ABOVE_HUMAN_LAYER
-	density = 0
-
-
-/obj/effect/shield_impact/New()
-	spawn(2 SECONDS)
-		qdel(src)
-
-
 /obj/effect/shield
 	name = "energy shield"
 	desc = "An impenetrable field of energy, capable of blocking anything as long as it's active."
@@ -26,9 +11,10 @@
 	var/obj/machinery/power/shield_generator/gen = null
 	var/disabled_for = 0
 	var/diffused_for = 0
+	atmos_canpass = CANPASS_PROC
 
 
-/obj/effect/shield/update_icon()
+/obj/effect/shield/on_update_icon()
 	if(gen && gen.check_flag(MODEFLAG_PHOTONIC) && !disabled_for && !diffused_for)
 		set_opacity(1)
 	else
@@ -98,7 +84,7 @@
 
 /obj/effect/shield/proc/diffuse(var/duration)
 	// The shield is trying to counter diffusers. Cause lasting stress on the shield.
-	if(gen.check_flag(MODEFLAG_BYPASS) && !diffused_for && !disabled_for)
+	if(gen.check_flag(MODEFLAG_BYPASS) && !disabled_for)
 		take_damage(duration * rand(8, 12), SHIELD_DAMTYPE_EM)
 		return
 
@@ -132,17 +118,18 @@
 		// The closer we are to impact site, the longer it takes for shield to come back up.
 		S.fail(-(-range + get_dist(src, S)) * 2)
 
-/obj/effect/shield/proc/take_damage(var/damage, var/damtype, var/hitby)
+/obj/effect/shield/take_damage(damage, damtype, armorbypass, used_weapon, var/hitby)
 	if(!gen)
 		qdel(src)
 		return
 
 	if(!damage)
 		return
+	..(damage, damtype, armorbypass, used_weapon)
 
 	damage = round(damage)
 
-	new/obj/effect/shield_impact(get_turf(src))
+	new /obj/effect/temporary(get_turf(src), 2 SECONDS,'icons/obj/machines/shielding.dmi',"shield_impact")
 
 	var/list/field_segments = gen.field_segments
 	switch(gen.take_damage(damage, damtype))
@@ -184,8 +171,7 @@
 
 
 /obj/effect/shield/c_airblock(turf/other)
-	if(gen)
-		return gen.check_flag(MODEFLAG_ATMOSPHERIC)
+	return gen.check_flag(MODEFLAG_ATMOSPHERIC) ? BLOCKED : 0
 
 
 // EMP. It may seem weak but keep in mind that multiple shield segments are likely to be affected.
@@ -201,16 +187,16 @@
 
 
 // Fire
-/obj/effect/shield/fire_act()
+/obj/effect/shield/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)
 	if(!disabled_for)
 		take_damage(rand(5,10), SHIELD_DAMTYPE_HEAT)
 
 
 // Projectiles
 /obj/effect/shield/bullet_act(var/obj/item/projectile/proj)
-	if(proj.damage_type == BURN)
+	if(IsDamageTypeBurn(proj.damtype))
 		take_damage(proj.get_structure_damage(), SHIELD_DAMTYPE_HEAT)
-	else if (proj.damage_type == BRUTE)
+	else if (IsDamageTypeBrute(proj.damtype))
 		take_damage(proj.get_structure_damage(), SHIELD_DAMTYPE_PHYSICAL)
 	else
 		take_damage(proj.get_structure_damage(), SHIELD_DAMTYPE_EM)
@@ -223,9 +209,9 @@
 
 	if(gen.check_flag(MODEFLAG_HYPERKINETIC))
 		user.visible_message("<span class='danger'>\The [user] hits \the [src] with \the [I]!</span>")
-		if(I.damtype == BURN)
+		if(IsDamageTypeBurn(I.damtype))
 			take_damage(I.force, SHIELD_DAMTYPE_HEAT)
-		else if (I.damtype == BRUTE)
+		else if (IsDamageTypeBrute(I.damtype))
 			take_damage(I.force, SHIELD_DAMTYPE_PHYSICAL)
 		else
 			take_damage(I.force, SHIELD_DAMTYPE_EM)
@@ -310,7 +296,7 @@
 /obj/effect/meteor/shield_impact(var/obj/effect/shield/S)
 	if(!S.gen.check_flag(MODEFLAG_HYPERKINETIC))
 		return
-	S.take_damage(get_shield_damage(), SHIELD_DAMTYPE_PHYSICAL, src)
+	S.take_damage(get_shield_damage(), SHIELD_DAMTYPE_PHYSICAL, used_weapon = src)
 	visible_message("<span class='danger'>\The [src] breaks into dust!</span>")
 	make_debris()
 	qdel(src)

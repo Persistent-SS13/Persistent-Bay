@@ -3,13 +3,15 @@
 	filedesc = "Atmosphere Control"
 	nanomodule_path = /datum/nano_module/atmos_control
 	program_icon_state = "atmos_control"
+	program_key_state = "atmos_key"
 	program_menu_icon = "shuffle"
 	extended_desc = "This program allows remote control of air alarms. This program can not be run on tablet computers."
-	required_access = 999
-	requires_ntnet = 1
+	required_access = core_access_engineering_programs
+	requires_ntnet = TRUE
 	network_destination = "atmospheric control system"
 	requires_ntnet_feature = NTNET_SYSTEMCONTROL
 	usage_flags = PROGRAM_LAPTOP | PROGRAM_CONSOLE
+	category = PROG_ENG
 	size = 17
 
 /datum/nano_module/atmos_control
@@ -34,7 +36,7 @@
 
 	if(monitored_alarm_ids)
 		for(var/obj/machinery/alarm/alarm in SSmachines.machinery)
-			if(alarm.alarm_id && alarm.alarm_id in monitored_alarm_ids)
+			if(alarm.id_tag && alarm.id_tag in monitored_alarm_ids)
 				monitored_alarms += alarm
 		// machines may not yet be ordered at this point
 		monitored_alarms = dd_sortedObjectList(monitored_alarms)
@@ -61,7 +63,7 @@
 		alarms[++alarms.len] = list("name" = sanitize(alarm.name), "ref"= "\ref[alarm]", "danger" = max(alarm.danger_level, alarm.alarm_area.atmosalm))
 	data["alarms"] = alarms
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "atmos_control.tmpl", src.name, 625, 625, state = state)
 		if(host.update_layout()) // This is necessary to ensure the status bar remains updated along with rest of the UI.
@@ -82,16 +84,16 @@
 	var/obj/machinery/alarm/air_alarm					= null
 
 /datum/topic_state/air_alarm/can_use_topic(var/src_object, var/mob/user)
-	if(has_access(user))
+	if(alarm_has_access(user))
 		return STATUS_INTERACTIVE
 	return STATUS_UPDATE
 
 /datum/topic_state/air_alarm/href_list(var/mob/user)
 	var/list/extra_href = list()
 	extra_href["remote_connection"] = 1
-	extra_href["remote_access"] = has_access(user)
+	extra_href["remote_access"] = alarm_has_access(user)
 
 	return extra_href
 
-/datum/topic_state/air_alarm/proc/has_access(var/mob/user)
+/datum/topic_state/air_alarm/proc/alarm_has_access(var/mob/user)
 	return user && (isAI(user) || atmos_control.access.allowed(user) || atmos_control.emagged || air_alarm.rcon_setting == RCON_YES || (air_alarm.alarm_area.atmosalm && air_alarm.rcon_setting == RCON_AUTO))

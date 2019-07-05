@@ -6,10 +6,12 @@
 	unacidable = 1
 	simulated = 0
 	invisibility = 101
+	should_save = 1
 
 /obj/effect/persistent_spawn/after_load()
 	GLOB.latejoin_cryo |= loc
 	qdel(src)
+
 /obj/effect/landmark
 	name = "landmark"
 	icon = 'icons/mob/screen1.dmi'
@@ -19,6 +21,7 @@
 	simulated = 0
 	invisibility = 101
 	var/delete_me = 0
+	should_save = 1
 
 /obj/effect/landmark/New()
 	..()
@@ -152,7 +155,7 @@
 	delete_me = 1
 
 /obj/effect/landmark/costume/butler/New()
-	new /obj/item/clothing/accessory/wcoat(src.loc)
+	new /obj/item/clothing/accessory/wcoat/black(src.loc)
 	new /obj/item/clothing/under/suit_jacket(src.loc)
 	new /obj/item/clothing/head/that(src.loc)
 	delete_me = 1
@@ -166,7 +169,7 @@
 	delete_me = 1
 
 /obj/effect/landmark/costume/prig/New()
-	new /obj/item/clothing/accessory/wcoat(src.loc)
+	new /obj/item/clothing/accessory/wcoat/black(src.loc)
 	new /obj/item/clothing/glasses/monocle(src.loc)
 	var/CHOICE= pick( /obj/item/clothing/head/bowler, /obj/item/clothing/head/that)
 	new CHOICE(src.loc)
@@ -196,7 +199,7 @@
 /obj/effect/landmark/costume/pirate/New()
 	new /obj/item/clothing/under/pirate(src.loc)
 	new /obj/item/clothing/suit/pirate(src.loc)
-	var/CHOICE = pick( /obj/item/clothing/head/pirate , /obj/item/clothing/head/bandana )
+	var/CHOICE = pick( /obj/item/clothing/head/pirate , /obj/item/clothing/mask/bandana/red)
 	new CHOICE(src.loc)
 	new /obj/item/clothing/glasses/eyepatch(src.loc)
 	delete_me = 1

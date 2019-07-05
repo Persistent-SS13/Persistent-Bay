@@ -10,15 +10,15 @@ Pipelines + Other Objects -> Pipe network
 
 */
 /obj/machinery/atmospherics
-	anchored = 1
-	idle_power_usage = 0
-	active_power_usage = 0
-	power_channel = ENVIRON
+	plane 				= ABOVE_TURF_PLANE
+	layer				= EXPOSED_PIPE_LAYER
+	anchored 			= TRUE
+	idle_power_usage 	= 0
+	active_power_usage 	= 0
+	power_channel 		= ENVIRON
+	mass				= 10.0 //kg
 	var/nodealert = 0
 	var/power_rating //the maximum amount of power the machine can use to do work, affects how powerful the machine is, in Watts
-
-	plane = ABOVE_TURF_PLANE
-	layer = EXPOSED_PIPE_LAYER
 
 	var/connect_types = CONNECT_TYPE_REGULAR
 	var/icon_connect_type = "" //"-supply" or "-scrubbers"
@@ -33,6 +33,8 @@ Pipelines + Other Objects -> Pipe network
 	var/atmos_initalized = FALSE
 
 /obj/machinery/atmospherics/New()
+	setup_initialize_directions()
+
 	if(!icon_manager)
 		icon_manager = new()
 
@@ -43,9 +45,17 @@ Pipelines + Other Objects -> Pipe network
 	if(!pipe_color_check(pipe_color))
 		pipe_color = null
 	..()
+	ADD_SAVED_VAR(pipe_color)
+
+/obj/machinery/atmospherics/after_load()
+	. = ..()
+	setup_initialize_directions()
 
 /obj/machinery/atmospherics/proc/atmos_init()
 	atmos_initalized = TRUE
+
+/obj/machinery/atmospherics/proc/setup_initialize_directions()
+	return
 
 /obj/machinery/atmospherics/hide(var/do_hide)
 	if(do_hide && level == 1)
@@ -57,9 +67,9 @@ Pipelines + Other Objects -> Pipe network
 /obj/machinery/atmospherics/attackby(atom/A, mob/user as mob)
 	if(istype(A, /obj/item/device/pipe_painter))
 		return
-	if(istype(A, /obj/item/device/analyzer))
+	if(istype(A, /obj/item/device/scanner/gas))
 		return
-	..()
+	return ..()
 
 /obj/machinery/atmospherics/proc/add_underlay(var/turf/T, var/obj/machinery/atmospherics/node, var/direction, var/icon_connect_type)
 	if(node)
@@ -138,5 +148,5 @@ obj/machinery/atmospherics/proc/check_connect_types(obj/machinery/atmospherics/a
 /obj/machinery/atmospherics/proc/atmos_scan()
 	return null
 
-/obj/machinery/atmospherics/update_icon()
+/obj/machinery/atmospherics/on_update_icon()
 	return null

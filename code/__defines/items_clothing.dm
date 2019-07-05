@@ -21,7 +21,7 @@
 #define SLOT_HOLSTER	0x8000 //16th bit - higher than this will overflow
 
 #define ACCESSORY_SLOT_UTILITY  "Utility"
-#define ACCESSORY_SLOT_HOLSTER  "Holster"
+#define ACCESSORY_SLOT_HOLSTER	"Holster"
 #define ACCESSORY_SLOT_ARMBAND  "Armband"
 #define ACCESSORY_SLOT_RANK     "Rank"
 #define ACCESSORY_SLOT_DEPT		"Department"
@@ -33,31 +33,7 @@
 #define ACCESSORY_SLOT_ARMOR_L  "Leg armor"
 #define ACCESSORY_SLOT_ARMOR_S  "Armor storage"
 #define ACCESSORY_SLOT_ARMOR_M  "Misc armor"
-
-// Flags bitmasks.
-#define NOBLUDGEON         0x1   // When an item has this it produces no "X has been hit by Y with Z" message with the default handler.
-#define CONDUCT            0x2   // Conducts electricity. (metal etc.)
-#define ON_BORDER          0x4   // Item has priority to check when entering or leaving.
-#define NOBLOODY           0x8   // Used for items if they don't want to get a blood overlay.
-#define OPENCONTAINER      0x10  // Is an open container for chemistry purposes.
-#define PHORONGUARD        0x20  // Does not get contaminated by phoron.
-#define	NOREACT            0x40  // Reagents don't react inside this container.
-#define PROXMOVE           0x80  // Does this object require proximity checking in Enter()?
-
-//Flags for items (equipment)
-#define THICKMATERIAL          0x1  // Prevents syringes, reagent pens, and hyposprays if equiped to slot_suit or slot_head.
-#define STOPPRESSUREDAMAGE     0x2  // Counts towards pressure protection. Note that like temperature protection, body_parts_covered is considered here as well.
-#define AIRTIGHT               0x4  // Functions with internals.
-#define NOSLIP                 0x8  // Prevents from slipping on wet floors, in space, etc.
-#define BLOCK_GAS_SMOKE_EFFECT 0x10 // Blocks the effect that chemical clouds would have on a mob -- glasses, mask and helmets ONLY! (NOTE: flag shared with ONESIZEFITSALL)
-#define FLEXIBLEMATERIAL       0x20 // At the moment, masks with this flag will not prevent eating even if they are covering your face.
-#define PREMODIFIED            0x40 // Gloves that are clipped by default
-#define IS_BELT                0x80 // Items that can be worn on the belt slot, even with no undersuit equipped
-
-// Flags for pass_flags.
-#define PASSTABLE  0x1
-#define PASSGLASS  0x2
-#define PASSGRILLE 0x4
+#define ACCESSORY_SLOT_HELM_C	"Helmet cover"
 
 // Bitmasks for the flags_inv variable. These determine when a piece of clothing hides another, i.e. a helmet hiding glasses.
 // WARNING: The following flags apply only to the external suit!
@@ -115,11 +91,9 @@
 #define slot_r_ear_str      "slot_r_ear"
 #define slot_belt_str       "slot_belt"
 #define slot_shoes_str      "slot_shoes"
-#define slot_head_str      	"slot_head"
 #define slot_wear_mask_str 	"slot_wear_mask"
 #define slot_handcuffed_str "slot_handcuffed"
 #define slot_legcuffed_str "slot_legcuffed"
-#define slot_wear_mask_str 	"slot_wear_mask"
 #define slot_wear_id_str  	"slot_wear_id"
 #define slot_gloves_str  	"slot_gloves"
 #define slot_glasses_str  	"slot_glasses"
@@ -214,7 +188,13 @@
 
 // Hair Flags
 #define VERY_SHORT 0x1
-#define HAIR_TRIPPABLE 0x2
+#define HAIR_TIEABLE 0x2
+
+//flags to determine if an eyepiece is a hud.
+#define HUD_SCIENCE 0x1
+#define HUD_SECURITY 0x2
+#define HUD_MEDICAL 0x4
+#define HUD_JANITOR 0x8
 
 // Storage
 
@@ -233,22 +213,22 @@
 */
 
 var/list/default_onmob_icons = list(
-		slot_l_hand_str = 'icons/mob/items/lefthand.dmi',
-		slot_r_hand_str = 'icons/mob/items/righthand.dmi',
-		slot_belt_str = 'icons/mob/belt.dmi',
-		slot_back_str = 'icons/mob/back.dmi',
-		slot_l_ear_str = 'icons/mob/ears.dmi',
-		slot_r_ear_str = 'icons/mob/ears.dmi',
-		slot_glasses_str = 'icons/mob/eyes.dmi',
-		slot_wear_id_str = 'icons/mob/mob.dmi',
-		slot_w_uniform_str = 'icons/mob/uniform.dmi',
-		slot_wear_suit_str = 'icons/mob/suit.dmi',
-		slot_head_str = 'icons/mob/head.dmi',
-		slot_shoes_str = 'icons/mob/feet.dmi',
-		slot_wear_mask_str = 'icons/mob/mask.dmi',
-		slot_handcuffed_str = 'icons/mob/mob.dmi',
-		slot_legcuffed_str = 'icons/mob/mob.dmi',
-		slot_gloves_str = 'icons/mob/hands.dmi',
-		slot_s_store_str = 'icons/mob/belt_mirror.dmi',
-		slot_tie_str = 'icons/mob/ties.dmi'
+		slot_l_hand_str = 'icons/mob/onmob/items/lefthand.dmi',
+		slot_r_hand_str = 'icons/mob/onmob/items/righthand.dmi',
+		slot_belt_str = 'icons/mob/onmob/onmob_belt.dmi',
+		slot_back_str = 'icons/mob/onmob/onmob_back.dmi',
+		slot_l_ear_str = 'icons/mob/onmob/onmob_ears.dmi',
+		slot_r_ear_str = 'icons/mob/onmob/onmob_ears.dmi',
+		slot_glasses_str = 'icons/mob/onmob/onmob_eyes.dmi',
+		slot_wear_id_str = 'icons/mob/onmob/onmob_id.dmi',
+		slot_w_uniform_str = 'icons/mob/onmob/onmob_under.dmi',
+		slot_wear_suit_str = 'icons/mob/onmob/onmob_suit.dmi',
+		slot_head_str = 'icons/mob/onmob/onmob_head.dmi',
+		slot_shoes_str = 'icons/mob/onmob/onmob_feet.dmi',
+		slot_wear_mask_str = 'icons/mob/onmob/onmob_mask.dmi',
+		slot_handcuffed_str = 'icons/mob/onmob/onmob_cuff.dmi',
+		slot_legcuffed_str = 'icons/mob/onmob/onmob_cuff.dmi',
+		slot_gloves_str = 'icons/mob/onmob/onmob_hands.dmi',
+		slot_s_store_str = 'icons/mob/onmob/onmob_belt_mirror.dmi',
+		slot_tie_str = 'icons/mob/onmob/onmob_accessories.dmi'
 		)

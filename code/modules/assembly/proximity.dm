@@ -3,8 +3,8 @@
 	desc = "Used for scanning and alerting when someone enters a certain proximity."
 	icon_state = "prox"
 	origin_tech = list(TECH_MAGNET = 1)
-	matter = list(DEFAULT_WALL_MATERIAL = 800, "glass" = 200)
-	flags = PROXMOVE
+	matter = list(MATERIAL_STEEL = 800, MATERIAL_GLASS = 200)
+	movable_flags = MOVABLE_FLAG_PROXMOVE
 	wires = WIRE_PULSE
 
 	secured = 0
@@ -14,6 +14,13 @@
 	var/time = 10
 
 	var/range = 2
+
+/obj/item/device/assembly/prox_sensor/New()
+	. = ..()
+	ADD_SAVED_VAR(scanning)
+	ADD_SAVED_VAR(timing)
+	ADD_SAVED_VAR(time)
+	ADD_SAVED_VAR(range)
 
 /obj/item/device/assembly/prox_sensor/proc/toggle_scan()
 /obj/item/device/assembly/prox_sensor/proc/sense()
@@ -91,7 +98,7 @@
 	return
 
 
-/obj/item/device/assembly/prox_sensor/update_icon()
+/obj/item/device/assembly/prox_sensor/on_update_icon()
 	overlays.Cut()
 	attached_overlays = list()
 	if(timing)
@@ -131,8 +138,7 @@
 
 
 /obj/item/device/assembly/prox_sensor/Topic(href, href_list, state = GLOB.physical_state)
-	if(..()) return 1
-	if(!usr.canmove || usr.stat || usr.restrained() || !in_range(loc, usr))
+	if((. = ..()))
 		usr << browse(null, "window=prox")
 		onclose(usr, "prox")
 		return

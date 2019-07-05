@@ -6,6 +6,7 @@
 	allow_quick_empty = 1
 	use_to_pickup = 1
 	slot_flags = SLOT_BELT
+	icon = 'icons/obj/items/storage/bags.dmi'
 
 /obj/item/weapon/storage/bag/handle_item_insertion(obj/item/W as obj, prevent_warning = 0)
 	. = ..()
@@ -42,7 +43,7 @@
 	name = "trash bag"
 	desc = "It's the heavy-duty black polymer kind. Time to take out the trash!"
 	icon = 'icons/obj/janitor.dmi'
-	icon_state = "trashbag0"
+	icon_state = "trashbag"
 	item_state = "trashbag"
 
 	w_class = ITEM_SIZE_HUGE
@@ -51,16 +52,37 @@
 	can_hold = list() // any
 	cant_hold = list(/obj/item/weapon/disk/nuclear)
 
+/obj/item/weapon/storage/bag/can_be_inserted(obj/item/W, mob/user, stop_messages = 0)
+	if(istype(W, /mob/living/simple_animal))
+		var/mob/living/simple_animal/A = W
+		if(issmall(A))
+			return TRUE
+	. = ..()
+
+/obj/item/weapon/storage/bag/handle_item_insertion(var/W, prevent_warning = 0)
+	//Handles pest mobs, creates them a mob holder and keep going
+	var/obj/item/I = null
+	if(istype(W, /mob/living/simple_animal))
+		var/mob/living/simple_animal/A = W
+		if(issmall(A) && A.holder_type)
+			var/obj/item/weapon/holder/H = new A.holder_type(get_turf(A))
+			I = H
+	else
+		I = W //If its not an animal keep going
+
+	. = ..(I, prevent_warning)
+	if(.) update_w_class()
+
 /obj/item/weapon/storage/bag/trash/update_w_class()
 	..()
 	update_icon()
 
-/obj/item/weapon/storage/bag/trash/update_icon()
+/obj/item/weapon/storage/bag/trash/on_update_icon()
 	switch(w_class)
-		if(2) icon_state = "trashbag0"
-		if(3) icon_state = "trashbag1"
-		if(4) icon_state = "trashbag2"
-		if(5 to INFINITY) icon_state = "trashbag3"
+		if(2) icon_state = "[initial(icon_state)]"
+		if(3) icon_state = "[initial(icon_state)]1"
+		if(4) icon_state = "[initial(icon_state)]2"
+		if(5 to INFINITY) icon_state = "[initial(icon_state)]3"
 
 // -----------------------------
 //        Plastic Bag
@@ -69,7 +91,7 @@
 /obj/item/weapon/storage/bag/plasticbag
 	name = "plastic bag"
 	desc = "It's a very flimsy, very noisy alternative to a bag."
-	icon = 'icons/obj/trash.dmi'
+	icon = 'icons/obj/items/storage/bags.dmi'
 	icon_state = "plasticbag"
 	item_state = "plasticbag"
 
@@ -85,10 +107,10 @@
 
 /obj/item/weapon/storage/bag/cash
 	name = "cash bag"
-	icon = 'icons/obj/storage.dmi'
+	icon = 'icons/obj/items/storage/bags.dmi'
 	icon_state = "cashbag"
 	desc = "A bag for carrying lots of cash. It's got a big dollar sign printed on the front."
 	max_storage_space = 100
 	max_w_class = ITEM_SIZE_HUGE
 	w_class = ITEM_SIZE_SMALL
-	can_hold = list(/obj/item/weapon/coin,/obj/item/weapon/spacecash)
+	can_hold = list(/obj/item/weapon/material/coin,/obj/item/weapon/spacecash)

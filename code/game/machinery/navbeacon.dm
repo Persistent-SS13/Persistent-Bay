@@ -29,7 +29,7 @@ var/global/list/navbeacons = list()
 	set_invisibility(intact ? 101 : 0)
 	update_icon()
 
-/obj/machinery/navbeacon/update_icon()
+/obj/machinery/navbeacon/on_update_icon()
 	var/state="navbeacon[open]"
 
 	if(invisibility)
@@ -107,7 +107,7 @@ Transponder Codes:<UL>"}
 		t += "<small><A href='byond://?src=\ref[src];add=1;'>(add new)</A></small><BR>"
 		t+= "<UL></TT>"
 
-	user << browse(t, "window=navbeacon")
+	show_browser(user, t, "window=navbeacon")
 	onclose(user, "navbeacon")
 	return
 

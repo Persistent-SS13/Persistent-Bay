@@ -5,7 +5,7 @@
 //because in it's stages list, "deep cut" = 15.
 /proc/get_wound_type(var/type, var/damage)
 	switch(type)
-		if(CUT)
+		if(DAM_CUT)
 			switch(damage)
 				if(70 to INFINITY)
 					return /datum/wound/cut/massive
@@ -19,7 +19,7 @@
 					return /datum/wound/cut/deep
 				if(0 to 15)
 					return /datum/wound/cut/small
-		if(PIERCE)
+		if(DAM_PIERCE)
 			switch(damage)
 				if(60 to INFINITY)
 					return /datum/wound/puncture/massive
@@ -31,9 +31,9 @@
 					return /datum/wound/puncture/flesh
 				if(0 to 15)
 					return /datum/wound/puncture/small
-		if(BRUISE)
+		if(DAM_BLUNT)
 			return /datum/wound/bruise
-		if(BURN, LASER)
+		if(DAM_BURN, DAM_LASER, DAM_ENERGY)
 			switch(damage)
 				if(50 to INFINITY)
 					return /datum/wound/burn/carbonised
@@ -45,12 +45,28 @@
 					return /datum/wound/burn/large
 				if(0 to 15)
 					return /datum/wound/burn/moderate
+		if(DAM_SHATTER)
+			switch(damage)
+				if(50 to INFINITY)
+					return /datum/wound/shatter/smashed
+				if(40 to 50)
+					return /datum/wound/shatter/wide
+				if(30 to 40)
+					return /datum/wound/shatter/narrow
+				if(15 to 30)
+					return /datum/wound/shatter/cracked
+				if(0 to 15)
+					return /datum/wound/shatter/chipped
+
 	return null //no wound
+
+/datum/wound/proc/close()
+	return
 
 /** CUTS **/
 /datum/wound/cut
 	bleed_threshold = 5
-	damage_type = CUT
+	damage_type = DAM_CUT
 
 /datum/wound/cut/bandage()
 	..()
@@ -60,11 +76,10 @@
 /datum/wound/cut/is_surgical()
 	return autoheal_cutoff == 0
 
-/datum/wound/cut/proc/close()
+/datum/wound/cut/close()
 	current_stage = max_bleeding_stage + 1
 	desc = desc_list[current_stage]
 	min_damage = damage_list[current_stage]
-	damage = min(min_damage, damage)
 	if(damage > min_damage)
 		heal_damage(damage-min_damage)
 
@@ -136,7 +151,7 @@ datum/wound/cut/massive
 /** PUNCTURES **/
 /datum/wound/puncture
 	bleed_threshold = 10
-	damage_type = PIERCE
+	damage_type = DAM_PIERCE
 
 /datum/wound/puncture/can_worsen(damage_type, damage)
 	return 0 //puncture wounds cannot be enlargened
@@ -202,11 +217,11 @@ datum/wound/puncture/massive
 	bleed_threshold = 20
 	max_bleeding_stage = 3 //only large bruise and above can bleed.
 	autoheal_cutoff = 30
-	damage_type = BRUISE
+	damage_type = DAM_BLUNT
 
 /** BURNS **/
 /datum/wound/burn
-	damage_type = BURN
+	damage_type = DAM_BURN
 	max_bleeding_stage = 0
 
 /datum/wound/burn/bleeding()
@@ -257,23 +272,32 @@ datum/wound/puncture/massive
 /datum/wound/lost_limb/New(var/obj/item/organ/external/lost_limb, var/losstype, var/clean)
 	if(!lost_limb)
 		return
-	var/damage_amt = lost_limb.max_damage
+	var/damage_amt = lost_limb.get_max_health()
 	if(clean) damage_amt /= 2
 
 	switch(losstype)
 		if(DROPLIMB_EDGE, DROPLIMB_BLUNT)
-			damage_type = CUT
-			max_bleeding_stage = 3 //clotted stump and above can bleed.
-			stages = list(
-				"ripped stump" = damage_amt*1.3,
-				"bloody stump" = damage_amt,
-				"clotted stump" = damage_amt*0.5,
-				"scarred stump" = 0
+			damage_type = DAM_CUT
+			if(BP_IS_ROBOTIC(lost_limb))
+				max_bleeding_stage = -1
+				bleed_threshold = INFINITY
+				stages = list("mangled robotic socket" = 0)
+			else if(BP_IS_CRYSTAL(lost_limb))
+				max_bleeding_stage = -1
+				bleed_threshold = INFINITY
+				stages = list("shattered stump" = 0)
+			else
+				max_bleeding_stage = 3 //clotted stump and above can bleed.
+				stages = list(
+					"ripped stump" = damage_amt*1.3,
+					"bloody stump" = damage_amt,
+					"clotted stump" = damage_amt*0.5,
+					"scarred stump" = 0
 				)
 		if(DROPLIMB_BURN)
-			damage_type = BURN
+			damage_type = DAM_BURN
 			stages = list(
-				"ripped charred stump" = damage_amt*1.3,
+				"mangled charred stump" = damage_amt*1.3,
 				"charred stump" = damage_amt,
 				"scarred stump" = damage_amt*0.5,
 				"scarred stump" = 0
@@ -283,3 +307,37 @@ datum/wound/puncture/massive
 
 /datum/wound/lost_limb/can_merge(var/datum/wound/other)
 	return 0 //cannot be merged
+
+/** CRYSTALLINE WOUNDS **/
+/datum/wound/shatter
+	bleed_threshold = INFINITY
+	damage_type = DAM_SHATTER
+	max_bleeding_stage = -1
+
+/datum/wound/shatter/close()
+	damage = 0
+	qdel(src)
+
+/datum/wound/shatter/bleeding()
+	return FALSE
+
+/datum/wound/shatter/can_autoheal()
+	return FALSE
+
+/datum/wound/shatter/infection_check()
+	return FALSE
+
+/datum/wound/shatter/smashed
+	stages = list("shattered hole" = 0)
+
+/datum/wound/shatter/wide
+	stages = list("gaping crack" = 0)
+
+/datum/wound/shatter/narrow
+	stages = list("wide crack" = 0)
+
+/datum/wound/shatter/cracked
+	stages = list("narrow crack" = 0)
+
+/datum/wound/shatter/chipped
+	stages = list("chip" = 0)

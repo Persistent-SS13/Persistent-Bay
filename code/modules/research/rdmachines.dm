@@ -2,13 +2,12 @@
 
 //All devices that link into the R&D console fall into thise type for easy identification and some shared procs.
 
-var/list/default_material_composition = list("steel" = 0, "glass" = 0, "gold" = 0, "silver" = 0, "phoron" = 0, "uranium" = 0, "diamond" = 0)
+var/list/default_material_composition = list(MATERIAL_STEEL = 0, MATERIAL_ALUMINIUM = 0, MATERIAL_PLASTIC = 0, MATERIAL_GLASS = 0, MATERIAL_GOLD = 0, MATERIAL_SILVER = 0, MATERIAL_PHORON = 0, MATERIAL_URANIUM = 0, MATERIAL_DIAMOND = 0)
 /obj/machinery/r_n_d
 	name = "R&D Device"
 	icon = 'icons/obj/machines/research.dmi'
 	density = 1
 	anchored = 1
-	use_power = 1
 	var/busy = 0
 	var/obj/machinery/computer/rdconsole/linked_console
 
@@ -23,25 +22,18 @@ var/list/default_material_composition = list("steel" = 0, "glass" = 0, "gold" = 
 			reagents.trans_to_obj(I, reagents.total_volume)
 	for(var/f in materials)
 		if(materials[f] >= SHEET_MATERIAL_AMOUNT)
-			var/path = get_material_by_name(f)
-			if(path)
-				var/obj/item/stack/S = new path(loc)
-				S.amount = round(materials[f] / SHEET_MATERIAL_AMOUNT)
-	..()
+			new /obj/item/stack/material(loc, round(materials[f] / SHEET_MATERIAL_AMOUNT), f)
+	return ..()
 
 
 /obj/machinery/r_n_d/proc/eject(var/material, var/amount)
 	if(!(material in materials))
 		return
-	var/material/mat = get_material_by_name(material)
-	var/obj/item/stack/material/sheetType = mat.stack_type
-	var/perUnit = initial(sheetType.perunit)
-	var/eject = round(materials[material] / perUnit)
-	eject = amount == -1 ? eject : min(eject, amount)
-	if(eject < 1)
-		return
-	new sheetType(loc, eject)
-	materials[material] -= eject * perUnit
+	var/material/mat = SSmaterials.get_material_by_name(material)
+	var/eject = Clamp(round(materials[material] / mat.units_per_sheet), 0, amount)
+	if(eject > 0)
+		mat.place_sheet(loc, eject)
+		materials[material] -= eject * mat.units_per_sheet
 
 /obj/machinery/r_n_d/proc/TotalMaterials()
 	for(var/f in materials)

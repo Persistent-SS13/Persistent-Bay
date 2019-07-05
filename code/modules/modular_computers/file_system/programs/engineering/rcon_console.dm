@@ -3,14 +3,16 @@
 	filedesc = "RCON Remote Control"
 	nanomodule_path = /datum/nano_module/rcon
 	program_icon_state = "generic"
+	program_key_state = "rd_key"
 	program_menu_icon = "power"
 	extended_desc = "This program allows remote control of power distribution systems. This program can not be run on tablet computers."
 	required_access = core_access_engineering_programs
-	requires_ntnet = 1
+	requires_ntnet = TRUE
 	network_destination = "RCON remote control system"
 	requires_ntnet_feature = NTNET_SYSTEMCONTROL
 	usage_flags = PROGRAM_LAPTOP | PROGRAM_CONSOLE
 	size = 19
+	category = PROG_ENG
 
 /datum/nano_module/rcon
 	name = "Power RCON"
@@ -32,10 +34,11 @@
 		"charge" = round(SMES.Percentage()),
 		"input_set" = SMES.input_attempt,
 		"input_val" = round(SMES.input_level/1000, 0.1),
+		"input_load" = round(SMES.input_available/1000, 0.1),
 		"output_set" = SMES.output_attempt,
 		"output_val" = round(SMES.output_level/1000, 0.1),
 		"output_load" = round(SMES.output_used/1000, 0.1),
-		"RCON_tag" = SMES.RCon_tag
+		"RCON_tag" = SMES.RCon_tag,
 		)))
 
 	data["smes_info"] = sortByKey(smeslist, "RCON_tag")
@@ -45,14 +48,20 @@
 	for(var/obj/machinery/power/breakerbox/BR in known_breakers)
 		breakerlist.Add(list(list(
 		"RCON_tag" = BR.RCon_tag,
-		"enabled" = BR.on
+		"enabled" = BR.on,
 		)))
 	data["breaker_info"] = breakerlist
 	data["hide_smes"] = hide_SMES
 	data["hide_smes_details"] = hide_SMES_details
 	data["hide_breakers"] = hide_breakers
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	var/obj/O = nano_host()
+	if(!istype(O, /obj))
+		log_warning(" /datum/nano_module/rcon/ui_interact(): No host!")
+		return
+	data["faction"] = O.req_access_faction
+
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "rcon.tmpl", "RCON Console", 600, 400, state = state)
 		if(host.update_layout()) // This is necessary to ensure the status bar remains updated along with rest of the UI.
@@ -104,7 +113,6 @@
 	if(href_list["hide_breakers"])
 		hide_breakers = !hide_breakers
 
-
 // Proc: GetSMESByTag()
 // Parameters: 1 (tag - RCON tag of SMES we want to look up)
 // Description: Looks up and returns SMES which has matching RCON tag
@@ -120,12 +128,18 @@
 // Parameters: None
 // Description: Refreshes local list of known devices.
 /datum/nano_module/rcon/proc/FindDevices()
+	var/obj/O = nano_host()
+	if(!istype(O, /obj))
+		log_warning(" /datum/nano_module/rcon/proc/FindDevices(): No host!")
+		return
+	var/fac = O.req_access_faction
+
 	known_SMESs = new /list()
 	for(var/obj/machinery/power/smes/buildable/SMES in SSmachines.machinery)
-		if(SMES.RCon_tag && (SMES.RCon_tag != "NO_TAG") && SMES.RCon)
+		if(AreConnectedZLevels(get_host_z(), get_z(SMES)) && SMES.RCon_tag && (SMES.RCon_tag != "NO_TAG") && SMES.RCon && SMES.req_access_faction == fac)
 			known_SMESs.Add(SMES)
 
 	known_breakers = new /list()
 	for(var/obj/machinery/power/breakerbox/breaker in SSmachines.machinery)
-		if(breaker.RCon_tag != "NO_TAG")
+		if(AreConnectedZLevels(get_host_z(), get_z(breaker)) && breaker.RCon_tag != "NO_TAG" && breaker.req_access_faction == fac)
 			known_breakers.Add(breaker)

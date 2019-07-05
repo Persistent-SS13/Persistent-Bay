@@ -3,7 +3,7 @@
 	// Text shown when becoming this antagonist.
 	var/list/restricted_jobs = 		list()   // Jobs that cannot be this antagonist at roundstart (depending on config)
 	var/list/protected_jobs = 		list()   // As above.
-	var/list/blacklisted_jobs =		list()   // Jobs that can NEVER be this antagonist
+	var/list/blacklisted_jobs =		list(/datum/job/submap)   // Jobs that can NEVER be this antagonist
 
 	// Strings.
 	var/welcome_text = "Cry havoc and let slip the dogs of war!"
@@ -14,8 +14,7 @@
 	var/loss_feedback_tag                   // Used by the database for end of round loss.
 
 	// Role data.
-	var/id = "traitor"                      // Unique datum identifier.
-	var/role_type                           // Preferences option for this role. Defaults to the id if unset
+	var/id = "traitor"                      // Unique datum identifier. Also preferences option for this role.
 	var/role_text = "Traitor"               // special_role text.
 	var/role_text_plural = "Traitors"       // As above but plural.
 
@@ -51,6 +50,7 @@
 	var/suspicion_chance = 50               // Prob of being on the initial Command report
 	var/flags = 0                           // Various runtime options.
 	var/show_objectives_on_creation = 1     // Whether or not objectives are shown when a player is added to this antag datum
+	var/datum/antag_skill_setter/skill_setter = /datum/antag_skill_setter/generic // Used to set up skills.
 
 	// Used for setting appearance.
 	var/list/valid_species =       list(SPECIES_UNATHI,SPECIES_SKRELL,SPECIES_HUMAN,SPECIES_VOX)
@@ -80,10 +80,13 @@
 		rules aside from those without explicit exceptions apply to antagonists.</b>"
 
 /datum/antagonist/New()
+	GLOB.all_antag_types_[id] = src
+	GLOB.all_antag_spawnpoints_[landmark_id] = list()
+	GLOB.antag_names_to_ids_[role_text] = id
+	skill_setter = new skill_setter
 	..()
-	if(!role_type)
-		role_type = id
 
+/datum/antagonist/proc/Initialize()
 	cur_max = hard_cap
 	get_starting_locations()
 	if(!role_text_plural)
@@ -100,12 +103,12 @@
 	return 1
 
 // Get the raw list of potential players.
-/datum/antagonist/proc/build_candidate_list(var/ghosts_only)
+/datum/antagonist/proc/build_candidate_list(datum/game_mode/mode, ghosts_only)
 	candidates = list() // Clear.
 
 	// Prune restricted status. Broke it up for readability.
 	// Note that this is done before jobs are handed out.
-	for(var/datum/mind/player in ticker.mode.get_players_for_role(role_type, id))
+	for(var/datum/mind/player in mode.get_players_for_role(id))
 		if(ghosts_only && !(isghostmind(player) || isnewplayer(player.current)))
 			log_debug("[key_name(player)] is not eligible to become a [role_text]: Only ghosts may join as this role!")
 		else if(config.use_age_restriction_for_antags && player.current.client.player_age < minimum_player_age)
@@ -128,7 +131,7 @@
 	var/candidates = list()
 
 	// Keeping broken up for readability
-	for(var/datum/mind/player in mode.get_players_for_role(role_type, id))
+	for(var/datum/mind/player in mode.get_players_for_role(id))
 		if(ghosts_only && !(isghostmind(player) || isnewplayer(player.current)))
 		else if(config.use_age_restriction_for_antags && player.current.client.player_age < minimum_player_age)
 		else if(player.special_role)
@@ -141,41 +144,43 @@
 	return candidates
 
 /datum/antagonist/proc/attempt_random_spawn()
-	update_current_antag_max()
-	build_candidate_list(flags & (ANTAG_OVERRIDE_MOB|ANTAG_OVERRIDE_JOB))
-	attempt_spawn()
-	finalize_spawn()
+	return FALSE
+	// update_current_antag_max(SSticker.mode)
+	// build_candidate_list(SSticker.mode, flags & (ANTAG_OVERRIDE_MOB|ANTAG_OVERRIDE_JOB))
+	// attempt_spawn()
+	// finalize_spawn()
 
 /datum/antagonist/proc/attempt_auto_spawn()
-	if(!can_late_spawn())
-		return 0
+	return FALSE
+	// if(!can_late_spawn())
+	// 	return 0
 
-	update_current_antag_max()
-	var/active_antags = get_active_antag_count()
-	log_debug("[uppertext(id)]: Found [active_antags]/[cur_max] active [role_text_plural].")
+	// update_current_antag_max(SSticker.mode)
+	// var/active_antags = get_active_antag_count()
+	// message_admins("[uppertext(id)]: Found [active_antags]/[cur_max] active [role_text_plural].")
 
-	if(active_antags >= cur_max)
-		log_debug("Could not auto-spawn a [role_text], active antag limit reached.")
-		return 0
+	// if(active_antags >= cur_max)
+	// 	message_admins("Could not auto-spawn a [role_text], active antag limit reached.")
+	// 	return 0
 
-	build_candidate_list(flags & (ANTAG_OVERRIDE_MOB|ANTAG_OVERRIDE_JOB))
-	if(!candidates.len)
-		log_debug("Could not auto-spawn a [role_text], no candidates found.")
-		return 0
+	// build_candidate_list(SSticker.mode, flags & (ANTAG_OVERRIDE_MOB|ANTAG_OVERRIDE_JOB))
+	// if(!candidates.len)
+	// 	message_admins("Could not auto-spawn a [role_text], no candidates found.")
+	// 	return 0
 
-	attempt_spawn(1) //auto-spawn antags one at a time
-	if(!pending_antagonists.len)
-		log_debug("Could not auto-spawn a [role_text], none of the available candidates could be selected.")
-		return 0
+	// attempt_spawn(1) //auto-spawn antags one at a time
+	// if(!pending_antagonists.len)
+	// 	message_admins("Could not auto-spawn a [role_text], none of the available candidates could be selected.")
+	// 	return 0
 
-	var/datum/mind/player = pending_antagonists[1]
-	if(!add_antagonist(player,0,0,0,1,1))
-		log_debug("Could not auto-spawn a [role_text], failed to add antagonist.")
-		return 0
+	// var/datum/mind/player = pending_antagonists[1]
+	// if(!add_antagonist(player,0,0,0,1,1))
+	// 	message_admins("Could not auto-spawn a [role_text], failed to add antagonist.")
+	// 	return 0
 
-	reset_antag_selection()
+	// reset_antag_selection()
 
-	return 1
+	// return 1
 
 //Selects players that will be spawned in the antagonist role from the potential candidates
 //Selected players are added to the pending_antagonists lists.
@@ -199,31 +204,33 @@
 	return 1
 
 /datum/antagonist/proc/draft_antagonist(var/datum/mind/player)
-	//Check if the player can join in this antag role, or if the player has already been given an antag role.
-	if(!can_become_antag(player))
-		log_debug("[player.key] was selected for [role_text] by lottery, but is not allowed to be that role.")
-		return 0
-	if(player.special_role)
-		log_debug("[player.key] was selected for [role_text] by lottery, but they already have a special role.")
-		return 0
-	if(!(flags & ANTAG_OVERRIDE_JOB) && (!player.current || istype(player.current, /mob/new_player)))
-		log_debug("[player.key] was selected for [role_text] by lottery, but they have not joined the game.")
-		return 0
-	if(ticker.current_state >= GAME_STATE_PLAYING && (isghostmind(player) || isnewplayer(player.current)) && !(player in ticker.antag_pool))
-		log_debug("[player.key] was selected for [role_text] by lottery, but they are a ghost not in the antag pool.")
-		return 0
+	return 0
+	// //Check if the player can join in this antag role, or if the player has already been given an antag role.
+	// if(!can_become_antag(player))
+	// 	log_debug("[player.key] was selected for [role_text] by lottery, but is not allowed to be that role.")
+	// 	return 0
+	// if(player.special_role)
+	// 	log_debug("[player.key] was selected for [role_text] by lottery, but they already have a special role.")
+	// 	return 0
+	// if(!(flags & ANTAG_OVERRIDE_JOB) && (!player.current || istype(player.current, /mob/new_player)))
+	// 	log_debug("[player.key] was selected for [role_text] by lottery, but they have not joined the game.")
+	// 	return 0
+	// if(GAME_STATE >= RUNLEVEL_GAME && (isghostmind(player) || isnewplayer(player.current)) && !(player in SSticker.antag_pool))
+	// 	log_debug("[player.key] was selected for [role_text] by lottery, but they are a ghost not in the antag pool.")
+	// 	return 0
 
-	pending_antagonists |= player
-	log_debug("[player.key] has been selected for [role_text] by lottery.")
+	// pending_antagonists |= player
+	// log_debug("[player.key] has been selected for [role_text] by lottery.")
 
-	//Ensure that antags with ANTAG_OVERRIDE_JOB do not occupy job slots.
-	if(flags & ANTAG_OVERRIDE_JOB)
-		player.assigned_role = role_text
+	// //Ensure that antags with ANTAG_OVERRIDE_JOB do not occupy job slots.
+	// if(flags & ANTAG_OVERRIDE_JOB)
+	// 	player.assigned_role = role_text
+	// 	player.role_alt_title = null
 
-	//Ensure that a player cannot be drafted for multiple antag roles, taking up slots for antag roles that they will not fill.
-	player.special_role = role_text
+	// //Ensure that a player cannot be drafted for multiple antag roles, taking up slots for antag roles that they will not fill.
+	// player.special_role = role_text
 
-	return 1
+	// return 1
 
 //Spawns all pending_antagonists. This is done separately from attempt_spawn in case the game mode setup fails.
 /datum/antagonist/proc/finalize_spawn()
@@ -246,6 +253,7 @@
 /datum/antagonist/proc/reset_antag_selection()
 	for(var/datum/mind/player in pending_antagonists)
 		if(flags & ANTAG_OVERRIDE_JOB)
+			player.assigned_job = null
 			player.assigned_role = null
 		player.special_role = null
 	pending_antagonists.Cut()

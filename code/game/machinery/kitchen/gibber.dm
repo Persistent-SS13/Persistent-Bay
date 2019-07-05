@@ -6,7 +6,8 @@
 	icon_state = "grinder"
 	density = 1
 	anchored = 1
-	req_access = list(access_kitchen,access_morgue)
+	req_access = list()
+	circuit_type = /obj/item/weapon/circuitboard/gibber
 
 	var/operating = 0        //Is it on?
 	var/dirty = 0            // Does it need cleaning?
@@ -14,43 +15,38 @@
 	var/gib_time = 40        // Time from starting until meat appears
 	var/gib_throw_dir = WEST // Direction to spit meat and gibs in.
 
-	use_power = 1
 	idle_power_usage = 2
 	active_power_usage = 500
 
-/obj/machinery/gibber/autogibber/Bumped(var/atom/movable/A)
-	if(ismob(A))
-		var/mob/M = A
-		if(!(istype(A, /mob/living/carbon) && (M.stat || M.restrained()) ))
-			M.forceMove(src)
-			M.gib()
-	if(A)
-		A.forceMove(src.loc)
-
+/obj/machinery/gibber/New()
+	..()
+	ADD_SAVED_VAR(dirty)
+	ADD_SAVED_VAR(occupant)
+	ADD_SKIP_EMPTY(occupant)
 
 /obj/machinery/gibber/Initialize()
 	. = ..()
-	update_icon()
+	queue_icon_update()
 
-/obj/machinery/gibber/update_icon()
+/obj/machinery/gibber/on_update_icon()
 	overlays.Cut()
 	if (dirty)
-		src.overlays += image('icons/obj/kitchen.dmi', "grbloody")
+		src.overlays += image(icon, "grbloody")
 	if(stat & (NOPOWER|BROKEN))
 		return
 	if (!occupant)
-		src.overlays += image('icons/obj/kitchen.dmi', "grjam")
+		src.overlays += image(icon, "grjam")
 	else if (operating)
-		src.overlays += image('icons/obj/kitchen.dmi', "gruse")
+		src.overlays += image(icon, "gruse")
 	else
-		src.overlays += image('icons/obj/kitchen.dmi', "gridle")
+		src.overlays += image(icon, "gridle")
 
 /obj/machinery/gibber/relaymove(mob/user as mob)
 	src.go_out()
 	return
 
 /obj/machinery/gibber/attack_hand(mob/user as mob)
-	if(stat & (NOPOWER|BROKEN))
+	if(inoperable())
 		return
 	if(operating)
 		to_chat(user, "<span class='danger'>\The [src] is locked and running, wait for it to finish.</span>")
@@ -73,10 +69,12 @@
 		if(!G.force_danger())
 			to_chat(user, "<span class='danger'>You need a better grip to do that!</span>")
 			return
+		if(!user.unEquip(W))
+			return
 		move_into_gibber(user,G.affecting)
-		user.drop_from_inventory(G)
 	else if(istype(W, /obj/item/organ))
-		user.drop_from_inventory(W)
+		if(!user.unEquip(W))
+			return
 		qdel(W)
 		user.visible_message("<span class='danger'>\The [user] feeds \the [W] into \the [src], obliterating it.</span>")
 	else
@@ -152,7 +150,7 @@
 		visible_message("<span class='danger'>You hear a loud metallic grinding sound.</span>")
 		return
 
-	use_power(1000)
+	use_power_oneoff(1000)
 	visible_message("<span class='danger'>You hear a loud [occupant.isSynthetic() ? "metallic" : "squelchy"] grinding sound.</span>")
 	src.operating = 1
 	update_icon()
@@ -185,13 +183,12 @@
 	for(var/i=1 to slab_count)
 		var/obj/item/weapon/reagent_containers/food/snacks/meat/new_meat = new slab_type(src, rand(3,8))
 		if(istype(new_meat))
-			new_meat.name = "[slab_name] [new_meat.name]"
+			new_meat.SetName("[slab_name] [new_meat.name]")
 			new_meat.reagents.add_reagent(/datum/reagent/nutriment,slab_nutrition)
 			if(src.occupant.reagents)
 				src.occupant.reagents.trans_to_obj(new_meat, round(occupant.reagents.total_volume/slab_count,1))
 
 	admin_attack_log(user, occupant, "Gibbed the victim", "Was gibbed", "gibbed")
-	src.occupant.ghostize()
 
 	spawn(gib_time)
 
@@ -209,18 +206,6 @@
 			thing.dropInto(loc) // Attempts to drop it onto the turf for throwing.
 			thing.throw_at(get_edge_target_turf(src,gib_throw_dir),rand(0,3),emagged ? 100 : 50) // Being pelted with bits of meat and bone would hurt.
 		update_icon()
-
-
-/obj/machinery/gibber/New()
-	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/gibber(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/stack/cable_coil(src, 1)
-
-
 
 /obj/machinery/gibber/attackby(var/obj/item/O as obj, var/mob/user as mob)
 

@@ -70,22 +70,13 @@
 //Meteor spawning global procs
 ///////////////////////////////
 
-/proc/pick_meteor_start(var/startSide = pick(GLOB.cardinal))
-	var/startLevel = pick(GLOB.using_map.station_levels)
-	var/pickedstart = spaceDebrisStartLoc(startSide, startLevel)
-
-	return list(startLevel, pickedstart)
-
-/proc/spawn_meteors(var/number = 10, var/list/meteortypes, var/startSide)
+/proc/spawn_meteors(var/number = 10, var/list/meteortypes, var/startSide, var/zlevel)
 	for(var/i = 0; i < number; i++)
-		spawn_meteor(meteortypes, startSide)
+		spawn_meteor(meteortypes, startSide, zlevel)
 
-/proc/spawn_meteor(var/list/meteortypes, var/startSide)
-	var/start = pick_meteor_start(startSide)
-
-	var/startLevel = start[1]
-	var/turf/pickedstart = start[2]
-	var/turf/pickedgoal = spaceDebrisFinishLoc(startSide, startLevel)
+/proc/spawn_meteor(var/list/meteortypes, var/startSide, var/zlevel)
+	var/turf/pickedstart = spaceDebrisStartLoc(startSide, zlevel)
+	var/turf/pickedgoal = spaceDebrisFinishLoc(startSide, zlevel)
 
 	var/Me = pickweight(meteortypes)
 	var/obj/effect/meteor/M = new Me(pickedstart)
@@ -146,11 +137,12 @@
 	var/hits = 4
 	var/hitpwr = 2 //Level of ex_act to be called on hit.
 	var/dest
-	pass_flags = PASSTABLE
+	pass_flags = PASS_FLAG_TABLE
 	var/heavy = 0
 	var/z_original
-	var/meteordrop = /obj/item/weapon/ore/iron
+	var/meteordrop = /obj/item/stack/ore/iron
 	var/dropamt = 1
+	var/ismissile //missiles don't spin
 
 	var/move_count = 0
 
@@ -177,7 +169,8 @@
 
 /obj/effect/meteor/New()
 	..()
-	SpinAnimation()
+	if(!ismissile)
+		SpinAnimation()
 
 /obj/effect/meteor/Bump(atom/A)
 	..()
@@ -216,7 +209,7 @@
 		return
 	..()
 
-/obj/effect/meteor/proc/make_debris()
+/obj/effect/meteor/make_debris()
 	for(var/throws = dropamt, throws > 0, throws--)
 		var/obj/item/O = new meteordrop(get_turf(src))
 		O.throw_at(dest, 5, 10)
@@ -239,11 +232,11 @@
 /obj/effect/meteor/dust
 	name = "space dust"
 	icon_state = "dust"
-	pass_flags = PASSTABLE | PASSGRILLE
+	pass_flags = PASS_FLAG_TABLE | PASS_FLAG_GRILLE
 	hits = 1
 	hitpwr = 3
 	dropamt = 1
-	meteordrop = /obj/item/weapon/ore/glass
+	meteordrop = /obj/item/stack/ore/glass
 
 //Medium-sized
 /obj/effect/meteor/medium
@@ -272,7 +265,7 @@
 	icon_state = "flaming"
 	hits = 5
 	heavy = 1
-	meteordrop = /obj/item/weapon/ore/phoron
+	meteordrop = /obj/item/stack/ore/phoron
 
 /obj/effect/meteor/flaming/meteor_effect()
 	..()
@@ -283,31 +276,31 @@
 	name = "glowing meteor"
 	icon_state = "glowing"
 	heavy = 1
-	meteordrop = /obj/item/weapon/ore/uranium
+	meteordrop = /obj/item/stack/ore/uranium
 
 /obj/effect/meteor/irradiated/meteor_effect()
 	..()
 	explosion(src.loc, 0, 0, 4, 3, 0)
 	new /obj/effect/decal/cleanable/greenglow(get_turf(src))
-	radiation_repository.radiate(src, 50)
+	SSradiation.radiate(src, 50)
 
 /obj/effect/meteor/golden
 	name = "golden meteor"
 	icon_state = "glowing"
 	desc = "Shiny! But also deadly."
-	meteordrop = /obj/item/weapon/ore/gold
+	meteordrop = /obj/item/stack/ore/gold
 
 /obj/effect/meteor/silver
 	name = "silver meteor"
 	icon_state = "glowing_blue"
 	desc = "Shiny! But also deadly."
-	meteordrop = /obj/item/weapon/ore/silver
+	meteordrop = /obj/item/stack/ore/silver
 
 /obj/effect/meteor/emp
 	name = "conducting meteor"
 	icon_state = "glowing_blue"
 	desc = "Hide your floppies!"
-	meteordrop = /obj/item/weapon/ore/osmium
+	meteordrop = /obj/item/stack/ore/osmium
 	dropamt = 2
 
 /obj/effect/meteor/emp/meteor_effect()
@@ -327,7 +320,7 @@
 	hits = 10
 	hitpwr = 1
 	heavy = 1
-	meteordrop = /obj/item/weapon/ore/diamond	// Probably means why it penetrates the hull so easily before exploding.
+	meteordrop = /obj/item/stack/ore/diamond	// Probably means why it penetrates the hull so easily before exploding.
 
 /obj/effect/meteor/tunguska/meteor_effect()
 	..()
@@ -348,3 +341,49 @@
 
 /obj/effect/meteor/supermatter/get_shield_damage()
 	return ..() * rand(80, 120)
+
+//Missiles, for events and so on
+/obj/effect/meteor/supermatter/missile
+	name = "photon torpedo"
+	desc = "An advanded warhead designed to tactically destroy space installations."
+	icon = 'icons/obj/missile.dmi'
+	icon_state = "photon"
+	meteordrop = null
+	ismissile = TRUE
+	dropamt = 0
+
+/obj/effect/meteor/medium/missile
+	name = "missile"
+	desc = "Some kind of missile."
+	icon = 'icons/obj/missile.dmi'
+	icon_state = "missile"
+	meteordrop = null
+	ismissile = TRUE
+	dropamt = 0
+
+/obj/effect/meteor/big/missile
+	name = "high-yield missile"
+	desc = "Some kind of missile."
+	icon = 'icons/obj/missile.dmi'
+	icon_state = "missile"
+	meteordrop = null
+	ismissile = TRUE
+	dropamt = 0
+
+/obj/effect/meteor/flaming/missile
+	name = "incendiary missile"
+	desc = "Some kind of missile."
+	icon = 'icons/obj/missile.dmi'
+	icon_state = "missile"
+	meteordrop = null
+	ismissile = TRUE
+	dropamt = 0
+
+/obj/effect/meteor/emp/missile
+	name = "ion torpedo"
+	desc = "Some kind of missile."
+	icon = 'icons/obj/missile.dmi'
+	icon_state = "torpedo"
+	meteordrop = null
+	ismissile = TRUE
+	dropamt = 0

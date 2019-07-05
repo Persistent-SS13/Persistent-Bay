@@ -1,7 +1,7 @@
 #define DEBUG
 // Turf-only flags.
-#define NOJAUNT 1 // This is used in literally one place, turf.dm, to block ethereal jaunt.
-#define NORUINS 2
+#define TURF_FLAG_NOJAUNT 1 // This is used in literally one place, turf.dm, to block ethereal jaunt.
+#define TURF_FLAG_NORUINS 2
 
 #define TRANSITIONEDGE 7 // Distance from edge to move to another z-level.
 #define RUIN_MAP_EDGE_PAD 15
@@ -56,8 +56,8 @@
 
 // Setting this much higher than 1024 could allow spammers to DOS the server easily.
 #define MAX_MESSAGE_LEN       1024
-#define MAX_PAPER_MESSAGE_LEN 3072
-#define MAX_BOOK_MESSAGE_LEN  9216
+#define MAX_PAPER_MESSAGE_LEN 6144
+#define MAX_BOOK_MESSAGE_LEN  18432
 #define MAX_LNAME_LEN         64
 #define MAX_NAME_LEN          26
 #define MAX_DESC_LEN          128
@@ -69,16 +69,31 @@
 #define EVENT_LEVEL_MAJOR    3
 
 //General-purpose life speed define for plants.
-#define HYDRO_SPEED_MULTIPLIER 1
+#define HYDRO_SPEED_MULTIPLIER 0.5
 
 #define DEFAULT_JOB_TYPE /datum/job/assistant
 
 //Area flags, possibly more to come
-#define AREA_RAD_SHIELDED 1 // shielded from radiation, clearly
-#define AREA_EXTERNAL     2 // External as in exposed to space, not outside in a nice, green, forest
+#define AREA_FLAG_RAD_SHIELDED      1 // shielded from radiation, clearly
+#define AREA_FLAG_EXTERNAL          2 // External as in exposed to space, not outside in a nice, green, forest
+#define AREA_FLAG_ION_SHIELDED      4 // shielded from ionospheric anomalies as an FBP / IPC
+#define AREA_FLAG_IS_NOT_PERSISTENT 8 // SSpersistence will not track values from this area.
+
+//Map template flags
+#define TEMPLATE_FLAG_ALLOW_DUPLICATES 1 // Lets multiple copies of the template to be spawned
+#define TEMPLATE_FLAG_SPAWN_GUARANTEED 2 // Makes it ignore away site budget and just spawn (only for away sites)
+#define TEMPLATE_FLAG_CLEAR_CONTENTS   4 // if it should destroy objects it spawns on top of
+#define TEMPLATE_FLAG_NO_RUINS         8 // if it should forbid ruins from spawning on top of it
+#define TEMPLATE_FLAG_NO_RADS          16// Removes all radiation from the template after spawning.
 
 // Convoluted setup so defines can be supplied by Bay12 main server compile script.
 // Should still work fine for people jamming the icons into their repo.
+#ifndef CUSTOM_ITEM_CONFIG
+#define CUSTOM_ITEM_CONFIG "config/custom_items.txt"
+#endif
+#ifndef CUSTOM_ITEM_SYNTH_CONFIG
+#define CUSTOM_ITEM_SYNTH_CONFIG "config/custom_sprites.txt"
+#endif
 #ifndef CUSTOM_ITEM_OBJ
 #define CUSTOM_ITEM_OBJ 'icons/obj/custom_items_obj.dmi'
 #endif
@@ -91,24 +106,6 @@
 
 #define WALL_CAN_OPEN 1
 #define WALL_OPENING 2
-
-#define DEFAULT_TABLE_MATERIAL "steel"
-#define DEFAULT_WALL_MATERIAL "steel"
-
-#define SHARD_SHARD "shard"
-#define SHARD_SHRAPNEL "shrapnel"
-#define SHARD_STONE_PIECE "piece"
-#define SHARD_SPLINTER "splinters"
-#define SHARD_NONE ""
-
-#define OBJ_ANCHORABLE 0x1
-#define OBJ_CLIMBABLE 0x2
-
-#define MATERIAL_UNMELTABLE 0x1
-#define MATERIAL_BRITTLE    0x2
-#define MATERIAL_PADDING    0x4
-
-#define TABLE_BRITTLE_MATERIAL_MULTIPLIER 4 // Amount table damage is multiplied by if it is made of a brittle material (e.g. glass)
 
 #define BOMBCAP_DVSTN_RADIUS (GLOB.max_explosion_range/4)
 #define BOMBCAP_HEAVY_RADIUS (GLOB.max_explosion_range/2)
@@ -127,24 +124,33 @@
 #define NTNETSPEED_DOS_AMPLIFICATION 5	// Multiplier for Denial of Service program. Resulting load on NTNet relay is this multiplied by NTNETSPEED of the device
 
 // Program bitflags
-#define PROGRAM_ALL 15
-#define PROGRAM_CONSOLE 1
-#define PROGRAM_LAPTOP 2
-#define PROGRAM_TABLET 4
-#define PROGRAM_TELESCREEN 8
+#define PROGRAM_ALL 		0x1F
+#define PROGRAM_CONSOLE 	0x1
+#define PROGRAM_LAPTOP 		0x2
+#define PROGRAM_TABLET 		0x4
+#define PROGRAM_TELESCREEN 	0x8
+#define PROGRAM_PDA 		0x10
 
 #define PROGRAM_STATE_KILLED 0
 #define PROGRAM_STATE_BACKGROUND 1
 #define PROGRAM_STATE_ACTIVE 2
 
+#define PROG_MISC  		"Miscellaneous"
+#define PROG_ENG  		"Engineering"
+#define PROG_OFFICE  	"Office Work"
+#define PROG_COMMAND  	"Command"
+#define PROG_SUPPLY  	"Supply and Shuttles"
+#define PROG_ADMIN  	"NTNet Administration"
+#define PROG_UTIL 		"Utility"
+#define PROG_SEC 		"Security"
+#define PROG_MONITOR	"Monitoring"
+#define PROG_BUSINESS	"Business"
+#define PROG_GOVERNMENT	"Govenment"
+#define PROG_JUSTICE	"Justice"
+
 // Caps for NTNet logging. Less than 10 would make logging useless anyway, more than 500 may make the log browser too laggy. Defaults to 100 unless user changes it.
 #define MAX_NTNET_LOGS 500
 #define MIN_NTNET_LOGS 10
-
-//Affects the chance that armour will block an attack. Should be between 0 and 1.
-//If set to 0, then armor will always prevent the same amount of damage, always, with no randomness whatsoever.
-//Of course, this will affect code that checks for blocked < 100, as blocked will be less likely to actually be 100.
-#define ARMOR_BLOCK_CHANCE_MULT 1.0
 
 // Special return values from bullet_act(). Positive return values are already used to indicate the blocked level of the projectile.
 #define PROJECTILE_CONTINUE   -1 //if the projectile should continue flying after calling bullet_act()
@@ -187,7 +193,6 @@
 #define CELLS 8								//Amount of cells per row/column in grid
 #define CELLSIZE (world.icon_size/CELLS)	//Size of a cell in pixels
 
-#define WORLD_ICON_SIZE 32
 #define PIXEL_MULTIPLIER WORLD_ICON_SIZE/32
 
 #define DEFAULT_SPAWNPOINT_ID "Default"
@@ -210,7 +215,7 @@
 
 #define RADIATION_THRESHOLD_CUTOFF 0.1	// Radiation will not affect a tile when below this value.
 
-#define LEGACY_RECORD_STRUCTURE(X, Y) GLOBAL_LIST_EMPTY(##X);/datum/computer_file/data/##Y/var/list/fields[0];/datum/computer_file/data/##Y/New(){..();GLOB.##X.Add(src);}/datum/computer_file/data/##Y/Destroy(){..();GLOB.##X.Remove(src);}
+#define LEGACY_RECORD_STRUCTURE(X, Y) GLOBAL_LIST_EMPTY(##X);/datum/computer_file/data/##Y/var/list/fields[0];/datum/computer_file/data/##Y/New(){..();GLOB.##X.Add(src);}/datum/computer_file/data/##Y/Destroy(){. = ..();GLOB.##X.Remove(src);}
 
 #define EDIT_SHORTTEXT 1	// Short (single line) text input field
 #define EDIT_LONGTEXT 2		// Long (multi line, papercode tag formattable) text input field
@@ -221,3 +226,47 @@
 
 #define SUPPLY_SECURITY_ELEVATED 1
 #define SUPPLY_SECURITY_HIGH 2
+
+// secure gun authorization settings
+#define UNAUTHORIZED      0
+#define AUTHORIZED        1
+#define ALWAYS_AUTHORIZED 2
+
+// wrinkle states for clothes
+#define WRINKLES_DEFAULT	0
+#define WRINKLES_WRINKLY	1
+#define WRINKLES_NONE		2
+
+//detergent states for clothes
+#define SMELL_DEFAULT	0
+#define SMELL_CLEAN		1
+#define SMELL_STINKY	2
+
+//Shuttle mission stages
+#define SHUTTLE_MISSION_PLANNED  1
+#define SHUTTLE_MISSION_STARTED  2
+#define SHUTTLE_MISSION_FINISHED 3
+#define SHUTTLE_MISSION_QUEUED   4
+
+//Built-in email accounts
+#define EMAIL_DOCUMENTS "document.server@internal-services.net"
+#define EMAIL_SYSADMIN  "admin@internal-services.net"
+#define EMAIL_BROADCAST "broadcast@internal-services.net"
+#define EMAIL_DOMAIN_DEFAULT "freemail.net"
+
+//Number of slots a modular computer has which can be tweaked via gear tweaks.
+#define TWEAKABLE_COMPUTER_PART_SLOTS 7
+
+//Lying animation
+#define ANIM_LYING_TIME 2
+#define STOCKPROPOSAL_CEOFIRE 1
+#define STOCKPROPOSAL_CEOREPLACE 2
+#define STOCKPROPOSAL_CEOWAGE 3
+#define STOCKPROPOSAL_CEOTAX 4
+#define STOCKPROPOSAL_STOCKHOLDERTAX 5
+#define STOCKPROPOSAL_INSTANTDIVIDEND 6
+#define STOCKPROPOSAL_PUBLIC 7
+#define STOCKPROPOSAL_UNPUBLIC 8
+
+//Economic stuff
+#define DEFAULT_NEW_CHARACTER_MONEY 1000

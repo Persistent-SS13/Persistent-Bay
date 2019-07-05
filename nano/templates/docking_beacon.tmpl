@@ -41,20 +41,29 @@
 				Dimension:
 			</div>
 			<div class='itemContent'>
-				{{:helper.link('5X7', '', {'change_dimension' : '1'}, data.dimension == 1 ? 'selected' : null)}}{{:helper.link('7X7', '', {'change_dimension' : '2'}, data.dimension == 2 ? 'selected' : null)}}{{:helper.link('9X9', '', {'change_dimension' : '3'}, data.dimension == 3 ? 'selected' : null)}}
+				{{:helper.link('5X8', '', {'change_dimension' : '1'}, data.dimension == 1 ? 'selected' : null)}}{{:helper.link('7X8', '', {'change_dimension' : '2'}, data.dimension == 2 ? 'selected' : null)}}{{:helper.link('9X10', '', {'change_dimension' : '3'}, data.dimension == 3 ? 'selected' : null)}}
 			</div>
 		</div>
-		This defines the maxmimum shuttle size that can be constructed and docked at this beacon.
+		This defines the maximum shuttle size that can be constructed and docked at this beacon.
 		<div class='item'>
 			<div class='itemLabel'>
 				Visibility Mode:
 			</div>
 			<div class='itemContent'>
-				{{:helper.link('Authorized Only', '', {'set_visible' : '0'}, data.visible == 0 ? 'selected' : null)}}{{:helper.link('Visible, Restricted', '', {'set_visible' : '1'}, data.visible == 1 ? 'selected' : null)}}{{:helper.link('Any Access', '', {'set_visible' : '2'}, data.visible == 2 ? 'selected' : null)}}
+				{{:helper.link('Authorized Only', '', {'set_visible' : '0'}, data.visible == 0 ? 'selected' : null)}}{{:helper.link('Any Access', '', {'set_visible' : '1'}, data.visible == 1 ? 'selected' : null)}}
+			</div>
+		</div>
+		This defines whether the shuttle docks on a interior area or out in space.
+		<div class='item'>
+			<div class='itemLabel'>
+				Shuttle Dock:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link('Interior', '', {'set_interior' : '1'}, data.interior == 1 ? 'selected' : null)}}
+				{{:helper.link('Exterior', '', {'set_interior' : '0'}, data.interior == 0 ? 'selected' : null)}}
 			</div>
 		</div>
 		Authorized Only: Only those with proper access on the docks network can see and use the dock<br>
-		Visible, Restriced: The dock is visible but those without proper access must make a docking request and be authorized<br>
 		Any Access: The dock is visible and anyone can dock with it at any time
 		<div class='item'>
 			<div class='itemLabel'>
@@ -73,6 +82,49 @@
 			</div>
 		</div>
 		{{if data.construction}}
+			<br>
+			<h2>Shuttle Construction</h2><br><hr>
+			To construct a shuttle, you must start by building all the walls and floors.<br>
+			Make sure the construction zone has no blueprinted areas within it, it should be entirely free of gravity.<br>
+			Construct and anchor one or more shuttle engines.<br>
+			Build a single bridge computer where the shuttle will be directed from. It wont be powered until after the shuttle is finalized and you add an APC.<br>
+			And fill out all the below details, then click finalize at the very bottom.<br>
+			<div class='item'>
+				<div class='itemLabel'>
+					Starting Ownership Type:
+				</div>
+				<div class='itemContent'>
+					{{:helper.link('Organization', '', {'Organization' : '1'}, data.individual ? null : 'selected')}}{{:helper.link('Individual', '', {'individual' : '1'}, data.individual ? 'selected' : null)}}
+				</div>
+			</div>
+			{{if data.individual}}
+				<div class='item'>
+					<div class='itemLabel'>
+						Starting Owner:
+					</div>
+					<div class='itemContent'>
+						{{:data.owner}}{{:helper.link('Change', '', {'change_owner' : '1'}, null)}}
+					</div>
+				</div>
+			{{else}}
+				<div class='item'>
+					<div class='itemLabel'>
+						Starting Owner:
+					</div>
+					<div class='itemContent'>
+						{{:data.owner}}
+					</div>
+				</div>
+				Swipe a linked ID to set the organization.
+			{{/if}}
+			<div class='item'>
+				<div class='itemLabel'>
+					Shuttle Name:
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.name, '', {'change_name' : '1'}, null)}}
+				</div>
+			</div>
 			<div class='item'>
 				<div class='itemLabel'>
 					Finalize Construction:
@@ -81,7 +133,6 @@
 					{{:helper.link('Finalize', '', {'finalize' : '1'}, null)}}
 				</div>
 			</div>
-			When theirs an appropriate amount of engines and a valid bridge computer in the beacon area, you can finalize the shuttle construction here. A roof will be automatically constructed if needed after finalization.
 		{{/if}}
 	{{/if}}
 {{else}}

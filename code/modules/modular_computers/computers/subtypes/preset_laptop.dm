@@ -51,8 +51,9 @@
 	nano_printer = new/obj/item/weapon/computer_hardware/nano_printer(src)
 	battery_module = new/obj/item/weapon/computer_hardware/battery_module/nano(src)
 	battery_module.charge_to_full()
+	scanner = new /obj/item/weapon/computer_hardware/scanner/paper(src)
 
 /obj/item/modular_computer/laptop/preset/records/install_default_programs()
 	..()
-	hard_drive.store_file(new/datum/computer_file/program/records())
+//	hard_drive.store_file(new/datum/computer_file/program/records())
 	hard_drive.store_file(new/datum/computer_file/program/wordprocessor())

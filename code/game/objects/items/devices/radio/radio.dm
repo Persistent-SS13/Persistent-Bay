@@ -15,35 +15,42 @@
 	var/broadcasting = 0
 	var/listening = 1
 	var/list/channels = list() //see communications.dm for full list. First channel is a "default" for :h
+	var/list/custom_channels = list() //channels created by custom encryption keys
 	var/subspace_transmission = 0
 	var/syndie = 0//Holder to see if it's a syndicate encrypted radio
-	flags = CONDUCT
+	var/intercept = 0 //can intercept other channels
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT
 	throw_speed = 2
 	throw_range = 9
 	w_class = ITEM_SIZE_SMALL
 
-	matter = list("glass" = 25,DEFAULT_WALL_MATERIAL = 75)
+	matter = list(MATERIAL_GLASS = 25, MATERIAL_ALUMINIUM = 75)
 	var/const/FREQ_LISTENING = 1
 	var/list/internal_channels
 
+	var/obj/item/weapon/cell/device/cell = /obj/item/weapon/cell/device
+	var/power_usage = 2800
 	var/faction_uid = ""
 	var/public_mode = 1 // if this is on, the radio will send and recieve signals with no faction association
 
-/obj/item/device/radio
 	var/datum/radio_frequency/radio_connection
 	var/list/datum/radio_frequency/secure_radio_connections = new
 
-	proc/set_frequency(new_frequency)
+/obj/item/device/radio/proc/set_frequency(new_frequency)
 		radio_controller.remove_object(src, frequency)
 		frequency = new_frequency
 		radio_connection = radio_controller.add_object(src, frequency, RADIO_CHAT)
+
 /obj/item/device/radio/proc/getfaction(var/mob/user)
 	faction_uid = user.GetFaction()
 	message_admins("faction_uid:[faction_uid]")
+
 /obj/item/device/radio/Initialize()
 	. = ..()
 	wires = new(src)
+	if(ispath(cell))
+		cell = new(src)
 	internal_channels = GLOB.using_map.default_internal_channels()
 	GLOB.listening_objects += src
 
@@ -53,6 +60,8 @@
 
 	for (var/ch_name in channels)
 		secure_radio_connections[ch_name] = radio_controller.add_object(src, radiochannels[ch_name],  RADIO_CHAT)
+	for (var/ch_name in custom_channels)
+		secure_radio_connections[ch_name] = radio_controller.add_object(src, custom_channels[ch_name], RADIO_CHAT)
 
 /obj/item/device/radio/Destroy()
 	QDEL_NULL(wires)
@@ -61,6 +70,8 @@
 		radio_controller.remove_object(src, frequency)
 		for (var/ch_name in channels)
 			radio_controller.remove_object(src, radiochannels[ch_name])
+		for (var/ch_name in custom_channels)
+			radio_controller.remove_object(src, custom_channels[ch_name])
 	return ..()
 
 /obj/item/device/radio/attack_self(mob/user as mob)
@@ -83,7 +94,9 @@
 	data["speaker"] = listening
 	data["freq"] = format_frequency(frequency)
 	data["rawfreq"] = num2text(frequency)
-
+	if(cell)
+		var/charge = round(cell.percent())
+		data["charge"] = charge ? "[charge]%" : "NONE"
 	data["mic_cut"] = (wires.IsIndexCut(WIRE_TRANSMIT) || wires.IsIndexCut(WIRE_SIGNAL))
 	data["spk_cut"] = (wires.IsIndexCut(WIRE_RECEIVE) || wires.IsIndexCut(WIRE_SIGNAL))
 	var/datum/world_faction/connected_faction
@@ -102,7 +115,7 @@
 	if(syndie)
 		data["useSyndMode"] = 1
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "radio_basic.tmpl", "[name]", 400, 430)
 		ui.set_initial_data(data)
@@ -118,7 +131,12 @@
 		var/chan_stat = channels[ch_name]
 		var/listening = !!(chan_stat & FREQ_LISTENING) != 0
 
-		dat.Add(list(list("chan" = ch_name, "display_name" = ch_name, "secure_channel" = 1, "sec_channel_listen" = !listening, "chan_span" = frequency_span_class(radiochannels[ch_name]))))
+		dat.Add(list(list("chan" = ch_name, "display_name" = ch_name, "secure_channel" = 1, "custom_channel" = 0, "sec_channel_listen" = !listening, "chan_span" = frequency_span_class(radiochannels[ch_name]))))
+
+	for(var/ch_name in custom_channels)
+		var/listening = !!(FREQ_LISTENING) != 0
+
+		dat.Add(list(list("chan" = ch_name, "display_name" = ch_name, "secure_channel" = 1, "custom_channel" = 1, "sec_channel_listen" = !listening, "chan_span", "deptradio")))
 
 	return dat
 
@@ -126,7 +144,7 @@
 	var/dat[0]
 	for(var/internal_chan in internal_channels)
 		if(has_channel_access(user, internal_chan))
-			dat.Add(list(list("chan" = internal_chan, "display_name" = get_frequency_name(text2num(internal_chan)), "chan_span" = frequency_span_class(text2num(internal_chan)))))
+			dat.Add(list(list("chan" = internal_chan, "display_name" = get_frequency_default_name(text2num(internal_chan)), "chan_span" = frequency_span_class(text2num(internal_chan)))))
 
 	return dat
 
@@ -146,11 +164,8 @@
 /mob/observer/ghost/has_internal_radio_channel_access(var/list/req_one_accesses)
 	return can_admin_interact()
 
-/obj/item/device/radio/proc/text_wires()
-	if (b_stat)
-		return wires.GetInteractWindow()
-	return
-
+/obj/item/device/radio/get_cell()
+	return cell
 
 /obj/item/device/radio/proc/text_sec_channel(var/chan_name, var/chan_stat)
 	var/list = !!(chan_stat&FREQ_LISTENING)!=0
@@ -217,12 +232,20 @@
 	if(href_list["nowindow"]) // here for pAIs, maybe others will want it, idk
 		return 1
 
+	if(href_list["remove_cell"])
+		if(cell)
+			var/mob/user = usr
+			user.put_in_hands(cell)
+			to_chat(user, "<span class='notice'>You remove [cell] from \the [src].</span>")
+			cell = null
+		return 1
+
 	if(.)
-		GLOB.nanomanager.update_uis(src)
+		SSnano.update_uis(src)
 
 /obj/item/device/radio/proc/autosay(var/message, var/from, var/channel) //BS12 EDIT
 	var/datum/radio_frequency/connection = null
-	if(channel && channels && channels.len > 0)
+	if(channel && ((channels && channels.len > 0) ||(custom_channels && channels.len > 0)))
 		if (channel == "department")
 			channel = channels[1]
 		connection = secure_radio_connections[channel]
@@ -239,12 +262,20 @@
 // Interprets the message mode when talking into a radio, possibly returning a connection datum
 /obj/item/device/radio/proc/handle_message_mode(mob/living/M as mob, message, message_mode)
 	// If a channel isn't specified, send to common.
-	if(!message_mode || message_mode == "headset")
+	if(!message_mode || message_mode == MESSAGE_MODE_HEADSET)
 		return radio_connection
+
+	//Custom channels handling
+	if(custom_channels && custom_channels.len > 0 && message_mode == MESSAGE_MODE_RADIO_CUSTOM)
+		if (message_mode == MESSAGE_MODE_DEPARTMENT)
+			message_mode = custom_channels[1]
+
+		if (custom_channels[message_mode])
+			return secure_radio_connections[message_mode]
 
 	// Otherwise, if a channel is specified, look for it.
 	if(channels && channels.len > 0)
-		if (message_mode == "department") // Department radio shortcut
+		if (message_mode == MESSAGE_MODE_DEPARTMENT) // Department radio shortcut
 			message_mode = channels[1]
 
 		if (channels[message_mode]) // only broadcast if the channel is set on
@@ -253,14 +284,25 @@
 	// If we were to send to a channel we don't have, drop it.
 	return null
 
-/obj/item/device/radio/talk_into(mob/living/M as mob, message, channel, var/verb = "says", var/datum/language/speaking = null)
+/obj/item/device/radio/talk_into(mob/living/M, message, channel, var/verb = "says", var/datum/language/speaking = null)
 	if(!on) return 0 // the device has to be on
 	//  Fix for permacell radios, but kinda eh about actually fixing them.
 	if(!M || !message) return 0
 
 	if(speaking && (speaking.flags & (NONVERBAL|SIGNLANG))) return 0
 
-	if(istype(M)) M.trigger_aiming(TARGET_CAN_RADIO)
+	if (!broadcasting)
+		// Sedation chemical effect should prevent radio use (Chloral and Soporific)
+		var/mob/living/carbon/C = M
+		if ((istype(C)) && (C.chem_effects[CE_SEDATE] || C.incapacitated(INCAPACITATION_DISRUPTED)))
+			to_chat(M, SPAN_WARNING("You're unable to reach \the [src]."))
+			return 0
+		
+		if((istype(C)) && C.radio_interrupt_cooldown > world.time)
+			to_chat(M, SPAN_WARNING("You're disrupted as you reach for \the [src]."))
+			return 0
+
+		if(istype(M)) M.trigger_aiming(TARGET_CAN_RADIO)
 
 	//  Uncommenting this. To the above comment:
 	// 	The permacell radios aren't suppose to be able to transmit, this isn't a bug and this "fix" is just making radio wires useless. -Giacom
@@ -269,6 +311,17 @@
 
 	if(!radio_connection)
 		set_frequency(frequency)
+
+
+	if(power_usage)
+		if(!cell)
+			return 0
+		if(!cell.checked_use(power_usage * CELLRATE))
+			return 0
+
+	if(loc == M)
+		playsound(loc, 'sound/effects/walkietalkie.ogg', 20, 0, -1)
+
 
 	/* Quick introduction:
 		This new radio system uses a very robust FTL signaling technology unoriginally
@@ -316,7 +369,7 @@
 
 	// --- Cyborg ---
 	else if (isrobot(M))
-		jobname = "Cyborg"
+		jobname = "Robot"
 
 	// --- Personal AI (pAI) ---
 	else if (istype(M, /mob/living/silicon/pai))
@@ -371,6 +424,8 @@
 			"server" = null, // the last server to log this signal
 			"reject" = 0,	// if nonzero, the signal will not be accepted by any broadcasting machinery
 			"level" = position.z, // The source's z level
+			"channel_tag" = "[connection.frequency]", // channel tag for the message
+			"channel_color" = channel_color_presets["Menacing Maroon"], // radio message color
 			"language" = speaking,
 			"verb" = verb,
 			"faction_uid" = public_mode ? "" : faction_uid
@@ -393,8 +448,14 @@
 			R.receive_signal(signal)
 
 		// Receiving code can be located in Telecommunications.dm
-		return signal.data["done"] && position.z in signal.data["level"]
+		if(signal.data["done"] && position.z in signal.data["level"])
+			return TRUE //Huzzah, sent via subspace
 
+		else //Less huzzah, we have to fallback
+			for(var/obj/item/device/radio/R in loc)
+				if(!R.subspace_transmission)
+					return R.talk_into(M, message, channel, verb, speaking)
+			return FALSE
 
   /* ###### Intercoms and station-bounced radios ###### */
 
@@ -433,17 +494,19 @@
 		"server" = null,
 		"reject" = 0,
 		"level" = position.z,
+		"channel_tag" = "#unkn",
+		"channel_color" = channel_color_presets["Menacing Maroon"],
 		"language" = speaking,
 		"verb" = verb
 	)
 	signal.frequency = connection.frequency // Quick frequency set
-
+	if(cell && cell.percent() < 20)
+		signal.data["compression"] = max(0, 80 - cell.percent()*3)
 	for(var/obj/machinery/telecomms/receiver/R in telecomms_list)
 		if(!R.loc)
 			telecomms_list -= R
 			continue
 		R.receive_signal(signal)
-
 
 	sleep(rand(10,25)) // wait a little...
 
@@ -458,7 +521,8 @@
 	if(!connection)	return 0	//~Carn
 	return Broadcast_Message(connection, M, voicemask, pick(M.speak_emote),
 					  src, message, displayname, jobname, real_name, M.voice_name,
-					  filter_type, signal.data["compression"], GetConnectedZlevels(position.z), connection.frequency,verb,speaking, public_mode ? faction_uid : "")
+					  filter_type, signal.data["compression"], GetConnectedZlevels(position.z), connection.frequency, verb, speaking,
+					  "[connection.frequency]", channel_color_presets["Menacing Maroon"])
 
 
 /obj/item/device/radio/hear_talk(mob/M as mob, msg, var/verb = "says", var/datum/language/speaking = null)
@@ -511,7 +575,12 @@
 		if (!accept)
 			for (var/ch_name in channels)
 				var/datum/radio_frequency/RF = secure_radio_connections[ch_name]
-				if (RF.frequency==freq && (channels[ch_name]&FREQ_LISTENING))
+				if (RF && RF.frequency==freq && (channels[ch_name]&FREQ_LISTENING))
+					accept = 1
+					break
+			for (var/ch_name in custom_channels)
+				var/datum/radio_frequency/RF = secure_radio_connections[ch_name]
+				if (RF.frequency==freq && (FREQ_LISTENING))
 					accept = 1
 					break
 		if (!accept)
@@ -537,25 +606,27 @@
 /obj/item/device/radio/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	..()
 	user.set_machine(src)
-	if (!( isScrewdriver(W) ))
+	if(isScrewdriver(W))
+		b_stat = !b_stat
+		if(!istype(src, /obj/item/device/radio/beacon))
+			if (b_stat)
+				user.show_message("<span class='notice'>\The [src] can now be attached and modified!</span>")
+			else
+				user.show_message("<span class='notice'>\The [src] can no longer be modified or attached!</span>")
+			updateDialog()
+			return
+	if(!cell && power_usage && istype(W, /obj/item/weapon/cell/device) && user.unEquip(W, target = src))
+		to_chat(user, "<span class='notice'>You put [W] in \the [src].</span>")
+		cell = W
 		return
-	b_stat = !( b_stat )
-	if(!istype(src, /obj/item/device/radio/beacon))
-		if (b_stat)
-			user.show_message("<span class='notice'>\The [src] can now be attached and modified!</span>")
-		else
-			user.show_message("<span class='notice'>\The [src] can no longer be modified or attached!</span>")
-		updateDialog()
-			//Foreach goto(83)
-		add_fingerprint(user)
-		return
-	else return
 
 /obj/item/device/radio/emp_act(severity)
 	broadcasting = 0
 	listening = 0
 	for (var/ch_name in channels)
 		channels[ch_name] = 0
+	if(cell)
+		cell.emp_act(severity)
 	..()
 
 /obj/item/device/radio/proc/recalculateChannels()
@@ -574,6 +645,13 @@
 	icon_state = "radio"
 	canhear_range = 0
 	subspace_transmission = 1
+	cell = null
+	power_usage = 0
+
+/obj/item/device/radio/borg/after_load()
+	..()
+	if(!myborg && istype(loc, /mob/living))
+		myborg = loc
 
 /obj/item/device/radio/borg/ert
 	keyslot = /obj/item/device/encryptionkey/ert
@@ -619,13 +697,12 @@
 			for(var/ch_name in channels)
 				radio_controller.remove_object(src, radiochannels[ch_name])
 				secure_radio_connections[ch_name] = null
-
+			for(var/ch_name in custom_channels)
+				radio_controller.remove_object(src, custom_channels[ch_name])
+				secure_radio_connections[ch_name] = null
 
 			if(keyslot)
-				var/turf/T = get_turf(user)
-				if(T)
-					keyslot.loc = T
-					keyslot = null
+				keyslot.dropInto(user.loc)
 
 			recalculateChannels()
 			to_chat(user, "You pop out the encryption key in the radio!")
@@ -639,13 +716,11 @@
 			return
 
 		if(!keyslot)
-			user.drop_item()
-			W.loc = src
+			if(!user.unEquip(W, src))
+				return
 			keyslot = W
 
 		recalculateChannels()
-
-	return
 
 /obj/item/device/radio/borg/recalculateChannels()
 	src.channels = list()
@@ -670,10 +745,18 @@
 
 	for (var/ch_name in src.channels)
 		if(!radio_controller)
-			src.name = "broken radio"
+			src.SetName("broken radio")
 			return
 
 		secure_radio_connections[ch_name] = radio_controller.add_object(src, radiochannels[ch_name],  RADIO_CHAT)
+
+	for (var/ch_name in src.custom_channels)
+		if(!radio_controller)
+			src.name = "broken radio"
+			return
+
+		secure_radio_connections[ch_name] = radio_controller.add_object(src, custom_channels[ch_name],  RADIO_CHAT)
+
 
 /obj/item/device/radio/borg/Topic(href, href_list)
 	if(..())
@@ -689,6 +772,7 @@
 
 			if(subspace_transmission == 0)//Simple as fuck, clears the channel list to prevent talking/listening over them if subspace transmission is disabled
 				channels = list()
+				custom_channels = list()
 			else
 				recalculateChannels()
 		. = 1
@@ -705,7 +789,7 @@
 		. = 1
 
 	if(.)
-		GLOB.nanomanager.update_uis(src)
+		SSnano.update_uis(src)
 
 /obj/item/device/radio/borg/interact(mob/user as mob)
 	if(!on)
@@ -734,7 +818,7 @@
 	data["has_subspace"] = 1
 	data["subspace"] = subspace_transmission
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "radio_basic.tmpl", "[name]", 400, 430)
 		ui.set_initial_data(data)
@@ -744,11 +828,15 @@
 	if(radio_controller)
 		for (var/ch_name in channels)
 			radio_controller.remove_object(src, radiochannels[ch_name])
+		for (var/ch_name in custom_channels)
+			radio_controller.remove_object(src, custom_channels[ch_name])
 	secure_radio_connections = new
 	channels = op
 	if(radio_controller)
 		for (var/ch_name in op)
 			secure_radio_connections[ch_name] = radio_controller.add_object(src, radiochannels[ch_name],  RADIO_CHAT)
+		for (var/ch_name in custom_channels)
+			secure_radio_connections[ch_name] = radio_controller.add_object(src, custom_channels[ch_name], RADIO_CHAT)
 	return
 
 /obj/item/device/radio/off
@@ -758,7 +846,11 @@
 	invisibility = 101
 	listening = 0
 	canhear_range = 0
-	channels=list("Engineering" = 1, "Security" = 1, "Medical" = 1, "Command" = 1, "Common" = 1, "Science" = 1, "Supply" = 1, "Service" = 1, "Exploration" = 1)
+	anchored = 1
+	simulated = 0
+	power_usage = 0
+	channels=list("Engineering" = 1, "Security" = 1, "Medical" = 1, "Command" = 1, "Common" = 1, "Science" = 1, "Supply" = 1, "Service" = 1, "Exploration" = 1, "Trauma Response" = 1)
+	cell = null
 
 /obj/item/device/radio/announcer/Destroy()
 	crash_with("attempt to delete a [src.type] detected, and prevented.")
@@ -786,7 +878,21 @@
 	..()
 	internal_channels = GLOB.default_medbay_channels.Copy()
 
+/obj/item/device/radio/phone/police
+	color = COLOR_GREEN
+	frequency = SEC_I_FREQ
+/obj/item/device/radio/phone/police/New()
+	..()
+	internal_channels = GLOB.default_sec_channels.Copy()
+
 /obj/item/device/radio/CouldUseTopic(var/mob/user)
 	..()
 	if(istype(user, /mob/living/carbon))
 		playsound(src, "button", 10)
+
+/obj/item/device/radio/intercept
+	name = "bulky radio"
+	desc = "A large radio fitted with several military-grade communication interception circuits."
+	icon_state = "radio"
+	intercept = 1
+	w_class = ITEM_SIZE_NORMAL

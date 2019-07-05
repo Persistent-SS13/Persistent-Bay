@@ -2,12 +2,13 @@
 	filename = "revelation"
 	filedesc = "Revelation"
 	program_icon_state = "hostile"
+	program_key_state = "security_key"
 	program_menu_icon = "home"
 	extended_desc = "This virus can destroy hard drive of system it is executed on. It may be obfuscated to look like another non-malicious program. Once armed, it will destroy the system upon next execution."
 	size = 13
-	requires_ntnet = 0
-	available_on_ntnet = 0
-	available_on_syndinet = 1
+	requires_ntnet = FALSE
+	available_on_ntnet = FALSE
+	available_on_syndinet = TRUE
 	nanomodule_path = /datum/nano_module/program/revelation/
 	var/armed = 0
 
@@ -73,7 +74,7 @@
 
 	data["armed"] = PRG.armed
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "revelation.tmpl", "Revelation Virus", 400, 250, state = state)
 		ui.auto_update_layout = 1

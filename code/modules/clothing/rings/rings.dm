@@ -3,7 +3,7 @@
 /obj/item/clothing/ring/engagement
 	name = "engagement ring"
 	desc = "An engagement ring. It certainly looks expensive."
-	icon_state = "diamond"
+	icon_state = MATERIAL_DIAMOND
 
 /obj/item/clothing/ring/engagement/attack_self(mob/user)
 	user.visible_message("<span class='warning'>\The [user] gets down on one knee, presenting \the [src].</span>","<span class='warning'>You get down on one knee, presenting \the [src].</span>")
@@ -42,12 +42,13 @@
 //Reagent Rings
 
 /obj/item/clothing/ring/reagent
-	flags = OPENCONTAINER
+	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 	origin_tech = list(TECH_MATERIAL = 2, TECH_ILLEGAL = 4)
 
-/obj/item/clothing/ring/reagent/New()
-	..()
-	create_reagents(15)
+/obj/item/clothing/ring/reagent/Initialize()
+	. = ..()
+	if(!reagents)
+		create_reagents(15)
 
 /obj/item/clothing/ring/reagent/equipped(var/mob/living/carbon/human/H)
 	..()
@@ -68,28 +69,30 @@
 	icon_state = "material"
 	origin_tech = list(TECH_MATERIAL = 2, TECH_ILLEGAL = 5)
 
-/obj/item/clothing/ring/reagent/sleepy/New()
-	..()
-	reagents.add_reagent(/datum/reagent/chloralhydrate, 15) // Less than a sleepy-pen, but still enough to knock someone out
+/obj/item/clothing/ring/reagent/sleepy/Initialize()
+	. = ..()
+	if(!reagents)
+		reagents.add_reagent(/datum/reagent/chloralhydrate, 15) // Less than a sleepy-pen, but still enough to knock someone out
 
 /////////////////////////////////////////
 //Seals and Signet Rings
+
+/obj/item/clothing/ring/seal/
+	icon = 'icons/obj/clothing/obj_hands_ring.dmi'
+
 /obj/item/clothing/ring/seal/secgen
 	name = "Secretary-General's official seal"
 	desc = "The official seal of the Secretary-General of the Sol Central Government, featured prominently on a silver ring."
-	icon = 'icons/obj/clothing/rings.dmi'
 	icon_state = "seal-secgen"
 
 /obj/item/clothing/ring/seal/mason
 	name = "masonic ring"
 	desc = "The Square and Compasses feature prominently on this Masonic ring."
-	icon = 'icons/obj/clothing/rings.dmi'
 	icon_state = "seal-masonic"
 
 /obj/item/clothing/ring/seal/signet
 	name = "signet ring"
 	desc = "A signet ring, for when you're too sophisticated to sign letters."
-	icon = 'icons/obj/clothing/rings.dmi'
 	icon_state = "seal-signet"
 	var/nameset = 0
 

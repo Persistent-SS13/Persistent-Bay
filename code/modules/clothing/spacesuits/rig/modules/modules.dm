@@ -13,7 +13,7 @@
 	desc = "It looks pretty sciency."
 	icon = 'icons/obj/rig_modules.dmi'
 	icon_state = "module"
-	matter = list(DEFAULT_WALL_MATERIAL = 20000, "plastic" = 30000, "glass" = 5000)
+	matter = list(MATERIAL_STEEL = 20000, MATERIAL_PLASTIC = 30000, MATERIAL_GLASS = 5000)
 
 	var/damage = 0
 	var/obj/item/weapon/rig/holder
@@ -95,7 +95,7 @@
 				return
 
 		var/obj/item/stack/cable_coil/cable = W
-		if(!cable.amount >= 5)
+		if(!cable.can_use(5))
 			to_chat(user, "You need five units of cable to repair \the [src].")
 			return
 
@@ -110,7 +110,7 @@
 	..()
 
 /obj/item/rig_module/Initialize()
-	. = ..()
+	. =..()
 	if(suit_overlay_inactive)
 		suit_overlay = suit_overlay_inactive
 
@@ -144,8 +144,7 @@
 	holder = new_holder
 	return
 
-//Proc for one-use abilities like teleport.
-/obj/item/rig_module/proc/engage()
+/obj/item/rig_module/proc/check()
 
 	if(damage >= 2)
 		to_chat(usr, "<span class='warning'>The [interface_name] is damaged beyond use!</span>")
@@ -174,8 +173,15 @@
 	if(!holder.check_power_cost(usr, use_power_cost, 0, src, (istype(usr,/mob/living/silicon ? 1 : 0) ) ) )
 		return 0
 
-	next_use = world.time + module_cooldown
+	return 1
 
+//Proc for one-use abilities like teleport.
+/obj/item/rig_module/proc/engage()
+
+	if(!check())
+		return 0
+
+	next_use = world.time + module_cooldown
 	return 1
 
 // Proc for toggling on active abilities.
@@ -186,12 +192,11 @@
 
 	active = 1
 
-	spawn(1)
-		if(suit_overlay_active)
-			suit_overlay = suit_overlay_active
-		else
-			suit_overlay = null
-		holder.update_icon()
+	if(suit_overlay_active)
+		suit_overlay = suit_overlay_active
+	else
+		suit_overlay = null
+	holder.update_icon()
 
 	return 1
 
@@ -203,14 +208,35 @@
 
 	active = 0
 
-	spawn(1)
-		if(suit_overlay_inactive)
-			suit_overlay = suit_overlay_inactive
-		else
-			suit_overlay = null
-		if(holder)
+	if(suit_overlay_inactive)
+		suit_overlay = suit_overlay_inactive
+	else
+		suit_overlay = null
+	if(holder)
+		holder.update_icon()
+
+	return 1
+
+//Proc for selecting module
+/obj/item/rig_module/proc/select()
+
+	if(!check())
+		return 0
+
+	for (var/obj/item/rig_module/M in holder.installed_modules)
+		if(M.selectable)
+			if(M.suit_overlay_inactive)
+				M.suit_overlay = M.suit_overlay_inactive
+			else
+				M.suit_overlay = null
 			holder.update_icon()
 
+	holder.selected_module = src
+	if(suit_overlay_active)
+		suit_overlay = suit_overlay_active
+	else
+		suit_overlay = null
+	holder.update_icon()
 	return 1
 
 // Called when the module is uninstalled from a suit.
@@ -243,11 +269,9 @@
 		var/cell_status = R.cell ? "[R.cell.charge]/[R.cell.maxcharge]" : "ERROR"
 		stat("Suit charge", cell_status)
 		for(var/obj/item/rig_module/module in R.installed_modules)
-		{
 			for(var/stat_rig_module/SRM in module.stat_modules)
 				if(SRM.CanUse())
 					stat(SRM.module.interface_name,SRM)
-		}
 
 /stat_rig_module
 	parent_type = /atom/movable
@@ -301,6 +325,7 @@
 			name += " ([module.passive_power_cost*10]P)"
 
 		module_mode = "deactivate"
+
 /stat_rig_module/deactivate/after_load()
 	..()
 	if(module)
@@ -320,6 +345,7 @@
 		if(module.use_power_cost)
 			name += " ([module.use_power_cost*10]E)"
 		module_mode = "engage"
+
 /stat_rig_module/engage/after_load()
 	..()
 	if(module)
@@ -327,6 +353,7 @@
 		if(module.use_power_cost)
 			name += " ([module.use_power_cost*10]E)"
 		module_mode = "engage"
+
 /stat_rig_module/engage/CanUse()
 	return module.usable
 

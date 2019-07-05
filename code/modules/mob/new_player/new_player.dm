@@ -9,44 +9,45 @@
 	var/datum/browser/load_panel
 	var/show_invalid_jobs = 0
 	universal_speak = 1
-
+	should_save = 0
 	invisibility = 101
 
 	density = 0
 	stat = DEAD
-	canmove = 0
 
+	movement_handlers = list()
 	anchored = 1	//  don't get pushed around
 
 	virtual_mob = null // Hear no evil, speak no evil
 
 	// Persitent Edit, chosen slot
 	var/chosen_slot = 0
+
 /mob/new_player/New()
 	..()
-	verbs += /mob/proc/toggle_antag_pool
+	//verbs += /mob/proc/toggle_antag_pool //no antags
 
-/mob/new_player/verb/new_player_panel()
-	set src = usr
-	new_player_panel_proc()
+/mob/new_player/proc/new_player_panel(force = TRUE)
+	if(!SScharacter_setup.initialized && !force)
+		return // Not ready yet.
 
-/mob/new_player/proc/new_player_panel_proc()
-	var/output = "<div align='center'>"
-	output +="<hr>"
-	output += "<p><a href='byond://?src=\ref[src];show_preferences=1'>Create A New Character</A></p>"
-
-	if(!ticker || ticker.current_state <= GAME_STATE_PREGAME)
-		if(ready)
-			output += "<p>\[ <span class='linkOn'><b>Ready</b></span> | <a href='byond://?src=\ref[src];ready=0'>Not Ready</a> \]</p>"
-		else
-			output += "<p>\[ <a href='byond://?src=\ref[src];ready=1'>Ready</a> | <span class='linkOn'><b>Not Ready</b></span> \]</p>"
+	var/output = list()
+	output += "<div align='center'><hr><br>"
+	if(GAME_STATE < RUNLEVEL_GAME)
+		output += "<span class='average'><b>The Game Is Loading!</b></span><br><br>"
 
 	else
-		output += "<a href='byond://?src=\ref[src];manifest=1'>View the Crew Manifest</A><br><br>"
-		output += "<p><a href='byond://?src=\ref[src];late_join=1'>Join Game!</A></p>"
+		output += "<a href='byond://?src=\ref[src];createCharacter=1'>Create A New Character</a><br><br>"
+		output += "<a href='byond://?src=\ref[src];deleteCharacter=1'>Delete A Character</a><br><br>"
+		output += "<a href='byond://?src=\ref[src];joinGame=1'>Join Game!</a><br><br>"
+		output += "<a href='byond://?src=\ref[src];importCharacter=1'>Import Prior Character</a><br><br>"
+	output += "<a href='https://discord.gg/53YgfNU'target='_blank'>Join Discord</a><br><br>"
+	output += "<a href='byond://?src=\ref[src];linkDiscord=1'>Link Discord Account</a><br><br>"
+	if(check_rights(R_DEBUG, 0, client))
+		output += "<a href='byond://?src=\ref[src];observeGame=1'>Observe</a><br><br>"
+	output += "<a href='byond://?src=\ref[src];refreshPanel=1'>Refresh</a><br><br>"
+	//output += "<a href='byond://?src=\ref[src];show_preferences=1'>Preferences</a><br><br>"
 
-//	output += "<p><a href='byond://?src=\ref[src];observe=1'>Observe</A></p>"
-	output += "<br><p><a href='byond://?src=\ref[src];delete_char=1'>Delete a Character</A></p>"
 	if(!IsGuestKey(src.key))
 		establish_db_connection()
 		if(dbcon.IsConnected())
@@ -67,236 +68,113 @@
 
 	output += "</div>"
 
-	panel = new(src, "Persistent SS13","Persistent SS13", 210, 300, src)
+	panel = new(src, "Persistent SS13","Persistent SS13", 250, 400, src)
 	panel.set_window_options("can_close=0")
-	panel.set_content(output)
+	panel.set_content(JOINTEXT(output))
 	panel.open()
-	return
-
-/mob/new_player/proc/slot_select_load()
-	for(var/mob/loaded_mob in SSmobs.mob_list)
-		if(loaded_mob.type != /mob/new_player && loaded_mob.saved_ckey == ckey && get_turf(loaded_mob))
-			if(ticker.current_state <= GAME_STATE_PREGAME)
-				to_chat(src, "A character is already in game, selecting on start")
-				ready = 1
-				close_spawn_windows()
-				new_player_panel_proc()
-				return 0
-			else
-				close_spawn_windows()
-				loaded_mob.ckey = ckey
-				loaded_mob.saved_ckey = ""
-				sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1)) // MAD JAMS cant last forever yo
-				qdel(src)
-				return 0
-	var/mob/user = src
-	var/slots = config.character_slots
-	if(check_rights(R_ADMIN, 0, client))
-		slots += 2
-	slots += client.prefs.bonus_slots
-	if(!client.prefs.character_list || (client.prefs.character_list.len < slots))
-		client.prefs.load_characters()
-		sleep(20)
-		return slot_select_load()
-	var/dat  = list()
-	dat += "<body>"
-	dat += "<tt><center>"
-	dat += "<b>Select the character you want to load</b><hr>"
-	var/ind = 0
-	for(var/x in client.prefs.character_list)
-		ind++
-		var/mob/M = x
-		if(istype(M))
-			var/icon/ico = client.prefs.get_preview_icon(M)
-			user << browse_rsc(ico, "[ind]preview.png")
-			dat += "<center><img src=[ind]preview.png width=[ico.Width()] height=[ico.Height()]></center><br>"
-			dat += "<b><a href='?src=\ref[src];pickslot_load=[ind]'>[M.real_name]</a></b><hr>"
-		else
-			dat += "Open Slot [ind]<hr>"
-	dat += "<hr>"
-	dat += "</center></tt>"
-	load_panel = new(user, "Character Slots", "Character Slots", 300, 500, src)
-	load_panel.set_content(jointext(dat,null))
-	load_panel.open()
-/mob/new_player/proc/slot_select_delete()
-	var/mob/user = src
-	var/slots = config.character_slots
-	if(check_rights(R_ADMIN, 0, client))
-		slots += 2
-	slots += client.prefs.bonus_slots
-	if(!client.prefs.character_list || (client.prefs.character_list.len < slots))
-		client.prefs.load_characters()
-
-	var/dat  = list()
-	dat += "<body>"
-	dat += "<tt><center>"
-	dat += "<b>Select the character you want to delete</b><hr>"
-	var/ind = 0
-	for(var/x in client.prefs.character_list)
-		ind++
-		var/mob/M = x
-		if(istype(M))
-			var/icon/ico = client.prefs.get_preview_icon(M)
-			user << browse_rsc(ico, "[ind]preview.png")
-			dat += "<center><img src=[ind]preview.png width=[ico.Width()] height=[ico.Height()]></center><br>"
-			dat += "<b><a href='?src=\ref[src];pickslot_delete=[ind]'>[M.real_name]</a></b><hr>"
-		else
-			dat += "Open Slot [ind]<hr>"
-	dat += "<hr>"
-	dat += "</center></tt>"
-	load_panel = new(user, "Character Slots", "Character Slots", 300, 500, src)
-	load_panel.set_content(jointext(dat,null))
-	load_panel.open()
 
 /mob/new_player/Stat()
 	. = ..()
 
-	if(statpanel("Lobby") && ticker)
-		if(check_rights(R_INVESTIGATE, 0, src))
-			stat("Game Mode:", "[ticker.mode || master_mode][ticker.hide_mode ? " (Secret)" : ""]")
-		else
-			stat("Game Mode:", PUBLIC_GAME_MODE)
-		var/extra_antags = list2params(additional_antag_types)
-		stat("Added Antagonists:", extra_antags ? extra_antags : "None")
+	if(statpanel("Lobby"))
+		stat("Players : [GLOB.player_list.len]")
 
-		if(ticker.current_state == GAME_STATE_PREGAME)
-			stat("Time To Start:", "[ticker.pregame_timeleft][round_progressing ? "" : " (DELAYED)"]")
-			stat("Players: [totalPlayers]", "Players Ready: [totalPlayersReady]")
-			totalPlayers = 0
-			totalPlayersReady = 0
-			for(var/mob/new_player/player in GLOB.player_list)
-				var/highjob
-				if(player.client && player.client.prefs && player.client.prefs.job_high)
-					highjob = " as [player.client.prefs.job_high]"
-				stat("[player.key]", (player.ready)?("(Playing[highjob])"):(null))
-				totalPlayers++
-				if(player.ready)totalPlayersReady++
+/mob/proc/after_spawn()
+	after_load()
+	for(var/datum/D in recursive_content_check(src, client_check = FALSE, sight_check = FALSE, include_mobs = TRUE))
+		D.after_load()
+	return
+
+/mob/living/carbon/lace/after_spawn()
+	..()
+	if(container2)
+		container2.loc = loc
+		loc = container
+		if(client)
+			client.perspective = EYE_PERSPECTIVE
+			client.eye = container
+	else if(container)
+		container.loc = loc
+		loc = container
+		if(client)
+			client.perspective = EYE_PERSPECTIVE
+			client.eye = container
 
 /mob/new_player/Topic(href, href_list[])
 	if(!client)	return 0
 
-	if(href_list["show_preferences"])
-		client.prefs.slot_select(src)
+	if(href_list["createCharacter"])
+		newCharacterPanel()
 		return 0
-	if(href_list["pickslot_load"])
-		src << browse(null, "window=saves")
-		chosen_slot = text2num(href_list["pickslot_load"])
-		var/mob/M = client.prefs.character_list[chosen_slot]
-		for(var/mob/mobbie in GLOB.all_cryo_mobs)
-			if(mobbie.real_name == M.real_name)
-				client.prefs.character_list[chosen_slot] = mobbie
-		load_panel.close()
-		panel.close()
-		if(ticker.current_state <= GAME_STATE_PREGAME)
-			ready = 1
-			load_panel.close()
-			new_player_panel_proc()
-		else
-			close_spawn_windows()
-			AttemptLateSpawn()
-		return 0
-	if(href_list["pickslot_delete"])
 
-		chosen_slot = text2num(href_list["pickslot_delete"])
-		var/mob/M = client.prefs.character_list[chosen_slot]
-		if(input("Are you SURE you want to delete [M.real_name]. THIS IS PERMANENT. Enter the characters full name to confirm","DELETE A CHARACTER","") == M.real_name)
-			src << browse(null, "window=saves")
-			for(var/mob/mobbie in GLOB.all_cryo_mobs)
-				if(mobbie.real_name == M.real_name)
-					GLOB.all_cryo_mobs -= mobbie
-					qdel(mobbie)
-			client.prefs.delete_character(chosen_slot)
-			load_panel.close()
+	if(href_list["joinGame"])
+		selectCharacterPanel("load")
 		return 0
-	if(href_list["ready"])
-		ready = text2num(href_list["ready"])
-		slot_select_load()
+	if(href_list["linkDiscord"])
+		client.link_discord()
+	if(href_list["crewManifest"])
+		crewManifestPanel()
 		return 0
-	//	if(!ticker || ticker.current_state <= GAME_STATE_PREGAME) // Make sure we don't ready up after the round has started
-	//		ready = text2num(href_list["ready"])
-	//	else
-	//		ready = 0
+
+	if(href_list["observeGame"])
+		observeGame()
+		return 0
+
+	if(href_list["deleteCharacter"])
+		selectCharacterPanel("delete")
+		return 0
 
 	if(href_list["refresh"])
 		panel.close()
-		new_player_panel_proc()
+		new_player_panel()
+
+	if(href_list["importSlot"])
+		chosen_slot = text2num(href_list["importSlot"])
+		ImportCharacter()
+		load_panel?.close()
+	if(href_list["importCharacter"])
+		selectImportPanel()
+	if(href_list["pickSlot"])
+		chosen_slot = text2num(copytext(href_list["pickSlot"], 1, 2))
+		client.prefs.chosen_slot = chosen_slot
+		load_panel?.close()
+		switch(copytext(href_list["pickSlot"], 2))
+			if("create")
+				client.prefs.randomize_appearance_and_body_for()
+				client.prefs.real_name = null
+				client.prefs.preview_icon = null
+				// client.prefs.home_system = null
+				client.prefs.faction = null
+				client.prefs.selected_under = null
+				client.prefs.sanitize_preferences()
+				client.prefs.ShowChoices(src)
+			if("load")
+				loadCharacter()
+			if("delete")
+				deleteCharacter()
 		return 0
-	if(href_list["observe"])
-		if(!(initialization_stage&INITIALIZATION_COMPLETE))
-			to_chat(src, "<span class='warning'>Please wait for server initialization to complete...</span>")
-			return
 
-		if(!config.respawn_delay || client.holder || alert(src,"Are you sure you wish to observe? You will have to wait [config.respawn_delay] minute\s before being able to respawn!","Player Setup","Yes","No") == "Yes")
-			if(!client)	return 1
-			var/mob/observer/ghost/observer = new()
-
-			spawning = 1
-			sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1))// MAD JAMS cant last forever yo
-
-
-			observer.started_as_observer = 1
-			close_spawn_windows()
-
-			if(GLOB.cryopods.len)
-				var/obj/O = pick(GLOB.cryopods)
-				to_chat(src, "<span class='notice'>Now teleporting.</span>")
-				observer.forceMove(get_step(O.loc, O.dir))
-			else
-				to_chat(src, "<span class='danger'>Could not locate an observer spawn point. Use the Teleport verb to jump to the map.</span>")
-			observer.timeofdeath = world.time // Set the time of death so that the respawn timer works correctly.
-
-			if(isnull(client.holder))
-				announce_ghost_joinleave(src)
-
-			var/mob/living/carbon/human/dummy/mannequin = new()
-			client.prefs.dress_preview_mob(mannequin)
-			observer.set_appearance(mannequin)
-			qdel(mannequin)
-
-			if(client.prefs.be_random_name)
-				client.prefs.real_name = random_name(client.prefs.gender)
-			observer.real_name = client.prefs.real_name
-			observer.name = observer.real_name
-			if(!client.holder && !config.antag_hud_allowed)           // For new ghosts we remove the verb from even showing up if it's not allowed.
-				observer.verbs -= /mob/observer/ghost/verb/toggle_antagHUD        // Poor guys, don't know what they are missing!
-			observer.key = key
-			qdel(src)
-
-			return 1
-
-	if(href_list["late_join"])
-		slot_select_load()
+	if(href_list["pickSlot"])
+		chosen_slot = text2num(copytext(href_list["pickSlot"], 1, 2))
+		client.prefs.chosen_slot = chosen_slot
+		load_panel?.close()
+		switch(copytext(href_list["pickSlot"], 2))
+			if("create")
+				client.prefs.randomize_appearance_and_body_for()
+				client.prefs.real_name = null
+				client.prefs.preview_icon = null
+				// client.prefs.home_system = null
+				client.prefs.faction = null
+				client.prefs.selected_under = null
+				client.prefs.sanitize_preferences()
+				client.prefs.ShowChoices(src)
+			if("load")
+				loadCharacter()
+			if("delete")
+				deleteCharacter()
 		return 0
-	//	if(!ticker || ticker.current_state != GAME_STATE_PLAYING)
-	//		to_chat(usr, "<span class='warning'>The round is either not ready, or has already finished...</span>")
-	//		return
-	//	LateChoices() //show the latejoin job selection menu
-	if(href_list["delete_char"])
-		slot_select_delete()
-		return 0
-	if(href_list["manifest"])
-		ViewManifest()
 
-	if(href_list["SelectedJob"])
-		var/datum/job/job = job_master.GetJob(href_list["SelectedJob"])
 
-		if(!job)
-			to_chat(usr, "<span class='danger'>The job '[href_list["SelectedJob"]]' doesn't exist!</span>")
-			return
-
-		if(!config.enter_allowed)
-			to_chat(usr, "<span class='notice'>There is an administrative lock on entering the game!</span>")
-			return
-		if(ticker && ticker.mode && ticker.mode.explosion_in_progress)
-			to_chat(usr, "<span class='danger'>The [station_name()] is currently exploding. Joining would go poorly.</span>")
-			return
-
-		var/datum/species/S = all_species[client.prefs.species]
-		if(!check_species_allowed(S))
-			return 0
-
-		AttemptLateSpawn(job, client.prefs.spawnpoint)
-		return
 
 	if(href_list["privacy_poll"])
 		establish_db_connection()
@@ -321,7 +199,7 @@
 			if("nostats")
 				option = "NOSTATS"
 			if("later")
-				usr << browse(null,"window=privacypoll")
+				close_browser(usr, "window=privacypoll")
 				return
 			if("abstain")
 				option = "ABSTAIN"
@@ -334,14 +212,13 @@
 			var/DBQuery/query_insert = dbcon.NewQuery(sql)
 			query_insert.Execute()
 			to_chat(usr, "<b>Thank you for your vote!</b>")
-			usr << browse(null,"window=privacypoll")
+			close_browser(usr, "window=privacypoll")
 
 	if(!ready && href_list["preference"])
 		if(client)
 			client.prefs.process_link(src, href_list)
-			
-	else if(!href_list["late_join"])
-		new_player_panel()
+//	else if(!href_list["late_join"])
+//		new_player_panel()
 
 	if(href_list["showpoll"])
 
@@ -356,10 +233,6 @@
 		if(isnum(pollid))
 			src.poll_player(pollid)
 		return
-
-	if(href_list["invalid_jobs"])
-		show_invalid_jobs = !show_invalid_jobs
-		LateChoices()
 
 	if(href_list["votepollid"] && href_list["votetype"])
 		var/pollid = text2num(href_list["votepollid"])
@@ -402,435 +275,484 @@
 					if(!isnull(href_list["option_[optionid]"]))	//Test if this optionid was selected
 						vote_on_poll(pollid, optionid, 1)
 
-/mob/new_player/proc/IsJobAvailable(var/datum/job/job)
-	if(!job)	return 0
-	if(!job.is_position_available()) return 0
-	if(jobban_isbanned(src, job.title))	return 0
-	if(!job.player_old_enough(src.client))	return 0
+/mob/new_player/proc/newCharacterPanel()
+	var/data = "<div align='center'><br>"
+	data += "<b>Select the slot you want to save this character under.</b><br>"
 
-	return 1
+	for(var/ind = 1, ind <= client.prefs.Slots(), ind++)
+		var/characterName = SScharacter_setup.peek_character_name(ind, ckey)
+		if(characterName)
+			data += "<b>[characterName]</b><br>"
+		else
+			data += "<b><a href='byond://?src=\ref[src];pickSlot=[ind]create'>Open Slot</a></b><br>"
 
-/mob/new_player/proc/get_branch_pref()
-	if(client)
-		return client.prefs.char_branch
+	data += "</div>"
+	load_panel = new(src, "Create Character", "Create Character", 300, 500, src)
+	load_panel.set_content(data)
+	load_panel.open()
 
-/mob/new_player/proc/get_rank_pref()
-	if(client)
-		return client.prefs.char_rank
-
-/mob/new_player/proc/AttemptLateSpawn(var/datum/job/job, var/turf/spawning_at)
-	message_admins("attemptlatespawn")
-	if(src != usr)
-		message_admins("ran by non usr...")
+/mob/new_player/proc/ImportCharacter()
+	var/found_slot = 0
+	if(!chosen_slot)
 		return 0
-	if(!ticker || ticker.current_state != GAME_STATE_PLAYING)
-		to_chat(usr, "<span class='warning'>The round is either not ready, or has already finished...</span>")
-		return 0
-	if(!config.enter_allowed)
-		to_chat(usr, "<span class='notice'>There is an administrative lock on entering the game!</span>")
-		return 0
-	var/mob/living/character = create_character()	//creates the human and transfers vars and mind
+	for(var/ind = 1, ind <= client.prefs.Slots(), ind++)
+		var/characterName = SScharacter_setup.peek_import_name(ind, ckey)
+		if(!characterName)
+			found_slot = ind
+			break
+	if(!found_slot)
+		to_chat(src, "Your character slots are full. Import failed.")
+		return
+	var/mob/living/carbon/human/character = SScharacter_setup.load_import_character(chosen_slot, ckey)
+	
 	if(!character)
-		message_admins("create_character failed!")
-		return 0
-	qdel(src)
+		return
+	if(!character.mind)
+		character.mind = new()
+	character.revive()
+	character.real_name = SScharacter_setup.peek_import_name(chosen_slot, ckey)
+	var/list/L = recursive_content_check(character, recursion_limit = 5)
+	var/list/spared = list()
+	var/obj/item/weapon/storage/bag/plasticbag = new()
+	for(var/ind in 1 to L.len)
+		var/atom/movable/A = L[ind]
+		if(istype(A, /obj/item/clothing/accessory/toggleable/hawaii))
+			var/obj/item/clothing/accessory/toggleable/hawaii = A
+			hawaii.has_suit = null
+			spared |= A
+			A.loc = plasticbag
+		if(istype(A, /obj/item/weapon/paper))
+			spared |= A
+			A.loc = plasticbag
+		if(istype(A, /obj/item/weapon/photo))
+			spared |= A
+			A.loc = plasticbag
+	for(var/obj/item/W in character)
+		character.drop_from_inventory(W)
+	character.update_languages()
+	character.update_citizenship()
+	character.spawn_cit = CITIZEN
+	//DNA should be last
+	var/datum/computer_file/report/crew_record/R = Retrieve_Record(character.real_name)
+	if(R)
+		R.linked_account.money = 1000
+		R.email = new()
+		R.email.login = character.real_name
+		R.citizenship = CITIZEN
+	else
+		client.prefs.real_name = character.real_name
+		client.prefs.setup_new_accounts(character) //make accounts before! Outfit setup needs the record set
 
-	/**
-	if(src != usr)
-		return 0
-	if(!ticker || ticker.current_state != GAME_STATE_PLAYING)
-		to_chat(usr, "<span class='warning'>The round is either not ready, or has already finished...</span>")
-		return 0
-	if(!config.enter_allowed)
+
+	character.dna.ResetUIFrom()
+	character.dna.ready_dna(character)
+	character.dna.b_type = client.prefs.b_type
+	character.sync_organ_dna()
+	character.spawn_loc = "nexus"
+	// Do the initial caching of the player's body icons.
+	character.force_update_limbs()
+	character.update_eyes()
+	character.regenerate_icons()
+	character.spawn_type = CHARACTER_SPAWN_TYPE_IMPORT //For first time spawn
+	var/decl/hierarchy/outfit/clothes
+	clothes = outfit_by_type(/decl/hierarchy/outfit/nexus/starter)
+	ASSERT(istype(clothes))
+	dressup_human(character, clothes)
+	var/obj/item/weapon/card/id/W = new (character)
+	W.registered_name = character.real_name
+	W.selected_faction = GLOB.using_map.default_faction_uid
+	character.equip_to_slot_or_store_or_drop(character, slot_wear_id)
+	var/obj/item/weapon/book/multipage/guide
+	var/datum/book_constructor/starterbook/bookconstruct = new()
+	guide = bookconstruct.construct()
+	guide.icon_state= "anomaly"
+	character.equip_to_slot_or_del(guide, slot_r_hand)
+	for(var/ind in 1 to spared.len)
+		var/atom/A = spared[ind]
+		message_admins("recovered ITEM!![A]")
+		character.equip_to_slot_or_store_or_drop(A, slot_r_hand)
+	SScharacter_setup.delete_import_character(chosen_slot, ckey)
+	SScharacter_setup.save_character(found_slot, client.ckey, character)
+	to_chat(src, "Import Successful. [character.real_name] saved to slot [found_slot].")
+
+/mob/new_player/proc/selectImportPanel()
+	var/data = "<div align='center'><br>"
+	data += "<b>Select the character you want to import.</b><br>"
+
+
+	for(var/ind = 1, ind <= client.prefs.Slots(), ind++)
+		var/characterName = SScharacter_setup.peek_import_name(ind, ckey)
+		if(characterName)
+			var/icon/preview = SScharacter_setup.peek_import_icon(ind, ckey)
+			if(preview)
+				send_rsc(src, preview, "[ind]preview.png")
+			data += "<img src=[ind]preview.png width=[preview.Width()] height=[preview.Height()]><br>"
+			data += "<b><a href='?src=\ref[src];importSlot=[ind]'>[characterName]</a></b><hr>"
+	data += "</div>"
+	load_panel = new(src, "Select Character", "Select Character", 300, 500, src)
+	load_panel.set_content(data)
+	load_panel.open()
+
+
+/mob/new_player/proc/selectCharacterPanel(var/action = "")
+	for(var/mob/M in SSmobs.mob_list)
+		if(M.loc && !M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
+			chosen_slot = M.save_slot
+			to_chat(src, "<span class='notice'>A character is already in game.</span>")
+			Retrieve_Record(M.real_name)
+			if(GAME_STATE >= RUNLEVEL_GAME)
+				panel?.close()
+				load_panel?.close()
+				M.key = key
+			else
+				to_chat(src, "<span class='notice'>Wait until the round starts to join.</span>")
+			return
+
+	var/data = "<div align='center'><br>"
+	data += "<b>Select the character you want to [action].</b><br>"
+
+	for(var/ind = 1, ind <= client.prefs.Slots(), ind++)
+		var/characterName = SScharacter_setup.peek_character_name(ind, ckey)
+		if(characterName)
+			var/icon/preview = SScharacter_setup.peek_character_icon(ind, ckey)
+			if(preview)
+				send_rsc(src, preview, "[ind]preview.png")
+			data += "<img src=[ind]preview.png width=[preview.Width()] height=[preview.Height()]><br>"
+			data += "<b><a href='?src=\ref[src];pickSlot=[ind][action]'>[characterName]</a></b><hr>"
+		else
+			data += "<b>Open Slot</b><hr>"
+	data += "</div>"
+	load_panel = new(src, "Select Character", "Select Character", 300, 500, src)
+	load_panel.set_content(data)
+	load_panel.open()
+
+
+/mob/new_player/proc/observeGame()
+	chosen_slot = -1
+	loadCharacter()
+
+//Stops the lobby music and close the main menu panels
+/mob/new_player/proc/transitionToGame()
+	panel?.close()
+	load_panel?.close()
+	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
+
+/mob/new_player/proc/loadCharacter()
+	if(!config.enter_allowed && !check_rights(R_ADMIN|R_MENTOR|R_MOD, 0, src))
 		to_chat(usr, "<span class='notice'>There is an administrative lock on entering the game!</span>")
-		return 0
-
-	if(!IsJobAvailable(job))
-		alert("[job.title] is not available. Please try another.")
-		return 0
-	if(job.is_restricted(client.prefs, src))
+		return
+	if(!chosen_slot)
+		return
+	if(spawning)
 		return
 
-	var/datum/spawnpoint/spawnpoint = job_master.get_spawnpoint_for(client, job.title)
-	var/turf/spawn_turf = pick(spawnpoint.turfs)
-	if(job.latejoin_at_spawnpoints)
-		var/obj/S = job_master.get_roundstart_spawnpoint(job.title)
-		spawn_turf = get_turf(S)
-	var/radlevel = radiation_repository.get_rads_at_turf(spawn_turf)
-	var/airstatus = IsTurfAtmosUnsafe(spawn_turf)
-	if(airstatus || radlevel > 0 )
-		var/reply = alert(usr, "Warning. Your selected spawn location seems to have unfavorable conditions. \
-		You may die shortly after spawning. \
-		Spawn anyway? More information: [airstatus] Radiation: [radlevel] Bq", "Atmosphere warning", "Abort", "Spawn anyway")
-		if(reply == "Abort")
-			return 0
-		else
-			// Let the staff know, in case the person complains about dying due to this later. They've been warned.
-			log_and_message_admins("User [src] spawned at spawn point with dangerous atmosphere.")
+	spawning = TRUE
 
-		// Just in case someone stole our position while we were waiting for input from alert() proc
-		if(!IsJobAvailable(job))
-			to_chat(src, alert("[job.title] is not available. Please try another."))
-			return 0
+	//Resume playing
+	for(var/mob/M in SSmobs.mob_list)
+		if(M.loc && !M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
+			transitionToGame() //Don't forget to close the panel and stop the lobby music
+			if(istype(M, /mob/observer))
+				qdel(M)
+				continue
+			M.ckey = ckey
+			M.update_icons()
+			spawn(200)
+				M.redraw_inv() //Make sure icons shows up
+			qdel(src)
+			return
 
-	job_master.AssignRole(src, job.title, 1)
-
-	var/mob/living/character = create_character()	//creates the human and transfers vars and mind
-	if(!character)
-		return 0
-
-//	character = job_master.EquipRank(character, job.title, 1)					//equips the human
-//	equip_custom_items(character)
-
-	// AIs don't need a spawnpoint, they must spawn at an empty core
-	if(character.mind.assigned_role == "AI")
-
-		character = character.AIize(move=0) // AIize the character, but don't move them yet
-
-			// IsJobAvailable for AI checks that there is an empty core available in this list
-		var/obj/structure/AIcore/deactivated/C = empty_playable_ai_cores[1]
-		empty_playable_ai_cores -= C
-
-		character.forceMove(C.loc)
-		var/mob/living/silicon/ai/A = character
-		A.on_mob_init()
-
-		AnnounceCyborg(character, job.title, "has been downloaded to the empty core in \the [character.loc.loc]")
-		ticker.mode.handle_latejoin(character)
-
-		qdel(C)
+	//Observer Spawn
+	if(chosen_slot == -1)
+		transitionToGame() //Don't forget to close the panel and stop the lobby music
+		var/mob/observer/ghost/observer = new()
+		observer.started_as_observer = 1
+		observer.forceMove(GLOB.cryopods.len ? get_turf(pick(GLOB.cryopods)) : locate(100, 100, 1))
+		observer.ckey = ckey
 		qdel(src)
 		return
 
-	ticker.mode.handle_latejoin(character)
-	GLOB.universe.OnPlayerLatejoin(character)
-	if(job_master.ShouldCreateRecords(job.title))
-		if(character.mind.assigned_role != "Cyborg")
-			CreateModularRecord(character)
-			AnnounceArrival(character, job, spawnpoint.msg)
+	sleep(50) //Wait possibly for the file to unlock???
+	var/mob/character = SScharacter_setup.load_character(chosen_slot, ckey)
+	if(!character)
+		message_admins("[ckey] load character failed during join.")
+		to_chat(src, "Your character is not loading correctly. Contact Brawler.")
+		spawning = FALSE
+		return
+	Retrieve_Record(character.real_name)
+	var/turf/spawnTurf = locate(0,0,0) //Instead of null start with 0,0,0 because the unsafe spawn check will kick in and warn the user if there's something wrong
+
+	if(character.spawn_type == CHARACTER_SPAWN_TYPE_CRYONET)
+		var/datum/world_faction/faction = get_faction(character.spawn_loc)
+		var/assignmentSpawnLocation = faction?.get_assignment(faction?.get_record(character.real_name)?.assignment_uid, character.real_name)?.cryo_net
+		if (assignmentSpawnLocation == "Last Known Cryonet")
+			// The character's assignment is set to spawn in their last cryo location
+			// Do nothing, leave it the way it is.
+		else if (assignmentSpawnLocation)
+			// The character has a special cryo network set to override their normal spawn location
+			character.spawn_loc_2 = assignmentSpawnLocation
 		else
-			AnnounceCyborg(character, job, spawnpoint.msg)
-		matchmaker.do_matchmaking()
-	log_and_message_admins("has joined the round as [character.mind.assigned_role].", character)
-	qdel(src)
-	**/
+			// The character doesn't have a spawn_loc_2, so use the one for their assignment or the default
+			character.spawn_loc_2 = " default"
 
-/mob/new_player/proc/AnnounceCyborg(var/mob/living/character, var/rank, var/join_message)
-	if (ticker.current_state == GAME_STATE_PLAYING)
-		if(character.mind.role_alt_title)
-			rank = character.mind.role_alt_title
-		// can't use their name here, since cyborg namepicking is done post-spawn, so we'll just say "A new Cyborg has arrived"/"A new Android has arrived"/etc.
-		GLOB.global_announcer.autosay("A new[rank ? " [rank]" : " visitor" ] [join_message ? join_message : "has arrived"].", "Arrivals Announcement Computer")
-		log_and_message_admins("has joined the round as [character.mind.assigned_role].", character)
-
-/mob/new_player/proc/LateChoices()
-	var/name = client.prefs.be_random_name ? "friend" : client.prefs.real_name
-
-	var/list/dat = list("<html><body><center>")
-	dat += "<b>Welcome, [name].<br></b>"
-	dat += "Round Duration: [roundduration2text()]<br>"
-
-	if(evacuation_controller.has_evacuated())
-		dat += "<font color='red'><b>The [station_name()] has been evacuated.</b></font><br>"
-	else if(evacuation_controller.is_evacuating())
-		if(evacuation_controller.emergency_evacuation) // Emergency shuttle is past the point of no recall
-			dat += "<font color='red'>The [station_name()] is currently undergoing evacuation procedures.</font><br>"
-		else                                           // Crew transfer initiated
-			dat += "<font color='red'>The [station_name()] is currently undergoing crew transfer procedures.</font><br>"
-
-	dat += "Choose from the following open/valid positions:<br>"
-	dat += "<a href='byond://?src=\ref[src];invalid_jobs=1'>[show_invalid_jobs ? "Hide":"Show"] unavailable jobs.</a><br>"
-	dat += "<table>"
-	for(var/datum/job/job in job_master.occupations)
-		if(job && IsJobAvailable(job))
-			if(job.minimum_character_age && (client.prefs.age < job.minimum_character_age))
+		for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+			if(!pod.loc)
+				qdel(pod)
 				continue
-
-			var/active = 0
-			// Only players with the job assigned and AFK for less than 10 minutes count as active
-			for(var/mob/M in GLOB.player_list) if(M.mind && M.client && M.mind.assigned_role == job.title && M.client.inactivity <= 10 * 60 * 10)
-				active++
-
-			if(job.is_restricted(client.prefs))
-				if(show_invalid_jobs)
-					dat += "<tr><td><a style='text-decoration: line-through' href='byond://?src=\ref[src];SelectedJob=[job.title]'>[job.title]</a></td><td>[job.current_positions]</td><td>(Active: [active])</td></tr>"
-			else
-				dat += "<tr><td><a href='byond://?src=\ref[src];SelectedJob=[job.title]'>[job.title]</a></td><td>[job.current_positions]</td><td>(Active: [active])</td></tr>"
-
-	dat += "</table></center>"
-	src << browse(jointext(dat, null), "window=latechoices;size=450x640;can_close=1")
-
-
-/mob/proc/after_spawn()
-	return
-/mob/living/carbon/lace/after_spawn()
-	if(container2)
-		container2.loc = loc
-		loc = container
-		if(client)
-			client.perspective = EYE_PERSPECTIVE
-			client.eye = container
-	else if(container)
-		container.loc = loc
-		loc = container
-		if(client)
-			client.perspective = EYE_PERSPECTIVE
-			client.eye = container
-/mob/new_player/proc/create_character(var/turf/spawn_turf)
-	message_admins("create_character")
-	spawning = 1
-	if(!chosen_slot)
-		message_admins("no chosen slot..")
-		return
-	var/mob/new_character = client.prefs.character_list[chosen_slot]
-	if(!new_character)
-		message_admins("null new_character")
-		return
-	if(!new_character.mind)
-		mind.active = 0					//we wish to transfer the key manually
-		mind.original = new_character
-		if(client.prefs.memory)
-			mind.store_memory(client.prefs.memory)
-		mind.transfer_to(new_character)					//won't transfer key since the mind is not active
-
-	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1))// MAD JAMS cant last forever yo
-	if(!spawn_turf)
-
-		if(new_character.spawn_type == 1)
-			if(!GLOB.cryopods.len)
-				message_admins("WARNING! No cryopods avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
-				spawn_turf = locate(102, 98, 1)
-			else
-				var/list/possible_spawn_turfs = list()
-				var/list/faction_spawns = list()
-				for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
-					if(!pod.loc) continue
-					if(pod.req_access_faction == new_character.spawn_loc)
-						faction_spawns |= pod
-				if(faction_spawns.len)
-					var/key = "default"
-					var/datum/world_faction/faction = get_faction(new_character.spawn_loc)
-					if(faction)
-						var/datum/computer_file/crew_record/record = faction.get_record(new_character.real_name)
-						if(record)
-							var/datum/assignment/curr_assignment = faction.get_assignment(record.assignment_uid)
-							if(curr_assignment)
-								key = curr_assignment.cryo_net
-					for(var/obj/machinery/cryopod/pod2 in faction_spawns)
-						if(pod2.network == key)
-							possible_spawn_turfs |= pod2.loc
-					if(!possible_spawn_turfs.len)
-						key = "default"
-						for(var/obj/machinery/cryopod/pod2 in faction_spawns)
-							if(pod2.network == key)
-								possible_spawn_turfs |= pod2.loc
-					if(!possible_spawn_turfs.len)
-						for(var/obj/machinery/cryopod/pod2 in faction_spawns)
-							possible_spawn_turfs |= pod2.loc
-				if(possible_spawn_turfs.len)
-					spawn_turf = pick(possible_spawn_turfs)
-				if(!spawn_turf)
-					for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
-						if(!pod.loc) continue
-						if(pod.req_access_faction == "nanotrasen")
-							spawn_turf = pod.loc
-							break
-				if(!spawn_turf)
-					var/obj/o
-					while(!o && GLOB.cryopods.len)
-						o = pick(GLOB.cryopods)
-						if(!o.loc)
-							GLOB.cryopods -= o
-							qdel(o)
-							o = null
-					if(o)
-						spawn_turf = o.loc
-				if(!spawn_turf)
-					message_admins("WARNING! No cryopods avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
-					spawn_turf = locate(102, 98, 1)
-		else if(new_character.spawn_type == 2)
-			if(!GLOB.frontierbeacons.len)
-				message_admins("WARNING! No beacons avalible for spawning! spawn one and set the req_access_faction!")
-			for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
-				if(!beacon.loc) continue
-				if(beacon.req_access_faction == new_character.spawn_loc)
-					spawn_turf = get_step(beacon.loc,pick(GLOB.cardinal))
-					new /obj/effect/portal(spawn_turf, delete_after = 50)
+			if(pod.req_access_faction == character.spawn_loc)
+				if(pod.network == character.spawn_loc_2)
+					spawnTurf = get_turf(pod)
 					break
-			if(!spawn_turf)
-				message_admins("No frontier beacon for [new_character.spawn_loc], spawn one and set the req_access_faction!")
-				for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
-					if(!beacon.loc) continue
-					spawn_turf = get_step(beacon.loc,pick(GLOB.cardinal))
-					new /obj/effect/portal(spawn_turf, delete_after = 50)
-					break
-			if(!spawn_turf)
-				for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
-					if(!pod.loc) continue
-					if(pod.req_access_faction == "refugee")
-						spawn_turf = pod.loc
-						break
-			if(!spawn_turf)
-				for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
-					if(!pod.loc) continue
-					if(pod.req_access_faction == "nanotrasen")
-						spawn_turf = pod.loc
-						break
-			if(!spawn_turf)
-				var/obj/o
-				while(!o && GLOB.cryopods.len)
-					o = pick(GLOB.cryopods)
-					if(!o.loc)
-						GLOB.cryopods -= o
-						qdel(o)
-						o = null
-				if(o)
-					spawn_turf = o.loc
-			if(!spawn_turf)
-				message_admins("WARNING! No cryopods avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
-				spawn_turf = locate(102, 98, 1)
-		if(!spawn_turf)
-			message_admins("WARNING! spawn-turf still invalid!!")
-			spawn_turf = locate(102, 98, 1)
+				else
+					spawnTurf = get_turf(pod)
+			else if(!spawnTurf)
+				spawnTurf = get_turf(pod)
 
+		if(!spawnTurf)
+			log_and_message_admins("WARNING! No cryopods avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
+			spawnTurf = locate(102, 98, 1)
 
+	else if(character.spawn_type == CHARACTER_SPAWN_TYPE_FRONTIER_BEACON || character.spawn_type == CHARACTER_SPAWN_TYPE_IMPORT)
+		var/obj/item/weapon/card/id/W = character.GetIdCard()
+		if(W)
+			W.selected_faction = "nexus"
+		var/list/obj/structure/frontier_beacon/possibles = list()
+		var/list/obj/structure/frontier_beacon/possibles_unsafe = list()
+		for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
+			if(!beacon.loc)
+				continue
+			if(beacon.req_access_faction == character.spawn_loc && beacon.citizenship_type == character.spawn_cit)
+				//Check the beacon position to see if they're safe
+				var/turf/T = get_turf(beacon)
+				var/radlevel = SSradiation.get_rads_at_turf(T)
+				var/airstatus = IsTurfAtmosUnsafe(T)
+				if(airstatus || radlevel > 0)
+					possibles_unsafe += beacon
+				else
+					possibles += beacon
 
-	close_spawn_windows()
-	new_character.loc = spawn_turf
-	new_character.key = key		//Manually transfer the key to log them in
-	new_character.save_slot = chosen_slot
-	ticker.minds |= new_character.mind//Cyborgs and AIs handle this in the transform proc.	//TODO!!!!! ~Carn
-	new_character.redraw_inv()
-	CreateModularRecord(new_character)
-	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1))// MAD JAMS cant last forever yo
-	if(new_character.spawn_type == 2)
-		var/obj/screen/cinematic
+		if(possibles.len)
+			spawnTurf = get_turf(pick(possibles)) //Pick one randomly
+		else if(possibles_unsafe.len)
+			spawnTurf = get_turf(pick(possibles_unsafe))
+			var/radlevel = SSradiation.get_rads_at_turf(spawnTurf)
+			var/airstatus = IsTurfAtmosUnsafe(spawnTurf)
+			log_and_message_admins("Couldn't find a safe spawn beacon. Spawning [character] at [spawnTurf] ([spawnTurf.x], [spawnTurf.y], [spawnTurf.z])! Warning player!", character, spawnTurf)
+			var/reply = alert(src, "Warning. Your selected spawn location seems to have unfavorable conditions. You may die shortly after spawning. \
+			Spawn anyway? More information: [airstatus] Radiation: [radlevel] Bq", "Atmosphere warning", "Abort", "Spawn anyway")
+			if(reply == "Abort")
+				spawning = FALSE
+				new_player_panel(TRUE)
+				return
+			else
+				// Let the staff know, in case the person complains about dying due to this later. They've been warned.
+				log_and_message_admins("User [src.client] spawned as [character] at [spawnTurf]([spawnTurf.x], [spawnTurf.y], [spawnTurf.z]) with dangerous atmosphere.")
 
-		cinematic = new
-		cinematic.icon = 'icons/effects/gateway_intro.dmi'
-		cinematic.icon_state = "blank"
-		cinematic.plane = HUD_PLANE
-		cinematic.layer = HUD_ABOVE_ITEM_LAYER
-		cinematic.mouse_opacity = 2
-		cinematic.screen_loc = "WEST,SOUTH"
+		if(!spawnTurf)
+			log_and_message_admins("WARNING! No frontier beacons avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
+			spawnTurf = locate(world.maxx / 2 , world.maxy /2, 1)
 
-		if(new_character.client)
-			new_character.client.screen += cinematic
+	else if(character.spawn_type == CHARACTER_SPAWN_TYPE_LACE_STORAGE)
+		spawnTurf = GetLaceStorage(character)
+		if(!spawnTurf)
+			log_and_message_admins("WARNING! Unable To Find Any Spawn Turf!!! Prehaps you didn't include a map?")
+			return
 
-			flick("neurallaceboot",cinematic)
-			sleep(150)
-			new_character.client.screen -= cinematic
+	//Close the menu and stop the lobby music once we're sure we're spawning
+	transitionToGame()
+	character.after_spawn()
 
-		new_character.spawn_type = 1
-		sound_to(new_character, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = 1))
-		spawn()
-			shake_camera(new_character, 3, 1)
-		new_character.druggy = 3
-		new_character.Weaken(3)
-		to_chat(new_character, "<span class='danger'>Your trip through the frontier gateway is like nothing you have ever experienced!</span>")
-		to_chat(new_character, "In fact, it was like your consciousness was ripped from your body and then hammered back inside moments later.")
-		to_chat(new_character, "However, you've made it to the uncharted frontier. You don't know when you'll be able to return to the places you've left behind.")
-		to_chat(new_character, "No time to think about that, your first priority is to get your bearings and find a job that pays. Whatever you decide to do in this new frontier, you're going to need a lot more cash than what you have now.")
-	else
-		to_chat(new_character, "You eject from your cryosleep, ready to resume life in the frontier.")
-	new_character.after_spawn()
-	return new_character
-	/**
-	var/mob/living/carbon/human/new_character
+	if(!character.mind)
+		mind.active = 1
+		mind.original = character
+		mind.transfer_to(character)	//won't transfer key since the mind is not active
 
-	var/datum/species/chosen_species
-	if(client.prefs.species)
-		chosen_species = all_species[client.prefs.species]
+	character.forceMove(spawnTurf)
+	character.stored_ckey = key
+	character.key = key
+	character.save_slot = chosen_slot
 
+	//Make sure dna is spread to limbs
+	character.dna.ready_dna(character)
+	character.sync_organ_dna()
 
+	GLOB.minds |= character.mind
+	character.regenerate_icons()
+	character.update_inv_back()
+	character.update_inv_wear_id()
+	character.update_inv_belt()
+	character.update_inv_pockets()
+	character.update_inv_l_hand()
+	character.update_inv_r_hand()
+	character.update_inv_s_store()
+	character.redraw_inv()
 
-	if(chosen_species)
-		if(!check_species_allowed(chosen_species))
-			spawning = 0 //abort
-			return null
-		new_character = new(spawn_turf, chosen_species.name)
-		if(chosen_species.has_organ[BP_POSIBRAIN] && client && client.prefs.is_shackled)
-			var/obj/item/organ/internal/posibrain/B = new_character.internal_organs_by_name[BP_POSIBRAIN]
-			if(B)	B.shackle(client.prefs.get_lawset())
+	//Execute post-spawn stuff
+	character.finishLoadCharacter()	// This is ran because new_players don't like to stick around long.
+	return 1
 
-	if(!new_character)
-		new_character = new(spawn_turf)
+//Runs what happens after the character is loaded. Mainly for cinematics and lore text.
+/mob/proc/finishLoadCharacter()
+	if(spawn_type == CHARACTER_SPAWN_TYPE_CRYONET)
+		to_chat(src, "You eject from your cryosleep, ready to resume life in the frontier.")
+	else if(spawn_type == CHARACTER_SPAWN_TYPE_FRONTIER_BEACON)
+		GLOB.using_map.on_new_spawn(src) //Moved to overridable map specific code
+	else if(spawn_type == CHARACTER_SPAWN_TYPE_LACE_STORAGE)
+		to_chat(src, "You regain consciousness, still prisoner of your neural lace.")
+	else if(spawn_type == CHARACTER_SPAWN_TYPE_IMPORT)
+		import_spawn()
+/mob/proc/import_spawn()
+	var/mob/newchar = src
+	if(!istype(newchar))
+		return
+	var/obj/screen/cinematic
+	cinematic = new
+	cinematic.icon = 'maps/nexus/icons/intro.dmi'
+	cinematic.icon_state = "blank"
+	cinematic.plane = HUD_PLANE
+	cinematic.layer = HUD_ABOVE_ITEM_LAYER
+	cinematic.mouse_opacity = 2
+	cinematic.screen_loc = "WEST,SOUTH"
 
-	new_character.lastarea = get_area(spawn_turf)
+	if(newchar.client)
+		newchar.client.screen += cinematic
+		flick("cinematic",cinematic)
+		sleep(106)
+		newchar.client.screen -= cinematic
 
-	for(var/lang in client.prefs.alternate_languages)
-		var/datum/language/chosen_language = all_languages[lang]
-		if(chosen_language)
-			var/is_species_lang = (chosen_language.name in new_character.species.secondary_langs)
-			if(is_species_lang || ((!(chosen_language.flags & RESTRICTED) || has_admin_rights()) && is_alien_whitelisted(src, chosen_language)))
-				new_character.add_language(lang)
+	newchar.spawn_type = CHARACTER_SPAWN_TYPE_CRYONET
+	var/sound/mus = sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel)
+	mus.environment = -1 //Don't do silly reverb stuff
+	mus.status = SOUND_STREAM //Cheaper to do streams
+	sound_to(newchar, mus)
+	spawn()
+		new /obj/effect/portal(get_turf(newchar), null, 5 SECONDS, 0)
+		shake_camera(newchar, 3, 1)
+	newchar.druggy = 3
+	newchar.Weaken(3)
+	to_chat(newchar, "<span class='danger'>Aboard the cruiser ecaping from the Alpha Quadrant, the journey through the bluespace barrier shreds the hull as it passes the threshold.</span>")
+	to_chat(newchar, "<span class='danger'>With the barrier weakened, the station inside the Beta Quadrant is able to yank the failing vessels cryo-storage over to the frontier beacons..</span>")
+	to_chat(newchar, "But it must have prioritized saving life-signs rather than the item storage. You wake up in an unfamilar uniform with a basic backpack. Maybe some of your lightest belongings are in there.")
+	to_chat(newchar, "You find a book at your feet. 'Guide to Nexus City'.")
+	to_chat(newchar, "You've been in this situation before, but on a different station. What new stories does the Nexus City hold for you?")
+	to_chat(newchar, "((Thanks for returning to persistence. So many staff and contributors have come together to make the lastest chapter, and I'm really glad to have you back. -- Brawler.))")
 
-	if(ticker.random_players)
-		new_character.gender = pick(MALE, FEMALE)
-		client.prefs.real_name = random_name(new_character.gender)
-		client.prefs.randomize_appearance_and_body_for(new_character)
-	else
-		client.prefs.copy_to(new_character)
+/mob/new_player/proc/deleteCharacter()
+	var/charname = SScharacter_setup.peek_character_name(chosen_slot, ckey)
+	if(input("Are you SURE you want to delete [charname]? THIS IS PERMANENT. enter the character\'s full name to conform.", "DELETE A CHARACTER", "") == charname)
+		SScharacter_setup.delete_character(chosen_slot, ckey)
+	load_panel.close()
 
+/mob/new_player/proc/crewManifestPanel()
+	var/list/factions = list()
 
+	for(var/obj/item/organ/internal/stack/stack in GLOB.neural_laces)
+		if(!stack.loc) continue
+		var/faction = get_faction(stack.connected_faction)?.name
+		if(factions["[faction]"])
+			factions["[faction]"] += stack
+		else
+			factions["[faction]"] = list(stack)
 
-	if(mind)
-		mind.active = 0					//we wish to transfer the key manually
-		mind.original = new_character
-		if(client.prefs.memory)
-			mind.store_memory(client.prefs.memory)
-		if(client.prefs.relations.len)
-			for(var/T in client.prefs.relations)
-				var/TT = matchmaker.relation_types[T]
-				var/datum/relation/R = new TT
-				R.holder = mind
-				R.info = client.prefs.relations_info[T]
-			mind.gen_relations_info = client.prefs.relations_info["general"]
-		mind.transfer_to(new_character)					//won't transfer key since the mind is not active
+	var/data = "<div align='center'><br>"
 
-	new_character.name = real_name
-	new_character.dna.ready_dna(new_character)
-	new_character.dna.b_type = client.prefs.b_type
-	new_character.sync_organ_dna()
-	if(client.prefs.disabilities)
-		// Set defer to 1 if you add more crap here so it only recalculates struc_enzymes once. - N3X
-		new_character.dna.SetSEState(GLOB.GLASSESBLOCK,1,0)
-		new_character.disabilities |= NEARSIGHTED
+	for(var/faction in factions)
+		data += "<table width=150px>"
+		data += "<tr class='title'><th colspan=3>[faction]</th></tr>"
+		data += "<tr class='title'><th>Name</th><th>Status</th></tr>"
+		var/ind = 0
+		for(var/obj/item/organ/internal/stack/stack in factions[faction])
+			data += "<tr[ind ? " class='alt'" : " class='norm'"]><td>[stack.get_owner_name()]</td><td>[stack.duty_status ? "On Duty" : "Off Duty"]</td></tr>"
+			ind = !ind
+		data += "</table>"
 
-	// Give them their cortical stack if we're using them.
-	if(config && config.use_cortical_stacks && client && client.prefs.has_cortical_stack /*&& new_character.should_have_organ(BP_BRAIN)*/)
-		new_character.create_stack()
+	data += "</div>"
+	load_panel = new(src, "Crew Manifest", "Crew Manifest", 300, 500, src)
+	load_panel.set_content(data)
+	load_panel.open()
 
-	// Do the initial caching of the player's body icons.
-	new_character.force_update_limbs()
-	new_character.update_eyes()
-	new_character.regenerate_icons()
+// /mob/new_player/proc/create_character(var/turf/spawn_turf)
+// 	spawning = 1
+// 	close_spawn_windows()
 
-	new_character.key = key		//Manually transfer the key to log them in
-	return new_character
-	**/
-/mob/new_player/proc/ViewManifest()
-	var/dat = "<div align='center'>"
-	dat += html_crew_manifest(OOC = 1)
-	//src << browse(dat, "window=manifest;size=370x420;can_close=1")
-	var/datum/browser/popup = new(src, "Crew Manifest", "Crew Manifest", 370, 420, src)
-	popup.set_content(dat)
-	popup.open()
+// 	var/mob/living/carbon/human/new_character
+
+// 	var/datum/species/chosen_species
+// 	if(client.prefs.species)
+// 		chosen_species = all_species[client.prefs.species]
+
+// 	if(!spawn_turf)
+// 		var/datum/job/job = SSjobs.get_by_title(mind.assigned_role)
+// 		if(!job)
+// 			job = SSjobs.get_by_title(GLOB.using_map.default_assistant_title)
+// 		var/datum/spawnpoint/spawnpoint = job.get_spawnpoint(client, client.prefs.ranks[job.title])
+// 		spawn_turf = pick(spawnpoint.turfs)
+
+// 	if(chosen_species)
+// 		if(!check_species_allowed(chosen_species))
+// 			spawning = 0 //abort
+// 			return null
+// 		new_character = new(spawn_turf, chosen_species.name)
+// 		if(chosen_species.has_organ[BP_POSIBRAIN] && client && client.prefs.is_shackled)
+// 			var/obj/item/organ/internal/posibrain/B = new_character.internal_organs_by_name[BP_POSIBRAIN]
+// 			if(B)	B.shackle(client.prefs.get_lawset())
+
+// 	if(!new_character)
+// 		new_character = new(spawn_turf)
+
+// 	new_character.lastarea = get_area(spawn_turf)
+
+// 	if(GLOB.random_players)
+// 		client.prefs.gender = pick(MALE, FEMALE)
+// 		client.prefs.real_name = random_name(new_character.gender)
+// 		client.prefs.randomize_appearance_and_body_for(new_character)
+// 	client.prefs.copy_to(new_character)
+
+// 	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))// MAD JAMS cant last forever yo
+
+// 	if(mind)
+// 		mind.active = 0 //we wish to transfer the key manually
+// 		mind.original = new_character
+// 		if(client.prefs.memory)
+// 			mind.store_memory(client.prefs.memory)
+// 		if(client.prefs.relations.len)
+// 			for(var/T in client.prefs.relations)
+// 				var/TT = matchmaker.relation_types[T]
+// 				var/datum/relation/R = new TT
+// 				R.holder = mind
+// 				R.info = client.prefs.relations_info[T]
+// 			mind.gen_relations_info = client.prefs.relations_info["general"]
+// 		mind.transfer_to(new_character)					//won't transfer key since the mind is not active
+
+// 	new_character.dna.ready_dna(new_character)
+// 	new_character.dna.b_type = client.prefs.b_type
+// 	new_character.sync_organ_dna()
+// 	if(client.prefs.disabilities)
+// 		// Set defer to 1 if you add more crap here so it only recalculates struc_enzymes once. - N3X
+// 		new_character.dna.SetSEState(GLOB.GLASSESBLOCK,1,0)
+// 		new_character.disabilities |= NEARSIGHTED
+
+// 	// Give them their cortical stack if we're using them.
+// 	if(config && config.use_cortical_stacks && client && client.prefs.has_cortical_stack /*&& new_character.should_have_organ(BP_BRAIN)*/)
+// 		new_character.create_stack()
+
+// 	// Do the initial caching of the player's body icons.
+// 	new_character.force_update_limbs()
+// 	new_character.update_eyes()
+// 	new_character.regenerate_icons()
+
+// 	new_character.key = key		//Manually transfer the key to log them in
+// 	return new_character
 
 /mob/new_player/Move()
 	return 0
 
 /mob/new_player/proc/close_spawn_windows()
-	src << browse(null, "window=latechoices") //closes late choices window
-	if(panel)
-		panel.close()
-	if(load_panel)
-		load_panel.close()
-/mob/new_player/proc/has_admin_rights()
-	return check_rights(R_ADMIN, 0, src)
+	close_browser(src, "window=latechoices") //closes late choices window
+	panel.close()
 
 /mob/new_player/proc/check_species_allowed(datum/species/S, var/show_alert=1)
-	if(!(S.spawn_flags & SPECIES_CAN_JOIN) && !has_admin_rights())
+	if(!S.is_available_for_join() && !has_admin_rights())
 		if(show_alert)
 			to_chat(src, alert("Your current species, [client.prefs.species], is not available for play."))
 		return 0

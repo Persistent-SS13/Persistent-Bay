@@ -8,6 +8,7 @@
 	use_power = 1
 	idle_power_usage = 20
 	active_power_usage = 500
+	circuit_type = /obj/item/weapon/circuitboard/telepad
 	var/stage = 0
 	var/datum/world_faction/connected_faction
 	req_access = core_access_order_approval
@@ -15,24 +16,17 @@
 /obj/machinery/telepad_cargo/New()
 	..()
 	GLOB.cargotelepads |= src
+	ADD_SAVED_VAR(stage)
+	ADD_SAVED_VAR(connected_faction)
+
 /obj/machinery/telepad_cargo/after_load()
 	if(req_access_faction && req_access_faction != "")
 		connected_faction = get_faction(req_access_faction)
 		if(connected_faction)
 			connected_faction.cargo_telepads |= src
 	
-/obj/machinery/telepad_cargo/New()
-	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/telepad(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	RefreshParts()
-	
-	
 /obj/machinery/telepad_cargo/attackby(obj/item/O as obj, mob/user as mob, params)
-	if(istype(O, /obj/item/weapon/wrench))
+	if(istype(O, /obj/item/weapon/tool/wrench))
 		playsound(src, 'sound/items/Ratchet.ogg', 50, 1)
 		if(anchored)
 			anchored = 0
@@ -40,7 +34,7 @@
 		else if(!anchored)
 			anchored = 1
 			to_chat(user, "<span class = 'caution'> The [src] is now secured.</span>")
-	if(istype(O, /obj/item/weapon/screwdriver))
+	if(istype(O, /obj/item/weapon/tool/screwdriver))
 		if(stage == 0)
 			playsound(src, 'sound/items/Screwdriver.ogg', 50, 1)
 			to_chat(user, "<span class = 'caution'> You unscrew the telepad's tracking beacon.</span>")
@@ -49,7 +43,7 @@
 			playsound(src, 'sound/items/Screwdriver.ogg', 50, 1)
 			to_chat(user, "<span class = 'caution'> You screw in the telepad's tracking beacon.</span>")
 			stage = 0
-	if(istype(O, /obj/item/weapon/weldingtool) && stage == 1)
+	if(istype(O, /obj/item/weapon/tool/weldingtool) && stage == 1)
 		playsound(src, 'sound/items/Welder.ogg', 50, 1)
 		to_chat(user, "<span class = 'caution'> You disassemble the telepad.</span>")
 		new /obj/item/stack/material/steel(get_turf(src))
@@ -71,7 +65,7 @@
 	data["beacon"] = stage ? "Unsecured" : "Secured"
 	data["label"] = name
 	data["connected"] = !!connected_faction
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "cargo_telepad.tmpl", "[name]", 400, 430)
 		ui.set_initial_data(data)
@@ -109,7 +103,7 @@
 				name = select_name
 		. = 1
 	if(.)
-		GLOB.nanomanager.update_uis(src)
+		SSnano.update_uis(src)
 
 
 /obj/machinery/telepad_cargo/attack_hand(mob/user as mob)

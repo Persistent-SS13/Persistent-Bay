@@ -1,11 +1,10 @@
 
-#define RANDOM_RGB rgb(rand(0,255), rand(0,255), rand(0,255))
 #define RANDOM_RIGHT_ANGLE pick(90,180,270,0)
 
 //Exists to handle a few global variables that change enough to justify this. Technically a parallax, but it exhibits a skybox effect.
 SUBSYSTEM_DEF(skybox)
 	name = "Space skybox"
-	init_order = INIT_ORDER_SKYBOX
+	init_order = SS_INIT_SKYBOX
 	flags = SS_NO_FIRE
 	var/BGrot
 	var/BGcolor
@@ -17,9 +16,10 @@ SUBSYSTEM_DEF(skybox)
 	var/list/skyboxes = list() //Keep track of all existing skyboxes.
 
 /datum/controller/subsystem/skybox/Initialize(timeofday)
-	..(timeofday)
 	BGcolor = RANDOM_RGB
 	BGrot = RANDOM_RIGHT_ANGLE
+
+	return ..()
 
 /datum/controller/subsystem/skybox/Recover()
 	BGrot = SSskybox.BGrot
@@ -64,5 +64,4 @@ SUBSYSTEM_DEF(skybox)
 		P.DoRotate()
 
 
-#undef RANDOM_RGB
 #undef RANDOM_RIGHT_ANGLE

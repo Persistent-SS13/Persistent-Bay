@@ -6,7 +6,7 @@
 	w_class = ITEM_SIZE_SMALL
 	anchored = 0
 
-	matter = list(DEFAULT_WALL_MATERIAL = 700,"glass" = 300)
+	matter = list(MATERIAL_ALUMINIUM = 700, MATERIAL_GLASS = 300)
 
 	//	Motion, EMP-Proof, X-Ray
 	var/list/obj/item/possible_upgrades = list(/obj/item/device/assembly/prox_sensor, /obj/item/stack/material/osmium, /obj/item/weapon/stock_parts/scanning_module)
@@ -92,7 +92,7 @@
 
 				var/area/camera_area = get_area(src)
 				var/temptag = "[sanitize(camera_area.name)] ([rand(1, 999)])"
-				input = sanitizeSafe(input(usr, "How would you like to name the camera?", "Set Camera Name", camera_name ? camera_name : temptag), MAX_NAME_LEN)
+				input = sanitizeSafe(input(usr, "How would you like to name the camera?", "Set Camera Name", camera_name ? camera_name : temptag), MAX_LNAME_LEN)
 
 				state = 4
 				var/obj/machinery/camera/C = new(src.loc)
@@ -112,6 +112,7 @@
 					if(i != 0)
 						var/confirm = alert(user, "Is this what you want? Chances Remaining: [i]", "Confirmation", "Yes", "No")
 						if(confirm == "Yes")
+							C.update_icon()
 							break
 				return
 
@@ -124,11 +125,9 @@
 				return
 
 	// Upgrades!
-	if(is_type_in_list(W, possible_upgrades) && !is_type_in_list(W, upgrades)) // Is a possible upgrade and isn't in the camera already.
+	if(is_type_in_list(W, possible_upgrades) && !is_type_in_list(W, upgrades) && user.unEquip(W, src)) // Is a possible upgrade and isn't in the camera already.
 		to_chat(user, "You attach \the [W] into the assembly inner circuits.")
 		upgrades += W
-		user.remove_from_mob(W)
-		W.forceMove(src)
 		return
 
 	// Taking out upgrades
@@ -143,7 +142,7 @@
 
 	..()
 
-/obj/item/weapon/camera_assembly/update_icon()
+/obj/item/weapon/camera_assembly/on_update_icon()
 	if(anchored)
 		icon_state = "camera1"
 	else
@@ -153,7 +152,7 @@
 	if(!anchored)
 		..()
 
-/obj/item/weapon/camera_assembly/proc/weld(var/obj/item/weapon/weldingtool/WT, var/mob/user)
+/obj/item/weapon/camera_assembly/proc/weld(var/obj/item/weapon/tool/weldingtool/WT, var/mob/user)
 
 	if(busy)
 		return 0

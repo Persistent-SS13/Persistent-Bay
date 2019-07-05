@@ -11,6 +11,7 @@
 	max_casts = 2
 	compatible_targets = list(/atom)
 	hud_state = "wiz_bshard"
+	cast_sound = 'sound/magic/demon_attack1.ogg'
 
 /spell/hand/charges/blood_shard/cast_hand(var/atom/A,var/mob/user)
 	var/obj/item/projectile/blood_shard/B = new(get_turf(user))
@@ -21,10 +22,9 @@
 
 /obj/item/projectile/blood_shard
 	name = "bloodshard"
-	damage = 15
-	check_armour = "melee"
+	force = 15
 	icon_state = "blood"
-	damage_type = BRUTE
+	damtype = DAM_PIERCE
 
 /obj/item/projectile/blood_shard/on_hit(var/atom/movable/target, var/blocked = 0)
 	if(..())
@@ -36,4 +36,4 @@
 
 /obj/item/projectile/bullet/pellet/blood
 	name = "blood fragment"
-	damage = 4
+	force = 4

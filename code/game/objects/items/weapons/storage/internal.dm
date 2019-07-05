@@ -10,9 +10,11 @@
 		name = master_item.name
 		verbs -= /obj/item/verb/verb_pickup	//make sure this is never picked up.
 		..()
+	ADD_SAVED_VAR(master_item)
+	
 /obj/item/weapon/storage/internal/after_load()
-	storage_ui = new storage_ui(src)
-	prepare_ui()
+	// storage_ui = new storage_ui(src)
+	// prepare_ui()
 	if(master_item)
 		loc = master_item
 		name = master_item.name

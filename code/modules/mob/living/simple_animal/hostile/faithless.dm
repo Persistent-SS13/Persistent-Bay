@@ -1,6 +1,6 @@
 /mob/living/simple_animal/hostile/faithless
 	name = "Faithless"
-	desc = "The Wish Granter's faith in humanity, incarnate"
+	desc = "The loss of faith leaves a burning absence."
 	icon_state = "faithless"
 	icon_living = "faithless"
 	icon_dead = "faithless_dead"
@@ -15,7 +15,7 @@
 
 	harm_intent_damage = 10
 	melee_damage_lower = 15
-	melee_damage_upper = 15
+	melee_damage_upper = 25
 	attacktext = "gripped"
 	attack_sound = 'sound/hallucinations/growl1.ogg'
 
@@ -25,6 +25,7 @@
 	speed = 4
 
 	faction = "faithless"
+	supernatural = 1
 
 /mob/living/simple_animal/hostile/faithless/Allow_Spacemove(var/check_drift = 0)
 	return 1

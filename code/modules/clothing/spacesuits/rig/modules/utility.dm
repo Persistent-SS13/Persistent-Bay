@@ -1,14 +1,11 @@
 /* Contains:
  * /obj/item/rig_module/device
- * /obj/item/rig_module/device/plasmacutter
  * /obj/item/rig_module/device/healthscanner
  * /obj/item/rig_module/device/drill
  * /obj/item/rig_module/device/orescanner
  * /obj/item/rig_module/device/rcd
  * /obj/item/rig_module/device/anomaly_scanner
  * /obj/item/rig_module/maneuvering_jets
- * /obj/item/rig_module/foam_sprayer
- * /obj/item/rig_module/device/broadcaster
  * /obj/item/rig_module/chem_dispenser
  * /obj/item/rig_module/chem_dispenser/injector
  * /obj/item/rig_module/voice
@@ -28,18 +25,6 @@
 	var/device_type
 	var/obj/item/device
 
-/obj/item/rig_module/device/plasmacutter
-	name = "hardsuit plasma cutter"
-	desc = "A lethal-looking industrial cutter."
-	icon_state = "plasmacutter"
-	interface_name = "plasma cutter"
-	interface_desc = "A self-sustaining plasma arc capable of cutting through walls."
-	suit_overlay_active = "plasmacutter"
-	suit_overlay_inactive = "plasmacutter"
-	use_power_cost = 50
-	origin_tech = list(TECH_MATERIAL = 4, TECH_PHORON = 3, TECH_ENGINEERING = 6)
-	device_type = /obj/item/weapon/gun/energy/plasmacutter
-
 /obj/item/rig_module/device/healthscanner
 	name = "health scanner module"
 	desc = "A hardsuit-mounted health scanner."
@@ -48,7 +33,7 @@
 	interface_desc = "Shows an informative health readout when used on a subject."
 	use_power_cost = 200
 	origin_tech = list(TECH_MAGNET = 3, TECH_BIO = 3, TECH_ENGINEERING = 5)
-	device_type = /obj/item/device/healthanalyzer
+	device_type = /obj/item/device/scanner/health
 
 /obj/item/rig_module/device/drill
 	name = "hardsuit drill mount"
@@ -57,8 +42,9 @@
 	interface_name = "mounted drill"
 	interface_desc = "A diamond-tipped industrial drill."
 	suit_overlay_active = "mounted-drill"
-	suit_overlay_inactive = "mounted-drill"
-	use_power_cost = 75
+	suit_overlay_inactive = null
+	use_power_cost = 3600 //2 Wh per use
+	module_cooldown = 0
 	origin_tech = list(TECH_MATERIAL = 6, TECH_POWER = 4, TECH_ENGINEERING = 6)
 	device_type = /obj/item/weapon/pickaxe/diamonddrill
 
@@ -81,12 +67,21 @@
 	icon_state = "scanner"
 	interface_name = "ore detector"
 	interface_desc = "A sonar system for detecting large masses of ore."
-	engage_string = "Begin Scan"
+	activate_string = "Get Survey Data Disk"
+	engage_string = "Display Readout"
 	usable = 1
-	selectable = 0
+	selectable = 1
+	toggleable = 1
 	use_power_cost = 200
-	device_type = /obj/item/weapon/mining_scanner
+	device_type = /obj/item/device/scanner/mining
 	origin_tech = list(TECH_MATERIAL = 4, TECH_MAGNET = 4, TECH_ENGINEERING = 6)
+
+/obj/item/rig_module/device/orescanner/activate()
+	if(!check() || !device)
+		return 0
+
+	var/obj/item/device/scanner/mining/scanner = device
+	scanner.put_disk_in_hand(holder.wearer)
 
 /obj/item/rig_module/device/rcd
 	name = "RCD mount"
@@ -96,7 +91,7 @@
 	interface_desc = "A device for building or removing walls. Cell-powered."
 	usable = 1
 	engage_string = "Configure RCD"
-	use_power_cost = 100 KILOWATTS // Matter fabrication is a very energy-demanding process.
+	use_power_cost = 300
 	origin_tech = list(TECH_MATERIAL = 6, TECH_MAGNET = 5, TECH_ENGINEERING = 7)
 	device_type = /obj/item/weapon/rcd/mounted
 
@@ -122,7 +117,6 @@
 	return 1
 
 
-
 /obj/item/rig_module/chem_dispenser
 	name = "mounted chemical dispenser"
 	desc = "A complex web of tubing and needles suitable for hardsuit use."
@@ -139,14 +133,12 @@
 	interface_desc = "Dispenses loaded chemicals directly into the wearer's bloodstream."
 
 	charges = list(
-		list("tricordrazine", "tricordrazine", /datum/reagent/tricordrazine,     80),
-		list("dramadol",      "tramadol",      /datum/reagent/tramadol,          80),
 		list("dexalin plus",  "dexalin plus",  /datum/reagent/dexalinp,          80),
-		list("antibiotics",   "antibiotics",   /datum/reagent/spaceacillin,      80),
-		list("antitoxins",    "antitoxins",    /datum/reagent/dylovene,          80),
-		list("glucose",       "glucose",       /datum/reagent/nutriment/glucose, 80),
+		list("dylovene",    "dylovene",    /datum/reagent/dylovene,          80),
 		list("hyronalin",     "hyronalin",     /datum/reagent/hyronalin,         80),
-		list("radium",        "radium",        /datum/reagent/radium,            80)
+		list("spaceacillin",   "spaceacillin",   /datum/reagent/spaceacillin,      80),
+		list("tramadol",      "tramadol",      /datum/reagent/tramadol,          80),
+		list("tricordrazine", "tricordrazine", /datum/reagent/tricordrazine,     80)
 		)
 
 	var/max_reagent_volume = 80 //Used when refilling.
@@ -156,14 +148,14 @@
 
 	//just over a syringe worth of each. Want more? Go refill. Gives the ninja another reason to have to show their face.
 	charges = list(
-		list("tricordrazine", "tricordrazine", /datum/reagent/tricordrazine,     20),
-		list("tramadol",      "tramadol",      /datum/reagent/tramadol,          20),
 		list("dexalin plus",  "dexalin plus",  /datum/reagent/dexalinp,          20),
-		list("antibiotics",   "antibiotics",   /datum/reagent/spaceacillin,      20),
-		list("antitoxins",    "antitoxins",    /datum/reagent/dylovene,          20),
+		list("dylovene",    "dylovene",    /datum/reagent/dylovene,          20),
 		list("glucose",       "glucose",       /datum/reagent/nutriment/glucose, 80),
 		list("hyronalin",     "hyronalin",     /datum/reagent/hyronalin,         20),
-		list("radium",        "radium",        /datum/reagent/radium,            20)
+		list("radium",        "radium",        /datum/reagent/radium,            20),
+		list("spaceacillin",   "spaceacillin",   /datum/reagent/spaceacillin,      20),
+		list("tramadol",      "tramadol",      /datum/reagent/tramadol,          20),
+		list("tricordrazine", "tricordrazine", /datum/reagent/tricordrazine,     20)
 		)
 
 /obj/item/rig_module/chem_dispenser/accepts_item(var/obj/item/input_item, var/mob/living/user)
@@ -264,6 +256,8 @@
 	usable = 0
 	selectable = 1
 	disruptive = 1
+
+	suit_overlay_active = "mounted-injector"
 
 	interface_name = "mounted chem injector"
 	interface_desc = "Dispenses loaded chemicals via an arm-mounted injector."
@@ -390,8 +384,6 @@
 	jets.holder = null
 	jets.ion_trail.set_up(jets)
 
-/obj/item/rig_module/foam_sprayer
-
 /obj/item/rig_module/device/paperdispenser
 	name = "hardsuit paper dispenser"
 	desc = "Crisp sheets."
@@ -461,3 +453,29 @@
 	interface_desc = "Eats trash like no one's business."
 	origin_tech = list(TECH_MATERIAL = 5, TECH_ENGINEERING = 5)
 	device_type = /obj/item/weapon/matter_decompiler
+
+/obj/item/rig_module/cooling_unit
+	name = "mounted cooling unit"
+	toggleable = 1
+	origin_tech = list(TECH_MAGNET = 2, TECH_MATERIAL = 2, TECH_ENGINEERING = 5)
+	interface_name = "mounted cooling unit"
+	interface_desc = "A heat sink with a liquid cooled radiator."
+	module_cooldown = 0 SECONDS //no cd because its critical for a life-support module
+	var/charge_consumption = 0.5 KILOWATTS
+	var/max_cooling = 12
+	var/thermostat = T20C
+
+/obj/item/rig_module/cooling_unit/Process()
+	if(!active)
+		return passive_power_cost
+
+	var/mob/living/carbon/human/H = holder.wearer
+
+	var/temp_adj = min(H.bodytemperature - thermostat, max_cooling) //Actually copies the original CU code
+
+	if (temp_adj < 0.5)
+		return passive_power_cost
+
+	H.bodytemperature -= temp_adj
+	active_power_cost = round((temp_adj/max_cooling)*charge_consumption)
+	return active_power_cost

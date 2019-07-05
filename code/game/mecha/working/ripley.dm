@@ -11,13 +11,10 @@
 
 /obj/mecha/working/ripley/Destroy()
 	for(var/atom/movable/A in src.cargo)
-		A.loc = loc
-		var/turf/T = loc
-		if(istype(T))
-			T.Entered(A)
+		A.dropInto(loc)
 		step_rand(A)
 	cargo.Cut()
-	..()
+	return ..()
 
 /obj/mecha/working/ripley/firefighter
 	desc = "Standart APLU chassis was refitted with additional thermal protection and cistern."
@@ -27,7 +24,7 @@
 	max_temperature = 65000
 	health = 250
 	lights_power = 8
-	damage_absorption = list("fire"=0.5,"bullet"=0.8,"bomb"=0.5)
+	damage_absorption = list(DAM_BURN = 0.5,DAM_BULLET = 0.8, DAM_BOMB =0.5)
 	wreckage = /obj/effect/decal/mecha_wreckage/ripley/firefighter
 
 /obj/mecha/working/ripley/deathripley

@@ -163,7 +163,7 @@ This saves us from having to call add_fingerprint() any time something is put in
 				update_inv_wear_mask(0)
 		if(src)
 			var/obj/item/clothing/mask/wear_mask = src.get_equipped_item(slot_wear_mask)
-			if(!(wear_mask && (wear_mask.item_flags & AIRTIGHT)))
+			if(!(wear_mask && (wear_mask.item_flags & ITEM_FLAG_AIRTIGHT)))
 				REMOVE_INTERNALS
 		update_inv_head()
 	else if (W == l_ear)
@@ -189,7 +189,9 @@ This saves us from having to call add_fingerprint() any time something is put in
 			if(I.flags_inv & (BLOCKHAIR|BLOCKHEADHAIR))
 				update_hair(0)	//rebuild hair
 				update_inv_ears(0)
-		REMOVE_INTERNALS
+		var/obj/item/clothing/mask/head = src.get_equipped_item(slot_head)
+		if(!(head && (head.item_flags & ITEM_FLAG_AIRTIGHT)))
+			REMOVE_INTERNALS
 		update_inv_wear_mask()
 	else if (W == wear_id)
 		wear_id = null
@@ -229,8 +231,6 @@ This saves us from having to call add_fingerprint() any time something is put in
 	update_action_buttons()
 	return 1
 
-/mob/proc/redraw_inv()
-	return 1
 
 /mob/living/carbon/human/redraw_inv()
 	var/obj/item/W
@@ -290,10 +290,10 @@ This saves us from having to call add_fingerprint() any time something is put in
 		W.hud_layerise()
 	if(hud_used)
 		hud_used.persistant_inventory_update()
-		hud_used.hands_inventory_update()
+		//hud_used.hands_inventory_update()
+
 //This is an UNSAFE proc. Use mob_can_equip() before calling this one! Or rather use equip_to_slot_if_possible() or advanced_equip_to_slot_if_possible()
 //set redraw_mob to 0 if you don't wish the hud to be updated - if you're doing it manually in your own proc.
-
 /mob/living/carbon/human/equip_to_slot(obj/item/W as obj, slot, redraw_mob = 1)
 
 	if(!slot) return
@@ -408,7 +408,8 @@ This saves us from having to call add_fingerprint() any time something is put in
 			W.forceMove(src.back)
 		if(slot_tie)
 			var/obj/item/clothing/under/uniform = src.w_uniform
-			uniform.attackby(W,src)
+			if(uniform)
+				uniform.attackby(W,src)
 		else
 			to_chat(src, "<span class='danger'>You are trying to eqip this item to an unsupported inventory slot. If possible, please write a ticket with steps to reproduce. Slot was: [slot]</span>")
 			return
@@ -494,5 +495,18 @@ This saves us from having to call add_fingerprint() any time something is put in
 		if(r_store)    . += r_store
 		if(handcuffed) . += handcuffed
 		if(s_store)    . += s_store
+
+//Same as get_covering_equipped_items, but using target zone instead of bodyparts flags
+/mob/living/carbon/human/proc/get_covering_equipped_item_by_zone(var/zone)
+	var/obj/item/organ/external/O = get_organ(zone)
+	if(O)
+		return get_covering_equipped_item(O.body_part)
+
+/mob/living/carbon/human/proc/has_item_equipped(var/itemtype)
+	var/list/equipped = get_equipped_items()
+	for(var/obj/item/E in equipped)
+		if(istype(E, itemtype))
+			return E
+	return null
 
 #undef REMOVE_INTERNALS

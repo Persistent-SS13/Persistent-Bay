@@ -10,7 +10,8 @@
 	var/newscast = 0
 	var/channel_name = "Announcements"
 	var/announcement_type = "Announcement"
-
+	var/sector = 1
+	var/faction = ""
 /datum/announcement/priority
 	title = "Priority Announcement"
 	announcement_type = "Priority Announcement"
@@ -29,7 +30,7 @@
 	title = "[command_name()] Update"
 	announcement_type = "[command_name()] Update"
 
-/datum/announcement/proc/Announce(var/message as text, var/new_title = "", var/new_sound = null, var/do_newscast = newscast, var/msg_sanitized = 0)
+/datum/announcement/proc/Announce(var/message as text, var/new_title = "", var/new_sound = null, var/do_newscast = newscast, var/msg_sanitized = 0, var/zlevels = GLOB.using_map.contact_levels)
 	if(!message)
 		return
 	var/message_title = new_title ? new_title : title
@@ -40,12 +41,20 @@
 	message_title = sanitizeSafe(message_title)
 
 	var/msg = FormMessage(message, message_title)
-	for(var/mob/M in GLOB.player_list)
-		if((M.z in (GLOB.using_map.contact_levels | GLOB.using_map.admin_levels)) && !istype(M,/mob/new_player) && !isdeaf(M))
-			to_chat(M, msg)
+	if(faction && faction != "")
+		for(var/mob/M in GLOB.player_list)
+			if((M.z+(M.z % 2) == sector) && !istype(M,/mob/new_player) && !isdeaf(M))
+				to_chat(M, msg)
 			if(message_sound)
 				sound_to(M, message_sound)
+	else
+		for(var/mob/M in GLOB.player_list)
+			if((M.z  in (zlevels | GLOB.using_map.admin_levels)) && !istype(M,/mob/new_player) && !isdeaf(M))
+				to_chat(M, msg)
+				if(message_sound)
+					sound_to(M, message_sound)
 
+  faction = ""
 	if(do_newscast)
 		NewsCast(message, message_title)
 
@@ -56,7 +65,9 @@
 datum/announcement/proc/FormMessage(message as text, message_title as text)
 	. = "<h2 class='alert'>[message_title]</h2>"
 	. += "<br><span class='alert'>[message]</span>"
-	if (announcer)
+	if(faction && faction != "")
+		. += "<br><span class='alert'> -([faction]) [html_encode(announcer)]</span>"
+	else if (announcer)
 		. += "<br><span class='alert'> -[html_encode(announcer)]</span>"
 
 datum/announcement/minor/FormMessage(message as text, message_title as text)
@@ -65,7 +76,9 @@ datum/announcement/minor/FormMessage(message as text, message_title as text)
 datum/announcement/priority/FormMessage(message as text, message_title as text)
 	. = "<h1 class='alert'>[message_title]</h1>"
 	. += "<br><span class='alert'>[message]</span>"
-	if(announcer)
+	if(faction && faction != "")
+		. += "<br><span class='alert'> -([faction]) [html_encode(announcer)]</span>"
+	else if (announcer)
 		. += "<br><span class='alert'> -[html_encode(announcer)]</span>"
 	. += "<br>"
 
@@ -100,13 +113,13 @@ datum/announcement/proc/NewsCast(message as text, message_title as text)
 /proc/level_seven_announcement()
 	GLOB.using_map.level_x_biohazard_announcement(7)
 
-/proc/ion_storm_announcement()
-	command_announcement.Announce("It has come to our attention that the [station_name()] passed through an ion storm.  Please monitor all electronic equipment for malfunctions.", "Anomaly Alert")
+/proc/ion_storm_announcement(list/affecting_z)
+	command_announcement.Announce("It has come to our attention that the [station_name()] passed through an ion storm.  Please monitor all electronic equipment for malfunctions.", "Anomaly Alert", zlevels = affecting_z)
 
 /proc/AnnounceArrival(var/mob/living/carbon/human/character, var/datum/job/job, var/join_message)
 	if(!istype(job) || !job.announced)
 		return
-	if (ticker.current_state != GAME_STATE_PLAYING)
+	if (GAME_STATE != RUNLEVEL_GAME)
 		return
 	var/rank = job.title
 	if(character.mind.role_alt_title)

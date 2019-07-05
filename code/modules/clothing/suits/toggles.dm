@@ -32,7 +32,7 @@
 	update_icon()
 	if(ishuman(hood.loc))
 		var/mob/living/carbon/H = hood.loc
-		H.unEquip(hood, 1)
+		H.drop_from_inventory(hood)
 		H.update_inv_wear_suit()
 	hood.forceMove(src)
 
@@ -57,7 +57,7 @@
 	else
 		RemoveHood()
 
-/obj/item/clothing/suit/storage/hooded/update_icon()
+/obj/item/clothing/suit/storage/hooded/on_update_icon()
 	if(suittoggled)
 		icon_state = "[initial(icon_state)]_t"
 	else
@@ -71,7 +71,19 @@
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
 	cold_protection = UPPER_TORSO|LOWER_TORSO|ARMS
 	min_cold_protection_temperature = ARMOR_MIN_COLD_PROTECTION_TEMPERATURE
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 10, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 10,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 	action_button_name = "Toggle Winter Hood"
 	hoodtype = /obj/item/clothing/head/winterhood
 	allowed = list (/obj/item/weapon/pen, /obj/item/weapon/paper, /obj/item/device/flashlight,/obj/item/weapon/storage/fancy/cigarettes, /obj/item/weapon/storage/box/matches, /obj/item/weapon/reagent_containers/food/drinks/flask)
@@ -89,31 +101,110 @@
 /obj/item/clothing/suit/storage/hooded/wintercoat/captain
 	name = "captain's winter coat"
 	icon_state = "coatcaptain"
-	armor = list(melee = 20, bullet = 15, laser = 20, energy = 10, bomb = 15, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 20,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 20,
+		DAM_BULLET 	= 15,
+		DAM_LASER 	= 20,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 15,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 1)
 
 /obj/item/clothing/suit/storage/hooded/wintercoat/security
 	name = "security winter coat"
 	icon_state = "coatsecurity"
-	armor = list(melee = 25, bullet = 20, laser = 20, energy = 15, bomb = 20, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 25,
+		DAM_PIERCE 	= 15,
+		DAM_CUT 	= 25,
+		DAM_BULLET 	= 20,
+		DAM_LASER 	= 20,
+		DAM_ENERGY 	= 15,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 20,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 1)
 
 /obj/item/clothing/suit/storage/hooded/wintercoat/medical
 	name = "medical winter coat"
 	icon_state = "coatmedical"
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 50, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 50,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/suit/storage/hooded/wintercoat/science
 	name = "science winter coat"
 	icon_state = "coatscience"
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 10, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 10,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 50,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/suit/storage/hooded/wintercoat/engineering
 	name = "engineering winter coat"
 	icon_state = "coatengineer"
-	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 0, rad = 20)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 20,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/suit/storage/hooded/wintercoat/engineering/atmos
 	name = "atmospherics winter coat"
 	icon_state = "coatatmos"
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
+
+/obj/item/clothing/suit/storage/hooded/wintercoat/dais
+	name = "\improper DAIS winter coat"
+	icon_state = "coat_dais"
+	siemens_coefficient = 0.5
+	desc = "A hooded winter coat colored blue and white and bearing the logo of Deimos Advanced Information Systems."
 
 /obj/item/clothing/suit/storage/hooded/wintercoat/hydro
 	name = "hydroponics winter coat"
@@ -126,7 +217,19 @@
 /obj/item/clothing/suit/storage/hooded/wintercoat/miner
 	name = "mining winter coat"
 	icon_state = "coatminer"
-	armor = list(melee = 10, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 20,
+		DAM_PIERCE 	= 10,
+		DAM_CUT 	= 15,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 1)
 
 /obj/item/clothing/suit/storage/hooded/hoodie
 	name = "hoodie"

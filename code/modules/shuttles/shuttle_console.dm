@@ -5,7 +5,7 @@
 	icon = 'icons/obj/computer.dmi'
 	icon_keyboard = "atmos_key"
 	icon_screen = "shuttle"
-	circuit = null
+	circuit = /obj/item/weapon/circuitboard/bridge_computer
 
 	var/shuttle_tag  // Used to coordinate data in shuttle controller.
 	var/hacked = 0   // Has been emagged, no access restrictions.
@@ -18,6 +18,17 @@
 	var/locked_to = "" // either the real_name or the faction_uid
 	var/ready = 0 // this is set to 1 to confirm construction is completed, and then the dock finalizes it
 	var/obj/machinery/docking_beacon/dock
+
+/obj/machinery/computer/bridge_computer/New()
+	. = ..()
+	ADD_SAVED_VAR(shuttle_tag)
+	ADD_SAVED_VAR(hacked)
+	ADD_SAVED_VAR(shuttle)
+	ADD_SAVED_VAR(desired_name)
+	ADD_SAVED_VAR(shuttle_type)
+	ADD_SAVED_VAR(locked_to)
+	ADD_SAVED_VAR(ready)
+
 /obj/machinery/computer/bridge_computer/attack_hand(user as mob)
 	if(..(user))
 		return
@@ -71,6 +82,9 @@
 		if(shuttle.finalized)
 			data["final"] = 1
 			data["name"] = shuttle.name
+			
+			data["shuttle_type"] = shuttle_type
+			
 			switch(shuttle.moving_status)
 				if(SHUTTLE_IDLE)
 					data["status"] = "Idle"
@@ -103,7 +117,7 @@
 			data["locked_to"] = locked_to != "" ? locked_to : "Unset!"
 
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, ui_template, "[shuttle_tag] Shuttle Control", 400, 300)
 		ui.set_initial_data(data)
@@ -122,7 +136,7 @@
 				locked_to = ""
 				return 0
 		else
-			var/datum/computer_file/crew_record/record = new()
+			var/datum/computer_file/report/crew_record/record = new()
 			if(!record.load_from_global(locked_to))
 				qdel(record)
 				locked_to = ""
@@ -190,7 +204,8 @@
 		if(beacon.dimensions < shuttle.size)
 			to_chat(usr, "Dock is not big enough.")
 			return 1
-		shuttle.short_jump(beacon, dock)
+		beacon.status = 4
+		shuttle.short_jump(beacon.get_top_turf(), dock.get_top_turf())
 		dock.status = 2
 		dock = beacon
 		dock.status = 4
@@ -249,6 +264,7 @@
 		"can_launch" = shuttle.can_launch(),
 		"can_cancel" = shuttle.can_cancel(),
 		"can_force" = shuttle.can_force(),
+		"docking_codes" = shuttle.docking_codes
 	)
 
 /obj/machinery/computer/shuttle_control/proc/handle_topic_href(var/datum/shuttle/autodock/shuttle, var/list/href_list)
@@ -297,14 +313,14 @@
 
 
 /obj/machinery/computer/shuttle_control/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
-	var/datum/shuttle/autodock/shuttle = shuttle_controller.shuttles[shuttle_tag]
+	var/datum/shuttle/autodock/shuttle = SSshuttle.shuttles[shuttle_tag]
 	if (!istype(shuttle))
 		to_chat(usr,"<span class='warning'>Unable to establish link with the shuttle.</span>")
 		return
 
 	var/list/data = get_ui_data(shuttle)
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, ui_template, "[shuttle_tag] Shuttle Control", 470, 450)
 		ui.set_initial_data(data)
@@ -315,7 +331,7 @@
 	if(..())
 		return 1
 
-	handle_topic_href(shuttle_controller.shuttles[shuttle_tag], href_list)
+	handle_topic_href(SSshuttle.shuttles[shuttle_tag], href_list)
 
 /obj/machinery/computer/shuttle_control/emag_act(var/remaining_charges, var/mob/user)
 	if (!hacked)

@@ -10,7 +10,10 @@
 /mob/living/bot/mulebot
 	name = "Mulebot"
 	desc = "A Multiple Utility Load Effector bot."
+	icon = 'icons/mob/bot/mulebot.dmi'
 	icon_state = "mulebot0"
+	plane = MOB_PLANE
+	layer = MOB_LAYER
 	anchored = 1
 	density = 1
 	health = 150
@@ -211,12 +214,12 @@
 		playsound(loc, 'sound/effects/splat.ogg', 50, 1)
 
 		var/damage = rand(5, 7)
-		H.apply_damage(2 * damage, BRUTE, BP_HEAD)
-		H.apply_damage(2 * damage, BRUTE, BP_CHEST)
-		H.apply_damage(0.5 * damage, BRUTE, BP_L_LEG)
-		H.apply_damage(0.5 * damage, BRUTE, BP_R_LEG)
-		H.apply_damage(0.5 * damage, BRUTE, BP_L_ARM)
-		H.apply_damage(0.5 * damage, BRUTE, BP_R_ARM)
+		H.apply_damage(2 * damage, DAM_BLUNT, BP_HEAD)
+		H.apply_damage(2 * damage, DAM_BLUNT, BP_CHEST)
+		H.apply_damage(0.5 * damage, DAM_BLUNT, BP_L_LEG)
+		H.apply_damage(0.5 * damage, DAM_BLUNT, BP_R_LEG)
+		H.apply_damage(0.5 * damage, DAM_BLUNT, BP_L_ARM)
+		H.apply_damage(0.5 * damage, DAM_BLUNT, BP_R_ARM)
 
 		blood_splatter(src, H, 1)
 	..()
@@ -232,8 +235,8 @@
 
 	var/turf/Tsec = get_turf(src)
 	new /obj/item/device/assembly/prox_sensor(Tsec)
-	new /obj/item/stack/rods(Tsec)
-	new /obj/item/stack/rods(Tsec)
+	new /obj/item/stack/material/rods(Tsec)
+	new /obj/item/stack/material/rods(Tsec)
 	new /obj/item/stack/cable_coil/cut(Tsec)
 
 	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread

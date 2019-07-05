@@ -9,9 +9,10 @@
 	plane = ABOVE_HUMAN_PLANE // this needs to be fairly high so it displays over most things, but it needs to be under lighting
 	interact_offline = 1
 	layer = ABOVE_HUMAN_LAYER
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE
+	circuit_type = /obj/item/weapon/circuitboard/cryo_cell
 
 	var/on = 0
-	use_power = 1
 	idle_power_usage = 20
 	active_power_usage = 200
 	clicksound = 'sound/machines/buttonbeep.ogg'
@@ -25,31 +26,26 @@
 
 /obj/machinery/atmospherics/unary/cryo_cell/New()
 	..()
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(occupant)
+	ADD_SAVED_VAR(beaker)
+
+	ADD_SKIP_EMPTY(occupant)
+	ADD_SKIP_EMPTY(beaker)
+
+/obj/machinery/atmospherics/unary/cryo_cell/Initialize()
+	. = ..()
 	icon = 'icons/obj/cryogenics_split.dmi'
 	update_icon()
 	initialize_directions = dir
-	initialize()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/cryo_tube(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/stack/cable_coil(src, 1)
-	RefreshParts()
+	atmos_init()
+	if(node) return
+	var/node_connect = dir
+	for(var/obj/machinery/atmospherics/target in get_step(src,node_connect))
+		if(target.initialize_directions & get_dir(target,src))
+			node = target
+			break
 
-/obj/machinery/atmospherics/unary/cryo_cell/upgraded/New()
-	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/cryo_tube(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin/super(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/stack/cable_coil(src, 1)
-	RefreshParts()
 
 /obj/machinery/atmospherics/unary/cryo_cell/RefreshParts()
 	var/C
@@ -58,21 +54,13 @@
 	current_heat_capacity = 50 * C
 	efficiency = C
 
-/obj/machinery/atmospherics/unary/cryo_cell/proc/initialize()
-	if(node) return
-	var/node_connect = dir
-	for(var/obj/machinery/atmospherics/target in get_step(src,node_connect))
-		if(target.initialize_directions & get_dir(target,src))
-			node = target
-			break
-
 /obj/machinery/atmospherics/unary/cryo_cell/Destroy()
 	var/turf/T = loc
 	T.contents += contents
-	var/obj/item/weapon/reagent_containers/glass/B = beaker
 	if(beaker)
-		B.loc = get_step(loc, SOUTH) //Beaker is carefully ejected from the wreckage of the cryotube
-	..()
+		beaker.forceMove(get_step(loc, SOUTH)) //Beaker is carefully ejected from the wreckage of the cryotube
+		beaker = null
+	. = ..()
 
 /obj/machinery/atmospherics/unary/cryo_cell/atmos_init()
 	..()
@@ -83,6 +71,13 @@
 			node = target
 			break
 
+/obj/machinery/atmospherics/unary/cryo_cell/examine(mob/user)
+	. = ..()
+	if (. && user.Adjacent(src))
+		if (beaker)
+			to_chat(user, "It is loaded with a beaker.")
+		if (occupant)
+			occupant.examine(user)
 
 /obj/machinery/atmospherics/unary/cryo_cell/MouseDrop_T(atom/movable/O as mob|obj, mob/user as mob)
 	if(O.loc == user) //no you can't pull things out of your ass
@@ -130,6 +125,14 @@
 	..()
 	if(!node)
 		return
+
+	var/has_air_contents = FALSE
+	if(air_contents) //Check this even if it's unpowered
+		ADJUST_ATOM_TEMPERATURE(src, air_contents.temperature)
+		if(beaker)
+			QUEUE_TEMPERATURE_ATOMS(beaker)
+		has_air_contents = TRUE
+
 	if(!on)
 		return
 
@@ -137,7 +140,7 @@
 		if(occupant.stat != 2)
 			process_occupant()
 
-	if(air_contents)
+	if(has_air_contents)
 		temperature_archived = air_contents.temperature
 		heat_gas_contents()
 		expel_gas()
@@ -167,7 +170,6 @@
   * @return nothing
   */
 /obj/machinery/atmospherics/unary/cryo_cell/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
-
 	if(user == occupant || user.stat)
 		return
 
@@ -189,15 +191,15 @@
 			cloneloss = "minor"
 		var/scan = medical_scan_results(occupant)
 		scan += "<br><br>Genetic degradation: [cloneloss]"
-		scan = replacetext(scan,"'notice'","'white'")
-		scan = replacetext(scan,"'warning'","'average'")
-		scan = replacetext(scan,"'danger'","'bad'")
+		scan = replacetext(scan,"'scan_notice'","'white'")
+		scan = replacetext(scan,"'scan_warning'","'average'")
+		scan = replacetext(scan,"'scan_danger'","'bad'")
 		scan += "<br>Cryostasis factor: [occupant.stasis_value]x"
 		data["occupant"] = scan
 
 	data["cellTemperature"] = round(air_contents.temperature)
 	data["cellTemperatureStatus"] = "good"
-	if(air_contents.temperature > T0C) // if greater than 273.15 kelvin (0 celcius)
+	if(air_contents.temperature > T0C) // if greater than 273.15 kelvin (0 celsius)
 		data["cellTemperatureStatus"] = "bad"
 	else if(air_contents.temperature > 225)
 		data["cellTemperatureStatus"] = "average"
@@ -211,7 +213,7 @@
 		data["beakerVolume"] = beaker.reagents.total_volume
 
 	// update the ui if it exists, returns null if no ui is passed/found
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		// the ui does not exist, so we'll create a new() one
 		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
@@ -226,8 +228,9 @@
 /obj/machinery/atmospherics/unary/cryo_cell/OnTopic(user, href_list)
 	if(user == occupant)
 		return STATUS_CLOSE
-	return ..()
+	. = ..()
 
+/obj/machinery/atmospherics/unary/cryo_cell/OnTopic(user, href_list)
 	if(href_list["switchOn"])
 		on = 1
 		update_icon()
@@ -247,107 +250,61 @@
 		return TOPIC_REFRESH
 
 	if(href_list["ejectOccupant"])
-		if(!occupant || isslime(usr) || ispAI(usr))
-			return 0 // don't update UIs attached to this object
+		if(!occupant || isslime(user) || ispAI(user))
+			return TOPIC_HANDLED // don't update UIs attached to this object
 		go_out()
 		return TOPIC_REFRESH
 
-	add_fingerprint(user)
 
 /obj/machinery/atmospherics/unary/cryo_cell/attackby(var/obj/G, var/mob/user as mob)
+	if(default_deconstruction_screwdriver(user, G))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, G))
+		return
+	if(default_part_replacement(user, G))
+		return
 	if(istype(G, /obj/item/weapon/reagent_containers/glass))
 		if(beaker)
 			to_chat(user, "<span class='warning'>A beaker is already loaded into the machine.</span>")
 			return
-
+		if(!user.unEquip(G, src))
+			return // Temperature will be adjusted on Entered()
 		beaker =  G
-		user.drop_item()
-		G.forceMove(src)
 		user.visible_message("[user] adds \a [G] to \the [src]!", "You add \a [G] to \the [src]!")
 	else if(istype(G, /obj/item/grab))
-		if(!ismob(G:affecting))
+		var/obj/item/grab/grab = G
+		if(!ismob(grab.affecting))
 			return
-		for(var/mob/living/carbon/slime/M in range(1,G:affecting))
-			if(M.Victim == G:affecting)
-				to_chat(usr, "[G:affecting:name] will not fit into the cryo because they have a slime latched onto their head.")
+		for(var/mob/living/carbon/slime/M in range(1,grab.affecting))
+			if(M.Victim == grab.affecting)
+				to_chat(user, "[grab.affecting.name] will not fit into the cryo because they have a slime latched onto their head.")
 				return
-		var/mob/M = G:affecting
-		if(put_mob(M))
+		if(put_mob(grab.affecting))
 			qdel(G)
 	return
 
-	if(istype(G, /obj/item/grab))
-		if(panel_open)
-			user << "\blue <b>Close the maintenance panel first.</b>"
-			return
-		if(!ismob(G:affecting))
-			return
-		for(var/mob/living/carbon/slime/M in range(1,G:affecting))
-			if(M.Victim == G:affecting)
-				usr << "[G:affecting:name] will not fit into the cryo because they have a slime latched onto their head."
-				return
-		var/mob/M = G:affecting
-		if(put_mob(M))
-			del(G)
-	return
+/obj/machinery/atmospherics/unary/cryo_cell/on_update_icon()
+	overlays.Cut()
+	icon_state = "pod[on]"
+	var/image/I
 
-/obj/machinery/atmospherics/unary/cryo_cell/update_icon()
-	handle_update_icon()
-
-/obj/machinery/atmospherics/unary/cryo_cell/attackby(var/obj/item/O as obj, var/mob/user as mob)
-
-	if(default_deconstruction_screwdriver(user, O))
-		updateUsrDialog()
-		return
-	if(default_deconstruction_crowbar(user, O))
-		return
-	if(default_part_replacement(user, O))
-		return
-	return ..()
-/obj/machinery/atmospherics/unary/cryo_cell/proc/handle_update_icon() //making another proc to avoid spam in update_icon
-	overlays.Cut() //empty the overlay proc, just in case
-	icon_state = "pod[on]" //set the icon properly every time
-
-	if(!src.occupant)
-		overlays += "lid[on]" //if no occupant, just put the lid overlay on, and ignore the rest
-		return
-
+	I = image(icon, "pod[on]_top")
+	I.pixel_z = 32
+	overlays += I
 
 	if(occupant)
 		var/image/pickle = image(occupant.icon, occupant.icon_state)
 		pickle.overlays = occupant.overlays
-		pickle.pixel_y = 22
-
+		pickle.pixel_z = 18
 		overlays += pickle
-		overlays += "lid[on]"
-		if(src.on) //no bobbing if off
-			var/up = 0 //used to see if we are going up or down, 1 is down, 2 is up
-			while(occupant)
-				overlays -= "lid[on]" //have to remove the overlays first, to force an update- remove cloning pod overlay
-				overlays -= pickle //remove mob overlay
 
-				switch(pickle.pixel_y) //this looks messy as fuck but it works, switch won't call itself twice
+	I = image(icon, "lid[on]")
+	overlays += I
 
-					if(23) //inbetween state, for smoothness
-						switch(up) //this is set later in the switch, to keep track of where the mob is supposed to go
-							if(2) //2 is up
-								pickle.pixel_y = 24 //set to highest
-
-							if(1) //1 is down
-								pickle.pixel_y = 22 //set to lowest
-
-					if(22) //mob is at it's lowest
-						pickle.pixel_y = 23 //set to inbetween
-						up = 2 //have to go up
-
-					if(24) //mob is at it's highest
-						pickle.pixel_y = 23 //set to inbetween
-						up = 1 //have to go down
-
-				overlays += pickle //re-add the mob to the icon
-				overlays += "lid[on]" //re-add the overlay of the pod, they are inside it, not floating
-
-				sleep(7) //don't want to jiggle violently, just slowly bob
+	I = image(icon, "lid[on]_top")
+	I.pixel_z = 32
+	overlays += I
 
 /obj/machinery/atmospherics/unary/cryo_cell/proc/process_occupant()
 	if(air_contents.total_moles < 10)
@@ -362,9 +319,7 @@
 			var/heal_brute = occupant.getBruteLoss() ? min(1, 20/occupant.getBruteLoss()) : 0
 			var/heal_fire = occupant.getFireLoss	() ? min(1, 20/occupant.getFireLoss()) : 0
 			occupant.heal_organ_damage(heal_brute,heal_fire)
-
-		var/has_cryo_medicine = occupant.reagents.has_any_reagent(list(/datum/reagent/cryoxadone, /datum/reagent/clonexadone)) >= REM
-
+		var/has_cryo_medicine = occupant.reagents.has_any_reagent(list(/datum/reagent/cryoxadone, /datum/reagent/clonexadone, /datum/reagent/nanitefluid)) >= REM
 		if(beaker && !has_cryo_medicine)
 			beaker.reagents.trans_to_mob(occupant, REM, CHEM_BLOOD)
 
@@ -401,9 +356,11 @@
 		occupant.bodytemperature = 261									  // Changed to 70 from 140 by Zuhayr due to reoccurance of bug.
 	occupant = null
 	current_heat_capacity = initial(current_heat_capacity)
-	update_use_power(1)
+	update_use_power(POWER_USE_IDLE)
 	update_icon()
+	SetName(initial(name))
 	return
+
 /obj/machinery/atmospherics/unary/cryo_cell/proc/put_mob(mob/living/carbon/M as mob)
 	if (stat & (NOPOWER|BROKEN))
 		to_chat(usr, "<span class='warning'>The cryo cell is not functioning.</span>")
@@ -430,10 +387,10 @@
 		to_chat(M, "<span class='notice'><b>You feel a cold liquid surround you. Your skin starts to freeze up.</b></span>")
 	occupant = M
 	current_heat_capacity = HEAT_CAPACITY_HUMAN
-	update_use_power(2)
-//	M.metabslow = 1
+	update_use_power(POWER_USE_ACTIVE)
 	add_fingerprint(usr)
 	update_icon()
+	SetName("[name] ([occupant])")
 	return 1
 
 	//Like grab-putting, but for mouse-dropping.
@@ -484,9 +441,7 @@
 	return
 
 /obj/machinery/atmospherics/unary/cryo_cell/return_air()
-	if(on)
-		return air_contents
-	..()
+	return air_contents
 
 //This proc literally only exists for cryo cells.
 /atom/proc/return_air_for_internal_lifeform()

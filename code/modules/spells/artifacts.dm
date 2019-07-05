@@ -8,12 +8,12 @@
 	throw_speed = 3
 	throw_range = 7
 	throwforce = 10
-	damtype = BURN
+	damtype = DAM_BURN
 	force = 10
-	hitsound = 'sound/items/welder2.ogg'
+	sound_hit = 'sound/magic/forcewall.ogg'
 
 /obj/item/weapon/scrying/attack_self(mob/user as mob)
-	if((user.mind && !wizards.is_antagonist(user.mind)))
+	if((user.mind && !GLOB.wizards.is_antagonist(user.mind)))
 		to_chat(user, "<span class='warning'>You stare into the orb and see nothing but your own reflection.</span>")
 		return
 

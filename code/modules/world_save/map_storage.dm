@@ -1,10 +1,12 @@
+#define SAVECHUNK_SIZEX 16
+#define SAVECHUNK_SIZEY 16
+
 var/global/list/found_vars = list()
 var/global/list/all_loaded = list()
 var/global/list/saved = list()
 var/global/list/areas_to_save = list()
 var/global/list/zones_to_save = list()
 var/global/list/debug_data = list()
-
 /proc/Prepare_Atmos_For_Saving()
 	for(var/datum/pipe_network/net in SSmachines.pipenets)
 		for(var/datum/pipeline/line in net.line_members)
@@ -14,8 +16,8 @@ var/global/list/debug_data = list()
 	var/area_type = "/area"
 	var/name
 	var/list/turfs = list()
-	map_storage_saved_vars = "area_type;name;turfs"
-
+	map_storage_saved_vars = "area_type;name;turfs;shuttle"
+	var/shuttle
 /obj/item/map_storage_debugger
 	name = "DEBUG ITEM"
 	desc = "DEBUG ITEM"
@@ -43,12 +45,17 @@ var/global/list/debug_data = list()
 	var/skip_icon_state = 0
 	var/map_storage_loaded = 0 // this is special instructions for problematic Initialize()
 /mob
-	var/saved_ckey = ""
+	var/stored_ckey = ""
+
 /atom/movable/lighting_overlay
 	should_save = 0
 
+
+
 /turf/space
 	map_storage_saved_vars = "contents"
+
+
 
 /turf/space/after_load()
 	..()
@@ -63,6 +70,9 @@ var/global/list/debug_data = list()
 /obj
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
 
+/obj/after_load()
+	..()
+	queue_icon_update()
 /area
 	map_storage_saved_vars = ""
 
@@ -78,26 +88,41 @@ var/global/list/debug_data = list()
 /datum/proc/before_load()
 	return
 
+
+/datum/chunk_holder/StandardRead(var/savefile/f)
+	..()
+	var/ve
+	while(!f.eof)
+		from_file(f, ve)
+
+/datum/chunk_holder/StandardWrite(var/savefile/f)
+	..()
+	for(var/x in turfs)
+		to_file(f, x)
+
+
 /turf/after_load()
 	..()
-	update_icon()
+	decals = saved_decals.Copy()
+	queue_icon_update()
 	if(dynamic_lighting)
 		lighting_build_overlay()
 	else
 		lighting_clear_overlay()
-	for(var/obj/effect/floor_decal/decal in saved_decals)
-		decal.init_for(src)
 
 /atom/movable/lighting_overlay/after_load()
 	loc = null
 	qdel(src)
 
-/mob/living/carbon/human/after_load()
-	..()
-	regenerate_icons()
-	redraw_inv()
-	handle_organs(1)
+/datum/proc/before_save()
+	return
+/datum/proc/after_save() //Sometimes we change the value of some variables for saving purpose only.. and want to change them back after
+	return
+
 /datum/proc/StandardWrite(var/savefile/f)
+	if(QDELETED(src) && !istype(src, /datum/money_account))	// If we are deleted, we shouldn't be saving
+		return
+	before_save()
 	var/list/saving
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
@@ -111,24 +136,25 @@ var/global/list/debug_data = list()
 			continue
 		if(vars[variable] == initial(vars[variable]))
 			continue
-		var/list/return_this = list()
 		if(istype(vars[variable], /datum))
 			var/datum/D = vars[variable]
+			if(QDELETED(D))
+				continue
 			if(!D.should_save(src))
 				continue
 		if(istype(vars[variable], /list))
 			if(variable in params2list(skip_empty))
 				var/list/lis = vars[variable]
 				if(!lis.len) continue
-			var/list/D = vars[variable]
+			var/list/C = vars[variable]
+			var/list/D = C.Copy()
 			for(var/datum/dat in D)
 				if(!dat.should_save(src))
 					D -= dat
-					return_this += dat
-		to_file(f["[variable]"],vars[variable])
-		if(return_this.len)
-			var/list/D = vars[variable]
-			D += return_this
+			to_file(f["[variable]"],D)
+		else
+			to_file(f["[variable]"],vars[variable])
+	after_save()
 
 /datum/Write(savefile/f)
 	StandardWrite(f)
@@ -151,13 +177,17 @@ var/global/list/debug_data = list()
 		zones_to_save |= zone
 	areas_to_save |= loc
 	StandardWrite(f)
-
+/turf/StandardWrite(f)
+	var/starttime = REALTIMEOFDAY
+	..()
+	if((REALTIMEOFDAY - starttime)/10 > 2)
+		to_world("[src.type] took [(REALTIMEOFDAY - starttime)/10] seconds to save at [x] [y] [z]")
 /mob/Write(savefile/f)
 	StandardWrite(f)
 	if(ckey)
 		to_file(f["ckey"], ckey)
 	else
-		to_file(f["ckey"], saved_ckey)
+		to_file(f["ckey"], stored_ckey)
 
 /area/proc/get_turf_coords()
 	var/list/coord_list = list()
@@ -193,7 +223,7 @@ var/global/list/debug_data = list()
 
 	for(var/ind in 1 to loading.len)
 		var/variable = loading[ind]
-		if(f.dir.Find("[variable]"))
+		if(hasvar(src, variable) && f.dir.Find("[variable]"))
 			from_file(f["[variable]"],vars[variable])
 	if("[src.type]" in debug_data)
 		var/amount = debug_data["[src.type]"][1]
@@ -228,7 +258,7 @@ var/global/list/debug_data = list()
 	else
 		debug_data["[src.type]"] = list(1,(REALTIMEOFDAY - starttime)/10)
 	if((REALTIMEOFDAY - starttime)/10 > 29)
-		world << "[src.type] took [(REALTIMEOFDAY - starttime)/10] seconds to load at [x] [y] [z]"
+		to_world("[src.type] took [(REALTIMEOFDAY - starttime)/10] seconds to load at [x] [y] [z]")
 
 /datum/Read(savefile/f)
 	StandardRead(f)
@@ -250,7 +280,7 @@ var/global/list/debug_data = list()
 
 /mob/Read(savefile/f)
 	StandardRead(f)
-	from_file(f["ckey"], saved_ckey)
+	from_file(f["ckey"], stored_ckey)
 
 /turf/Read(savefile/f)
 	StandardRead(f)
@@ -258,87 +288,221 @@ var/global/list/debug_data = list()
 /area/Read(savefile/f)
 	return 0
 
+/datum/chunk_holder
+	var/list/turfs = list()
+
 /proc/Save_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
 	var/z = zi
-	xi = (xi - (xi % 20) + 1)
-	yi = (yi - (yi % 20) + 1)
-	var/list/lis = list()
-	for(var/y in yi to yi + 20)
-		for(var/x in xi to xi + 20)
+	xi = (xi - (xi % SAVECHUNK_SIZEX) + 1)
+	yi = (yi - (yi % SAVECHUNK_SIZEY) + 1)
+	var/datum/chunk_holder/holder = new()
+	for(var/y in yi to yi + SAVECHUNK_SIZEY)
+		for(var/x in xi to xi + SAVECHUNK_SIZEX)
 			var/turf/T = locate(x,y,z)
 			if(!T || ((T.type == /turf/space || T.type == /turf/simulated/open) && (!T.contents || !T.contents.len)))
 				continue
-			lis |= T
-	to_file(f,lis)
+			holder.turfs |= T
+	to_file(f,holder)
+
+/proc/Save_Records(var/backup_dir)
+	to_world("<font size=3 color='green'>Saving crew records..</font>")
+	for(var/datum/computer_file/report/crew_record/L in GLOB.all_crew_records)
+		var/key = L.get_name()
+		fcopy("record_saves/[key].sav", "backups/[backup_dir]/records/[key].sav")
+		fdel("record_saves/[key].sav")
+		var/savefile/f = new("record_saves/[key].sav")
+		to_file(f, L)
+		if(!L.linked_account)
+			message_admins("RECORD [key] HAS NO LINKED ACCOUNT!!! GENERATING ONE")
+			L.linked_account = create_account(L.get_name(), 0, null)
+			L.linked_account.remote_access_pin = rand(1111,9999)
+			L.linked_account = L.linked_account.after_load()
+			L.linked_account.money = 1000
+		to_file(f, L.linked_account)
+		if(L.linked_account)
+			var/key2 = L.linked_account.account_number
+
+			fdel("record_saves/[key2].sav")
+			var/savefile/fa = new("record_saves/[key2].sav")
+			to_file(fa, L)
+			to_file(fa, L.linked_account)
+		var/key3 = L.get_fingerprint()
+		fdel("record_saves/[key3].sav")
+		var/savefile/fe = new("record_saves/[key3].sav")
+		to_file(fe, L)
+		to_file(fe, L.linked_account)
+
+	to_world("<font size=3 color='green'>Saving faction records..</font>")
+	for(var/datum/world_faction/faction in GLOB.all_world_factions)
+		var/list/records = faction.get_records()
+		for(var/datum/computer_file/report/crew_record/L in records)
+			var/key = L.get_name()
+			fcopy("record_saves/[faction.uid]/[key].sav", "backups/[backup_dir]/records/[faction.uid]/[key].sav")
+			fdel("record_saves/[faction.uid]/[key].sav")
+			var/savefile/f = new("record_saves/[faction.uid]/[key].sav")
+			to_file(f, L)
 
 /proc/Save_World()
+	to_world("<font size=4 color='green'>The world is saving! Characters are frozen and you won't be able to join at this time.</font>")
+	sleep(20)
+	var/reallow = 0
+	if(config.enter_allowed) reallow = 1
+	config.enter_allowed = 0
 	Prepare_Atmos_For_Saving()
 	areas_to_save = list()
 	zones_to_save = list()
 	var/starttime = REALTIMEOFDAY
 	var/backup = 0
 	var/dir = 1
+
 	while(!backup)
-		if(fexists("backups/[dir].sav"))
+		if(fexists("backups/[dir]/z1.sav"))
 			dir++
 		else
 			backup = 1
-			fcopy("map_saves/game.sav", "backups/[dir].sav")
-	fdel("map_saves/game.sav")
-	var/savefile/f = new("map_saves/game.sav")
 	found_vars = list()
-	for(var/z in 1 to 50)
-		f.cd = "/map/[z]"
-		for(var/x in 1 to world.maxx step 20)
-			for(var/y in 1 to world.maxy step 20)
-				Save_Chunk(x,y,z, f)
-				CHECK_TICK
-	f.cd = "/extras"
+	to_world("<font size=3 color='green'>Saving chunks..</font>")
+	for(var/z in 1 to SAVED_ZLEVELS)
+		fcopy("map_saves/z[z].sav", "backups/[dir]/z[z].sav")
+		fdel("map_saves/z[z].sav")
+		var/savefile/f = new("map_saves/z[z].sav")
+		for(var/x in 1 to world.maxx step SAVECHUNK_SIZEX)
+			for(var/y in 1 to world.maxy step SAVECHUNK_SIZEY)
+				Save_Chunk(x,y,z,f)
+		f = null
+	fcopy("map_saves/extras.sav", "backups/[dir]/extras.sav")
+	fdel("map_saves/extras.sav")
+	var/savefile/f = new("map_saves/extras.sav")
 	var/list/formatted_areas = list()
+	to_world("<font size=3 color='green'>Saving areas..</font>")
 	for(var/area/A in areas_to_save)
 		if(istype(A, /area/space)) continue
 		var/datum/area_holder/holder = new()
 		holder.area_type = A.type
 		holder.name = A.name
 		holder.turfs = A.get_turf_coords()
+		holder.shuttle = A.shuttle
 		formatted_areas += holder
 	var/list/zones = list()
+	to_world("<font size=3 color='green'>Saving zones..</font>")
 	for(var/zone/Z in zones_to_save)
 		Z.turf_coords = Z.get_turf_coords()
 		zones |= Z
+	to_world("<font size=3 color='green'>Saving factions..</font>")
 	to_file(f["factions"],GLOB.all_world_factions)
-	to_file(f["businesses"],GLOB.all_business)
+	to_world("<font size=3 color='green'>Saving marketplace..</font>")
+	to_file(f["material_marketplace"],GLOB.material_marketplace)
+	to_file(f["contract_database"],GLOB.contract_database)
 	to_file(f["zones"],zones)
 	to_file(f["areas"],formatted_areas)
-	to_file(f["turbolifts"],turbolifts)
-	to_file(f["records"],GLOB.all_crew_records)
-	to_file(f["email"],ntnet_global.email_accounts)
+	Save_Records(dir)
+
 	to_file(f["next_account_number"],next_account_number)
-	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
-	world << "Saving Complete"
+	if(reallow) config.enter_allowed = 1
+	to_world("Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!")
+	to_world("Saving Complete")
+	f = null
 	return 1
+
+
+/proc/Send_Email(var/key, var/sender = "Unknown", var/subject, var/body)
+	var/datum/computer_file/report/crew_record/record = Retrieve_Record(key)
+	if(record && record.email)
+		var/datum/computer_file/data/email_message/message = new()
+		message.title = subject
+		message.stored_data = body
+		message.source = sender
+		var/datum/computer_file/data/email_account/recipient = record.email
+		if(!istype(recipient))
+			return 0
+		if(!recipient.receive_mail(message))
+			return
+		return 1
+
+
+/proc/Get_Email_Account(var/key) // 2 = ATM account
+	var/datum/computer_file/report/crew_record/record = Retrieve_Record(key)
+	if(record && record.email)
+		return record.email
+
+/proc/Retrieve_Record(var/key, var/func = 1) // 2 = ATM account
+	for(var/datum/computer_file/report/crew_record/record2 in GLOB.all_crew_records)
+		if(record2.get_name() == key)
+			return record2
+	if(!fexists("record_saves/[key].sav")) return
+	var/savefile/f = new("record_saves/[key].sav")
+	var/datum/computer_file/report/crew_record/v
+	from_file(f, v)
+	var/datum/money_account/account
+	from_file(f, account)
+	if(!v)
+		message_admins("fucked up record [key]")
+		if(func == 1)
+			v = new()
+			v.set_name(key)
+		else
+			return
+	if(!account)
+		message_admins("broken account for [key]")
+		v.linked_account = create_account(v.get_name(), 0, null)
+		v.linked_account.remote_access_pin = rand(1111,9999)
+		v.linked_account = v.linked_account.after_load()
+		v.linked_account.money = 1000
+	else
+		v.linked_account = account
+	if(v.linked_account)
+		v.linked_account = v.linked_account.after_load()
+
+	for(var/datum/computer_file/report/crew_record/record2 in GLOB.all_crew_records)
+		if(record2.get_name() == v.get_name())
+			if(v.linked_account && !record2.linked_account || (record2.linked_account && v.linked_account && record2.linked_account.money < v.linked_account))
+				message_admins("recovered account found for [key] [v.get_name()]")
+				all_money_accounts.Remove(v.linked_account)
+				record2.linked_account = v.linked_account
+			return record2
+	GLOB.all_crew_records |= v
+	return v
+
+
+/proc/Retrieve_Record_Faction(var/key, var/datum/world_faction/faction)
+	if(!faction) return
+	for(var/datum/computer_file/report/crew_record/record2 in faction.records.faction_records)
+		if(record2.get_name() == key)
+			return record2
+	if(!fexists("record_saves/[faction.uid]/[key].sav")) return
+	var/savefile/f = new("record_saves/[faction.uid]/[key].sav")
+	var/v
+	from_file(f, v)
+	var/list/records = faction.get_records()
+	records |= v
+	return v
+
 
 /proc/Load_World()
 	var/starttime = REALTIMEOFDAY
-	if(!fexists("map_saves/game.sav")) return
-	var/savefile/f = new("map_saves/game.sav")
+	var/savefile/f = new("map_saves/extras.sav")
 	all_loaded = list()
 	found_vars = list()
 	debug_data = list()
-	var/v = null
-	f.cd = "/extras"
+	var/turf/ve = null
 	from_file(f["email"],ntnet_global.email_accounts)
 	from_file(f["records"],GLOB.all_crew_records)
-	if(!GLOB.all_crew_records)
-		GLOB.all_crew_records = list()
+	LAZYINITLIST(GLOB.all_crew_records)
 	from_file(f["factions"],GLOB.all_world_factions)
-	from_file(f["businesses"],GLOB.all_business)
+	from_file(f["material_marketplace"],GLOB.material_marketplace)
+	if(!GLOB.material_marketplace)
+		GLOB.material_marketplace = new()
+	from_file(f["contract_database"],GLOB.contract_database)
+	if(!GLOB.contract_database)
+		GLOB.contract_database = new()
+
 	from_file(f["next_account_number"],next_account_number)
 	var/list/areas
 	from_file(f["areas"],areas)
 	for(var/datum/area_holder/holder in areas)
 		var/area/A = new holder.area_type
 		A.name = holder.name
+		A.shuttle = holder.shuttle
 		var/list/turfs = list()
 		for(var/ind in 1 to holder.turfs.len)
 			var/list/coords = holder.turfs[ind]
@@ -347,18 +511,16 @@ var/global/list/debug_data = list()
 				message_admins("No turf found for area load")
 			turfs |= T
 		A.contents.Add(turfs)
-
-	f.cd = "/"
-	for(var/z in 1 to 50)
-		f.cd = "/map/[z]"
+	f = null
+	for(var/z in 1 to SAVED_ZLEVELS)
 		var/starttime2 = REALTIMEOFDAY
+		f = new("map_saves/z[z].sav")
 		while(!f.eof)
-			f >> v
-			sleep(-1)
-		world << "Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!"
+			from_file(f,ve)
+		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
 
-	f.cd = "/extras"
-	from_file(f["turbolifts"],turbolifts)
+	f = null
+	f = new("map_saves/extras.sav")
 	var/list/zones
 
 	from_file(f["zones"],zones)
@@ -383,21 +545,21 @@ var/global/list/debug_data = list()
 	SSmachines.makepowernets()
 
 	for(var/x in debug_data)
-		world << "Loaded [debug_data[x][1]] [x] in [debug_data[x][2]] seconds!"
-	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
-	world << "Loading Complete"
+		to_world("Loaded [debug_data[x][1]] [x] in [debug_data[x][2]] seconds!")
+	to_world("Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!")
+	to_world("Loading Complete")
 	return 1
+
 
 /proc/Load_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
 	var/z = zi
-	xi = (xi - (xi % 20) + 1)
-	yi = (yi - (yi % 20) + 1)
+	xi = (xi - (xi % SAVECHUNK_SIZEX) + 1)
+	yi = (yi - (yi % SAVECHUNK_SIZEY) + 1)
 	f.cd = "/[z]/Chunk|[yi]|[xi]"
-	for(var/y in yi to yi + 20)
-		for(var/x in xi to xi + 20)
+	for(var/y in yi to yi + SAVECHUNK_SIZEY)
+		for(var/x in xi to xi + SAVECHUNK_SIZEX)
 			var/turf/T = locate(x,y,z)
 			from_file(f["[x]-[y]"],T)
-
 //TODO; make this better.
 /proc/Load_Initialize()
 	for(var/ind in 1 to all_loaded.len)
@@ -537,4 +699,7 @@ var/global/list/debug_data = list()
 		dat += "[x] <a href='?_src_=vars;Remove_Var=[ind];Varsx=\ref[src]'>(Remove)</a><br>"
 	dat += "<hr><br>"
 	dat += "<a href='?_src_=vars;Varsx=\ref[src];Add_Var=1'>(Add new var)</a>"
-	M << browse(dat, "window=roundstats;size=500x600")
+	show_browser(M, dat, "window=roundstats;size=500x600")
+
+#undef SAVECHUNK_SIZEX
+#undef SAVECHUNK_SIZEY

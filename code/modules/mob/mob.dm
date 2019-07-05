@@ -4,6 +4,8 @@
 	GLOB.living_mob_list_ -= src
 	unset_machine()
 	QDEL_NULL(hud_used)
+	if(istype(skillset))
+		QDEL_NULL(skillset)
 	for(var/obj/item/grab/G in grabbed_by)
 		qdel(G)
 	clear_fullscreen()
@@ -22,7 +24,7 @@
 
 /mob/proc/get_stack()
 	return 0
-	
+
 /mob/proc/remove_screen_obj_references()
 	hands = null
 	pullin = null
@@ -46,7 +48,11 @@
 	zone_sel = null
 
 /mob/Initialize()
+	if(ispath(move_intent))
+		move_intent = decls_repository.get_decl(move_intent) //Do it very early, because subclasses need it in initialize
 	. = ..()
+	if(!map_storage_loaded)
+		skillset = new skillset(src)
 	START_PROCESSING(SSmobs, src)
 
 /mob/proc/show_message(msg, type, alt, alt_type)//Message, type of message (1 or 2), alternative message, alt message type (1 or 2)
@@ -77,7 +83,7 @@
 // message is the message output to anyone who can see e.g. "[src] does something!"
 // self_message (optional) is what the src mob sees  e.g. "You do something!"
 // blind_message (optional) is what blind people will hear e.g. "You hear something!"
-/mob/visible_message(var/message, var/self_message, var/blind_message, var/range = world.view, var/checkghosts = null)
+/mob/visible_message(var/message, var/self_message, var/blind_message, var/range = world.view, var/checkghosts = null, var/narrate = FALSE)
 	var/turf/T = get_turf(src)
 	var/list/mobs = list()
 	var/list/objs = list()
@@ -89,12 +95,19 @@
 
 	for(var/m in mobs)
 		var/mob/M = m
+		var/mob_message = message
+
+		if(isghost(M))
+			if(ghost_skip_message(M))
+				continue
+			mob_message = add_ghost_track(mob_message, M)
+
 		if(self_message && M == src)
 			M.show_message(self_message, VISIBLE_MESSAGE, blind_message, AUDIBLE_MESSAGE)
 			continue
 
-		if(M.see_invisible >= invisibility)
-			M.show_message(message, VISIBLE_MESSAGE, blind_message, AUDIBLE_MESSAGE)
+		if(!M.is_blind() || narrate)
+			M.show_message(mob_message, VISIBLE_MESSAGE, blind_message, AUDIBLE_MESSAGE)
 			continue
 
 		if(blind_message)
@@ -104,20 +117,13 @@
 	if(shadow)
 		shadow.visible_message(message, self_message, blind_message)
 
-// Returns an amount of power drawn from the object (-1 if it's not viable).
-// If drain_check is set it will not actually drain power, just return a value.
-// If surge is set, it will destroy/damage the recipient and not return any power.
-// Not sure where to define this, so it can sit here for the rest of time.
-/atom/proc/drain_power(var/drain_check,var/surge, var/amount = 0)
-	return -1
-
 // Show a message to all mobs and objects in earshot of this one
 // This would be for audible actions by the src mob
 // message is the message output to anyone who can hear.
 // self_message (optional) is what the src mob hears.
 // deaf_message (optional) is what deaf people will see.
 // hearing_distance (optional) is the range, how many tiles away the message can be heard.
-/mob/audible_message(var/message, var/self_message, var/deaf_message, var/hearing_distance = world.view, var/checkghosts = null)
+/mob/audible_message(var/message, var/self_message, var/deaf_message, var/hearing_distance = world.view, var/checkghosts = null, var/narrate = FALSE)
 	var/turf/T = get_turf(src)
 	var/list/mobs = list()
 	var/list/objs = list()
@@ -125,16 +131,42 @@
 
 	for(var/m in mobs)
 		var/mob/M = m
+		var/mob_message = message
+
+		if(isghost(M))
+			if(ghost_skip_message(M))
+				continue
+			mob_message = add_ghost_track(mob_message, M)
+
 		if(self_message && M == src)
 			M.show_message(self_message, AUDIBLE_MESSAGE, deaf_message, VISIBLE_MESSAGE)
-		else if(M.see_invisible >= invisibility) // Cannot view the invisible
-			M.show_message(message, AUDIBLE_MESSAGE, deaf_message, VISIBLE_MESSAGE)
+		else if(M.see_invisible >= invisibility || narrate) // Cannot view the invisible
+			M.show_message(mob_message, AUDIBLE_MESSAGE, deaf_message, VISIBLE_MESSAGE)
 		else
-			M.show_message(message, AUDIBLE_MESSAGE)
+			M.show_message(mob_message, AUDIBLE_MESSAGE)
 
 	for(var/o in objs)
 		var/obj/O = o
 		O.show_message(message, AUDIBLE_MESSAGE, deaf_message, VISIBLE_MESSAGE)
+
+/mob/proc/add_ghost_track(var/message, var/mob/observer/ghost/M)
+	ASSERT(istype(M))
+
+	var/remote = ""
+	if(M.get_preference_value(/datum/client_preference/ghost_sight) == GLOB.PREF_ALL_EMOTES && !(src in view(M)))
+		remote = "\[R\]"
+
+	var/track = "([ghost_follow_link(src, M)])"
+
+	message = track + remote + " " + message
+	return message
+
+/mob/proc/ghost_skip_message(var/mob/observer/ghost/M)
+	ASSERT(istype(M))
+	if(M.get_preference_value(/datum/client_preference/ghost_sight) == GLOB.PREF_ALL_EMOTES && !(src in view(M)))
+		if(!client)
+			return TRUE
+	return FALSE
 
 /mob/proc/findname(msg)
 	for(var/mob/M in SSmobs.mob_list)
@@ -147,6 +179,17 @@
 	if(istype(loc, /turf))
 		var/turf/T = loc
 		. += T.movement_delay
+
+	if ((drowsyness > 0) && !MOVING_DELIBERATELY(src))
+		. += 6
+	if(lying) //Crawling, it's slower
+		. += (8 + ((weakened * 3) + (confused * 2)))
+	. += move_intent.move_delay
+	. += encumbrance() * (0.5 + 1.5 * (SKILL_MAX - get_skill_value(SKILL_HAULING))/(SKILL_MAX - SKILL_MIN)) //Varies between 0.5 and 2, depending on skill
+
+//How much the stuff the mob is pulling contributes to its movement delay.
+/mob/proc/encumbrance()
+	. = 0
 	if(pulling)
 		if(istype(pulling, /obj))
 			var/obj/O = pulling
@@ -156,11 +199,15 @@
 			. += max(0, M.mob_size) / MOB_MEDIUM
 		else
 			. += 1
+	. *= (0.8 ** size_strength_mod())
+
+//Determines mob size/strength effects for slowdown purposes. Standard is 0; can be pos/neg.
+/mob/proc/size_strength_mod()
+	return log(2, mob_size / MOB_MEDIUM)
 
 /mob/proc/Life()
-//	if(organStructure)
-//		organStructure.ProcessOrgans()
-	return
+	if(ability_master)
+		ability_master.update_spells(0)
 
 #define UNBUCKLED 0
 #define PARTIALLY_BUCKLED 1
@@ -185,7 +232,6 @@
 	return incapacitated(INCAPACITATION_KNOCKDOWN)
 
 /mob/proc/incapacitated(var/incapacitation_flags = INCAPACITATION_DEFAULT)
-
 	if ((incapacitation_flags & INCAPACITATION_STUNNED) && stunned)
 		return 1
 
@@ -204,6 +250,9 @@
 			return 1
 		if(buckling == FULLY_BUCKLED && (incapacitation_flags & INCAPACITATION_BUCKLED_FULLY))
 			return 1
+
+	if((incapacitation_flags & INCAPACITATION_WEAKENED) && weakened)
+		return 1
 
 	return 0
 
@@ -243,6 +292,17 @@
 		return 1
 
 	face_atom(A)
+
+	if(!isghost(src))
+		if(A.loc != src || A == l_hand || A == r_hand)
+			for(var/mob/M in viewers(4, src))
+				if(M == src)
+					continue
+				if(M.client && M.client.get_preference_value(/datum/client_preference/examine_messages) == GLOB.PREF_SHOW)
+					if(M.is_blind() || is_invisible_to(M))
+						continue
+					to_chat(M, "<span class='subtle'><b>\The [src]</b> looks at \the [A].</span>")
+
 	A.examine(src)
 
 /mob/verb/pointed(atom/A as mob|obj|turf in view())
@@ -294,23 +354,15 @@
 		if (W)
 			W.attack_self(src)
 			update_inv_l_hand()
+		else
+			attack_empty_hand(BP_L_HAND)
 	else
 		var/obj/item/W = r_hand
 		if (W)
 			W.attack_self(src)
 			update_inv_r_hand()
-	return
-
-/*
-/mob/verb/dump_source()
-
-	var/master = "<PRE>"
-	for(var/t in typesof(/area))
-		master += text("[]\n", t)
-		//Foreach goto(26)
-	src << browse(master)
-	return
-*/
+		else
+			attack_empty_hand(BP_R_HAND)
 
 /mob/verb/memory()
 	set name = "Notes"
@@ -378,6 +430,9 @@
 	getFiles(
 		'html/88x31.png',
 		'html/bug-minus.png',
+		'html/burn-exclamation.png',
+		'html/chevron.png',
+		'html/chevron-expand.png',
 		'html/cross-circle.png',
 		'html/hard-hat-exclamation.png',
 		'html/image-minus.png',
@@ -386,26 +441,23 @@
 		'html/music-minus.png',
 		'html/music-plus.png',
 		'html/tick-circle.png',
-		'html/wrench-screwdriver.png',
+		'html/scales.png',
 		'html/spell-check.png',
-		'html/burn-exclamation.png',
-		'html/chevron.png',
-		'html/chevron-expand.png',
+		'html/wrench-screwdriver.png',
 		'html/changelog.css',
-		'html/changelog.js',
 		'html/changelog.html'
 		)
 	src << browse('html/changelog.html', "window=changes;size=675x650")
 	if(prefs.lastchangelog != changelog_hash)
 		prefs.lastchangelog = changelog_hash
-		prefs.save_preferences()
+		SScharacter_setup.queue_preferences_save(prefs)
 		winset(src, "rpane.changelog", "background-color=none;font-style=;")
 
 /mob/new_player/verb/observe()
 	set name = "Observe"
 	set category = "OOC"
 
-	if(!(initialization_stage&INITIALIZATION_COMPLETE))
+	if(GAME_STATE <= RUNLEVEL_INIT)
 		to_chat(src, "<span class='warning'>Please wait for server initialization to complete...</span>")
 		return
 
@@ -413,7 +465,9 @@
 
 	if(client.holder && (client.holder.rights & R_ADMIN))
 		is_admin = 1
-
+	else
+		to_chat(src, "Observing is restricted in persistence.")
+		return
 	if(is_admin && stat == DEAD)
 		is_admin = 0
 
@@ -588,6 +642,11 @@
 		var/mob/living/carbon/human/H = AM
 		if(H.pull_damage())
 			to_chat(src, "<span class='danger'>Pulling \the [H] in their current condition would probably be a bad idea.</span>")
+
+		var/obj/item/clothing/C = H.get_covering_equipped_item_by_zone(BP_CHEST)
+		if(istype(C))
+			C.leave_evidence(src)
+
 	//Attempted fix for people flying away through space when cuffed and dragged.
 	if(ismob(AM))
 		var/mob/pulled = AM
@@ -603,7 +662,7 @@
 	return stat == DEAD
 
 /mob/proc/is_mechanical()
-	if(mind && (mind.assigned_role == "Cyborg" || mind.assigned_role == "AI"))
+	if(mind && (mind.assigned_role == "Robot" || mind.assigned_role == "AI"))
 		return 1
 	return istype(src, /mob/living/silicon) || get_species() == SPECIES_IPC
 
@@ -630,7 +689,7 @@
 		return
 
 	if(statpanel("Status"))
-		if(ticker && ticker.current_state != GAME_STATE_PREGAME)
+		if(GAME_STATE >= RUNLEVEL_SETUP)
 			stat("Local Time", stationtime2text())
 			stat("Local Date", stationdate2text())
 			stat("Server Uptime", roundduration2text())
@@ -638,8 +697,6 @@
 			stat("Location:", "([x], [y], [z]) [loc]")
 
 	if(client.holder)
-		if(statpanel("Processes") && processScheduler)
-			processScheduler.statProcesses()
 		if(statpanel("MC"))
 			stat("CPU:","[world.cpu]")
 			stat("Instances:","[world.contents.len]")
@@ -675,24 +732,18 @@
 
 // facing verbs
 /mob/proc/canface()
-	if(!canmove)						return 0
-	if(anchored)						return 0
-	if(transforming)					return 0
-	return 1
+	return !incapacitated()
 
 // Not sure what to call this. Used to check if humans are wearing an AI-controlled exosuit and hence don't need to fall over yet.
 /mob/proc/can_stand_overridden()
 	return 0
 
-//Updates canmove, lying and icons. Could perhaps do with a rename but I can't think of anything to describe it.
-/mob/proc/update_canmove()
-
+//Updates lying and icons
+/mob/proc/UpdateLyingBuckledAndVerbStatus()
 	if(!resting && cannot_stand() && can_stand_overridden())
 		lying = 0
-		canmove = 1
 	else if(buckled)
 		anchored = 1
-		canmove = 0
 		if(istype(buckled))
 			if(buckled.buckle_lying == -1)
 				lying = incapacitated(INCAPACITATION_KNOCKDOWN)
@@ -700,10 +751,8 @@
 				lying = buckled.buckle_lying
 			if(buckled.buckle_movable)
 				anchored = 0
-				canmove = 1
 	else
 		lying = incapacitated(INCAPACITATION_KNOCKDOWN)
-		canmove = !incapacitated(INCAPACITATION_DISABLED)
 
 	if(lying)
 		set_density(0)
@@ -714,9 +763,6 @@
 	reset_layer()
 
 	for(var/obj/item/grab/G in grabbed_by)
-		if(G.stop_move())
-			canmove = 0
-
 		if(G.force_stand())
 			lying = 0
 
@@ -729,25 +775,23 @@
 	else if( lying != lying_prev )
 		update_icons()
 
-	return canmove
-
 /mob/proc/reset_layer()
 	if(lying)
 		plane = LYING_MOB_PLANE
 		layer = LYING_MOB_LAYER
+	if(riding)
+		plane = ABOVE_HUMAN_PLANE
+		layer = VEHICLE_LOAD_LAYER
 	else
 		reset_plane_and_layer()
 
 /mob/proc/facedir(var/ndir)
-	if(!isnull(client))
-		client.pixel_x = 0
-		client.pixel_y = 0
-	if(!canface() || client.moving || world.time < client.move_delay)
+	if(!canface() || moving || (buckled && !buckled.buckle_movable))
 		return 0
 	set_dir(ndir)
 	if(buckled && buckled.buckle_movable)
 		buckled.set_dir(ndir)
-	client.move_delay += movement_delay()
+	SetMoveCooldown(movement_delay())
 	return 1
 
 
@@ -779,35 +823,38 @@
 	if(status_flags & CANSTUN)
 		facing_dir = null
 		stunned = max(max(stunned,amount),0) //can't go below 0, getting a low amount of stun doesn't lower your current stun
+		UpdateLyingBuckledAndVerbStatus()
 	return
 
 /mob/proc/SetStunned(amount) //if you REALLY need to set stun to a set amount without the whole "can't go below current stunned"
 	if(status_flags & CANSTUN)
 		stunned = max(amount,0)
+		UpdateLyingBuckledAndVerbStatus()
 	return
 
 /mob/proc/AdjustStunned(amount)
 	if(status_flags & CANSTUN)
 		stunned = max(stunned + amount,0)
+		UpdateLyingBuckledAndVerbStatus()
 	return
 
 /mob/proc/Weaken(amount)
 	if(status_flags & CANWEAKEN)
 		facing_dir = null
 		weakened = max(max(weakened,amount),0)
-		update_canmove()	//updates lying, canmove and icons
+		UpdateLyingBuckledAndVerbStatus()
 	return
 
 /mob/proc/SetWeakened(amount)
 	if(status_flags & CANWEAKEN)
 		weakened = max(amount,0)
-		update_canmove()	//updates lying, canmove and icons
+		UpdateLyingBuckledAndVerbStatus()
 	return
 
 /mob/proc/AdjustWeakened(amount)
 	if(status_flags & CANWEAKEN)
 		weakened = max(weakened + amount,0)
-		update_canmove()	//updates lying, canmove and icons
+		UpdateLyingBuckledAndVerbStatus()
 	return
 
 /mob/proc/Paralyse(amount)
@@ -865,7 +912,47 @@
 /mob/proc/embedded_needs_process()
 	return (embedded.len > 0)
 
-mob/proc/yank_out_object()
+/mob/proc/remove_implant(var/obj/item/implant, var/surgical_removal = FALSE)
+	if(!LAZYLEN(get_visible_implants(0))) //Yanking out last object - removing verb.
+		verbs -= /mob/proc/yank_out_object
+	for(var/obj/item/weapon/O in pinned)
+		if(O == implant)
+			pinned -= O
+		if(!pinned.len)
+			anchored = 0
+	implant.dropInto(loc)
+	implant.add_blood(src)
+	implant.update_icon()
+	if(istype(implant,/obj/item/weapon/implant))
+		var/obj/item/weapon/implant/imp = implant
+		imp.removed()
+	. = TRUE
+
+/mob/living/silicon/robot/remove_implant(var/obj/item/implant, var/surgical_removal = FALSE)
+	embedded -= implant
+	adjustBruteLoss(5)
+	adjustFireLoss(10)
+	. = ..()
+
+/mob/living/carbon/human/remove_implant(var/obj/item/implant, var/surgical_removal = FALSE, var/obj/item/organ/external/affected)
+	if(!affected) //Grab the organ holding the implant.
+		for(var/obj/item/organ/external/organ in organs)
+			for(var/obj/item/O in organ.implants)
+				if(O == implant)
+					affected = organ
+					break
+	if(affected)
+		affected.implants -= implant
+		for(var/datum/wound/wound in affected.wounds)
+			LAZYREMOVE(wound.embedded_objects, implant)
+		if(!surgical_removal)
+			shock_stage+=20
+			affected.take_damage((implant.w_class * 3), 0, DAM_CUT, used_weapon = "Embedded object extraction")
+			if(!BP_IS_ROBOTIC(affected) && prob(implant.w_class * 5) && affected.sever_artery()) //I'M SO ANEMIC I COULD JUST -DIE-.
+				custom_pain("Something tears wetly in your [affected.name] as [implant] is pulled free!", 50, affecting = affected)
+	. = ..()
+
+/mob/proc/yank_out_object()
 	set category = "Object"
 	set name = "Yank out object"
 	set desc = "Remove an embedded item at the cost of bleeding and pain."
@@ -898,14 +985,12 @@ mob/proc/yank_out_object()
 		else
 			to_chat(U, "[src] has nothing stuck in their wounds that is large enough to remove.")
 		return
-
 	var/obj/item/weapon/selection = input("What do you want to yank out?", "Embedded objects") in valid_objects
-
 	if(self)
 		to_chat(src, "<span class='warning'>You attempt to get a good grip on [selection] in your body.</span>")
 	else
 		to_chat(U, "<span class='warning'>You attempt to get a good grip on [selection] in [S]'s body.</span>")
-	if(!do_mob(U, S, 30))
+	if(!do_mob(U, S, 30, incapacitation_flags = INCAPACITATION_DEFAULT & (~INCAPACITATION_FORCELYING))) //let people pinned to stuff yank it out, otherwise they're stuck... forever!!!
 		return
 	if(!selection || !S || !U)
 		return
@@ -914,48 +999,13 @@ mob/proc/yank_out_object()
 		visible_message("<span class='warning'><b>[src] rips [selection] out of their body.</b></span>","<span class='warning'><b>You rip [selection] out of your body.</b></span>")
 	else
 		visible_message("<span class='warning'><b>[usr] rips [selection] out of [src]'s body.</b></span>","<span class='warning'><b>[usr] rips [selection] out of your body.</b></span>")
-	valid_objects = get_visible_implants(0)
-	if(valid_objects.len == 1) //Yanking out last object - removing verb.
-		src.verbs -= /mob/proc/yank_out_object
-
-	if(ishuman(src))
-		var/mob/living/carbon/human/H = src
-		var/obj/item/organ/external/affected
-
-		for(var/obj/item/organ/external/organ in H.organs) //Grab the organ holding the implant.
-			for(var/obj/item/O in organ.implants)
-				if(O == selection)
-					affected = organ
-
-		affected.implants -= selection
-		for(var/datum/wound/wound in affected.wounds)
-			wound.embedded_objects -= selection
-
-		H.shock_stage+=20
-		affected.take_damage((selection.w_class * 3), 0, DAM_EDGE, "Embedded object extraction")
-
-		if(prob(selection.w_class * 5) && affected.sever_artery()) //I'M SO ANEMIC I COULD JUST -DIE-.
-			H.custom_pain("Something tears wetly in your [affected] as [selection] is pulled free!", 50, affecting = affected)
-
-		if (ishuman(U))
-			var/mob/living/carbon/human/human_user = U
-			human_user.bloody_hands(H)
-
-	else if(issilicon(src))
-		var/mob/living/silicon/robot/R = src
-		R.embedded -= selection
-		R.adjustBruteLoss(5)
-		R.adjustFireLoss(10)
-
+	remove_implant(selection)
 	selection.forceMove(get_turf(src))
 	if(!(U.l_hand && U.r_hand))
 		U.put_in_hands(selection)
-
-	for(var/obj/item/weapon/O in pinned)
-		if(O == selection)
-			pinned -= O
-		if(!pinned.len)
-			anchored = 0
+	if(ishuman(U))
+		var/mob/living/carbon/human/human_user = U
+		human_user.bloody_hands(src)
 	return 1
 
 //Check for brain worms in head.
@@ -967,8 +1017,10 @@ mob/proc/yank_out_object()
 
 	return 0
 
-/mob/update_icon()
-	return
+// A mob should either use update_icon(), overriding this definition, or use update_icons(), not touching update_icon().
+// It should not use both.
+/mob/on_update_icon()
+	return update_icons()
 
 /mob/verb/face_direction()
 
@@ -982,6 +1034,7 @@ mob/proc/yank_out_object()
 		to_chat(usr, "You are now not facing anything.")
 	else
 		to_chat(usr, "You are now facing [dir2text(facing_dir)].")
+
 /mob/proc/set_face_dir(var/newdir)
 	if(!isnull(facing_dir) && newdir == facing_dir)
 		facing_dir = null
@@ -995,9 +1048,6 @@ mob/proc/yank_out_object()
 		facing_dir = dir
 
 /mob/set_dir()
-	if(!isnull(client))
-		client.pixel_x = 0
-		client.pixel_y = 0
 	if(facing_dir)
 		if(!canface() || lying || buckled || restrained())
 			facing_dir = null
@@ -1082,27 +1132,24 @@ mob/proc/yank_out_object()
 	if(src.throw_icon)
 		src.throw_icon.icon_state = "act_throw_on"
 
-/mob/proc/toggle_antag_pool()
-	set name = "Toggle Add-Antag Candidacy"
-	set desc = "Toggles whether or not you will be considered a candidate by an add-antag vote."
-	set category = "OOC"
-	if(isghostmind(src.mind) || isnewplayer(src))
-		if(ticker && ticker.looking_for_antags)
-			if(src.mind in ticker.antag_pool)
-				ticker.antag_pool -= src.mind
-				to_chat(usr, "You have left the antag pool.")
-			else
-				ticker.antag_pool += src.mind
-				to_chat(usr, "You have joined the antag pool. Make sure you have the needed role set to high!")
-		else
-			to_chat(usr, "The game is not currently looking for antags.")
-	else
-		to_chat(usr, "You must be observing or in the lobby to join the antag pool.")
+///mob/proc/toggle_antag_pool()
+//	set name = "Toggle Add-Antag Candidacy"
+//	set desc = "Toggles whether or not you will be considered a candidate by an add-antag vote."
+//	set category = "OOC"
+//	if(isghostmind(src.mind) || isnewplayer(src))
+//		if(SSticker.looking_for_antags)
+//			if(src.mind in SSticker.antag_pool)
+//				SSticker.antag_pool -= src.mind
+//				to_chat(usr, "You have left the antag pool.")
+//			else
+//				SSticker.antag_pool += src.mind
+//				to_chat(usr, "You have joined the antag pool. Make sure you have the needed role set to high!")
+//		else
+//			to_chat(usr, "The game is not currently looking for antags.")
+//	else
+//		to_chat(usr, "You must be observing or in the lobby to join the antag pool.")
 /mob/proc/is_invisible_to(var/mob/viewer)
 	return (!alpha || !mouse_opacity || viewer.see_invisible < invisibility)
-
-/mob/proc/has_chem_effect(chem, threshold)
-	return FALSE
 
 /client/proc/check_has_body_select()
 	return mob && mob.hud_used && istype(mob.zone_sel, /obj/screen/zone_sel)
@@ -1147,3 +1194,139 @@ mob/proc/yank_out_object()
 		return
 	var/obj/screen/zone_sel/selector = mob.zone_sel
 	selector.set_selected_zone(next_in_list(mob.zone_sel.selecting,zones))
+
+/mob/proc/has_chem_effect(chem, threshold)
+	return FALSE
+
+/mob/proc/has_admin_rights()
+	return check_rights(R_ADMIN, 0, src)
+
+/mob/proc/handle_drowning()
+	return FALSE
+
+/mob/proc/can_drown()
+	return 0
+
+/mob/proc/get_sex()
+	return gender
+
+/mob/is_fluid_pushable(var/amt)
+	if(..() && !buckled && (lying || !Check_Shoegrip()) && (amt >= mob_size * (lying ? 5 : 10)))
+		if(!lying)
+			Weaken(1)
+			if(lying && prob(10))
+				to_chat(src, "<span class='danger'>You are pushed down by the flood!</span>")
+		return TRUE
+	return FALSE
+
+/mob/proc/get_footstep(var/footstep_type)
+	return
+
+/mob/proc/get_id_name(var/if_no_id = "Unknown")
+	return if_no_id
+
+/mob/GetIdCard()
+	return
+
+/mob/proc/is_cloaked()
+	return FALSE
+
+/mob/proc/redraw_inv()
+	return TRUE
+
+/mob/verb/remember_money_account()
+	set name = "Remember Money Account"
+	set desc = "Remember your money account."
+	set category = "IC"
+
+	if(isliving(src)) //Needs to be a mob verb to prevent error messages when using hotkeys
+		var/mob/living/M = src
+
+		for(var/datum/computer_file/report/crew_record/record in GLOB.all_crew_records)
+			if(record.get_name() == M.real_name)
+				if(record.linked_account && istype(record.linked_account, /datum/money_account))
+					if(record.linked_account.account_number == 0)
+						message_admins("BROKEN ACCOUNT FOR [real_name] GENERATING")
+						record.linked_account = create_account(record.get_name(), 0, null)
+						record.linked_account.remote_access_pin = rand(1111,9999)
+						record.linked_account = record.linked_account.after_load()
+						record.linked_account.money = 1000
+						to_chat(usr, "Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
+						return
+					to_chat(usr, "Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
+				else
+					message_admins("BROKEN ACCOUNT FOR [real_name] GENERATING")
+					record.linked_account = create_account(record.get_name(), 0, null)
+					record.linked_account.remote_access_pin = rand(1111,9999)
+					record.linked_account = record.linked_account.after_load()
+					record.linked_account.money = 1000
+					to_chat(usr, "Your account was broke. Ahelp admins to have your money restored, and reprint an ID. Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
+	else
+		to_chat(src, "<span class='warning'>This verb may only be used by living mobs, sorry.</span>")
+	return
+
+//For mobs with organs
+/mob/proc/sync_organ_dna()
+	return
+
+/mob/New(loc, ...)
+	. = ..()
+	ADD_SAVED_VAR(lastKnownIP)
+	ADD_SAVED_VAR(stat)
+	ADD_SAVED_VAR(sdisabilities)
+	ADD_SAVED_VAR(disabilities)
+
+	ADD_SAVED_VAR(timeofdeath)
+	ADD_SAVED_VAR(radiation)
+	ADD_SAVED_VAR(phoronation)
+	ADD_SAVED_VAR(faction) //Need to save for pacified pet mobs
+	ADD_SAVED_VAR(blinded)
+	ADD_SAVED_VAR(ear_deaf)
+	ADD_SAVED_VAR(paralysis)
+	ADD_SAVED_VAR(stunned)
+	ADD_SAVED_VAR(druggy)
+	ADD_SAVED_VAR(confused)
+	ADD_SAVED_VAR(sleeping)
+	ADD_SAVED_VAR(resting)
+	ADD_SAVED_VAR(weakened)
+	ADD_SAVED_VAR(drowsyness)
+	ADD_SAVED_VAR(bhunger)
+	ADD_SAVED_VAR(lying)
+	ADD_SAVED_VAR(riding)
+	ADD_SAVED_VAR(buckled)
+	ADD_SAVED_VAR(bodytemperature)
+	ADD_SAVED_VAR(inertia_dir)
+
+	ADD_SAVED_VAR(dna)
+	ADD_SAVED_VAR(l_hand)
+	ADD_SAVED_VAR(r_hand)
+	ADD_SAVED_VAR(back)
+	ADD_SAVED_VAR(s_active)
+	ADD_SAVED_VAR(wear_mask)
+	ADD_SAVED_VAR(pinned)
+	ADD_SAVED_VAR(embedded)
+	ADD_SAVED_VAR(active_genes)
+	ADD_SAVED_VAR(mutations)
+	ADD_SAVED_VAR(skillset)
+
+	ADD_SAVED_VAR(spawn_type)
+	ADD_SAVED_VAR(spawn_loc)
+	ADD_SAVED_VAR(spawn_loc_2)
+	ADD_SAVED_VAR(spawn_cit)
+	ADD_SKIP_EMPTY(dna)
+	ADD_SKIP_EMPTY(l_hand)
+	ADD_SKIP_EMPTY(r_hand)
+	ADD_SKIP_EMPTY(back)
+	ADD_SKIP_EMPTY(s_active)
+	ADD_SKIP_EMPTY(wear_mask)
+	ADD_SKIP_EMPTY(pinned)
+	ADD_SKIP_EMPTY(embedded)
+	ADD_SKIP_EMPTY(active_genes)
+	ADD_SKIP_EMPTY(mutations)
+	ADD_SKIP_EMPTY(skillset)
+	ADD_SKIP_EMPTY(spawn_loc)
+	ADD_SKIP_EMPTY(spawn_loc_2)
+
+/mob/after_load()
+	. = ..()
+

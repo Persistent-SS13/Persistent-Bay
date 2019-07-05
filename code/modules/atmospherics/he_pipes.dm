@@ -1,5 +1,5 @@
 
-obj/machinery/atmospherics/pipe/simple/heat_exchanging
+/obj/machinery/atmospherics/pipe/simple/heat_exchanging
 	icon = 'icons/atmos/heat.dmi'
 	icon_state = "intact"
 	pipe_icon = "hepipe"
@@ -17,15 +17,18 @@ obj/machinery/atmospherics/pipe/simple/heat_exchanging
 	fatigue_pressure = 300*ONE_ATMOSPHERE
 	alert_pressure = 360*ONE_ATMOSPHERE
 
-	can_buckle = 1
-	buckle_lying = 1
+	can_buckle = TRUE
+	buckle_lying = TRUE
 
-obj/machinery/atmospherics/pipe/simple/heat_exchanging/New()
+/obj/machinery/atmospherics/pipe/simple/heat_exchanging/New()
 	..()
-	initialize_directions_he = initialize_directions	// The auto-detection from /pipe is good enough for a simple HE pipe
 	color = "#404040" //we don't make use of the fancy overlay system for colours, use this to set the default.
 
-obj/machinery/atmospherics/pipe/simple/heat_exchanging/atmos_init()
+/obj/machinery/atmospherics/pipe/simple/heat_exchanging/setup_initialize_directions()
+	..()
+	initialize_directions_he = initialize_directions	// The auto-detection from /pipe is good enough for a simple HE pipe
+
+/obj/machinery/atmospherics/pipe/simple/heat_exchanging/atmos_init()
 	..()
 	normalize_dir()
 	var/node1_dir
@@ -47,64 +50,69 @@ obj/machinery/atmospherics/pipe/simple/heat_exchanging/atmos_init()
 			node2 = target
 			break
 	if(!node1 && !node2)
+		log_debug("Deleted the [src]\ref[src]([x],[y],[z]) on atmos_init() because both nodes were null!")
 		qdel(src)
 		return
 
-	update_icon()
+	queue_icon_update()
 
-obj/machinery/atmospherics/pipe/simple/heat_exchanging/Process()
-	if(!parent)
-		..()
-	else
-		var/datum/gas_mixture/pipe_air = return_air()
-		if(istype(loc, /turf/simulated/))
-			var/environment_temperature = 0
-			if(loc:blocks_air)
-				environment_temperature = loc:temperature
-			else
-				var/datum/gas_mixture/environment = loc.return_air()
-				environment_temperature = environment.temperature
-			if(abs(environment_temperature-pipe_air.temperature) > minimum_temperature_difference)
-				parent.temperature_interact(loc, volume, thermal_conductivity)
-		else if(istype(loc, /turf/space/))
-			parent.radiate_heat_to_space(surface, 1)
+/obj/machinery/atmospherics/pipe/simple/heat_exchanging/Process()
+	if(isnull(loc))
+		return
+	
+	. = ..()
 
-		if(buckled_mob)
-			var/hc = pipe_air.heat_capacity()
-			var/avg_temp = (pipe_air.temperature * hc + buckled_mob.bodytemperature * 3500) / (hc + 3500)
-			pipe_air.temperature = avg_temp
-			buckled_mob.bodytemperature = avg_temp
+	var/datum/gas_mixture/pipe_air = return_air()
+	if(isnull(pipe_air))
+		return
+	if(istype(loc, /turf/simulated/))
+		var/environment_temperature = 0
+		if(loc:blocks_air)
+			environment_temperature = loc:temperature
+		else
+			var/datum/gas_mixture/environment = loc.return_air()
+			environment_temperature = environment.temperature
+		if(abs(environment_temperature-pipe_air.temperature) > minimum_temperature_difference)
+			parent.temperature_interact(loc, volume, thermal_conductivity)
+	else if(istype(loc, /turf/space/))
+		parent.radiate_heat_to_space(surface, 1)
 
-			var/heat_limit = 1000
+	if(buckled_mob)
+		var/hc = pipe_air.heat_capacity()
+		var/avg_temp = (pipe_air.temperature * hc + buckled_mob.bodytemperature * 3500) / (hc + 3500)
+		pipe_air.temperature = avg_temp
+		buckled_mob.bodytemperature = avg_temp
 
-			var/mob/living/carbon/human/H = buckled_mob
-			if(istype(H) && H.species)
-				heat_limit = H.species.heat_level_3
+		var/heat_limit = 1000
 
-			if(pipe_air.temperature > heat_limit + 1)
-				buckled_mob.apply_damage(4 * log(pipe_air.temperature - heat_limit), BURN, BP_CHEST, used_weapon = "Excessive Heat")
+		var/mob/living/carbon/human/H = buckled_mob
+		if(istype(H) && H.species)
+			heat_limit = H.species.heat_level_3
 
-		//fancy radiation glowing
-		if(pipe_air.temperature && (icon_temperature > 500 || pipe_air.temperature > 500)) //start glowing at 500K
-			if(abs(pipe_air.temperature - icon_temperature) > 10)
-				icon_temperature = pipe_air.temperature
+		if(pipe_air.temperature > heat_limit + 1)
+			buckled_mob.apply_damage(4 * log(pipe_air.temperature - heat_limit), DAM_BURN, BP_CHEST, used_weapon = "Excessive Heat")
 
-				var/h_r = heat2color_r(icon_temperature)
-				var/h_g = heat2color_g(icon_temperature)
-				var/h_b = heat2color_b(icon_temperature)
+	//fancy radiation glowing
+	if(pipe_air.temperature && (icon_temperature > 500 || pipe_air.temperature > 500)) //start glowing at 500K
+		if(abs(pipe_air.temperature - icon_temperature) > 10)
+			icon_temperature = pipe_air.temperature
 
-				if(icon_temperature < 2000) //scale up overlay until 2000K
-					var/scale = (icon_temperature - 500) / 1500
-					h_r = 64 + (h_r - 64)*scale
-					h_g = 64 + (h_g - 64)*scale
-					h_b = 64 + (h_b - 64)*scale
+			var/h_r = heat2color_r(icon_temperature)
+			var/h_g = heat2color_g(icon_temperature)
+			var/h_b = heat2color_b(icon_temperature)
 
-				animate(src, color = rgb(h_r, h_g, h_b), time = 20, easing = SINE_EASING)
+			if(icon_temperature < 2000) //scale up overlay until 2000K
+				var/scale = (icon_temperature - 500) / 1500
+				h_r = 64 + (h_r - 64)*scale
+				h_g = 64 + (h_g - 64)*scale
+				h_b = 64 + (h_b - 64)*scale
+
+			animate(src, color = rgb(h_r, h_g, h_b), time = 20, easing = SINE_EASING)
 
 
 
 
-obj/machinery/atmospherics/pipe/simple/heat_exchanging/junction
+/obj/machinery/atmospherics/pipe/simple/heat_exchanging/junction
 	icon = 'icons/atmos/junction.dmi'
 	icon_state = "intact"
 	pipe_icon = "hejunction"
@@ -112,8 +120,7 @@ obj/machinery/atmospherics/pipe/simple/heat_exchanging/junction
 	connect_types = CONNECT_TYPE_REGULAR|CONNECT_TYPE_HE
 
 // Doubling up on initialize_directions is necessary to allow HE pipes to connect
-obj/machinery/atmospherics/pipe/simple/heat_exchanging/junction/New()
-	.. ()
+/obj/machinery/atmospherics/pipe/simple/heat_exchanging/junction/setup_initialize_directions()
 	switch (dir)
 		if (SOUTH)
 			initialize_directions_he = SOUTH
@@ -128,7 +135,7 @@ obj/machinery/atmospherics/pipe/simple/heat_exchanging/junction/New()
 			initialize_directions_he = WEST
 			initialize_directions = EAST|WEST
 
-obj/machinery/atmospherics/pipe/simple/heat_exchanging/junction/atmos_init()
+/obj/machinery/atmospherics/pipe/simple/heat_exchanging/junction/atmos_init()
 	..()
 	// Only check back side for normal pipes
 	for(var/obj/machinery/atmospherics/target in get_step(src,GLOB.flip_dir[src.dir]))
@@ -144,7 +151,8 @@ obj/machinery/atmospherics/pipe/simple/heat_exchanging/junction/atmos_init()
 			break
 
 	if(!node1 && !node2)
+		log_debug("Deleted the [src]\ref[src]([x],[y],[z]) on atmos_init() because both nodes were null!")
 		qdel(src)
 		return
 
-	update_icon()
+	queue_icon_update()

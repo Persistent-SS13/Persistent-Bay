@@ -9,6 +9,24 @@
 
 /proc/cmp_crew_sensor_modifier(var/crew_sensor_modifier/a, var/crew_sensor_modifier/b)
 	return b.priority - a.priority
+	
+/proc/cmp_newsfeed(var/datum/NewsFeed/a, var/datum/NewsFeed/b)
+	return b.last_published - a.last_published
+	
+/proc/cmp_buyorders(var/datum/material_order/a, var/datum/material_order/b)
+	return b.price - a.price
+
+/proc/cmp_sellorders(var/datum/material_order/a, var/datum/material_order/b)
+	return a.price - b.price
+
+/proc/cmp_buyorders_stock(var/datum/stock_order/a, var/datum/stock_order/b)
+	return b.price - a.price
+
+/proc/cmp_sellorders_stock(var/datum/stock_order/a, var/datum/stock_order/b)
+	return a.price - b.price
+
+
+
 
 /proc/cmp_follow_holder(var/datum/follow_holder/a, var/datum/follow_holder/b)
 	if(a.sort_order == b.sort_order)
@@ -27,6 +45,9 @@
 
 /proc/cmp_numeric_asc(a,b)
 	return a - b
+
+/proc/cmp_numeric_dsc(a,b)
+	return b - a
 
 /proc/cmp_subsystem_display(datum/controller/subsystem/a, datum/controller/subsystem/b)
 	return sorttext(b.name, a.name)
@@ -57,3 +78,18 @@
 
 /proc/cmp_ruincost_priority(datum/map_template/ruin/A, datum/map_template/ruin/B)
 	return initial(A.cost) - initial(B.cost)
+
+/proc/cmp_timer(datum/timedevent/a, datum/timedevent/b)
+	return a.timeToRun - b.timeToRun
+
+/proc/cmp_clientcolor_priority(datum/client_color/A, datum/client_color/B)
+	return B.priority - A.priority
+
+/proc/cmp_fusion_reaction_asc(var/decl/fusion_reaction/A, var/decl/fusion_reaction/B)
+	return A.priority - B.priority
+
+/proc/cmp_fusion_reaction_des(var/decl/fusion_reaction/A, var/decl/fusion_reaction/B)
+	return B.priority - A.priority
+
+/proc/cmp_program(var/datum/computer_file/program/A, var/datum/computer_file/program/B)
+	return cmp_text_asc(A.filedesc, B.filedesc)

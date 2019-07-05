@@ -71,6 +71,6 @@ world/IsBanned(key,address,computer_id)
 		if (failedip)
 			message_admins("[key] has logged in with a blank ip in the ban check.")
 		return ..()	//default pager ban stuff
+#else
+	#undef OVERRIDE_BAN_SYSTEM //I guess this would be the only reason why its even in this file?
 #endif
-#undef OVERRIDE_BAN_SYSTEM
-

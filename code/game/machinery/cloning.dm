@@ -5,16 +5,6 @@
 
 #define CLONE_BIOMASS 150
 #define BIOMASS_MEAT_AMOUNT 50
-/obj/item/weapon/circuitboard/clonepod
-	name = "Circuit Board (Cloning Pod)"
-	build_path = /obj/machinery/clonepod
-	board_type = "machine"
-	origin_tech = list(TECH_DATA = 3, TECH_BIO = 3)
-	req_components = list(
-							/obj/item/stack/cable_coil = 2,
-							/obj/item/weapon/stock_parts/scanning_module = 2,
-							/obj/item/weapon/stock_parts/manipulator = 2,
-							/obj/item/weapon/stock_parts/console_screen = 1)
 
 /obj/machinery/clonepod
 	anchored = 1
@@ -24,6 +14,7 @@
 	icon = 'icons/obj/cloning.dmi'
 	icon_state = "pod_0"
 	req_access = list(core_access_medical_programs) //For premature unlocking.
+	circuit_type = /obj/item/weapon/circuitboard/clonepod
 	var/mob/living/occupant
 	var/heal_level = 90 //The clone is released once its health reaches this level.
 	var/locked = 0
@@ -40,7 +31,7 @@
 	power_change()
 		..()
 		if(!(stat & (BROKEN|NOPOWER)))
-			set_light(2)
+			set_light(0.8, 2, 8, 2, light_color)
 		else
 			set_light(0)
 
@@ -49,36 +40,34 @@
 
 /obj/machinery/clonepod/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/clonepod(null)
-	component_parts += new /obj/item/weapon/stock_parts/scanning_module(null)
-	component_parts += new /obj/item/weapon/stock_parts/scanning_module(null)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(null)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(null)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(null)
-	component_parts += new /obj/item/stack/cable_coil(null, 1)
-	component_parts += new /obj/item/stack/cable_coil(null, 1)
-	held_brain = new(src)
-	RefreshParts()
-	update_icon()
+	ADD_SAVED_VAR(occupant)
+	ADD_SAVED_VAR(locked)
+	ADD_SAVED_VAR(mess)
+	ADD_SAVED_VAR(attempting)
+	ADD_SAVED_VAR(biomass)
+	ADD_SAVED_VAR(held_brain)
 
-/obj/machinery/clonepod/upgraded/New()
-	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/clonepod(null)
-	component_parts += new /obj/item/weapon/stock_parts/scanning_module/phasic(null)
-	component_parts += new /obj/item/weapon/stock_parts/scanning_module/phasic(null)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator/pico(null)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator/pico(null)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(null)
-	component_parts += new /obj/item/stack/cable_coil(null, 1)
-	component_parts += new /obj/item/stack/cable_coil(null, 1)
-	biomass = CLONE_BIOMASS
-	RefreshParts()
+/obj/machinery/clonepod/after_load()
+	. = ..()
+	if(ishuman(occupant))
+		var/mob/living/carbon/human/H = occupant
+		var/obj/item/organ/internal/brain/B = H.internal_organs_by_name[BP_BRAIN]
+		if(istype(B))
+			occupant_brain = B
+
+/obj/machinery/clonepod/Initialize()
+	. = ..()
+	if(. == INITIALIZE_HINT_QDEL)
+		return .
+	queue_icon_update()
 
 /obj/machinery/clonepod/Destroy()
 //	if(connected)
 	//	connected.pods -= src
+	connected = null
+	held_brain = null
+	occupant_brain = null
+	occupant = null
 	return ..()
 
 /obj/machinery/clonepod/RefreshParts()
@@ -89,23 +78,6 @@
 	for(var/obj/item/weapon/stock_parts/manipulator/P in component_parts)
 		speed_coeff += P.rating
 	heal_level = min((efficiency * 15) + 10, 100)
-
-//Health Tracker Implant
-
-/obj/item/weapon/implant/health
-	name = "health implant"
-	var/healthstring = ""
-
-/obj/item/weapon/implant/health/proc/sensehealth()
-	if(!implanted)
-		return "ERROR"
-	else
-		if(isliving(implanted))
-			var/mob/living/L = implanted
-			healthstring = "[round(L.getOxyLoss())] - [round(L.getFireLoss())] - [round(L.getToxLoss())] - [round(L.getBruteLoss())]"
-		if(!healthstring)
-			healthstring = "ERROR"
-		return healthstring
 
 /obj/machinery/clonepod/attack_ai(mob/user as mob)
 	return attack_hand(user)
@@ -136,7 +108,7 @@
 
 	var/mob/living/carbon/human/H = new /mob/living/carbon/human(src, R.species)
 	occupant = H
-	occupant.reagents.add_reagent("synaptizine", 30)
+	occupant.reagents.add_reagent(/datum/reagent/synaptizine, 30)
 	if(!R.real_name)	//to prevent null names
 		if(held_brain && held_brain.brainmob)
 			R.real_name = held_brain.brainmob.mind.name
@@ -147,7 +119,7 @@
 	//Get the clone body ready
 	if(function == 1)
 		H.adjustCloneLoss(190) //new damage var so you can't eject a clone early then stab them to abuse the current damage system --NeoFite
-		H.adjustBrainLoss(90) // The rand(10, 30) will come out as extra brain damage
+		H.adjustBrainLoss(rand(10, 30)) // The rand(10, 30) will come out as extra brain damage
 		H.Paralyse(4)
 	else
 		H.adjustBrainLoss(5) // The rand(10, 30) will come out as extra brain damage
@@ -188,12 +160,13 @@
 			head.f_style = pick("Neckbeard", "Very Long Beard", "Abraham Lincoln Beard", "Dwarf Beard", "Shaven", "Unshaven")
 	**/
 	H.update_body()
-	update_icon()
+	queue_icon_update()
 	attempting = 0
 	return 1
 
 //Grow clones to maturity then kick them out.  FREELOADERS
 /obj/machinery/clonepod/Process()
+	. = ..()
 	var/show_message = 0
 	for(var/obj/item/weapon/reagent_containers/food/snacks/meat/meat in range(1, src))
 		qdel(meat)
@@ -231,7 +204,7 @@
 			//Also heal some oxyloss ourselves just in case!!
 			occupant.adjustOxyLoss(-4)
 
-			use_power(7500) //This might need tweaking.
+			use_power_oneoff(7500) //This might need tweaking.
 			return
 
 		else if((occupant.getCloneLoss() <= (100 - heal_level)) && (!eject_wait))
@@ -244,37 +217,34 @@
 		occupant = null
 		if(locked)
 			locked = 0
-		use_power(200)
+		use_power_oneoff(200)
 		return
 
 	return
 
 //Let's unlock this early I guess.  Might be too early, needs tweaking.
 /obj/machinery/clonepod/attackby(obj/item/weapon/W as obj, mob/user as mob, params)
-	if(istype(W, /obj/item/weapon/screwdriver))
-		if(occupant || mess || locked)
-			to_chat(user, "<span class='notice'>The maintenance panel is locked.</span>")
-			return
-		default_deconstruction_screwdriver(user, "[icon_state]_maintenance", "[initial(icon_state)]", W)
-		return
+	if( !(occupant || mess || locked) && default_deconstruction_screwdriver(user, W))
+		return 1
+	else
+		to_chat(user, "<span class='notice'>The maintenance panel is locked.</span>")
+		return 1
 
-	if(istype(W, /obj/item/weapon/crowbar))
-		if(panel_open)
-			default_deconstruction_crowbar(W)
-		return
+	if(panel_open && default_deconstruction_crowbar(user, W))
+		return 1
 
-	if(istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))
+	if(istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/modular_computer/pda))
 		if(!check_access(W))
 			to_chat(user, "\red Access Denied.")
 			return
 		if((!locked) || (isnull(occupant)))
 			return
-		if((occupant.health < -20) && (occupant.stat != 2))
-			to_chat(user, "\red Access Refused.")
+		if((occupant.health < -20) && (occupant.stat != DEAD))
+			to_chat(user, SPAN_WARNING("Access Refused."))
 			return
 		else
 			locked = 0
-			to_chat(user, "System unlocked.")
+			to_chat(user, SPAN_WARNING("System unlocked."))
 
 //Removing cloning pod biomass
 	else if(istype(W, /obj/item/weapon/reagent_containers/food/snacks/meat))
@@ -283,10 +253,10 @@
 		user.drop_item()
 		qdel(W)
 		return
-	else if(istype(W, /obj/item/weapon/wrench))
+	else if(isWrench(W))
 		if(locked && (anchored || occupant))
 			to_chat(user, "\red Can not do that while [src] is in use.")
-		else
+		else if(default_wrench_floor_bolts(user, W, 2 SECONDS))
 			if(anchored)
 				anchored = 0
 		//		connected.pods -= src  COME BACK TO THIS
@@ -301,7 +271,7 @@
 	else if(istype(W, /obj/item/device/multitool))
 		return
 	else
-		..()
+		return ..()
 
 /obj/machinery/clonepod/emag_act(user as mob)
 	if(isnull(occupant))
@@ -364,13 +334,13 @@
 	if(occupant)
 		connected_message("Critical Error!")
 		mess = 1
-		occupant.ghostize()
-		qdel(occupant)
+		occupant.forceMove(get_turf(src))
+		domutcheck(occupant)
 		occupant = null
 		update_icon()
 	return
 
-/obj/machinery/clonepod/update_icon()
+/obj/machinery/clonepod/on_update_icon()
 	..()
 	icon_state = "pod_0"
 	if(occupant && !(stat & NOPOWER))

@@ -8,9 +8,9 @@
 		last_hud_update = world.time + 15 SECONDS
 		update_action_buttons()
 
-	if (transforming)
+	if (HasMovementHandler(/datum/movement_handler/mob/transformation/))
 		return
-	if(!loc)
+	if (!loc)
 		return
 
 	if(machine && !CanMouseDrop(machine, src))
@@ -25,7 +25,8 @@
 	// human/handle_regular_status_updates() needs a cleanup, as blindness should be handled in handle_disabilities()
 	handle_regular_status_updates() // Status & health update, are we dead or alive etc.
 
-//	if(stat != DEAD) // commented out until when/if I port Auras
+	if(stat != DEAD)
+		aura_check(AURA_TYPE_LIFE)
 
 	//Check if we're on fire
 	handle_fire()
@@ -37,7 +38,7 @@
 
 	handle_actions()
 
-	update_canmove()
+	UpdateLyingBuckledAndVerbStatus()
 
 	handle_regular_hud_updates()
 
@@ -56,9 +57,6 @@
 	return
 
 /mob/living/proc/handle_environment(var/datum/gas_mixture/environment)
-	return
-
-/mob/living/proc/handle_stomach()
 	return
 
 /mob/living/proc/update_pulling()
@@ -86,6 +84,7 @@
 	handle_silent()
 	handle_drugged()
 	handle_slurring()
+	handle_confused()
 
 /mob/living/proc/handle_stunned()
 	if(stunned)
@@ -131,6 +130,11 @@
 /mob/living/proc/handle_disabilities()
 	handle_impaired_vision()
 	handle_impaired_hearing()
+
+/mob/living/proc/handle_confused()
+	if(confused)
+		confused = max(0, confused - 1)
+	return confused
 
 /mob/living/proc/handle_impaired_vision()
 	//Eyes

@@ -10,32 +10,36 @@
 	speak_emote = list("squeeks","squeeks","squiks")
 	emote_hear = list("squeeks","squeaks","squiks")
 	emote_see = list("runs in a circle", "shakes", "scritches at something")
-	pass_flags = PASSTABLE
+	pass_flags = PASS_FLAG_TABLE
 	speak_chance = 1
 	turns_per_move = 5
 	see_in_dark = 6
 	maxHealth = 5
 	health = 5
 	meat_type = /obj/item/weapon/reagent_containers/food/snacks/meat
+	meat_amount = 1
 	response_help  = "pets"
 	response_disarm = "gently pushes aside"
 	response_harm   = "stamps on"
 	density = 0
 	var/body_color //brown, gray and white, leave blank for random
-	minbodytemp = 223		//Below -50 Degrees Celcius
-	maxbodytemp = 323	//Above 50 Degrees Celcius
+	minbodytemp = 223		//Below -50 Degrees Celsius
+	maxbodytemp = 323	//Above 50 Degrees Celsius
 	universal_speak = 0
 	universal_understand = 1
 	holder_type = /obj/item/weapon/holder/mouse
 	mob_size = MOB_MINISCULE
 	possession_candidate = 1
+	can_escape = 1
 
 	can_pull_size = ITEM_SIZE_TINY
 	can_pull_mobs = MOB_PULL_NONE
 
 /mob/living/simple_animal/mouse/Life()
-	..()
-	if(!stat && prob(speak_chance))
+	. = ..()
+	if(!.)
+		return FALSE
+	if(prob(speak_chance))
 		for(var/mob/M in view())
 			sound_to(M, 'sound/effects/mousesqueek.ogg')
 
@@ -112,5 +116,5 @@
 /mob/living/simple_animal/mouse/brown/Tom/New()
 	..()
 	// Change my name back, don't want to be named Tom (666)
-	name = initial(name)
+	SetName(initial(name))
 	real_name = name

@@ -6,9 +6,11 @@
 	icon_state = "strangepresent"
 	density = 1
 	anchored = 0
+	should_save = 1
 
 /obj/effect/stop
 	var/victim = null
 	icon_state = "empty"
 	name = "Geas"
 	desc = "You can't resist."
+	should_save = 1

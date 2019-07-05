@@ -52,38 +52,24 @@ obj/item/weapon/circuitboard/rdserver
 							/obj/item/weapon/stock_parts/manipulator = 1,
 							/obj/item/weapon/reagent_containers/glass/beaker = 2)
 
-/obj/item/weapon/circuitboard/mechfab
-	name = "Circuit board (Exosuit Fabricator)"
-	build_path = /obj/machinery/mecha_part_fabricator
-	board_type = "machine"
-	origin_tech = list(TECH_DATA = 3, TECH_ENGINEERING = 3)
-	req_components = list(
-							/obj/item/weapon/stock_parts/matter_bin = 2,
-							/obj/item/weapon/stock_parts/manipulator = 1,
-							/obj/item/weapon/stock_parts/micro_laser = 1,
-							/obj/item/weapon/stock_parts/console_screen = 1)
 
 /obj/item/weapon/circuitboard/ntnet_relay
-	name = "Circuit board (NTNet Quantum Relay)"
+	name = T_BOARD("NTNet Quantum Relay")
 	build_path = /obj/machinery/ntnet_relay
 	board_type = "machine"
 	origin_tech = list(TECH_DATA = 4)
 	req_components = list(
 							/obj/item/stack/cable_coil = 15)
 
-/obj/item/weapon/circuitboard/integrated_printer
-	name = "Circuit board (Integrated Circuit Printer)"
-	build_path = /obj/machinery/integrated_circuit_printer
+/obj/item/weapon/circuitboard/machinery/robotic_fabricator
+
+/obj/item/weapon/circuitboard/doppler_array
+	name = T_BOARD("doppler array")
+	build_path = /obj/machinery/doppler_array
 	board_type = "machine"
 	origin_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 2)
 	req_components = list(
-						/obj/item/weapon/stock_parts/matter_bin = 1,
-						/obj/item/weapon/stock_parts/manipulator = 1,
-						/obj/item/weapon/stock_parts/micro_laser = 1)
-
-
-
-
-
-
-/obj/item/weapon/circuitboard/machinery/robotic_fabricator
+							/obj/item/weapon/stock_parts/scanning_module = 3,
+							/obj/item/weapon/stock_parts/console_screen = 1,
+							/obj/item/weapon/stock_parts/subspace/ansible = 1,
+							)

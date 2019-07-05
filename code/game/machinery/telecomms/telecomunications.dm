@@ -24,6 +24,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	var/network = "NULL" // the network of the machinery
 
 	var/list/freq_listening = list() // list of frequencies to tune into: if none, will listen to all
+	var/list/channel_tags = list() // a list specifying what to tag packets on different frequencies
 
 	var/machinetype = 0 // just a hacky way of preventing alike machines from pairing
 	var/toggled = 1 	// Is it toggled on
@@ -38,6 +39,27 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	var/overloaded_for = 0
 	var/outage_probability = 75			// Probability of failing during a ionospheric storm
 
+	var/list/links_coords = list()
+/datum/coord_holder
+	var/x
+	var/y
+	var/z
+	map_storage_saved_vars = "x;y;z"
+/obj/machinery/telecomms/before_save()
+	links_coords = list()
+	for(var/obj/ob in links)
+		var/datum/coord_holder/holder = new()
+		holder.x = ob.x
+		holder.y = ob.y
+		holder.z = ob.z
+		links_coords += holder
+/obj/machinery/telecomms/after_load()
+	if(links_coords && links_coords.len)
+		for(var/datum/coord_holder/holder in links_coords)
+			var/turf/T = locate(holder.x,holder.y,holder.z)
+			if(T)
+				for(var/obj/machinery/telecomms/tele in T.contents)
+					links |= tele
 
 /obj/machinery/telecomms/proc/relay_information(datum/signal/signal, filter, copysig, amount = 20)
 	// relay signal to all linked machinery that are of type [filter]. If signal has been sent [amount] times, stop sending
@@ -124,9 +146,10 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	..()
 
 /obj/machinery/telecomms/Initialize()
+	. = ..()
 	//Set the listening_levels if there's none.
 	if(!loc)
-		return
+		return INITIALIZE_HINT_QDEL
 	if(!listening_levels)
 		//Defaults to our Z level!
 		var/turf/position = get_turf(src)
@@ -144,14 +167,14 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 					continue
 				add_link(T)
 	update_power()
-	. = ..()
+
 
 /obj/machinery/telecomms/Destroy()
 	telecomms_list -= src
 	for(var/obj/machinery/telecomms/comm in telecomms_list)
 		comm.links -= src
 	links = list()
-	..()
+	. = ..()
 
 // Used in auto linking
 /obj/machinery/telecomms/proc/add_link(var/obj/machinery/telecomms/T)
@@ -163,7 +186,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 				if(src != T)
 					links |= T
 
-/obj/machinery/telecomms/update_icon()
+/obj/machinery/telecomms/on_update_icon()
 	if(on && !overloaded_for)
 		icon_state = initial(icon_state)
 	else
@@ -177,7 +200,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 			on = 1
 	else
 		on = 0
-	use_power = on
+	update_use_power(on)
 
 /obj/machinery/telecomms/Process()
 	update_power()
@@ -262,7 +285,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 
 /obj/machinery/telecomms/receiver
 	name = "Subspace Receiver"
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/machines/telecomms.dmi'
 	icon_state = "broadcast receiver"
 	desc = "This machine has a dish-like shape and green lights. It is designed to detect and process subspace radio activity."
 	density = 1
@@ -320,7 +343,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 
 /obj/machinery/telecomms/hub
 	name = "Telecommunication Hub"
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/machines/telecomms.dmi'
 	icon_state = "hub"
 	desc = "A mighty piece of hardware used to send/receive massive amounts of data."
 	density = 1
@@ -354,7 +377,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 
 /obj/machinery/telecomms/relay
 	name = "Telecommunication Relay"
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/machines/telecomms.dmi'
 	icon_state = "relay"
 	desc = "A mighty piece of hardware used to send massive amounts of data far away."
 	density = 1
@@ -377,9 +400,9 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 /obj/machinery/telecomms/relay/update_power()
 	..()
 	if(z in GLOB.using_map.station_levels)
-		idle_power_usage = 2.5 KILOWATTS
+		change_power_consumption(2.5 KILOWATTS, POWER_USE_IDLE)
 	else
-		idle_power_usage = 30 KILOWATTS
+		change_power_consumption(100 KILOWATTS, POWER_USE_IDLE)
 
 /obj/machinery/telecomms/relay/receive_information(datum/signal/signal, obj/machinery/telecomms/machine_from)
 
@@ -418,7 +441,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 
 /obj/machinery/telecomms/bus
 	name = "Bus Mainframe"
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/machines/telecomms.dmi'
 	icon_state = "bus"
 	desc = "A mighty piece of hardware used to send massive amounts of data quickly."
 	density = 1
@@ -470,7 +493,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 
 /obj/machinery/telecomms/processor
 	name = "Processor Unit"
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/machines/telecomms.dmi'
 	icon_state = "processor"
 	desc = "This machine is used to process large quantities of information."
 	density = 1
@@ -508,7 +531,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 
 /obj/machinery/telecomms/server
 	name = "Telecommunication Server"
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/machines/telecomms.dmi'
 	icon_state = "comm_server"
 	desc = "A machine used to store data and network statistics."
 	density = 1
@@ -524,10 +547,6 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	var/totaltraffic = 0 // gigabytes (if > 1024, divide by 1024 -> terrabytes)
 
 	var/list/memory = list()	// stored memory
-	var/rawcode = ""	// the code to compile (raw text)
-	var/datum/TCS_Compiler/Compiler	// the compiler that compiles and runs the code
-	var/autoruncode = 0		// 1 if the code is set to run every time a signal is picked up
-
 	var/encryption = "null" // encryption key: ie "password"
 	var/salt = "null"		// encryption salt: ie "123comsat"
 							// would add up to md5("password123comsat")
@@ -536,8 +555,6 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 
 /obj/machinery/telecomms/server/New()
 	..()
-	Compiler = new()
-	Compiler.Holder = src
 	server_radio = new()
 
 /obj/machinery/telecomms/server/receive_information(datum/signal/signal, obj/machinery/telecomms/machine_from)
@@ -548,6 +565,11 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 
 			if(traffic > 0)
 				totaltraffic += traffic // add current traffic to total traffic
+
+			// channel tag the signal
+			var/list/data = get_channel_info(signal.frequency)
+			signal.data["channel_tag"] = data[1]
+			signal.data["channel_color"] = data[2]
 
 			//Is this a test signal? Bypass logging
 			if(signal.data["type"] != 4)
@@ -611,22 +633,9 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 				var/identifier = num2text( rand(-1000,1000) + world.time )
 				log.name = "data packet ([md5(identifier)])"
 
-				if(Compiler && autoruncode)
-					Compiler.Run(signal)	// execute the code
-
 			var/can_send = relay_information(signal, /obj/machinery/telecomms/hub)
 			if(!can_send)
 				relay_information(signal, /obj/machinery/telecomms/broadcaster)
-
-
-/obj/machinery/telecomms/server/proc/setcode(var/t)
-	if(t)
-		if(istext(t))
-			rawcode = t
-
-/obj/machinery/telecomms/server/proc/compile()
-	if(Compiler)
-		return Compiler.Compile(rawcode)
 
 /obj/machinery/telecomms/server/proc/update_logs()
 	// start deleting the very first log entry
@@ -647,7 +656,11 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	log_entries.Add(log)
 	update_logs()
 
-
+/obj/machinery/telecomms/server/proc/get_channel_info(var/freq)
+	for(var/list/rule in channel_tags)
+		if(rule[1] == freq)
+			return list(rule[2], rule[3])
+	return list(format_frequency(freq), channel_color_presets["Global Green"])
 
 
 // Simple log entry datum

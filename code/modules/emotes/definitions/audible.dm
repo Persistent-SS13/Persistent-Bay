@@ -108,6 +108,7 @@
 
 /decl/emote/audible/laugh
 	key = "laugh"
+	emote_message_3p_target = "USER laughs at TARGET."
 	emote_message_3p = "USER laughs."
 
 /decl/emote/audible/mumble
@@ -151,8 +152,17 @@
 	key = "grunt"
 	emote_message_3p = "USER grunts."
 
+/decl/emote/audible/slap
+	key = "slap"
+	emote_message_1p_target = "<span class='warning'>You slap TARGET across the face!</span>"
+	emote_message_1p = "You slap yourself across the face!"
+	emote_message_3p_target = "<span class='warning'>USER slaps TARGET across the face!</span>"
+	emote_message_3p = "USER slaps USER_SELF across the face!"
+	emote_sound = 'sound/effects/snap.ogg'
+
 /decl/emote/audible/bug_hiss
 	key ="hiss"
+	emote_message_3p_target = "USER hisses at TARGET."
 	emote_message_3p = "USER hisses."
 	emote_sound = 'sound/voice/BugHiss.ogg'
 
@@ -165,3 +175,9 @@
 	key ="chitter"
 	emote_message_3p = "USER chitters."
 	emote_sound = 'sound/voice/Bug.ogg'
+
+/decl/emote/audible/unathi_hiss
+	key ="hiss"
+	emote_message_3p_target = "USER hisses at TARGET."
+	emote_message_3p = "USER hisses."
+	emote_sound = 'sound/voice/unathihiss.ogg' //Credit for sound: www.zapsplat.com

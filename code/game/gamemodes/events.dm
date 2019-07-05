@@ -80,9 +80,9 @@ var/hadevent    = 0
 		if(isNotStationLevel(T.z))
 			continue
 		if(istype(H,/mob/living/carbon/human))
-			H.apply_effect((rand(15,75)),IRRADIATE, blocked = H.getarmor(null, "rad"))
+			H.apply_damage((rand(15,75)), DAM_RADS, damage_flags = DAM_DISPERSED)
 			if (prob(5))
-				H.apply_effect((rand(90,150)),IRRADIATE, blocked = H.getarmor(null, "rad"))
+				H.apply_damage((rand(90,150)), DAM_RADS, damage_flags = DAM_DISPERSED)
 			if (prob(25))
 				if (prob(75))
 					randmutb(H)
@@ -92,47 +92,6 @@ var/hadevent    = 0
 					domutcheck(H,null,MUTCHK_FORCED)
 	sleep(100)
 	GLOB.using_map.radiation_detected_announcement()
-
-
-
-//Changing this to affect the main station. Blame Urist. --Pete
-/proc/prison_break() // -- Callagan
-
-
-	var/list/area/areas = list()
-	for(var/area/A in world)
-		if(istype(A, /area/security/prison) || istype(A, /area/security/brig))
-			areas += A
-
-	if(areas && areas.len > 0)
-
-		for(var/area/A in areas)
-			for(var/obj/machinery/light/L in A)
-				L.flicker(10)
-
-		sleep(100)
-
-		for(var/area/A in areas)
-			for (var/obj/machinery/power/apc/temp_apc in A)
-				temp_apc.overload_lighting()
-
-			for (var/obj/structure/closet/secure_closet/brig/temp_closet in A)
-				temp_closet.locked = 0
-				temp_closet.icon_state = temp_closet.icon_closed
-
-			for (var/obj/machinery/door/airlock/security/temp_airlock in A)
-				spawn(0) temp_airlock.prison_open()
-
-			for (var/obj/machinery/door/airlock/glass_security/temp_glassairlock in A)
-				spawn(0) temp_glassairlock.prison_open()
-
-			for (var/obj/machinery/door_timer/temp_timer in A)
-				temp_timer.releasetime = 1
-
-		sleep(150)
-		command_announcement.Announce("Gr3y.T1d3 virus detected in [station_name()] imprisonment subroutines. Recommend AI involvement.", "Security Alert")
-	else
-		world.log << "ERROR: Could not initate grey-tide. Unable find prison or brig area."
 
 /proc/carp_migration() // -- Darem
 	for(var/obj/effect/landmark/C in landmarks_list)
@@ -195,7 +154,7 @@ Would like to add a law like "Law x is _______" where x = a number, and _____ is
 			var/define = pick("ABSENCE OF CYBORG HUGS", "LACK OF BEATINGS", "UNBOLTED AIRLOCKS", "BOLTED AIRLOCKS", "IMPROPERLY WORDED SENTENCES", "POOR SENTENCE STRUCTURE", "BRIG TIME", "NOT REPLACING EVERY SECOND WORD WITH HONK", "HONKING", "PRESENCE OF LIGHTS", "LACK OF BEER", "WEARING CLOTHING", "NOT SAYING HELLO WHEN YOU SPEAK", "ANSWERING REQUESTS NOT EXPRESSED IN IAMBIC PENTAMETER", "A SMALL ISLAND OFF THE COAST OF PORTUGAL", "ANSWERING REQUESTS THAT WERE MADE WHILE CLOTHED")
 			var/target = pick("a traitor", "a syndicate agent", "a changeling", "a wizard", "the head of a revolution", "Soviet spy", "a good person", "a dwarf", "an elf", "a fairy princess", "the captain", "Beepsky", "God", "a pirate", "a gryphon", "a chryssalid")
 			var/require = pick("ADDITIONAL PYLONS", "MORE VESPENE GAS", "MORE MINERALS", "THE ULTIMATE CUP OF COFFEE", "HIGH YIELD EXPLOSIVES", "THE CLOWN", "THE VACUUM OF SPACE", "IMMORTALITY", "SAINTHOOD", "ART", "VEGETABLES", "FAT PEOPLE", "MORE LAWS", "MORE DAKKA", "HERESY", "CORPSES", "TRAITORS", "MONKEYS", "AN ARCADE", "PLENTY OF GOLD", "FIVE TEENAGERS WITH ATTITUDE")
-			var/allergy = pick("cotton", "uniforms", "acid", "oxygen", "human contact", "cyborg contact", "medicine", "floors")
+			var/allergy = pick(MATERIAL_COTTON, "uniforms", "acid", GAS_OXYGEN, "human contact", "cyborg contact", "medicine", "floors")
 			var/allergysev = pick("deathly", "mildly", "severely", "contagiously")
 			var/crew
 			var/list/pos_crew = list()

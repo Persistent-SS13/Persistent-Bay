@@ -18,7 +18,7 @@
 /datum/reagent/acetone
 	value = 0.27
 
-/datum/reagent/aluminum
+/datum/reagent/aluminium
 	value = 0.02
 
 /datum/reagent/ammonia
@@ -52,7 +52,7 @@
 	value = 1
 
 /datum/reagent/radium
-	value = 50 //Radium is crazy expensive, like 100k+ per gram. So probably a bit less expensive in the future.
+	value = 1 //Radium is crazy expensive, like 100k+ per gram. So probably a bit less expensive in the future.
 
 /datum/reagent/acid
 	value = 0.2
@@ -518,6 +518,12 @@
 /datum/reagent/toxin
 	value = 2
 
+/datum/reagent/toxin/bromide
+	value = 2
+
+/datum/reagent/toxin/methyl_bromide
+	value = 3
+
 /datum/reagent/toxin/plasticide
 	value = 2.1
 
@@ -528,7 +534,7 @@
 	value = 3
 
 /datum/reagent/toxin/phoron
-	value = 10
+	value = 4
 
 /datum/reagent/toxin/cyanide
 	value = 3.3
@@ -550,6 +556,9 @@
 
 /datum/reagent/acid/polyacid
 	value = 2
+
+/datum/reagent/acid/stomach
+	value = 0
 
 /datum/reagent/lexorin
 	value = 2.4

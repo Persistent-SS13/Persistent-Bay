@@ -23,7 +23,7 @@ datum/objective
 
 	proc/find_target()
 		var/list/possible_targets = list()
-		for(var/datum/mind/possible_target in ticker.minds)
+		for(var/datum/mind/possible_target in GLOB.minds)
 			if(possible_target != owner && ishuman(possible_target.current) && (possible_target.current.stat != 2))
 				possible_targets += possible_target
 		if(possible_targets.len > 0)
@@ -31,7 +31,7 @@ datum/objective
 
 
 	proc/find_target_by_role(role, role_type=0)//Option sets either to check assigned role or special role. Default to assigned.
-		for(var/datum/mind/possible_target in ticker.minds)
+		for(var/datum/mind/possible_target in GLOB.minds)
 			if((possible_target != owner) && ishuman(possible_target.current) && ((role_type ? possible_target.special_role : possible_target.assigned_role) == role) )
 				target = possible_target
 				break
@@ -123,37 +123,33 @@ datum/objective/anti_revolution/brig
 			return 0
 		return 0
 
-datum/objective/anti_revolution/demote
-	find_target()
-		..()
-		if(target && target.current)
-			explanation_text = "[target.current.real_name], the [target.assigned_role]  has been classified as harmful to [GLOB.using_map.company_name]'s goals. Demote \him[target.current] to assistant."
+/datum/objective/anti_revolution/demote/find_target()
+	..()
+	if(target && target.current)
+		explanation_text = "[target.current.real_name], the [target.assigned_role]  has been classified as harmful to [GLOB.using_map.company_name]'s goals. Demote \him[target.current] to assistant."
+	else
+		explanation_text = "Free Objective"
+	return target
+
+/datum/objective/anti_revolution/demote/find_target_by_role(role, role_type=0)
+	..(role, role_type)
+	if(target && target.current)
+		explanation_text = "[target.current.real_name], the [!role_type ? target.assigned_role : target.special_role] has been classified as harmful to [GLOB.using_map.company_name]'s goals. Demote \him[target.current] to assistant."
+	else
+		explanation_text = "Free Objective"
+	return target
+
+/datum/objective/anti_revolution/demote/check_completion()
+	if(target && target.current && istype(target,/mob/living/carbon/human))
+		var/obj/item/weapon/card/id/I = target.current.GetIdCard()
+
+		if(!istype(I)) return 1
+
+		if(I.assignment == GLOB.using_map.default_assistant_title)
+			return 1
 		else
-			explanation_text = "Free Objective"
-		return target
-
-	find_target_by_role(role, role_type=0)
-		..(role, role_type)
-		if(target && target.current)
-			explanation_text = "[target.current.real_name], the [!role_type ? target.assigned_role : target.special_role] has been classified as harmful to [GLOB.using_map.company_name]'s goals. Demote \him[target.current] to assistant."
-		else
-			explanation_text = "Free Objective"
-		return target
-
-	check_completion()
-		if(target && target.current && istype(target,/mob/living/carbon/human))
-			var/obj/item/weapon/card/id/I = target.current:wear_id
-			if(istype(I, /obj/item/device/pda))
-				var/obj/item/device/pda/P = I
-				I = P.id
-
-			if(!istype(I)) return 1
-
-			if(I.assignment == "Assistant")
-				return 1
-			else
-				return 0
-		return 1
+			return 0
+	return 1
 
 datum/objective/debrain//I want braaaainssss
 	find_target()
@@ -396,7 +392,7 @@ datum/objective/harm
 					return 1
 
 			var/obj/item/organ/external/head/head = H.get_organ(BP_HEAD)
-			if(!head || head.disfigured)
+			if(!head || (head.status & ORGAN_DISFIGURED))
 				return 1
 		return 0
 
@@ -488,7 +484,7 @@ datum/objective/steal
 
 				for(var/obj/item/I in all_items) //Check for phoron tanks
 					if(istype(I, steal_target))
-						found_amount += (target_name=="28 moles of phoron (full tank)" ? (I:air_contents:gas["phoron"]) : (I:amount))
+						found_amount += (target_name=="28 moles of phoron (full tank)" ? (I:air_contents:gas[GAS_PHORON]) : (I:amount))
 				return found_amount>=target_amount
 
 			if("a functional AI")
@@ -572,17 +568,16 @@ datum/objective/capture
 /datum/objective/absorb
 	proc/gen_amount_goal(var/lowbound = 4, var/highbound = 6)
 		target_amount = rand (lowbound,highbound)
-		if (ticker)
-			var/n_p = 1 //autowin
-			if (ticker.current_state == GAME_STATE_SETTING_UP)
-				for(var/mob/new_player/P in GLOB.player_list)
-					if(P.client && P.ready && P.mind!=owner)
-						n_p ++
-			else if (ticker.current_state == GAME_STATE_PLAYING)
-				for(var/mob/living/carbon/human/P in GLOB.player_list)
-					if(P.client && !(P.mind.changeling) && P.mind!=owner)
-						n_p ++
-			target_amount = min(target_amount, n_p)
+		var/n_p = 1 //autowin
+		if (GAME_STATE == RUNLEVEL_SETUP)
+			for(var/mob/new_player/P in GLOB.player_list)
+				if(P.client && P.ready && P.mind!=owner)
+					n_p ++
+		else if (GAME_STATE == RUNLEVEL_GAME)
+			for(var/mob/living/carbon/human/P in GLOB.player_list)
+				if(P.client && !(P.mind.changeling) && P.mind!=owner)
+					n_p ++
+		target_amount = min(target_amount, n_p)
 
 		explanation_text = "Absorb [target_amount] compatible genomes."
 		return target_amount
@@ -604,7 +599,7 @@ datum/objective/heist/kidnap
 		var/list/possible_targets = list()
 		var/list/priority_targets = list()
 
-		for(var/datum/mind/possible_target in ticker.minds)
+		for(var/datum/mind/possible_target in GLOB.minds)
 			if(possible_target != owner && ishuman(possible_target.current) && (possible_target.current.stat != 2) && (!possible_target.special_role))
 				possible_targets += possible_target
 				for(var/role in roles)
@@ -687,7 +682,7 @@ datum/objective/heist/loot
 				if(istype(I,target)) total_amount++
 			if(total_amount >= target_amount) return 1
 
-		for(var/datum/mind/raider in raiders.current_antagonists)
+		for(var/datum/mind/raider in GLOB.raiders.current_antagonists)
 			if(raider.current)
 				for(var/obj/O in raider.current.get_contents())
 					if(istype(O,target)) total_amount++
@@ -700,28 +695,28 @@ datum/objective/heist/salvage
 	choose_target()
 		switch(rand(1,8))
 			if(1)
-				target = DEFAULT_WALL_MATERIAL
+				target = MATERIAL_STEEL
 				target_amount = 300
 			if(2)
-				target = "glass"
+				target = MATERIAL_GLASS
 				target_amount = 200
 			if(3)
-				target = "plasteel"
+				target = MATERIAL_PLASTEEL
 				target_amount = 100
 			if(4)
-				target = "phoron"
+				target = MATERIAL_PHORON
 				target_amount = 100
 			if(5)
-				target = "silver"
+				target = MATERIAL_SILVER
 				target_amount = 50
 			if(6)
-				target = "gold"
+				target = MATERIAL_GOLD
 				target_amount = 20
 			if(7)
-				target = "uranium"
+				target = MATERIAL_URANIUM
 				target_amount = 20
 			if(8)
-				target = "diamond"
+				target = MATERIAL_DIAMOND
 				target_amount = 20
 
 		explanation_text = "Ransack the [station_name()] and escape with [target_amount] [target]."
@@ -743,7 +738,7 @@ datum/objective/heist/salvage
 						S = I
 						total_amount += S.get_amount()
 
-		for(var/datum/mind/raider in raiders.current_antagonists)
+		for(var/datum/mind/raider in GLOB.raiders.current_antagonists)
 			if(raider.current)
 				for(var/obj/item/O in raider.current.get_contents())
 					if(istype(O,/obj/item/stack/material))
@@ -759,7 +754,7 @@ datum/objective/heist/salvage
 	explanation_text = "Do not leave anyone behind, alive or dead."
 
 	check_completion()
-		if(raiders && raiders.is_raider_crew_safe()) return 1
+		if(GLOB.raiders && GLOB.raiders.is_raider_crew_safe()) return 1
 		return 0
 
 //Borer objective(s).
@@ -802,9 +797,9 @@ datum/objective/heist/salvage
 
 /datum/objective/cult/survive/check_completion()
 	var/acolytes_survived = 0
-	if(!cult)
+	if(!GLOB.cult)
 		return 0
-	for(var/datum/mind/cult_mind in cult.current_antagonists)
+	for(var/datum/mind/cult_mind in GLOB.cult.current_antagonists)
 		if (cult_mind.current && cult_mind.current.stat!=2)
 			var/area/A = get_area(cult_mind.current )
 			if ( is_type_in_list(A, GLOB.using_map.post_round_safe_areas))
@@ -827,14 +822,14 @@ datum/objective/heist/salvage
 	var/list/possible_targets = list()
 	if(!possible_targets.len)
 		for(var/mob/living/carbon/human/player in GLOB.player_list)
-			if(player.mind && !(player.mind in cult))
+			if(player.mind && !(player.mind in GLOB.cult.current_antagonists))
 				possible_targets += player.mind
 	if(possible_targets.len > 0)
 		target = pick(possible_targets)
 	if(target) explanation_text = "Sacrifice [target.name], the [target.assigned_role]. You will need the sacrifice rune (Hell blood join) and three acolytes to do so."
 
 /datum/objective/cult/sacrifice/check_completion()
-	return (target && cult && !cult.sacrificed.Find(target))
+	return (target && GLOB.cult && !GLOB.cult.sacrificed.Find(target))
 
 /datum/objective/rev/find_target()
 	..()
@@ -862,7 +857,7 @@ datum/objective/heist/salvage
 		if(H.stat == DEAD || H.restrained())
 			return 1
 		// Check if they're converted
-		if(target in revs.current_antagonists)
+		if(target in GLOB.revs.current_antagonists)
 			return 1
 		var/turf/T = get_turf(H)
 		if(T && isNotStationLevel(T.z))			//If they leave the station they count as dead for this

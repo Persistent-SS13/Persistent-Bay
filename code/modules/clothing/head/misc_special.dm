@@ -19,9 +19,8 @@
 		slot_l_hand_str = "welding",
 		slot_r_hand_str = "welding",
 		)
-	matter = list(DEFAULT_WALL_MATERIAL = 3000, "glass" = 1000)
+	matter = list(MATERIAL_STEEL = 3000, MATERIAL_GLASS = 1000)
 	var/up = 0
-	armor = list(melee = 10, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
 	flags_inv = (HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE)
 	body_parts_covered = HEAD|FACE|EYES
 	action_button_name = "Flip Welding Mask"
@@ -30,6 +29,20 @@
 	var/base_state
 	flash_protection = FLASH_PROTECTION_MAJOR
 	tint = TINT_HEAVY
+	armor  = list(
+		DAM_BLUNT 	= 15,
+		DAM_PIERCE 	= 10,
+		DAM_CUT 	= 15,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 5,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
+
 /obj/item/clothing/head/welding/after_load()
 	base_state = "welding"
 /obj/item/clothing/head/welding/attack_self()
@@ -43,7 +56,7 @@
 	set name = "Adjust welding mask"
 	set src in usr
 
-	if(usr.canmove && !usr.stat && !usr.restrained())
+	if(CanPhysicallyInteract(usr))
 		if(src.up)
 			src.up = !src.up
 			body_parts_covered |= (EYES|FACE)
@@ -136,13 +149,13 @@
 	src.onfire = !( src.onfire )
 	if (src.onfire)
 		src.force = 3
-		src.damtype = "fire"
+		src.damtype = DAM_BURN
 		src.icon_state = "cake1"
 		src.item_state = "cake1"
 		START_PROCESSING(SSobj, src)
 	else
 		src.force = null
-		src.damtype = "brute"
+		src.damtype = DAM_BLUNT
 		src.icon_state = "cake0"
 		src.item_state = "cake0"
 	return
@@ -168,6 +181,12 @@
 		icon_state = initial(icon_state)
 		to_chat(user, "You lower the ear flaps on the ushanka.")
 
+/obj/item/clothing/head/ushanka/gcc
+	name = "GCC ushanka"
+	desc = "Perfect for keeping ears warm during your court-martial."
+	icon_state = "tccushankadown"
+	icon_state_up = "tccushankaup"
+
 /*
  * Pumpkin head
  */
@@ -177,7 +196,7 @@
 	icon_state = "hardhat0_pumpkin"//Could stand to be renamed
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE|BLOCKHAIR
 	body_parts_covered = HEAD|FACE|EYES
-	brightness_on = 2
+	brightness_on = 0.5
 	light_overlay = "helmet_light"
 	w_class = ITEM_SIZE_NORMAL
 
@@ -194,10 +213,10 @@
 
 	update_icon(var/mob/living/carbon/human/user)
 		if(!istype(user)) return
-		var/icon/ears = new/icon("icon" = 'icons/mob/head.dmi', "icon_state" = "kitty")
+		var/icon/ears = new/icon("icon" = 'icons/mob/onmob/onmob_head.dmi', "icon_state" = "kitty")
 		ears.Blend(rgb(user.r_hair, user.g_hair, user.b_hair), ICON_ADD)
 
-		var/icon/earbit = new/icon("icon" = 'icons/mob/head.dmi', "icon_state" = "kittyinner")
+		var/icon/earbit = new/icon("icon" = 'icons/mob/onmob/onmob_head.dmi', "icon_state" = "kittyinner")
 		ears.Blend(earbit, ICON_OVERLAY)
 
 /obj/item/clothing/head/richard
@@ -206,3 +225,21 @@
 	icon_state = "richard"
 	body_parts_covered = HEAD|FACE
 	flags_inv = BLOCKHAIR
+
+/obj/item/clothing/head/crown
+	name = "crown"
+	desc = "A crown fit for a king, a pretty king maybe? Who are we to judge this day in age."
+	icon_state = "crown"
+	armor  = list(
+		DAM_BLUNT 	= 15,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 15,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 15,
+		DAM_BURN 	= 0,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)

@@ -32,18 +32,19 @@
 /obj/structure/inflatable
 	name = "inflatable"
 	desc = "An inflated membrane. Do not puncture."
-	density = 1
-	anchored = 1
+	density = TRUE
+	anchored = TRUE
 	opacity = 0
 	icon = 'icons/obj/inflatable.dmi'
 	icon_state = "wall"
-
+	max_health = 50.0
 	var/undeploy_path = null
-	var/health = 50.0
 
 /obj/structure/inflatable/wall
 	name = "inflatable wall"
 	undeploy_path = /obj/item/inflatable/wall
+	max_health = 80
+	mass = 5
 
 /obj/structure/inflatable/New(location)
 	..()
@@ -54,30 +55,7 @@
 	return ..()
 
 /obj/structure/inflatable/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
-	return 0
-
-/obj/structure/inflatable/bullet_act(var/obj/item/projectile/Proj)
-	var/proj_damage = Proj.get_structure_damage()
-	if(!proj_damage) return
-
-	health -= proj_damage
-	..()
-	if(health <= 0)
-		deflate(1)
-	return
-
-/obj/structure/inflatable/ex_act(severity)
-	switch(severity)
-		if(1.0)
-			qdel(src)
-			return
-		if(2.0)
-			deflate(1)
-			return
-		if(3.0)
-			if(prob(50))
-				deflate(1)
-				return
+	return FALSE
 
 /obj/structure/inflatable/attack_hand(mob/user as mob)
 	add_fingerprint(user)
@@ -86,14 +64,14 @@
 /obj/structure/inflatable/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(!istype(W) || istype(W, /obj/item/weapon/inflatable_dispenser)) return
 
-	if((W.damtype == BRUTE || W.damtype == BURN) && W.can_puncture())
+	if((IsDamageTypeBrute(W.damtype) || IsDamageTypeBurn(W.damtype)) && W.can_puncture())
 		..()
 		if(hit(W.force))
 			visible_message("<span class='danger'>[user] pierces [src] with [W]!</span>")
 	return
 
 /obj/structure/inflatable/proc/hit(var/damage, var/sound_effect = 1)
-	health = max(0, health - damage)
+	rem_health(damage)
 	if(sound_effect)
 		playsound(loc, 'sound/effects/Glasshit.ogg', 75, 1)
 	if(health <= 0)
@@ -141,6 +119,9 @@
 		user.visible_message("<span class='danger'>[user] [attack_verb] at [src]!</span>")
 	return 1
 
+/obj/structure/inflatable/CanFluidPass(var/coming_from)
+	return !density
+
 /obj/structure/inflatable/door //Based on mineral door code
 	name = "inflatable door"
 	density = 1
@@ -149,6 +130,8 @@
 
 	icon_state = "door_closed"
 	undeploy_path = /obj/item/inflatable/door
+	max_health = 70
+	mass = 5
 
 	var/state = 0 //closed, 1 == open
 	var/isSwitchingStates = 0
@@ -211,7 +194,7 @@
 	update_icon()
 	isSwitchingStates = 0
 
-/obj/structure/inflatable/door/update_icon()
+/obj/structure/inflatable/door/on_update_icon()
 	if(state)
 		icon_state = "door_open"
 	else
@@ -259,4 +242,6 @@
 	w_class = ITEM_SIZE_LARGE
 	max_storage_space = DEFAULT_LARGEBOX_STORAGE
 	can_hold = list(/obj/item/inflatable)
+
+/obj/item/weapon/storage/briefcase/inflatable/full
 	startswith = list(/obj/item/inflatable/door = 2, /obj/item/inflatable/wall = 3)

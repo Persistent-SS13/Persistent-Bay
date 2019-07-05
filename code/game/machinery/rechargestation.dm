@@ -5,8 +5,8 @@
 	icon_state = "borgcharger0"
 	density = 1
 	anchored = 1
-	use_power = 1
 	idle_power_usage = 50
+	circuit_type = /obj/item/weapon/circuitboard/recharge_station
 	var/mob/living/occupant = null
 	var/obj/item/weapon/cell/cell = null
 	var/icon_update_tick = 0	// Used to rebuild the overlay only once every 10 ticks
@@ -21,21 +21,17 @@
 	var/weld_power_use = 2300	// power used per point of brute damage repaired. 2.3 kW ~ about the same power usage of a handheld arc welder
 	var/wire_power_use = 500	// power used per point of burn damage repaired.
 
+/obj/machinery/recharge_station/after_load()
+	for(var/mob/M in contents)
+		M.loc = get_turf(src)
+
 /obj/machinery/recharge_station/New()
 	..()
-
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/recharge_station(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/weapon/cell/high(src)
-	component_parts += new /obj/item/stack/cable_coil(src, 5)
-
-	RefreshParts()
-
-	update_icon()
+	ADD_SAVED_VAR(occupant)
+	ADD_SAVED_VAR(cell)
+	
+	ADD_SKIP_EMPTY(occupant)
+	ADD_SKIP_EMPTY(cell)
 
 /obj/machinery/recharge_station/proc/has_cell_power()
 	return cell && cell.percent() > 0
@@ -63,7 +59,9 @@
 		recharge_amount = (occupant ? restore_power_active : restore_power_passive) * CELLRATE
 
 		recharge_amount = cell.give(recharge_amount)
-		use_power(recharge_amount / CELLRATE)
+		use_power_oneoff(recharge_amount / CELLRATE)
+	else
+		cell.use(get_power_usage() * CELLRATE) //since the recharge station can still be on even with NOPOWER. Instead it draws from the internal cell.
 
 	if(icon_update_tick >= 10)
 		icon_update_tick = 0
@@ -72,19 +70,6 @@
 
 	if(occupant || recharge_amount)
 		update_icon()
-
-//since the recharge station can still be on even with NOPOWER. Instead it draws from the internal cell.
-/obj/machinery/recharge_station/auto_use_power()
-	if(!(stat & NOPOWER))
-		return ..()
-
-	if(!has_cell_power())
-		return 0
-	if(src.use_power == 1)
-		cell.use(idle_power_usage * CELLRATE)
-	else if(src.use_power >= 2)
-		cell.use(active_power_usage * CELLRATE)
-	return 1
 
 //Processes the occupant, drawing from the internal power cell if needed.
 /obj/machinery/recharge_station/proc/process_occupant()
@@ -119,9 +104,12 @@
 
 	if(target && !target.fully_charged())
 		var/diff = min(target.maxcharge - target.charge, charging_power * CELLRATE) // Capped by charging_power / tick
+		if(ishuman(occupant))
+			var/mob/living/carbon/human/H = occupant
+			if(H.species.name == SPECIES_ADHERENT)
+				diff /= 2 //Adherents charge at half the normal rate.
 		var/charge_used = cell.use(diff)
 		target.give(charge_used)
-
 
 /obj/machinery/recharge_station/examine(mob/user)
 	. = ..(user)
@@ -198,7 +186,7 @@
 		if(99 to 110)
 			overlays += image('icons/obj/objects.dmi', "statn_c100")
 
-/obj/machinery/recharge_station/update_icon()
+/obj/machinery/recharge_station/on_update_icon()
 	..()
 	if(stat & BROKEN)
 		icon_state = "borgcharger0"

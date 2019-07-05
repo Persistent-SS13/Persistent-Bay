@@ -7,26 +7,38 @@
 	icon_state = "printer"
 	hardware_size = 1
 	var/stored_paper = 5
-	var/max_paper = 10
+	var/max_paper = 50
+
+/obj/item/weapon/computer_hardware/nano_printer/New()
+	..()
+	ADD_SAVED_VAR(stored_paper)
+
+/obj/item/weapon/computer_hardware/nano_printer/Destroy()
+	if(holder2 && (holder2.nano_printer == src))
+		holder2.nano_printer = null
+	holder2 = null
+	return ..()
 
 /obj/item/weapon/computer_hardware/nano_printer/diagnostics(var/mob/user)
 	..()
 	to_chat(user, "Paper buffer level: [stored_paper]/[max_paper]")
 
-/obj/item/weapon/computer_hardware/nano_printer/proc/print_text(var/text_to_print, var/paper_title = null)
+/obj/item/weapon/computer_hardware/nano_printer/proc/print_text(var/text_to_print, var/paper_title = null, var/paper_type = /obj/item/weapon/paper, var/list/md = null)
+	if(printer_ready())
+		// Damaged printer causes the resulting paper to be somewhat harder to read.
+		if(ismalfunctioning())
+			text_to_print = stars(text_to_print, 100-malfunction_probability)
+		new paper_type(get_turf(holder2),text_to_print, paper_title, md)
+		stored_paper--
+		return 1
+
+/obj/item/weapon/computer_hardware/nano_printer/proc/printer_ready()
 	if(!stored_paper)
 		return 0
 	if(!enabled)
 		return 0
 	if(!check_functionality())
 		return 0
-
-	// Damaged printer causes the resulting paper to be somewhat harder to read.
-	if(damage > damage_malfunction)
-		text_to_print = stars(text_to_print, 100-malfunction_probability)
-	new/obj/item/weapon/paper(get_turf(holder2),text_to_print, paper_title)
-
-	stored_paper--
 	return 1
 
 /obj/item/weapon/computer_hardware/nano_printer/attackby(obj/item/W as obj, mob/user as mob)
@@ -58,9 +70,6 @@
 			return
 		for(var/obj/item/weapon/bundleitem in B) //loop through items in bundle
 			if(istype(bundleitem, /obj/item/weapon/paper)) //if item is paper (and not photo), add into the bin
-				var/obj/item/weapon/paper/paper = bundleitem
-				if(paper.info && paper.info != "")					
-					continue
 				B.pages.Remove(bundleitem)
 				qdel(bundleitem)
 				num_of_pages_added++
@@ -78,9 +87,3 @@
 			B.update_icon()
 		to_chat(user, "You add [num_of_pages_added] papers from \the [W] into \the [src].")
 	return
-
-/obj/item/weapon/computer_hardware/nano_printer/Destroy()
-	if(holder2 && (holder2.nano_printer == src))
-		holder2.nano_printer = null
-	holder2 = null
-	return ..()

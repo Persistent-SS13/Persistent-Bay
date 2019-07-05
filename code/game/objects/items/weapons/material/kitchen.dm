@@ -9,8 +9,7 @@
 	thrown_force_divisor = 1
 	origin_tech = list(TECH_MATERIAL = 1)
 	attack_verb = list("attacked", "stabbed", "poked")
-	sharp = 0
-	edge = 0
+	sharpness = 0
 	force_divisor = 0.1 // 6 when wielded with hardness 60 (steel)
 	thrown_force_divisor = 0.25 // 5 when thrown with weight 20 (steel)
 	var/loaded      //Descriptive string for currently loaded food object.
@@ -29,7 +28,7 @@
 
 	if(user.a_intent != I_HELP)
 		if(user.zone_sel.selecting == BP_HEAD || user.zone_sel.selecting == BP_EYES)
-			if((CLUMSY in user.mutations) && prob(50))
+			if((MUTATION_CLUMSY in user.mutations) && prob(50))
 				M = user
 			return eyestab(M,user)
 		else
@@ -57,9 +56,13 @@
 	name = "fork"
 	desc = "It's a fork. Sure is pointy."
 	icon_state = "fork"
+	damtype = DAM_PIERCE
+	mass = 0.2
 
 /obj/item/weapon/material/kitchen/utensil/fork/plastic
-	default_material = "plastic"
+	default_material = MATERIAL_PLASTIC
+	damtype = DAM_PIERCE
+	mass = 0.1
 
 /obj/item/weapon/material/kitchen/utensil/spoon
 	name = "spoon"
@@ -67,9 +70,13 @@
 	icon_state = "spoon"
 	attack_verb = list("attacked", "poked")
 	force_divisor = 0.1 //2 when wielded with weight 20 (steel)
+	damtype = DAM_BLUNT
+	mass = 0.1
 
 /obj/item/weapon/material/kitchen/utensil/spoon/plastic
-	default_material = "plastic"
+	default_material = MATERIAL_PLASTIC
+	damtype = DAM_BLUNT
+	mass = 0.1
 
 /*
  * Knives
@@ -77,11 +84,13 @@
 /obj/item/weapon/material/kitchen/utensil/knife
 	name = "knife"
 	desc = "A knife for eating with. Can cut through any food."
+	icon = 'icons/obj/knife.dmi'
 	icon_state = "knife"
 	force_divisor = 0.1 // 6 when wielded with hardness 60 (steel)
 	scoop_food = 0
-	sharp = 1
-	edge = 1
+	sharpness = 0
+	damtype = DAM_CUT
+	mass = 0.2
 
 // Identical to the tactical knife but nowhere near as stabby.
 // Kind of like the toy esword compared to the real thing.
@@ -89,21 +98,23 @@
 /obj/item/weapon/material/kitchen/utensil/knife/boot
 	name = "small knife"
 	desc = "A small, easily concealed knife."
-	icon = 'icons/obj/weapons.dmi'
+	icon = 'icons/obj/knife.dmi'
 	icon_state = "pocketknife_open"
 	item_state = "knife"
 	applies_material_colour = 0
 	unbreakable = 1
+	damtype = DAM_CUT
+	mass = 0.3
 
 /obj/item/weapon/material/kitchen/utensil/knife/attack(target as mob, mob/living/user as mob)
-	if ((CLUMSY in user.mutations) && prob(50))
+	if ((MUTATION_CLUMSY in user.mutations) && prob(50))
 		to_chat(user, "<span class='warning'>You accidentally cut yourself with \the [src].</span>")
-		user.take_organ_damage(20)
+		user.apply_damage(20, DAM_CUT)
 		return
 	return ..()
 
 /obj/item/weapon/material/kitchen/utensil/knife/plastic
-	default_material = "plastic"
+	default_material = MATERIAL_PLASTIC
 
 /*
  * Rolling Pins
@@ -114,15 +125,16 @@
 	desc = "Used to knock out the Bartender."
 	icon_state = "rolling_pin"
 	attack_verb = list("bashed", "battered", "bludgeoned", "thrashed", "whacked")
-	default_material = "wood"
+	default_material = MATERIAL_WOOD
 	force_divisor = 0.7 // 10 when wielded with weight 15 (wood)
 	thrown_force_divisor = 1 // as above
+	damtype = DAM_BLUNT
+	mass = 0.5
 
 /obj/item/weapon/material/kitchen/rollingpin/attack(mob/living/M as mob, mob/living/user as mob)
-	if ((CLUMSY in user.mutations) && prob(50))
+	if ((MUTATION_CLUMSY in user.mutations) && prob(50) && user.unEquip(src))
 		to_chat(user, "<span class='warning'>\The [src] slips out of your hand and hits your head.</span>")
-		user.drop_from_inventory(src)
-		user.take_organ_damage(10)
+		user.apply_damage(10)
 		user.Paralyse(2)
 		return
 	return ..()

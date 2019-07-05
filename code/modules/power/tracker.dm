@@ -27,7 +27,7 @@
 
 //set the control of the tracker to a given computer if closer than SOLAR_MAX_DIST
 /obj/machinery/power/tracker/proc/set_control(var/obj/machinery/power/solar_control/SC)
-	if(SC && (get_dist(src, SC) > SOLAR_MAX_DIST))
+	if(!SC)//&& (get_dist(src, SC) > SOLAR_MAX_DIST))
 		return 0
 	control = SC
 	return 1
@@ -44,7 +44,7 @@
 		S.glass_type = /obj/item/stack/material/glass
 		S.tracker = 1
 		S.anchored = 1
-	S.loc = src
+	S.forceMove(src)
 	update_icon()
 
 //updates the tracker icon and the facing angle for the control computer
@@ -59,21 +59,22 @@
 	if(powernet && (powernet == control.powernet)) //update if we're still in the same powernet
 		control.cdir = angle
 
-/obj/machinery/power/tracker/attackby(var/obj/item/weapon/W, var/mob/user)
-
-	if(isCrowbar(W))
+/obj/machinery/power/tracker/attackby(var/obj/item/weapon/tool/crowbar/C, var/mob/user)
+	if(isCrowbar(C))
 		playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
 		user.visible_message("<span class='notice'>[user] begins to take the glass off the solar tracker.</span>")
-		if(do_after(user, 50,src))
-			var/obj/item/solar_assembly/S = locate() in src
-			if(S)
-				S.loc = src.loc
-				S.give_glass()
-			playsound(src.loc, 'sound/items/Deconstruct.ogg', 50, 1)
+		if(C.use_tool(user, src, 5 SECONDS))
 			user.visible_message("<span class='notice'>[user] takes the glass off the tracker.</span>")
-			qdel(src)
-		return
-	..()
+			dismantle()
+		return 1
+	return ..()
+
+/obj/machinery/power/tracker/dismantle()
+	var/obj/item/solar_assembly/S = locate() in src
+	if(S)
+		S.dropInto(loc)
+		S.give_glass()
+	. = ..()
 
 // Tracker Electronic
 

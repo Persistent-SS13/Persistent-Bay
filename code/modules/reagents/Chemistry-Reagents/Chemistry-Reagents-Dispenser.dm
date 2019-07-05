@@ -5,6 +5,7 @@
 	reagent_state = LIQUID
 	color = "#808080"
 	metabolism = REM * 0.2
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/acetone/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_NABBER)
@@ -29,13 +30,14 @@
 		to_chat(usr, "<span class='notice'>The solution dissolves the ink on the book.</span>")
 	return
 
-/datum/reagent/aluminum
-	name = "Aluminum"
+/datum/reagent/aluminium
+	name = "Aluminium"
 	taste_description = "metal"
 	taste_mult = 1.1
 	description = "A silvery white and ductile member of the boron group of chemical elements."
 	reagent_state = SOLID
 	color = "#a8a8a8"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/ammonia
 	name = "Ammonia"
@@ -45,12 +47,18 @@
 	reagent_state = LIQUID
 	color = "#404030"
 	metabolism = REM * 0.5
+	overdose = 5
+	gas_id = GAS_AMONIA
 
 /datum/reagent/ammonia/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_VOX)
 		M.adjustOxyLoss(-removed * 10)
 	else if(alien != IS_DIONA)
 		M.adjustToxLoss(removed * 1.5)
+
+/datum/reagent/ammonia/overdose(var/mob/living/carbon/M, var/alien)
+	if(alien != IS_VOX || volume > overdose*6)
+		..()
 
 /datum/reagent/carbon
 	name = "Carbon"
@@ -64,12 +72,13 @@
 /datum/reagent/carbon/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
 		return
-	if(M.ingested && M.ingested.reagent_list.len > 1) // Need to have at least 2 reagents - cabon and something to remove
-		var/effect = 1 / (M.ingested.reagent_list.len - 1)
-		for(var/datum/reagent/R in M.ingested.reagent_list)
+	var/datum/reagents/ingested = M.get_ingested_reagents()
+	if(ingested && ingested.reagent_list.len > 1) // Need to have at least 2 reagents - cabon and something to remove
+		var/effect = 1 / (ingested.reagent_list.len - 1)
+		for(var/datum/reagent/R in ingested.reagent_list)
 			if(R == src)
 				continue
-			M.ingested.remove_reagent(R.type, removed * effect)
+			ingested.remove_reagent(R.type, removed * effect)
 
 /datum/reagent/carbon/touch_turf(var/turf/T)
 	if(!istype(T, /turf/space))
@@ -85,6 +94,7 @@
 	description = "A highly ductile metal."
 	taste_description = "copper"
 	color = "#6e3b08"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/ethanol
 	name = "Ethanol" //Parent class for all alcoholic reagents.
@@ -102,8 +112,16 @@
 	var/targ_temp = 310
 	var/halluci = 0
 
+	addictiveness = 1
+	addiction_median_dose = 150
+	parent_substance = /datum/reagent/ethanol
+	addiction_display_name = "Alcohol"
+
 	glass_name = "ethanol"
 	glass_desc = "A well-known alcohol with a variety of applications."
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_FUEL | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
+	gas_specific_heat = 15
 
 /datum/reagent/ethanol/touch_mob(var/mob/living/L, var/amount)
 	if(istype(L))
@@ -114,7 +132,7 @@
 	return
 
 /datum/reagent/ethanol/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
-	M.nutrition += (nutriment_factor + strength / 2) * removed
+	M.nutrition += nutriment_factor * removed
 	var/strength_mod = 1
 	if(alien == IS_SKRELL)
 		strength_mod *= 5
@@ -180,6 +198,7 @@
 	color = "#808080"
 	metabolism = REM * 0.2
 	touch_met = 5
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_FUEL | XGM_GAS_OXIDIZER | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/hydrazine/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	M.adjustToxLoss(4 * removed)
@@ -199,6 +218,7 @@
 	taste_description = "metal"
 	reagent_state = SOLID
 	color = "#353535"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/iron/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien != IS_DIONA)
@@ -210,11 +230,12 @@
 	taste_description = "metal"
 	reagent_state = SOLID
 	color = "#808080"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/lithium/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien != IS_DIONA)
-		if(M.canmove && !M.restrained() && istype(M.loc, /turf/space))
-			step(M, pick(GLOB.cardinal))
+		if(istype(M.loc, /turf/space))
+			M.SelfMove(pick(GLOB.cardinal))
 		if(prob(5))
 			M.emote(pick("twitch", "drool", "moan"))
 
@@ -224,11 +245,12 @@
 	taste_mult = 0 //mercury apparently is tasteless. IDK
 	reagent_state = LIQUID
 	color = "#484848"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/mercury/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien != IS_DIONA)
-		if(M.canmove && !M.restrained() && istype(M.loc, /turf/space))
-			step(M, pick(GLOB.cardinal))
+		if(istype(M.loc, /turf/space))
+			M.SelfMove(pick(GLOB.cardinal))
 		if(prob(5))
 			M.emote(pick("twitch", "drool", "moan"))
 		M.adjustBrainLoss(0.1)
@@ -261,16 +283,16 @@
 	color = "#c7c7c7"
 
 /datum/reagent/radium/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
-	M.apply_effect(10 * removed, IRRADIATE, blocked = 0) // Radium may increase your chances to cure a disease
+	M.apply_damage(10 * removed, DAM_RADS, armor_pen = 100) // Radium may increase your chances to cure a disease
 	if(M.virus2.len)
 		for(var/ID in M.virus2)
 			var/datum/disease2/disease/V = M.virus2[ID]
 			if(prob(5))
 				M.antibodies |= V.antigen
 				if(prob(50))
-					M.apply_effect(50, IRRADIATE, blocked = 0) // curing it that way may kill you instead
+					M.apply_damage(50, DAM_RADS, armor_pen = 100) // curing it that way may kill you instead
 					var/absorbed = 0
-					var/obj/item/organ/internal/xenos/nutrients/rad_organ = locate() in M.internal_organs
+					var/obj/item/organ/internal/diona/nutrients/rad_organ = locate() in M.internal_organs
 					if(rad_organ && !rad_organ.is_broken())
 						absorbed = 1
 					if(!absorbed)
@@ -283,99 +305,6 @@
 			if(!glow)
 				new /obj/effect/decal/cleanable/greenglow(T)
 			return
-
-/datum/reagent/acid
-	name = "Sulphuric acid"
-	description = "A very corrosive mineral acid with the molecular formula H2SO4."
-	taste_description = "acid"
-	reagent_state = LIQUID
-	color = "#db5008"
-	metabolism = REM * 2
-	touch_met = 50 // It's acid!
-	var/power = 5
-	var/meltdose = 10 // How much is needed to melt
-
-/datum/reagent/acid/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
-	M.take_organ_damage(0, removed * power * 2)
-
-/datum/reagent/acid/affect_touch(var/mob/living/carbon/M, var/alien, var/removed) // This is the most interesting
-	if(ishuman(M))
-		var/mob/living/carbon/human/H = M
-		if(H.head)
-			if(H.head.unacidable)
-				to_chat(H, "<span class='danger'>Your [H.head] protects you from the acid.</span>")
-				remove_self(volume)
-				return
-			else if(removed > meltdose)
-				to_chat(H, "<span class='danger'>Your [H.head] melts away!</span>")
-				qdel(H.head)
-				H.update_inv_head(1)
-				H.update_hair(1)
-				removed -= meltdose
-		if(removed <= 0)
-			return
-
-		if(H.wear_mask)
-			if(H.wear_mask.unacidable)
-				to_chat(H, "<span class='danger'>Your [H.wear_mask] protects you from the acid.</span>")
-				remove_self(volume)
-				return
-			else if(removed > meltdose)
-				to_chat(H, "<span class='danger'>Your [H.wear_mask] melts away!</span>")
-				qdel(H.wear_mask)
-				H.update_inv_wear_mask(1)
-				H.update_hair(1)
-				removed -= meltdose
-		if(removed <= 0)
-			return
-
-		if(H.glasses)
-			if(H.glasses.unacidable)
-				to_chat(H, "<span class='danger'>Your [H.glasses] partially protect you from the acid!</span>")
-				removed /= 2
-			else if(removed > meltdose)
-				to_chat(H, "<span class='danger'>Your [H.glasses] melt away!</span>")
-				qdel(H.glasses)
-				H.update_inv_glasses(1)
-				removed -= meltdose / 2
-		if(removed <= 0)
-			return
-
-	if(M.unacidable)
-		return
-
-	if(volume < meltdose) // Not enough to melt anything
-		M.take_organ_damage(0, removed * power * 0.1) //burn damage, since it causes chemical burns. Acid doesn't make bones shatter, like brute trauma would.
-	else
-		M.take_organ_damage(0, removed * power * 0.2)
-		if(removed && ishuman(M) && prob(100 * removed / meltdose)) // Applies disfigurement
-			var/mob/living/carbon/human/H = M
-			var/screamed
-			for(var/obj/item/organ/external/affecting in H.organs)
-				if(!screamed && affecting.can_feel_pain())
-					screamed = 1
-					H.emote("scream")
-				affecting.disfigured = 1
-
-/datum/reagent/acid/touch_obj(var/obj/O)
-	if(O.unacidable)
-		return
-	if((istype(O, /obj/item) || istype(O, /obj/effect/vine)) && (volume > meltdose))
-		var/obj/effect/decal/cleanable/molten_item/I = new/obj/effect/decal/cleanable/molten_item(O.loc)
-		I.desc = "Looks like this was \an [O] some time ago."
-		for(var/mob/M in viewers(5, O))
-			to_chat(M, "<span class='warning'>\The [O] melts.</span>")
-		qdel(O)
-		remove_self(meltdose) // 10 units of acid will not melt EVERYTHING on the tile
-
-/datum/reagent/acid/hydrochloric //Like sulfuric, but less toxic and more acidic.
-	name = "Hydrochloric Acid"
-	description = "A very corrosive mineral acid with the molecular formula HCl."
-	taste_description = "stomach acid"
-	reagent_state = LIQUID
-	color = "#808080"
-	power = 3
-	meltdose = 8
 
 /datum/reagent/silicon
 	name = "Silicon"
@@ -397,27 +326,18 @@
 	taste_mult = 1.8
 	reagent_state = SOLID
 	color = "#ffffff"
+	scannable = 1
 
 	glass_name = "sugar"
 	glass_desc = "The organic compound commonly known as table sugar and sometimes called saccharose. This white, odorless, crystalline powder has a pleasing, sweet taste."
 	glass_icon = DRINK_ICON_NOISY
 
-/datum/reagent/sugar/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+/datum/reagent/sugar/affect_blood(var/mob/living/carbon/human/M, var/alien, var/removed)
 	M.nutrition += removed * 3
 
 	if(alien == IS_UNATHI)
-		if(M.chem_doses[type] < 2)
-			if(M.chem_doses[type] == metabolism * 2 || prob(5))
-				M.emote("yawn")
-		else if(M.chem_doses[type] < 5)
-			M.eye_blurry = max(M.eye_blurry, 10)
-		else if(M.chem_doses[type] < 20)
-			if(prob(50))
-				M.Weaken(2)
-			M.drowsyness = max(M.drowsyness, 20)
-		else
-			M.sleeping = max(M.sleeping, 20)
-			M.drowsyness = max(M.drowsyness, 60)
+		var/datum/species/unathi/S = M.species
+		S.handle_sugar(M,src)
 
 /datum/reagent/sulfur
 	name = "Sulfur"
@@ -425,6 +345,7 @@
 	taste_description = "old eggs"
 	reagent_state = SOLID
 	color = "#bf8c00"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/tungsten
 	name = "Tungsten"
@@ -432,3 +353,5 @@
 	taste_mult = 0 //no taste
 	reagent_state = SOLID
 	color = "#dcdcdc"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_OXIDIZER | XGM_GAS_REAGENT_GAS
+

@@ -64,7 +64,7 @@ Class Procs:
 SUBSYSTEM_DEF(air)
 	name = "Air"
 	priority = SS_PRIORITY_AIR
-	init_order = INIT_ORDER_AIR
+	init_order = SS_INIT_AIR
 	flags = SS_POST_FIRE_TIMING
 
 	//Geometry lists
@@ -128,7 +128,6 @@ SUBSYSTEM_DEF(air)
 	..(out.Join())
 
 /datum/controller/subsystem/air/Initialize(timeofday, simulate = TRUE)
-
 	var/starttime = REALTIMEOFDAY
 	report_progress("Processing Geometry...")
 
@@ -335,9 +334,8 @@ Total Unsimulated Turfs: [world.maxx*world.maxy*world.maxz - simulated_turf_coun
 			merge(A.zone,B.zone)
 			return
 
-	var
-		a_to_b = get_dir(A,B)
-		b_to_a = get_dir(B,A)
+	var/a_to_b = get_dir(A,B)
+	var/b_to_a = get_dir(B,A)
 
 	if(!A.connections) A.connections = new
 	if(!B.connections) B.connections = new
@@ -361,6 +359,8 @@ Total Unsimulated Turfs: [world.maxx*world.maxy*world.maxz - simulated_turf_coun
 	#ifdef ZASDBG
 	ASSERT(isturf(T))
 	#endif
+	if(QDELETED(T)) //Don't update qdeleted turfs please..
+		return 
 	if(T.needs_air_update)
 		return
 	tiles_to_update += T

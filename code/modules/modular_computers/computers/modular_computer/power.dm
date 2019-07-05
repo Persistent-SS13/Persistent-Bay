@@ -11,6 +11,7 @@
 /obj/item/modular_computer/proc/battery_power(var/power_usage = 0)
 	apc_powered = FALSE
 	if(!battery_module || !battery_module.check_functionality() || battery_module.battery.charge <= 0)
+		log_debug("battery_power([power_usage]): Battery module failed checks")
 		return FALSE
 	if(battery_module.battery.use(power_usage * CELLRATE) || ((power_usage == 0) && battery_module.battery.charge))
 		return TRUE
@@ -22,6 +23,7 @@
 	// Tesla link was originally limited to machinery only, but this probably works too, and the benefit of being able to power all devices from an APC outweights
 	// the possible minor performance loss.
 	if(!tesla_link || !tesla_link.check_functionality())
+		log_debug("apc_power([power_usage]): Tesla link failed checks")
 		return FALSE
 	var/area/A = get_area(src)
 	if(!istype(A) || !A.powered(EQUIP))
@@ -32,7 +34,7 @@
 		power_usage += tesla_link.passive_charging_rate
 		battery_module.battery.give(tesla_link.passive_charging_rate * CELLRATE)
 
-	A.use_power(power_usage, EQUIP)
+	A.use_power_oneoff(power_usage, EQUIP)
 	return TRUE
 
 // Handles power-related things, such as battery interaction, recharging, shutdown when it's discharged

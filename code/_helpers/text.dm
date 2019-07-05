@@ -136,6 +136,32 @@
 
 	return output
 
+//Used to strip text of everything but letters and numbers, make letters lowercase, and turn spaces into .'s.
+//Make sure the text hasn't been encoded if using this.
+/proc/sanitize_for_email(text)
+	if(!text) return ""
+	var/list/dat = list()
+	var/last_was_space = 1
+	for(var/i=1, i<=length(text), i++)
+		var/ascii_char = text2ascii(text,i)
+		switch(ascii_char)
+			if(65 to 90)	//A-Z, make them lowercase
+				dat += ascii2text(ascii_char + 32)
+			if(97 to 122)	//a-z
+				dat += ascii2text(ascii_char)
+				last_was_space = 0
+			if(48 to 57)	//0-9
+				dat += ascii2text(ascii_char)
+				last_was_space = 0
+			if(32)			//space
+				if(last_was_space)
+					continue
+				dat += "."		//We turn these into ., but avoid repeats or . at start.
+				last_was_space = 1
+	if(dat[length(dat)] == ".")	//kill trailing .
+		dat.Cut(length(dat))
+	return jointext(dat, null)
+
 //Returns null if there is any bad text in the string
 /proc/reject_bad_text(var/text, var/max_length=512)
 	if(length(text) > max_length)	return			//message too long
@@ -143,7 +169,7 @@
 	for(var/i=1, i<=length(text), i++)
 		switch(text2ascii(text,i))
 			if(62,60,92,47)	return			//rejects the text if it contains these bad characters: <, >, \ or /
-			if(127 to 255)	return			//rejects weird letters like �
+			if(127 to 255)	return			//rejects non-ASCII letters
 			if(0 to 31)		return			//more weird stuff
 			if(32)			continue		//whitespace
 			else			non_whitespace = 1
@@ -391,11 +417,75 @@ proc/TextPreview(var/string,var/len=40)
 	t = replacetext(t, "\[/grid\]", "</td></tr></table>")
 	t = replacetext(t, "\[row\]", "</td><tr>")
 	t = replacetext(t, "\[cell\]", "<td>")
-	t = replacetext(t, "\[logo\]", "<img src = ntlogo.png>")
+	t = replacetext(t, "\[ntlogo\]", "<img src = ntlogo.png>")
+	t = replacetext(t, "\[exologo\]", "<img src = exologo.png>")
 	t = replacetext(t, "\[bluelogo\]", "<img src = bluentlogo.png>")
 	t = replacetext(t, "\[solcrest\]", "<img src = sollogo.png>")
-	t = replacetext(t, "\[terraseal\]", "<img src = terralogo.png>")
+	t = replacetext(t, "\[torchltd\]", "<img src = exologo.png>")
+	t = replacetext(t, "\[iccgseal\]", "<img src = terralogo.png>")
+	t = replacetext(t, "\[ntlogo\]", "<img src = ntlogo.png>")
+	t = replacetext(t, "\[daislogo\]", "<img src = daislogo.png>")
+	t = replacetext(t, "\[eclogo\]", "<img src = eclogo.png>")
+	t = replacetext(t, "\[xynlogo\]", "<img src = xynlogo.png>")
+	t = replacetext(t, "\[fleetlogo\]", "<img src = fleetlogo.png>")
+	t = replacetext(t, "\[ocielogo\]", "<img src = ocielogo.png>")
+	t = replacetext(t, "\[terraseal\]","<img src = terralogo.png>")
+	t = replacetext(t, "\[nfrseal\]",  "<img src = nfrlogo.png>")
+	t = replacetext(t, "\[pdseal\]", "<img src = pdlogo.png>")
+	t = replacetext(t, "\[logo\]", "<img src = nfrlogo.png>")
 	t = replacetext(t, "\[editorbr\]", "")
+	t = replacetext(t, "\[tab\]", "&nbsp;&nbsp;&nbsp;&nbsp;")
+	return t
+
+//Will kill most formatting; not recommended.
+/proc/html2pencode(t)
+	t = replacetext(t, "<BR>", "\[br\]")
+	t = replacetext(t, "<br>", "\[br\]")
+	t = replacetext(t, "<B>", "\[b\]")
+	t = replacetext(t, "</B>", "\[/b\]")
+	t = replacetext(t, "<I>", "\[i\]")
+	t = replacetext(t, "</I>", "\[/i\]")
+	t = replacetext(t, "<U>", "\[u\]")
+	t = replacetext(t, "</U>", "\[/u\]")
+	t = replacetext(t, "<center>", "\[center\]")
+	t = replacetext(t, "</center>", "\[/center\]")
+	t = replacetext(t, "<H1>", "\[h1\]")
+	t = replacetext(t, "</H1>", "\[/h1\]")
+	t = replacetext(t, "<H2>", "\[h2\]")
+	t = replacetext(t, "</H2>", "\[/h2\]")
+	t = replacetext(t, "<H3>", "\[h3\]")
+	t = replacetext(t, "</H3>", "\[/h3\]")
+	t = replacetext(t, "<li>", "\[*\]")
+	t = replacetext(t, "<HR>", "\[hr\]")
+	t = replacetext(t, "<ul>", "\[list\]")
+	t = replacetext(t, "</ul>", "\[/list\]")
+	t = replacetext(t, "<table>", "\[grid\]")
+	t = replacetext(t, "</table>", "\[/grid\]")
+	t = replacetext(t, "<tr>", "\[row\]")
+	t = replacetext(t, "<td>", "\[cell\]")
+	t = replacetext(t, "<img src = ntlogo.png>", "\[ntlogo\]")
+	t = replacetext(t, "<img src = bluentlogo.png>", "\[bluelogo\]")
+	t = replacetext(t, "<img src = sollogo.png>", "\[solcrest\]")
+	t = replacetext(t, "<img src = terralogo.png>", "\[iccgseal\]")
+	t = replacetext(t, "<img src = exologo.png>", "\[exologo\]")
+	t = replacetext(t, "<img src = eclogo.png>", "\[eclogo\]")
+	t = replacetext(t, "<img src = daislogo.png>", "\[daislogo\]")
+	t = replacetext(t, "<img src = xynlogo.png>", "\[xynlogo\]")
+	t = replacetext(t, "<img src = ocielogo.png>", "\[ocielogo\]")
+	t = replacetext(t, "<img src = terralogo.png>", "\[terraseal\]")
+	t = replacetext(t, "<img src = nfrlogo.png>", "\[logo\]")
+	t = replacetext(t, "<img src = pdlogo.png>", "\[pdseal\]")
+	t = replacetext(t, "<span class=\"paper_field\"></span>", "\[field\]")
+	t = strip_html_properly(t)
+	return t
+
+/proc/imgcode2html(t, var/image/img1, var/image/img2, var/mob/user)
+	if(img1)
+		user << browse_rsc(img1.icon, "tmp_img1.png")
+		t = replacetext(t, "\[IMG1\]", "<img src='tmp_img1.png' width='192' style='-ms-interpolation-mode:nearest-neighbor' />")
+	if(img2)
+		user << browse_rsc(img2.icon, "tmp_img2.png")
+		t = replacetext(t, "\[IMG2\]", "<img src='tmp_img2.png' width='192' style='-ms-interpolation-mode:nearest-neighbor' /> ")
 	return t
 
 // Random password generator
@@ -462,3 +552,23 @@ proc/TextPreview(var/string,var/len=40)
 	. = base
 	if(rest)
 		. += .(rest)
+
+/proc/deep_string_equals(var/A, var/B)
+	if (lentext(A) != lentext(B))
+		return FALSE
+	for (var/i = 1 to lentext(A))
+		if (text2ascii(A, i) != text2ascii(B, i))
+			return FALSE
+	return TRUE
+
+// If char isn't part of the text the entire text is returned
+/proc/copytext_after_last(var/text, var/char)
+	var/regex/R = regex("(\[^[char]\]*)$")
+	R.Find(text)
+	return R.group[1]
+
+/proc/sql_sanitize_text(var/text)
+	text = replacetext(text, "'", "''")
+	text = replacetext(text, ";", "")
+	text = replacetext(text, "&", "")
+	return text

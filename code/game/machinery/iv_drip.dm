@@ -71,7 +71,7 @@
 		src.update_icon()
 		return
 	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if(WT.remove_fuel(0,user))
 			var/obj/item/stack/material/steel/new_item = new(usr.loc)
 			new_item.add_to_stacks(usr)
@@ -88,7 +88,7 @@
 
 		if(!(get_dist(src, src.attached) <= 1 && isturf(src.attached.loc)))
 			visible_message("The needle is ripped out of [src.attached], doesn't that hurt?")
-			src.attached.apply_damage(3, BRUTE, pick(BP_R_ARM, BP_L_ARM))
+			src.attached.apply_damage(3, DAM_BLUNT, pick(BP_R_ARM, BP_L_ARM))
 			src.attached = null
 			src.update_icon()
 			return
@@ -98,7 +98,7 @@
 		if(mode)
 			if(src.beaker.volume > 0)
 				var/transfer_amount = REM
-				if(istype(src.beaker, /obj/item/weapon/reagent_containers/blood))
+				if(istype(src.beaker, /obj/item/weapon/reagent_containers/ivbag))
 					// speed up transfer on blood packs
 					transfer_amount = 4
 				src.beaker.reagents.trans_to_mob(src.attached, transfer_amount, CHEM_BLOOD)
@@ -118,7 +118,7 @@
 			if(!istype(T)) return
 			if(!T.dna)
 				return
-			if(NOCLONE in T.mutations)
+			if(MUTATION_NOCLONE in T.mutations)
 				return
 
 			if(!T.should_have_organ(BP_HEART))
@@ -178,6 +178,6 @@ obj/machinery/iv_drip/attack_ai(mob/user as mob)
 	to_chat(usr, "<span class='notice'>[attached ? attached : "No one"] is attached.</span>")
 
 /obj/machinery/iv_drip/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
-	if(height && istype(mover) && mover.checkpass(PASSTABLE)) //allow bullets, beams, thrown objects, mice, drones, and the like through.
+	if(height && istype(mover) && mover.checkpass(PASS_FLAG_TABLE)) //allow bullets, beams, thrown objects, mice, drones, and the like through.
 		return 1
 	return ..()

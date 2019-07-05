@@ -1,14 +1,14 @@
-var/datum/antagonist/raider/raiders
+GLOBAL_DATUM_INIT(raiders, /datum/antagonist/raider, new)
 
 /datum/antagonist/raider
 	id = MODE_RAIDER
 	role_text = "Raider"
 	role_text_plural = "Raiders"
-	antag_indicator = "hudmutineer"
+	antag_indicator = "hudraider"
 	landmark_id = "voxstart"
 	welcome_text = "Use :H to talk on your encrypted channel."
 	flags = ANTAG_OVERRIDE_JOB | ANTAG_CLEAR_EQUIPMENT | ANTAG_CHOOSE_NAME | ANTAG_VOTABLE | ANTAG_SET_APPEARANCE | ANTAG_HAS_LEADER
-	antaghud_indicator = "hudmutineer"
+	antaghud_indicator = "hudraider"
 
 	hard_cap = 6
 	hard_cap_round = 10
@@ -25,7 +25,8 @@ var/datum/antagonist/raider/raiders
 		/obj/item/clothing/under/soviet,
 		/obj/item/clothing/under/pirate,
 		/obj/item/clothing/under/redcoat,
-		/obj/item/clothing/under/serviceoveralls,
+		/obj/item/clothing/under/overalls,
+		///obj/item/clothing/under/serviceoveralls,
 		/obj/item/clothing/under/captain_fly,
 		/obj/item/clothing/under/det,
 		/obj/item/clothing/under/color/brown,
@@ -48,7 +49,7 @@ var/datum/antagonist/raider/raiders
 		/obj/item/clothing/head/bearpelt,
 		/obj/item/clothing/head/ushanka,
 		/obj/item/clothing/head/pirate,
-		/obj/item/clothing/head/bandana,
+		/obj/item/clothing/mask/bandana/red,
 		/obj/item/clothing/head/hgpiratecap,
 		)
 
@@ -65,6 +66,12 @@ var/datum/antagonist/raider/raiders
 		)
 
 	var/list/raider_guns = list(
+		/obj/item/weapon/gun/energy/laser,
+		/obj/item/weapon/gun/energy/retro,
+		/obj/item/weapon/gun/energy/xray,
+		/obj/item/weapon/gun/energy/xray/pistol,
+		/obj/item/weapon/gun/energy/mindflayer,
+		/obj/item/weapon/gun/energy/toxgun,
 		/obj/item/weapon/gun/energy/stunrevolver,
 		/obj/item/weapon/gun/energy/ionrifle,
 		/obj/item/weapon/gun/energy/taser,
@@ -72,34 +79,35 @@ var/datum/antagonist/raider/raiders
 		/obj/item/weapon/gun/launcher/crossbow,
 		/obj/item/weapon/gun/launcher/grenade/loaded,
 		/obj/item/weapon/gun/launcher/pneumatic,
-		/obj/item/weapon/gun/projectile/silenced,
+		/obj/item/weapon/gun/projectile/automatic/machine_pistol,
+		// /obj/item/weapon/gun/projectile/automatic/merc_smg,
+		// /obj/item/weapon/gun/projectile/automatic/sec_smg,
+		// /obj/item/weapon/gun/projectile/automatic/assault_rifle,
 		/obj/item/weapon/gun/projectile/shotgun/pump,
+		/obj/item/weapon/gun/projectile/shotgun/pump/combat,
 		/obj/item/weapon/gun/projectile/shotgun/doublebarrel,
 		/obj/item/weapon/gun/projectile/shotgun/doublebarrel/pellet,
 		/obj/item/weapon/gun/projectile/shotgun/doublebarrel/sawn,
-		/obj/item/weapon/gun/projectile/colt,
-		/obj/item/weapon/gun/projectile/sec,
-		/obj/item/weapon/gun/projectile/pistol,
+		// /obj/item/weapon/gun/projectile/pistol/sec,
+		// /obj/item/weapon/gun/projectile/pistol/holdout,
 		/obj/item/weapon/gun/projectile/revolver,
-		/obj/item/weapon/gun/projectile/pirate
+		/obj/item/weapon/gun/projectile/pirate,
+		// /obj/item/weapon/gun/projectile/revolver/medium,
+		// /obj/item/weapon/gun/projectile/pistol/throwback
 		)
 
 	var/list/raider_holster = list(
-		/obj/item/clothing/accessory/holster/armpit,
-		/obj/item/clothing/accessory/holster/waist,
-		/obj/item/clothing/accessory/holster/hip
+		/obj/item/clothing/accessory/storage/holster/armpit,
+		/obj/item/clothing/accessory/storage/holster/waist,
+		/obj/item/clothing/accessory/storage/holster/hip
 		)
-
-/datum/antagonist/raider/New()
-	..()
-	raiders = src
 
 /datum/antagonist/raider/update_access(var/mob/living/player)
 	for(var/obj/item/weapon/storage/wallet/W in player.contents)
 		for(var/obj/item/weapon/card/id/id in W.contents)
-			id.name = "[player.real_name]'s Passport"
+			id.SetName("[player.real_name]'s Passport")
 			id.registered_name = player.real_name
-			W.name = "[initial(W.name)] ([id.name])"
+			W.SetName("[initial(W.name)] ([id.name])")
 
 /datum/antagonist/raider/create_global_objectives()
 
@@ -173,7 +181,7 @@ var/datum/antagonist/raider/raiders
 
 	to_world("<span class='danger'><font size = 3>[win_type] [win_group] victory!</font></span>")
 	to_world("[win_msg]")
-	feedback_set_details("round_end_result","heist - [win_type] [win_group]")
+	SSstatistics.set_field_details("round_end_result","heist - [win_type] [win_group]")
 
 /datum/antagonist/raider/proc/is_raider_crew_safe()
 
@@ -212,7 +220,7 @@ var/datum/antagonist/raider/raiders
 		equip_weapons(player)
 
 	var/obj/item/weapon/card/id/id = create_id("Visitor", player, equip = 0)
-	id.name = "[player.real_name]'s Passport"
+	id.SetName("[player.real_name]'s Passport")
 	id.assignment = "Visitor"
 	var/obj/item/weapon/storage/wallet/W = new(player)
 	W.handle_item_insertion(id)
@@ -228,21 +236,23 @@ var/datum/antagonist/raider/raiders
 	var/turf/T = get_turf(player)
 
 	var/obj/item/primary = new new_gun(T)
-	var/obj/item/clothing/accessory/holster/holster = null
+	var/obj/item/clothing/accessory/storage/holster/holster = null
 
 	//Give some of the raiders a pirate gun as a secondary
 	if(prob(60))
 		var/obj/item/secondary = new /obj/item/weapon/gun/projectile/pirate(T)
 		if(!(primary.slot_flags & SLOT_HOLSTER))
 			holster = new new_holster(T)
-			holster.holstered = secondary
+			var/datum/extension/holster/H = get_extension(holster, /datum/extension/holster)
+			H.holstered = secondary
 			secondary.forceMove(holster)
 		else
 			player.equip_to_slot_or_del(secondary, slot_belt)
 
 	if(primary.slot_flags & SLOT_HOLSTER)
 		holster = new new_holster(T)
-		holster.holstered = primary
+		var/datum/extension/holster/H = get_extension(holster, /datum/extension/holster)
+		H.holstered = primary
 		primary.forceMove(holster)
 	else if(!player.belt && (primary.slot_flags & SLOT_BELT))
 		player.equip_to_slot_or_del(primary, slot_belt)

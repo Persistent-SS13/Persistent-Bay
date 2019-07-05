@@ -7,16 +7,18 @@
 	filename = "comm"
 	filedesc = "Command and Communications Program"
 	program_icon_state = "comm"
+	program_key_state = "med_key"
 	program_menu_icon = "flag"
 	nanomodule_path = /datum/nano_module/program/comm
 	extended_desc = "Used to command and control. Can relay long-range communications. This program can not be run on tablet computers."
 	required_access = core_access_command_programs
-	requires_ntnet = 1
+	requires_ntnet = TRUE
 	size = 12
-	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP
+	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP | PROGRAM_TELESCREEN
 	network_destination = "long-range communication array"
+	category = PROG_COMMAND
 	var/datum/comm_message_listener/message_core = new
-
+	democratic = 1
 /datum/computer_file/program/comm/clone()
 	var/datum/computer_file/program/comm/temp = ..()
 	temp.message_core.messages = null
@@ -69,8 +71,9 @@
 	data["current_security_level_title"] = security_state.current_security_level.name
 
 	data["cannot_change_security_level"] = !security_state.can_change_security_level()
+	data["current_security_level_is_high_security_level"] = security_state.current_security_level == security_state.high_security_level
 	var/list/security_levels = list()
-	for(var/decl/security_level/security_level in security_state.standard_security_levels)
+	for(var/decl/security_level/security_level in security_state.comm_console_security_levels)
 		var/list/security_setup = list()
 		security_setup["title"] = security_level.name
 		security_setup["ref"] = any2ref(security_level)
@@ -87,6 +90,8 @@
 	var/list/processed_evac_options = list()
 	if(!isnull(evacuation_controller))
 		for (var/datum/evacuation_option/EO in evacuation_controller.available_evac_options())
+			if(EO.abandon_ship)
+				continue
 			var/list/option = list()
 			option["option_text"] = EO.option_text
 			option["option_target"] = EO.option_target
@@ -95,7 +100,7 @@
 			processed_evac_options[++processed_evac_options.len] = option
 	data["evac_options"] = processed_evac_options
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "communication.tmpl", name, 550, 420, state = state)
 		ui.auto_update_layout = 1
@@ -120,6 +125,7 @@
 	var/ntn_comm = program ? !!program.get_signal(NTNET_COMMUNICATION) : 1
 	var/ntn_cont = program ? !!program.get_signal(NTNET_SYSTEMCONTROL) : 1
 	var/datum/comm_message_listener/l = obtain_message_listener()
+	var/datum/world_faction/connected_faction = program.computer.network_card.connected_network.holder
 	switch(href_list["action"])
 		if("sw_menu")
 			. = 1
@@ -138,7 +144,13 @@
 				var/input = input(usr, "Please write a message to announce to the [station_name()].", "Priority Announcement") as null|text
 				if(!input || !can_still_topic())
 					return 1
-				crew_announcement.Announce(input)
+				var/affected_zlevels = GLOB.using_map.contact_levels
+				var/atom/A = host
+				if(istype(A))
+					affected_zlevels = GetConnectedZlevels(A.z)
+				crew_announcement.faction = connected_faction.name
+				crew_announcement.sector = program.computer.z+(program.computer.z % 2)
+				crew_announcement.Announce(input, zlevels = affected_zlevels)
 				announcment_cooldown = 1
 				spawn(600)//One minute cooldown
 					announcment_cooldown = 0
@@ -149,7 +161,7 @@
 					if(is_autenthicated(user) && program.computer_emagged && !issilicon(usr) && ntn_comm)
 						if(centcomm_message_cooldown)
 							to_chat(usr, "<span class='warning'>Arrays recycling. Please stand by.</span>")
-							GLOB.nanomanager.update_uis(src)
+							SSnano.update_uis(src)
 							return
 						var/input = sanitize(input(usr, "Please choose a message to transmit to \[ABNORMAL ROUTING CORDINATES\] via quantum entanglement.  Please be aware that this process is very expensive, and abuse will lead to... termination. Transmission does not guarantee a response. There is a 30 second delay before you may send another message, be clear, full and concise.", "To abort, send an empty message.", "") as null|text)
 						if(!input || !can_still_topic())
@@ -164,7 +176,7 @@
 				if(is_autenthicated(user) && !issilicon(usr) && ntn_comm)
 					if(centcomm_message_cooldown)
 						to_chat(usr, "<span class='warning'>Arrays recycling. Please stand by.</span>")
-						GLOB.nanomanager.update_uis(src)
+						SSnano.update_uis(src)
 						return
 					if(!is_relay_online())//Contact Centcom has a check, Syndie doesn't to allow for Traitor funs.
 						to_chat(usr, "<span class='warning'>No Emergency Bluespace Relay detected. Unable to transmit message.</span>")
@@ -213,12 +225,12 @@
 			. = 1
 			if(is_autenthicated(user) && !issilicon(usr) && ntn_cont && ntn_comm)
 				var/decl/security_state/security_state = decls_repository.get_decl(GLOB.using_map.security_state)
-				var/decl/security_level/target_level = locate(href_list["target"]) in security_state.standard_security_levels
+				var/decl/security_level/target_level = locate(href_list["target"]) in security_state.comm_console_security_levels
 				if(target_level && security_state.can_switch_to(target_level))
-					var/confirm = alert("Are you sure you want to change alert level to [target_level.name]?", name, "No", "Yes")
+					var/confirm = alert("Are you sure you want to change the alert level to [target_level.name]?", name, "No", "Yes")
 					if(confirm == "Yes" && can_still_topic())
 						if(security_state.set_security_level(target_level))
-							feedback_inc(target_level.type,1)
+							SSstatistics.add_field(target_level.type,1)
 			else
 				to_chat(usr, "You press the button, but a red light flashes and nothing happens.") //This should never happen
 
@@ -287,7 +299,7 @@ var/last_message_id = 0
 
 /proc/post_status(var/command, var/data1, var/data2)
 
-	var/datum/radio_frequency/frequency = radio_controller.return_frequency(1435)
+	var/datum/radio_frequency/frequency = radio_controller.return_frequency(STATUS_FREQ)
 
 	if(!frequency) return
 
@@ -307,7 +319,7 @@ var/last_message_id = 0
 	frequency.post_signal(src, status_signal)
 
 /proc/cancel_call_proc(var/mob/user)
-	if (!ticker || !evacuation_controller)
+	if (!evacuation_controller)
 		return
 
 	if(evacuation_controller.cancel_evacuation())
@@ -324,7 +336,7 @@ var/last_message_id = 0
 	return 0
 
 /proc/call_shuttle_proc(var/mob/user, var/emergency)
-	if (!ticker || !evacuation_controller)
+	if (!evacuation_controller)
 		return
 
 	if(isnull(emergency))
@@ -334,7 +346,7 @@ var/last_message_id = 0
 		to_chat(user, "<span class='notice'>Cannot establish a bluespace connection.</span>")
 		return
 
-	if(deathsquad.deployed)
+	if(GLOB.deathsquad.deployed)
 		to_chat(user, "[GLOB.using_map.boss_short] will not allow an evacuation to take place. Consider all contracts terminated.")
 		return
 
@@ -353,12 +365,13 @@ var/last_message_id = 0
 		log_and_message_admins("[user? key_name(user) : "Autotransfer"] has called the shuttle.")
 
 /proc/init_autotransfer()
-	if (!ticker || !evacuation_controller)
+
+	if (!evacuation_controller)
 		return
 
 	. = evacuation_controller.call_evacuation(null, _emergency_evac = FALSE, autotransfer = TRUE)
 	if(.)
 		//delay events in case of an autotransfer
 		var/delay = evacuation_controller.evac_arrival_time - world.time + (2 MINUTES)
-		GLOB.event_manager.delay_events(EVENT_LEVEL_MODERATE, delay)
-		GLOB.event_manager.delay_events(EVENT_LEVEL_MAJOR, delay)
+		SSevent.delay_events(EVENT_LEVEL_MODERATE, delay)
+		SSevent.delay_events(EVENT_LEVEL_MAJOR, delay)

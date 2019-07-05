@@ -83,6 +83,9 @@
 	if(state != AWAITING_ACTIVATION)
 		to_chat(user, "<span class='warning'>\The [src] won't activate again.</span>")
 		return
+	if(!(user.z in GLOB.using_map.station_levels))
+		to_chat(user, SPAN_WARNING("You are too far away from \the [GLOB.using_map.name] to make use of this service."))
+		return
 	if(!enable())
 		return
 	state = CURRENTLY_ACTIVE
@@ -91,7 +94,7 @@
 	log_and_message_admins("has activated the service '[service_label]'", user)
 
 	if(service_duration)
-		schedule_task_with_source_in(service_duration, src, /obj/item/device/uplink_service/proc/deactivate)
+		addtimer(CALLBACK(src,/obj/item/device/uplink_service/proc/deactivate), service_duration)
 	else
 		deactivate()
 
@@ -104,14 +107,14 @@
 	playsound(loc, "sparks", 50, 1)
 	visible_message("<span class='warning'>\The [src] shuts down with a spark.</span>")
 
-/obj/item/device/uplink_service/update_icon()
+/obj/item/device/uplink_service/on_update_icon()
 	switch(state)
 		if(AWAITING_ACTIVATION)
 			icon_state = initial(icon_state)
 		if(CURRENTLY_ACTIVE)
-			icon_state = "sflash2"
+			icon_state = "flash_on"
 		if(HAS_BEEN_ACTIVATED)
-			icon_state = "flashburnt"
+			icon_state = "flash_burnt"
 
 /obj/item/device/uplink_service/proc/enable(var/mob/user = usr)
 	return TRUE
@@ -193,16 +196,18 @@
 /obj/item/device/uplink_service/fake_crew_announcement
 	service_label = "Crew Arrival Announcement and Records"
 
-/obj/item/device/uplink_service/fake_crew_announcement/enable(var/mob/user = usr)
-	var/obj/item/weapon/card/id/I = user.GetIdCard()
-	var/datum/computer_file/crew_record/random_record
+#define COPY_VALUE(KEY) new_record.set_##KEY(random_record.get_##KEY())
 
+/obj/item/device/uplink_service/fake_crew_announcement/enable(var/mob/user = usr)
+
+	var/datum/computer_file/report/crew_record/random_record
+	var/obj/item/weapon/card/id/I = user.GetIdCard()
 	if(GLOB.all_crew_records.len)
 		random_record = pick(GLOB.all_crew_records)
-
-	var/datum/computer_file/crew_record/new_record = CreateModularRecord(user)
+	var/datum/computer_file/report/crew_record/new_record = CreateModularRecord(user)
 	if(I)
 		new_record.set_name(I.registered_name)
+		new_record.set_formal_name("[I.formal_name_prefix][I.registered_name][I.formal_name_suffix]")
 		new_record.set_sex(I.sex)
 		new_record.set_age(I.age)
 		new_record.set_job(I.assignment)
@@ -213,6 +218,7 @@
 			new_record.set_branch(I.military_branch.name)
 			if(I.military_rank)
 				new_record.set_rank(I.military_rank.name)
+				new_record.set_formal_name("[I.registered_name][I.formal_name_suffix]") // Rank replaces formal name prefix in real manifest entries
 	else
 		var/mob/living/carbon/human/H = user
 		var/age = istype(H) ? H.age : 30
@@ -224,11 +230,25 @@
 	new_record.set_species(user.get_species())
 
 	if(random_record)
-		var/list/to_copy = list(REC_FIELD(citizenship),REC_FIELD(faction),REC_FIELD(religion),REC_FIELD(homeSystem),REC_FIELD(fingerprint),REC_FIELD(dna),REC_FIELD(bloodtype))
-		for(var/field in to_copy)
-			new_record.set_field(field, random_record.get_field(field))
+		COPY_VALUE(faction)
+		COPY_VALUE(religion)
+		COPY_VALUE(homeSystem)
+		COPY_VALUE(fingerprint)
+		COPY_VALUE(dna)
+		COPY_VALUE(bloodtype)
+	var/datum/job/job = SSjobs.get_by_title(new_record.get_job())
+	if(job)
+		var/skills = list()
+		for(var/decl/hierarchy/skill/S in GLOB.skills)
+			var/level = job.min_skill[S.type]
+			if(prob(10))
+				level = min(rand(1,3), job.max_skill[S.type])
+			if(level > SKILL_NONE)
+				skills += "[S.name], [S.levels[level]]"
+		new_record.set_skillset(jointext(skills,"\n"))
 
-	var/datum/job/job = job_master.GetJob(new_record.get_job())
 	if(istype(job) && job.announced)
-		AnnounceArrivalSimple(new_record.get_name(), new_record.get_job(), get_announcement_frequency(job))
+		AnnounceArrivalSimple(new_record.get_name(), new_record.get_job(), "has completed cryogenic revival", get_announcement_frequency(job))
 	. = ..()
+
+#undef COPY_VALUE

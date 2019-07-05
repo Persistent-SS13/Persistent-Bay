@@ -6,7 +6,6 @@
 	req_access = list(access_heads)
 	var/islocked = 0
 
-	use_power = 1
 	active_power_usage = 8000 //8kW for the scenery + 500W per holoitem
 
 	circuit = /obj/item/weapon/circuitboard/holodeckcontrol
@@ -162,7 +161,7 @@
 	if (safety_disabled)
 		item_power_usage = 2500
 		for(var/obj/item/weapon/holo/esword/H in linkedholodeck)
-			H.damtype = BRUTE
+			H.damtype = DAM_CUT
 	else
 		item_power_usage = initial(item_power_usage)
 		for(var/obj/item/weapon/holo/esword/H in linkedholodeck)
@@ -201,13 +200,13 @@
 	if(!..())
 		return
 	if(active)
-		use_power(item_power_usage * (holographic_objs.len + holographic_mobs.len))
+		use_power_oneoff(item_power_usage * (holographic_objs.len + holographic_mobs.len))
 
 		if(!checkInteg(linkedholodeck))
 			damaged = 1
 			loadProgram(GLOB.using_map.holodeck_programs["turnoff"], 0)
 			active = 0
-			use_power = 1
+			update_use_power(POWER_USE_IDLE)
 			for(var/mob/M in range(10,src))
 				M.show_message("The holodeck overloads!")
 
@@ -225,12 +224,6 @@
 
 	if(obj == null)
 		return
-
-	if(isobj(obj))
-		var/mob/M = obj.loc
-		if(ismob(M))
-			M.remove_from_mob(obj)
-			M.update_icons()	//so their overlays update
 
 	if(!silent)
 		var/obj/oldobj = obj
@@ -255,7 +248,7 @@
 			linkedholodeck.gravitychange(1)
 
 		active = 0
-		use_power = 1
+		update_use_power(POWER_USE_IDLE)
 
 
 /obj/machinery/computer/HolodeckControl/proc/loadProgram(var/datum/holodeck_program/HP, var/check_delay = 1)
@@ -276,7 +269,7 @@
 
 	last_change = world.time
 	active = 1
-	use_power = 2
+	update_use_power(POWER_USE_ACTIVE)
 
 	for(var/item in holographic_objs)
 		derez(item)
@@ -291,6 +284,7 @@
 	holographic_objs = A.copy_contents_to(linkedholodeck , 1)
 	for(var/obj/holo_obj in holographic_objs)
 		holo_obj.alpha *= 0.8 //give holodeck objs a slight transparency
+		holo_obj.holographic = TRUE
 
 	if(HP.ambience)
 		linkedholodeck.forced_ambience = HP.ambience
@@ -335,7 +329,7 @@
 
 	last_gravity_change = world.time
 	active = 1
-	use_power = 1
+	update_use_power(POWER_USE_IDLE)
 
 	if(A.has_gravity)
 		A.gravitychange(0,A)
@@ -350,7 +344,7 @@
 		linkedholodeck.gravitychange(1,linkedholodeck)
 
 	active = 0
-	use_power = 1
+	update_use_power(POWER_USE_IDLE)
 
 // Locking system
 

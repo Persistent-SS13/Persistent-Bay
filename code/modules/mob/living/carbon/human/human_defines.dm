@@ -18,7 +18,8 @@
 	var/g_eyes = 0
 	var/b_eyes = 0
 
-	var/s_tone = 0	//Skin tone
+	var/s_tone = 0  //Skin tone
+	var/s_base = "" //Skin base
 
 	//Skin colour
 	var/r_skin = 0
@@ -38,6 +39,7 @@
 
 	var/datum/backpack_setup/backpack_setup
 
+	var/list/cultural_info = list()
 	// General information
 	var/home_system = ""
 	var/citizenship = ""
@@ -59,9 +61,6 @@
 	var/obj/item/l_store = null
 	var/obj/item/s_store = null
 
-	var/used_skillpoints = 0
-	var/list/skills = list()
-
 	var/icon/stand_icon = null
 	var/icon/lying_icon = null
 
@@ -78,7 +77,6 @@
 	var/hand_blood_color
 
 	var/list/flavor_texts = list()
-	var/gunshot_residue
 	var/pulling_punches    // Are you trying not to hurt your opponent?
 	var/full_prosthetic    // We are a robutt.
 	var/robolimb_count = 0 // Number of robot limbs.
@@ -97,6 +95,7 @@
 	var/equipment_light_protection
 	var/list/equipment_overlays = list()	// Extra overlays from equipped items
 
+	var/public_record = ""
 	var/med_record = ""
 	var/sec_record = ""
 	var/gen_record = ""
@@ -106,17 +105,18 @@
 	var/datum/mil_rank/char_rank = null
 
 	var/stance_damage = 0 //Whether this mob's ability to stand has been affected
-	var/cloaked // If set, mob will only render its inhands, no other icons will be shown.
+
+	var/datum/unarmed_attack/default_attack	//default unarmed attack
 
 	var/obj/machinery/machine_visual //machine that is currently applying visual effects to this mob. Only used for camera monitors currently.
-
-	var/innate_heal = 1
-
 	var/shock_stage
 
 	var/obj/item/grab/current_grab_type 	// What type of grab they use when they grab someone.
-	var/skin_state = SKIN_NORMAL
-	var/obj/screen/fov = null//The screen object because I can't figure out how the hell TG does their screen objects so I'm just using legacy code.
-	var/usefov = 1
+
+	//vars for fountain of youth examine lines
+	var/became_older
+	var/became_younger
+
+	var/list/descriptors
 	var/decaylevel = 0 //For rotting bodies
 	var/branded = null	//For whether or not they've been branded, and what they've been branded with.

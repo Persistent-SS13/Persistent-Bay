@@ -1,18 +1,22 @@
 /obj/item/device/radio/intercom
-	name = "intercom"
+	name = "intercom (General)"
 	desc = "Talk through this."
+	icon = 'icons/obj/machines/radio_intercom.dmi'
 	icon_state = "intercom"
 	randpixel = 0
-	anchored = 1
+	anchored = TRUE
 	w_class = ITEM_SIZE_HUGE
 	canhear_range = 2
-	flags = CONDUCT
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_NO_BLOOD
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	layer = ABOVE_WINDOW_LAYER
+	cell = null
+	power_usage = 0
 	var/number = 0
 	var/last_tick //used to delay the powercheck
 	var/buildstage = 0
-	var/wiresexposed = 0
-	var/circuitry_installed = 1
+	var/wiresexposed = FALSE
+	var/circuitry_installed = TRUE
 
 
 /obj/item/device/radio/intercom/get_storage_cost()
@@ -20,12 +24,12 @@
 
 /obj/item/device/radio/intercom/custom
 	name = "intercom (Custom)"
-	broadcasting = 0
-	listening = 0
+	broadcasting = FALSE
+	listening = FALSE
 
 /obj/item/device/radio/intercom/interrogation
 	name = "intercom (Interrogation)"
-	frequency  = 1449
+	frequency  = SEC_INTERCOM_FREQ
 
 /obj/item/device/radio/intercom/private
 	name = "intercom (Private)"
@@ -37,8 +41,8 @@
 
 /obj/item/device/radio/intercom/department
 	canhear_range = 5
-	broadcasting = 0
-	listening = 1
+	broadcasting = FALSE
+	listening = TRUE
 
 /obj/item/device/radio/intercom/department/medbay
 	name = "intercom (Medbay)"
@@ -56,6 +60,7 @@
 /obj/item/device/radio/intercom/Initialize()
 	. = ..()
 	START_PROCESSING(SSobj, src)
+	queue_icon_update()
 
 /obj/item/device/radio/intercom/department/medbay/Initialize()
 	. = ..()
@@ -79,8 +84,8 @@
 	name = "illicit intercom"
 	desc = "Talk through this. Evilly."
 	frequency = SYND_FREQ
-	subspace_transmission = 1
-	syndie = 1
+	subspace_transmission = TRUE
+	syndie = TRUE
 
 /obj/item/device/radio/intercom/syndicate/Initialize()
 	. = ..()
@@ -90,8 +95,8 @@
 	name = "illicit intercom"
 	desc = "Pirate radio, but not in the usual sense of the word."
 	frequency = RAID_FREQ
-	subspace_transmission = 1
-	syndie = 1
+	subspace_transmission = TRUE
+	syndie = TRUE
 
 /obj/item/device/radio/intercom/raider/Initialize()
 	. = ..()
@@ -114,9 +119,6 @@
 /obj/item/device/radio/intercom/receive_range(freq, level, faction)
 	if (!on)
 		return -1
-//	if(!faction || faction == "")
-//		if(!public_mode)
-//			return -1
 	if(faction && faction != "" && faction != faction_uid)
 		return -1
 	if(!(0 in level))
@@ -134,23 +136,42 @@
 /obj/item/device/radio/intercom/Process()
 	if(((world.timeofday - last_tick) > 30) || ((world.timeofday - last_tick) < 0))
 		last_tick = world.timeofday
+		var/old_on = on
 
 		if(!src.loc)
-			on = 0
+			on = FALSE
 		else
 			var/area/A = get_area(src)
 			if(!A)
-				on = 0
+				on = FALSE
 			else
 				on = A.powered(EQUIP) // set "on" to the power status
 
-		if(!on)
-			icon_state = "intercom-p"
-		else
-			icon_state = "intercom"
+		if (on != old_on)
+			queue_icon_update()
+
+/obj/item/device/radio/intercom/on_update_icon()
+	if(!on)
+		icon_state = "intercom-p"
+	else if (broadcasting && listening)
+		icon_state = "intercom_11"
+	else if (broadcasting)
+		icon_state = "intercom_10"
+	else if (listening)
+		icon_state = "intercom_01"
+	else
+		icon_state = "intercom_00"
+
+/obj/item/device/radio/intercom/ToggleBroadcast()
+	..()
+	update_icon()
+
+/obj/item/device/radio/intercom/ToggleReception()
+	..()
+	update_icon()
 
 /obj/item/device/radio/intercom/broadcasting
-	broadcasting = 1
+	broadcasting = TRUE
 
 /obj/item/device/radio/intercom/locked
 	var/locked_frequency
@@ -164,12 +185,12 @@
 /obj/item/device/radio/intercom/locked/ai_private
 	name = "\improper AI intercom"
 	locked_frequency = AI_FREQ
-	broadcasting = 1
-	listening = 1
+	broadcasting = TRUE
+	listening = TRUE
 
 /obj/item/device/radio/intercom/locked/confessional
 	name = "confessional intercom"
-	locked_frequency = 1480
+	locked_frequency = CONFESSIONALS_FREQ
 
 /obj/item/device/radio/intercom/locked/prison
 	name = "\improper prison intercom"
@@ -180,33 +201,42 @@
 	wires.CutWireIndex(WIRE_TRANSMIT)
 
 /obj/item/device/radio/intercom/attackby(obj/item/weapon/W as obj, mob/user as mob, params)
-	if(istype(W, /obj/item/device/reagent_scanner))
+	if(istype(W, /obj/item/device/scanner/reagent))
 		return
-
-
-	if(istype(W, /obj/item/weapon/wrench))
+	if(istype(W, /obj/item/weapon/tool/wrench))
 		to_chat(user, "<span class='notice'>You detach \the [src] from the wall.</span>")
 		new /obj/item/frame/intercom(get_turf(src))
 		qdel(src)
 		return 1
-
 	return src.attack_hand(user)
 
 /obj/item/device/radio/intercom/New(loc, dir, atom/frame)
 	..(loc)
-
 	if(dir)
 		src.set_dir(dir)
-
 	if(istype(frame))
 		buildstage = 0
-		wiresexposed = 1
-		pixel_x = (dir & 3)? 0 : (dir == 4 ? -24 : 24)
-		pixel_y = (dir & 3)? (dir ==1 ? -24 : 24) : 0
+		wiresexposed = TRUE
 		frame.transfer_fingerprints_to(src)
 
+/obj/item/device/radio/intercom/Initialize()
+	. = ..()
+	update_icon()
 
 /obj/item/device/radio/intercom/update_icon()
+	switch(dir)
+		if(NORTH)
+			src.pixel_x = 0
+			src.pixel_y = -28
+		if(SOUTH)
+			src.pixel_x = 0
+			src.pixel_y = 24
+		if(EAST)
+			src.pixel_x = -22
+			src.pixel_y = 0
+		if(WEST)
+			src.pixel_x = 22
+			src.pixel_y = 0
 	if(!circuitry_installed)
 		icon_state="intercom-frame"
 		return
@@ -218,7 +248,7 @@
 	icon_state = "door_electronics"
 	desc = "Looks like a circuit. Probably is."
 	w_class = ITEM_SIZE_SMALL
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
 	origin_tech = "engineering=2;programming=1"
 
 

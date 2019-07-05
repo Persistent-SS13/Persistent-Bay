@@ -4,16 +4,22 @@
 /obj/var/list/req_one_access = list()
 /obj/var/req_access_faction = ""
 /obj/var/req_access_personal
+/obj/var/list/req_access_personal_list = list()
 /obj/var/req_access_business
 /obj/var/list/req_access_business_list = list()
 /obj/var/list/req_one_access_business_list = list()
 //returns 1 if this mob has sufficient access to use this object
 /obj/proc/allowed(mob/M)
 	//check if it doesn't require any access at all
-	if(src.check_access(null))
-		return 1
 	if(!istype(M))
 		return 0
+
+	if(req_access_personal_list && req_access_personal_list.len)
+		for(var/nam in req_access_personal_list)
+			if(M.get_id_name() == nam)
+				return 1
+		return 0
+
 	if(req_access_personal)
 		if(M.get_id_name() == req_access_personal)
 			return 1
@@ -26,33 +32,56 @@
 			if(employee)
 				var/pass = 1
 				var/one_pass = 0
-				for(var/x in req_access_business_list)
+				for(var/x in req_access_business_list)		//needs all
 					if(!(x in employee.accesses))
 						pass = 0
-				for(var/x in req_one_access_business_list)
-					if(!(x in employee.accesses))
-						one_pass = 1
-				if(!req_one_access_business_list.len) one_pass = 1
-				if(pass && one_pass)
+						break								//Break since we found one required access that we don't have on a list that we need ALL
+				if(req_one_access_business_list.len)
+					for(var/x in req_one_access_business_list)
+						if(x in employee.accesses)
+							one_pass = 1
+							break
+
+				if(pass && (one_pass || !req_one_access_business_list.len) )
 					return 1
 			return 0
+	if(src.check_access(null))
+		return 1
+
+
 	return check_access_list(M.GetAccess(req_access_faction))
 
+//FIXME?: Why provide the faction uid if the ID contains it??
 /atom/movable/proc/GetAccess(var/faction_uid)
 	var/obj/item/weapon/card/id/id = GetIdCard()
 	return id ? id.GetAccess(faction_uid) : list()
+
 /atom/movable/proc/GetFaction()
 	var/obj/item/weapon/card/id/id = GetIdCard()
 	return id ? id.GetFaction() : ""
+
+// /atom/movable/proc/GetAccess()
+// 	. = list()
+// 	var/obj/item/weapon/card/id/id = GetIdCard()
+// 	if(id)
+// 		. += id.GetAccess()
+// 	if(maint_all_access)
+// 		. |= access_maint_tunnels
+
 /atom/movable/proc/GetIdCard()
 	return null
 
-/obj/proc/check_access(obj/item/I)
-	return check_access_list(I ? I.GetAccess(req_access_faction) : list())
+/obj/proc/check_access(obj/item/I, var/faction)
+	var/use_faction = req_access_faction
+	if(faction)
+		use_faction = faction
+	return check_access_list(I ? I.GetAccess(use_faction) : list())
 
 /obj/proc/check_access_list(var/list/L)
 	if(!req_access)		req_access = list()
 	if(!req_one_access)	req_one_access = list()
+	if(req_access_personal || (req_access_personal_list && req_access_personal_list.len))
+		return 0
 	if(!istype(L, /list))	return 0
 	return has_access(req_access, req_one_access, L)
 
@@ -66,6 +95,14 @@
 				return 1
 		return 0
 	return 1
+
+//Checks if the access (constant or list) is contained in one of the entries of access_patterns, a list of lists.
+/proc/has_access_pattern(list/access_patterns, access)
+	if(!islist(access))
+		access = list(access)
+	for(var/access_pattern in access_patterns)
+		if(has_access(access_pattern, list(), access))
+			return 1
 
 /proc/get_centcom_access(job)
 	switch(job)
@@ -184,6 +221,8 @@
 			return "General"
 		if(ACCESS_REGION_SUPPLY) //supply
 			return "Supply"
+		if(ACCESS_REGION_NT) //nt
+			return "Corporate"
 
 /proc/get_access_desc(id)
 	var/list/AS = priv_all_access_datums_id || get_all_access_datums_by_id()
@@ -198,15 +237,15 @@
 	var/list/AS = priv_all_access_datums_id || get_all_access_datums_by_id()
 	return AS[num2text(id)]
 
-/proc/get_all_jobs()
-	var/list/all_jobs = list()
-	var/list/all_datums = typesof(/datum/job)
-	all_datums -= exclude_jobs
-	var/datum/job/jobdatum
-	for(var/jobtype in all_datums)
-		jobdatum = new jobtype
-		all_jobs.Add(jobdatum.title)
-	return all_jobs
+///proc/get_all_jobs()
+//	var/list/all_jobs = list()
+//	var/list/all_datums = typesof(/datum/job)
+//	all_datums -= exclude_jobs
+//	var/datum/job/jobdatum
+//	for(var/jobtype in all_datums)
+//		jobdatum = new jobtype
+//		all_jobs.Add(jobdatum.title)
+//	return all_jobs
 
 /proc/get_all_centcom_jobs()
 	return list("VIP Guest",
@@ -265,7 +304,7 @@
 	return missing_id_name
 
 /proc/get_all_job_icons() //For all existing HUD icons
-	return joblist + list("Prisoner")
+	return SSjobs.titles_to_datums + list("Prisoner")
 
 /obj/proc/GetJobName() //Used in secHUD icon generation
 	var/obj/item/weapon/card/id/I = GetIdCard()
@@ -286,3 +325,7 @@
 		return
 
 	return "Unknown" //Return unknown if none of the above apply
+
+/proc/get_access_region_by_id(id)
+	var/datum/access/AD = get_access_by_id(id)
+	return AD.region

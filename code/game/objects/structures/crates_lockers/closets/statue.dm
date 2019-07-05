@@ -1,11 +1,11 @@
-/obj/structure/closet/statue
+/obj/structure/closet/statue //what
 	name = "statue"
 	desc = "An incredibly lifelike marble carving."
 	icon = 'icons/obj/statue.dmi'
 	icon_state = "human_male"
 	density = 1
 	anchored = 1
-	wrenchable = 0 // statues cannot be unanchored with a wrench
+	setup = 0
 	health = 0 //destroying the statue kills the mob within
 	var/intialTox = 0 	//these are here to keep the mob from taking damage from things that logically wouldn't affect a rock
 	var/intialFire = 0	//it's a little sloppy I know but it was this or the GODMODE flag. Lesser of two evils.
@@ -21,8 +21,8 @@
 		if(L.client)
 			L.client.perspective = EYE_PERSPECTIVE
 			L.client.eye = src
-		L.loc = src
-		L.sdisabilities |= MUTE
+		L.forceMove(src)
+		L.set_sdisability(MUTE)
 		health = L.health + 100 //stoning damaged mobs will result in easier to shatter statues
 		intialTox = L.getToxLoss()
 		intialFire = L.getFireLoss()
@@ -60,14 +60,13 @@
 		qdel(src)
 
 /obj/structure/closet/statue/dump_contents()
-
 	for(var/obj/O in src)
-		O.loc = src.loc
+		O.dropInto(loc)
 
 	for(var/mob/living/M in src)
-		M.loc = src.loc
-		M.sdisabilities &= ~MUTE
-		M.take_overall_damage((M.health - health - 100),0) //any new damage the statue incurred is transfered to the mob
+		M.dropInto(loc)
+		M.unset_sdisability(MUTE)
+		M.take_overall_damage((M.health - health - 100), DAM_BLUNT) //any new damage the statue incurred is transfered to the mob
 		if(M.client)
 			M.client.eye = M.client.mob
 			M.client.perspective = MOB_PERSPECTIVE
@@ -121,7 +120,7 @@
 /obj/structure/closet/statue/verb_toggleopen()
 	return
 
-/obj/structure/closet/statue/update_icon()
+/obj/structure/closet/statue/on_update_icon()
 	return
 
 /obj/structure/closet/statue/proc/shatter(mob/user as mob)

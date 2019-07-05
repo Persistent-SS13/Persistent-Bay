@@ -1,0 +1,462 @@
+<!--//Yet another spaget cooked by Stigma. -- https://github.com/ingles98 -->
+<!DOCTYPE html>
+<html>
+<head><meta http-equiv="X-UA-Compatible" content="IE=edge"></head>
+<body scroll=no>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="jquery.tinycolorpicker.js"></script>
+
+	<title>Designer</title>
+<style>
+	#divMain {
+		position: absolute;
+		margin: 12px;
+		border-style: solid;
+		border-width: 3px;
+		border-color: rgb(80, 80, 80);
+		width: 300px;
+		height: 300px;
+	}
+
+	.pixel{
+		font-size:0;
+		min-height: 6px;
+		min-width: 6px;
+	}
+
+	.backgroundSquare{
+		display: inline-block;
+		margin: 0px;
+		padding: 0px;
+		background-color: rgb(160, 160, 160);
+		width: 25%;
+		height: 25%;
+	}
+
+	body {
+		background-color: rgb(30, 30, 30);
+	}
+	#bg {
+		position: absolute;
+		margin: 12px;
+		border-style: solid;
+		border-width: 3px;
+		border-color: rgb(80, 80, 80);
+		width: 300px;
+		height: 300px;
+	}
+
+	.links {
+		position: absolute;
+		left: 300px;
+		top: 12px;
+		padding: 12px;
+		width:200px;
+		align-content: center;
+		text-align: center;
+	}
+	.alphaDiv {
+		width: 100px;
+		height: 12px;
+		positon: relative;
+		align-content: center;
+		text-align: center;
+		font-size: 0;
+	}
+	.alpha {
+		width: 100px;
+		text-align: center;
+		font-size: 0;
+	}
+
+
+	.rangeslider{
+		width: 50%;
+    }
+	#alpha{
+		top: 90px;
+		left: 30%;
+	}
+
+	#redSlider{
+		top: 140px;
+		left: 30%;
+	}
+	#greenSlider{
+		top: 180px;
+		left: 30%;
+	}
+	#blueSlider{
+		top: 220px;
+		left: 30%;
+	}
+	#redSlider::-ms-thumb {
+		background: red;
+	}
+	#greenSlider::-ms-thumb {
+		background: green;
+	}
+	#blueSlider::-ms-thumb {
+		background: blue;
+	}
+
+	input[type=range] {
+		/*removes default webkit styles*/
+		-webkit-appearance: none;
+
+		/*fix for FF unable to apply focus style bug */
+		border: 1px solid white;
+
+		/*required for proper track sizing in FF*/
+		width: 100px;
+		height:16px;
+
+		border-width: 0px; left: 0px; top: 0px; height: 50px; padding: 4px;
+		margin: -10px;
+		position: absolute;
+	}
+	input[type=range]::-webkit-slider-runnable-track {
+		width: 100px;
+		height: 5px;
+		background: #ddd;
+		border: none;
+		border-radius: 3px;
+	}
+	input[type=range]::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		border: none;
+		height: 16px;
+		width: 16px;
+		border-radius: 50%;
+		background: goldenrod;
+		margin-top: -4px;
+	}
+	input[type=range]:focus {
+		outline: none;
+	}
+	input[type=range]:focus::-webkit-slider-runnable-track {
+		background: #ccc;
+	}
+
+	input[type=range]::-moz-range-track {
+		width: 100px;
+		height: 5px;
+		background: #ddd;
+		border: none;
+		border-radius: 3px;
+	}
+	input[type=range]::-moz-range-thumb {
+		border: none;
+		height: 16px;
+		width: 16px;
+		border-radius: 50%;
+		background: goldenrod;
+	}
+
+	/*hide the outline behind the border*/
+	input[type=range]:-moz-focusring{
+		outline: 1px solid white;
+		outline-offset: -1px;
+	}
+
+	input[type=range]::-ms-track {
+		width: 100px;
+		height: 5px;
+
+		/*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+		background: transparent;
+
+		/*leave room for the larger thumb to overflow with a transparent border */
+		border-color: transparent;
+		border-width: 6px 0;
+
+		/*remove default tick marks*/
+		color: transparent;
+	}
+	input[type=range]::-ms-fill-lower {
+		background: #777;
+		border-radius: 0px;
+	}
+	input[type=range]::-ms-fill-upper {
+		background: #ddd;
+		border-radius: 0px;
+	}
+	input[type=range]::-ms-thumb {
+		border: none;
+		height: 16px;
+		width: 16px;
+		border-radius: 50%;
+		background: white;
+	}
+	input[type=range]:focus::-ms-fill-lower {
+		background: #888;
+		height:3px;
+	}
+	input[type=range]:focus::-ms-fill-upper {
+		background: #ccc;
+		height:2px;
+	}
+</style>
+
+<div id="bg">
+	<div class="backgroundSquare" style="background-color:rgb(210, 210, 210);position:absolute;left: 0%;top:25%;"></div>
+	<div class="backgroundSquare" style="position:absolute;left: 0%;top:0%;"></div>
+	<div class="backgroundSquare" style="background-color:rgb(210, 210, 210);position:absolute;left: 0%;top:75%;"></div>
+	<div class="backgroundSquare" style="position:absolute;left: 0%;top:50%;"></div>
+
+	<div class="backgroundSquare" style="background-color:rgb(210, 210, 210);position:absolute;left: 25%;top:0%;"></div>
+	<div class="backgroundSquare" style="position:absolute;left: 25%;top:25%;"></div>
+	<div class="backgroundSquare" style="background-color:rgb(210, 210, 210);position:absolute;left: 25%;top:50%;"></div>
+	<div class="backgroundSquare" style="position:absolute;left: 25%;top:75%;"></div>
+
+
+	<div class="backgroundSquare" style="background-color:rgb(210, 210, 210);position:absolute;left: 50%;top:25%;"></div>
+	<div class="backgroundSquare" style="position:absolute;left: 50%;top:0%;"></div>
+	<div class="backgroundSquare" style="background-color:rgb(210, 210, 210);position:absolute;left: 50%;top:75%;"></div>
+	<div class="backgroundSquare" style="position:absolute;left: 50%;top:50%;"></div>
+
+	<div class="backgroundSquare" style="background-color:rgb(210, 210, 210);position:absolute;left: 75%;top:0%;"></div>
+	<div class="backgroundSquare" style="position:absolute;left: 75%;top:25%;"></div>
+	<div class="backgroundSquare" style="background-color:rgb(210, 210, 210);position:absolute;left: 75%;top:50%;"></div>
+	<div class="backgroundSquare" style="position:absolute;left: 75%;top:75%;"></div>
+</div>
+<div id="divMain" onmousedown="return false"></div>
+<div class="links">
+	<div style="text-align:center;align-content:center;"><button onclick="saveIcon()">To-icon</button></div>
+	<div style="text-align:center"><p style="color:white;margin:1px">Color: </p><input class="picker" id="colorinput" onchange="pickColor()" value="ab2567"></div>
+	<div style="text-align:center"><p style="color:white;margin:1px">Alpha: </p></div>
+
+	<div style="text-align:center;align-content:center"><div class="alphaDiv"><input type="range" min="0" max="100" value="100" class="alpha" id="alpha" onchange="setAlpha()" ></input></div></div>
+	<div style="text-align:center;align-content:center"><div class="rangeslider"><input type="range" min="1" max="255" value="0" class="myslider" id="redSlider" onchange="gliderColor()"></div></div>
+	<div style="text-align:center;align-content:center"><div class="rangeslider"><input type="range" min="1" max="255" value="0" class="myslider" id="greenSlider" onchange="gliderColor()"></div></div>
+	<div style="text-align:center;align-content:center"><div class="rangeslider"><input type="range" min="1" max="255" value="0" class="myslider" id="blueSlider" onchange="gliderColor()"></div></div>
+</div>
+
+<script type="text/javascript">
+var canvas = document.getElementById("divMain");
+var bg = document.getElementById("bg");
+var height = canvas.offsetHeight;
+var pixelScale = Math.floor((height-(3*2)) /32);
+var mouseDown = 0;
+var selectedColor = "rgb(255,0,0)";
+var selectedAlpha = 1;
+var source = ""
+var isProcessing = false;
+
+var max_x = 32
+var max_y = 32
+
+var pixel_list = []
+
+function main(){
+	canvas.style.width = pixelScale*max_x +"px" ;
+	canvas.style.height = pixelScale*max_y +"px";
+	bg.style.width = canvas.style.width;
+	bg.style.height = canvas.style.height;
+	for (var i = 0; i<max_x; i++){
+		pixel_list[i] = []
+		for (var j = 0; j<max_y; j++){
+			var pixel = document.createElement("DIV");
+			pixel.id = i + "_" + j;
+			pixel.className = "pixel";
+			pixel.style = "width:"+pixelScale+"px;height:"+pixelScale+"px;background-color:white;position:absolute;left:"+pixelScale*i+"px;top:"+pixelScale*j+"px";
+			pixel.style.position = "absolute";
+			pixel.style.width = pixelScale +"px";
+			pixel.style.height = pixelScale +"px";
+			pixel.style.left = pixelScale*i +"px"
+			pixel.style.top = pixelScale*j +"px"
+			pixel.style.backgroundColor = "#ffbbff";
+			pixel.style.opacity = "0"
+			pixel.onmouseenter = setColor;
+			pixel.onclick = setColorOnClick;
+			canvas.appendChild(pixel);
+			pixel.px = i+1;
+			pixel.py = j+1;
+			pixel_list[i][j] = pixel;
+		}
+	}
+}
+
+function setColor(){
+	if (mouseDown == 0){return};
+	if (isProcessing == true) {
+		return
+	}
+	this.style.backgroundColor = selectedColor;
+	this.style.opacity = selectedAlpha;
+}
+
+function setColorOnClick(){
+	if (isProcessing == true) {
+		return
+	}
+	this.style.backgroundColor = selectedColor;
+	this.style.opacity = selectedAlpha;
+}
+
+	/*
+		WIP. This function below should never be called while it is work in progress
+		Currently the problem is "location.href" won't let us send the JSON string (this method of passing
+		data has a name, i know, but i cant recall it)
+
+		Passing the JSON string and not sending href data to DM every iteration of each pixel is way cheaper.
+		As it currently doesn't function (Permission Denied error ...smh...), we have to stick with the
+		mentioned method, as it is the only two ways i know of sending data (at least this two dimensional array)
+		back to DM.
+	*/
+function new_saveIcon() {
+	if (isProcessing == true) {
+		alert("The client is currently processing an icon save.")
+		return
+	}
+	isProcessing = true;
+	var pixels = document.getElementsByClassName("pixel");
+	var icon_array = []
+	for (w = 1; w <= max_x; w++) {
+		icon_array[w] = []
+		for (h = 1; h <= max_x; h++){
+			icon_array[w][h] = [null,null,null,null]
+		}
+	}
+	for (i = 0; i < pixels.length; i++) {
+		var elem = pixels[i];
+		var color = elem.style.backgroundColor;
+		var args = [];
+
+		args[1] = color.match(/\d+/);
+		color = color.replace(args[1],"");
+
+		args[2] = color.match(/\d+/);
+		color = color.replace(args[2],"");
+
+		args[3] = color.match(/\d+/);
+		color = color.replace(args[3],"");
+
+		args[4] = elem.style.opacity * 255;
+		icon_array[elem.px][elem.py] = args;
+	}
+	var icon_array_string = JSON.stringify(icon_array);
+	location.href = source + encodeURIComponent( ";action=getIcon;json_string=" + JSON.stringify(icon_array[1]));
+	isProcessing = false;
+	//location.href = source + ";action=start";
+}
+
+function saveIcon(){
+	if (isProcessing == true) {
+		alert("The client is currently processing an icon save.")
+		return
+	}
+	var pixels = document.getElementsByClassName("pixel");
+	location.href = source + ";action=start";
+	isProcessing = true;
+	startProcess(pixels,0,true)
+	//location.href = source + ";action=stop";
+}
+
+function startProcess(pixels, index ,isBegin) {
+	if (index >= pixels.length) {
+		location.href = source + ";action=stop";
+		isProcessing = false;
+		alert("Icon has been saved!")
+		return
+	}
+	var elem = pixels[index];
+	var color = elem.style.backgroundColor;
+	var args = [];
+
+	args[1] = color.match(/\d+/);
+	color = color.replace(args[1],"");
+
+	args[2] = color.match(/\d+/);
+	color = color.replace(args[2],"");
+
+	args[3] = color.match(/\d+/);
+	color = color.replace(args[3],"");
+
+	args[4] = elem.style.opacity * 255;
+
+	var str = ";action=pixel;x="+elem.px+";"+"y="+elem.py+";"+"r="+args[1]+";"+"g="+args[2]+";"+"b="+args[3]+";"+"a="+args[4];
+	location.href = source + str;
+
+	if (index % 2 == 0) {
+		startProcess(pixels, index+1)
+	} else {
+		setTimeout(startProcess, 0.000000000000001,pixels,index+1)
+	}
+}
+
+function getData(ref,p_width,p_height){
+	source = ref.replace("href='", "byond://")
+
+	var remake = false
+	if (p_width != max_x || p_height != max_y) {
+		remake = true
+	}
+	max_x = p_width
+	max_y = p_height
+	main()
+}
+
+function getIconAsJSON(str) {
+	var obj = JSON.parse(str);
+	for (var i = 0; i <= obj.length -1; i++) {
+		var array = obj[i].reverse()
+		for (var j = 0; j <= array.length -1; j++) {
+			var color = array[j];
+			if (color == null || !pixel_list[i][j]) {
+				continue;
+			}
+			pixel_list[i][j].style.backgroundColor = "rgb("+color[0]+","+color[1]+","+color[2]+")";
+			pixel_list[i][j].style.opacity = "1";
+			if (color[3]){
+				pixel_list[i][j].style.opacity = "" + color[3]/255 + "";
+			}
+		}
+	}
+}
+
+function setTitle(str) {
+	document.title = str;
+}
+
+function pickColor(){
+	var picker = document.getElementById("colorinput")
+	picker.style.backgroundColor = "#"+picker.value
+	picker.style.opacity = selectedAlpha
+	selectedColor = picker.style.backgroundColor
+}
+
+function setAlpha(){
+	selectedAlpha = ""+(document.getElementById("alpha").value)/100 +""
+	var picker = document.getElementById("colorinput").style.opacity = selectedAlpha
+}
+function gliderColor(){
+	var red = document.getElementById("redSlider").value
+	var green = document.getElementById("greenSlider").value
+	var blue = document.getElementById("blueSlider").value
+	selectedColor = "rgb("+red+","+green+","+blue+")"
+	document.getElementById("colorinput").value = rgb2hex(red,green,blue)
+	document.getElementById("colorinput").style.backgroundColor = "#"+rgb2hex(red,green,blue)
+}
+
+function hexstr(number) {
+    var chars = new Array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f");
+    var low = number & 0xf;
+    var high = (number >> 4) & 0xf;
+    return "" + chars[high] + chars[low];
+}
+
+function rgb2hex(r, g, b) {
+    return "" + hexstr(r) + hexstr(g) + hexstr(b) +"";
+}
+document.onmousedown = function() {
+  mouseDown = 1;
+}
+document.onmouseup = function() {
+  mouseDown = 0;
+}
+pickColor();
+</script>
+
+</body>
+</html>

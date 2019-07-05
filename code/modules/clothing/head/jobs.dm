@@ -133,7 +133,8 @@
 /obj/item/clothing/head/beret/engineering
 	name = "corporate engineering beret"
 	desc = "A beret with the engineering insignia emblazoned on it. For engineers that are more inclined towards style than safety."
-	icon_state = "beret_orange"
+	icon_state = "beret_white"
+	color = COLOR_ORANGE
 
 /obj/item/clothing/head/beret/purple
 	name = "purple beret"
@@ -153,14 +154,26 @@
 /obj/item/clothing/head/beret/deathsquad
 	name = "heavy asset protection beret"
 	desc = "An armored red beret adorned with the crest of corporate asset protection. Doesn't sacrifice style or safety."
-	icon_state = "beret_red"
-	armor = list(melee = 65, bullet = 55, laser = 35,energy = 20, bomb = 30, bio = 30, rad = 30)
+	icon_state = "beret_corporate_red"
 	siemens_coefficient = 0.9
+	armor  = list(
+		DAM_BLUNT 	= 65,
+		DAM_PIERCE 	= 55,
+		DAM_CUT 	= 65,
+		DAM_BULLET 	= 55,
+		DAM_LASER 	= 35,
+		DAM_ENERGY 	= 20,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 30,
+		DAM_RADS 	= 30,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/head/beret/guard
 	name = "corporate security beret"
-	desc = "A white beret adorned with the crest of Nanotrasen. For security guards that are more inclined towards style than safety."
-	icon_state = "beret_corporate_whitered"
+	desc = "A white beret adorned with a corporate logo. For security guards that are more inclined towards style than safety."
+	icon_state = "corpsec_beret"
 
 /obj/item/clothing/head/beret/plaincolor
 	name = "beret"

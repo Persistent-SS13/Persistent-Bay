@@ -1,3 +1,6 @@
+// large amount of fields creates a heavy load on the server, see updateinfolinks() and addtofield()
+#define MAX_FIELDS 50
+
 /*
  * Paper
  * also scraps of paper
@@ -6,7 +9,7 @@
 /obj/item/weapon/paper
 	name = "sheet of paper"
 	gender = NEUTER
-	icon = 'icons/obj/bureaucracy.dmi'
+	icon = 'icons/obj/items/paper.dmi'
 	icon_state = "paper"
 	item_state = "paper"
 	randpixel = 8
@@ -30,33 +33,61 @@
 	var/list/offset_y[0] //usage by the photocopier
 	var/rigged = 0
 	var/spam_flag = 0
+	var/last_modified_ckey
+	var/age = 0
+	var/list/metadata
 
 	var/const/deffont = "Verdana"
 	var/const/signfont = "Times New Roman"
 	var/const/crayonfont = "Comic Sans MS"
-/obj/item/weapon/paper/Write(savefile/f)
-	info_links = replacetext(info_links,"\ref[src]","***MY_REF***")
+	var/const/fancyfont = "Segoe Script"
 
-	StandardWrite(f)
+	var/scan_file_type = /datum/computer_file/data/text
+
+/obj/item/weapon/paper/New(loc, text, title, list/md = null)
+	..(loc)
+	ADD_SAVED_VAR(info)
+	ADD_SAVED_VAR(info_links)
+	ADD_SAVED_VAR(stamps)
+	ADD_SAVED_VAR(fields)
+	ADD_SAVED_VAR(free_space)
+	ADD_SAVED_VAR(stamped)
+	ADD_SAVED_VAR(ico)
+	ADD_SAVED_VAR(last_modified_ckey)
+	ADD_SAVED_VAR(age)
+	ADD_SAVED_VAR(metadata)
+
+	ADD_SKIP_EMPTY(info)
+	ADD_SKIP_EMPTY(info_links)
+	ADD_SKIP_EMPTY(stamps)
+	ADD_SKIP_EMPTY(fields)
+	ADD_SKIP_EMPTY(ico)
+	ADD_SKIP_EMPTY(last_modified_ckey)
+	ADD_SKIP_EMPTY(age)
+	ADD_SKIP_EMPTY(metadata)
+
+	set_content(text ? text : info, title)
+	metadata = md
 
 /obj/item/weapon/paper/after_load()
 	info_links = replacetext(info_links,"***MY_REF***","\ref[src]")
 	update_icon()
 	..()
-/obj/item/weapon/paper/New(loc, text,title)
-	..(loc)
-	set_content(text ? text : info, title)
+
+/obj/item/weapon/paper/Write(savefile/f)
+	info_links = replacetext(info_links,"\ref[src]","***MY_REF***")
+	StandardWrite(f)
 
 /obj/item/weapon/paper/proc/set_content(text,title)
 	if(title)
-		name = title
+		SetName(title)
 	info = html_encode(text)
 	info = parsepencode(text)
 	update_icon()
 	update_space(info)
 	updateinfolinks()
 
-/obj/item/weapon/paper/update_icon()
+/obj/item/weapon/paper/on_update_icon()
 	if(icon_state == "paper_talisman")
 		return
 	else if(info)
@@ -90,14 +121,14 @@
 	set category = "Object"
 	set src in usr
 
-	if((CLUMSY in usr.mutations) && prob(50))
+	if((MUTATION_CLUMSY in usr.mutations) && prob(50))
 		to_chat(usr, "<span class='warning'>You cut yourself on the paper.</span>")
 		return
 	var/n_name = sanitizeSafe(input(usr, "What would you like to label the paper?", "Paper Labelling", null)  as text, MAX_NAME_LEN)
 
 	// We check loc one level up, so we can rename in clipboards and such. See also: /obj/item/weapon/photo/rename()
 	if((loc == usr || loc.loc && loc.loc == usr) && usr.stat == 0 && n_name)
-		name = n_name
+		SetName(n_name)
 		add_fingerprint(usr)
 
 /obj/item/weapon/paper/attack_self(mob/living/user as mob)
@@ -147,7 +178,7 @@
 	var/locid = 0
 	var/laststart = 1
 	var/textindex = 1
-	while(1) // I know this can cause infinite loops and fuck up the whole server, but the if(istart==0) should be safe as fuck
+	while(locid < MAX_FIELDS)
 		var/istart = 0
 		if(links)
 			istart = findtext(info_links, "<span class=\"paper_field\">", laststart)
@@ -201,7 +232,7 @@
 		return P.get_signature(user)
 	return (user && user.real_name) ? user.real_name : "Anonymous"
 
-/obj/item/weapon/paper/proc/parsepencode(t, obj/item/weapon/pen/P, mob/user, iscrayon)
+/obj/item/weapon/paper/proc/parsepencode(t, obj/item/weapon/pen/P, mob/user, iscrayon, isfancy)
 	if(length(t) == 0)
 		return ""
 
@@ -223,6 +254,8 @@
 
 	if(iscrayon)
 		t = "<font face=\"[crayonfont]\" color=[P ? P.colour : "black"]><b>[t]</b></font>"
+	else if(isfancy)
+		t = "<font face=\"[fancyfont]\" color=[P ? P.colour : "black"]><i>[t]</i></font>"
 	else
 		t = "<font face=\"[deffont]\" color=[P ? P.colour : "black"]>[t]</font>"
 
@@ -230,7 +263,7 @@
 
 	//Count the fields
 	var/laststart = 1
-	while(1)
+	while(fields < MAX_FIELDS)
 		var/i = findtext(t, "<span class=\"paper_field\">", laststart)	//</span>
 		if(i==0)
 			break
@@ -255,10 +288,7 @@
 				user.visible_message("<span class='[class]'>[user] burns right through \the [src], turning it to ash. It flutters through the air before settling on the floor in a heap.</span>", \
 				"<span class='[class]'>You burn right through \the [src], turning it to ash. It flutters through the air before settling on the floor in a heap.</span>")
 
-				if(user.get_inactive_hand() == src)
-					user.drop_from_inventory(src)
-
-				new /obj/effect/decal/cleanable/ash(src.loc)
+				new /obj/effect/decal/cleanable/ash(get_turf(src))
 				qdel(src)
 
 			else
@@ -287,8 +317,9 @@
 		if(!t)
 			return
 
-		var/obj/item/i = usr.get_active_hand() // Check to see if he still got that darn pen, also check if he's using a crayon or pen.
+		var/obj/item/i = usr.get_active_hand() // Check to see if he still got that darn pen, also check what type of pen
 		var/iscrayon = 0
+		var/isfancy = 0
 		if(!istype(i, /obj/item/weapon/pen))
 			if(usr.back && istype(usr.back,/obj/item/weapon/rig))
 				var/obj/item/weapon/rig/r = usr.back
@@ -303,17 +334,20 @@
 		if(istype(i, /obj/item/weapon/pen/crayon))
 			iscrayon = 1
 
+		if(istype(i, /obj/item/weapon/pen/fancy))
+			isfancy = 1
+
 
 		// if paper is not in usr, then it must be near them, or in a clipboard or folder, which must be in or near usr
-		if(src.loc != usr && !src.Adjacent(usr) && !((istype(src.loc, /obj/item/weapon/clipboard) || istype(src.loc, /obj/item/weapon/folder)) && (src.loc.loc == usr || src.loc.Adjacent(usr)) ) )
+		if(src.loc != usr && !src.Adjacent(usr) && !((istype(src.loc, /obj/item/weapon/material/clipboard) || istype(src.loc, /obj/item/weapon/folder)) && (src.loc.loc == usr || src.loc.Adjacent(usr)) ) )
 			return
 
 		var/last_fields_value = fields
 
-		t = parsepencode(t, i, usr, iscrayon) // Encode everything from pencode to html
+		t = parsepencode(t, i, usr, iscrayon, isfancy) // Encode everything from pencode to html
 
 
-		if(fields > 50)//large amount of fields creates a heavy load on the server, see updateinfolinks() and addtofield()
+		if(fields > MAX_FIELDS)
 			to_chat(usr, "<span class='warning'>Too many fields. Sorry, you can't do this.</span>")
 			fields = last_fields_value
 			return
@@ -324,10 +358,13 @@
 			info += t // Oh, he wants to edit to the end of the file, let him.
 			updateinfolinks()
 
+		last_modified_ckey = usr.ckey
+
 		update_space(t)
 
 		usr << browse("<HTML><HEAD><TITLE>[name]</TITLE></HEAD><BODY bgcolor='[color]'>[info_links][stamps]</BODY></HTML>", "window=[name]") // Update the window
 
+		playsound(src, pick('sound/effects/pen1.ogg','sound/effects/pen2.ogg'), 10)
 		update_icon()
 
 
@@ -343,6 +380,11 @@
 		return
 
 	if(istype(P, /obj/item/weapon/paper) || istype(P, /obj/item/weapon/photo))
+		if(!can_bundle())
+			return
+		var/obj/item/weapon/paper/other = P
+		if(istype(other) && !other.can_bundle())
+			return
 		if (istype(P, /obj/item/weapon/paper/carbon))
 			var/obj/item/weapon/paper/carbon/C = P
 			if (!C.iscopy && !C.copied)
@@ -351,15 +393,13 @@
 				return
 		var/obj/item/weapon/paper_bundle/B = new(src.loc)
 		if (name != "paper")
-			B.name = name
+			B.SetName(name)
 		else if (P.name != "paper" && P.name != "photo")
-			B.name = P.name
+			B.SetName(P.name)
 
-		user.drop_from_inventory(P)
-		user.drop_from_inventory(src)
+		if(!user.unEquip(P, B) || !user.unEquip(src, B))
+			return
 		user.put_in_hands(B)
-		src.forceMove(B)
-		P.forceMove(B)
 
 		to_chat(user, "<span class='notice'>You clip the [P.name] to [(src.name == "paper") ? "the paper" : src.name].</span>")
 
@@ -380,13 +420,14 @@
 		return
 
 	else if(istype(P, /obj/item/weapon/stamp) || istype(P, /obj/item/clothing/ring/seal))
-		if((!in_range(src, usr) && loc != user && !( istype(loc, /obj/item/weapon/clipboard) ) && loc.loc != user && user.get_active_hand() != P))
+		if((!in_range(src, usr) && loc != user && !( istype(loc, /obj/item/weapon/material/clipboard) ) && loc.loc != user && user.get_active_hand() != P))
 			return
 
 		stamps += (stamps=="" ? "<HR>" : "<BR>") + "<i>This paper has been stamped with the [P.name].</i>"
 
-		var/image/stampoverlay = image('icons/obj/bureaucracy.dmi')
-		var/{x; y;}
+		var/image/stampoverlay = image(icon)
+		var/x
+		var/y
 		if(istype(P, /obj/item/weapon/stamp/captain) || istype(P, /obj/item/weapon/stamp/centcomm))
 			x = rand(-2, 0)
 			y = rand(-1, 2)
@@ -413,25 +454,36 @@
 		stamped += P.type
 		overlays += stampoverlay
 
+		playsound(src, 'sound/effects/stamp.ogg', 50, 1)
 		to_chat(user, "<span class='notice'>You stamp the paper with your [P.name].</span>")
 
 	else if(istype(P, /obj/item/weapon/flame))
 		burnpaper(P, user)
 
 	else if(istype(P, /obj/item/weapon/paper_bundle))
+		if(!can_bundle())
+			return
 		var/obj/item/weapon/paper_bundle/attacking_bundle = P
 		attacking_bundle.insert_sheet_at(user, (attacking_bundle.pages.len)+1, src)
 		attacking_bundle.update_icon()
-
+	else 
+		return ..()
 	add_fingerprint(user)
-	return
+
+//Whether the paper can be added to a paper bundle
+/obj/item/weapon/paper/proc/can_bundle()
+	return TRUE
+
+/obj/item/weapon/paper/proc/show_info(var/mob/user)
+	return info
+
 /*
  * Paper packages (not to be confused with bundled paper)
  */
 /obj/item/weapon/paper_package
 	name = "package of paper"
 	gender = NEUTER
-	icon = 'icons/obj/bureaucracy.dmi'
+	icon = 'icons/obj/items/paper.dmi'
 	icon_state = "paperpackage"
 	item_state = "paperpackage"
 	randpixel = 8
@@ -443,6 +495,63 @@
 	attack_verb = list("bureaucratized")
 
 	var/amount = 50 //How much paper is stored
+
+//For supply.
+/obj/item/weapon/paper/manifest
+	name = "supply manifest"
+	icon_state = "paper_words"
+	var/is_copy = 1
+
+/obj/item/weapon/paper/export
+	name = "export manifest"
+	icon_state = "paper_words"
+	var/is_copy = 1
+	var/export_id = 0
+	var/business_name = 0
+
+/obj/item/weapon/paper/export/business
+	name = "export manifest"
+	business_name = null
+
+/obj/item/weapon/paper/export/business/show_content(mob/user, forceshow)
+	var/can_read = (istype(user, /mob/living/carbon/human) || isghost(user) || istype(user, /mob/living/silicon)) || forceshow
+	if(!forceshow && istype(user,/mob/living/silicon/ai))
+		var/mob/living/silicon/ai/AI = user
+		can_read = get_dist(src, AI.camera) < 2
+	var/info2 = info
+	info2 += "LINKED BUSINESS: [business_name]<br>"
+	if(src.Adjacent(user))
+		info2 += "<br>Swipe business name-tag <A href='?src=\ref[src];connect=1'>or enter full business name here.</A>"
+	else
+		info2 += "<br>Swipe business name-tag or enter full business name here."
+	user << browse("<HTML><HEAD><TITLE>[name]</TITLE></HEAD><BODY bgcolor='[color]'>[can_read ? info2 : stars(info)][stamps]</BODY></HTML>", "window=[name]")
+	onclose(user, "[name]")
+
+
+/obj/item/weapon/paper/export/business/attackby(obj/item/weapon/P as obj, mob/user as mob)
+	if(istype(P, /obj/item/weapon/pen))
+		return
+	else if(istype(P, /obj/item/weapon/card/id))
+		var/obj/item/weapon/card/id/id = P
+		if(id.selected_business)
+			var/datum/small_business/business = get_business(id.selected_business)
+			if(business)
+				business_name = business.name
+				to_chat(user, "Business linked to export.")
+		return
+	..()
+/obj/item/weapon/paper/export/business/Topic(href, href_list)
+	..()
+	if(!usr || (usr.stat || usr.restrained()))
+		return
+	if(href_list["connect"])
+		var/select_name =  sanitize(input(usr,"Enter the full name of the business.","Connect Business", "") as null|text)
+		var/datum/small_business/viewing = get_business(select_name)
+		if(viewing && src.Adjacent(usr))
+			business_name = viewing.name
+			to_chat(usr, "Business linked to export.")
+
+
 /*
  * Premade paper
  */
@@ -454,7 +563,7 @@
 	name = "paper scrap"
 	icon_state = "scrap"
 
-/obj/item/weapon/paper/crumpled/update_icon()
+/obj/item/weapon/paper/crumpled/on_update_icon()
 	return
 
 /obj/item/weapon/paper/crumpled/bloody
@@ -484,3 +593,12 @@
 /obj/item/weapon/paper/workvisa/New()
 	..()
 	icon_state = "workvisa" //Has to be here or it'll assume default paper sprites.
+
+/obj/item/weapon/paper/travelvisa
+	name = "Sol Travel Visa"
+	info = "<center><b><large>Travel Visa of the Sol Central Government</large></b></center><br><center><img src = sollogo.png><br><br><i><small>Issued on behalf of the Secretary-General.</small></i></center><hr><BR>This paper hereby permits the carrier to travel unhindered through Sol territories, colonies, and space for the purpose of pleasure and recreation."
+	desc = "A flimsy piece of laminated cardboard issued by the Sol Central Government."
+
+/obj/item/weapon/paper/travelvisa/New()
+	..()
+	icon_state = "travelvisa"

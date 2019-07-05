@@ -10,11 +10,15 @@
 	// Large, but inaccurate. Use a chem dispenser or beaker for accuracy.
 	possible_transfer_amounts = "50;100"
 	unacidable = 1
-	matter = list(DEFAULT_WALL_MATERIAL = 100) //Not made from steel buuut we need a way to recycle them
+	matter = list(MATERIAL_STEEL = 100) //Not made from steel buuut we need a way to recycle them
 	var/spawn_reagent = null
 	var/label = ""
 
 /obj/item/weapon/reagent_containers/chem_disp_cartridge/New()
+	. = ..()
+	ADD_SAVED_VAR(label)
+
+/obj/item/weapon/reagent_containers/chem_disp_cartridge/SetupReagents()
 	. = ..()
 	if(spawn_reagent)
 		reagents.add_reagent(spawn_reagent, volume)
@@ -44,21 +48,21 @@
 			to_chat(user, "<span class='notice'>You set the label on \the [src] to '[L]'.</span>")
 
 		label = L
-		name = "[initial(name)] - '[L]'"
+		SetName("[initial(name)] - '[L]'")
 	else
 		if(user)
 			to_chat(user, "<span class='notice'>You clear the label on \the [src].</span>")
 		label = ""
-		name = initial(name)
+		SetName(initial(name))
 
 /obj/item/weapon/reagent_containers/chem_disp_cartridge/attack_self()
 	..()
 	if (is_open_container())
 		to_chat(usr, "<span class = 'notice'>You put the cap on \the [src].</span>")
-		flags ^= OPENCONTAINER
+		atom_flags ^= ATOM_FLAG_OPEN_CONTAINER
 	else
 		to_chat(usr, "<span class = 'notice'>You take the cap off \the [src].</span>")
-		flags |= OPENCONTAINER
+		atom_flags |= ATOM_FLAG_OPEN_CONTAINER
 
 /obj/item/weapon/reagent_containers/chem_disp_cartridge/afterattack(obj/target, mob/user , flag)
 	if (!is_open_container() || !flag)

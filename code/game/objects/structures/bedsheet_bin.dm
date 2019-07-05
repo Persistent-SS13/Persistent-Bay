@@ -7,7 +7,7 @@ LINEN BINS
 /obj/item/weapon/bedsheet
 	name = "bedsheet"
 	desc = "A surprisingly soft linen bedsheet."
-	icon = 'icons/obj/items.dmi'
+	icon = 'icons/obj/bedsheet.dmi'
 	icon_state = "sheet"
 	item_state = "bedsheet"
 	randpixel = 0
@@ -18,6 +18,7 @@ LINEN BINS
 	throw_speed = 1
 	throw_range = 2
 	w_class = ITEM_SIZE_SMALL
+	max_health = 10
 
 /obj/item/weapon/bedsheet/attackby(obj/item/I, mob/user)
 	if(is_sharp(I))
@@ -98,13 +99,27 @@ LINEN BINS
 /obj/structure/bedsheetbin
 	name = "linen bin"
 	desc = "A linen bin. It looks rather cosy."
-	icon = 'icons/obj/structures.dmi'
+	icon = 'icons/obj/structures/bedsheets_bin.dmi'
 	icon_state = "linenbin-full"
 	anchored = 1
-	var/amount = 20
+	max_health = 50
+	matter = list(MATERIAL_PLASTIC = 4 * SHEET_MATERIAL_AMOUNT)
+	var/amount = 0
 	var/list/sheets = list()
 	var/obj/item/hidden = null
 
+/obj/structure/bedsheetbin/filled
+	amount = 20
+
+/obj/structure/bedsheetbin/New()
+	..()
+	ADD_SAVED_VAR(hidden)
+	ADD_SAVED_VAR(amount)
+
+/obj/structure/bedsheetbin/Destroy()
+	if(hidden)
+		hidden.forceMove(get_turf(loc))
+	..()
 
 /obj/structure/bedsheetbin/examine(mob/user)
 	. = ..(user)
@@ -118,51 +133,67 @@ LINEN BINS
 	to_chat(user, "There are [amount] bed sheets in the bin.")
 
 
-/obj/structure/bedsheetbin/update_icon()
+/obj/structure/bedsheetbin/on_update_icon()
 	switch(amount)
 		if(0)				icon_state = "linenbin-empty"
 		if(1 to amount / 2)	icon_state = "linenbin-half"
 		else				icon_state = "linenbin-full"
 
+/obj/structure/bedsheetbin/proc/can_hide_item(obj/item/I)
+	return amount && !hidden && I.w_class < ITEM_SIZE_HUGE
 
 /obj/structure/bedsheetbin/attackby(obj/item/I as obj, mob/user as mob)
 	if(istype(I, /obj/item/weapon/bedsheet))
-		user.drop_item()
-		I.loc = src
+		if(!user.unEquip(I, src))
+			return
 		sheets.Add(I)
 		amount++
-		to_chat(user, "<span class='notice'>You put [I] in [src].</span>")
-	else if(amount && !hidden && I.w_class < ITEM_SIZE_HUGE)	//make sure there's sheets to hide it among, make sure nothing else is hidden in there.
-		user.drop_item()
-		I.loc = src
+		to_chat(user, SPAN_NOTICE("You put [I] in [src]."))
+		return 1
+	else if(isWrench(I))
+		refund_matter()
+		qdel(src)
+		return 1
+	else if(user.a_intent != I_HURT && can_hide_item(I))	//make sure there's sheets to hide it among, make sure nothing else is hidden in there.
+		if(!user.unEquip(I, src))
+			return
 		hidden = I
-		to_chat(user, "<span class='notice'>You hide [I] among the sheets.</span>")
+		to_chat(user, SPAN_NOTICE("You hide [I] among the sheets."))
+		return 1
+	else
+		return ..()
 
 /obj/structure/bedsheetbin/attack_hand(mob/user as mob)
-	if(amount >= 1)
-		amount--
-
-		var/obj/item/weapon/bedsheet/B
-		if(sheets.len > 0)
-			B = sheets[sheets.len]
-			sheets.Remove(B)
-
-		else
-			B = new /obj/item/weapon/bedsheet(loc)
-
-		B.loc = user.loc
+	if(user.a_intent != I_HURT)
+		var/obj/item/weapon/bedsheet/B = take_sheet()
+		if(!B)
+			to_chat(user, SPAN_WARNING("\The [src] is empty!"))
+			return
+		add_fingerprint(user)
+		B.forceMove(user.loc)
 		user.put_in_hands(B)
-		to_chat(user, "<span class='notice'>You take [B] out of [src].</span>")
+		to_chat(user, SPAN_NOTICE("You take [B] out of [src]."))
 
 		if(hidden)
-			hidden.loc = user.loc
-			to_chat(user, "<span class='notice'>[hidden] falls out of [B]!</span>")
+			hidden.forceMove(user.loc)
+			to_chat(user, SPAN_NOTICE("[hidden] falls out of [B]!"))
 			hidden = null
-
-
-	add_fingerprint(user)
+	else
+		..()
 
 /obj/structure/bedsheetbin/attack_tk(mob/user as mob)
+	var/obj/item/weapon/bedsheet/B = take_sheet()
+	if(!B)
+		to_chat(user, SPAN_WARNING("\The [src] is empty!"))
+		return
+	B.dropInto(loc)
+	to_chat(user, SPAN_NOTICE("You telekinetically remove [B] from [src]."))
+
+	if(hidden)
+		hidden.dropInto(loc)
+		hidden = null
+
+/obj/structure/bedsheetbin/proc/take_sheet()
 	if(amount >= 1)
 		amount--
 
@@ -173,14 +204,6 @@ LINEN BINS
 
 		else
 			B = new /obj/item/weapon/bedsheet(loc)
-
-		B.loc = loc
-		to_chat(user, "<span class='notice'>You telekinetically remove [B] from [src].</span>")
+		. = B
 		update_icon()
-
-		if(hidden)
-			hidden.loc = loc
-			hidden = null
-
-
-	add_fingerprint(user)
+	return .

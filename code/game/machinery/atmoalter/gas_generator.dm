@@ -5,21 +5,27 @@
 	icon_state = "gas_generator:0"
 	density = 1
 	w_class = ITEM_SIZE_GARGANTUAN
-
+	anchored = 0
+	interact_offline = 0
+	volume = 500
+	circuit_type = /obj/item/weapon/circuitboard/gasgenerator
 	var/valve_open = 0
 	var/release_pressure = ONE_ATMOSPHERE
 	var/release_flow_rate = ATMOS_DEFAULT_VOLUME_PUMP
-
-	volume = 500
 	var/obj/item/weapon/reagent_containers/container
-
-	anchored = 0
-	use_power = 1
-	interact_offline = 0
 	var/release_log = ""
 
-/obj/machinery/portable_atmospherics/gas_generator/Process()
+/obj/machinery/portable_atmospherics/gas_generator/New()
 	..()
+	ADD_SAVED_VAR(container)
+	ADD_SAVED_VAR(valve_open)
+	ADD_SAVED_VAR(release_pressure)
+	ADD_SAVED_VAR(release_flow_rate)
+
+	ADD_SKIP_EMPTY(container)
+
+/obj/machinery/portable_atmospherics/gas_generator/Process()
+	. = ..()
 
 	if(valve_open)
 		var/datum/gas_mixture/environment
@@ -37,7 +43,7 @@
 
 			var/return_val = pump_gas_passive(src, air_contents, environment, transfer_moles)
 			if(return_val >= 0)
-				src.update_icon()
+				queue_icon_update()
 
 
 /obj/machinery/portable_atmospherics/gas_generator/attackby(var/obj/item/weapon/O as obj, var/mob/usr as mob)
@@ -52,6 +58,11 @@
 			to_chat(usr, "<span class='notice'>You load \the [O] into \the [src]</span>")
 
 		update_icon()
+	if(isScrewdriver(O))
+		default_deconstruction_screwdriver(usr, O)
+	if(isCrowbar(O))
+		default_deconstruction_crowbar(usr, O)
+
 	..()
 
 /obj/machinery/portable_atmospherics/gas_generator/attack_ai(var/mob/usr)
@@ -102,7 +113,7 @@
 	if (holding)
 		data["holdingTank"] = list("name" = holding.name, "tankPressure" = round(holding.air_contents.return_pressure()))
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "gas_generator.tmpl", "Gas Generator", 480, 400)
 		ui.set_initial_data(data)
@@ -206,7 +217,7 @@
 			release_pressure = max(ONE_ATMOSPHERE/10, release_pressure+diff)
 		return TOPIC_REFRESH
 
-/obj/machinery/portable_atmospherics/gas_generator/update_icon()
+/obj/machinery/portable_atmospherics/gas_generator/on_update_icon()
 	overlays.Cut()
 
 	if(connected_port)

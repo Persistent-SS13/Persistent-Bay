@@ -111,27 +111,7 @@
 	affect_blood(M, alien, removed)
 
 /datum/reagent/adminordrazine/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
-	M.setCloneLoss(0)
-	M.setOxyLoss(0)
-	M.radiation = 0
-	M.heal_organ_damage(5,5)
-	M.adjustToxLoss(-5)
-	M.hallucination_power = 0
-	M.setBrainLoss(0)
-	M.disabilities = 0
-	M.sdisabilities = 0
-	M.eye_blurry = 0
-	M.eye_blind = 0
-	M.SetWeakened(0)
-	M.SetStunned(0)
-	M.SetParalysis(0)
-	M.silent = 0
-	M.dizziness = 0
-	M.drowsyness = 0
-	M.stuttering = 0
-	M.confused = 0
-	M.sleeping = 0
-	M.jitteriness = 0
+	M.rejuvenate()
 
 /datum/reagent/gold
 	name = "Gold"
@@ -148,7 +128,7 @@
 	color = "#d0d0d0"
 
 /datum/reagent/uranium
-	name ="Uranium"
+	name = "Uranium"
 	description = "A silvery-white metallic chemical element in the actinide series, weakly radioactive."
 	taste_description = "the inside of a reactor"
 	reagent_state = SOLID
@@ -158,7 +138,7 @@
 	affect_ingest(M, alien, removed)
 
 /datum/reagent/uranium/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
-	M.apply_effect(5 * removed, IRRADIATE, blocked = 0)
+	M.apply_damage(5 * removed, IRRADIATE, armor_pen = 100)
 
 /datum/reagent/uranium/touch_turf(var/turf/T)
 	if(volume >= 3)
@@ -181,10 +161,23 @@
 	if(ishuman(M)) // Any location
 		if(iscultist(M))
 			if(prob(10))
-				cult.offer_uncult(M)
+				GLOB.cult.offer_uncult(M)
 			if(prob(2))
 				var/obj/effect/spider/spiderling/S = new /obj/effect/spider/spiderling(M.loc)
 				M.visible_message("<span class='warning'>\The [M] coughs up \the [S]!</span>")
+		else if(M.mind && GLOB.godcult.is_antagonist(M.mind))
+			if(volume > 5)
+				M.adjustHalLoss(5)
+				M.adjustBruteLoss(1)
+				if(prob(10)) //Only annoy them a /bit/
+					to_chat(M,"<span class='danger'>You feel your insides curdle and burn!</span> \[<a href='?src=\ref[src];deconvert=\ref[M]'>Give Into Purity</a>\]")
+
+/datum/reagent/water/holywater/Topic(href, href_list)
+	. = ..()
+	if(!. && href_list["deconvert"])
+		var/mob/living/carbon/C = locate(href_list["deconvert"])
+		if(C.mind)
+			GLOB.godcult.remove_antagonist(C.mind,1)
 
 /datum/reagent/water/holywater/touch_turf(var/turf/T)
 	if(volume >= 5)
@@ -219,6 +212,9 @@
 	reagent_state = SOLID
 	color = "#673910"
 	touch_met = 50
+	gas_specific_heat = 10
+	gas_flags = XGM_GAS_FUEL | XGM_GAS_OXIDIZER | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
 
 /datum/reagent/thermite/touch_turf(var/turf/T)
 	if(volume >= 5)
@@ -236,6 +232,29 @@
 /datum/reagent/thermite/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	M.adjustFireLoss(3 * removed)
 
+/datum/reagent/napalm
+	name = "Napalm"
+	description = "A sticky volatile substance made from mixing quick burning goo with slow burning goo, to make a viscous average burning goo that sticks to everything."
+	taste_description = "burnt corn"
+	reagent_state = LIQUID
+	color = "#673910"
+	touch_met = 50
+	gas_specific_heat = 10
+	gas_flags = XGM_GAS_FUEL  | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
+
+/datum/reagent/napalm/touch_turf(var/turf/T)
+	new /obj/effect/decal/cleanable/liquid_fuel(T, volume)
+	remove_self(volume)
+
+/datum/reagent/napalm/touch_mob(var/mob/living/L, var/amount)
+	if(istype(L))
+		L.adjust_fire_stacks(amount / 100)
+
+/datum/reagent/napalm/b
+	name = "Napalm B"
+	taste_description = "burnt plastic and metal"
+
 /datum/reagent/space_cleaner
 	name = "Space cleaner"
 	description = "A compound used to clean things. Now with 50% more sodium hypochlorite!"
@@ -243,6 +262,9 @@
 	reagent_state = LIQUID
 	color = "#a5f0ee"
 	touch_met = 50
+	gas_specific_heat =50
+	gas_flags = XGM_GAS_CONTAMINANT  | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
 
 /datum/reagent/space_cleaner/touch_obj(var/obj/O)
 	O.clean_blood()
@@ -293,6 +315,9 @@
 	taste_description = "slime"
 	reagent_state = LIQUID
 	color = "#009ca8"
+	gas_specific_heat = 100
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
 
 /datum/reagent/lube/touch_turf(var/turf/simulated/T)
 	if(!istype(T))
@@ -300,19 +325,18 @@
 	if(volume >= 1)
 		T.wet_floor(80)
 
-/datum/reagent/silicate
-	name = "Silicate"
-	description = "A compound that can be used to reinforce glass."
-	taste_description = "plastic"
-	reagent_state = LIQUID
-	color = "#c7ffff"
+/datum/reagent/lube/oil // TODO: Robot Overhaul in general
+	name = "Oil"
+	description = "A thick greasy industrial lubricant. Commonly found in robotics."
+	taste_description = "greasy diesel"
+	color = "#000000"
+	gas_specific_heat = 80
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_FUEL | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
 
-/datum/reagent/silicate/touch_obj(var/obj/O)
-	if(istype(O, /obj/structure/window))
-		var/obj/structure/window/W = O
-		W.apply_silicate(volume)
-		remove_self(volume)
-	return
+/datum/reagent/lube/oil/touch_turf(var/turf/simulated/T)
+	if(!istype(T, /turf/space))
+		new /obj/effect/decal/cleanable/blood/oil/streak(T)
 
 /datum/reagent/glycerol
 	name = "Glycerol"
@@ -320,6 +344,8 @@
 	taste_description = "sweetness"
 	reagent_state = LIQUID
 	color = "#808080"
+	gas_specific_heat = 120
+	gas_burn_product = GAS_CARBON_MONOXIDE
 
 /datum/reagent/nitroglycerin
 	name = "Nitroglycerin"
@@ -327,11 +353,15 @@
 	taste_description = "oil"
 	reagent_state = LIQUID
 	color = "#808080"
+	gas_specific_heat = 10
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_FUEL | XGM_GAS_OXIDIZER | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
 
 /datum/reagent/nitroglycerin/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	..()
 	M.add_chemical_effect(CE_PULSE, 2)
 
+#define COOLANT_LATENT_HEAT 19000 //Twice as good at cooling than water is, but may cool below 20c. It'll cause freezing that atmos will have to deal with..
 /datum/reagent/coolant
 	name = "Coolant"
 	description = "Industrial cooling substance."
@@ -339,19 +369,55 @@
 	taste_mult = 1.1
 	reagent_state = LIQUID
 	color = "#c8a5dc"
+	gas_specific_heat = COOLANT_LATENT_HEAT
+
+/datum/reagent/coolant/touch_turf(var/turf/simulated/T)
+	if(!istype(T))
+		return
+
+	var/datum/gas_mixture/environment = T.return_air()
+	var/min_temperature = 0 // Room temperature + some variance. An actual diminishing return would be better, but this is *like* that. In a way. . This has the potential for weird behavior, but I says fuck it. Water grenades for everyone.
+
+	var/hotspot = (locate(/obj/fire) in T)
+	if(hotspot && !istype(T, /turf/space))
+		var/datum/gas_mixture/lowertemp = T.remove_air(T:air:total_moles)
+		lowertemp.temperature = max(min(lowertemp.temperature-2000, lowertemp.temperature / 2), 0)
+		lowertemp.react()
+		T.assume_air(lowertemp)
+		qdel(hotspot)
+
+	if (environment && environment.temperature > min_temperature) // Abstracted as steam or something
+		var/removed_heat = between(0, volume * COOLANT_LATENT_HEAT, -environment.get_thermal_energy_change(min_temperature))
+		environment.add_thermal_energy(-removed_heat)
+		if (prob(5) && environment && environment.temperature > T100C)
+			T.visible_message("<span class='warning'>The water sizzles as it lands on \the [T]!</span>")
+
 
 /datum/reagent/ultraglue
 	name = "Ultra Glue"
 	description = "An extremely powerful bonding agent."
 	taste_description = "a special education class"
 	color = "#ffffcc"
+	gas_specific_heat = 20
+	gas_flags = XGM_GAS_FUEL | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
 
 /datum/reagent/woodpulp
 	name = "Wood Pulp"
 	description = "A mass of wood fibers."
 	taste_description = "wood"
 	reagent_state = LIQUID
-	color = "#b97a57"
+	color = WOOD_COLOR_GENERIC
+	gas_specific_heat = 50
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_FUEL | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
+
+/datum/reagent/bamboo
+	name = "Bamboo Pulp"
+	description = "A mass of bamboo fibers."
+	taste_description = "grass"
+	reagent_state = SOLID
+	color = WOOD_COLOR_PALE2
 
 /datum/reagent/luminol
 	name = "Luminol"
@@ -365,48 +431,51 @@
 
 /datum/reagent/luminol/touch_mob(var/mob/living/L)
 	L.reveal_blood()
- 
-// This is only really used to poison vox and to produce other gases.
+
+/datum/reagent/helium
+	name = "Helium"
+	gas_id = GAS_HELIUM
+	description = "A noble gas. It makes your voice squeaky."
+	taste_description = "nothing"
+	reagent_state = LIQUID
+	color = COLOR_GRAY80
+	metabolism = 0.05 // So that low dosages have a chance to build up in the body.
+
+/datum/reagent/helium/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+	if(alien == IS_DIONA)
+		return
+	..()
+	M.add_chemical_effect(CE_SQUEAKY, 1)
+
+// This is only really used to poison vox.
 /datum/reagent/oxygen
 	name = "Oxygen"
+	gas_id = GAS_OXYGEN
 	description = "An ubiquitous oxidizing agent."
 	taste_description = "nothing"
 	reagent_state = LIQUID
-	color = "#cccccc"
+	color = COLOR_GRAY80
 
 /datum/reagent/oxygen/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_VOX || alien == IS_PHOROSIAN)
 		M.adjustToxLoss(removed * 6)
 
-/datum/reagent/carbon_dioxide
-	name = "Carbon Dioxide"
-	description = "A byproduct of human respiration."
+/datum/reagent/carbon_monoxide
+	name = "Carbon Monoxide"
+	description = "A dangerous carbon comubstion byproduct."
 	taste_description = "stale air"
 	reagent_state = LIQUID
-	color = "#cccccc"
-	metabolism = 0.1
+	color = COLOR_GRAY80
+	metabolism = 0.05 // As with helium.
+	gas_id = GAS_CARBON_MONOXIDE
 
-/datum/reagent/nitrogen
-	name = "Nitrogen"
-	description = "A ubiquitous and largely inert chemical."
-	taste_description = "nothing"
-	reagent_state = LIQUID
-	color = "#c2c4c4"
-
-/datum/reagent/hydrogen
-	name = "Hydrogen"
-	description = "The most common element in the universe."
-	taste_description = "nothing"
-	reagent_state = LIQUID
-	color = "#d3e2e2"
-  
-/datum/reagent/carbon_dioxide/affect_blood(var/mob/living/carbon/human/M, var/alien, var/removed)
+/datum/reagent/carbon_monoxide/affect_blood(var/mob/living/carbon/human/M, var/alien, var/removed)
 	if(!istype(M) || alien == IS_DIONA)
 		return
 	var/warning_message
 	var/warning_prob = 10
 	var/dosage = M.chem_doses[type]
-	if(dosage >= 3)
+	if(dosage >= (3 * REAGENT_GAS_EXCHANGE_FACTOR)) //Apparently this keeps people from dying easily to CO2
 		warning_message = pick("extremely dizzy","short of breath","faint","confused")
 		warning_prob = 15
 		M.adjustOxyLoss(10,20)
@@ -423,3 +492,128 @@
 		M.co2_alert = 0
 	if(warning_message && prob(warning_prob))
 		to_chat(M, "<span class='warning'>You feel [warning_message].</span>")
+
+/datum/reagent/cellulose
+	name = "Cellulose"
+	description = "Organic polymer, and major component of plant cells. Found in wood and cotton."
+	taste_description = "like wet paper bags"
+	reagent_state = LIQUID
+	color = "#dbd3a6"
+
+/datum/reagent/toxin/salpeter
+	name = "Salpeter"
+	description = "Potassium nitrate. A useful chemical used in anything from fertilizers to food preservatives."
+	taste_description = "like wet paper bags"
+	reagent_state = SOLID
+	color = "#ffffff"
+	strength = 0.5
+
+/datum/reagent/anfo
+	name = "ANFO"
+	description = "Ammonia Nitrate Fuel Oil mix, an explosive compound known for centuries. Safe to handle, can be set off with a small explosion."
+	taste_description = "fertilizer and fuel"
+	reagent_state = SOLID
+	color = "#dbc3c3"
+	var/boompower = 1
+
+/datum/reagent/anfo/ex_act(obj/item/weapon/reagent_containers/holder, severity)
+	var/activated_volume = volume
+	switch(severity)
+		if(2)
+			if(prob(max(0, 2*(volume - 120))))
+				activated_volume = rand(volume/4, volume)
+		if(3)
+			if(prob(max(0, 2*(volume - 60))))
+				activated_volume = rand(0, max(volume, 120))
+	if(activated_volume < 30) //whiff
+		return
+	var/turf/T = get_turf(holder)
+	if(T)
+		var/adj_power = round(boompower * activated_volume/60)
+		explosion(T, adj_power, adj_power + 1, adj_power*2 + 2)
+		remove_self(activated_volume)
+
+/datum/reagent/anfo/plus
+	name = "ANFO+"
+	description = "Ammonia Nitrate Fuel Oil, with aluminium powder, an explosive compound known for centuries. Safe to handle, can be set off with a small explosion."
+	color = "#ffe8e8"
+	boompower = 2
+
+/datum/reagent/nitrogen
+	name = "Nitrogen"
+	gas_id = GAS_NITROGEN
+	taste_description = "nothing"
+	reagent_state = LIQUID
+	color = COLOR_GREEN_GRAY
+
+/datum/reagent/hydrogen
+	name = "Hydrogen"
+	gas_id = GAS_HYDROGEN
+	taste_description = "nothing"
+	reagent_state = LIQUID
+	color = COLOR_BLUE_GRAY
+
+/datum/reagent/carbon_dioxide
+	name = "Carbon Dioxide"
+	gas_id = GAS_CO2
+	taste_description = "nothing"
+	reagent_state = LIQUID
+	color = COLOR_GRAY15
+
+//	C20H24N2O2
+/datum/reagent/quinine
+	name = "Quinine"
+	description = "A very bitter, uv fluorescent powder. Used in making tonic water."
+	taste_description = "bitterness"
+	taste_mult = 4
+	reagent_state = SOLID
+	color = COLOR_BROWN_ORANGE
+	heating_point = T0C + 177
+	metabolism = 0.02 //Takes a while to get flushed// 8-14h - kidneys
+
+/datum/reagent/hydrogen_peroxide
+	name = "hydrogen peroxide"
+	description = "A very common chemical with some disinfectant properties."
+	taste_description = "stingy"
+	taste_mult = 2
+	reagent_state = LIQUID
+	heating_point = T0C + 150
+	color = COLOR_BLUE_LIGHT
+	touch_met = 5
+/datum/reagent/hydrogen_peroxide/affect_touch(var/mob/living/carbon/M, var/alien, var/removed)
+	if(M.germ_level < INFECTION_LEVEL_TWO) // rest and antibiotics is required to cure serious infections
+		M.germ_level -= min(removed, M.germ_level)
+	for(var/obj/item/I in M.contents)
+		I.was_bloodied = null
+	M.was_bloodied = null
+/datum/reagent/hydrogen_peroxide/touch_obj(var/obj/O)
+	O.germ_level -= min(volume, O.germ_level)
+	O.was_bloodied = null
+/datum/reagent/hydrogen_peroxide/touch_turf(var/turf/T)
+	T.germ_level -= min(volume, T.germ_level)
+	for(var/obj/item/I in T.contents)
+		I.was_bloodied = null
+	for(var/obj/effect/decal/cleanable/blood/B in T)
+		qdel(B)
+
+
+/datum/reagent/methanol
+	name = "methanol"
+	description = "Methyl alcohol, cause blindness if injested.."
+	taste_description = "cold"
+	taste_mult = 4
+	reagent_state = LIQUID
+	heating_point = T0C + 64
+	color = COLOR_BLUE_LIGHT
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_FUEL | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
+	gas_specific_heat = 15
+
+/datum/reagent/methanol/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+	if(!M || !length(M.organs_by_name))
+		return
+	M.adjustToxLoss(removed * 2)
+	var/obj/item/organ/internal/eyes/E = M.organs_by_name[BP_EYES]
+	if(E && !BP_IS_ROBOTIC(E))
+		E.take_internal_damage(removed * 2)  //Methanol causes blindness
+

@@ -7,10 +7,13 @@ var/global/list/image/ghost_sightless_images = list() //this is a list of images
 	icon = 'icons/mob/mob.dmi'
 	icon_state = "ghost"
 	appearance_flags = KEEP_TOGETHER
-	canmove = 0
 	blinded = 0
 	anchored = 1	//  don't get pushed around
 	universal_speak = 1
+
+	mob_flags = MOB_FLAG_HOLY_BAD
+	movement_handlers = list(/datum/movement_handler/mob/incorporeal)
+
 	var/is_manifest = FALSE
 	var/next_visibility_toggle = 0
 	var/can_reenter_corpse
@@ -28,13 +31,11 @@ var/global/list/image/ghost_sightless_images = list() //this is a list of images
 	var/seedarkness = 1
 
 	var/obj/item/device/multitool/ghost_multitool
-	incorporeal_move = 1
-
 	var/list/hud_images // A list of hud images
 
 /mob/observer/ghost/New(mob/body)
 	see_in_dark = 100
-	verbs += /mob/proc/toggle_antag_pool
+	//verbs += /mob/proc/toggle_antag_pool
 
 	var/turf/T
 	if(ismob(body))
@@ -69,8 +70,8 @@ var/global/list/image/ghost_sightless_images = list() //this is a list of images
 		name = capitalize(pick(GLOB.first_names_male)) + " " + capitalize(pick(GLOB.last_names))
 	real_name = name
 
-	if(cult)
-		cult.add_ghost_magic(src)
+//	if(GLOB.cult)
+//		GLOB.cult.add_ghost_magic(src)
 
 	ghost_multitool = new(src)
 
@@ -137,56 +138,61 @@ Works together with spawning an observer, noted above.
 		C.images += target.hud_list[SPECIALROLE_HUD]
 	return 1
 
-/mob/proc/ghostize(var/can_reenter_corpse = CORPSE_CAN_REENTER)
+/mob/proc/ghostize(var/shouldGhost = 0)
 	// Are we the body of an aghosted admin? If so, don't make a ghost.
 	if(teleop && istype(teleop, /mob/observer/ghost))
 		var/mob/observer/ghost/G = teleop
 		if(G.admin_ghosted)
 			return
 	if(key)
-		if(check_rights(R_ADMIN, 0, src))
-			hide_fullscreens()
+		hide_fullscreens()
+		if(check_rights(R_ADMIN, 0, src) && shouldGhost)
 			var/mob/observer/ghost/ghost = new(src)	//Transfer safety to observer spawning proc.
-			ghost.can_reenter_corpse = can_reenter_corpse
 			ghost.timeofdeath = src.stat == DEAD ? src.timeofdeath : world.time
 			ghost.key = key
 			if(ghost.client && !ghost.client.holder && !config.antag_hud_allowed)		// For new ghosts we remove the verb from even showing up if it's not allowed.
 				ghost.verbs -= /mob/observer/ghost/verb/toggle_antagHUD	// Poor guys, don't know what they are missing!
 			return ghost
+		else
+			var/mob/new_player/M = new /mob/new_player()
+			client.eye = M
+			M.key = key
+			M.loc = null
+			return 
 
 /*
 This is the proc mobs get to turn into a ghost. Forked from ghostize due to compatibility issues.
 */
-/mob/living/verb/ghost()
-	set category = "OOC"
-	set name = "Ghost"
-	set desc = "Relinquish your life and enter the land of the dead."
-
-	to_chat(src, "This verb has been disabled for persistence.")
-	return
-	if(stat == DEAD)
-		announce_ghost_joinleave(ghostize(1))
-	else
-		var/response
-		if(src.client && src.client.holder)
-			response = alert(src, "You have the ability to Admin-Ghost. The regular Ghost verb will announce your presence to dead chat. Both variants will allow you to return to your body using 'aghost'.\n\nWhat do you wish to do?", "Are you sure you want to ghost?", "Ghost", "Admin Ghost", "Stay in body")
-			if(response == "Admin Ghost")
-				if(!src.client)
-					return
-				src.client.admin_ghost()
-		else if(config.respawn_delay)
-			response = alert(src, "Are you -sure- you want to ghost?\n(You are alive. If you ghost, you won't be able to play this round for another [config.respawn_delay] minute\s! You can't change your mind so choose wisely!)", "Are you sure you want to ghost?", "Ghost", "Stay in body")
-		else
-			response = alert(src, "Are you -sure- you want to ghost?\n(You are alive. If you ghost, you won't be able to return to this body! You can't change your mind so choose wisely!)", "Are you sure you want to ghost?", "Ghost", "Stay in body")
-		if(response != "Ghost")
-			return
-		resting = 1
-		var/turf/location = get_turf(src)
-		message_admins("[key_name_admin(usr)] has ghosted. (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[location.x];Y=[location.y];Z=[location.z]'>JMP</a>)")
-		log_game("[key_name_admin(usr)] has ghosted.")
-		var/mob/observer/ghost/ghost = ghostize(0)	//0 parameter is so we can never re-enter our body, "Charlie, you can never come baaaack~" :3
-		ghost.timeofdeath = world.time // Because the living mob won't have a time of death and we want the respawn timer to work properly.
-		announce_ghost_joinleave(ghost)
+///mob/living/verb/ghost()
+//	set category = "OOC"
+//	set name = "Ghost"
+//	set desc = "Relinquish your life and enter the land of the dead."
+//
+//	to_chat(src, "This verb has been disabled for persistence.")
+//	return
+//	if(stat == DEAD)
+//		announce_ghost_joinleave(ghostize(1))
+//	else
+//		var/response
+//		if(src.client && src.client.holder)
+//			response = alert(src, "You have the ability to Admin-Ghost. The regular Ghost verb will announce your presence to dead chat. Both variants will allow you to return to your body using 'aghost'.\n\nWhat do you wish to do?", "Are you sure you want to ghost?", "Ghost", "Admin Ghost", "Stay in body")
+//			if(response == "Admin Ghost")
+//				if(!src.client)
+//					return
+//				src.client.admin_ghost()
+//		else if(config.respawn_delay)
+//			response = alert(src, "Are you -sure- you want to ghost?\n(You are alive. If you ghost, you won't be able to play this round for another [config.respawn_delay] minute\s! You can't change your mind so choose wisely!)", "Are you sure you want to ghost?", "Ghost", "Stay in body")
+//		else
+//			response = alert(src, "Are you -sure- you want to ghost?\n(You are alive. If you ghost, you won't be able to return to this body! You can't change your mind so choose wisely!)", "Are you sure you want to ghost?", "Ghost", "Stay in body")
+//		if(response != "Ghost")
+//			return
+//		resting = 1
+//		var/turf/location = get_turf(src)
+//		message_admins("[key_name_admin(usr)] has ghosted. (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[location.x];Y=[location.y];Z=[location.z]'>JMP</a>)")
+//		log_game("[key_name_admin(usr)] has ghosted.")
+//		var/mob/observer/ghost/ghost = ghostize(0)	//0 parameter is so we can never re-enter our body, "Charlie, you can never come baaaack~" :3
+//		ghost.timeofdeath = world.time // Because the living mob won't have a time of death and we want the respawn timer to work properly.
+//		announce_ghost_joinleave(ghost)
 
 /mob/observer/ghost/can_use_hands()	return 0
 /mob/observer/ghost/is_active()		return 0
@@ -229,6 +235,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	else
 		medHUD = 1
 		to_chat(src, "<span class='notice'>Medical HUD Enabled</span>")
+
 /mob/observer/ghost/verb/toggle_antagHUD()
 	set category = "Ghost"
 	set name = "Toggle AntagHUD"
@@ -238,11 +245,11 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		return
 	var/mentor = is_mentor(usr.client)
 	if(!config.antag_hud_allowed && (!client.holder || mentor))
-		to_chat(src, "<span class='warning'>Admins have disabled this for this round.</span>")
+		to_chat(src, SPAN_WARNING("Admins have disabled this for this round"))
 		return
 	var/mob/observer/ghost/M = src
 	if(jobban_isbanned(M, "AntagHUD"))
-		to_chat(src, "<span class='danger'>You have been banned from using this feature</span>")
+		to_chat(src, SPAN_WARNING("You have been banned from using this feature"))
 		return
 	if(config.antag_hud_restricted && !M.has_enabled_antagHUD && (!client.holder || mentor))
 		var/response = alert(src, "If you turn this on, you will not be able to take any part in the round.","Are you sure you want to turn this feature on?","Yes","No")
@@ -252,10 +259,11 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		M.has_enabled_antagHUD = 1
 	if(M.antagHUD)
 		M.antagHUD = 0
-		to_chat(src, "<span class='notice'>AntagHUD Disabled</span>")
+		to_chat(src, SPAN_NOTICE("AntagHUD Disabled"))
 	else
 		M.antagHUD = 1
-		to_chat(src, "<span class='notice'>AntagHUD Enabled</span>")
+		to_chat(src, SPAN_NOTICE("AntagHUD Enabled"))
+
 /mob/observer/ghost/verb/dead_tele(A in area_repository.get_areas_by_z_level())
 	set category = "Ghost"
 	set name = "Teleport"
@@ -305,6 +313,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 	stop_following()
 	following = target
+	verbs |= /mob/observer/ghost/proc/scan_target
 	GLOB.moved_event.register(following, src, /atom/movable/proc/move_to_turf)
 	GLOB.dir_set_event.register(following, src, /atom/proc/recursive_dir_set)
 	GLOB.destroyed_event.register(following, src, /mob/observer/ghost/proc/stop_following)
@@ -319,6 +328,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		GLOB.dir_set_event.unregister(following, src)
 		GLOB.destroyed_event.unregister(following, src)
 		following = null
+		verbs -= /mob/observer/ghost/proc/scan_target
 
 /mob/observer/ghost/move_to_turf(var/atom/movable/am, var/old_loc, var/new_loc)
 	var/turf/T = get_turf(new_loc)
@@ -333,7 +343,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 /mob/observer/ghost/add_memory()
 	set hidden = 1
 	to_chat(src, "<span class='warning'>You are dead! You have no mind to store memory!</span>")
-/mob/observer/ghost/Post_Incorpmove()
+/mob/observer/ghost/PostIncorporealMovement()
 	stop_following()
 
 /mob/observer/ghost/verb/analyze_air()
@@ -350,8 +360,18 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 	var/turf/t = get_turf(src)
 	if(t)
-		var/rads = radiation_repository.get_rads_at_turf(t)
+		var/rads = SSradiation.get_rads_at_turf(t)
 		to_chat(src, "<span class='notice'>Radiation level: [rads ? rads : "0"] Bq.</span>")
+
+/mob/observer/ghost/proc/scan_target()
+	set name = "Scan Target"
+	set category = "Ghost"
+	set desc = "Analyse whatever you are following."
+
+	if(ishuman(following))
+		to_chat(src, medical_scan_results(following, 1, SKILL_MAX))
+
+	else to_chat(src, "<span class='notice'>Not a scannable target.</span>")
 
 /mob/observer/ghost/verb/become_mouse()
 	set name = "Become mouse"
@@ -473,11 +493,13 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	ghostvision = !(ghostvision)
 	updateghostsight()
 	to_chat(src, "You [(ghostvision?"now":"no longer")] have ghost vision.")
+
 /mob/observer/ghost/verb/toggle_darkness()
 	set name = "Toggle Darkness"
 	set category = "Ghost"
 	seedarkness = !(seedarkness)
 	updateghostsight()
+	to_chat(src, "You [(seedarkness?"now":"no longer")] see darkness.")
 
 /mob/observer/ghost/proc/updateghostsight()
 	if (!seedarkness)
@@ -502,7 +524,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 /mob/observer/ghost/MayRespawn(var/feedback = 0, var/respawn_time = 0)
 	if(!client)
 		return 0
-	if(mind && mind.current && mind.current.stat != DEAD && can_reenter_corpse == CORPSE_CAN_REENTER)
+	if(mind && mind.current && mind.current.stat != DEAD)
 		if(feedback)
 			to_chat(src, "<span class='warning'>Your non-dead body prevents you from respawning.</span>")
 		return 0
@@ -555,19 +577,13 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	set category = "OOC"
 
 	if (!(config.abandon_allowed))
-		to_chat(usr, "<span class='notice'>Respawn is disabled.</span>")
-		return
-	if (!(ticker && ticker.mode))
-		to_chat(usr, "<span class='notice'><B>You may not attempt to respawn yet.</B></span>")
-		return
-	if (ticker.mode && ticker.mode.deny_respawn)
-		to_chat(usr, "<span class='notice'>Respawn is disabled for this roundtype.</span>")
+		to_chat(usr, SPAN_WARNING("Respawn is disabled."))
 		return
 	else if(!MayRespawn(1, config.respawn_delay))
 		return
 
-	to_chat(usr, "You can respawn now, enjoy your new life!")
-	to_chat(usr, "<span class='notice'><B>Make sure to play a different character, and please roleplay correctly!</B></span>")
+	to_chat(usr, SPAN_NOTICE("You can respawn now, enjoy your new life!"))
+	to_chat(usr, SPAN_NOTICE("<b>Make sure to play a different character, and please roleplay correctly!</b>"))
 	announce_ghost_joinleave(client, 0)
 
 	var/mob/new_player/M = new /mob/new_player()

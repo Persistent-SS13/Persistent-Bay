@@ -15,11 +15,12 @@
 	for(var/obj/machinery/camera/cam in range(severity_range,C))
 		if(is_valid_camera(cam))
 			if(prob(2*severity))
-				cam.destroy()
+				cam.kill()
 			else
-				cam.wires.UpdateCut(CAMERA_WIRE_POWER, 0)
-				if(prob(5*severity))
-					cam.wires.UpdateCut(CAMERA_WIRE_ALARM, 0)
+				if(!cam.wires.IsIndexCut(CAMERA_WIRE_POWER))
+					cam.wires.CutWireIndex(CAMERA_WIRE_POWER)
+				if(!cam.wires.IsIndexCut(CAMERA_WIRE_ALARM) && prob(5*severity))
+					cam.wires.CutWireIndex(CAMERA_WIRE_ALARM)
 
 /datum/event/camera_damage/proc/acquire_random_camera(var/remaining_attempts = 5)
 	if(!cameranet.cameras.len)

@@ -2,12 +2,12 @@
 	name = "towel"
 	icon = 'icons/obj/weapons.dmi'
 	icon_state = "towel"
-	item_flags = IS_BELT
+	item_flags = ITEM_FLAG_IS_BELT
 	slot_flags = SLOT_HEAD | SLOT_BELT | SLOT_OCLOTHING
 	force = 3.0
 	w_class = ITEM_SIZE_NORMAL
 	attack_verb = list("whipped")
-	hitsound = 'sound/weapons/towelwhip.ogg'
+	sound_hit = 'sound/weapons/towelwhip.ogg'
 	desc = "A soft cotton towel."
 
 /obj/item/weapon/towel/attack_self(mob/living/user as mob)
@@ -17,3 +17,10 @@
 /obj/item/weapon/towel/random/New()
 	..()
 	color = get_random_colour()
+
+/obj/item/weapon/towel/fleece // loot from the king of goats. it's a golden towel
+	name = "golden fleece"
+	desc = "The legendary Golden Fleece of Jason made real."
+	color = "#ffd700"
+	force = 1
+	attack_verb = list("smote")

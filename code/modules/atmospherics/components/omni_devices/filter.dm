@@ -10,17 +10,30 @@
 	var/datum/omni_port/output
 	var/max_output_pressure = MAX_OMNI_PRESSURE
 
-	use_power = 1
 	idle_power_usage = 150		//internal circuitry, friction losses and stuff
-	power_rating = 7500			//7500 W ~ 10 HP
+	power_rating = 15000			// 15000 W ~ 20 HP
 
-	var/max_flow_rate = 200
-	var/set_flow_rate = 200
+	var/max_flow_rate = ATMOS_DEFAULT_VOLUME_FILTER
+	var/set_flow_rate = ATMOS_DEFAULT_VOLUME_FILTER
 
 	var/list/filtering_outputs = list()	//maps gasids to gas_mixtures
 
 /obj/machinery/atmospherics/omni/filter/New()
 	..()
+	do_init()
+	ADD_SAVED_VAR(gas_filters)
+	ADD_SAVED_VAR(input)
+	ADD_SAVED_VAR(output)
+	ADD_SAVED_VAR(set_flow_rate)
+	ADD_SAVED_VAR(filtering_outputs)
+
+/obj/machinery/atmospherics/omni/filter/after_load()
+	rebuild_filtering_list()
+	for(var/datum/omni_port/P in ports)
+		handle_port_change(P)
+	..()
+
+/obj/machinery/atmospherics/omni/filter/proc/do_init()
 	rebuild_filtering_list()
 	for(var/datum/omni_port/P in ports)
 		P.air.volume = ATMOS_DEFAULT_VOLUME_FILTER
@@ -38,10 +51,10 @@
 				output = null
 			if(input == P)
 				input = null
-			if(gas_filters.Find(P))
+			if(P in gas_filters)
 				gas_filters -= P
 
-			P.air.volume = 200
+			P.air.volume = ATMOS_DEFAULT_VOLUME_FILTER
 			switch(P.mode)
 				if(ATM_INPUT)
 					input = P
@@ -80,7 +93,7 @@
 
 	if (power_draw >= 0)
 		last_power_draw = power_draw
-		use_power(power_draw)
+		use_power_oneoff(power_draw)
 
 		if(input.network)
 			input.network.update = 1
@@ -99,7 +112,7 @@
 
 	data = build_uidata()
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 
 	if (!ui)
 		ui = new(user, src, ui_key, "omni_filter.tmpl", "Omni Filter Control", 330, 330)
@@ -120,22 +133,22 @@
 
 		var/input = 0
 		var/output = 0
-		var/filter = 1
+		var/is_filter = 1
 		var/f_type = null
 		switch(P.mode)
 			if(ATM_INPUT)
 				input = 1
-				filter = 0
+				is_filter = 0
 			if(ATM_OUTPUT)
 				output = 1
-				filter = 0
-			if(ATM_O2 to ATM_RG)
+				is_filter = 0
+			if(ATM_O2 to ATM_H2)
 				f_type = mode_send_switch(P.mode)
 
 		portData[++portData.len] = list("dir" = dir_name(P.dir, capitalize = 1), \
 										"input" = input, \
 										"output" = output, \
-										"filter" = filter, \
+										"filter" = is_filter, \
 										"f_type" = f_type)
 
 	if(portData.len)
@@ -156,10 +169,10 @@
 			return "Carbon Dioxide"
 		if(ATM_P)
 			return "Phoron" //*cough* Plasma *cough*
-		if(ATM_H2)
-			return "Hydrogen"
 		if(ATM_N2O)
 			return "Nitrous Oxide"
+		if(ATM_H2)
+			return "Hydrogen"
 		if(ATM_RG)
 			return "Reagents"
 		else
@@ -170,13 +183,13 @@
 	switch(href_list["command"])
 		if("power")
 			if(!configuring)
-				use_power = !use_power
+				update_use_power(!use_power)
 			else
-				use_power = 0
+				update_use_power(POWER_USE_OFF)
 		if("configure")
 			configuring = !configuring
 			if(configuring)
-				use_power = 0
+				update_use_power(POWER_USE_OFF)
 
 	//only allows config changes when in configuring mode ~otherwise you'll get weird pressure stuff going on
 	if(configuring && !use_power)
@@ -191,7 +204,7 @@
 				switch_filter(dir_flag(href_list["dir"]), mode_return_switch(new_filter))
 
 	update_icon()
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)
 	return
 
 /obj/machinery/atmospherics/omni/filter/proc/mode_return_switch(var/mode)
@@ -204,10 +217,10 @@
 			return ATM_CO2
 		if("Phoron")
 			return ATM_P
-		if("Hydrogen")
-			return ATM_H2
 		if("Nitrous Oxide")
 			return ATM_N2O
+		if("Hydrogen")
+			return ATM_H2
 		if("Reagents")
 			return ATM_RG
 		if("in")

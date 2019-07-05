@@ -8,7 +8,7 @@
 			return !density
 		else
 			return 1
-	if(istype(mover) && mover.checkpass(PASSTABLE))
+	if(istype(mover) && mover.checkpass(PASS_FLAG_TABLE))
 		return 1
 	var/obj/structure/table/T = (locate() in get_turf(mover))
 	return (T && !T.flipped) 	//If we are moving from a table, check if it is flipped.
@@ -43,10 +43,11 @@
 	return 1
 
 /obj/structure/table/bullet_act(obj/item/projectile/P)
-	if(!(P.damage_type == BRUTE || P.damage_type == BURN))
+	if(!IsDamageTypePhysical(P.damtype))
 		return 0
 
-	if(take_damage(P.damage/2))
+	return ..(P)
+	if(take_damage(P.force/2, P.damtype, P.armor_penetration, P))
 		//prevent tables with 1 health left from stopping bullets outright
 		return PROJECTILE_CONTINUE //the projectile destroyed the table, so it gets to keep going
 
@@ -54,7 +55,7 @@
 	return 0
 
 /obj/structure/table/CheckExit(atom/movable/O as mob|obj, target as turf)
-	if(istype(O) && O.checkpass(PASSTABLE))
+	if(istype(O) && O.checkpass(PASS_FLAG_TABLE))
 		return 1
 	if (flipped==1)
 		if (get_dir(loc, target) == dir)
@@ -70,11 +71,10 @@
 		return ..()
 	if(isrobot(user))
 		return
-	user.drop_item()
+	user.unequip_item()
 	if (O.loc != src.loc)
 		step(O, get_dir(O, src))
 	return
-
 
 /obj/structure/table/attackby(obj/item/W, mob/user, var/click_params)
 	if (!W) return
@@ -104,7 +104,7 @@
 	if(W.loc != user) // This should stop mounted modules ending up outside the module.
 		return
 
-	if(istype(W, /obj/item/weapon/melee/energy/blade))
+	if(istype(W, /obj/item/weapon/melee/energy/blade) || istype(W,/obj/item/psychic_power/psiblade/master/grand/paramount))
 		var/datum/effect/effect/system/spark_spread/spark_system = new /datum/effect/effect/system/spark_spread()
 		spark_system.set_up(5, 0, src.loc)
 		spark_system.start()
@@ -119,11 +119,9 @@
 		return
 
 	// Placing stuff on tables
-	if(user.drop_from_inventory(W, src.loc))
+	if(user.unEquip(W, src.loc))
 		auto_align(W, click_params)
 		return 1
-
-	return
 
 /*
 Automatic alignment of items to an invisible grid, defined by CELLS and CELLSIZE, defined in code/__defines/misc.dm.
@@ -173,8 +171,8 @@ Note: This proc can be overwritten to allow for different types of auto-alignmen
 		if (I.anchored || !I.center_of_mass)
 			continue
 		i++
-		I.pixel_x = max(3-i*3, -3) + 1 // There's a sprite layering bug for 0/0 pixelshift, so we avoid it.
-		I.pixel_y = max(4-i*4, -4) + 1
+		I.pixel_x = 1  // There's a sprite layering bug for 0/0 pixelshift, so we avoid it.
+		I.pixel_y = max(3-i*3, -3) + 1
 		I.pixel_z = 0
 
 /obj/structure/table/attack_tk() // no telehulk sorry

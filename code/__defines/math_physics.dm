@@ -4,8 +4,6 @@
 #define R_IDEAL_GAS_EQUATION       8.31    // kPa*L/(K*mol).
 #define ONE_ATMOSPHERE             101.325 // kPa.
 #define IDEAL_GAS_ENTROPY_CONSTANT 1164    // (mol^3 * s^3) / (kg^3 * L).
-#define REAGENT_GAS_EXCHANGE_FACTOR 10 // Amount of reagents per gaseous mole. This is pretty arbritary, as how much a "unit" is is never defined
-								 	   // and any reasonable estimation would be far too low.
 
 // Radiation constants.
 #define STEFAN_BOLTZMANN_CONSTANT    5.6704e-8 // W/(m^2*K^4).
@@ -17,11 +15,13 @@
 #define RADIATOR_EXPOSED_SURFACE_AREA_RATIO 0.04 // (3 cm + 100 cm * sin(3deg))/(2*(3+100 cm)). Unitless ratio.
 #define HUMAN_EXPOSED_SURFACE_AREA          5.2 //m^2, surface area of 1.7m (H) x 0.46m (D) cylinder
 
-#define T0C  273.15 //    0.0 degrees celcius
-#define T20C 293.15 //   20.0 degrees celcius
-#define TCMB 2.7    // -270.3 degrees celcius
+#define T0C   273.15 //    0.0 degrees celsius
+#define T20C  293.15 //   20.0 degrees celsius
+#define T100C 373.15 //  100.0 degrees celsius
+#define TCMB  2.7    // -270.3 degrees celsius
 
-#define CLAMP01(x) max(0, min(1, x))
+#define CELSIUS + T0C
+
 #define ATMOS_PRECISION 0.0001
 #define QUANTIZE(variable) (round(variable, ATMOS_PRECISION))
 
@@ -32,3 +32,13 @@
 
 #define SIMPLE_SIGN(X) ((X) < 0 ? -1 : 1)
 #define SIGN(X)        ((X) ? SIMPLE_SIGN(X) : 0)
+
+// Determines the exchange ratio of reagents being converted to gas and vice versa.
+#define REAGENT_GAS_EXCHANGE_FACTOR 10
+
+//C constant, not C because name conflict galore
+#define SPEED_OF_LIGHT 299792458
+
+//Value for mass var in grams
+#define GRAMS     *0.001
+#define KILOGRAMS *1

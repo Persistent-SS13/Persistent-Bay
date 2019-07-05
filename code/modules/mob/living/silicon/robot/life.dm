@@ -2,11 +2,11 @@
 	set invisibility = 0
 	set background = 1
 
-	if (src.transforming)
+	if (HAS_TRANSFORMATION_MOVEMENT_HANDLER(src))
 		return
 
 	src.blinded = null
-	
+
 	//Status updates, death etc.
 	clamp_values()
 	handle_regular_status_updates()
@@ -20,7 +20,7 @@
 		process_killswitch()
 		process_locks()
 		process_queued_alarms()
-	update_canmove()
+	UpdateLyingBuckledAndVerbStatus()
 
 /mob/living/silicon/robot/proc/clamp_values()
 
@@ -34,9 +34,6 @@
 	adjustFireLoss(0)
 
 /mob/living/silicon/robot/proc/use_power()
-	// Debug only
-//	log_debug(life.dm line 35: cyborg use_power() called at tick [controller_iteration]")
-
 	used_power_this_tick = 0
 	for(var/V in components)
 		var/datum/robot_component/C = components[V]
@@ -58,12 +55,16 @@
 
 		src.has_power = 1
 	else
-		if (src.has_power)
-			to_chat(src, "<span class='warning'>You are now running on emergency backup power.</span>")
-		src.has_power = 0
-		if(lights_on) // Light is on but there is no power!
-			lights_on = 0
-			set_light(0)
+		power_down()
+
+/mob/living/silicon/robot/proc/power_down()
+	if (has_power)
+		visible_message("[src] beeps stridently as it begins to run on emergency backup power!", SPAN_WARNING("You beep stridently as you begin to run on emergency backup power!"))
+		has_power = 0
+		set_stat(UNCONSCIOUS)
+	if(lights_on) // Light is on but there is no power!
+		lights_on = 0
+		set_light(0)
 
 /mob/living/silicon/robot/handle_regular_status_updates()
 
@@ -84,11 +85,11 @@
 
 	if(health < config.health_threshold_dead && src.stat != 2) //die only once
 		death()
-		
+
 	if(last_hud_update < world.time)
 		last_hud_update = world.time + 15 SECONDS
 		update_action_buttons()
-		
+
 	if (src.stat != DEAD) //Alive.
 		if (src.paralysis || src.stunned || src.weakened || !src.has_power) //Stunned etc.
 			src.set_stat(UNCONSCIOUS)
@@ -105,7 +106,7 @@
 		else	//Not stunned.
 			src.set_stat(CONSCIOUS)
 
-		confused = max(0, confused - 1)
+		handle_confused()
 
 	else //Dead.
 		src.blinded = 1
@@ -205,7 +206,7 @@
 			src.healths.icon_state = "health7"
 
 	if (src.syndicate && src.client)
-		for(var/datum/mind/tra in traitors.current_antagonists)
+		for(var/datum/mind/tra in GLOB.traitors.current_antagonists)
 			if(tra.current)
 				// TODO: Update to new antagonist system.
 				var/I = image('icons/mob/mob.dmi', loc = tra.current, icon_state = "traitor")
@@ -215,7 +216,7 @@
 			// TODO: Update to new antagonist system.
 			if(!src.mind.special_role)
 				src.mind.special_role = "traitor"
-				traitors.current_antagonists |= src.mind
+				GLOB.traitors.current_antagonists |= src.mind
 
 	if (src.cells)
 		if (src.cell)
@@ -262,7 +263,7 @@
 /mob/living/silicon/robot/handle_vision()
 	..()
 
-	if (src.stat == DEAD || (XRAY in mutations) || (src.sight_mode & BORGXRAY))
+	if (src.stat == DEAD || (MUTATION_XRAY in mutations) || (src.sight_mode & BORGXRAY))
 		set_sight(sight|SEE_TURFS|SEE_MOBS|SEE_OBJS)
 		set_see_in_dark(8)
 		set_see_invisible(SEE_INVISIBLE_LEVEL_TWO)
@@ -283,7 +284,7 @@
 		set_see_invisible(SEE_INVISIBLE_LEVEL_TWO)
 	else if (src.stat != DEAD)
 		set_sight(sight&(~SEE_TURFS)&(~SEE_MOBS)&(~SEE_OBJS))
-		set_see_in_dark(8) 			 // see_in_dark means you can FAINTLY see in the dark, humans have a range of 3 or so, tajaran have it at 8
+		set_see_in_dark(8) 			 // see_in_dark means you can FAINTLY see in the dark, humans have a range of 3 or so
 		set_see_invisible(SEE_INVISIBLE_LIVING) // This is normal vision (25), setting it lower for normal vision means you don't "see" things like darkness since darkness
 							 // has a "invisible" value of 15
 
@@ -322,16 +323,11 @@
 			weapon_lock = 0
 			weaponlock_time = 120
 
-/mob/living/silicon/robot/update_canmove()
-	if(paralysis || stunned || weakened || buckled || lockcharge || !is_component_functioning("actuator")) canmove = 0
-	else canmove = 1
-	return canmove
-
 /mob/living/silicon/robot/update_fire()
 	overlays -= image("icon"='icons/mob/OnFire.dmi', "icon_state"="Standing")
 	if(on_fire)
 		overlays += image("icon"='icons/mob/OnFire.dmi', "icon_state"="Standing")
 
-/mob/living/silicon/robot/fire_act()
+/mob/living/silicon/robot/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)
 	if(!on_fire) //Silicons don't gain stacks from hotspots, but hotspots can ignite them
 		IgniteMob()

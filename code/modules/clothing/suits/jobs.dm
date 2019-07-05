@@ -10,7 +10,8 @@
 	item_state = "apron"
 	blood_overlay_type = "armor"
 	body_parts_covered = 0
-	allowed = list (/obj/item/weapon/reagent_containers/spray/plantbgone,/obj/item/device/analyzer/plant_analyzer,/obj/item/seeds,/obj/item/weapon/reagent_containers/glass/bottle,/obj/item/weapon/material/minihoe)
+	species_restricted = null
+	allowed = list (/obj/item/weapon/reagent_containers/spray/plantbgone,/obj/item/device/scanner/plant,/obj/item/seeds,/obj/item/weapon/reagent_containers/glass/bottle,/obj/item/weapon/material/minihoe)
 
 //Captain
 /obj/item/clothing/suit/captunic
@@ -63,6 +64,7 @@
 	desc = "A basic, dull, white chef's apron."
 	icon_state = "apronchef"
 	item_state = "apronchef"
+	species_restricted = null
 	blood_overlay_type = "armor"
 	body_parts_covered = 0
 
@@ -98,11 +100,58 @@
 	blood_overlay_type = "coat"
 	body_parts_covered = UPPER_TORSO|ARMS
 	allowed = list(/obj/item/weapon/tank/emergency,/obj/item/device/flashlight,/obj/item/weapon/gun/energy,/obj/item/weapon/gun/projectile,/obj/item/ammo_magazine,/obj/item/ammo_casing,/obj/item/weapon/melee/baton,/obj/item/weapon/handcuffs,/obj/item/weapon/storage/fancy/cigarettes,/obj/item/weapon/flame/lighter,/obj/item/device/taperecorder)
-	armor = list(melee = 50, bullet = 10, laser = 25, energy = 10, bomb = 0, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 50,
+		DAM_PIERCE 	= 40,
+		DAM_CUT 	= 50,
+		DAM_BULLET 	= 10,
+		DAM_LASER 	= 25,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
+
+/obj/item/clothing/suit/storage/det_trench/ft/
+	desc = "A rugged canvas trenchcoat, designed and created by TX Fabrication Corp. This one wouldn't block much of anything."
+	armor = list() //No armor
 
 /obj/item/clothing/suit/storage/det_trench/grey
 	name = "grey trenchcoat"
 	icon_state = "detective2"
+
+/obj/item/clothing/suit/storage/det_trench/noarmor
+	armor  = list(
+		DAM_BLUNT 	= 0,
+		DAM_PIERCE 	= 0,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 0,
+		DAM_BURN 	= 2,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
+
+/obj/item/clothing/suit/storage/det_trench/grey/noarmor
+	armor  = list(
+		DAM_BLUNT 	= 0,
+		DAM_PIERCE 	= 0,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 0,
+		DAM_BURN 	= 2,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
+
 
 //Forensics
 /obj/item/clothing/suit/storage/forensics
@@ -111,7 +160,19 @@
 	item_state = "det_suit"
 	body_parts_covered = UPPER_TORSO|ARMS
 	allowed = list(/obj/item/weapon/tank/emergency,/obj/item/device/flashlight,/obj/item/weapon/gun/energy,/obj/item/weapon/gun/projectile,/obj/item/ammo_magazine,/obj/item/ammo_casing,/obj/item/weapon/melee/baton,/obj/item/weapon/handcuffs,/obj/item/device/taperecorder)
-	armor = list(melee = 10, bullet = 10, laser = 15, energy = 10, bomb = 0, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 10,
+		DAM_BULLET 	= 10,
+		DAM_LASER 	= 15,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 2,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 5,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/suit/storage/forensics/red
 	name = "red jacket"
@@ -123,6 +184,36 @@
 	desc = "A blue forensics technician jacket."
 	icon_state = "forensics_blue"
 
+/obj/item/clothing/suit/storage/forensics/red/noarmor
+	armor  = list(
+		DAM_BLUNT 	= 0,
+		DAM_PIERCE 	= 0,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 2,
+		DAM_BURN 	= 2,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 5,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
+
+/obj/item/clothing/suit/storage/forensics/blue/noarmor
+	armor  = list(
+		DAM_BLUNT 	= 0,
+		DAM_PIERCE 	= 0,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 2,
+		DAM_BURN 	= 2,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 5,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
+
 //Engineering
 /obj/item/clothing/suit/storage/hazardvest
 	name = "hazard vest"
@@ -130,8 +221,9 @@
 	icon_state = "hazard"
 	item_state = "hazard"
 	blood_overlay_type = "armor"
-	allowed = list (/obj/item/device/analyzer, /obj/item/device/flashlight, /obj/item/device/multitool, /obj/item/device/pipe_painter, /obj/item/device/radio, /obj/item/device/t_scanner, \
-	/obj/item/weapon/crowbar, /obj/item/weapon/screwdriver, /obj/item/weapon/weldingtool, /obj/item/weapon/wirecutters, /obj/item/weapon/wrench, /obj/item/weapon/tank/emergency, \
+	species_restricted = null
+	allowed = list (/obj/item/device/scanner/gas, /obj/item/device/flashlight, /obj/item/device/multitool, /obj/item/device/pipe_painter, /obj/item/device/radio, /obj/item/device/t_scanner, \
+	/obj/item/weapon/tool/crowbar, /obj/item/weapon/tool/screwdriver, /obj/item/weapon/tool/weldingtool, /obj/item/weapon/tool/wirecutters, /obj/item/weapon/tool/wrench, /obj/item/weapon/tank/emergency, \
 	/obj/item/clothing/mask/gas, /obj/item/taperoll/engineering)
 	body_parts_covered = UPPER_TORSO
 
@@ -142,7 +234,7 @@
 
 /obj/item/clothing/suit/storage/hazardvest/white
 	name = "white hazard vest"
-	desc = "A high-visibility vest used in work zones. This one has a red cross!"
+	desc = "A high-visibility vest used in work zones. This one has a blue cross!"
 	icon_state = "hazard_w"
 
 /obj/item/clothing/suit/storage/hazardvest/green
@@ -183,7 +275,7 @@
 	icon_closed = "fr_jacket"
 	blood_overlay_type = "armor"
 	allowed = list(/obj/item/stack/medical, /obj/item/weapon/reagent_containers/dropper, /obj/item/weapon/reagent_containers/hypospray, /obj/item/weapon/reagent_containers/syringe, \
-	/obj/item/device/healthanalyzer, /obj/item/device/flashlight, /obj/item/device/radio, /obj/item/weapon/tank/emergency)
+	/obj/item/device/scanner/health, /obj/item/device/flashlight, /obj/item/device/radio, /obj/item/weapon/tank/emergency, /obj/item/weapon/reagent_containers/ivbag)
 	body_parts_covered = UPPER_TORSO|ARMS
 
 /obj/item/clothing/suit/storage/toggle/fr_jacket/ems
@@ -194,6 +286,16 @@
 	icon_open = "ems_jacket_open"
 	icon_closed = "ems_jacket_closed"
 
+/obj/item/clothing/suit/storage/medical_chest_rig
+	name = "\improper MT chest-rig"
+	desc = "A black chest-rig with blue pouches worn by medical first responders, meant to carry their equipment. It has a blue 'Medic' tag on its chest."
+	icon_state = "Med-chest-rig"
+	item_state = "Med-chest-rig"
+	blood_overlay_type = "armor"
+	allowed = list(/obj/item/stack/medical, /obj/item/weapon/reagent_containers/dropper, /obj/item/weapon/reagent_containers/hypospray, /obj/item/weapon/reagent_containers/syringe, \
+	/obj/item/device/scanner/health, /obj/item/device/flashlight, /obj/item/device/radio, /obj/item/weapon/tank/emergency, /obj/item/weapon/reagent_containers/ivbag)
+	body_parts_covered = UPPER_TORSO
+
 /obj/item/clothing/suit/surgicalapron
 	name = "surgical apron"
 	desc = "A sterile blue apron for performing surgery."
@@ -202,7 +304,7 @@
 	blood_overlay_type = "armor"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO
 	allowed = list(/obj/item/stack/medical, /obj/item/weapon/reagent_containers/dropper, /obj/item/weapon/reagent_containers/hypospray, /obj/item/weapon/reagent_containers/syringe, \
-	/obj/item/device/healthanalyzer, /obj/item/device/flashlight, /obj/item/device/radio, /obj/item/weapon/tank/emergency,/obj/item/weapon/scalpel,/obj/item/weapon/retractor,/obj/item/weapon/hemostat, \
+	/obj/item/device/scanner/health, /obj/item/device/flashlight, /obj/item/device/radio, /obj/item/weapon/tank/emergency,/obj/item/weapon/scalpel,/obj/item/weapon/retractor,/obj/item/weapon/hemostat, \
 	/obj/item/weapon/cautery,/obj/item/weapon/bonegel,/obj/item/weapon/FixOVein)
 
 /obj/item/clothing/suit/patientgown

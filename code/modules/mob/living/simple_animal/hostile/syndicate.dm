@@ -17,12 +17,13 @@
 	harm_intent_damage = 5
 	melee_damage_lower = 10
 	melee_damage_upper = 10
+	can_escape = 1
 	attacktext = "punched"
 	a_intent = I_HURT
-	var/corpse = /obj/effect/landmark/mobcorpse/syndicatesoldier
+	var/corpse = /obj/effect/landmark/corpse/syndicate
 	var/weapon1
 	var/weapon2
-	unsuitable_atoms_damage = 15
+	unsuitable_atmos_damage = 15
 	environment_smash = 1
 	faction = "syndicate"
 	status_flags = CANPUSH
@@ -54,7 +55,7 @@
 	if(O.force)
 		if(prob(80))
 			var/damage = O.force
-			if (O.damtype == PAIN)
+			if (O.damtype == DAM_PAIN)
 				damage = 0
 			health -= damage
 			visible_message("<span class='danger'>\The [src] has been attacked with \the [O] by \the [user].</span>")
@@ -69,7 +70,7 @@
 /mob/living/simple_animal/hostile/syndicate/melee/bullet_act(var/obj/item/projectile/Proj)
 	if(!Proj)	return
 	if(prob(65))
-		src.health -= Proj.damage
+		src.health -= Proj.force
 	else
 		visible_message("<span class='danger'>\The [src] blocks \the [Proj] with its shield!</span>")
 	return 0
@@ -82,7 +83,7 @@
 	icon_state = "syndicatemeleespace"
 	icon_living = "syndicatemeleespace"
 	name = "Syndicate Commando"
-	corpse = /obj/effect/landmark/mobcorpse/syndicatecommando
+	corpse = /obj/effect/landmark/corpse/syndicate
 	speed = 0
 
 /mob/living/simple_animal/hostile/syndicate/ranged
@@ -90,9 +91,9 @@
 	rapid = 1
 	icon_state = "syndicateranged"
 	icon_living = "syndicateranged"
-	casingtype = /obj/item/ammo_casing/a357
+	casingtype = /obj/item/ammo_casing/c357
 	projectilesound = 'sound/weapons/gunshot/gunshot_smg.ogg'
-	projectiletype = /obj/item/projectile/bullet/pistol/medium
+	projectiletype = /obj/item/projectile/bullet/pistol/c357
 
 	weapon1 = /obj/item/weapon/gun/projectile/revolver
 
@@ -103,7 +104,7 @@
 	min_gas = null
 	max_gas = null
 	minbodytemp = 0
-	corpse = /obj/effect/landmark/mobcorpse/syndicatecommando
+	corpse = /obj/effect/landmark/corpse/syndicate/commando
 	speed = 0
 
 /mob/living/simple_animal/hostile/viscerator
@@ -112,7 +113,7 @@
 	icon = 'icons/mob/critter.dmi'
 	icon_state = "viscerator_attack"
 	icon_living = "viscerator_attack"
-	pass_flags = PASSTABLE
+	pass_flags = PASS_FLAG_TABLE
 	health = 15
 	maxHealth = 15
 	melee_damage_lower = 15

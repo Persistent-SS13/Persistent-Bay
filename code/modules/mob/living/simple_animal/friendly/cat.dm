@@ -14,21 +14,25 @@
 	turns_per_move = 5
 	see_in_dark = 6
 	meat_type = /obj/item/weapon/reagent_containers/food/snacks/meat
+	meat_amount = 2
 	response_help  = "pets"
 	response_disarm = "gently pushes aside"
 	response_harm   = "kicks"
 	var/turns_since_scan = 0
 	var/mob/living/simple_animal/mouse/movement_target
 	var/mob/flee_target
-	minbodytemp = 223		//Below -50 Degrees Celcius
-	maxbodytemp = 323	//Above 50 Degrees Celcius
+	minbodytemp = 223		//Below -50 Degrees Celsius
+	maxbodytemp = 323	//Above 50 Degrees Celsius
 	holder_type = /obj/item/weapon/holder/cat
 	mob_size = MOB_SMALL
 	possession_candidate = 1
+	density = 0
+	pass_flags = PASS_FLAG_TABLE
 
 /mob/living/simple_animal/cat/Life()
-	if(!..() || incapacitated() || client)
-		return
+	. = ..()
+	if(!.)
+		return FALSE
 	//MICE!
 	if((src.loc) && isturf(src.loc))
 		if(!resting && !buckled)
@@ -165,7 +169,9 @@
 		..()
 
 /mob/living/simple_animal/cat/fluff/Life()
-	..()
+	. = ..()
+	if(!.)
+		return FALSE 
 	if (stat || !friend)
 		return
 	if (get_dist(src, friend) <= 1)

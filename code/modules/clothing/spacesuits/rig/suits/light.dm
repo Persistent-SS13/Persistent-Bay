@@ -5,11 +5,23 @@
 	icon_state = "ninja_rig"
 	suit_type = "light suit"
 	allowed = list(/obj/item/weapon/gun,/obj/item/ammo_magazine,/obj/item/ammo_casing,/obj/item/weapon/melee/baton,/obj/item/weapon/handcuffs,/obj/item/weapon/tank,/obj/item/device/suit_cooling_unit,/obj/item/weapon/cell)
-	armor = list(melee = 50, bullet = 15, laser = 50, energy = 10, bomb = 25, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 50,
+		DAM_PIERCE 	= 40,
+		DAM_CUT 	= 50,
+		DAM_BULLET 	= 15,
+		DAM_LASER 	= 50,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 25,
+		DAM_EMP 	= 10,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 	siemens_coefficient = 0.4
 	emp_protection = 10
 	online_slowdown = 0
-	item_flags = STOPPRESSUREDAMAGE | THICKMATERIAL
+	item_flags = ITEM_FLAG_STOPPRESSUREDAMAGE | ITEM_FLAG_THICKMATERIAL
 	offline_slowdown = TINT_NONE
 	offline_vision_restriction = TINT_NONE
 
@@ -35,6 +47,7 @@
 	name = "cybersuit control module"
 	suit_type = "cyber"
 	desc = "An advanced powered armour suit with many cyberwarfare enhancements. Comes with built-in insulated gloves for safely tampering with electronics."
+	icon = 'icons/obj/clothing/obj_suit.dmi'
 	icon_state = "hacker_rig"
 
 	req_access = list(access_syndicate)
@@ -54,29 +67,44 @@
 		/obj/item/rig_module/electrowarfare_suite,
 		/obj/item/rig_module/voice,
 		/obj/item/rig_module/vision,
+		/obj/item/rig_module/cooling_unit
 		)
 
 //The cybersuit is not space-proof. It does however, have good siemens_coefficient values
 /obj/item/clothing/head/lightrig/hacker
 	name = "HUD"
-	flags = 0
+	item_flags = 0
 
 /obj/item/clothing/suit/lightrig/hacker
 	siemens_coefficient = 0.2
 
 /obj/item/clothing/shoes/lightrig/hacker
 	siemens_coefficient = 0.2
-	flags = NOSLIP //All the other rigs have magboots anyways, hopefully gives the hacker suit something more going for it.
+	item_flags = ITEM_FLAG_NOSLIP //All the other rigs have magboots anyways, hopefully gives the hacker suit something more going for it.
 
 /obj/item/clothing/gloves/lightrig/hacker
 	siemens_coefficient = 0
+	item_flags = ITEM_FLAG_THICKMATERIAL | ITEM_FLAG_NOCUFFS
+
 
 /obj/item/weapon/rig/light/ninja
 	name = "ominous suit control module"
 	desc = "A unique, vaccum-proof suit of nano-enhanced armor designed specifically for assassins."
 	suit_type = "ominous"
 	icon_state = "ninja_rig"
-	armor = list(melee = 50, bullet = 15, laser = 30, energy = 10, bomb = 25, bio = 100, rad = 30)
+	armor  = list(
+		DAM_BLUNT 	= 50,
+		DAM_PIERCE 	= 40,
+		DAM_CUT 	= 50,
+		DAM_BULLET 	= 15,
+		DAM_LASER 	= 30,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 25,
+		DAM_EMP 	= 40,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 30,
+		DAM_STUN 	= 0)
 	siemens_coefficient = 0.2 //heavy hardsuit level shock protection
 	emp_protection = 40 //change this to 30 if too high.
 	online_slowdown = 0
@@ -94,15 +122,14 @@
 		/obj/item/rig_module/vision,
 		/obj/item/rig_module/voice,
 		/obj/item/rig_module/fabricator/energy_net,
-		/obj/item/rig_module/chem_dispenser,
-		/obj/item/rig_module/grenade_launcher,
+		/obj/item/rig_module/chem_dispenser/combat,
+		/obj/item/rig_module/grenade_launcher/ninja,
 		/obj/item/rig_module/ai_container,
 		/obj/item/rig_module/power_sink,
 		/obj/item/rig_module/datajack,
-		/obj/item/rig_module/self_destruct
+		/obj/item/rig_module/self_destruct,
+		/obj/item/rig_module/cooling_unit
 		)
-
-	..()
 
 /obj/item/weapon/rig/light/ninja/verb/rename_suit()
 	set name = "Name Ninja Suit"
@@ -115,7 +142,7 @@
 	if(src && input && !M.incapacitated() && in_range(M,src))
 		if(!findtext(input, "the", 1, 4))
 			input = "\improper [input]"
-		name = input
+		SetName(input)
 		to_chat(M, "Suit naming succesful!")
 		verbs -= /obj/item/weapon/rig/light/ninja/verb/rename_suit
 		return 1
@@ -138,6 +165,7 @@
 /obj/item/clothing/gloves/rig/light/ninja
 	name = "insulated gloves"
 	siemens_coefficient = 0
+	item_flags = ITEM_FLAG_THICKMATERIAL | ITEM_FLAG_NOCUFFS
 
 /obj/item/clothing/suit/space/rig/light/ninja
 	breach_threshold = 38 //comparable to regular hardsuits

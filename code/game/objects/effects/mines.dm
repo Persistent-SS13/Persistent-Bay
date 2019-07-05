@@ -5,10 +5,11 @@
 	anchored = 1
 	plane = OBJ_PLANE
 	layer = OBJ_LAYER
-	icon = 'icons/obj/weapons.dmi'
+	icon = 'icons/obj/weapons/mines.dmi'
 	icon_state = "uglymine"
 	var/triggerproc = "explode" //name of the proc thats called when the mine is triggered
 	var/triggered = 0
+	should_save = 1
 
 /obj/effect/mine/New()
 	icon_state = "uglyminearmed"
@@ -52,7 +53,7 @@
 
 	for (var/turf/simulated/floor/target in range(1,src))
 		if(!target.blocks_air)
-			target.assume_gas("sleeping_agent", 30)
+			target.assume_gas(GAS_N2O, 30)
 
 	spawn(0)
 		qdel(src)
@@ -60,7 +61,7 @@
 /obj/effect/mine/proc/triggerphoron(obj)
 	for (var/turf/simulated/floor/target in range(1,src))
 		if(!target.blocks_air)
-			target.assume_gas("phoron", 30)
+			target.assume_gas(GAS_PHORON, 30)
 
 			target.hotspot_expose(1000, CELL_VOLUME)
 

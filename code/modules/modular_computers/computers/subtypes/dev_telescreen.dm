@@ -5,7 +5,6 @@
 	icon_state = "telescreen"
 	icon_state_unpowered = "telescreen"
 	icon_state_menu = "menu"
-	icon_state_screensaver = "standby"
 	hardware_flag = PROGRAM_TELESCREEN
 	anchored = TRUE
 	density = 0
@@ -14,8 +13,7 @@
 	max_hardware_size = 2
 	steel_sheet_cost = 10
 	light_strength = 4
-	max_damage = 300
-	broken_damage = 150
+	max_health = 300
 	w_class = ITEM_SIZE_HUGE
 
 /obj/item/modular_computer/telescreen/New()

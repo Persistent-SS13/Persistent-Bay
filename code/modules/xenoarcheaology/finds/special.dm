@@ -85,12 +85,12 @@
 		var/obj/effect/decal/cleanable/blood/B = locate() in range(2,src)
 		if(B)
 			last_eat = world.time
-			B.loc = null
 			if(istype(B, /obj/effect/decal/cleanable/blood/drip))
 				charges += 0.25
 			else
 				charges += 1
 				playsound(src.loc, 'sound/effects/splat.ogg', 50, 1, -3)
+			qdel(B)
 
 	//use up stored charges
 	if(charges >= 10)
@@ -141,7 +141,7 @@
 		nearby_mobs.Add(M)
 
 		var/target = pick(M.organs_by_name)
-		M.apply_damage(rand(5, 10), BRUTE, target)
+		M.apply_damage(rand(5, 10), DAM_PIERCE, target)
 		to_chat(M, "<span class='warning'>The skin on your [parse_zone(target)] feels like it's ripping apart, and a stream of blood flies out.</span>")
 		var/obj/effect/decal/cleanable/blood/splatter/animated/B = new(M.loc)
 		B.target_turf = pick(range(1, src))

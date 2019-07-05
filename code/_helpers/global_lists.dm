@@ -2,9 +2,7 @@
 //This is for procs to replace all the goddamn 'in world's that are chilling around the code
 
 var/global/list/cable_list = list()					//Index for all cables, so that powernets don't have to look through the entire world all the time
-var/global/list/chemical_reactions_list				//list of all /datum/chemical_reaction datums. Used during chemical reactions
 var/global/list/landmarks_list = list()				//list of all landmarks created
-var/global/list/surgery_steps = list()				//list of all surgery steps  |BS12
 var/global/list/side_effects = list()				//list of all medical sideeffects types by thier names |BS12
 var/global/list/mechas_list = list()				//list of all mechs. Used by hostile mobs target tracking.
 var/global/list/joblist = list()					//list of all jobstypes, minus borg and AI
@@ -32,15 +30,12 @@ var/global/list/all_grabobjects[0]
 var/list/obj/item/device/uplink/world_uplinks = list()
 
 //Preferences stuff
-	//Hairstyles
-var/global/list/hair_styles_list = list()			//stores /datum/sprite_accessory/hair indexed by name
-var/global/list/hair_styles_male_list = list()
-var/global/list/hair_styles_female_list = list()
-var/global/list/facial_hair_styles_list = list()	//stores /datum/sprite_accessory/facial_hair indexed by name
-var/global/list/facial_hair_styles_male_list = list()
-var/global/list/facial_hair_styles_female_list = list()
+//Hairstyles
+GLOBAL_LIST_EMPTY(hair_styles_list)        //stores /datum/sprite_accessory/hair indexed by name
+GLOBAL_LIST_EMPTY(facial_hair_styles_list) //stores /datum/sprite_accessory/facial_hair indexed by name
+
 var/global/list/skin_styles_female_list = list()		//unused
-GLOBAL_LIST_INIT(body_marking_styles_list, list())		//stores /datum/sprite_accessory/marking indexed by name
+GLOBAL_LIST_EMPTY(body_marking_styles_list)		//stores /datum/sprite_accessory/marking indexed by name
 
 GLOBAL_DATUM_INIT(underwear, /datum/category_collection/underwear, new())
 
@@ -91,19 +86,6 @@ var/global/list/string_slot_flags = list(
 /////Initial Building/////
 //////////////////////////
 
-/hook/global_init/proc/populateGlobalLists()
-	possible_cable_coil_colours = sortAssoc(list(
-		"Yellow" = COLOR_YELLOW,
-		"Green" = COLOR_LIME,
-		"Pink" = COLOR_PINK,
-		"Blue" = COLOR_BLUE,
-		"Orange" = COLOR_ORANGE,
-		"Cyan" = COLOR_CYAN,
-		"Red" = COLOR_RED,
-		"White" = COLOR_WHITE
-	))
-	return 1
-
 /proc/get_mannequin(var/ckey)
 	if(!mannequins_)
 		mannequins_ = new()
@@ -119,45 +101,19 @@ var/global/list/string_slot_flags = list(
 	paths = typesof(/datum/sprite_accessory/hair) - /datum/sprite_accessory/hair
 	for(var/path in paths)
 		var/datum/sprite_accessory/hair/H = new path()
-		hair_styles_list[H.name] = H
-		switch(H.gender)
-			if(MALE)	hair_styles_male_list += H.name
-			if(FEMALE)	hair_styles_female_list += H.name
-			else
-				hair_styles_male_list += H.name
-				hair_styles_female_list += H.name
+		GLOB.hair_styles_list[H.name] = H
 
 	//Facial Hair - Initialise all /datum/sprite_accessory/facial_hair into an list indexed by facialhair-style name
 	paths = typesof(/datum/sprite_accessory/facial_hair) - /datum/sprite_accessory/facial_hair
 	for(var/path in paths)
 		var/datum/sprite_accessory/facial_hair/H = new path()
-		facial_hair_styles_list[H.name] = H
-		switch(H.gender)
-			if(MALE)	facial_hair_styles_male_list += H.name
-			if(FEMALE)	facial_hair_styles_female_list += H.name
-			else
-				facial_hair_styles_male_list += H.name
-				facial_hair_styles_female_list += H.name
+		GLOB.facial_hair_styles_list[H.name] = H
 
 	//Body markings - Initialise all /datum/sprite_accessory/marking into an list indexed by marking name
 	paths = typesof(/datum/sprite_accessory/marking) - /datum/sprite_accessory/marking
 	for(var/path in paths)
 		var/datum/sprite_accessory/marking/M = new path()
 		GLOB.body_marking_styles_list[M.name] = M
-
-	//Surgery Steps - Initialize all /datum/surgery_step into a list
-	paths = typesof(/datum/surgery_step)-/datum/surgery_step
-	for(var/T in paths)
-		var/datum/surgery_step/S = new T
-		surgery_steps += S
-	sort_surgeries()
-
-	//List of job. I can't believe this was calculated multiple times per tick!
-	paths = typesof(/datum/job)-/datum/job
-	paths -= exclude_jobs
-	for(var/T in paths)
-		var/datum/job/J = new T
-		joblist[J.title] = J
 
 	//Languages and species.
 	paths = typesof(/datum/language)-/datum/language
@@ -177,24 +133,16 @@ var/global/list/string_slot_flags = list(
 		rkey++
 
 		var/datum/species/S = T
-		if(!initial(S.name))
-			continue
+	//	if(!initial(S.name))
+	//		continue
 
 		S = new T
 		S.race_key = rkey //Used in mob icon caching.
 		all_species[S.name] = S
-
 		if(!(S.spawn_flags & SPECIES_IS_RESTRICTED))
 			playable_species += S.name
 		if(S.spawn_flags & SPECIES_IS_WHITELISTED)
 			whitelisted_species += S.name
-
-	//Posters
-	paths = typesof(/datum/poster) - /datum/poster
-	for(var/T in paths)
-		var/datum/poster/P = new T
-		poster_designs += P
-
 	//Grabs
 	paths = typesof(/datum/grab) - /datum/grab
 	for(var/T in paths)
@@ -213,21 +161,7 @@ var/global/list/string_slot_flags = list(
 
 	return 1
 
-/* // Uncomment to debug chemical reaction list.
-/client/verb/debug_chemical_list()
-
-	for (var/reaction in chemical_reactions_list)
-		. += "chemical_reactions_list\[\"[reaction]\"\] = \"[chemical_reactions_list[reaction]]\"\n"
-		if(islist(chemical_reactions_list[reaction]))
-			var/list/L = chemical_reactions_list[reaction]
-			for(var/t in L)
-				. += "    has: [t]\n"
-	log_debug(.)
-
-*/
-
 //*** params cache
-
 var/global/list/paramslist_cache = list()
 
 #define cached_key_number_decode(key_number_data) cached_params_decode(key_number_data, /proc/key_number_decode)

@@ -1,5 +1,6 @@
 /obj/machinery/portable_atmospherics/hydroponics/Process()
-
+	if(!connected_faction)
+		return
 	// Handle nearby smoke if any.
 	for(var/obj/effect/effect/smoke/chem/smoke in view(1, src))
 		if(smoke.reagents.total_volume)
@@ -35,19 +36,19 @@
 	// If there is no seed data (and hence nothing planted),
 	// or the plant is dead, process nothing further.
 	if(!seed || dead)
-		if(mechanical) 
+		if(mechanical)
 			update_icon() //Harvesting would fail to set alert icons properly.
 		return
 
 	// Advance plant age.
 	var/cur_stage = get_overlay_stage()
-	if(prob(30)) 
+	if(prob(30))
 		age += 1 * HYDRO_SPEED_MULTIPLIER
 		if(get_overlay_stage() != cur_stage)
 			needs_icon_update |= 1
 
 	//Highly mutable plants have a chance of mutating every tick.
-	if(seed.get_trait(TRAIT_IMMUTABLE) == -1)
+	/*if(seed.get_trait(TRAIT_IMMUTABLE) == -1)
 		var/mut_prob = rand(1,100)
 		if(mut_prob <= 5) mutate(mut_prob == 1 ? 2 : 1)
 
@@ -56,7 +57,7 @@
 		if(prob(min(mutation_level,100)))
 			mutate((rand(100) < 15) ? 2 : 1)
 			mutation_level = 0
-
+	*/
 	// Maintain tray nutrient and water levels.
 	if(seed.get_trait(TRAIT_REQUIRES_NUTRIENTS) && seed.get_trait(TRAIT_NUTRIENT_CONSUMPTION) > 0 && nutrilevel > 0 && prob(25))
 		nutrilevel -= max(0,seed.get_trait(TRAIT_NUTRIENT_CONSUMPTION) * HYDRO_SPEED_MULTIPLIER)
@@ -67,9 +68,9 @@
 	// water and nutrients will cause a plant to become healthier.
 	var/healthmod = rand(1,3) * HYDRO_SPEED_MULTIPLIER
 	if(seed.get_trait(TRAIT_REQUIRES_NUTRIENTS) && prob(35))
-		health += (nutrilevel < 2 ? -healthmod : healthmod)
+		plant_health += (nutrilevel < 2 ? -healthmod : healthmod)
 	if(seed.get_trait(TRAIT_REQUIRES_WATER) && prob(35))
-		health += (waterlevel < 10 ? -healthmod : healthmod)
+		plant_health += (waterlevel < 10 ? -healthmod : healthmod)
 
 	// Check that pressure, heat and light are all within bounds.
 	// First, handle an open system or an unconnected closed system.
@@ -84,9 +85,9 @@
 
 	// Seed datum handles gasses, light and pressure.
 	if(mechanical && closed_system)
-		health -= seed.handle_environment(T,environment,tray_light)
+		plant_health -= seed.handle_environment(T,environment,tray_light)
 	else
-		health -= seed.handle_environment(T,environment)
+		plant_health -= seed.handle_environment(T,environment)
 
 	// If we're attached to a pipenet, then we should let the pipenet know we might have modified some gasses
 	if (closed_system && connected_port)
@@ -97,25 +98,25 @@
 	if(toxins > 0)
 		var/toxin_uptake = max(1,round(toxins/10))
 		if(toxins > seed.get_trait(TRAIT_TOXINS_TOLERANCE))
-			health -= toxin_uptake
+			plant_health -= toxin_uptake
 		toxins -= toxin_uptake
 
 	// Check for pests and weeds.
 	// Some carnivorous plants happily eat pests.
 	if(pestlevel > 0)
 		if(seed.get_trait(TRAIT_CARNIVOROUS))
-			health += HYDRO_SPEED_MULTIPLIER
+			plant_health += HYDRO_SPEED_MULTIPLIER
 			pestlevel -= HYDRO_SPEED_MULTIPLIER
 		else if (pestlevel >= seed.get_trait(TRAIT_PEST_TOLERANCE))
-			health -= HYDRO_SPEED_MULTIPLIER
+			plant_health -= HYDRO_SPEED_MULTIPLIER
 
 	// Some plants thrive and live off of weeds.
 	if(weedlevel > 0)
 		if(seed.get_trait(TRAIT_PARASITE))
-			health += HYDRO_SPEED_MULTIPLIER
+			plant_health += HYDRO_SPEED_MULTIPLIER
 			weedlevel -= HYDRO_SPEED_MULTIPLIER
 		else if (weedlevel >= seed.get_trait(TRAIT_WEED_TOLERANCE))
-			health -= HYDRO_SPEED_MULTIPLIER
+			plant_health -= HYDRO_SPEED_MULTIPLIER
 
 	// Handle life and death.
 	// When the plant dies, weeds thrive and pests die off.

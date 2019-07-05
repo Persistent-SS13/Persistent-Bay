@@ -19,7 +19,8 @@
 	response_harm   = "kicks"
 	faction = "goat"
 	attacktext = "kicked"
-	health = 40
+	maxHealth = 150
+	health = 150
 	melee_damage_lower = 1
 	melee_damage_upper = 5
 	var/datum/reagents/udder = null
@@ -42,7 +43,7 @@
 		if(enemies.len && prob(10))
 			enemies = list()
 			LoseTarget()
-			src.visible_message("<span class='notice'>[src] calms down.</span>")
+			src.visible_message("<span class='notice'>\The [src] calms down.</span>")
 
 		if(stat == CONSCIOUS)
 			if(udder && prob(5))
@@ -69,8 +70,8 @@
 
 /mob/living/simple_animal/hostile/retaliate/goat/Retaliate()
 	..()
-	if(stat == CONSCIOUS)
-		visible_message("<span class='warning'>[src] gets an evil-looking gleam in their eye.</span>")
+	if(stat == CONSCIOUS && prob(50))
+		visible_message("<span class='warning'>\The [src] gets an evil-looking gleam in their eye.</span>")
 
 /mob/living/simple_animal/hostile/retaliate/goat/attackby(var/obj/item/O as obj, var/mob/user as mob)
 	var/obj/item/weapon/reagent_containers/glass/G = O
@@ -83,33 +84,6 @@
 			to_chat(user, "<span class='warning'>The udder is dry. Wait a bit longer...</span>")
 	else
 		..()
-
-//this is the king of goats. he is very powerful, which is why he is the king
-/mob/living/simple_animal/hostile/retaliate/goat/king
-	name = "king of goats"
-	desc = "The oldest and wisest of goats; king of his race, peerless in dignity and power. His golden fleece radiates nobility."
-	icon_state = "king_goat"
-	icon_living = "king_goat"
-	icon_dead = "king_goat_dead"
-	speak_emote = list("brays in a booming voice")
-	emote_hear = list("brays in a booming voice")
-	emote_see = list("stamps a mighty foot, shaking the surroundings")
-	meat_amount = 12
-	response_help  = "placates"
-	response_harm   = "assaults"
-	faction = "goat"
-	attacktext = "brutalized"
-	turns_per_move = 10
-	health = 500
-	maxHealth = 500
-	melee_damage_lower = 35
-	melee_damage_upper = 55
-	mob_size = MOB_LARGE
-
-/mob/living/simple_animal/hostile/retaliate/goat/king/Retaliate()
-	..()
-	if(stat == CONSCIOUS)
-		visible_message("<span class='warning'>[src] bellows indignantly, with a judgemental gleam in their eye.</span>")
 
 //cow
 /mob/living/simple_animal/cow
@@ -127,17 +101,18 @@
 	turns_per_move = 5
 	see_in_dark = 6
 	meat_type = /obj/item/weapon/reagent_containers/food/snacks/meat/beef
-	meat_amount = 6
+	meat_amount = 10
 	response_help  = "pets"
 	response_disarm = "gently pushes aside"
 	response_harm   = "kicks"
 	attacktext = "kicked"
-	health = 50
+	maxHealth = 200
+	health = 200
+	mass = 680.4 //1,500 lbs
 	var/datum/reagents/udder = null
 
 /mob/living/simple_animal/cow/New()
-	udder = new(50)
-	udder.my_atom = src
+	udder = new(50, src)
 	..()
 
 /mob/living/simple_animal/cow/attackby(var/obj/item/O as obj, var/mob/user as mob)
@@ -154,9 +129,10 @@
 
 /mob/living/simple_animal/cow/Life()
 	. = ..()
-	if(stat == CONSCIOUS)
-		if(udder && prob(5))
-			udder.add_reagent(/datum/reagent/drink/milk, rand(5, 10))
+	if(!.)
+		return FALSE
+	if(udder && prob(5))
+		udder.add_reagent(/datum/reagent/drink/milk, rand(5, 10))
 
 /mob/living/simple_animal/cow/attack_hand(mob/living/carbon/M as mob)
 	if(!stat && M.a_intent == I_DISARM && icon_state != icon_dead)
@@ -193,9 +169,11 @@
 	response_disarm = "gently pushes aside"
 	response_harm   = "kicks"
 	attacktext = "kicked"
-	health = 1
+	health = 20
+	maxHealth = 20
+	density = 0
 	var/amount_grown = 0
-	pass_flags = PASSTABLE | PASSGRILLE
+	pass_flags = PASS_FLAG_TABLE | PASS_FLAG_GRILLE
 	mob_size = MOB_MINISCULE
 
 /mob/living/simple_animal/chick/New()
@@ -204,14 +182,13 @@
 	pixel_y = rand(0, 10)
 
 /mob/living/simple_animal/chick/Life()
-	. =..()
+	. = ..()
 	if(!.)
-		return
-	if(!stat)
-		amount_grown += rand(1,2)
-		if(amount_grown >= 100)
-			new /mob/living/simple_animal/chicken(src.loc)
-			qdel(src)
+		return FALSE
+	amount_grown += rand(1,2)
+	if(amount_grown >= 100)
+		new /mob/living/simple_animal/chicken(src.loc)
+		qdel(src)
 
 var/const/MAX_CHICKENS = 50
 var/global/chicken_count = 0
@@ -234,10 +211,12 @@ var/global/chicken_count = 0
 	response_disarm = "gently pushes aside"
 	response_harm   = "kicks"
 	attacktext = "kicked"
-	health = 10
+	health = 80
+	maxHealth = 80
+	density = 0
 	var/eggsleft = 0
 	var/body_color
-	pass_flags = PASSTABLE
+	pass_flags = PASS_FLAG_TABLE
 	mob_size = MOB_SMALL
 
 /mob/living/simple_animal/chicken/New()
@@ -263,7 +242,8 @@ var/global/chicken_count = 0
 				user.visible_message("<span class='notice'>[user] feeds [O] to [name]! It clucks happily.</span>","<span class='notice'>You feed [O] to [name]! It clucks happily.</span>")
 				user.drop_item()
 				qdel(O)
-				eggsleft += rand(1, 4)
+				if(prob(25))
+					eggsleft++
 			else
 				to_chat(user, "<span class='notice'>[name] doesn't seem hungry!</span>")
 		else
@@ -272,10 +252,10 @@ var/global/chicken_count = 0
 		..()
 
 /mob/living/simple_animal/chicken/Life()
-	. =..()
+	. = ..()
 	if(!.)
-		return
-	if(!stat && prob(3) && eggsleft > 0)
+		return FALSE
+	if(prob(1) && eggsleft > 0)
 		visible_message("[src] [pick("lays an egg.","squats down and croons.","begins making a huge racket.","begins clucking raucously.")]")
 		eggsleft--
 		var/obj/item/weapon/reagent_containers/food/snacks/egg/E = new(get_turf(src))

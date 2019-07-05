@@ -35,8 +35,8 @@
 /obj/effect/spresent/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	..()
 
-	if(!isWirecutter(W))
-		to_chat(user, "<span class='warning'>I need wirecutters for that.</span>")
+	if(!isWirecutter(W) || isScissors(W))
+		to_chat(user, "<span class='warning'>I need wirecutters or scissors for that.</span>")
 		return
 
 	to_chat(user, "<span class='notice'>You cut open the present.</span>")
@@ -97,11 +97,9 @@
 	if(!ispath(gift_type,/obj/item))	return
 
 	var/obj/item/I = new gift_type(M)
-	M.remove_from_mob(src)
 	M.put_in_hands(I)
 	I.add_fingerprint(M)
 	qdel(src)
-	return
 
 /*
  * Wrapping Paper and Gifts
@@ -168,11 +166,10 @@
 				if(istype(W, /obj/item/smallDelivery) || istype(W, /obj/item/weapon/gift)) //No gift wrapping gifts!
 					return
 
-				if(user.drop_from_inventory(W))
+				if(user.unEquip(W))
 					var/obj/item/weapon/gift/G = new /obj/item/weapon/gift( src.loc, W )
 					G.add_fingerprint(user)
 					W.add_fingerprint(user)
-					src.add_fingerprint(user)
 					src.amount -= a_used
 
 			if (src.amount <= 0)

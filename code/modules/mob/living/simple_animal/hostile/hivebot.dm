@@ -1,6 +1,6 @@
 /obj/item/projectile/hivebotbullet
-	damage = 10
-	damage_type = BRUTE
+	force = 10
+	damtype = DAM_BULLET
 
 /mob/living/simple_animal/hostile/hivebot
 	name = "Hivebot"
@@ -21,6 +21,9 @@
 	max_gas = null
 	minbodytemp = 0
 	speed = 4
+	natural_armor = list(DAM_BLUNT = 20)
+
+	bleed_colour = SYNTH_BLOOD_COLOUR
 
 /mob/living/simple_animal/hostile/hivebot/range
 	name = "Hivebot"
@@ -36,7 +39,8 @@
 	desc = "A robot, this one is armed and looks tough!"
 	health = 80
 	ranged = 1
-
+	can_escape = 1
+	natural_armor = list(DAM_BLUNT = 30)
 
 /mob/living/simple_animal/hostile/hivebot/death()
 	..(null, "blows apart!")

@@ -4,16 +4,30 @@
 	var/flags = EXTENSION_FLAG_NONE
 
 /datum/extension/New(var/datum/holder)
-	if(!istype(holder, expected_type))
-		CRASH("Invalid holder type. Expected [expected_type], was [holder.type]")
+	if(!istype(holder, expected_type) && !isnull(holder)) //Let null extensions be built, otherwise we get runtime spam on save load!!
+		CRASH("Invalid holder type. Expected [expected_type], was [isnull(holder)? "null" : holder.type]")
 	src.holder = holder
 
 /datum/extension/Destroy()
 	holder = null
 	. = ..()
 
+/datum/extension/proc/set_holder(var/holder)
+	src.holder = holder
+
 /datum
 	var/list/datum/extension/extensions
+
+/datum/after_load()
+	. = ..()
+	if(extensions)
+		for(var/key in extensions)
+			var/list/extension = extensions[key]
+			if(!islist(extension))
+				var/datum/extension/ext = extension
+				ext.set_holder(src) //Ensure the holder is set properly
+			// else
+			// 	log_debug(" /datum/after_load(): found a list extension \"[key]\".. Not setting holder.")
 
 /datum/Destroy()
 	if(extensions)
@@ -25,6 +39,12 @@
 				qdel(extension)
 		extensions = null
 	return ..()
+
+/datum/proc/GetExtension(var/base_type)
+	return get_extension(src, base_type)
+
+/datum/proc/HasExtension(var/base_type)
+	return has_extension(src, base_type)
 
 //Variadic - Additional positional arguments can be given. Named arguments might not work so well
 /proc/set_extension(var/datum/source, var/datum/extension/base_type, var/extension_type)
@@ -42,6 +62,11 @@
 		if(args.len > 3)
 			extension_data += args.Copy(4)
 		source.extensions[base_type] = extension_data
+
+/proc/get_or_create_extension(var/datum/source, var/base_type, var/extension_type)
+	if(!has_extension(source, base_type))
+		set_extension(arglist(args))
+	return get_extension(source, base_type)
 
 /proc/get_extension(var/datum/source, var/base_type)
 	if(!source.extensions)
@@ -61,3 +86,10 @@
 /proc/construct_extension_instance(var/extension_type, var/datum/source, var/list/arguments)
 	arguments = list(source) + arguments
 	return new extension_type(arglist(arguments))
+
+/proc/remove_extension(var/datum/source, var/base_type)
+	if(!source.extensions || !source.extensions[base_type])
+		return
+	if(!islist(source.extensions[base_type]))
+		qdel(source.extensions[base_type])
+	LAZYREMOVE(source.extensions, base_type)

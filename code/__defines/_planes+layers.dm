@@ -66,8 +66,9 @@ What is the naming convention for planes or layers?
 #define SKYBOX_PLANE SPACE_PLANE + 1
 
 #define DUST_PLANE SPACE_PLANE + 2
-	#define DUST_LAYER 1
-	#define DEBRIS_LAYER 2
+	#define DEBRIS_LAYER 1
+	#define DUST_LAYER 2
+
 //Reserve planes for openspace
 #define OPENSPACE_PLANE_START -462
 #define OPENSPACE_PLANE_END -22
@@ -95,10 +96,11 @@ What is the naming convention for planes or layers?
 
 	#define BASE_TURF_LAYER -999
 	#define TURF_DETAIL_LAYER 1
+	#define TURF_SHADOW_LAYER 2
 
 #define ABOVE_TURF_PLANE              -18 // For items which should appear above turfs but below other objects and hiding mobs, eg: wires & pipes
 
-	#define HOLOMAP_LAYER               1 // NOTE: ENSURE this is equal to the one at ABOVE_PLATING_PLANE!
+//	#define HOLOMAP_LAYER               1 // NOTE: ENSURE this is equal to the one at ABOVE_PLATING_PLANE!
 	#define DECAL_LAYER                 2
 	#define RUNE_LAYER                  3
 	#define ABOVE_TILE_LAYER            4
@@ -106,13 +108,17 @@ What is the naming convention for planes or layers?
 	#define EXPOSED_WIRE_LAYER          6
 	#define EXPOSED_WIRE_TERMINAL_LAYER 7
 	#define CATWALK_LAYER               8
+	#define FLOOR_MACHINE_LAYER         8.5
 	#define BLOOD_LAYER                 9
 	#define MOUSETRAP_LAYER             10
 	#define PLANT_LAYER                 11
+	#define AO_LAYER                    12
 
 #define HIDING_MOB_PLANE              -16 // for hiding mobs like MoMMIs or spiders or whatever, under most objects but over pipes & such.
 
-	#define HIDING_MOB_LAYER 0
+	#define HIDING_MOB_LAYER    0
+	#define SHALLOW_FLUID_LAYER 1
+	#define MOB_SHADOW_LAYER    2
 
 #define OBJ_PLANE                     -15 // For objects which appear below humans.
 	#define BELOW_DOOR_LAYER        0.25
@@ -120,6 +126,8 @@ What is the naming convention for planes or layers?
 	#define BELOW_TABLE_LAYER       0.75
 	#define TABLE_LAYER             1
 	#define BELOW_OBJ_LAYER         2
+	#define STRUCTURE_LAYER         2.5
+	#define MACHINERY_LAYER			2.9
 	// OBJ_LAYER                    3
 	#define ABOVE_OBJ_LAYER         4
 	#define CLOSED_DOOR_LAYER       5
@@ -149,8 +157,10 @@ What is the naming convention for planes or layers?
 #define ABOVE_HUMAN_PLANE              -6 // For things that should appear above humans.
 
 	#define ABOVE_HUMAN_LAYER  0
-	#define VEHICLE_LOAD_LAYER 1
-	#define CAMERA_LAYER       2
+	#define VEHICLE_BASE_LAYER 1
+	#define VEHICLE_LOAD_LAYER 2
+	#define VEHICLE_TOP_LAYER  3
+	#define CAMERA_LAYER       4
 
 #define BLOB_PLANE                     -5 // For Blobs, which are above humans.
 
@@ -160,7 +170,8 @@ What is the naming convention for planes or layers?
 
 #define EFFECTS_BELOW_LIGHTING_PLANE   -4 // For special effects.
 
-	#define BELOW_PROJECTILE_LAYER  2
+	#define BELOW_PROJECTILE_LAYER  1
+	#define DEEP_FLUID_LAYER        2
 	#define FIRE_LAYER              3
 	#define PROJECTILE_LAYER        4
 	#define ABOVE_PROJECTILE_LAYER  5

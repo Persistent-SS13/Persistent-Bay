@@ -10,6 +10,24 @@
 	plane = ABOVE_HUMAN_PLANE
 	layer = ABOVE_HUMAN_LAYER
 	anchored = 1.0
+	mass = 15
+	max_health = 200
+	armor = list(
+		DAM_BLUNT  	= 95,
+		DAM_PIERCE 	= 90,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 95,
+		DAM_ENERGY 	= 90,
+		DAM_BURN 	= 80,
+		DAM_BOMB 	= 50,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
+	damthreshold_brute 	= 5
+	damthreshold_burn	= 5
 	var/list/tube_dirs = null
 	var/exit_delay = 2
 	var/enter_delay = 1
@@ -29,6 +47,8 @@
 	icon_state = "closed"
 	exit_delay = 2
 	enter_delay = 3
+	mass = 30
+	max_health = 400
 	var/pod_moving = 0
 	var/automatic_launch_time = 100
 
@@ -43,6 +63,24 @@
 	animate_movement = FORWARD_STEPS
 	anchored = 1.0
 	density = 1
+	mass = 50
+	max_health = 600
+	damthreshold_brute 	= 5
+	damthreshold_burn	= 5
+	armor = list(
+		DAM_BLUNT  	= 50,
+		DAM_PIERCE 	= 50,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 10,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 5,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 	var/moving = 0
 	var/datum/gas_mixture/air_contents = new()
 
@@ -50,7 +88,7 @@
 
 /obj/structure/transit_tube_pod/Destroy()
 	for(var/atom/movable/AM in contents)
-		AM.loc = loc
+		AM.dropInto(loc)
 
 	..()
 
@@ -61,7 +99,7 @@ obj/structure/ex_act(severity)
 	switch(severity)
 		if(1.0)
 			for(var/atom/movable/AM in contents)
-				AM.loc = loc
+				AM.dropInto(loc)
 				AM.ex_act(severity++)
 
 			qdel(src)
@@ -69,7 +107,7 @@ obj/structure/ex_act(severity)
 		if(2.0)
 			if(prob(50))
 				for(var/atom/movable/AM in contents)
-					AM.loc = loc
+					AM.dropInto(loc)
 					AM.ex_act(severity++)
 
 				qdel(src)
@@ -82,7 +120,7 @@ obj/structure/ex_act(severity)
 /obj/structure/transit_tube_pod/New(loc)
 	..(loc)
 
-	air_contents.adjust_multi("oxygen", MOLES_O2STANDARD * 2, "nitrogen", MOLES_N2STANDARD)
+	air_contents.adjust_multi(GAS_OXYGEN, MOLES_O2STANDARD * 2, GAS_NITROGEN, MOLES_N2STANDARD)
 	air_contents.temperature = T20C
 
 	// Give auto tubes time to align before trying to start moving
@@ -105,14 +143,11 @@ obj/structure/ex_act(severity)
 		to_chat(AM, "<span class='warning'>The tube's support pylons block your way.</span>")
 		return ..()
 	else
-		AM.loc = src.loc
+		AM.dropInto(loc)
 		to_chat(AM, "<span class='info'>You slip under the tube.</span>")
-
 
 /obj/structure/transit_tube/station/New(loc)
 	..(loc)
-
-
 
 /obj/structure/transit_tube/station/Bumped(mob/AM as mob|obj)
 	if(!pod_moving && icon_state == "open" && istype(AM, /mob))
@@ -121,9 +156,7 @@ obj/structure/ex_act(severity)
 				to_chat(AM, "<span class='notice'>The pod is already occupied.</span>")
 				return
 			else if(!pod.moving && pod.dir in directions())
-				AM.loc = pod
-				return
-
+				AM.forceMove(pod)
 
 /obj/structure/transit_tube/station/attack_hand(mob/user as mob)
 	if(!pod_moving)
@@ -328,7 +361,7 @@ obj/structure/ex_act(severity)
 			last_delay = current_tube.enter_delay(src, next_dir)
 			sleep(last_delay)
 			set_dir(next_dir)
-			loc = next_loc // When moving from one tube to another, skip collision and such.
+			forceMove(next_loc) // When moving from one tube to another, skip collision and such.
 			set_density(current_tube.density)
 
 			if(current_tube && current_tube.should_stop_pod(src, next_dir))
@@ -381,8 +414,9 @@ obj/structure/ex_act(severity)
 	if(istype(mob, /mob) && mob.client)
 		// If the pod is not in a tube at all, you can get out at any time.
 		if(!(locate(/obj/structure/transit_tube) in loc))
-			mob.loc = loc
-			mob.client.Move(get_step(loc, direction), direction)
+			var/turf/T = get_turf(src)
+			mob.forceMove(T)
+			mob.client.Move(get_step(T, direction), direction)
 
 			//if(moving && istype(loc, /turf/space))
 				// Todo: If you get out of a moving pod in space, you should move as well.
@@ -394,8 +428,9 @@ obj/structure/ex_act(severity)
 					if(!station.pod_moving)
 						if(direction == station.dir)
 							if(station.icon_state == "open")
-								mob.loc = loc
-								mob.client.Move(get_step(loc, direction), direction)
+								var/turf/T = get_turf(src)
+								mob.forceMove(T)
+								mob.client.Move(get_step(T, direction), direction)
 
 							else
 								station.open_animation()

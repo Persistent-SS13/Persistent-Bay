@@ -16,6 +16,16 @@
 	var/affected_area = 3
 
 	New()
+		..()
+		ADD_SAVED_VAR(stage)
+		ADD_SAVED_VAR(state)
+		ADD_SAVED_VAR(path)
+		ADD_SAVED_VAR(detonator)
+		ADD_SAVED_VAR(beakers)
+		ADD_SAVED_VAR(affected_area)
+	
+	SetupReagents()
+		. = ..()
 		create_reagents(1000)
 
 	attack_self(mob/user as mob)
@@ -33,11 +43,11 @@
 					if(istype(B))
 						beakers -= B
 						user.put_in_hands(B)
-			name = "unsecured grenade with [beakers.len] containers[detonator?" and detonator":""]"
+			SetName("unsecured grenade with [beakers.len] containers[detonator?" and detonator":""]")
 		if(stage > 1 && !active && clown_check(user))
 			to_chat(user, "<span class='warning'>You prime \the [name]!</span>")
 
-			msg_admin_attack("[user.name] ([user.ckey]) primed \a [src]. (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[user.x];Y=[user.y];Z=[user.z]'>JMP</a>)")
+			log_and_message_admins("has primed \a [src].")
 
 			activate()
 			add_fingerprint(user)
@@ -55,11 +65,12 @@
 			if(!det.secured)
 				to_chat(user, "<span class='warning'>Assembly must be secured with screwdriver.</span>")
 				return
+			if(!user.unEquip(det, src))
+				return
 			path = 1
+			log_and_message_admins("has attached \a [W] to \the [src].")
 			to_chat(user, "<span class='notice'>You add [W] to the metal casing.</span>")
 			playsound(src.loc, 'sound/items/Screwdriver2.ogg', 25, -3)
-			user.remove_from_mob(det)
-			det.loc = src
 			detonator = det
 			if(istimer(detonator.a_left))
 				var/obj/item/device/assembly/timer/T = detonator.a_left
@@ -68,18 +79,18 @@
 				var/obj/item/device/assembly/timer/T = detonator.a_right
 				det_time = 10*T.time
 			icon_state = initial(icon_state) +"_ass"
-			name = "unsecured grenade with [beakers.len] containers[detonator?" and detonator":""]"
+			SetName("unsecured grenade with [beakers.len] containers[detonator?" and detonator":""]")
 			stage = 1
 		else if(isScrewdriver(W) && path != 2)
 			if(stage == 1)
 				path = 1
 				if(beakers.len)
 					to_chat(user, "<span class='notice'>You lock the assembly.</span>")
-					name = "grenade"
+					SetName("grenade")
 				else
 //					to_chat(user, "<span class='warning'>You need to add at least one beaker before locking the assembly.</span>")
 					to_chat(user, "<span class='notice'>You lock the empty assembly.</span>")
-					name = "fake grenade"
+					SetName("fake grenade")
 				playsound(src.loc, 'sound/items/Screwdriver.ogg', 25, -3)
 				icon_state = initial(icon_state) +"_locked"
 				stage = 2
@@ -91,7 +102,7 @@
 				else
 					to_chat(user, "<span class='notice'>You unlock the assembly.</span>")
 					playsound(src.loc, 'sound/items/Screwdriver.ogg', 25, -3)
-					name = "unsecured grenade with [beakers.len] containers[detonator?" and detonator":""]"
+					SetName("unsecured grenade with [beakers.len] containers[detonator?" and detonator":""]")
 					icon_state = initial(icon_state) + (detonator?"_ass":"")
 					stage = 1
 					active = 0
@@ -102,12 +113,12 @@
 				return
 			else
 				if(W.reagents.total_volume)
+					if(!user.unEquip(W, src))
+						return
 					to_chat(user, "<span class='notice'>You add \the [W] to the assembly.</span>")
-					user.drop_item()
-					W.loc = src
 					beakers += W
 					stage = 1
-					name = "unsecured grenade with [beakers.len] containers[detonator?" and detonator":""]"
+					SetName("unsecured grenade with [beakers.len] containers[detonator?" and detonator":""]")
 				else
 					to_chat(user, "<span class='warning'>\The [W] is empty.</span>")
 
@@ -130,7 +141,7 @@
 			icon_state = initial(icon_state) + "_active"
 
 			if(user)
-				msg_admin_attack("[user.name] ([user.ckey]) primed \a [src] (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[user.x];Y=[user.y];Z=[user.z]'>JMP</a>)")
+				log_and_message_admins("has primed \a [src].")
 
 		return
 
@@ -198,11 +209,15 @@
 	stage = 2
 
 	New()
-		..()
+		. = ..()
+		icon_state = initial(icon_state) +"_locked"
+
+	SetupReagents()
+		. = ..()
 		var/obj/item/weapon/reagent_containers/glass/beaker/B1 = new(src)
 		var/obj/item/weapon/reagent_containers/glass/beaker/B2 = new(src)
 
-		B1.reagents.add_reagent(/datum/reagent/aluminum, 30)
+		B1.reagents.add_reagent(/datum/reagent/aluminium, 30)
 		B2.reagents.add_reagent(/datum/reagent/foaming_agent, 10)
 		B2.reagents.add_reagent(/datum/reagent/acid/polyacid, 10)
 
@@ -210,7 +225,6 @@
 
 		beakers += B1
 		beakers += B2
-		icon_state = initial(icon_state) +"_locked"
 
 /obj/item/weapon/grenade/chem_grenade/incendiary
 	name = "incendiary grenade"
@@ -219,11 +233,15 @@
 	stage = 2
 
 	New()
-		..()
+		. = ..()
+		icon_state = initial(icon_state) +"_locked"
+
+	SetupReagents()
+		. = ..()
 		var/obj/item/weapon/reagent_containers/glass/beaker/B1 = new(src)
 		var/obj/item/weapon/reagent_containers/glass/beaker/B2 = new(src)
 
-		B1.reagents.add_reagent(/datum/reagent/aluminum, 15)
+		B1.reagents.add_reagent(/datum/reagent/aluminium, 15)
 		B1.reagents.add_reagent(/datum/reagent/fuel,20)
 		B2.reagents.add_reagent(/datum/reagent/toxin/phoron, 15)
 		B2.reagents.add_reagent(/datum/reagent/acid, 15)
@@ -233,15 +251,15 @@
 
 		beakers += B1
 		beakers += B2
-		icon_state = initial(icon_state) +"_locked"
 
 /obj/item/weapon/grenade/chem_grenade/antiweed
 	name = "weedkiller grenade"
 	desc = "Used for purging large areas of invasive plant species. Contents under pressure. Do not directly inhale contents."
+	icon_state = "grenade"
 	path = 1
 	stage = 2
 
-	New()
+	SetupReagents()
 		..()
 		var/obj/item/weapon/reagent_containers/glass/beaker/B1 = new(src)
 		var/obj/item/weapon/reagent_containers/glass/beaker/B2 = new(src)
@@ -255,7 +273,7 @@
 
 		beakers += B1
 		beakers += B2
-		icon_state = "grenade"
+
 
 /obj/item/weapon/grenade/chem_grenade/cleaner
 	name = "cleaner grenade"
@@ -264,6 +282,10 @@
 	path = 1
 
 	New()
+		. = ..()
+		icon_state = initial(icon_state) +"_locked"
+
+	SetupReagents()
 		..()
 		var/obj/item/weapon/reagent_containers/glass/beaker/B1 = new(src)
 		var/obj/item/weapon/reagent_containers/glass/beaker/B2 = new(src)
@@ -276,7 +298,6 @@
 
 		beakers += B1
 		beakers += B2
-		icon_state = initial(icon_state) +"_locked"
 
 /obj/item/weapon/grenade/chem_grenade/teargas
 	name = "tear gas grenade"
@@ -285,6 +306,10 @@
 	path = 1
 
 	New()
+		. = ..()
+		icon_state = initial(icon_state) +"_locked"
+
+	SetupReagents()
 		..()
 		var/obj/item/weapon/reagent_containers/glass/beaker/large/B1 = new(src)
 		var/obj/item/weapon/reagent_containers/glass/beaker/large/B2 = new(src)
@@ -299,5 +324,4 @@
 
 		beakers += B1
 		beakers += B2
-		icon_state = initial(icon_state) +"_locked"
 

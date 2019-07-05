@@ -1,0 +1,68 @@
+<h2>Library Control</h2><hr>
+<br><br>
+{{:helper.link('View Titles', '', {'action' : 'change_menu', 'target' : '1'}, data.menu == 1 ? 'selected' : null)}}
+{{:helper.link('Publish', '', {'action' : 'change_menu', 'target' : '2'}, data.menu == 2 ? 'selected' : null)}}
+{{if data.menu == 1}}
+	<h4>View Titles</h4>
+	<div class='itemLabel'>
+		Published Titles:
+	</div>
+	<br><br>
+	<div class='block'>
+		{{for data.titles}}
+			{{:helper.link(value.name, '', {'action' : 'select_title', 'ref' : value.ref}, null)}}<br><br>
+		{{/for}}
+	</div>
+{{/if}}
+{{if data.menu == 2}}
+	<h4>Publish</h4>
+	<div class='item'>
+		<div class='itemLabel'>
+			Scanned Book:
+		</div>
+		<div class='itemContent'>
+			{{:data.book_name}}{{:helper.link('Scan', '', {'action' : 'scan_book'}, null)}}
+		</div>
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			Author
+		</div>
+		<br><br>
+		<div class='itemContent'>
+			{{:data.book_author}}
+		</div>
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			Finalize
+		</div>
+		<br><br>
+		<div class='itemContent'>
+			{{:helper.link('Publish', '', {'action' : 'publish'}, null)}}
+		</div>
+	</div>
+{{/if}}
+{{if data.menu == 3}}
+	<h4>{{:book_name}}</h4>
+	<div class='item'>
+		<div class='itemLabel'>
+			Author
+		</div>
+		<br><br>
+		<div class='itemContent'>
+			{{:data.book_author}}
+		</div>
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			Pages
+		</div>
+		<br><br>
+		<div class='itemContent'>
+			{{:data.book_pages}}
+		</div>
+	</div>
+	{{:helper.link('Print Copy', '', {'action' : 'print'}, null)}}{{:helper.link('Delete Book', '', {'action' : 'delete'}, null)}}
+	
+{{/if}}

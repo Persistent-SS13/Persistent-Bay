@@ -15,8 +15,9 @@ var/list/limb_icon_cache = list()
 /obj/item/organ/external/proc/sync_colour_to_human(var/mob/living/carbon/human/human)
 	s_tone = null
 	s_col = null
+	s_base = ""
 	h_col = list(human.r_hair, human.g_hair, human.b_hair)
-	if(robotic >= ORGAN_ROBOT)
+	if(BP_IS_ROBOTIC(src) && !(human.species.appearance_flags & HAS_BASE_SKIN_COLOURS))
 		var/datum/robolimb/franchise = all_robolimbs[model]
 		if(!(franchise && franchise.skintone))
 			return
@@ -24,14 +25,17 @@ var/list/limb_icon_cache = list()
 		return
 	if(!isnull(human.s_tone) && (human.species.appearance_flags & HAS_A_SKIN_TONE))
 		s_tone = human.s_tone
+	if(!isnull(human.s_base) && (human.species.appearance_flags & HAS_BASE_SKIN_COLOURS))
+		s_base = human.s_base
 	if(human.species.appearance_flags & HAS_SKIN_COLOR)
 		s_col = list(human.r_skin, human.g_skin, human.b_skin)
 
 /obj/item/organ/external/proc/sync_colour_to_dna()
 	s_tone = null
 	s_col = null
+	s_base = dna.s_base
 	h_col = list(dna.GetUIValue(DNA_UI_HAIR_R),dna.GetUIValue(DNA_UI_HAIR_G),dna.GetUIValue(DNA_UI_HAIR_B))
-	if(robotic >= ORGAN_ROBOT)
+	if(BP_IS_ROBOTIC(src))
 		var/datum/robolimb/franchise = all_robolimbs[model]
 		if(!(franchise && franchise.skintone))
 			return
@@ -47,8 +51,10 @@ var/list/limb_icon_cache = list()
 
 /obj/item/organ/external/head/removed()
 	update_icon(1)
+	if(owner)
+		SetName("[owner.real_name]'s head")
+		addtimer(CALLBACK(owner, /mob/living/carbon/human/proc/update_hair), 1, TIMER_UNIQUE)
 	..()
-
 	//Head markings, duplicated (sadly) below.
 	for(var/M in markings)
 		var/datum/sprite_accessory/marking/mark_style = markings[M]["datum"]
@@ -59,27 +65,36 @@ var/list/limb_icon_cache = list()
 		icon_cache_key += "[M][markings[M]["color"]]"
 
 /obj/item/organ/external/var/icon_cache_key
-/obj/item/organ/external/update_icon(var/regenerate = 0)
+/obj/item/organ/external/on_update_icon(var/regenerate = 0)
+	if(QDELING(src) || QDELETED(src))
+		return
+
 	var/gender = "_m"
-	if(!gendered_icon)
+	if(!has_gendered_icon())
 		gender = null
 	else if (dna && dna.GetUIState(DNA_UI_GENDER))
 		gender = "_f"
 	else if(owner && owner.gender == FEMALE)
 		gender = "_f"
 
+	if(isnull(species))
+		CRASH("[src] \ref[src] has null specie! Loc is [loc]")
+
 	icon_state = "[icon_name][gender]"
+	if(species.base_skin_colours && !isnull(species.base_skin_colours[s_base]))
+		icon_state += species.base_skin_colours[s_base]
+
 	icon_cache_key = "[icon_state]_[species ? species.name : SPECIES_HUMAN]"
 
 	if(force_icon)
 		icon = force_icon
+	else if (BP_IS_ROBOTIC(src))
+		icon = 'icons/mob/human_races/cyberlimbs/robotic.dmi'
 	else if (!dna)
 		icon = 'icons/mob/human_races/species/human/body.dmi'
-	else if (robotic >= ORGAN_ROBOT)
-		icon = 'icons/mob/human_races/cyberlimbs/robotic.dmi'
 	else if (status & ORGAN_MUTATED)
 		icon = species.deform
-	else if (owner && (SKELETON in owner.mutations))
+	else if (owner && (MUTATION_SKELETON in owner.mutations))
 		icon = 'icons/mob/human_races/species/human/skeleton.dmi'
 	else
 		icon = species.get_icobase(owner)
@@ -141,18 +156,18 @@ var/list/robot_hud_colours = list("#ffffff","#cccccc","#aaaaaa","#888888","#6666
 
 
 	// Calculate the required color index.
-	var/dam_state = min(1,((brute_dam+burn_dam)/max(1,max_damage)))
-	var/min_dam_state = min(1,(get_pain()/max(1,max_damage)))
+	var/dam_state = min(1,((brute_dam+burn_dam)/max(1,max_health)))
+	var/min_dam_state = min(1,(get_pain()/max(1,max_health)))
 	if(min_dam_state && dam_state < min_dam_state)
 		dam_state = min_dam_state
 	// Apply colour and return product.
-	var/list/hud_colours = (robotic < ORGAN_ROBOT) ? flesh_hud_colours : robot_hud_colours
+	var/list/hud_colours = (!BP_IS_ROBOTIC(src)) ? flesh_hud_colours : robot_hud_colours
 	hud_damage_image.color = hud_colours[max(1,min(ceil(dam_state*hud_colours.len),hud_colours.len))]
 	return hud_damage_image
 
 /obj/item/organ/external/proc/apply_colouration(var/icon/applying)
 
-	if(nonsolid)
+	if(species.limbs_are_nonsolid)
 		applying.MapColors("#4d4d4d","#969696","#1c1c1c", "#000000")
 		if(species && species.get_bodytype(owner) != SPECIES_HUMAN)
 			applying.SetIntensity(1.5)
@@ -171,10 +186,23 @@ var/list/robot_hud_colours = list("#ffffff","#cccccc","#aaaaaa","#888888","#6666
 		else
 			applying.Blend(rgb(-s_tone,  -s_tone,  -s_tone), ICON_SUBTRACT)
 		icon_cache_key += "_tone_[s_tone]"
-	else
+	if(species.appearance_flags & HAS_SKIN_COLOR)
 		if(s_col && s_col.len >= 3)
 			applying.Blend(rgb(s_col[1], s_col[2], s_col[3]), s_col_blend)
 			icon_cache_key += "_color_[s_col[1]]_[s_col[2]]_[s_col[3]]_[s_col_blend]"
 
 	return applying
 
+/obj/item/organ/external/proc/bandage_level()
+	if(damage_state_text() == "00")
+		return 0
+	if(!is_bandaged())
+		return 0
+	if(burn_dam + brute_dam == 0)
+		. = 0
+	else if (burn_dam + brute_dam < (max_health * 0.25 / 2))
+		. = 1
+	else if (burn_dam + brute_dam < (max_health * 0.75 / 2))
+		. = 2
+	else
+		. = 3

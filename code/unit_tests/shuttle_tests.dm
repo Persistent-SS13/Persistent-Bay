@@ -1,4 +1,29 @@
 /*
+/datum/unit_test/generic_shuttle_landmarks_shall_not_appear_in_restricted_list
+	name = "SHUTTLE: Generic shuttle landmarks shall not appear in the restricted landmark list."
+
+/datum/unit_test/generic_shuttle_landmarks_shall_not_appear_in_restricted_list/start_test()
+	var/fail = FALSE
+
+	for(var/obj/effect/overmap/sector in world)
+		var/list/failures = list()
+		for(var/generic in sector.initial_generic_waypoints)
+			for(var/shuttle in sector.initial_restricted_waypoints)
+				if(generic == sector.initial_restricted_waypoints[shuttle])
+					failures += generic
+					break
+			if(length(failures))
+				log_bad("The sector [log_info_line(sector)] has the following generic landmarks also appearing on the restricted list: [english_list(failures)]")
+				fail = TRUE
+
+	if (fail)
+		fail("Some sector landmark lists were misconfigured.")
+	else
+		pass("All sector landmark lists were configured properly.")
+	return 1
+*/
+
+/*
 /datum/unit_test/shuttle
 	name = "SHUTTLE template"
 	async = 0
@@ -8,7 +33,7 @@
 
 /datum/unit_test/shuttle/shuttles_shall_have_a_name/start_test()
 	var/failed_shuttles = 0
-	for(var/datum/shuttle/shuttle in shuttle_controller.shuttles)
+	for(var/datum/shuttle/shuttle in SSshuttle.shuttles)
 		if(!shuttle.name)
 			failed_shuttles++
 
@@ -23,8 +48,8 @@
 
 /datum/unit_test/shuttle/shuttles_shall_use_mapped_areas/start_test()
 	var/failed_shuttles = 0
-	for(var/shuttle_name in shuttle_controller.shuttles)
-		var/datum/shuttle/shuttle = shuttle_controller.shuttles[shuttle_name]
+	for(var/shuttle_name in SSshuttle.shuttles)
+		var/datum/shuttle/shuttle = SSshuttle.shuttles[shuttle_name]
 		var/failed = FALSE
 		if(istype(shuttle, /datum/shuttle/autodock/ferry))
 			var/datum/shuttle/autodock/ferry/f = shuttle
@@ -63,8 +88,8 @@
 
 /datum/unit_test/shuttle/shuttles_shall_use_equally_sized_areas/start_test()
 	var/failed_shuttles = 0
-	for(var/shuttle_name in shuttle_controller.shuttles)
-		var/datum/shuttle/shuttle = shuttle_controller.shuttles[shuttle_name]
+	for(var/shuttle_name in SSshuttle.shuttles)
+		var/datum/shuttle/shuttle = SSshuttle.shuttles[shuttle_name]
 		var/failed = FALSE
 		if(istype(shuttle, /datum/shuttle/multi_shuttle))
 			var/datum/shuttle/multi_shuttle/ms = shuttle
@@ -90,8 +115,8 @@
 
 /datum/unit_test/shuttle/shuttles_shall_use_unique_areas/start_test()
 	var/list/shuttle_areas = list()
-	for(var/shuttle_name in shuttle_controller.shuttles)
-		var/datum/shuttle/shuttle = shuttle_controller.shuttles[shuttle_name]
+	for(var/shuttle_name in SSshuttle.shuttles)
+		var/datum/shuttle/shuttle = SSshuttle.shuttles[shuttle_name]
 		if(istype(shuttle, /datum/shuttle/autodock/ferry))
 			var/datum/shuttle/autodock/ferry/f = shuttle
 			group_by(shuttle_areas, f.shuttle_area.type, SHUTTLE_NAME_AID(f))

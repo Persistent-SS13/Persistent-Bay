@@ -6,177 +6,114 @@
 	light_color = "#e6ffff"
 	circuit = /obj/item/weapon/circuitboard/area_atmos
 
+	id_tag 			= null
+	frequency 		= ATMOS_CONTROL_FREQ
+	range 			= 25
+	radio_filter_in = RADIO_ATMOSIA
+	radio_filter_out= RADIO_ATMOSIA
+	//Simple variable to prevent me from doing attack_hand in both this and the child computer
+	var/zone = "This computer is working on a wireless range, the range is currently limited to 25 meters."
 	var/list/connectedscrubbers = new()
 	var/status = ""
 
-	var/range = 25
+/obj/machinery/computer/area_atmos/Initialize()
+	. = ..()
+	return INITIALIZE_HINT_LATELOAD
 
-	//Simple variable to prevent me from doing attack_hand in both this and the child computer
-	var/zone = "This computer is working on a wireless range, the range is currently limited to 25 meters."
+/obj/machinery/computer/area_atmos/LateInitialize()
+	. = ..()
+	scanscrubbers()
 
-	New()
-		..()
-		//So the scrubbers have time to spawn
-		spawn(10)
-			scanscrubbers()
+/obj/machinery/computer/area_atmos/attack_ai(var/mob/user as mob)
+	return src.attack_hand(user)
 
-	attack_ai(var/mob/user as mob)
-		return src.attack_hand(user)
+/obj/machinery/computer/area_atmos/ui_interact(mob/user, ui_key, datum/nanoui/ui, force_open, datum/nano_ui/master_ui, datum/topic_state/state)
+	var/data[0]
+	data["status"] = status
+	data["zone"] = zone
 
-	attack_hand(var/mob/user as mob)
-		if(..(user))
+	var/list/scrubdata[0]
+	for(var/obj/machinery/portable_atmospherics/powered/scrubber/huge/S in connectedscrubbers)
+		var/list/scr[0]
+		scr["name"] 	= S.name
+		scr["id"]		= "\ref[S]"
+		scr["pressure"] = round(S.air_contents.return_pressure(), 0.01)
+		scr["flowrate"] = round(S.last_flow_rate,0.1)
+		scr["load"]		= round(S.last_power_draw)
+		scr["power"]	= S.ison()
+		scrubdata[S.name] = scr.Copy()
+	data["scrubbers"] = scrubdata.Copy()
+
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
+	if (!ui)
+		ui = new(user, src, ui_key, "area_atmos_computer.tmpl", src.name, 480, 400)
+		ui.set_initial_data(data)
+		ui.open()
+		ui.set_auto_update(1)
+
+/obj/machinery/computer/area_atmos/OnTopic(mob/user, href_list, datum/topic_state/state)
+	if(..())
+		return
+	if(href_list["scan"])
+		scanscrubbers()
+	else if(href_list["toggle"])
+		var/obj/machinery/portable_atmospherics/powered/scrubber/huge/scrubber = locate(href_list["scrub"])
+
+		if(!validscrubber(scrubber))
+			spawn(20)
+				status = "ERROR: Couldn't connect to scrubber! (timeout)"
+				connectedscrubbers -= scrubber
+				src.updateUsrDialog()
 			return
-		src.add_fingerprint(usr)
-		var/dat = {"
-		<html>
-			<head>
-				<style type="text/css">
-					a.green:link
-					{
-						color:#00cc00;
-					}
-					a.green:visited
-					{
-						color:#00cc00;
-					}
-					a.green:hover
-					{
-						color:#00cc00;
-					}
-					a.green:active
-					{
-						color:#00cc00;
-					}
-					a.red:link
-					{
-						color:#ff0000;
-					}
-					a.red:visited
-					{
-						color:#ff0000;
-					}
-					a.red:hover
-					{
-						color:#ff0000;
-					}
-					a.red:active
-					{
-						color:#ff0000;
-					}
-				</style>
-			</head>
-			<body>
-				<center><h1>Area Air Control</h1></center>
-				<font color="red">[status]</font><br>
-				<a href="?src=\ref[src];scan=1">Scan</a>
-				<table border="1" width="90%">"}
-		for(var/obj/machinery/portable_atmospherics/powered/scrubber/huge/scrubber in connectedscrubbers)
-			dat += {"
-					<tr>
-						<td>
-							[scrubber.name]<br>
-							Pressure: [round(scrubber.air_contents.return_pressure(), 0.01)] kPa<br>
-							Flow Rate: [round(scrubber.last_flow_rate,0.1)] L/s<br>
-						</td>
-						<td width="150">
-							<a class="green" href="?src=\ref[src];scrub=\ref[scrubber];toggle=1">Turn On</a>
-							<a class="red" href="?src=\ref[src];scrub=\ref[scrubber];toggle=0">Turn Off</a><br>
-							Load: [round(scrubber.last_power_draw)] W
-						</td>
-					</tr>"}
-
-		dat += {"
-				</table><br>
-				<i>[zone]</i>
-			</body>
-		</html>"}
-		user << browse("[dat]", "window=miningshuttle;size=400x400")
-		status = ""
-
-	Topic(href, href_list)
-		if(..())
-			return
-		usr.set_machine(src)
-		src.add_fingerprint(usr)
+		if(scrubber.isactive())
+			scrubber.turn_idle()
+		else
+			scrubber.turn_active()
 
 
-		if(href_list["scan"])
-			scanscrubbers()
-		else if(href_list["toggle"])
-			var/obj/machinery/portable_atmospherics/powered/scrubber/huge/scrubber = locate(href_list["scrub"])
+/obj/machinery/computer/area_atmos/proc/validscrubber( var/obj/machinery/portable_atmospherics/powered/scrubber/huge/scrubber as obj )
+	if(!isobj(scrubber) || get_dist(scrubber.loc, src.loc) > src.range || scrubber.loc.z != src.loc.z)
+		return FALSE
+	return TRUE
 
-			if(!validscrubber(scrubber))
-				spawn(20)
-					status = "ERROR: Couldn't connect to scrubber! (timeout)"
-					connectedscrubbers -= scrubber
-					src.updateUsrDialog()
-				return
+/obj/machinery/computer/area_atmos/proc/scanscrubbers()
+	qdel(connectedscrubbers)
+	connectedscrubbers = list()
+	var/found = FALSE
+	for(var/obj/machinery/portable_atmospherics/powered/scrubber/huge/scrubber in range(range, src.loc))
+		if(istype(scrubber))
+			found = TRUE
+			connectedscrubbers += scrubber
+	if(!found)
+		status = "ERROR: No scrubber found!"
+	src.updateUsrDialog()
 
-			scrubber.on = text2num(href_list["toggle"])
-			scrubber.update_icon()
-
-	proc/validscrubber( var/obj/machinery/portable_atmospherics/powered/scrubber/huge/scrubber as obj )
-		if(!isobj(scrubber) || get_dist(scrubber.loc, src.loc) > src.range || scrubber.loc.z != src.loc.z)
-			return 0
-
-		return 1
-
-	proc/scanscrubbers()
-		connectedscrubbers = new()
-
-		var/found = 0
-		for(var/obj/machinery/portable_atmospherics/powered/scrubber/huge/scrubber in range(range, src.loc))
-			if(istype(scrubber))
-				found = 1
-				connectedscrubbers += scrubber
-
-		if(!found)
-			status = "ERROR: No scrubber found!"
-
-		src.updateUsrDialog()
-
-
+//
+//	Area limited
+//
 /obj/machinery/computer/area_atmos/area
 	zone = "This computer is working in a wired network limited to this area."
 
-	validscrubber( var/obj/machinery/portable_atmospherics/powered/scrubber/huge/scrubber as obj )
-		if(!isobj(scrubber))
-			return 0
+/obj/machinery/computer/area_atmos/area/validscrubber( var/obj/machinery/portable_atmospherics/powered/scrubber/huge/scrubber as obj )
+	if(!isobj(scrubber))
+		return FALSE
+	var/area/srca = get_area(src)
+	var/area/scra = get_area(scrubber)
+	if(!srca || !scra || (srca && scra && srca != scra))
+		return FALSE
+	return TRUE
 
-		/*
-		wow this is stupid, someone help me
-		*/
-		var/turf/T_src = get_turf(src)
-		if(!T_src.loc) return 0
-		var/area/A_src = T_src.loc
-
-		var/turf/T_scrub = get_turf(scrubber)
-		if(!T_scrub.loc) return 0
-		var/area/A_scrub = T_scrub.loc
-
-		if(A_scrub != A_src)
-			return 0
-
-		return 1
-
-	scanscrubbers()
-		connectedscrubbers = new()
-
-		var/found = 0
-
-		var/turf/T = get_turf(src)
-		if(!T.loc) return
-		var/area/A = T.loc
-		for(var/obj/machinery/portable_atmospherics/powered/scrubber/huge/scrubber in world )
-			var/turf/T2 = get_turf(scrubber)
-			if(T2 && T2.loc)
-				var/area/A2 = T2.loc
-				if(istype(A2) && A2 == A)
-					connectedscrubbers += scrubber
-					found = 1
-
-
-		if(!found)
-			status = "ERROR: No scrubber found!"
-
-		src.updateUsrDialog()
+/obj/machinery/computer/area_atmos/area/scanscrubbers()
+	connectedscrubbers = new()
+	var/found = FALSE
+	var/area/A = get_area(src)
+	if(!A)
+		return
+	for(var/obj/machinery/portable_atmospherics/powered/scrubber/huge/scrubber in world )
+		var/area/A2 = get_area(scrubber)
+		if(istype(A2) && A2 == A)
+			connectedscrubbers += scrubber
+			found = TRUE
+	if(!found)
+		status = "ERROR: No scrubber found!"
+	src.updateUsrDialog()

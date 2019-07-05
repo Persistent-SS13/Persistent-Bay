@@ -42,16 +42,16 @@
 			return INITIALIZE_HINT_QDEL
 
 /obj/machinery/computer/arcade/proc/prizevend()
-	if(!contents.len)
-		var/prizeselect = pickweight(prizes)
-		new prizeselect(src.loc)
-
-		if(istype(prizeselect, /obj/item/clothing/suit/syndicatefake)) //Helmet is part of the suit
-			new	/obj/item/clothing/head/syndicatefake(src.loc)
-
-	else
-		var/atom/movable/prize = pick(contents)
-		prize.forceMove(src.loc)
+//	if(!contents.len)
+//		var/prizeselect = pickweight(prizes)
+//		new prizeselect(src.loc)
+//
+//		if(istype(prizeselect, /obj/item/clothing/suit/syndicatefake)) //Helmet is part of the suit
+//			new	/obj/item/clothing/head/syndicatefake(src.loc)
+//
+//	else
+//		var/atom/movable/prize = pick(contents)
+//		prize.forceMove(src.loc)
 
 /obj/machinery/computer/arcade/attack_ai(mob/user as mob)
 	return src.attack_hand(user)
@@ -108,7 +108,7 @@
 	name_part2 = pick("Melonoid", "Murdertron", "Sorcerer", "Ruin", "Jeff", "Ectoplasm", "Crushulon", "Uhangoid", "Vhakoid", "Peteoid", "slime", "Griefer", "ERPer", "Lizard Man", "Unicorn", "Bloopers")
 
 	src.enemy_name = replacetext((name_part1 + name_part2), "the ", "")
-	src.name = (name_action + name_part1 + name_part2)
+	src.SetName((name_action + name_part1 + name_part2))
 
 
 /obj/machinery/computer/arcade/battle/attack_hand(mob/user as mob)
@@ -209,14 +209,14 @@
 			src.temp = "[src.enemy_name] has fallen! Rejoice!"
 
 			if(emagged)
-				feedback_inc("arcade_win_emagged")
+				SSstatistics.add_field("arcade_win_emagged")
 				new /obj/effect/spawner/newbomb/timer/syndicate(src.loc)
 				new /obj/item/clothing/head/collectable/petehat(src.loc)
 				log_and_message_admins("has outbombed Cuban Pete and been awarded a bomb.")
 				SetupGame()
 				emagged = 0
 			else
-				feedback_inc("arcade_win_normal")
+				SSstatistics.add_field("arcade_win_normal")
 				src.prizevend()
 
 	else if (emagged && (turtle >= 4))
@@ -235,10 +235,10 @@
 			sleep(10)
 			src.temp = "You have been drained! GAME OVER"
 			if(emagged)
-				feedback_inc("arcade_loss_mana_emagged")
+				SSstatistics.add_field("arcade_loss_mana_emagged")
 				explode()
 			else
-				feedback_inc("arcade_loss_mana_normal")
+				SSstatistics.add_field("arcade_loss_mana_normal")
 
 	else if ((src.enemy_hp <= 10) && (src.enemy_mp > 4))
 		src.temp = "[src.enemy_name] heals for 4 health!"
@@ -254,10 +254,10 @@
 		src.gameover = 1
 		src.temp = "You have been crushed! GAME OVER"
 		if(emagged)
-			feedback_inc("arcade_loss_hp_emagged")
+			SSstatistics.add_field("arcade_loss_hp_emagged")
 			explode()
 		else
-			feedback_inc("arcade_loss_hp_normal")
+			SSstatistics.add_field("arcade_loss_hp_normal")
 
 	src.blocked = 0
 

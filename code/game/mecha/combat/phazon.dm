@@ -8,7 +8,7 @@
 	step_energy_drain = 100
 	health = 200
 	deflect_chance = 30
-	damage_absorption = list("brute"=0.7,"fire"=0.7,"bullet"=0.7,"laser"=0.7,"energy"=0.7,"bomb"=0.7)
+	damage_absorption = list(DAM_BLUNT = 0.7, DAM_CUT = 0.7, DAM_PIERCE = 0.65, DAM_BURN = 0.7, DAM_BULLET = 0.7, DAM_LASER = 0.7, DAM_ENERGY = 0.7, DAM_BOMB = 0.7)
 	max_temperature = 25000
 	infra_luminosity = 3
 	wreckage = /obj/effect/decal/mecha_wreckage/phazon
@@ -60,11 +60,11 @@
 	var/new_damtype = alert(src.occupant,"Melee Damage Type",null,"Brute","Fire","Toxic")
 	switch(new_damtype)
 		if("Brute")
-			damtype = "brute"
+			damtype = DAM_BLUNT
 		if("Fire")
-			damtype = "fire"
+			damtype = DAM_BURN
 		if("Toxic")
-			damtype = "tox"
+			damtype = DAM_BIO
 	src.occupant_message("Melee damage type switched to [new_damtype ]")
 	return
 

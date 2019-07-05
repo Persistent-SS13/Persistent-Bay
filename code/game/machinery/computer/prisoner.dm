@@ -44,7 +44,7 @@
 				Tr = get_turf(T)
 				if((Tr) && !AreConnectedZLevels(Tr.z, src.z))	continue // Out of range
 				if(!T.implanted) continue
-				var/loc_display = "Unknown"
+				var/loc_display = "Space"
 				var/mob/living/carbon/M = T.imp_in
 				if(!istype(M.loc, /turf/space))
 					var/turf/mob_loc = get_turf(M)
@@ -99,6 +99,5 @@
 					var/mob/living/carbon/R = I.imp_in
 					to_chat(R, "<span class='notice'>You hear a voice in your head saying: '[warning]'</span>")
 
-			src.add_fingerprint(usr)
 		src.updateUsrDialog()
 		return

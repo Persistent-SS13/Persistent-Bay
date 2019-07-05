@@ -9,17 +9,11 @@
 	var/potency = 1
 
 /obj/item/weapon/grown/New(newloc,planttype)
-
 	..()
-
-	var/datum/reagents/R = new/datum/reagents(50)
-	reagents = R
-	R.my_atom = src
-
 	//Handle some post-spawn var stuff.
 	if(planttype)
 		plantname = planttype
-		var/datum/seed/S = plant_controller.seeds[plantname]
+		var/datum/seed/S = SSplants.seeds[plantname]
 		if(!S || !S.chems)
 			return
 
@@ -31,6 +25,12 @@
 			if(reagent_data.len > 1 && potency > 0)
 				rtotal += round(potency/reagent_data[2])
 			reagents.add_reagent(rid,max(1,rtotal))
+	ADD_SAVED_VAR(plantname)
+	ADD_SAVED_VAR(potency)
+
+/obj/item/weapon/grown/SetupReagents()
+	. = ..()
+	create_reagents(50)
 
 /obj/item/weapon/corncob
 	name = "corn cob"
@@ -45,7 +45,7 @@
 
 /obj/item/weapon/corncob/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	..()
-	if(istype(W, /obj/item/weapon/circular_saw) || istype(W, /obj/item/weapon/material/hatchet) || istype(W, /obj/item/weapon/material/kitchen/utensil/knife) || istype(W, /obj/item/weapon/material/knife) || istype(W, /obj/item/weapon/material/knife/ritual))
+	if(istype(W, /obj/item/weapon/circular_saw) || isHatchet(W) || istype(W, /obj/item/weapon/material/knife))
 		to_chat(user, "<span class='notice'>You use [W] to fashion a pipe out of the corn cob!</span>")
 		new /obj/item/clothing/mask/smokable/pipe/cobpipe (user.loc)
 		qdel(src)

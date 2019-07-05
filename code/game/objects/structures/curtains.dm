@@ -6,19 +6,13 @@
 	layer = ABOVE_WINDOW_LAYER
 	opacity = 1
 	density = 0
+	max_health = 20
 
 /obj/structure/curtain/open
 	icon_state = "open"
 	plane = ABOVE_HUMAN_PLANE
 	layer = ABOVE_HUMAN_LAYER
 	opacity = 0
-
-/obj/structure/curtain/bullet_act(obj/item/projectile/P, def_zone)
-	if(!P.nodamage)
-		visible_message("<span class='warning'>[P] tears [src] down!</span>")
-		qdel(src)
-	else
-		..(P, def_zone)
 
 /obj/structure/curtain/attack_hand(mob/user)
 	playsound(get_turf(loc), "rustle", 15, 1, -5)
@@ -64,9 +58,6 @@
 /obj/structure/curtain/open/shower/security
 	color = "#aa0000"
 
-#undef SHOWER_OPEN_LAYER
-#undef SHOWER_CLOSED_LAYER
-
 /obj/structure/curtain/attackby(obj/item/W as obj, mob/user as mob)
 	if((isScrewdriver(W)) && (istype(loc, /turf/simulated) || anchored))
 		playsound(loc, 'sound/items/Screwdriver.ogg', 100, 1)
@@ -76,7 +67,7 @@
 		return
 
 	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if(WT.remove_fuel(0,user))
 			var/obj/item/stack/material/plastic/new_item = new(usr.loc)
 			new_item.add_to_stacks(usr)
@@ -84,3 +75,4 @@
 				M.show_message("<span class='notice'>Now slicing apart the [src]...</span>", 3, "<span class='notice'>You hear welding.</span>", 2)
 		qdel(src)
 		return
+	return ..()

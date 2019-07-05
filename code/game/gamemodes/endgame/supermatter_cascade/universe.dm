@@ -52,9 +52,10 @@ var/global/universe_has_ended = 0
 	OverlayAndAmbientSet()
 
 	// Disable Nar-Sie.
-	cult.allow_narsie = 0
+	GLOB.cult.allow_narsie = 0
 
 	PlayerSet()
+	SSskybox.reinstate_skyboxes("cascade", FALSE)
 
 	new /obj/singularity/narsie/large/exit(pick(endgame_exits))
 	spawn(rand(30,60) SECONDS)
@@ -72,9 +73,6 @@ AUTOMATED ALERT: Link to [command_name()] lost.
 "}
 		priority_announcement.Announce(txt,"SUPERMATTER CASCADE DETECTED")
 
-		spawn(5 MINUTES)
-			ticker.station_explosion_cinematic(0,null) // TODO: Custom cinematic
-			universe_has_ended = 1
 		return
 
 /datum/universal_state/supermatter_cascade/proc/AreaSet()

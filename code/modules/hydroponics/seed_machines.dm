@@ -8,12 +8,17 @@
 	var/list/genes = list()
 	var/genesource = "unknown"
 
+/obj/item/weapon/disk/botany/New()
+	. = ..()
+	ADD_SAVED_VAR(genes)
+	ADD_SAVED_VAR(genesource)
+
 /obj/item/weapon/disk/botany/attack_self(var/mob/user as mob)
 	if(genes.len)
 		var/choice = alert(user, "Are you sure you want to wipe the disk?", "Xenobotany Data", "No", "Yes")
 		if(src && user && genes && choice && choice == "Yes" && user.Adjacent(get_turf(src)))
 			to_chat(user, "You wipe the disk data.")
-			name = initial(name)
+			SetName(initial(name))
 			desc = initial(name)
 			genes = list()
 			genesource = "unknown"
@@ -28,7 +33,6 @@
 	icon_state = "hydrotray3"
 	density = 1
 	anchored = 1
-	use_power = 1
 
 	var/obj/item/seeds/seed // Currently loaded seed packet.
 	var/obj/item/weapon/disk/botany/loaded_disk //Currently loaded data disk.
@@ -41,9 +45,33 @@
 	var/failed_task = 0
 	var/disk_needs_genes = 0
 
+/obj/machinery/botany/New()
+	. = ..()
+	ADD_SAVED_VAR(seed)
+	ADD_SAVED_VAR(loaded_disk)
+	ADD_SAVED_VAR(open)
+	ADD_SAVED_VAR(active)
+	ADD_SAVED_VAR(action_time)
+	ADD_SAVED_VAR(last_action)
+	ADD_SAVED_VAR(failed_task)
+	ADD_SAVED_VAR(disk_needs_genes)
+
+	ADD_SKIP_EMPTY(seed)
+	ADD_SKIP_EMPTY(loaded_disk)
+
+//Save the time until finished as absolute time
+/obj/machinery/botany/before_save()
+	. = ..()
+	if(active)
+		last_action -= world.time
+/obj/machinery/botany/after_save()
+	. = ..()
+	if(active)
+		last_action += world.time
+
 /obj/machinery/botany/Process()
 
-	..()
+	. = ..()
 	if(!active) return
 
 	if(world.time > last_action + action_time)
@@ -66,7 +94,7 @@
 	if(eject_disk)
 		eject_disk = 0
 		if(loaded_disk)
-			loaded_disk.loc = get_turf(src)
+			loaded_disk.dropInto(loc)
 			visible_message("\icon[src] [src] beeps and spits out [loaded_disk].")
 			loaded_disk = null
 
@@ -78,9 +106,7 @@
 		var/obj/item/seeds/S =W
 		if(S.seed && S.seed.get_trait(TRAIT_IMMUTABLE) > 0)
 			to_chat(user, "That seed is not compatible with our genetics technology.")
-		else
-			user.drop_from_inventory(W)
-			W.loc = src
+		else if(user.unEquip(W, src))
 			seed = W
 			to_chat(user, "You load [W] into [src].")
 		return
@@ -110,9 +136,8 @@
 				if(disk_needs_genes)
 					to_chat(user, "That disk does not have any gene data loaded.")
 					return
-
-			user.drop_from_inventory(W)
-			W.loc = src
+			if(!user.unEquip(W, src))
+				return
 			loaded_disk = W
 			to_chat(user, "You load [W] into [src].")
 
@@ -123,11 +148,17 @@
 /obj/machinery/botany/extractor
 	name = "lysis-isolation centrifuge"
 	icon_state = "traitcopier"
+	circuit_type = /obj/item/weapon/circuitboard/botany_extractor
 
 	var/datum/seed/genetics // Currently scanned seed genetic structure.
 	var/degradation = 0     // Increments with each scan, stops allowing gene mods after a certain point.
 	var/degrade_lower = 5
 	var/degrade_upper = 10
+
+/obj/machinery/botany/extractor/New()
+	..()
+	ADD_SAVED_VAR(genetics)
+	ADD_SAVED_VAR(degradation)
 
 /obj/machinery/botany/extractor/attackby(var/obj/item/O as obj, var/mob/user as mob)
 
@@ -140,19 +171,6 @@
 		return
 	return ..()
 
-/obj/machinery/botany/extractor/New()
-	..()
-
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/botany_extractor(null)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(null)
-	component_parts += new /obj/item/weapon/stock_parts/scanning_module(null)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(null)
-	RefreshParts()
-
-/obj/machinery/botany/extractor/RefreshParts()
-
-
 /obj/machinery/botany/extractor/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 
 	if(!user)
@@ -160,7 +178,7 @@
 
 	var/list/data = list()
 
-	var/list/geneMasks = plant_controller.gene_masked_list
+	var/list/geneMasks = SSplants.gene_masked_list
 	data["geneMasks"] = geneMasks
 
 	data["activity"] = active
@@ -185,7 +203,7 @@
 		data["hasGenetics"] = 0
 		data["sourceName"] = 0
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "botany_isolator.tmpl", "Lysis-isolation Centrifuge UI", 470, 450)
 		ui.set_initial_data(data)
@@ -199,12 +217,12 @@
 
 	if(href_list["eject_packet"])
 		if(!seed) return
-		seed.loc = get_turf(src)
+		seed.dropInto(loc)
 
-		if(seed.seed.name == "new line" || isnull(plant_controller.seeds[seed.seed.name]))
-			seed.seed.uid = plant_controller.seeds.len + 1
+		if(seed.seed.name == "new line" || isnull(SSplants.seeds[seed.seed.name]))
+			seed.seed.uid = SSplants.seeds.len + 1
 			seed.seed.name = "[seed.seed.uid]"
-			plant_controller.seeds[seed.seed.name] = seed.seed
+			SSplants.seeds[seed.seed.name] = seed.seed
 
 		seed.update_seed()
 		visible_message("\icon[src] [src] beeps and spits out [seed].")
@@ -213,7 +231,7 @@
 
 	if(href_list["eject_disk"])
 		if(!loaded_disk) return
-		loaded_disk.loc = get_turf(src)
+		loaded_disk.dropInto(loc)
 		visible_message("\icon[src] [src] beeps and spits out [loaded_disk].")
 		loaded_disk = null
 
@@ -225,8 +243,9 @@
 	if(..())
 		return 1
 
-	usr.set_machine(src)
-	src.add_fingerprint(usr)
+	var/mob/user = usr
+	user.set_machine(src)
+	src.add_fingerprint(user)
 
 	if(href_list["scan_genome"])
 
@@ -236,8 +255,11 @@
 		active = 1
 
 		if(seed && seed.seed)
-			genetics = seed.seed
-			degradation = 0
+			if(prob(user.skill_fail_chance(SKILL_BOTANY, 100, SKILL_ADEPT)))
+				failed_task = 1
+			else
+				genetics = seed.seed
+				degradation = 0
 
 		qdel(seed)
 		seed = null
@@ -257,11 +279,14 @@
 		if(!genetics.roundstart)
 			loaded_disk.genesource += " (variety #[genetics.uid])"
 
-		loaded_disk.name += " ([plant_controller.gene_tag_masks[href_list["get_gene"]]], #[genetics.uid])"
-		loaded_disk.desc += " The label reads \'gene [plant_controller.gene_tag_masks[href_list["get_gene"]]], sampled from [genetics.display_name]\'."
+		loaded_disk.name += " ([SSplants.gene_tag_masks[href_list["get_gene"]]], #[genetics.uid])"
+		loaded_disk.desc += " The label reads \'gene [SSplants.gene_tag_masks[href_list["get_gene"]]], sampled from [genetics.display_name]\'."
 		eject_disk = 1
 
-		degradation += rand(20,60)
+		degradation += rand(20,60) + user.skill_fail_chance(SKILL_BOTANY, 100, SKILL_ADEPT)
+		var/expertise = max(0, user.get_skill_value(SKILL_BOTANY) - SKILL_ADEPT)
+		degradation = max(0, degradation - 10*expertise)
+	
 		if(degradation >= 100)
 			failed_task = 1
 			genetics = null
@@ -281,6 +306,7 @@
 	name = "bioballistic delivery system"
 	icon_state = "traitgun"
 	disk_needs_genes = 1
+	circuit_type = /obj/item/weapon/circuitboard/botany_editor
 
 /obj/machinery/botany/editor/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 
@@ -303,7 +329,7 @@
 
 		for(var/datum/plantgene/P in loaded_disk.genes)
 			if(data["locus"] != "") data["locus"] += ", "
-			data["locus"] += "[plant_controller.gene_tag_masks[P.genetype]]"
+			data["locus"] += "[SSplants.gene_tag_masks[P.genetype]]"
 
 	else
 		data["disk"] = 0
@@ -315,7 +341,7 @@
 	else
 		data["loaded"] = 0
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "botany_editor.tmpl", "Bioballistic Delivery UI", 470, 450)
 		ui.set_initial_data(data)
@@ -330,10 +356,11 @@
 	if(href_list["apply_gene"])
 		if(!loaded_disk || !seed) return
 
+		var/mob/user = usr
 		last_action = world.time
 		active = 1
 
-		if(!isnull(plant_controller.seeds[seed.seed.name]))
+		if(!isnull(SSplants.seeds[seed.seed.name]))
 			seed.seed = seed.seed.diverge(1)
 			seed.seed_type = seed.seed.name
 			seed.update_seed()
@@ -344,16 +371,13 @@
 
 		for(var/datum/plantgene/gene in loaded_disk.genes)
 			seed.seed.apply_gene(gene)
-			seed.modified += rand(5,10)
+			var/expertise = max(user.get_skill_value(SKILL_BOTANY) - SKILL_ADEPT)
+			seed.modified += rand(5,10) + min(-5, 30 * expertise)
 
 	usr.set_machine(src)
 	src.add_fingerprint(usr)
 
-
-
-
 /obj/machinery/botany/editor/attackby(var/obj/item/O as obj, var/mob/user as mob)
-
 	if(default_deconstruction_screwdriver(user, O))
 		updateUsrDialog()
 		return
@@ -363,15 +387,3 @@
 		return
 	return ..()
 
-/obj/machinery/botany/editor/New()
-	..()
-
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/botany_editor(null)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(null)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(null)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(null)
-	RefreshParts()
-
-/obj/machinery/botany/editor/RefreshParts()
-	return

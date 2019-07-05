@@ -1,4 +1,4 @@
-var/datum/antagonist/godcultist/godcult
+GLOBAL_DATUM_INIT(godcult, /datum/antagonist/godcultist, new)
 
 /datum/antagonist/godcultist
 	id = MODE_GODCULTIST
@@ -6,7 +6,7 @@ var/datum/antagonist/godcultist/godcult
 	role_text_plural = "God Cultists"
 	restricted_jobs = list(/datum/job/lawyer, /datum/job/captain, /datum/job/hos)
 	protected_jobs = list(/datum/job/officer, /datum/job/warden, /datum/job/detective)
-	blacklisted_jobs = list(/datum/job/ai, /datum/job/cyborg, /datum/job/chaplain)
+	blacklisted_jobs = list(/datum/job/ai, /datum/job/cyborg, /datum/job/chaplain, /datum/job/submap)
 	feedback_tag = "godcult_objective"
 	antag_indicator = "hudcultist"
 	faction_verb = /mob/living/proc/dpray
@@ -18,13 +18,10 @@ var/datum/antagonist/godcultist/godcult
 	flags = ANTAG_SUSPICIOUS | ANTAG_RANDSPAWN | ANTAG_VOTABLE
 	hard_cap = 5
 	hard_cap_round = 6
-	initial_spawn_req = 2
-	initial_spawn_target = 2
+	initial_spawn_req = 3
+	initial_spawn_target = 3
 	antaghud_indicator = "hudcultist"
-
-/datum/antagonist/godcultist/New()
-	..()
-	godcult = src
+	skill_setter = /datum/antag_skill_setter/station
 
 /datum/antagonist/godcultist/add_antagonist_mind(var/datum/mind/player, var/ignore_role, var/nonstandard_role_type, var/nonstandard_role_msg, var/mob/living/deity/specific_god)
 	if(!..())
@@ -36,15 +33,15 @@ var/datum/antagonist/godcultist/godcult
 	return 1
 
 /datum/antagonist/godcultist/post_spawn()
-	if(!deity || !deity.current_antagonists.len)
+	if(!GLOB.deity || !GLOB.deity.current_antagonists.len)
 		return
 
 	var/count = 1
 	var/deity_count = 1
 	while(count <= current_antagonists.len)
-		if(deity_count > deity.current_antagonists.len)
+		if(deity_count > GLOB.deity.current_antagonists.len)
 			deity_count = 1
-		var/datum/mind/deity_mind = deity.current_antagonists[deity_count]
+		var/datum/mind/deity_mind = GLOB.deity.current_antagonists[deity_count]
 		var/datum/mind/mind = current_antagonists[count]
 		add_cultist(mind, deity_mind.current)
 		count++
@@ -52,9 +49,10 @@ var/datum/antagonist/godcultist/godcult
 
 
 /datum/antagonist/godcultist/remove_antagonist(var/datum/mind/player, var/show_message, var/implanted)
+	var/mob/living/deity/god = get_deity(player)
 	if(!..())
 		return 0
-	remove_cultist(player)
+	remove_cultist(player, god)
 	return 1
 
 /datum/antagonist/godcultist/get_extra_panel_options(var/datum/mind/player)
@@ -65,8 +63,8 @@ var/datum/antagonist/godcultist/godcult
 		return 1
 	if(href_list["selectgod"])
 		var/list/god_list = list()
-		if(deity && deity.current_antagonists.len)
-			for(var/m in deity.current_antagonists)
+		if(GLOB.deity && GLOB.deity.current_antagonists.len)
+			for(var/m in GLOB.deity.current_antagonists)
 				var/datum/mind/mind = m
 				god_list += mind.current
 		else
@@ -84,29 +82,27 @@ var/datum/antagonist/godcultist/godcult
 		return 1
 
 /datum/antagonist/godcultist/proc/add_cultist(var/datum/mind/player, var/mob/living/deity/deity)
-	deity.change_follower(player.current, adding = 1)
+	deity.add_follower(player.current)
 	player.current.add_language(LANGUAGE_CULT)
 
-/datum/antagonist/godcultist/proc/remove_cultist(var/datum/mind/player)
-	var/mob/living/deity/god = get_deity(player)
-	if(god)
-		god.change_follower(player.current, adding = 0)
+/datum/antagonist/godcultist/proc/remove_cultist(var/datum/mind/player, var/mob/living/deity/god)
+	god.remove_follower(player.current)
 	player.current.remove_language(LANGUAGE_CULT)
 
 /datum/antagonist/godcultist/proc/get_deity(var/datum/mind/player)
-	for(var/m in deity.current_antagonists)
+	for(var/m in GLOB.deity.current_antagonists)
 		var/datum/mind/mind = m
 		var/mob/living/deity/god = mind.current
-		if(god.is_follower(player.current,1))
+		if(god && god.is_follower(player.current,1))
 			return god
 
 /mob/living/proc/dpray(var/msg as text)
 	set category = "Abilities"
 
-	if(!src.mind || !godcult || !godcult.is_antagonist(mind))
+	if(!src.mind || !GLOB.godcult || !GLOB.godcult.is_antagonist(mind))
 		return
 	msg = sanitize(msg)
-	var/mob/living/deity/D = godcult.get_deity(mind)
+	var/mob/living/deity/D = GLOB.godcult.get_deity(mind)
 	if(!D || !msg)
 		return
 

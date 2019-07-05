@@ -3,10 +3,9 @@
 /obj/item/bodybag
 	name = "body bag"
 	desc = "A folded bag designed for the storage and transportation of cadavers."
-	icon = 'icons/obj/bodybag.dmi'
+	icon = 'icons/obj/closets/bodybag.dmi'
 	icon_state = "bodybag_folded"
 	w_class = ITEM_SIZE_SMALL
-
 	attack_self(mob/user)
 		var/obj/structure/closet/body_bag/R = new /obj/structure/closet/body_bag(user.loc)
 		R.add_fingerprint(user)
@@ -31,19 +30,16 @@
 /obj/structure/closet/body_bag
 	name = "body bag"
 	desc = "A plastic bag designed for the storage and transportation of cadavers."
-	icon = 'icons/obj/bodybag.dmi'
-	icon_state = "bodybag_closed"
-	icon_closed = "bodybag_closed"
-	icon_opened = "bodybag_open"
+	icon = 'icons/obj/closets/bodybag.dmi'
+	closet_appearance = null
 	open_sound = 'sound/items/zip.ogg'
 	close_sound = 'sound/items/zip.ogg'
 	var/item_path = /obj/item/bodybag
 	density = 0
-	wrenchable = 0 // body bags cannot be anchored with a wrench
 	storage_capacity = (MOB_MEDIUM * 2) - 1
 	var/contains_body = 0
 
-/obj/structure/closet/body_bag/attackby(W as obj, mob/user as mob)
+/obj/structure/closet/body_bag/attackby(var/obj/item/W, mob/user as mob)
 	if (istype(W, /obj/item/weapon/pen))
 		var/t = input(user, "What would you like the label to be?", text("[]", src.name), null)  as text
 		if (user.get_active_hand() != W)
@@ -52,23 +48,23 @@
 			return
 		t = sanitizeSafe(t, MAX_NAME_LEN)
 		if (t)
-			src.name = "body bag - "
+			src.SetName("body bag - ")
 			src.name += t
 			src.overlays += image(src.icon, "bodybag_label")
 		else
-			src.name = "body bag"
+			src.SetName("body bag")
 	//..() //Doesn't need to run the parent. Since when can fucking bodybags be welded shut? -Agouri
 		return
-	else if(isWirecutter(W))
-		src.name = "body bag"
+	else if(isWirecutter(W) || isScissors(W))
+		src.SetName("body bag")
 		src.overlays.Cut()
 		to_chat(user, "You cut the tag off \the [src].")
 		return
-	else if(istype(W, /obj/item/device/healthanalyzer/) && !opened)
+	else if(istype(W, /obj/item/device/scanner/health/) && !opened)
 		if(contains_body)
-			var/obj/item/device/healthanalyzer/HA = W
+			var/obj/item/device/scanner/health/HA = W
 			for(var/mob/living/L in contents)
-				HA.scan_mob(L, user)
+				HA.afterattack(L, user, TRUE)
 		else
 			to_chat(user, "\The [W] reports that \the [src] is empty.")
 		return
@@ -84,7 +80,7 @@
 	return 0
 
 /obj/structure/closet/body_bag/proc/fold(var/user)
-	if(!ishuman(user))	return 0
+	if(!(ishuman(user) || isrobot(user)))	return 0
 	if(opened)	return 0
 	if(contents.len)	return 0
 	visible_message("[user] folds up the [name]")
@@ -96,11 +92,11 @@
 	if((over_object == usr && (in_range(src, usr) || usr.contents.Find(src))))
 		fold(usr)
 
-/obj/structure/closet/body_bag/update_icon()
-	if(opened)
-		icon_state = icon_opened
-	else
-		if(contains_body > 0)
-			icon_state = "bodybag_closed1"
-		else
-			icon_state = icon_closed
+/obj/item/robot_rack/body_bag
+	name = "stasis bag rack"
+	desc = "A rack for carrying folded stasis bags and body bags."
+	icon = 'icons/obj/closets/cryobag.dmi'
+	icon_state = "bodybag_folded"
+	object_type = /obj/item/bodybag
+	interact_type = /obj/structure/closet/body_bag
+	capacity = 3

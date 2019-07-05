@@ -30,7 +30,7 @@ hr {
     height: 1px;
 }
 
-.link, .linkOn, .linkOff, .selected, .disabled, .yellowButton, .redButton {
+.link, .linkOn, .linkOff, .selected, .disabled, .yellowButton, .redButton, button {
     float: left;
     min-width: 15px;
     height: 16px;
@@ -49,7 +49,7 @@ hr {
     padding: 0px 4px 4px 0px;
 }
 
-a:hover, .zoomLink:hover, .linkActive:hover {
+a:hover, .zoomLink:hover, .linkActive:hover, button:hover {
     box-shadow: 0 0 2rem GhostWhite inset;
 }
 
@@ -152,6 +152,10 @@ abbr {
     border-bottom: .1em dotted;
 }
 
+button[class="spoiler"][value="0"] + .spoiler {
+   display: none;
+}
+
 .white {
     color: white;
     font-weight: bold;
@@ -237,6 +241,10 @@ abbr {
 
 div.notice {
     clear: both;
+}
+
+.notice.info {
+    background: url(uiInfoBackground.jpg) 50% 50%;
 }
 
 .itemGroup {
@@ -570,7 +578,7 @@ div.notice {
     text-align: center;
 }
 
-table.fixed { 
+table.fixed {
 	table-layout:fixed;
 }
 

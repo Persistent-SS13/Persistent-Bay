@@ -6,7 +6,7 @@
 	icon_state = "health"
 	w_class = ITEM_SIZE_SMALL
 	item_state = "electronic"
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 
 /obj/item/device/antibody_scanner/attack(mob/M as mob, mob/user as mob)
 	if(!istype(M,/mob/living/carbon/))
@@ -24,7 +24,7 @@
 		report("Scan Complete: No antibodies detected.", user)
 		return
 
-	if (CLUMSY in user.mutations && prob(50))
+	if (MUTATION_CLUMSY in user.mutations && prob(50))
 		// I was tempted to be really evil and rot13 the output.
 		report("Antibodies detected: [reverse_text(antigens2string(C.antibodies))]", user)
 	else

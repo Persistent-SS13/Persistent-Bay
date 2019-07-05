@@ -6,6 +6,9 @@
 	var/atom/storing_object
 
 /datum/stored_items/New(var/atom/storing_object, var/path, var/name = null, var/amount = 0)
+	//Don't do this check, because on save load it breaks loaded things
+	// if(!istype(storing_object))
+	// 	CRASH("Unexpected storing object. [storing_object]\ref[storing_object] of type [storing_object ? storing_object.type : "null"]. path: [path], name: [name], amount: [amount]")
 	src.storing_object = storing_object
 	src.item_path = path
 	src.amount = amount
@@ -16,6 +19,11 @@
 	else
 		src.item_name = name
 	..()
+	ADD_SAVED_VAR(item_name)
+	ADD_SAVED_VAR(item_path)
+	ADD_SAVED_VAR(amount)
+	ADD_SAVED_VAR(instances)
+	ADD_SAVED_VAR(storing_object)
 
 /datum/stored_items/Destroy()
 	storing_object = null
@@ -36,6 +44,9 @@
 		return 0
 	init_products()
 	if(product in instances)
+		return 0
+	if(!storing_object)
+		log_error("stored_items/add_product(): [src]\ref[src]'s Storing object is null!")
 		return 0
 	product.forceMove(storing_object)
 	instances += product
@@ -63,6 +74,9 @@
 	if(instances)
 		return
 	instances = list()
+	if(!storing_object)
+		log_error("stored_items/add_product(): [src]\ref[src]'s Storing object is null!")
+		return 0
 	for(var/i = 1 to amount)
 		var/new_product = new item_path(storing_object)
 		instances += new_product

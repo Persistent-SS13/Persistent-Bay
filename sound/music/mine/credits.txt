@@ -1,0 +1,23 @@
+To make music work open up maps/Space Station 13 Areas.dm and add music = "music/bla" below an entry and include musicplayer.dm at compiletime
+
+credits - tanner helland 
+
+cyrarons gate
+the forest awakes
+fromhere
+
+alexander Ehlers 
+
+brandon75869 https://opengameart.org/content/tragic-ambient-main-menu
+
+ambientmain
+
+knittle https://opengameart.org/content/horror-soundtrack-8-tracks-tech-rooms
+
+action_01
+amb_01
+amb_02
+amb_03
+silence_01
+silence_02
+silence_03

@@ -1,3 +1,4 @@
+//#TODO: Is this still in use?
 var/const/ENG               =(1<<0)
 var/const/SEC               =(1<<1)
 var/const/MED               =(1<<2)

@@ -95,13 +95,14 @@
 
 	if (!needs_update)
 		needs_update = TRUE
-		lighting_update_corners += src
+		SSlighting.corner_queue += src
 
 /datum/lighting_corner/proc/update_overlays()
 	// Cache these values a head of time so 4 individual lighting overlays don't all calculate them individually.
-	var/lum_r = src.lum_r
-	var/lum_g = src.lum_g
-	var/lum_b = src.lum_b
+	var/lum_r = src.lum_r > 0 ? LIGHTING_MULT_FACTOR * sqrt(src.lum_r) : src.lum_r
+	var/lum_g = src.lum_g > 0 ? LIGHTING_MULT_FACTOR * sqrt(src.lum_g) : src.lum_g
+	var/lum_b = src.lum_b > 0 ? LIGHTING_MULT_FACTOR * sqrt(src.lum_b) : src.lum_b
+
 	var/mx = max(lum_r, lum_g, lum_b) // Scale it so 1 is the strongest lum, if it is above 1.
 	. = 1 // factor
 	if (mx > 1)
@@ -126,7 +127,7 @@
 		if (T.lighting_overlay)
 			if (!T.lighting_overlay.needs_update)
 				T.lighting_overlay.needs_update = TRUE
-				lighting_update_overlays += T.lighting_overlay
+				SSlighting.overlay_queue += T.lighting_overlay
 
 
 /datum/lighting_corner/dummy/New()

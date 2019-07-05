@@ -11,6 +11,7 @@
 	layer = ABOVE_OBJ_LAYER
 	mouse_opacity = 0
 	animate_movement = 0
+	should_save = 0 //Dont save it, its a temporary effect
 	var/amount = 3
 	var/expand = 1
 	var/metal = 0
@@ -23,17 +24,16 @@
 	spawn(3 + metal * 3)
 		Process()
 		checkReagents()
-	spawn(120)
-		STOP_PROCESSING(SSobj, src)
-		sleep(30)
-		if(metal)
-			var/obj/structure/foamedmetal/M = new(src.loc)
-			M.metal = metal
-			M.update_icon()
-		flick("[icon_state]-disolve", src)
-		sleep(5)
-		qdel(src)
-	return
+	addtimer(CALLBACK(src, .proc/remove_foam), 12 SECONDS)
+
+/obj/effect/effect/foam/proc/remove_foam()
+	STOP_PROCESSING(SSobj, src)
+	if(metal)
+		var/obj/structure/foamedmetal/M = new(src.loc)
+		M.metal = metal
+		M.update_icon()
+	flick("[icon_state]-disolve", src)
+	QDEL_IN(src, 5)
 
 /obj/effect/effect/foam/proc/checkReagents() // transfer any reagents to the floor
 	if(!metal && reagents)
@@ -130,18 +130,20 @@
 	anchored = 1
 	name = "foamed metal"
 	desc = "A lightweight foamed metal wall."
-	var/metal = 1 // 1 = aluminum, 2 = iron
+	var/metal = 1 // 1 = aluminium, 2 = iron
+	should_save = 1
 
 /obj/structure/foamedmetal/New()
 	..()
 	update_nearby_tiles(1)
+	ADD_SAVED_VAR(metal)
 
 /obj/structure/foamedmetal/Destroy()
 	set_density(0)
 	update_nearby_tiles(1)
 	..()
 
-/obj/structure/foamedmetal/update_icon()
+/obj/structure/foamedmetal/on_update_icon()
 	if(metal == 1)
 		icon_state = "metalfoam"
 	else
@@ -155,7 +157,7 @@
 		qdel(src)
 
 /obj/structure/foamedmetal/attack_hand(var/mob/user)
-	if ((HULK in user.mutations) || (prob(75 - metal * 25)))
+	if ((MUTATION_HULK in user.mutations) || (prob(75 - metal * 25)))
 		user.visible_message("<span class='warning'>[user] smashes through the foamed metal.</span>", "<span class='notice'>You smash through the metal foam wall.</span>")
 		qdel(src)
 	else

@@ -10,6 +10,7 @@
 	req_components = list(
 							/obj/item/weapon/stock_parts/matter_bin = 1,
 							/obj/item/weapon/stock_parts/manipulator = 1)
+
 /obj/item/weapon/circuitboard/botany_extractor
 	name = T_BOARD("Lysis-Isolation Centrifuge")
 	build_path = /obj/machinery/botany/extractor
@@ -39,4 +40,14 @@
 							/obj/item/weapon/stock_parts/scanning_module = 1,
 							/obj/item/weapon/stock_parts/manipulator = 1,
 							/obj/item/weapon/stock_parts/console_screen = 1,
-							/obj/item/device/analyzer/plant_analyzer)
+							/obj/item/device/scanner/plant)
+
+/obj/item/weapon/circuitboard/honey_extractor
+	name = T_BOARD("Honey Extraction Centrifuge")
+	build_path = /obj/machinery/honey_extractor
+	board_type = "machine"
+	origin_tech = list(TECH_BIO = 3, TECH_DATA = 3)
+	req_components = list(
+							/obj/item/weapon/stock_parts/matter_bin = 1,
+							/obj/item/weapon/stock_parts/manipulator = 3,
+							/obj/item/weapon/stock_parts/console_screen = 1)

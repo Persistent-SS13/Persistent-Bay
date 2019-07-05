@@ -2,6 +2,12 @@
 	var/genetype    // Label used when applying trait.
 	var/list/values // Values to copy into the target seed datum.
 
+/datum/plantgene/New()
+	. = ..()
+	ADD_SAVED_VAR(genetype)
+	ADD_SAVED_VAR(values)
+	ADD_SKIP_EMPTY(values)
+
 /datum/seed
 	//Tracking.
 	var/uid                        // Unique identifier.
@@ -11,6 +17,7 @@
 	var/display_name               // Prettier name.
 	var/roundstart                 // If set, seed will not display variety number.
 	var/mysterious                 // Only used for the random seed packets.
+	var/scanned                    // If it was scanned with a plant analyzer.
 	var/can_self_harvest = 0       // Mostly used for living mobs.
 	var/growth_stages = 0          // Number of stages the plant passes through before it is mature.
 	var/list/traits = list()       // Initialized in New()
@@ -62,11 +69,29 @@
 	set_trait(TRAIT_NUTRIENT_CONSUMPTION, 0.25)         // Plant eats this much per tick.
 	set_trait(TRAIT_PLANT_COLOUR,         "#46b543")    // Colour of the plant icon.
 
-	spawn(5)
-		sleep(-1)
-		update_growth_stages()
+	update_growth_stages()
 
-	uid = plant_controller.seeds.len + 1
+	uid = sequential_id(/datum/seed/)
+
+	ADD_SAVED_VAR(name)
+	ADD_SAVED_VAR(seed_name)
+	ADD_SAVED_VAR(seed_noun)
+	ADD_SAVED_VAR(display_name)
+	ADD_SAVED_VAR(roundstart)
+	ADD_SAVED_VAR(mysterious)
+	ADD_SAVED_VAR(scanned)
+	ADD_SAVED_VAR(can_self_harvest)
+	ADD_SAVED_VAR(growth_stages)
+	ADD_SAVED_VAR(traits)
+	ADD_SAVED_VAR(mutants)
+	ADD_SAVED_VAR(chems)
+	ADD_SAVED_VAR(consume_gasses)
+	ADD_SAVED_VAR(exude_gasses)
+	ADD_SAVED_VAR(kitchen_tag)
+	ADD_SAVED_VAR(trash_type)
+	ADD_SAVED_VAR(splat_type)
+	ADD_SAVED_VAR(has_mob_product)
+	ADD_SAVED_VAR(force_layer)
 
 /datum/seed/proc/get_trait(var/trait)
 	return traits["[trait]"]
@@ -117,10 +142,9 @@
 
 
 	if(!target_limb) target_limb = pick(BP_ALL_LIMBS)
-	var/blocked = target.run_armor_check(target_limb, "melee")
 	var/obj/item/organ/external/affecting = target.get_organ(target_limb)
 
-	if(blocked >= 100 || (target.species && target.species.flags & (NO_EMBED|NO_MINOR_CUT)))
+	if((target.species && target.species.species_flags & (SPECIES_FLAG_NO_EMBED|SPECIES_FLAG_NO_MINOR_CUT)))
 		to_chat(target, "<span class='danger'>\The [fruit]'s thorns scratch against the armour on your [affecting.name]!</span>")
 		return
 
@@ -141,8 +165,8 @@
 		damage = max(1, round(5*get_trait(TRAIT_POTENCY)/100, 1))
 		has_edge = prob(get_trait(TRAIT_POTENCY)/5)
 
-	var/damage_flags = DAM_SHARP|(has_edge? DAM_EDGE : 0)
-	target.apply_damage(damage, BRUTE, target_limb, blocked, damage_flags, "Thorns")
+	var/dtype = has_edge? DAM_CUT : DAM_PIERCE
+	target.apply_damage(damage, dtype, target_limb, used_weapon = "Thorns")
 
 // Adds reagents to a target.
 /datum/seed/proc/do_sting(var/mob/living/carbon/human/target, var/obj/item/fruit)
@@ -154,10 +178,10 @@
 		var/obj/item/organ/external/affecting = pick(target.organs)
 
 		for(var/obj/item/clothing/C in list(target.head, target.wear_mask, target.wear_suit, target.w_uniform, target.gloves, target.shoes))
-			if(C && (C.body_parts_covered & affecting) && (C.item_flags & THICKMATERIAL))
+			if(C && (C.body_parts_covered & affecting.body_part) && (C.item_flags & ITEM_FLAG_THICKMATERIAL))
 				affecting = null
 
-		if(!(target.species && target.species.flags & (NO_EMBED|NO_MINOR_CUT)))	affecting = null
+		if(!(target.species && target.species.species_flags & (SPECIES_FLAG_NO_EMBED|SPECIES_FLAG_NO_MINOR_CUT)))	affecting = null
 
 		if(affecting)
 			to_chat(target, "<span class='danger'>You are stung by \the [fruit] in your [affecting.name]!</span>")
@@ -172,12 +196,12 @@
 	if(splat_type && !(locate(/obj/effect/vine) in T))
 		var/obj/effect/vine/splat = new splat_type(T, src)
 		if(!istype(splat)) // Plants handle their own stuff.
-			splat.name = "[thrown.name] [pick("smear","smudge","splatter")]"
+			splat.SetName("[thrown.name] [pick("smear","smudge","splatter")]")
 			if(get_trait(TRAIT_BIOLUM))
 				var/clr
 				if(get_trait(TRAIT_BIOLUM_COLOUR))
 					clr = get_trait(TRAIT_BIOLUM_COLOUR)
-				splat.set_light(get_trait(TRAIT_BIOLUM), l_color = clr)
+				splat.set_light(0.5, 0.1, 3, l_color = clr)
 			var/flesh_colour = get_trait(TRAIT_FLESH_COLOUR)
 			if(!flesh_colour) flesh_colour = get_trait(TRAIT_PRODUCT_COLOUR)
 			if(flesh_colour) splat.color = get_trait(TRAIT_PRODUCT_COLOUR)
@@ -390,8 +414,8 @@
 	seed_noun = pick(SEED_NOUN_SEEDS, SEED_NOUN_PITS, SEED_NOUN_NODES, SEED_NOUN_CUTTINGS)
 
 	set_trait(TRAIT_POTENCY,rand(5,30),200,0)
-	set_trait(TRAIT_PRODUCT_ICON,pick(plant_controller.plant_product_sprites))
-	set_trait(TRAIT_PLANT_ICON,pick(plant_controller.plant_sprites))
+	set_trait(TRAIT_PRODUCT_ICON,pick(SSplants.plant_product_sprites))
+	set_trait(TRAIT_PLANT_ICON,pick(SSplants.plant_sprites))
 	set_trait(TRAIT_PLANT_COLOUR,get_random_colour(0,75,190))
 	set_trait(TRAIT_PRODUCT_COLOUR,get_random_colour(0,75,190))
 	update_growth_stages()
@@ -418,12 +442,12 @@
 
 	if(prob(5))
 		consume_gasses = list()
-		var/gas = pick("oxygen","nitrogen","phoron","carbon_dioxide")
+		var/gas = pick(GAS_OXYGEN,GAS_NITROGEN,GAS_PHORON,GAS_CO2,GAS_WATER_VAPOR,GAS_HYDROGEN,GAS_METHANE,GAS_NITRIC_OXIDE,GAS_CHLORINE)
 		consume_gasses[gas] = rand(3,9)
 
 	if(prob(5))
 		exude_gasses = list()
-		var/gas = pick("oxygen","nitrogen","phoron","carbon_dioxide")
+		var/gas = pick(GAS_OXYGEN,GAS_NITROGEN,GAS_PHORON,GAS_CO2,GAS_WATER_VAPOR,GAS_HYDROGEN,GAS_METHANE,GAS_NITRIC_OXIDE,GAS_CHLORINE)
 		exude_gasses[gas] = rand(3,9)
 
 	chems = list()
@@ -436,10 +460,18 @@
 		var/list/banned_chems = list(
 			/datum/reagent/adminordrazine,
 			/datum/reagent/nutriment,
-			/datum/reagent/nanites
+			/datum/reagent/nanites,
+			/datum/reagent/water/holywater,
+			/datum/reagent/toxin/plantbgone,
+			/datum/reagent/chloralhydrate/beer2
 			)
+		banned_chems += subtypesof(/datum/reagent/ethanol)
+		banned_chems += subtypesof(/datum/reagent/tobacco)
+		banned_chems += typesof(/datum/reagent/drink)
+		banned_chems += typesof(/datum/reagent/nutriment)
+		banned_chems += typesof(/datum/reagent/toxin/fertilizer)
+		banned_chems += typesof(/datum/reagent/crayon_dust)
 
-		if(prob(30))	banned_chems |= typesof(/datum/reagent/ethanol)
 		if(prob(30))	banned_chems |= typesof(/datum/reagent/toxin)
 
 		for(var/x=1;x<=additional_chems;x++)
@@ -500,7 +532,7 @@
 	set_trait(TRAIT_ENDURANCE,rand(60,100))
 	set_trait(TRAIT_YIELD,rand(3,15))
 	set_trait(TRAIT_MATURATION,rand(5,15))
-	set_trait(TRAIT_PRODUCTION,get_trait(TRAIT_MATURATION)+rand(2,5))
+	set_trait(TRAIT_PRODUCTION,rand(1,10))
 
 	generate_name()
 
@@ -688,10 +720,10 @@
 	else
 		if(istype(user)) to_chat(user, "You [harvest_sample ? "take a sample" : "harvest"] from the [display_name].")
 		//This may be a new line. Update the global if it is.
-		if(name == "new line" || !(name in plant_controller.seeds))
-			uid = plant_controller.seeds.len + 1
+		if(name == "new line" || !(name in SSplants.seeds))
+			uid = SSplants.seeds.len + 1
 			name = "[uid]"
-			plant_controller.seeds[name] = src
+			SSplants.seeds[name] = src
 
 		if(harvest_sample)
 			var/obj/item/seeds/seeds = new(get_turf(user))
@@ -735,7 +767,7 @@
 				var/clr
 				if(get_trait(TRAIT_BIOLUM_COLOUR))
 					clr = get_trait(TRAIT_BIOLUM_COLOUR)
-				product.set_light(get_trait(TRAIT_BIOLUM), l_color = clr)
+				product.set_light(0.5, 0.1, 3, l_color = clr)
 
 			//Handle spawning in living, mobile products (like dionaea).
 			if(istype(product,/mob/living))
@@ -776,7 +808,7 @@
 
 /datum/seed/proc/update_growth_stages()
 	if(get_trait(TRAIT_PLANT_ICON))
-		growth_stages = plant_controller.plant_sprites[get_trait(TRAIT_PLANT_ICON)]
+		growth_stages = SSplants.plant_sprites[get_trait(TRAIT_PLANT_ICON)]
 	else
 		growth_stages = 0
 

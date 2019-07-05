@@ -1,43 +1,23 @@
 /obj/machinery/bluespacerelay
 	name = "Emergency Bluespace Relay"
 	desc = "This sends messages through bluespace! Wow!"
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/machines/telecomms.dmi'
 	icon_state = "bspacerelay"
-
 	anchored = 1
 	density = 1
-	use_power = 1
+	circuit_type = /obj/item/weapon/circuitboard/bluespacerelay
+	idle_power_usage = 15 KILOWATTS
 	var/on = 1
 
-	idle_power_usage = 15000
-	active_power_usage = 15000
-
-/obj/machinery/bluespacerelay/Process()
-	update_power()
-	update_icon()
-
-
-/obj/machinery/bluespacerelay/update_icon()
-	if(on)
-		icon_state = initial(icon_state)
-	else
-		icon_state = "[initial(icon_state)]_off"
-
 /obj/machinery/bluespacerelay/New()
-	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/bluespacerelay(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/subspace/filter(src)
-	component_parts += new /obj/item/weapon/stock_parts/subspace/crystal(src)
-	component_parts += new /obj/item/stack/cable_coil(src, 30)
-/obj/machinery/bluespacerelay/proc/update_power()
+	. = ..()
+	ADD_SAVED_VAR(on)
 
-	if(stat & (BROKEN|NOPOWER|EMPED))
-		on = 0
+/obj/machinery/bluespacerelay/on_update_icon()
+	if(stat & (BROKEN|NOPOWER))
+		icon_state = "[initial(icon_state)]_off"
 	else
-		on = 1
+		icon_state = initial(icon_state)
 
 /obj/machinery/bluespacerelay/attackby(var/obj/item/O as obj, var/mob/user as mob)
 	if(default_deconstruction_screwdriver(user, O))

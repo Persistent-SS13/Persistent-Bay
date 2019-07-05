@@ -42,6 +42,9 @@ proc/get_deepspace(x,y)
 		return new /obj/effect/overmap/sector/temporary(x, y, GLOB.using_map.get_empty_zlevel())
 
 /atom/movable/proc/lost_in_space()
+	for(var/atom/movable/AM in contents)
+		if(!AM.lost_in_space())
+			return FALSE
 	return TRUE
 
 /mob/lost_in_space()
@@ -104,5 +107,5 @@ proc/overmap_spacetravel(var/turf/space/T, var/atom/movable/A)
 		var/obj/effect/overmap/sector/temporary/source = M
 		if (source.can_die())
 			testing("Caching [M] for future use")
-			source.loc = null
+			source.forceMove(null)
 			cached_space += source

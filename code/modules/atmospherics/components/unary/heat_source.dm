@@ -8,8 +8,9 @@
 	icon_state = "heater_0"
 	density = 1
 	anchored = 1
-	use_power = 0
+	use_power = POWER_USE_OFF
 	idle_power_usage = 5			//5 Watts for thermostat related circuitry
+	circuit_type = /obj/item/weapon/circuitboard/unary_atmos/heater
 
 	var/max_temperature = T20C + 680
 	var/internal_volume = 600	//L
@@ -22,16 +23,12 @@
 
 /obj/machinery/atmospherics/unary/heater/New()
 	..()
+	ADD_SAVED_VAR(set_temperature)
+	ADD_SAVED_VAR(power_setting)
+
+/obj/machinery/atmospherics/unary/heater/setup_initialize_directions()
+	..()
 	initialize_directions = dir
-
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/unary_atmos/heater(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/stack/cable_coil(src, 5)
-
-	RefreshParts()
 
 /obj/machinery/atmospherics/unary/heater/atmos_init()
 	..()
@@ -53,10 +50,10 @@
 			node = null
 			break
 
-	update_icon()
+	queue_icon_update()
 
 
-/obj/machinery/atmospherics/unary/heater/update_icon()
+/obj/machinery/atmospherics/unary/heater/on_update_icon()
 	if(node)
 		if(use_power && heating)
 			icon_state = "heater_1"
@@ -72,19 +69,19 @@
 
 	if(stat & (NOPOWER|BROKEN) || !use_power)
 		heating = 0
-		update_icon()
+		queue_icon_update()
 		return
 
 	if(network && air_contents.total_moles && air_contents.temperature < set_temperature)
 		air_contents.add_thermal_energy(power_rating * HEATER_PERF_MULT)
-		use_power(power_rating)
+		use_power_oneoff(power_rating)
 
 		heating = 1
 		network.update = 1
 	else
 		heating = 0
 
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/atmospherics/unary/heater/attack_ai(mob/user as mob)
 	ui_interact(user)
@@ -109,7 +106,7 @@
 	data["gasTemperatureClass"] = temp_class
 
 	// update the ui if it exists, returns null if no ui is passed/found
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		// the ui does not exist, so we'll create a new() one
 		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
@@ -125,7 +122,7 @@
 	if(..())
 		return 1
 	if(href_list["toggleStatus"])
-		use_power = !use_power
+		update_use_power(!use_power)
 		update_icon()
 	if(href_list["temp"])
 		var/amount = text2num(href_list["temp"])

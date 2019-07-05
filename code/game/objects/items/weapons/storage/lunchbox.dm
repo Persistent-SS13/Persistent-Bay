@@ -1,6 +1,7 @@
 /obj/item/weapon/storage/lunchbox
 	max_storage_space = 8 //slightly smaller than a toolbox
 	name = "rainbow lunchbox"
+	icon = 'icons/obj/items/storage/lunchboxes.dmi'
 	icon_state = "lunchbox_rainbow"
 	item_state = "toolbox_pink"
 	desc = "A little lunchbox. This one is the colors of the rainbow!"
@@ -49,7 +50,13 @@
 	name = "Nanotrasen brand lunchbox"
 	icon_state = "lunchbox_nanotrasen"
 	item_state = "toolbox_blue"
-	desc = "A little lunchbox. This one is branded with the Nanotrasen logo!"
+	desc = "A little lunchbox. This one is branded with the NanoTrasen logo!"
+
+/obj/item/weapon/storage/lunchbox/dais
+	name = "\improper DAIS brand lunchbox"
+	icon_state = "lunchbox_dais"
+	item_state = "toolbox_blue"
+	desc = "A little lunchbox. This one is branded with the Deimos Advanced Information Systems logo!"
 
 /obj/item/weapon/storage/lunchbox/nt/filled
 	filled = TRUE
@@ -90,11 +97,11 @@
 /obj/item/weapon/storage/lunchbox/syndicate/filled
 	filled = TRUE
 
-/obj/item/weapon/storage/lunchbox/TCC
-	name = "\improper TCC lunchbox"
+/obj/item/weapon/storage/lunchbox/tf
+	name = "\improper TF lunchbox"
 	icon_state = "lunchbox_tcc"
 	item_state = "toolbox_syndi"
-	desc = "A little lunchbox. This one is branded with the flag of the Terran Colonial Confederation!"
+	desc = "A little lunchbox. This one is branded with the flag of the Terran Federation!"
 
 /obj/item/weapon/storage/lunchbox/syndicate/filled
 	filled = TRUE

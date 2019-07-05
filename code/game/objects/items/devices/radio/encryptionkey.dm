@@ -1,5 +1,5 @@
 
-/obj/item/device/encryptionkey/
+/obj/item/device/encryptionkey
 	name = "standard encryption key"
 	desc = "An encryption key for a radio headset. Contains cypherkeys."
 	icon = 'icons/obj/radio.dmi'
@@ -69,7 +69,7 @@
 /obj/item/device/encryptionkey/heads/captain
 	name = "captain's encryption key"
 	icon_state = "cap_cypherkey"
-	channels = list("Command" = 1, "Security" = 1, "Engineering" = 0, "Science" = 0, "Medical" = 0, "Supply" = 0, "Service" = 0)
+	channels = list("Command" = 1, "Security" = 1, "Engineering" = 1, "Science" = 1, "Medical" = 1, "Supply" = 1, "Service" = 1)
 
 /obj/item/device/encryptionkey/heads/ai_integrated
 	name = "ai integrated encryption key"
@@ -125,3 +125,22 @@
 /obj/item/device/encryptionkey/entertainment
 	name = "entertainment radio key"
 	channels = list("Entertainment" = 1)
+
+/obj/item/device/encryptionkey/headset_mining
+	name = "prospector radio encryption key"
+	icon_state = "srv_cypherkey"
+	channels = list("Supply" = 1)
+
+/obj/item/device/encryptionkey/custom
+	name = "custom encryption key"
+
+	var/freq 	// The frequency the message will be transmitted on and will be received
+	var/rad_key // The code used to access this channel e.g. :h .l :am
+	var/ch_name
+/obj/item/device/encryptionkey/custom/New(var/loc, var/channel_freq, var/channel_rad_key, var/channel_name)
+	freq = channel_freq
+	rad_key = channel_rad_key
+	ch_name = channel_name
+	desc = "An encryption key for a radio headset. Contains cypherkeys for the channel [channel_name]."
+	..()
+

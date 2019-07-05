@@ -1,5 +1,9 @@
 // Attempts to install the hardware into apropriate slot.
 /obj/item/modular_computer/proc/try_install_component(var/mob/living/user, var/obj/item/weapon/computer_hardware/H, var/found = 0)
+	if(!(H.usage_flags & hardware_flag))
+		to_chat(user, "This computer isn't compatible with [H].")
+		return
+
 	// "USB" flash drive.
 	if(istype(H, /obj/item/weapon/computer_hardware/hard_drive/portable))
 		if(portable_drive)
@@ -55,23 +59,22 @@
 			return
 		found = 1
 		tesla_link = H
-	else if(istype(H, /obj/item/weapon/computer_hardware/dna_scanner))
-		if(dna_scanner)
-			to_chat(user, "This computer's dna scanner slot is already occupied by \the [dna_scanner].")
-			return
-		found = 1
-		dna_scanner = H	
 	else if(istype(H, /obj/item/weapon/computer_hardware/logistic_processor))
 		if(logistic_processor)
 			to_chat(user, "This computer's logistic processor slot is already occupied by \the [logistic_processor].")
 			return
 		found = 1
-		logistic_processor = H		
-	if(found)
+		logistic_processor = H
+	else if(istype(H, /obj/item/weapon/computer_hardware/scanner))
+		if(scanner)
+			to_chat(user, "This computer's scanner slot is already occupied by \the [scanner].")
+			return
+		found = 1
+		scanner = H
+		scanner.do_after_install(user, src)
+	if(found && user.unEquip(H, src))
 		to_chat(user, "You install \the [H] into \the [src]")
 		H.holder2 = src
-		user.drop_from_inventory(H)
-		H.forceMove(src)
 		update_verbs()
 
 // Uninstalls component. Found and Critical vars may be passed by parent types, if they have additional hardware.
@@ -105,8 +108,9 @@
 	if(tesla_link == H)
 		tesla_link = null
 		found = 1
-	if(dna_scanner == H)
-		dna_scanner = null
+	if(scanner == H)
+		scanner.do_before_uninstall()
+		scanner = null
 		found = 1
 	if(logistic_processor == H)
 		logistic_processor = null
@@ -116,10 +120,11 @@
 			to_chat(user, "You remove \the [H] from \the [src].")
 
 		H.forceMove(get_turf(src))
-		if(Adjacent(user) && !issilicon(user))
+		if(user && Adjacent(user) && !issilicon(user))
 			user.put_in_hands(H)
+		else
+			H.dropInto(loc)
 		H.holder2 = null
-
 		update_verbs()
 	if(critical && enabled)
 		if(user)
@@ -150,8 +155,8 @@
 		return tesla_link
 	if(logistic_processor && (logistic_processor.name == name))
 		return logistic_processor
-	if(dna_scanner && (dna_scanner.name == name))
-		return dna_scanner
+	if(scanner && (scanner.name == name))
+		return scanner
 	return null
 
 // Returns list of all components
@@ -175,8 +180,8 @@
 		all_components.Add(ai_slot)
 	if(tesla_link)
 		all_components.Add(tesla_link)
-	if(dna_scanner)
-		all_components.Add(dna_scanner)
+	if(scanner)
+		all_components.Add(scanner)
 	if(logistic_processor)
 		all_components.Add(logistic_processor)
 		

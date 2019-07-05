@@ -1,11 +1,11 @@
 /obj/item/weapon/reagent_containers/chem_disp_cartridge
 	small
 		volume = CARTRIDGE_VOLUME_SMALL
-		matter = list(DEFAULT_WALL_MATERIAL = 25)
+		matter = list(MATERIAL_STEEL = 25)
 
 	medium
 		volume = CARTRIDGE_VOLUME_MEDIUM
-		matter = list(DEFAULT_WALL_MATERIAL = 50)
+		matter = list(MATERIAL_STEEL = 50)
 
 	// Multiple
 	water		spawn_reagent = /datum/reagent/water
@@ -18,7 +18,7 @@
 	ammonia		spawn_reagent = /datum/reagent/ammonia
 	acetone		spawn_reagent = /datum/reagent/acetone
 	sodium		spawn_reagent = /datum/reagent/sodium
-	aluminum	spawn_reagent = /datum/reagent/aluminum
+	aluminium	spawn_reagent = /datum/reagent/aluminium
 	silicon		spawn_reagent = /datum/reagent/silicon
 	phosphorus	spawn_reagent = /datum/reagent/phosphorus
 	sulfur		spawn_reagent = /datum/reagent/sulfur
@@ -49,7 +49,7 @@
 	// Bar, soft
 	ice			spawn_reagent = /datum/reagent/drink/ice
 	tea			spawn_reagent = /datum/reagent/drink/tea
-	icetea		spawn_reagent = /datum/reagent/drink/tea/icetea
+	green_tea	spawn_reagent = /datum/reagent/drink/tea/green
 	cola		spawn_reagent = /datum/reagent/drink/space_cola
 	smw			spawn_reagent = /datum/reagent/drink/spacemountainwind
 	dr_gibb		spawn_reagent = /datum/reagent/drink/dr_gibb

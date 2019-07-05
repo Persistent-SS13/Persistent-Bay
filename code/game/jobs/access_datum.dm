@@ -1,5 +1,5 @@
 /datum/access
-	var/id = 0
+	var/id = ""
 	var/desc = ""
 	var/region = ACCESS_REGION_NONE
 	var/access_type = ACCESS_TYPE_STATION
@@ -10,115 +10,117 @@
 /*****************
 * Station access *
 *****************/
-/var/const/access_security = 64
+/var/const/access_security = "ACCESS_SECURITY" //1
 /datum/access/security
 	id = access_security
 	desc = "Security Equipment"
 	region = ACCESS_REGION_SECURITY
 
-/var/const/access_brig = 65 // Brig timers and permabrig
+/var/const/access_brig = "ACCESS_BRIG" // Brig timers and permabrig 2
 /datum/access/holding
 	id = access_brig
 	desc = "Holding Cells"
 	region = ACCESS_REGION_SECURITY
 
-/var/const/access_armory = 66
+/var/const/access_armory = "ACCESS_ARMORY" //3
 /datum/access/armory
 	id = access_armory
 	desc = "Armory"
 	region = ACCESS_REGION_SECURITY
 
-/var/const/access_forensics_lockers = 67
+/var/const/access_forensics_lockers = "ACCESS_FORENSICS" //4
 /datum/access/forensics_lockers
 	id = access_forensics_lockers
 	desc = "Forensics"
 	region = ACCESS_REGION_SECURITY
 
-/var/const/access_medical = 68
+/var/const/access_medical = "ACCESS_MEDICAL" //5
 /datum/access/medical
 	id = access_medical
 	desc = "Medical"
 	region = ACCESS_REGION_MEDBAY
 
-/var/const/access_morgue = 69
+/var/const/access_morgue = "ACCESS_MORGUE" //6
 /datum/access/morgue
 	id = access_morgue
 	desc = "Morgue"
 	region = ACCESS_REGION_MEDBAY
 
-/var/const/access_tox = 70
+/var/const/access_tox = "ACCESS_TOXINS" //7
 /datum/access/tox
 	id = access_tox
-	desc = "R&D Lab"
+	desc = "Research Labs"
 	region = ACCESS_REGION_RESEARCH
 
-/var/const/access_tox_storage = 71
+/var/const/access_tox_storage = "ACCESS_TOX_STORAGE" //8
 /datum/access/tox_storage
 	id = access_tox_storage
 	desc = "Toxins Lab"
 	region = ACCESS_REGION_RESEARCH
 
-/var/const/access_genetics = 72
+/var/const/access_genetics = "ACCESS_GENETICS" //9
 /datum/access/genetics
 	id = access_genetics
 	desc = "Genetics Lab"
 	region = ACCESS_REGION_MEDBAY
 
-/var/const/access_engine = 73
+/var/const/access_engine = "ACCESS_ENGINEERING" //10
 /datum/access/engine
 	id = access_engine
 	desc = "Engineering"
 	region = ACCESS_REGION_ENGINEERING
 
-/var/const/access_engineer_equipment = 74
+/var/const/access_engine_equip = "ACCESS_ENGINE_EQUIP" //11
 /datum/access/engine_equip
-	id = access_engineer_equipment
+	id = access_engine_equip
 	desc = "Engine Room"
 	region = ACCESS_REGION_ENGINEERING
 
-/var/const/access_maint_tunnels = 75
+/var/const/access_maint_tunnels = "ACCESS_MAINT" //12
 /datum/access/maint_tunnels
 	id = access_maint_tunnels
 	desc = "Maintenance"
 	region = ACCESS_REGION_ENGINEERING
 
-/var/const/access_external_airlocks = 76
+/var/const/access_external_airlocks = "ACCESS_EXTERNAL" //13
 /datum/access/external_airlocks
 	id = access_external_airlocks
 	desc = "External Airlocks"
 	region = ACCESS_REGION_ENGINEERING
 
-/var/const/access_emergency_storage = 77
+/var/const/access_emergency_storage = "ACCESS_EMERGENCY_STORAGE" //14
 /datum/access/emergency_storage
 	id = access_emergency_storage
 	desc = "Emergency Storage"
 	region = ACCESS_REGION_ENGINEERING
 
-/var/const/access_change_ids = 78
+/var/const/access_change_ids = "ACCESS_CHANGE_ID" //15
 /datum/access/change_ids
 	id = access_change_ids
 	desc = "ID Computer"
 	region = ACCESS_REGION_COMMAND
 
-/var/const/access_ai_upload = 79
+/var/const/access_ai_upload = "ACCESS_AI_UPLOAD" //16
 /datum/access/ai_upload
 	id = access_ai_upload
 	desc = "AI Upload"
 	region = ACCESS_REGION_COMMAND
 
-/var/const/access_teleporter = 80
+/var/const/access_teleporter = "ACCESS_TELEPORTER" //17
 /datum/access/teleporter
 	id = access_teleporter
 	desc = "Teleporter"
 	region = ACCESS_REGION_COMMAND
 
-/var/const/access_eva = 81
+/var/const/access_eva = "ACCESS_EVA" //18
 /datum/access/eva
 	id = access_eva
 	desc = "EVA"
 	region = ACCESS_REGION_COMMAND
 
-/var/const/access_heads = 82
+
+
+/var/const/access_heads = "ACCESS_HEADS" //19
 /datum/access/heads
 	id = access_heads
 	desc = "Bridge"

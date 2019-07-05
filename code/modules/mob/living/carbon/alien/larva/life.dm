@@ -1,5 +1,10 @@
 #define MIN_LARVA_BLOOD_DRINK 0.5
 
+/mob/living/carbon/alien/larva/Life()
+	. = ..()
+	if (stat != DEAD)
+		update_progression()
+
 //Larvae regenerate health and nutrition from plasma and alien weeds.
 /mob/living/carbon/alien/larva/handle_environment(var/datum/gas_mixture/environment)
 
@@ -7,7 +12,7 @@
 
 	var/turf/T = get_turf(src)
 	var/obj/effect/vine/plant = locate() in T
-	if(environment.gas["phoron"] > 0 || (plant && plant.seed.type == /datum/seed/xenomorph))
+	if(environment.gas[GAS_PHORON] > 0 || (plant && plant.seed.type == /datum/seed/xenomorph))
 		update_progression()
 		adjustBruteLoss(-1)
 		adjustFireLoss(-1)

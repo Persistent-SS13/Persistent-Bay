@@ -5,7 +5,7 @@
 	icon_state = "sliver1"
 	randpixel = 8
 	w_class = ITEM_SIZE_TINY
-	sharp = 1
+	sharpness = 1
 	var/datum/geosample/geological_data
 
 /obj/item/weapon/rocksliver/New()
@@ -23,6 +23,14 @@
 
 /datum/geosample/New(var/turf/simulated/mineral/container)
 	UpdateTurf(container)
+	ADD_SAVED_VAR(age)
+	ADD_SAVED_VAR(age_thousand)
+	ADD_SAVED_VAR(age_million)
+	ADD_SAVED_VAR(age_billion)
+	ADD_SAVED_VAR(artifact_id)
+	ADD_SAVED_VAR(artifact_distance)
+	ADD_SAVED_VAR(source_mineral)
+	ADD_SAVED_VAR(find_presence)
 
 /datum/geosample/proc/UpdateTurf(var/turf/simulated/mineral/container)
 	if(!istype(container))
@@ -69,15 +77,14 @@
 		artifact_distance = rand()
 		artifact_id = container.artifact_find.artifact_id
 	else
-		if(master_controller) //Sanity check due to runtimes ~Z
-			for(var/turf/simulated/mineral/T in master_controller.artifact_spawning_turfs)
-				if(T.artifact_find)
-					var/cur_dist = get_dist(container, T) * 2
-					if( (artifact_distance < 0 || cur_dist < artifact_distance))
-						artifact_distance = cur_dist + rand() * 2 - 1
-						artifact_id = T.artifact_find.artifact_id
-				else
-					master_controller.artifact_spawning_turfs.Remove(T)
+		for(var/turf/simulated/mineral/T in SSxenoarch.artifact_spawning_turfs)
+			if(T.artifact_find)
+				var/cur_dist = get_dist(container, T) * 2
+				if( (artifact_distance < 0 || cur_dist < artifact_distance))
+					artifact_distance = cur_dist + rand() * 2 - 1
+					artifact_id = T.artifact_find.artifact_id
+			else
+				SSxenoarch.artifact_spawning_turfs.Remove(T)
 
 /obj/item/device/core_sampler
 	name = "core sampler"
@@ -116,8 +123,8 @@
 		var/turf/simulated/mineral/T = item_to_sample
 		T.geologic_data.UpdateNearbyArtifactInfo(T)
 		geo_data = T.geologic_data
-	else if(istype(item_to_sample, /obj/item/weapon/ore))
-		var/obj/item/weapon/ore/O = item_to_sample
+	else if(istype(item_to_sample, /obj/item/stack/ore))
+		var/obj/item/stack/ore/O = item_to_sample
 		geo_data = O.geologic_data
 
 	if(geo_data)
@@ -128,7 +135,7 @@
 		else
 			//create a new sample bag which we'll fill with rock samples
 			filled_bag = new /obj/item/weapon/evidencebag(src)
-			filled_bag.name = "sample bag"
+			filled_bag.SetName("sample bag")
 			filled_bag.desc = "a bag for holding research samples."
 
 			icon_state = "sampler1"
@@ -144,6 +151,7 @@
 			filled_bag.overlays += I
 			filled_bag.overlays += "evidence"
 			filled_bag.w_class = ITEM_SIZE_TINY
+			filled_bag.stored_item = R
 
 			to_chat(user, "<span class='notice'>You take a core sample of the [item_to_sample].</span>")
 	else
@@ -157,7 +165,7 @@
 			var/mob/M = src.loc
 			success = M.put_in_inactive_hand(filled_bag)
 		if(!success)
-			filled_bag.forceMove(get_turf(src))
+			filled_bag.dropInto(loc)
 		filled_bag = null
 		icon_state = "sampler0"
 	else

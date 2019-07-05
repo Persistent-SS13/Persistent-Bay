@@ -1,9 +1,11 @@
 /mob/living
 	see_in_dark = 2
 	see_invisible = SEE_INVISIBLE_LIVING
+	waterproof = FALSE
 
 	//Health and life related vars
 	var/maxHealth = 100 //Maximum health that should be possible.
+	var/minHealth = 0
 	var/health = 100 	//A mob's health
 
 	var/hud_updateflag = 0
@@ -49,3 +51,5 @@
 	var/list/obj/aura/auras = null //Basically a catch-all aura/force-field thing.
 
 	var/obj/screen/cells = null
+
+	var/last_resist = 0

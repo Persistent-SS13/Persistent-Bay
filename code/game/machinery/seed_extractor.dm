@@ -5,38 +5,35 @@
 	icon_state = "sextractor"
 	density = 1
 	anchored = 1
-	use_power = 2
+	use_power = POWER_USE_ACTIVE
 	idle_power_usage = 10
 	active_power_usage = 2000
+	circuit_type = /obj/item/weapon/circuitboard/seed_extractor
 
 /obj/machinery/seed_extractor/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/seed_extractor(src)
-	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/device/analyzer/plant_analyzer(src)
-	RefreshParts()
 
 obj/machinery/seed_extractor/attackby(var/obj/item/O as obj, var/mob/user as mob)
 
 	// Fruits and vegetables.
 	if(istype(O, /obj/item/weapon/reagent_containers/food/snacks/grown) || istype(O, /obj/item/weapon/grown))
-
-		user.remove_from_mob(O)
+		if(!user.unEquip(O))
+			return
 
 		var/datum/seed/new_seed_type
 		if(istype(O, /obj/item/weapon/grown))
 			var/obj/item/weapon/grown/F = O
-			new_seed_type = plant_controller.seeds[F.plantname]
+			new_seed_type = SSplants.seeds[F.plantname]
 		else
 			var/obj/item/weapon/reagent_containers/food/snacks/grown/F = O
-			new_seed_type = plant_controller.seeds[F.plantname]
+			new_seed_type = SSplants.seeds[F.plantname]
 
 		if(new_seed_type)
 			to_chat(user, "<span class='notice'>You extract some seeds from [O].</span>")
-			var/produce = rand(1,4)
+			if(prob(35))
+				var/produce =(1)
+			else
+				to_chat (user, "<span class='notice'>You fail to extract any seeds from [O].</span>")
 			for(var/i = 0;i<=produce;i++)
 				var/obj/item/seeds/seeds = new(get_turf(src))
 				seeds.seed_type = new_seed_type.name

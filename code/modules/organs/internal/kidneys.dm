@@ -6,12 +6,8 @@
 	parent_organ = BP_GROIN
 	min_bruised_damage = 25
 	min_broken_damage = 45
-	max_damage = 70
-	scarring_effect = 4
+	max_health = 70
 
-/obj/item/organ/internal/kidneys/robotize()
-	. = ..()
-	icon_state = "kidneys-prosthetic"
 
 /obj/item/organ/internal/kidneys/Process()
 	..()
@@ -37,11 +33,16 @@
 			owner.reagents.add_reagent(/datum/reagent/potassium, REM*2)
 
 	//If your kidneys aren't working, your body's going to have a hard time cleaning your blood.
-	if(!owner.reagents.has_reagent(/datum/reagent/dylovene))
+	if(!owner.chem_effects[CE_ANTITOX])
 		if(prob(33))
 			if(is_broken())
 				owner.adjustToxLoss(0.5)
 			if(status & ORGAN_DEAD)
 				owner.adjustToxLoss(1)
 
-
+/obj/item/organ/internal/kidneys/on_update_icon()
+	. = ..()
+	if(BP_IS_ROBOTIC(src))
+		icon_state = "[initial(icon_state)]-prosthetic"
+	else
+		icon_state = initial(icon_state)

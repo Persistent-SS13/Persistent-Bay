@@ -9,8 +9,7 @@
 	name = "circuit board (Microwave)"
 	build_path = /obj/machinery/microwave
 	board_type = "machine"
-	origin_tech = "programming=1"
-	frame_desc = "Requires 1 Micro Laser, 2 pieces of cable and 1 Console Screen."
+	origin_tech = list(TECH_ENGINEERING = 1)
 	req_components = list(
 							/obj/item/weapon/stock_parts/micro_laser = 1,
 							/obj/item/stack/cable_coil = 2,
@@ -20,8 +19,7 @@
 	name = "circuit board (Oven)"
 	build_path = /obj/machinery/cooker/oven
 	board_type = "machine"
-	origin_tech = "programming=1;plasmatech=1"
-	frame_desc = "Requires 2 Micro Lasers, 5 pieces of cable and 1 Console Screen."
+	origin_tech = list(TECH_POWER = 1, TECH_ENGINEERING = 1)
 	req_components = list(
 							/obj/item/weapon/stock_parts/micro_laser = 2,
 							/obj/item/stack/cable_coil = 5,
@@ -31,8 +29,7 @@
 	name = "circuit board (Grill)"
 	build_path = /obj/machinery/cooker/grill
 	board_type = "machine"
-	origin_tech = "programming=1;plasmatech=1"
-	frame_desc = "Requires 2 Micro Lasers, 5 pieces of cable and 1 Console Screen."
+	origin_tech = list(TECH_POWER = 1, TECH_ENGINEERING = 1)
 	req_components = list(
 							/obj/item/weapon/stock_parts/micro_laser = 2,
 							/obj/item/stack/cable_coil = 5,
@@ -42,8 +39,7 @@
 	name = "circuit board (Candy Maker)"
 	build_path = /obj/machinery/cooker/candy
 	board_type = "machine"
-	origin_tech = "programming=2"
-	frame_desc = "Requires 1 Manipulator, 5 pieces of cable and 1 Console Screen."
+	origin_tech = list(TECH_ENGINEERING = 2)
 	req_components = list(
 							/obj/item/weapon/stock_parts/manipulator = 1,
 							/obj/item/stack/cable_coil = 5,
@@ -53,8 +49,7 @@
 	name = "circuit board (Deep Fryer)"
 	build_path = /obj/machinery/cooker/fryer/
 	board_type = "machine"
-	origin_tech = "programming=2"
-	frame_desc = "Requires 2 Micro Lasers and 5 pieces of cable."
+	origin_tech = list(TECH_ENGINEERING = 2)
 	req_components = list(
 							/obj/item/weapon/stock_parts/micro_laser = 2,
 							/obj/item/stack/cable_coil = 5)
@@ -63,7 +58,7 @@
 	name = "circuit board (Gibber)"
 	build_path = /obj/machinery/gibber
 	board_type = "machine"
-	origin_tech = "programming=1"
+	origin_tech = list(TECH_ENGINEERING = 1)
 	req_components = list(
 							/obj/item/weapon/stock_parts/matter_bin = 1,
 							/obj/item/weapon/stock_parts/manipulator = 1)
@@ -72,15 +67,19 @@
 	name = "circuit board (cereal maker)"
 	build_path = /obj/machinery/cooker/cereal
 	board_type = "machine"
-	origin_tech = "programming=1;plasmatech=1"
-	frame_desc = "Requires 2 Micro Lasers, 5 pieces of cable and 1 Console Screen."
+	origin_tech = list(TECH_POWER = 1, TECH_ENGINEERING = 1)
 	req_components = list(
 							/obj/item/weapon/stock_parts/micro_laser = 2,
 							/obj/item/stack/cable_coil = 5,
 							/obj/item/weapon/stock_parts/console_screen = 1)
 
-
-
-
-//Undef the macro, shouldn't be needed anywhere else
-#undef T_BOARD_MECHA
+/obj/item/weapon/circuitboard/small_incubator
+	name = T_BOARD("small incubator")
+	build_path = /obj/machinery/small_incubator
+	board_type = "machine"
+	origin_tech = list(TECH_POWER = 1, TECH_ENGINEERING = 1)
+	req_components = list(
+							/obj/item/weapon/stock_parts/micro_laser = 2,
+							/obj/item/stack/cable_coil = 5,
+							/obj/item/weapon/reagent_containers/glass/beaker = 1,
+							)

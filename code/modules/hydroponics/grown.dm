@@ -31,7 +31,7 @@
 			log_error("<span class='danger'>Plant controller does not exist and [src] requires it. Aborting.</span>")
 			return INITIALIZE_HINT_QDEL
 		seed = SSplants.seeds[plantname]
-
+		SetupReagents()
 	if(!seed)
 		return INITIALIZE_HINT_QDEL
 

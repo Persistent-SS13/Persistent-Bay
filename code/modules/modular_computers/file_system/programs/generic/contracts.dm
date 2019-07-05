@@ -79,8 +79,8 @@
 			data["cancelable"] = 1
 		else
 			data["clearable"] = 1
-			
-		
+
+
 	data["menu"] = menu
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
@@ -120,11 +120,11 @@
 			var/chosen_desc = sanitize(input(usr, "Enter a full description of the terms of the contract.", "Contract Description", selected_desc) as null|message, MAX_MESSAGE_LEN*2)
 			if(chosen_desc)
 				selected_desc = chosen_desc
-				
+
 		if("select_org")
 			selected_type = CONTRACT_BUSINESS
-			
-		if("select_personal") 
+
+		if("select_personal")
 			selected_type = CONTRACT_PERSON
 
 		if("change_payment_type")
@@ -138,12 +138,12 @@
 						selected_paytype = CONTRACT_PAY_WEEKLY
 					if("Daily")
 						selected_paytype = CONTRACT_PAY_DAILY
-						
+
 		if("change_payment")
 			var/chose_pay = max(0, input(usr, "Enter the auto-pay amount.", "Autopay amount", selected_pay) as null|num)
 			if(!isnull(chose_pay))
 				selected_pay = chose_pay
-				
+
 		if("change_service")
 			var/list/choices = list(CONTRACT_SERVICE_NONE, CONTRACT_SERVICE_MEDICAL, CONTRACT_SERVICE_SECURITY)
 			var/choice = input(usr, "Select an additional service.") as null|anything in choices
@@ -165,12 +165,12 @@
 			contract.contract_payee = connected_faction.uid
 			contract.contract_desc = selected_desc
 			contract.contract_title = selected_title
-			contract.auto_pay = selected_paytype
-			contract.pay_amount = selected_pay
+			contract.contract_paytype = selected_paytype
+			contract.contract_pay = selected_pay
 			contract.additional_function = selected_service
 			contract.name = "[connected_faction.name] Contract"
 			var/text_pay = ""
-			
+
 			switch(selected_paytype)
 				if(CONTRACT_PAY_WEEKLY)
 					text_pay = "[selected_pay] paid weekly"
@@ -217,7 +217,7 @@
 			selected_title = ""
 			selected_paytype = CONTRACT_PAY_NONE
 			selected_service = "None"
-			
+
 		if("print")
 			if(last_print > world.time)
 				to_chat(usr, "You must wait before printing.")
@@ -262,7 +262,7 @@
 				selected_contract.payee_completed = 1
 			if(selected_contract.payer_type == CONTRACT_BUSINESS && selected_contract.payer == connected_faction.uid)
 				selected_contract.payer_completed = 1
-			selected_contract.update_status()	
+			selected_contract.update_status()
 		if("unmark_complete")
 			if(selected_contract.payee_type == CONTRACT_BUSINESS && selected_contract.payee == connected_faction.uid)
 				selected_contract.payee_completed = 0
@@ -282,4 +282,4 @@
 					selected_contract.payee_clear = 1
 				if(selected_contract.payer_type == CONTRACT_BUSINESS && selected_contract.payer == connected_faction.uid)
 					selected_contract.payer_clear = 1
-			
+

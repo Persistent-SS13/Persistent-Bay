@@ -179,7 +179,7 @@
 	walk(src, 0)
 	if(z > 3)
 		var/list/counted_factions = list()
-		for(var/mob/living/carbon/M in range(7))
+		for(var/mob/living/carbon/M in range(7, get_turf(src)))
 			if(M.key)
 				var/obj/item/organ/internal/stack/stack = M.get_stack()
 				if(stack && stack.connected_faction != "" && !(stack.connected_faction in counted_factions))

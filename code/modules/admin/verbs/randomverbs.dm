@@ -115,6 +115,27 @@
 	log_and_message_admins(" - GlobalNarrate [result[2]]/[result[3]]: [result[4]]")
 	SSstatistics.add_field_details("admin_verb","GLN") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
+/client/proc/cmd_admin_nexus_narrate() // Allows administrators to fluff events a little easier -- TLE
+	set category = "Special Verbs"
+	set name = "NEX Speak"
+	set desc = "Narrate to everyone."
+
+	if(!check_rights(R_ADMIN))
+		return
+	var/static/list/beepsounds = list('sound/effects/compbeep1.ogg','sound/effects/compbeep2.ogg','sound/effects/compbeep3.ogg','sound/effects/compbeep4.ogg','sound/effects/compbeep5.ogg')	
+	var/result
+	var/message = input("Message:", text("Enter the text you want NEX to say. This will be broadcast to both the entire server and the discord.")) as null|text
+	if (!message)
+		return
+	result = FONT_LARGE(SPAN_WARNING(sanitize(message)))
+	to_world(result)
+	for(var/mob/M in GLOB.player_list)
+		sound_to(M, pick(beepsounds))
+	GLOB.discord_api.broadcast(message)
+	log_and_message_admins(" - GlobalNarrate [result[2]]/[result[3]]: [result[4]]")
+	SSstatistics.add_field_details("admin_verb","GLN") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+
+
 
 /proc/cmd_admin_narrate_helper(var/user, var/style, var/size, var/message)
 	if (!style)

@@ -533,7 +533,7 @@
 		return FALSE
 
 /obj/structure/closet/proc/CanToggleLock(var/mob/user, var/obj/item/weapon/card/id/id_card)
-	return allowed(user) || (istype(id_card) && check_access_list(id_card.GetAccess(req_access_faction)))
+	return allowed(user)
 
 /obj/structure/closet/AltClick(var/mob/user)
 	if(!src.opened)
@@ -607,10 +607,10 @@
 				"selected" = (text2num(x) in req_access)
 				))
 		data["access_categories"] = access_categories
-		var/list/personal_access[0]
-		for(var/x in req_access_personal_list)
-			personal_access[++personal_access.len] = list("name" = x)
-		data["personal_access"] = personal_access
+	var/list/personal_access[0]
+	for(var/x in req_access_personal_list)
+		personal_access[++personal_access.len] = list("name" = x)
+	data["personal_access"] = personal_access
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "closet.tmpl", "Container Programming", 800, 500, state = state)

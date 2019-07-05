@@ -570,7 +570,7 @@
 	addictiveness = 2
 	addiction_median_dose = 5
 
-	var/global/list/dose_messages = list(
+	var/global/list/shroom_dose_messages = list(
 		"The world spins pleasantly around you.",
 		"You look down, and your hands aren't yours.",
 		"The walls flow slowly, over and over again.",
@@ -601,14 +601,13 @@
 
 	M.druggy = max(M.druggy, 30)
 
-
 	if(M.chem_doses[type] < 1 * threshold)
 		M.apply_effect(3, STUTTER)
 		M.make_dizzy(5)
 		if(prob(5))
 			M.emote(pick("twitch", "giggle"))
 		if(prob(5))
-			to_chat(M, "[pick(dose_messages)]")
+			to_chat(M, "[pick(shroom_dose_messages)]")
 	else if(M.chem_doses[type] < 2 * threshold)
 		M.apply_effect(3, STUTTER)
 		M.make_jittery(5)
@@ -617,7 +616,7 @@
 		if(prob(10))
 			M.emote(pick("twitch", "giggle"))
 		if(prob(10))
-			to_chat(M, "[pick(dose_messages)]")
+			to_chat(M, "[pick(shroom_dose_messages)]")
 	else
 		M.add_chemical_effect(CE_MIND, -1)
 		M.apply_effect(3, STUTTER)
@@ -627,8 +626,45 @@
 		if(prob(15))
 			M.emote(pick("twitch", "giggle"))
 		if(prob(15))
-			to_chat(M, "[pick(dose_messages)]")
+			to_chat(M, "[pick(shroom_dose_messages)]")
 
+/datum/reagent/stimulant
+	name = "Stimulant"
+	description = "A recreational stimulant."
+	taste_description = "sharpness"
+	reagent_state = LIQUID
+	color = "#ff3300"
+	metabolism = REM * 0.15
+	overdose = REAGENTS_OVERDOSE * 0.5
+
+	addictiveness = 3
+	addiction_median_dose = 30
+
+	var/global/list/stim_dose_messages = list(
+		"The world races, but not as fast as you.",
+		"You feel on top of the world.",
+		"You're in control.",
+		"You can do anything.",
+		"You've accomplished so much.",
+		"Euphoria floods your mind.",
+		"You need to talk to someone else.",
+		"It's hard to stay calm!",
+		"You need to do something with your hands.",
+		"You have to stay busy.",
+		"You feel like cleaning something.",
+		"Your heart races like the wind.",
+		"You find yourself blinking a lot.",
+		"You can barely feel your face."
+	)	
+
+/datum/reagent/stimulant/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+	if(alien == IS_DIONA)
+		return
+	if(prob(5))
+		M.emote(pick("twitch", "blink_r", "shiver"))
+		to_chat(M, "[pick(stim_dose_messages)]")
+	M.add_chemical_effect(CE_SPEEDBOOST, 0.2)
+	M.add_chemical_effect(CE_PULSE, 3)
 
 /datum/reagent/three_eye
 	name = "Three Eye"
@@ -646,7 +682,7 @@
 	overdose = 25
 
 	// M A X I M U M C H E E S E
-	var/global/list/dose_messages = list(
+	var/global/list/three_eye_dose_messages = list(
 		"Your name is called. It is your time.",
 		"You are dissolving. Your hands are wax...",
 		"It all runs together. It all mixes.",
@@ -667,7 +703,7 @@
 		"Come back from there. Please."
 	)
 
-	var/global/list/overdose_messages = list(
+	var/global/list/three_eye_overdose_messages = list(
 		"THE SIGNAL THE SIGNAL THE SIGNAL THE SIGNAL",
 		"IT CRIES IT CRIES IT WAITS IT CRIES",
 		"NOT YOURS NOT YOURS NOT YOURS NOT YOURS",
@@ -690,7 +726,7 @@
 		H.seizure()
 		H.adjustBrainLoss(rand(8, 12))
 	if(prob(5))
-		to_chat(M, SPAN_WARNING("<font size = [rand(1,3)]>[pick(dose_messages)]</font>"))
+		to_chat(M, SPAN_WARNING("<font size = [rand(1,3)]>[pick(three_eye_dose_messages)]</font>"))
 
 /datum/reagent/three_eye/on_leaving_metabolism(var/mob/parent, var/metabolism_class)
 	parent.remove_client_color(/datum/client_color/thirdeye)
@@ -702,7 +738,7 @@
 		var/mob/living/carbon/human/H = M
 		H.seizure()
 	if(prob(10))
-		to_chat(M, SPAN_DANGER("<font size = [rand(2,4)]>[pick(overdose_messages)]</font>"))
+		to_chat(M, SPAN_DANGER("<font size = [rand(2,4)]>[pick(three_eye_overdose_messages)]</font>"))
 	if(M.psi)
 		M.psi.check_latency_trigger(30, "a Three Eye overdose")
 

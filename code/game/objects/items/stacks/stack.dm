@@ -30,7 +30,7 @@
 	if (!stacktype)
 		stacktype = type
 	if (amount >= 1)
-		src.amount = amount
+		set_amount(amount)
 	..()
 	ADD_SAVED_VAR(amount)
 

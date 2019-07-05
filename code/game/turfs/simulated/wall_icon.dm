@@ -97,11 +97,7 @@
 			overlays += I
 
 	if(integrity != MaxIntegrity())
-		var/mat_integrity = material.integrity
-		if(reinf_material)
-			mat_integrity += reinf_material.integrity
-
-		var/overlay = round((MaxIntegrity() - integrity) / mat_integrity * damage_overlays.len) + 1
+		var/overlay = Floor((MaxIntegrity() - integrity) / MaxIntegrity() * damage_overlays.len) + 1
 		if(overlay > damage_overlays.len)
 			overlay = damage_overlays.len
 

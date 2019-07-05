@@ -258,6 +258,12 @@
 	required_reagents = list(/datum/reagent/sugar = 1, /datum/reagent/phosphorus = 1, /datum/reagent/sulfur = 1)
 	result_amount = 3
 
+/datum/chemical_reaction/phorostimulant
+	name = "Phorostimulant"
+	result = /datum/reagent/phorostimulant
+	required_reagents = list(/datum/reagent/sugar = 1, /datum/reagent/phoron = 1)
+	result_amount = 6
+
 /datum/chemical_reaction/ryetalyn
 	name = "Ryetalyn"
 	result = /datum/reagent/ryetalyn

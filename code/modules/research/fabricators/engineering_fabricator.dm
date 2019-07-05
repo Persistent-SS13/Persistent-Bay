@@ -254,12 +254,12 @@
 	name = "Experimental welding tool"
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_PLASTEEL = 5 SHEETS, MATERIAL_PHORON = 5 SHEETS)
 	build_path = /obj/item/weapon/tool/weldingtool/experimental
-
+	research = "welding_experimental"
 /datum/design/item/engifab/engitools/adv/electric_welder
 	name = "Electric welding tool"
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GRAPHITE = 2 SHEETS, MATERIAL_COPPER = 5 SHEETS)
 	build_path = /obj/item/weapon/tool/weldingtool/electric
-
+	research = "welding_experimental"
 /datum/design/item/engifab/engitools/adv/airlock_brace
 	name = "Airlock brace"
 	materials = list(MATERIAL_STEEL = 5 SHEET, MATERIAL_PLASTEEL = 5 SHEETS)

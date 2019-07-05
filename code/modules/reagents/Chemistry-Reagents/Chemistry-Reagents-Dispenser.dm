@@ -142,23 +142,23 @@
 	M.add_chemical_effect(CE_ALCOHOL, 1)
 	var/effective_dose = M.chem_doses[type] * strength_mod * (1 + volume/60) //drinking a LOT will make you go down faster
 
-	if(effective_dose >= strength) // Early warning
+	if(effective_dose >= strength * 2) // Early warning
 		M.make_dizzy(6) // It is decreased at the speed of 3 per tick
-	if(effective_dose >= strength * 2) // Slurring
+	if(effective_dose >= strength * 3) // Slurring
 		M.add_chemical_effect(CE_PAINKILLER, 150/strength)
 		M.slurring = max(M.slurring, 30)
-	if(effective_dose >= strength * 3) // Confusion - walking in random directions
-		M.add_chemical_effect(CE_PAINKILLER, 150/strength)
-		M.confused = max(M.confused, 20)
 	if(effective_dose >= strength * 4) // Blurry vision
 		M.add_chemical_effect(CE_PAINKILLER, 150/strength)
 		M.eye_blurry = max(M.eye_blurry, 10)
-	if(effective_dose >= strength * 5) // Drowsyness - periodically falling asleep
+	if(effective_dose >= strength * 5) // Confusion - walking in random directions
+		M.add_chemical_effect(CE_PAINKILLER, 150/strength)
+		M.confused = max(M.confused, 20)
+	if(effective_dose >= strength * 6) // Drowsyness - periodically falling asleep
 		M.add_chemical_effect(CE_PAINKILLER, 150/strength)
 		M.drowsyness = max(M.drowsyness, 20)
-	if(effective_dose >= strength * 6) // Toxic dose
+	if(effective_dose >= strength * 7) // Toxic dose
 		M.add_chemical_effect(CE_ALCOHOL_TOXIC, toxicity)
-	if(effective_dose >= strength * 7) // Pass out
+	if(effective_dose >= strength * 8) // Pass out
 		M.Paralyse(20)
 		M.Sleeping(30)
 

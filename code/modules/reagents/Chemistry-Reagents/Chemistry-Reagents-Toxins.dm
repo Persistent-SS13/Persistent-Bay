@@ -569,6 +569,27 @@
 	
 	addictiveness = 2
 	addiction_median_dose = 5
+
+	var/global/list/dose_messages = list(
+		"The world spins pleasantly around you.",
+		"You look down, and your hands aren't yours.",
+		"The walls flow slowly, over and over again.",
+		"You're not sure you've ever seen that color before.",
+		"The floor is fascinating.",
+		"Your arm feels very soft.",
+		"There's a brief fluttering in your chest.",
+		"You smile contentedly, for no reason.",
+		"Breathing feels nice.",
+		"You feel like you're in a dream.",
+		"You forgot you could be as happy as this.",
+		"Everything around you is crisp and clear.",
+		"All things love you, and you love them.",
+		"You feel a strong connection to the place around you.",
+		"The door into yourself opens.",
+		"Every emotion feels magnified.",
+		"You dream of being yourself.",
+		"You dream of being no one."
+	)	
 	
 /datum/reagent/psilocybin/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -580,11 +601,14 @@
 
 	M.druggy = max(M.druggy, 30)
 
+
 	if(M.chem_doses[type] < 1 * threshold)
 		M.apply_effect(3, STUTTER)
 		M.make_dizzy(5)
 		if(prob(5))
 			M.emote(pick("twitch", "giggle"))
+		if(prob(5))
+			to_chat(M, "[pick(dose_messages)]")
 	else if(M.chem_doses[type] < 2 * threshold)
 		M.apply_effect(3, STUTTER)
 		M.make_jittery(5)
@@ -592,6 +616,8 @@
 		M.druggy = max(M.druggy, 35)
 		if(prob(10))
 			M.emote(pick("twitch", "giggle"))
+		if(prob(10))
+			to_chat(M, "[pick(dose_messages)]")
 	else
 		M.add_chemical_effect(CE_MIND, -1)
 		M.apply_effect(3, STUTTER)
@@ -600,6 +626,8 @@
 		M.druggy = max(M.druggy, 40)
 		if(prob(15))
 			M.emote(pick("twitch", "giggle"))
+		if(prob(15))
+			to_chat(M, "[pick(dose_messages)]")
 
 
 /datum/reagent/three_eye

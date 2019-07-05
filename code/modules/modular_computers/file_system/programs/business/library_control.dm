@@ -74,7 +74,7 @@
 	switch(href_list["action"])
 		if("select_book")
 			selected_book = locate(href_list["ref"])
-			if(select_book)
+			if(selected_book)
 				menu = 3
 		if("change_menu")
 			menu = text2num(href_list["target"])

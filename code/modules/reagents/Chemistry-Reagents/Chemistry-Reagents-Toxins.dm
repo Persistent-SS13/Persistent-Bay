@@ -663,8 +663,31 @@
 		"You feel the urge to go on an adventure.",
 		"You feel the urge to mine."
 	)	
+	
+	var/global/list/stim_overdose_messages = list(
+		"The world is spinning, far too fast.",
+		"You stumble, your hands shaking.",
+		"You're not in control.",
+		"You need to move, but your body doesn't respond.",
+		"Your heart beats out of your chest.",
+		"You look down, and see endless slugs.",
+		"Teeth gnash at you, from every direction.",
+		"The ground shakes violently",
+		"Everything is orange.",
+		"You feel like you're going to die.",
+		"This is too much engagement."
+	)	
 
-/datum/reagent/stimulant/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+/datum/reagent/phorostim/overdose(var/mob/living/carbon/M, var/alien)
+	..()
+	M.adjustBrainLoss(1)
+	if(ishuman(M) && prob(10))
+		var/mob/living/carbon/human/H = M
+		H.seizure()
+	if(prob(10))
+		to_chat(M, SPAN_DANGER("[pick(stim_overdose_messages)]"))
+		
+/datum/reagent/phorostim/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
 		return
 	if(prob(5))

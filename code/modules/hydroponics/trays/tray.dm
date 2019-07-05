@@ -152,6 +152,12 @@
 	ADD_SAVED_VAR(temp_chem_holder)
 	ADD_SAVED_VAR(labelled)
 	ADD_SAVED_VAR(seed)
+	ADD_SAVED_VAR(req_access_faction)
+
+/obj/machinery/portable_atmospherics/hydroponics/before_save()
+	. = ..()
+	if(connected_faction)
+		req_access_faction = connected_faction.uid
 
 /obj/machinery/portable_atmospherics/hydroponics/after_load()
 	..()

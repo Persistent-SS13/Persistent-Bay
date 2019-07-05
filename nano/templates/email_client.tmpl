@@ -52,7 +52,7 @@
 		</div>
 		<div class="item">
 			<div class="itemLabel">
-				{{:helper.link('', 'plusthick', {'edit_recipient'' : 1})}} Recipient:
+				{{:helper.link('', 'plusthick', {'edit_recipient' : 1})}} Recipient:
 			</div>
 			<div class="itemContent">
 				<div class="statusDisplayComm" style="width:100%;min-height:1.7em;padding-bottom: 0;">
@@ -158,6 +158,7 @@
 						<td>
 							{{:helper.link('', 'trash', {'delete' : value.uid})}}
 							{{:helper.link('', 'arrowreturnthick-1-w', {'reply' :  value.uid})}}
+							{{:helper.link('', 'search', {'view' :  value.ref})}}
 							{{:helper.link('', 'search', {'view' :  value.ref})}}
 						</td>
 					</tr>

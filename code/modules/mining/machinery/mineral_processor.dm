@@ -47,7 +47,7 @@
 	if(input_turf)
 		for(var/obj/item/stack/S in input_turf)
 			// If we are deleted or are neither dust or ore, continue
-			if(QDELETED(S) || (!istype(S, /obj/item/stack/material_dust) && !istype(S, /obj/item/stack/ore) && !istype(S, /obj/item/stack/material) || !LAZYLEN(S.matter))
+			if(QDELETED(S) || (!istype(S, /obj/item/stack/material_dust) && !istype(S, /obj/item/stack/ore) && !istype(S, /obj/item/stack/material)) || !LAZYLEN(S.matter))
 				continue
 
 			// Otherwise add the matter in the stack to our stores.

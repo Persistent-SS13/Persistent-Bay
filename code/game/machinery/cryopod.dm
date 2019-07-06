@@ -206,6 +206,9 @@
 			var/choice = input(usr,"Choose which cryo network [src] should use.","Choose Cryo-net",null) as null|anything in choices
 			if(choice)
 				network = choice
+	if(href_list["despawn"])
+		if(user == occupant)
+			despawn_occupant()
 
 /obj/machinery/cryopod/examine(mob/user)
 	. = ..()
@@ -257,7 +260,7 @@
 
 		src.add_fingerprint(M)
 		M.stop_pulling()
-		to_chat(M, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
+		to_chat(M, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b>(<a href='?src=\ref[src];despawn=1'>despawn now</a>)</span>")
 
 	if(istype(A, /obj/item/organ/internal/stack))
 		var/obj/item/organ/internal/stack/S = A
@@ -341,15 +344,20 @@
 	SScharacter_setup.save_character(saveslot, key, character)
 	SetName(initial(src.name))
 	icon_state = base_icon_state
-	//var/mob/new_player/player = new()
-	//player.loc = locate(200,200,19)
-	//if(occupant.client)
-	//	occupant.client.eye = player
-	//player.key = key
-	//player.loc = locate(200,200,19)
-	//if(occupant && occupant.client)
-	//	occupant.client.eye = player
+	var/mob/new_player/player = new()
+	player.loc = locate(200,200,19)
+	if(occupant.client)
+		occupant.client.eye = player
+	player.key = key
+	player.loc = locate(200,200,19)
+	if(occupant && occupant.client)
+		occupant.client.eye = player
+	if(istype(occupant, /mob/))
+		var/mob/M = occupant
+		M.stored_ckey = null
+		M.ckey = null
 	QDEL_NULL(occupant)
+	time_despawn = 0
 	despawning = FALSE
 
 /*

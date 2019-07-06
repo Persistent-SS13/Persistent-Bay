@@ -37,5 +37,7 @@ PROCESSING_SUBSYSTEM_DEF(icon_update)
 			return
 
 /atom/proc/queue_icon_update(...)
+	if(QDELETED(src))
+		return
 	SSicon_update.queue[src] = args.len ? args : TRUE
 	SSicon_update.wake()

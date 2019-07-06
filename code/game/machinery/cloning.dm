@@ -31,7 +31,7 @@
 	power_change()
 		..()
 		if(!(stat & (BROKEN|NOPOWER)))
-			set_light(1)
+			set_light(0.8, 2, 8, 2, light_color)
 		else
 			set_light(0)
 
@@ -57,11 +57,17 @@
 
 /obj/machinery/clonepod/Initialize()
 	. = ..()
+	if(. == INITIALIZE_HINT_QDEL)
+		return .
 	queue_icon_update()
 
 /obj/machinery/clonepod/Destroy()
 //	if(connected)
 	//	connected.pods -= src
+	connected = null
+	held_brain = null
+	occupant_brain = null
+	occupant = null
 	return ..()
 
 /obj/machinery/clonepod/RefreshParts()
@@ -102,7 +108,7 @@
 
 	var/mob/living/carbon/human/H = new /mob/living/carbon/human(src, R.species)
 	occupant = H
-	occupant.reagents.add_reagent("synaptizine", 30)
+	occupant.reagents.add_reagent(/datum/reagent/synaptizine, 30)
 	if(!R.real_name)	//to prevent null names
 		if(held_brain && held_brain.brainmob)
 			R.real_name = held_brain.brainmob.mind.name
@@ -113,7 +119,7 @@
 	//Get the clone body ready
 	if(function == 1)
 		H.adjustCloneLoss(190) //new damage var so you can't eject a clone early then stab them to abuse the current damage system --NeoFite
-		H.adjustBrainLoss(90) // The rand(10, 30) will come out as extra brain damage
+		H.adjustBrainLoss(rand(10, 30)) // The rand(10, 30) will come out as extra brain damage
 		H.Paralyse(4)
 	else
 		H.adjustBrainLoss(5) // The rand(10, 30) will come out as extra brain damage

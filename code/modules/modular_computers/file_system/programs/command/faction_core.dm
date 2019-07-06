@@ -9,7 +9,7 @@
 	required_access = core_access_leader
 	requires_ntnet = FALSE
 	size = 65
-	usage_flags = PROGRAM_CONSOLE
+	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP | PROGRAM_TELESCREEN
 	category = PROG_COMMAND
 
 /datum/nano_module/program/faction_core

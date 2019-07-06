@@ -9,7 +9,9 @@
 
 /datum/stack_recipe/rod/spawn_result(user, location, amount)
 	var/obj/item/stack/S = new result_type(location, amount, use_material)
-	S.add_to_stacks(user, 1)
+	spawn(0)
+		S.add_to_stacks(user, TRUE)
+	
 	return S
 
 // Tiles

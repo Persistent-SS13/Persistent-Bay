@@ -6,10 +6,10 @@
 	nanomodule_path = /datum/nano_module/program/stockholders
 	extended_desc = "Used by stockholders to create and vote on proposals, and create private stock sales."
 	requires_ntnet = 1
-	size = 12
+	size = 2
 	business = 1
 	category = PROG_BUSINESS
-
+	usage_flags = PROGRAM_ALL
 
 /datum/nano_module/program/stockholders
 	name = "Business Stockholders Panel"
@@ -167,6 +167,7 @@
 				contract.linked = new /datum/stock_contract()
 				contract.purpose = "Stock contract for [amount] stocks at [cost]$$"
 				contract.ownership = amount
+				contract.created_by = usr.real_name
 				contract.name = "[connected_faction.name] stock contract"
 				var/t = {"
 						<font face='Verdana' color=blue>

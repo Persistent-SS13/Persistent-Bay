@@ -135,10 +135,13 @@
 			if(istype(W, /obj/item/stack/material/rods))
 				if(UseMaterial(W, user, null, null, null, null, 4))
 					var/obj/item/stack/material/rods/R = W
-					reinf_material = SSmaterials.get_material_by_name(R.default_type)
+					reinf_material = R.material
 					to_chat(user, SPAN_NOTICE("You insert the rods into \the [src]."))
 					state = 5
 					update_material(1)
+					return
+				else
+					// Otherwise we smack it with the rods.
 					return
 			if(Weld(W, user))
 				to_chat(user, SPAN_NOTICE("You repair the holes made for reinforcing rods."))
@@ -153,7 +156,11 @@
 				return
 			if(Wirecutter(W, user))
 				to_chat(user, SPAN_NOTICE("You remove the rods from \the [src]."))
-				new reinf_material.stack_type(get_turf(src), 2)
+				var/obj/item/stack/material/rods/R = new(src, 4)
+				R.material = reinf_material
+				R.update_strings()
+				R.update_icon()
+				reinf_material = null
 				state = 4
 				update_icon()
 				return

@@ -12,14 +12,20 @@
 	randpixel = 3
 	icon = 'icons/obj/materials.dmi'
 
+	stacktype = /obj/item/stack/material
+
 	var/default_type = MATERIAL_STEEL
 	var/material/material
 	var/default_reinf_type
 	var/material/reinf_material
-	var/perunit = SHEET_MATERIAL_AMOUNT
 	var/material_flags = USE_MATERIAL_COLOR|USE_MATERIAL_SINGULAR_NAME|USE_MATERIAL_PLURAL_NAME
 	var/plural_name
 	var/matter_multiplier = 1
+
+/obj/item/stack/material/New(loc, amount)
+	. = ..()
+	ADD_SAVED_VAR(material)
+	ADD_SAVED_VAR(reinf_material)
 
 /obj/item/stack/material/Initialize(mapload, var/amount, var/material, var/reinf_material)
 	. = ..()
@@ -40,8 +46,6 @@
 		if(!src.reinf_material)
 			log_warning(" /obj/item/stack/material/Initialize() : Missing or invalid reinf_material type([src.default_reinf_type])!")
 
-	if(!stacktype)
-		stacktype = src.material.stack_type
 	if(islist(src.material.stack_origin_tech))
 		origin_tech = src.material.stack_origin_tech.Copy()
 
@@ -62,10 +66,6 @@
 
 /obj/item/stack/material/get_codex_value()
 	return (material && !material.hidden_from_codex) ? "[lowertext(material.display_name)] (material)" : ..()
-
-/obj/item/stack/material/set_amount(var/_amount)
-	amount = max(1, min(_amount, max_amount))
-	update_strings()
 
 /obj/item/stack/material/get_material()
 	return material
@@ -105,7 +105,7 @@
 	return
 
 /obj/item/stack/material/proc/is_same(obj/item/stack/material/M)
-	if(!istype(M))
+	if((stacktype != M.stacktype))
 		return FALSE
 	if(matter_multiplier != M.matter_multiplier)
 		return FALSE
@@ -169,14 +169,18 @@
 //--------------------------------
 //	Generic
 //--------------------------------
-/obj/item/stack/material/generic
-	icon_state = "sheet"
-	plural_icon_state = "sheet-mult"
-	max_icon_state = "sheet-max"
+///obj/item/stack/material/generic
+	// icon_state = "sheet"
+	// plural_icon_state = "sheet-mult"
+	// max_icon_state = "sheet-max"
 
 /obj/item/stack/material/generic/Initialize()
 	. = ..()
-	if(material) color = material.icon_colour
+	// if(material) color = material.icon_colour
+	//This should make any existing stacks of generic material on the save turn into regular old material stacks
+	if(material && loc)
+		material.place_sheet(get_turf(src), amount)
+	return INITIALIZE_HINT_QDEL
 
 //--------------------------------
 //	Iron

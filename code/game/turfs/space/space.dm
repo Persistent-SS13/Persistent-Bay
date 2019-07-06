@@ -8,6 +8,7 @@
 	temperature = T20C
 	thermal_conductivity = OPEN_HEAT_TRANSFER_COEFFICIENT
 	var/static/list/dust_cache
+	permit_ao = FALSE
 
 /turf/space/proc/build_dust_cache()
 	LAZYINITLIST(dust_cache)
@@ -80,11 +81,10 @@
 		var/obj/structure/lattice/L = locate(/obj/structure/lattice, src)
 		if(L)
 			var/obj/item/stack/tile/floor/S = C
-			if (S.get_amount() < 1)
+			if (!S.use(1))
 				return
 			qdel(L)
 			playsound(src, 'sound/weapons/Genhit.ogg', 50, 1)
-			S.use(1)
 			ChangeTurf(/turf/simulated/floor/airless)
 			return
 		else
@@ -215,6 +215,9 @@
 
 /turf/space/ChangeTurf(var/turf/N, var/tell_universe=1, var/force_lighting_update = 0)
 	return ..(N, tell_universe, 1)
+
+/turf/space/is_open()
+	return TRUE
 
 //Bluespace turfs for shuttles and possible future transit use
 /turf/space/bluespace

@@ -74,3 +74,40 @@
 	required_reagents = list(/datum/reagent/water = 1)
 	minimum_temperature = T0C
 	maximum_temperature = T0C - 150
+
+/datum/chemical_reaction/welding_fuel
+	name = "welding fuel"
+	result = /datum/reagent/fuel
+	result_amount = 20
+	required_reagents = list(/datum/reagent/acetone = 10, /datum/reagent/ethanol = 10)
+	minimum_temperature = T0C + 20
+	maximum_temperature = T0C + 50
+
+/datum/chemical_reaction/hydrazine
+	name = "welding fuel"
+	result = /datum/reagent/fuel
+	result_amount = 20
+	required_reagents = list(/datum/reagent/hydrogen_peroxide = 10, /datum/reagent/acid/acetic = 5, /datum/reagent/ammonia = 5)
+	minimum_temperature = T0C + 20
+	maximum_temperature = T0C + 50
+
+/datum/chemical_reaction/acetic_acid
+	name = "acetic acid"
+	result = /datum/reagent/acid/acetic
+	required_reagents = list(/datum/reagent/methanol = 10, /datum/reagent/carbon_monoxide = 10)
+	catalysts = list(/datum/reagent/carbon = 5)
+	result_amount = 20
+
+/datum/chemical_reaction/methanol
+	name = "methanol"
+	result = /datum/reagent/methanol
+	required_reagents = list(/datum/reagent/hydrogen = 5, /datum/reagent/carbon_monoxide = 5)
+	catalysts = list(/datum/reagent/copper = 5)
+	result_amount = 10
+
+/datum/chemical_reaction/methyl_bromide2
+	name = "Methyl Bromide"
+	required_reagents = list(/datum/reagent/boron = 1, /datum/reagent/methanol = 1, /datum/reagent/hydrogen = 2)
+	result_amount = 3
+	result = /datum/reagent/toxin/methyl_bromide
+	mix_message = "The solution begins to bubble, emitting a dark vapor."

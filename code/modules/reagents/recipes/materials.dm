@@ -28,6 +28,17 @@
 /datum/chemical_reaction/plastication/on_reaction(var/datum/reagents/holder, var/created_volume)
 	new /obj/item/stack/material/plastic(get_turf(holder.my_atom), created_volume)
 
+/datum/chemical_reaction/plastication2
+	name = "Plastic"
+	result = null
+	required_reagents = list(/datum/reagent/ethanol = 25, /datum/reagent/aluminium = 25, /datum/reagent/oxygen = 25) //Basically, dehydrate ethanol into ethene, and then magically get it to turn into polyethene
+	result_amount = 1
+	mix_message = "The solution solidifies into a grey-white mass."
+	minimum_temperature = T0C + 100
+	maximum_temperature = T0C + 200
+/datum/chemical_reaction/plastication2/on_reaction(var/datum/reagents/holder, var/created_volume)
+	new /obj/item/stack/material/plastic(get_turf(holder.my_atom), created_volume)
+
 //-------------------------------------
 //	Pultrusion
 //-------------------------------------

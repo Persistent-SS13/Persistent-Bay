@@ -148,6 +148,14 @@
 
 	return ..()
 
+/turf/simulated/floor/proc/welder_melt()
+	if(!(is_plating()) || broken || burnt)
+		return 0
+	burnt = 1
+	remove_decals()
+	update_icon()
+	return 1
+
 /turf/simulated/floor/acid_melt()
 	. = FALSE
 	var/turf/T = GetBelow(src)

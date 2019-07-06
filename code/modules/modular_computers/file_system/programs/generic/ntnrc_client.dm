@@ -8,7 +8,7 @@ GLOBAL_LIST_EMPTY(chat_client_sessions)
 	program_key_state = "med_key"
 	program_menu_icon = "comment"
 	extended_desc = "This program allows communication over NTNRC network"
-	size = 8
+	size = 4
 	requires_ntnet = TRUE
 	requires_ntnet_feature = NTNET_COMMUNICATION
 	network_destination = "NTNRC server"

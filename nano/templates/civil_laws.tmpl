@@ -1,38 +1,39 @@
-<h2>Civil Laws</h2>
-<br><hr>
-<br>
-{{if data.selected_vote}}
-	{{:helper.link('Back', '', {'action' : 'deselect_vote'})}}{{:helper.link('Print Copy', 'print', {'action' : 'print'})}}<br><br>
-	<h3>{{:data.selected_vote}}</h3>
-	<div class='item'>
-		<div class='itemLabel'>
-			Sponsor
-		</div>
-		<div class='itemContent'>
-			{{:data.sponsor}}
-		</div>
-	</div>
-	<div class='item'>
-		<div class='itemLabel'>
-			Date Passed
-		</div>
-		<div class='itemContent'>
-			{{:data.passed_date}}
-		</div>
-	</div>
-	<br><hr><br>
-	{{:data.vote_body}}
+<div style="color: #FFFFFF;">
+	<h2>Civil Laws</h2>
 	<br><hr>
 	<br>
-{{else}}
-	<div class="statusDisplay" style="overflow: auto;">
-		{{if data.votes}}
-			{{for data.votes}}
-				{{:helper.link(value.name, '', {'action' : 'select_vote', 'ref' : value.ref})}}<br>
-			{{/for}}
-		{{else}}
-			<span class='alert'>No civil laws.</span>
-		{{/if}}
-	</div>
-{{/if}}
-	
+	{{if data.selected_vote}}
+		{{:helper.link('Back', '', {'action' : 'deselect_vote'})}}{{:helper.link('Print Copy', 'print', {'action' : 'print'})}}<br><br>
+		<h3>{{:data.selected_vote}}</h3>
+		<div class='item'>
+			<div class='itemLabel'>
+				Sponsor
+			</div>
+			<div class='itemContent'>
+				{{:data.sponsor}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Date Passed
+			</div>
+			<div class='itemContent'>
+				{{:data.passed_date}}
+			</div>
+		</div>
+		<br><hr><br>
+		{{:data.vote_body}}
+		<br><hr>
+		<br>
+	{{else}}
+		<div class="statusDisplay" style="overflow: auto;">
+			{{if data.votes}}
+				{{for data.votes}}
+					{{:helper.link(value.name, '', {'action' : 'select_vote', 'ref' : value.ref})}}<br>
+				{{/for}}
+			{{else}}
+				<span class='alert'>No civil laws.</span>
+			{{/if}}
+		</div>
+	{{/if}}
+</div>

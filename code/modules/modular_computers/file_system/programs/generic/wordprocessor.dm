@@ -95,7 +95,8 @@
 		\[fleetlogo\] - Inserts the logo of the SCG Fleet
 		\[ocielogo\] - Inserts the logo of the Office of Civil Investigation and Enforcement
 		\[terraseal\] - Inserts TCC seal.
-		\[nfrseal\] - Inserts NFR seal."}
+		\[nfrseal\] - Inserts NFR seal.
+		\[pdseal\] - Inserts Nexus City Police seal."}
 
 		to_chat(usr, help)
 		return 1

@@ -16,7 +16,7 @@ GLOBAL_LIST_EMPTY(all_zshadows) //Keep track of the bastards
 	var/mob/owner = null		// What we are a shadow of.
 	should_save = 0
 
-/mob/zshadow/can_fall()
+/mob/zshadow/can_fall(var/anchor_bypass = FALSE, var/turf/location_override = loc)
 	return FALSE
 
 /mob/zshadow/New(var/mob/L)

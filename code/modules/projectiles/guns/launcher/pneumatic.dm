@@ -145,6 +145,10 @@
 
 	var/buildstate = 0
 
+/obj/item/weapon/cannonframe/New()
+	. = ..()
+	ADD_SAVED_VAR(buildstate)
+
 /obj/item/weapon/cannonframe/on_update_icon()
 	icon_state = "pneumatic[buildstate]"
 
@@ -155,7 +159,7 @@
 		if(2) to_chat(user, "It has a pipe segment welded in place.")
 		if(3) to_chat(user, "It has an outer chassis installed.")
 		if(4) to_chat(user, "It has an outer chassis welded in place.")
-		if(5) to_chat(user, "It has a transfer valve installed.")
+		if(5) to_chat(user, "It has a valve installed.")
 
 /obj/item/weapon/cannonframe/attackby(obj/item/W as obj, mob/user as mob)
 	if(istype(W,/obj/item/pipe))
@@ -176,11 +180,11 @@
 			else
 				to_chat(user, "<span class='notice'>You need at least five metal sheets to complete this task.</span>")
 			return
-	else if(istype(W,/obj/item/device/transfer_valve))
+	else if(istype(W,/obj/item/clamp))
 		if(buildstate == 4)
 			user.drop_from_inventory(W)
 			qdel(W)
-			to_chat(user, "<span class='notice'>You install the transfer valve and connect it to the piping.</span>")
+			to_chat(user, "<span class='notice'>You install \the [W] and connect it to the piping.</span>")
 			buildstate++
 			update_icon()
 			return

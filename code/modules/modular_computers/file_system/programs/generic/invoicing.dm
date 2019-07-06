@@ -5,7 +5,7 @@
 	program_icon_state = "supply"
 	program_menu_icon = "cart"
 	extended_desc = "A tool for creating digital invoices that act as one time payment processors for networks to recieve payment from individual accounts."
-	size = 21
+	size = 2
 	available_on_ntnet = 1
 	requires_ntnet = 1
 	usage_flags = PROGRAM_ALL

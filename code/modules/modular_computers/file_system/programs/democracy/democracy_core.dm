@@ -23,7 +23,7 @@
 	required_access = core_access_leader
 	requires_ntnet = 1
 	size = 65
-	usage_flags = PROGRAM_CONSOLE
+	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP | PROGRAM_TELESCREEN
 	democratic = 1
 	category = PROG_GOVERNMENT
 

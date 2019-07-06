@@ -80,6 +80,8 @@
 /obj/proc/check_access_list(var/list/L)
 	if(!req_access)		req_access = list()
 	if(!req_one_access)	req_one_access = list()
+	if(req_access_personal || (req_access_personal_list && req_access_personal_list.len))
+		return 0
 	if(!istype(L, /list))	return 0
 	return has_access(req_access, req_one_access, L)
 

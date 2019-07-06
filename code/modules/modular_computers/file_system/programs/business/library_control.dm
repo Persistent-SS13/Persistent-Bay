@@ -11,6 +11,8 @@
 	business = 1
 	required_module = /datum/business_module/media
 	category = PROG_OFFICE
+	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP | PROGRAM_TELESCREEN
+
 /datum/nano_module/program/library_control
 	name = "Library Control"
 	var/menu = 1
@@ -41,8 +43,12 @@
 			data["book_author"] = "*None*"
 
 	if(menu == 3)
-		data["book_name"] = selected_book.name
-		data["book_author"] = selected_book.author
+		if(selected_book)
+			data["book_name"] = selected_book.name
+			data["book_author"] = selected_book.author
+		else
+			data["book_name"] = "*None*"
+			data["book_author"] = "*None*"
 
 	data["menu"] = menu
 
@@ -66,6 +72,10 @@
 	if(!user_id_card) return
 
 	switch(href_list["action"])
+		if("select_book")
+			selected_book = locate(href_list["ref"])
+			if(selected_book)
+				menu = 3
 		if("change_menu")
 			menu = text2num(href_list["target"])
 			selected_book = null
@@ -79,7 +89,6 @@
 					to_chat(usr, "You cannot scan this book as it is not an original copy. Only books made through a bookbinder can be scanned and added to library networks.")
 				else
 					scanned_book = usr.get_active_hand()
-					menu = 3
 			else if(istype(usr.get_active_hand(), /obj/item/weapon/book))
 				to_chat(usr, "This book is not properly formatted for the library system. Use a newer book.")
 			else
@@ -97,9 +106,13 @@
 				book.author = scanned_book.author
 				book.author_real = scanned_book.author_real
 				book.title = scanned_book.title
+				book.name = scanned_book.title
 				book.icon_state = scanned_book.icon_state
 				connected_faction.library.books |= book
 				connected_faction.publish_book_objectives(book.author_real)
+				scanned_book = null
+				selected_book = book
+				menu = 3
 			else
 				to_chat(usr, "You must scan a book first.")
 

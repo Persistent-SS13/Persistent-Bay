@@ -11,10 +11,11 @@
 
 /obj/item/clothing/accessory/storage/holster/Initialize()
 	. = ..()
-	set_extension(src, /datum/extension/holster, /datum/extension/holster, hold, sound_in, sound_out, can_holster)
-	var/datum/extension/holster/H = get_extension(src, /datum/extension/holster)
-	if(H)
-		H.storage = hold //Apparently it won't set properly the first time....
+	if(!map_storage_loaded)
+		set_extension(src, /datum/extension/holster, /datum/extension/holster, hold, sound_in, sound_out, can_holster)
+		var/datum/extension/holster/H = get_extension(src, /datum/extension/holster)
+		if(H)
+			H.storage = hold //Apparently it won't set properly the first time....
 
 /obj/item/clothing/accessory/storage/holster/attackby(obj/item/W as obj, mob/user as mob)
 	var/datum/extension/holster/H = get_extension(src, /datum/extension/holster)

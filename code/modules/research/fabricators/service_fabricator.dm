@@ -193,3 +193,19 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/datum/design/item/servicefab/botanytools/honey_extractor
+	name = "honey extractor"
+	build_path = /obj/item/weapon/circuitboard/honey_extractor
+	materials = list(MATERIAL_COPPER = 1250, MATERIAL_GLASS = 1500)
+
+/datum/design/item/servicefab/botanytools/reagent_heater
+	name = "chemical heating system"
+	id = "chemheater"
+	build_path = /obj/item/weapon/circuitboard/reagent_heater
+	materials = list(MATERIAL_COPPER = 1250, MATERIAL_GLASS = 1500)
+
+/datum/design/item/servicefab/botanytools/reagent_cooler
+	name = "chemical cooling system"
+	id = "chemcooler"
+	build_path = /obj/item/weapon/circuitboard/reagent_heater/cooler
+	materials = list(MATERIAL_COPPER = 1250, MATERIAL_GLASS = 1500)

@@ -9,6 +9,7 @@
 	requires_ntnet = FALSE
 	size = 8
 	category = PROG_COMMAND
+	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP | PROGRAM_TELESCREEN
 
 /datum/nano_module/program/card_mod
 	name = "ID card modification program"

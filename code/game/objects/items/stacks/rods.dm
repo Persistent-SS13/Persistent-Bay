@@ -21,7 +21,6 @@
 	material_flags = USE_MATERIAL_COLOR
 	stacktype = /obj/item/stack/material/rods
 	default_type = MATERIAL_STEEL
-	materials_per_unit = list(MATERIAL_STEEL = 1875)
 
 /obj/item/stack/material/rods/ten
 	amount = 10
@@ -39,7 +38,6 @@
 
 /obj/item/stack/material/rods/Initialize()
 	. = ..()
-	queue_icon_update()
 	throwforce = round(0.25*material.get_edge_damage())
 	force = round(0.5*material.get_blunt_damage())
 
@@ -89,11 +87,3 @@
 	if(!istype(user.loc,/turf)) return 0
 
 	place_grille(user, user.loc, src)
-
-/obj/item/stack/material/rods/use()
-	. = ..()
-	update_icon()
-
-/obj/item/stack/material/rods/add()
-	. = ..()
-	update_icon()

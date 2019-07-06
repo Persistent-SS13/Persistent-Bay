@@ -6,9 +6,10 @@
 	nanomodule_path = /datum/nano_module/program/civil_laws
 	extended_desc = "Used to view all civil laws passed by the council."
 	requires_ntnet = TRUE
-	size = 12
+	size = 2
 	democratic = 1
 	category = PROG_GOVERNMENT
+	usage_flags = PROGRAM_ALL
 
 /datum/nano_module/program/civil_laws
 	name = "Nexus City Civil Laws"

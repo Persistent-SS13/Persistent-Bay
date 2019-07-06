@@ -8,7 +8,7 @@
 	metal_load_anim = TRUE				// Determines if a sheet loading animation will be applied when loading metals. If you're using a non-standard icon and don't
 										// want to sprite a new loading animation as well, set this to FALSE.
 
-	has_reagents = FALSE				// Defaults to FALSE, but added here for explanation. If this is set to true, than you require designs to use reagents
+	has_reagents = TRUE				// Defaults to FALSE, but added here for explanation. If this is set to true, than you require designs to use reagents
 										// in addition to any material costs.
 
 /obj/machinery/fabricator/medical_fabricator/can_connect(var/datum/world_faction/trying, var/mob/M)
@@ -46,17 +46,38 @@
 
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+//////////////////////DESIGNS///////////////////////
+////////////////////////////////////////////////////
 
-// MEDICAL EQUIPMENT
+// Medicines
+/datum/design/item/medicalfab/medicines
+	category = "Medicines"
 
+/datum/design/item/medicalfab/medicines/bruise_pack
+	build_path = /obj/item/stack/medical/bruise_pack
+	materials = list(MATERIAL_CLOTH = 5 SHEETS)
+
+/datum/design/item/medicalfab/medicines/ointment
+	build_path = /obj/item/stack/medical/ointment
+	materials = list(MATERIAL_PLASTIC = 2 SHEETS)
+	chemicals = list(/datum/reagent/kelotane = 5)
+
+/datum/design/item/medicalfab/medicines/atk
+	build_path = /obj/item/stack/medical/advanced/bruise_pack
+	materials = list(MATERIAL_CLOTH = 5 SHEETS)
+	chemicals = list(/datum/reagent/bicaridine = 10)
+
+/datum/design/item/medicalfab/medicines/abt
+	build_path = /obj/item/stack/medical/advanced/ointment
+	materials = list(MATERIAL_CLOTH = 5 SHEETS)
+	chemicals = list(/datum/reagent/dermaline = 10)
+
+// Tools etc.
 /datum/design/item/medicalfab/meditools
 	category = "Medical Equipment"
 
 /datum/design/item/medicalfab/meditools/adv
-
-//////////////////////////////////////////////////////////////////////////
-
 
 /datum/design/item/medicalfab/meditools/bodybag
 	build_path = /obj/item/bodybag
@@ -70,7 +91,15 @@
 	build_path = /obj/item/bodybag/rescue
 	materials = list(MATERIAL_CLOTH = 2 SHEETS, MATERIAL_PHORON = 1 SHEET)
 
+/datum/design/item/medicalfab/meditools/dropper
+	name = "dropper"
+	build_path = /obj/item/weapon/reagent_containers/dropper
+	materials = list(MATERIAL_GLASS = 60)
 
+/datum/design/item/medicalfab/meditools/dropper_industrial
+	name = "industrial size dropper"
+	build_path = /obj/item/weapon/reagent_containers/dropper/industrial
+	materials = list(MATERIAL_GLASS = 120, MATERIAL_PLASTIC = 10)
 
 /datum/design/item/medicalfab/meditools/penlight
 	build_path = /obj/item/device/flashlight/pen

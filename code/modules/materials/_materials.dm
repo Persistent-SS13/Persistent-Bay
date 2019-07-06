@@ -73,13 +73,13 @@
 	var/ignition_point           // K, point at which the material catches on fire.
 	var/energy_combustion = 8    // MJ/kilo-unit Basically the heat energy given off for burning 1,000 units of said material(8 is given for generic trash on wikipedia)
 	var/melting_point = 1800     // K, walls will take damage if they're next to a fire hotter than this
-	var/brute_armor = 2	 		 // Brute damage to a wall is divided by this value if the wall is reinforced by this material.
-	var/burn_armor				 // Same as above, but for Burn damage type. If blank brute_armor's value is used.
+	var/brute_armor = 2          // Brute damage to a wall is divided by this value if the wall is reinforced by this material.
+	var/burn_armor = 0           // Same as above, but for Burn damage type. If blank brute_armor's value is used.
 	var/integrity = 150          // General-use HP value for products.
 	var/opacity = 1              // Is the material transparent? 0.5< makes transparent walls/doors.
 	var/explosion_resistance = 5 // Only used by walls currently.
 	var/conductive = 1           // Objects with this var add CONDUCTS to flags on spawn.
-	var/luminescence
+	var/luminescence = 0
 	var/list/alloy_materials     // If set, material can be produced via alloying these materials in these amounts.
 	var/units_per_sheet = SHEET_MATERIAL_AMOUNT
 
@@ -98,7 +98,7 @@
 	// Noise made when you hit structure made of this material.
 	var/hitsound = 'sound/weapons/genhit.ogg'
 	// Path to resulting stacktype. Todo remove need for this.
-	var/stack_type = /obj/item/stack/material/generic
+	var/stack_type = /obj/item/stack/material
 	// Wallrot crumble message.
 	var/rotting_touch_message = "crumbles under your touch"
 	// Modifies skill checks when constructing with this material.
@@ -124,20 +124,24 @@
 // Placeholders for light tiles and rglass.
 /material/proc/reinforce(var/mob/user, var/obj/item/stack/material/used_stack, var/obj/item/stack/material/target_stack)
 	if(!used_stack.can_use(1))
-		to_chat(user, "<span class='warning'>You need need at least one [used_stack.singular_name] to reinforce [target_stack].</span>")
+		to_chat(user, SPAN_WARNING("You need need at least one [used_stack.singular_name] to reinforce [target_stack]."))
 		return
 
 	var/needed_sheets = 2 * used_stack.matter_multiplier
 	if(!target_stack.can_use(needed_sheets))
-		to_chat(user, "<span class='warning'>You need need at least [needed_sheets] [target_stack.plural_name] for reinforcement with [used_stack].</span>")
+		to_chat(user, SPAN_WARNING("You need need at least [needed_sheets] [target_stack.plural_name] for reinforcement with [used_stack]."))
 		return
 
 	var/material/reinf_mat = used_stack.material
-	if(reinf_mat.integrity <= integrity || reinf_mat.is_brittle())
-		to_chat(user, "<span class='warning'>The [reinf_mat.display_name] is too structurally weak to reinforce the [display_name].</span>")
+	if(reinf_mat.name == name)
+		to_chat(user, SPAN_WARNING("You can't reinforce a material with itself."))
 		return
 
-	to_chat(user, "<span class='notice'>You reinforce the [target_stack] with the [reinf_mat.display_name].</span>")
+	if(reinf_mat.integrity <= integrity || reinf_mat.is_brittle())
+		to_chat(user, SPAN_WARNING("The [reinf_mat.display_name] is too structurally weak to reinforce the [display_name]."))
+		return
+
+	to_chat(user, SPAN_NOTICE("You reinforce the [target_stack] with the [reinf_mat.display_name]."))
 	used_stack.use(1)
 	var/obj/item/stack/material/S = target_stack.split(needed_sheets)
 	S.reinf_material = reinf_mat

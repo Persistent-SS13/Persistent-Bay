@@ -45,6 +45,8 @@
 			return global.SSairflow;
 		if("SSalarm")
 			return global.SSalarm;
+		if("SSao")
+			return global.SSao;
 		if("SSasteroid")
 			return global.SSasteroid;
 		if("SSatoms")
@@ -1042,6 +1044,8 @@
 			global.SSairflow=newval;
 		if("SSalarm")
 			global.SSalarm=newval;
+		if("SSao")
+			global.SSao=newval;
 		if("SSasteroid")
 			global.SSasteroid=newval;
 		if("SSatoms")
@@ -2016,6 +2020,7 @@
 	"SSair",
 	"SSairflow",
 	"SSalarm",
+	"SSao",
 	"SSasteroid",
 	"SSatoms",
 	"SSautosave",

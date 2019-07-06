@@ -11,6 +11,10 @@
 	size = 20
 	var/obj/machinery/clonepod/pod
 
+/datum/computer_file/program/clone_manager/Destroy()
+	pod = null
+	. = ..()
+
 /datum/computer_file/program/clone_manager/Topic(href, href_list)
 	if(..())
 		return 1
@@ -18,9 +22,11 @@
 		return 0
 	var/datum/nano_module/program/clone_manager/cloneNM = NM
 	var/obj/item/weapon/computer_hardware/scanner/medical/mdscan = computer.scanner
+	if(!istype(mdscan))
+		to_chat(usr, "The computer must have a medical scanner installed to function.")
 	if(href_list["connect"])
 		var/found = 0
-		for(var/obj/machinery/clonepod/pod in view(4,computer.loc))
+		for(var/obj/machinery/clonepod/pod in view(4, get_turf(computer)))
 			if(pod.stat || !pod.anchored) 
 				continue
 			found = 1
@@ -137,6 +143,9 @@
 		return 0
 	var/list/formatted = list()
 	var/obj/item/weapon/computer_hardware/scanner/medical/mdscan = program.computer.scanner
+	if(!istype(mdscan))
+		to_chat(usr, "The computer must have a medical scanner installed to correctly function.")
+		return 0
 	for(var/obj/machinery/clonepod/pod in mdscan.connected_pods)
 		var/can_select = 1
 		if(!mdscan.stored_dna || pod.panel_open || pod.attempting || pod.occupant || pod.biomass < CLONE_BIOMASS || pod.stat)

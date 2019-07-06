@@ -14,7 +14,7 @@
 	required_access = core_access_command_programs
 	requires_ntnet = TRUE
 	size = 12
-	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP
+	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP | PROGRAM_TELESCREEN
 	network_destination = "long-range communication array"
 	category = PROG_COMMAND
 	var/datum/comm_message_listener/message_core = new

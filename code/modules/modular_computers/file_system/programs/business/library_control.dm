@@ -11,7 +11,8 @@
 	business = 1
 	required_module = /datum/business_module/media
 	category = PROG_OFFICE
-	
+	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP | PROGRAM_TELESCREEN
+
 /datum/nano_module/program/library_control
 	name = "Library Control"
 	var/menu = 1
@@ -42,8 +43,12 @@
 			data["book_author"] = "*None*"
 
 	if(menu == 3)
-		data["book_name"] = selected_book.name
-		data["book_author"] = selected_book.author
+		if(selected_book)
+			data["book_name"] = selected_book.name
+			data["book_author"] = selected_book.author
+		else
+			data["book_name"] = "*None*"
+			data["book_author"] = "*None*"
 
 	data["menu"] = menu
 
@@ -67,6 +72,10 @@
 	if(!user_id_card) return
 
 	switch(href_list["action"])
+		if("select_book")
+			selected_book = locate(href_list["ref"])
+			if(selected_book)
+				menu = 3
 		if("change_menu")
 			menu = text2num(href_list["target"])
 			selected_book = null

@@ -9,6 +9,9 @@ Some standard magazines, speedloaders and clips
 	name = "clip"
 	desc = "A clip for reloading a fixed magazine rifle quickly."
 	mag_type = SPEEDLOADER
+	w_class = ITEM_SIZE_SMALL
+	matter = list(MATERIAL_STEEL = 100)
+	mass = 5 GRAMS
 /obj/item/ammo_magazine/speedloader/Initialize()
 	. = ..()
 	SetName("clip ([caliber])")
@@ -44,6 +47,8 @@ Some standard magazines, speedloaders and clips
 	name = "speed loader"
 	desc = "A speed loader for revolvers."
 	mag_type = SPEEDLOADER
+	w_class = ITEM_SIZE_SMALL
+	mass = 10 GRAMS
 /obj/item/ammo_magazine/speedloader/Initialize()
 	. = ..()
 	SetName("speed loader ([caliber])")
@@ -152,6 +157,7 @@ Some standard magazines, speedloaders and clips
 	matter = list(MATERIAL_STEEL = 1440)
 	max_ammo = 4
 	multiple_sprites = 1
+	mass = 80 GRAMS
 	var/marking_color
 
 /obj/item/ammo_magazine/shotholder/on_update_icon()
@@ -200,8 +206,10 @@ Some standard magazines, speedloaders and clips
 //	Box Magazines
 //----------------------------------
 /obj/item/ammo_magazine/box
-	w_class = ITEM_SIZE_NORMAL
+	w_class = ITEM_SIZE_SMALL
 	mag_type = MAGAZINE
+	mass = 100 GRAMS
+
 //----------------------------------
 //	standard 9mm Magazine
 //----------------------------------
@@ -236,6 +244,7 @@ Some standard magazines, speedloaders and clips
 	ammo_type = /obj/item/ammo_casing/c9mm
 	max_ammo = 20
 	multiple_sprites = 1
+	mass = 150 GRAMS
 /obj/item/ammo_magazine/box/c9mm/_20/empty
 	initial_ammo = 0
 /obj/item/ammo_magazine/box/c9mm/_20/rubber
@@ -295,6 +304,7 @@ Some standard magazines, speedloaders and clips
 	caliber = CALIBER_45
 	matter = list(MATERIAL_STEEL = 1050)
 	max_ammo = 15
+	mass = 120 GRAMS
 /obj/item/ammo_magazine/box/c45/_15/empty
 	initial_ammo = 0
 /obj/item/ammo_magazine/box/c45/_15/rubber
@@ -320,6 +330,7 @@ Some standard magazines, speedloaders and clips
 	ammo_type = /obj/item/ammo_casing/c45
 	max_ammo = 20
 	multiple_sprites = 1
+	mass = 150 GRAMS
 /obj/item/ammo_magazine/box/c45/_20/empty
 	initial_ammo = 0
 /obj/item/ammo_magazine/box/c45/_20/rubber
@@ -344,6 +355,7 @@ Some standard magazines, speedloaders and clips
 	ammo_type = /obj/item/ammo_casing/c50
 	max_ammo = 7
 	multiple_sprites = 1
+	mass = 200 GRAMS
 /obj/item/ammo_magazine/box/c50/empty
 	initial_ammo = 0
 
@@ -360,6 +372,8 @@ Some standard magazines, speedloaders and clips
 	max_ammo = 50
 	multiple_sprites = 1
 	slot_flags = SLOT_BELT
+	w_class = ITEM_SIZE_LARGE
+	mass = 500 GRAMS
 /obj/item/ammo_magazine/box/machinegun/empty
 	initial_ammo = 0
 
@@ -374,6 +388,7 @@ Some standard magazines, speedloaders and clips
 	ammo_type = /obj/item/ammo_casing/c556
 	max_ammo = 20
 	multiple_sprites = 1
+	mass = 120 GRAMS
 /obj/item/ammo_magazine/box/c556/empty
 	initial_ammo = 0
 /obj/item/ammo_magazine/box/c556/practice
@@ -392,6 +407,7 @@ Some standard magazines, speedloaders and clips
 	ammo_type = /obj/item/ammo_casing/c762
 	max_ammo = 15 //if we lived in a world where normal mags had 30 rounds, this would be a 20 round mag
 	multiple_sprites = 1
+	mass = 180 GRAMS
 /obj/item/ammo_magazine/box/c762/empty
 	initial_ammo = 0
 /obj/item/ammo_magazine/box/c762/practice

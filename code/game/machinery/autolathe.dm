@@ -329,9 +329,7 @@
 	for(var/obj/item/weapon/stock_parts/manipulator/M in component_parts)
 		man_rating += M.rating
 
-	var/material/M = SSmaterials.get_material_by_name(MATERIAL_STEEL)
-	var/obj/item/stack/material/S = M.stack_type
-	storage_capacity = mb_rating * initial(S.perunit) * 15
+	storage_capacity = mb_rating * 15 SHEETS
 	build_time = 45 / man_rating
 	mat_efficiency = 1.1 - man_rating * 0.1	//You get a slight discount on items with better parts, also affects the recycling penalty of the autolathe (AKA use the recycler)
 
@@ -341,8 +339,8 @@
 		if(!istype(M))
 			continue
 		var/obj/item/stack/material/S = M.place_sheet(get_turf(src), 1, M.name)
-		if(stored_material[mat] > S.perunit)
-			S.amount = round(stored_material[mat] / S.perunit)
+		if(stored_material[mat] > ONE_SHEET)
+			S.set_amount(round(stored_material[mat] / ONE_SHEET))
 		else
 			qdel(S)
 	..()

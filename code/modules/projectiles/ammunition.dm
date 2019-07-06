@@ -8,6 +8,7 @@
 	slot_flags = SLOT_BELT | SLOT_EARS
 	throwforce = 1
 	w_class = ITEM_SIZE_TINY
+	mass = 8 GRAMS
 
 	var/leaves_residue = 1
 	var/caliber = ""					//Which kind of guns it can be loaded into
@@ -105,6 +106,7 @@
 	w_class = ITEM_SIZE_SMALL
 	throw_speed = 4
 	throw_range = 10
+	mass = 100 GRAMS
 
 	var/list/stored_ammo = list()
 	var/mag_type = SPEEDLOADER //ammo_magazines can only be used with compatible guns. This is not a bitflag, the load_method var on guns is.

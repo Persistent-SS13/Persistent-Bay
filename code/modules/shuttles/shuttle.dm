@@ -155,25 +155,23 @@
 				if(istype(TA.loc,/area/space) && !istype(TA,/turf/simulated/wall))
 					TA.ChangeTurf(ceiling_type, 1, 1)
 
-/datum/shuttle/proc/short_jump(var/obj/effect/shuttle_landmark/destination)
+/datum/shuttle/proc/short_jump(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/location)
 	if(moving_status != SHUTTLE_IDLE) return
 
 	moving_status = SHUTTLE_WARMUP
-	if(sound_takeoff)
-		playsound(current_location, sound_takeoff, 100, 20, 0.2)
-	spawn(warmup_time*10)
-		if (moving_status == SHUTTLE_IDLE)
-			return FALSE	//someone cancelled the launch
+	playsound(current_location.loc, sound_takeoff, 100, 20, 1)
+	sleep(warmup_time*10)
+	if (moving_status == SHUTTLE_IDLE)
+		return FALSE	//someone cancelled the launch
 
-		if(!fuel_check()) //fuel error (probably out of fuel) occured, so cancel the launch
-			var/datum/shuttle/autodock/S = src
-			if(istype(S))
-				S.cancel_launch(null)
-			return
-
-		moving_status = SHUTTLE_INTRANSIT //shouldn't matter but just to be safe
-		attempt_move(destination)
-		moving_status = SHUTTLE_IDLE
+	if(!fuel_check()) //fuel error (probably out of fuel) occured, so cancel the launch
+		var/datum/shuttle/autodock/S = src
+		if(istype(S))
+			S.cancel_launch(null)
+		return
+	moving_status = SHUTTLE_INTRANSIT //shouldn't matter but just to be safe
+	attempt_move(destination, location)
+	moving_status = SHUTTLE_IDLE
 
 /datum/shuttle/proc/long_jump(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/interim, var/travel_time)
 	if(moving_status != SHUTTLE_IDLE) return
@@ -212,6 +210,12 @@
 
 // attempt_move - Prepare the shuttle for moving
 /datum/shuttle/proc/attempt_move(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/location)
+	if(istype(location, /obj/machinery/docking_beacon))
+		var/obj/machinery/docking_beacon/beacon = location
+		location = beacon.get_top_turf()
+	if(istype(destination, /obj/machinery/docking_beacon))
+		var/obj/machinery/docking_beacon/beacon = destination
+		destination = beacon.get_top_turf()
 	if(location) current_location = location
 	if(current_location == destination)
 		return FALSE

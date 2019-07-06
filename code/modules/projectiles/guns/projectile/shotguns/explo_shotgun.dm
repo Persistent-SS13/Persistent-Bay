@@ -1,16 +1,21 @@
 /obj/item/weapon/gun/projectile/shotgun/pump/exploration
-	name = "ballistic launcher"
+	name = "XP-3 ballistic launcher"
 	desc = "As the user's handbook will tell you, the Xynergy XP-3 is /not/ a shotgun, it just launches payloads of same caliber at high speed towards targets. Nicknamed 'Boomstick' for the way it behaves when full-power ammunition is loaded."
 	icon = 'code/modules/torch/icons/obj/explshotgun.dmi'
 	icon_state = "expshotgun0"
 	starts_loaded = 0
-	req_access = list(access_hop)
+	req_access = list(core_access_security_programs)
 	authorized_modes = list(UNAUTHORIZED)
 	firemodes = list(
 		list(mode_name="fire"),
 		)
 	var/explosion_chance = 50
 	var/obj/item/pipe/reinforced
+
+/obj/item/weapon/gun/projectile/shotgun/pump/exploration/New()
+	. = ..()
+	ADD_SAVED_VAR(explosion_chance)
+	ADD_SAVED_VAR(reinforced)
 
 /obj/item/weapon/gun/projectile/shotgun/pump/get_mechanics_info()
 	. = ..()

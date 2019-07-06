@@ -1939,6 +1939,13 @@
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 2
 
+/datum/chemical_reaction/honey_crystallization
+	name = "Honey Crystallization"
+	result = /datum/reagent/sugar
+	required_reagents = list(/datum/reagent/nutriment/honey = 2)
+	minimum_temperature = 100 CELSIUS
+	result_amount = 1
+	
 /datum/chemical_reaction/iced_beer
 	name = "Iced Beer"
 	result = /datum/reagent/ethanol/iced_beer

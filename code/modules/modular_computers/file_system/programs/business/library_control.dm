@@ -12,7 +12,7 @@
 	required_module = /datum/business_module/media
 	category = PROG_OFFICE
 	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP | PROGRAM_TELESCREEN
-	
+
 /datum/nano_module/program/library_control
 	name = "Library Control"
 	var/menu = 1
@@ -74,7 +74,7 @@
 	switch(href_list["action"])
 		if("select_book")
 			selected_book = locate(href_list["ref"])
-			if(select_book)
+			if(selected_book)
 				menu = 3
 		if("change_menu")
 			menu = text2num(href_list["target"])

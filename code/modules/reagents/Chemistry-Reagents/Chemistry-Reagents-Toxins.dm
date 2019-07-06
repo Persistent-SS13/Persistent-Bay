@@ -678,7 +678,7 @@
 		"This is too much engagement."
 	)	
 
-/datum/reagent/phorostim/overdose(var/mob/living/carbon/M, var/alien)
+/datum/reagent/phorostimulant/overdose(var/mob/living/carbon/M, var/alien)
 	..()
 	M.adjustBrainLoss(1)
 	if(ishuman(M) && prob(10))
@@ -687,7 +687,7 @@
 	if(prob(10))
 		to_chat(M, SPAN_DANGER("[pick(stim_overdose_messages)]"))
 		
-/datum/reagent/phorostim/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+/datum/reagent/phorostimulant/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
 		return
 	if(prob(5))

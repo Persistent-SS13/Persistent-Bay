@@ -177,7 +177,7 @@
 	if(alien == IS_DIONA)
 		strength_mod = 0
 
-	var/drink_message = false
+	var/drink_message = FALSE
 
 	M.add_chemical_effect(CE_ALCOHOL, 1)
 	var/effective_dose = M.chem_doses[type] * strength_mod * (1 + volume/60) //drinking a LOT will make you go down faster
@@ -207,7 +207,7 @@
 		M.add_chemical_effect(CE_ALCOHOL_TOXIC, toxicity)
 		drink_message = SPAN_WARNING(pick(drink_hammered_messages))
 	if(effective_dose >= strength * 8) // Pass out
-		drink message = SPAN_DANGER("You black out...")
+		drink_message = SPAN_DANGER("You black out...")
 		M.Paralyse(20)
 		M.Sleeping(30)
 

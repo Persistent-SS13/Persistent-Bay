@@ -261,7 +261,7 @@
 /datum/chemical_reaction/phorostimulant
 	name = "Phorostimulant"
 	result = /datum/reagent/phorostimulant
-	required_reagents = list(/datum/reagent/sugar = 1, /datum/reagent/phoron = 1)
+	required_reagents = list(/datum/reagent/sugar = 1, /datum/reagent/toxin/phoron = 1)
 	result_amount = 6
 
 /datum/chemical_reaction/ryetalyn

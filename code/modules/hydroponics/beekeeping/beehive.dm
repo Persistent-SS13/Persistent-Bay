@@ -243,7 +243,7 @@
 		user.visible_message("<span class='notice'>\The [user] loads \the [H] into \the [src] and turns it on.</span>", "<span class='notice'>You load \the [H] into \the [src] and turn it on.</span>")
 		processing = H.honey
 		qdel(H)
-		time_end_processing = world.time + 300 SECONDS
+		time_end_processing = world.time + 60 SECONDS
 		update_icon()
 		update_use_power(POWER_USE_ACTIVE)
 		return 1

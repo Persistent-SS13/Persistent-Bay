@@ -30,11 +30,8 @@ obj/machinery/seed_extractor/attackby(var/obj/item/O as obj, var/mob/user as mob
 
 		if(new_seed_type)
 			to_chat(user, "<span class='notice'>You extract some seeds from [O].</span>")
-			if(prob(35))
-				var/produce =(1)
-			else
-				to_chat (user, "<span class='notice'>You fail to extract any seeds from [O].</span>")
-			for(var/i = 0;i<=produce;i++)
+			var/produce = pick(1, 2)
+			for(var/i = 0; i <= produce; i++)
 				var/obj/item/seeds/seeds = new(get_turf(src))
 				seeds.seed_type = new_seed_type.name
 				seeds.update_seed()

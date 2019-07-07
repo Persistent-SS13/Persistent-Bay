@@ -30,69 +30,85 @@ LINEN BINS
 			qdel(src)
 		return
 	..()
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/obj/weapon/bedsheet/verb/rotatesheet()
+	set category = "Object"
+	set name = "Flip sheet"
+	set src in view(1)
 
+	if (usr.stat || usr.restrained() || !Adjacent(usr) || usr.incapacitated())
+		return
+
+/obj/item/weapon/bedsheet/rotatesheet()
+		if
+			(icon_state = 1, set icon_state = 2)
+		else
+			(icon_state = 2, set icon_state = 1)
+		to_chat(user, "You flip the sheet around.")
+		return
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /obj/item/weapon/bedsheet/blue
-	icon_state = "sheetblue"
+	icon_state = (1 = ("sheetblue"), 2 = ("sheetblue180"))
 	item_state = "sheetblue"
 
 /obj/item/weapon/bedsheet/green
-	icon_state = "sheetgreen"
+	icon_state = "sheetgreen, sheetgreen180"
 	item_state = "sheetgreen"
 
 /obj/item/weapon/bedsheet/orange
-	icon_state = "sheetorange"
+	icon_state = "sheetorange, sheetorange180"
 	item_state = "sheetorange"
 
 /obj/item/weapon/bedsheet/purple
-	icon_state = "sheetpurple"
+	icon_state = "sheetpurple, sheetpurple180"
 	item_state = "sheetpurple"
 
 /obj/item/weapon/bedsheet/rainbow
-	icon_state = "sheetrainbow"
+	icon_state = "sheetrainbow, sheetrainbow180"
 	item_state = "sheetrainbow"
 
 /obj/item/weapon/bedsheet/red
-	icon_state = "sheetred"
+	icon_state = "sheetred, sheetred180"
 	item_state = "sheetred"
 
 /obj/item/weapon/bedsheet/yellow
-	icon_state = "sheetyellow"
+	icon_state = "sheetyellow, sheetyellow180"
 	item_state = "sheetyellow"
 
 /obj/item/weapon/bedsheet/mime
-	icon_state = "sheetmime"
+	icon_state = "sheetmime, sheetmime180"
 	item_state = "sheetmime"
 
 /obj/item/weapon/bedsheet/clown
-	icon_state = "sheetclown"
+	icon_state = "sheetclown, sheetclown180"
 	item_state = "sheetclown"
 
 /obj/item/weapon/bedsheet/captain
-	icon_state = "sheetcaptain"
+	icon_state = "sheetcaptain, sheetcaptain180"
 	item_state = "sheetcaptain"
 
 /obj/item/weapon/bedsheet/rd
-	icon_state = "sheetrd"
+	icon_state = "sheetrd, sheetrd180"
 	item_state = "sheetrd"
 
 /obj/item/weapon/bedsheet/medical
-	icon_state = "sheetmedical"
+	icon_state = "sheetmedical, sheetmedical180"
 	item_state = "sheetmedical"
 
 /obj/item/weapon/bedsheet/hos
-	icon_state = "sheethos"
+	icon_state = "sheethos, sheethos180"
 	item_state = "sheethos"
 
 /obj/item/weapon/bedsheet/hop
-	icon_state = "sheethop"
+	icon_state = "sheethop, sheethop180"
 	item_state = "sheethop"
 
 /obj/item/weapon/bedsheet/ce
-	icon_state = "sheetce"
+	icon_state = "sheetce, sheetce180"
 	item_state = "sheetce"
 
 /obj/item/weapon/bedsheet/brown
-	icon_state = "sheetbrown"
+	icon_state = "sheetbrown, sheetbrown180"
 	item_state = "sheetbrown"
 
 

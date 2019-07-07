@@ -593,3 +593,16 @@
 	name = "spaceball booster pack"
 	build_path = /obj/item/weapon/pack/spaceball
 	materials = list(MATERIAL_PLASTIC = 0.25 SHEETS)
+////////////////////////////////////////////////////
+//////////////////////VEHICLES//////////////////////
+////////////////////////////////////////////////////
+
+/datum/design/item/consumerfab/vehicles
+	category = "Vehicles"
+	time = 50
+
+/datum/design/item/consumerfab/vehicles/bike
+	name = "Motor bike"
+	id = "m_bike"
+	materials = list(MATERIAL_STEEL = 40000, MATERIAL_TUNGSTEN = 20000, MATERIAL_GLASS = 20000, MATERIAL_GOLD = 20000)
+	build_path = /obj/vehicle/bike

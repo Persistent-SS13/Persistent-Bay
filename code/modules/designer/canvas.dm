@@ -104,6 +104,7 @@
 	canvas_item = frame.type
 	designer_associate(frame.designer_unit)
 	designer_update_icon()
+	anchored = 1
 
 /obj/structure/canvas/Destroy()
 		designer_disassociate()

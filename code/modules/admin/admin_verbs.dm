@@ -512,9 +512,9 @@ var/list/admin_verbs_mentor = list(
 	set name = "Unban Panel"
 	set category = "Admin"
 	if(holder)
-	 	if(config.ban_legacy_system)
-	 		holder.unbanpanel()
-	 	else
+		if(config.ban_legacy_system)
+			holder.unbanpanel()
+		else
 			holder.DB_ban_panel()
 	SSstatistics.add_field_details("admin_verb","UBP") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 	return

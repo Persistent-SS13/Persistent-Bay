@@ -1,5 +1,5 @@
 /obj/item/frame/canvas
-	name = "Canvas (30x30)"
+	name = "Canvas"
 	desc = "Such avant-garde, much art."
 	gender = NEUTER
 	icon = 'icons/obj/bureaucracy.dmi'

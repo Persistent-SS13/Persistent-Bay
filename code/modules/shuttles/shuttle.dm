@@ -44,8 +44,8 @@
 		shuttle_area = list(shuttle_area)
 	for(var/T in shuttle_area)
 		var/area/A = locate(T)
-		if(!istype(A))
-			CRASH("Shuttle \"[name]\" couldn't locate area [T].")
+	//	if(!istype(A))
+	//		CRASH("Shuttle \"[name]\" couldn't locate area [T].")
 		areas += A
 	shuttle_area = areas
 
@@ -53,11 +53,11 @@
 		current_location = initial_location
 	else
 		current_location = SSshuttle.get_landmark(current_location)
-	if(!istype(current_location))
-		CRASH("Shuttle \"[name]\" could not find its starting location.")
+//	if(!istype(current_location))
+//		CRASH("Shuttle \"[name]\" could not find its starting location.")
 
-	if(src.name in SSshuttle.shuttles)
-		CRASH("A shuttle with the name '[name]' is already defined.")
+//	if(src.name in SSshuttle.shuttles)
+//		CRASH("A shuttle with the name '[name]' is already defined.")
 	SSshuttle.shuttles[src.name] = src
 	if(logging_home_tag)
 		new /datum/shuttle_log(src)

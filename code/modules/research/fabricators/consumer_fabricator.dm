@@ -90,6 +90,15 @@
 	build_path = /obj/item/instrument/guitar
 	materials = list(MATERIAL_WOOD = 1.5 SHEETS, MATERIAL_STEEL = 1 SHEET)
 
+/datum/design/item/consumerfab/consumer/canvas
+	build_path = /obj/item/frame/canvas/size_m
+	materials = list(MATERIAL_WOOD = 3 SHEETS)
+	build_type = list(CONSUMERFAB, SERVICEFAB)
+/datum/design/item/consumerfab/consumer/canvas/portrait
+	build_path = /obj/item/frame/canvas/size_m/portrait
+
+/datum/design/item/consumerfab/consumer/canvas/landscape
+	build_path = /obj/item/frame/canvas/size_m/landscape
 
 /datum/design/item/consumerfab/consumer/basketball
 	build_path = /obj/item/weapon/basketball

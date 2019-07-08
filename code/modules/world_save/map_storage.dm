@@ -453,13 +453,6 @@ var/global/list/debug_data = list()
 	if(v.linked_account)
 		v.linked_account = v.linked_account.after_load()
 		v.linked_account.owner_name = get_name()
-	for(var/datum/computer_file/report/crew_record/record2 in GLOB.all_crew_records)
-		if(record2.get_name() == v.get_name())
-			if(v.linked_account && !record2.linked_account || (record2.linked_account && v.linked_account && record2.linked_account.money < v.linked_account))
-				message_admins("recovered account found for [key] [v.get_name()]")
-				all_money_accounts.Remove(v.linked_account)
-				record2.linked_account = v.linked_account
-			return record2
 	GLOB.all_crew_records |= v
 	return v
 

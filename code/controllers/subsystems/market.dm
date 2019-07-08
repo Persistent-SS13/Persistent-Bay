@@ -149,7 +149,7 @@ SUBSYSTEM_DEF(market)
 			if(R)
 				payee_account = R.linked_account
 		if(payee_account)
-			if(payee_account.money >= pay_amount)
+			if(payer_account.money >= pay_amount)
 				var/datum/transaction/T = new("[payee] (via recurring contract)", "Contract Payment", -pay_amount, "Recurring Contract")
 				payer_account.do_transaction(T)
 				//transfer the money

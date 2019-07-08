@@ -797,7 +797,7 @@
 	id = "nitrile"
 	build_path = /obj/item/clothing/gloves/latex/nitrile
 	materials = list(MATERIAL_PLASTIC = 10000)
-	build_type = list(AUTOTAILOR_ACCESSORIES, MEDICAL_FABRICATOR)
+	build_type = list(AUTOTAILOR_ACCESSORIES, MEDICALFAB)
 
 /datum/design/item/autotailor/accessories/gloves/dressgloves_white	//custom colors
 	name = "Evening gloves - white"

@@ -55,8 +55,7 @@
 		list(mode_name="shock", projectile_type=/obj/item/projectile/beam/stun/shock, modifystate="energyrevolvershock"),
 		list(mode_name="kill", projectile_type=/obj/item/projectile/beam, modifystate="energyrevolverkill"),
 		)
-	req_access = list(list(core_access_security_programs))
-	authorized_modes = list(ALWAYS_AUTHORIZED, AUTHORIZED)
+	load_method = ENERGY_LOAD_HOTSWAP_CELL
 
 /obj/item/weapon/gun/energy/gun/secure/mounted
 	name = "LAEP90-S mounted energy gun"

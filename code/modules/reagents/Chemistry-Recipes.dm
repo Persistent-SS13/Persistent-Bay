@@ -1671,10 +1671,10 @@ datum/chemical_reaction/vermouth
 /datum/chemical_reaction/beer
 	name = "Beer"
 	result = /datum/reagent/ethanol/beer/good
-	required_reagents = list(/datum/reagent/nutriment/flour = 1)
+	required_reagents = list(/datum/reagent/nutriment/flour = 1, /datum/reagent/water = 1)
 	minimum_temperature = 50 CELSIUS
 	maximum_temperature = (50 CELSIUS) + 100
-	result_amount = 1
+	result_amount = 2
 	mix_message = "The solution roils as it rapidly ferments into a foaming amber liquid."
 
 /datum/chemical_reaction/tequilla

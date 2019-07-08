@@ -479,7 +479,9 @@
 		to_chat(src, "Your character is not loading correctly. Contact Brawler.")
 		spawning = FALSE
 		return
-	Retrieve_Record(character.real_name)
+	if (!Retrieve_Record(character.real_name))
+		var/datum/computer_file/report/crew_record/new_record = CreateModularRecord(character)
+		GLOB.all_crew_records |= new_record
 	var/turf/spawnTurf = locate(0,0,0) //Instead of null start with 0,0,0 because the unsafe spawn check will kick in and warn the user if there's something wrong
 
 	if(character.spawn_type == CHARACTER_SPAWN_TYPE_CRYONET)

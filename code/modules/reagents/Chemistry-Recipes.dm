@@ -258,6 +258,12 @@
 	required_reagents = list(/datum/reagent/sugar = 1, /datum/reagent/phosphorus = 1, /datum/reagent/sulfur = 1)
 	result_amount = 3
 
+/datum/chemical_reaction/phorostimulant
+	name = "Phorostimulant"
+	result = /datum/reagent/phorostimulant
+	required_reagents = list(/datum/reagent/sugar = 1, /datum/reagent/toxin/phoron = 1)
+	result_amount = 6
+
 /datum/chemical_reaction/ryetalyn
 	name = "Ryetalyn"
 	result = /datum/reagent/ryetalyn
@@ -1939,6 +1945,13 @@
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 2
 
+/datum/chemical_reaction/honey_crystallization
+	name = "Honey Crystallization"
+	result = /datum/reagent/sugar
+	required_reagents = list(/datum/reagent/nutriment/honey = 2)
+	minimum_temperature = 100 CELSIUS
+	result_amount = 1
+	
 /datum/chemical_reaction/iced_beer
 	name = "Iced Beer"
 	result = /datum/reagent/ethanol/iced_beer

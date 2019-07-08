@@ -46,7 +46,7 @@ SUBSYSTEM_DEF(market)
 					if((faction.weekly_assigned + 7 DAY) < world.realtime)
 						faction.assign_weekly_objective()
 			else
-				if((faction.daily_assigned + 7 DAYS) < world.realtime)
+				if((faction.weekly_assigned + 7 DAYS) < world.realtime)
 					faction.assign_weekly_objective()
 
 

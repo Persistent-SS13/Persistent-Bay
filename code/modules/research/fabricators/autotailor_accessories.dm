@@ -815,7 +815,7 @@
 	id = "eng"
 	build_path = /obj/item/clothing/gloves/insulated
 	materials = list(MATERIAL_LEATHER = 2000, MATERIAL_TITANIUM = 5000)	//not sure if this generates on roid, change if not
-
+	build_type = list(AUTOTAILOR_ACCESSORIES, ENGIFAB)
 /datum/design/item/autotailor/accessories/gloves/forensic
 	name = "Forensic gloves"
 	id = "forensic"

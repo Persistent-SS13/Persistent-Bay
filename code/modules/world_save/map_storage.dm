@@ -319,13 +319,13 @@ var/global/list/debug_data = list()
 			L.linked_account = L.linked_account.after_load()
 			L.linked_account.money = 1000
 		to_file(f, L.linked_account)
-		if(L.linked_account)
-			var/key2 = L.linked_account.account_number
+	//	if(L.linked_account)
+		//	var/key2 = L.linked_account.account_number
 
-			fdel("record_saves/[key2].sav")
-			var/savefile/fa = new("record_saves/[key2].sav")
-			to_file(fa, L)
-			to_file(fa, L.linked_account)
+		//	fdel("record_saves/[key2].sav")
+		//	var/savefile/fa = new("record_saves/[key2].sav")
+		//	to_file(fa, L)
+		//	to_file(fa, L.linked_account)
 		var/key3 = L.get_fingerprint()
 		fdel("record_saves/[key3].sav")
 		var/savefile/fe = new("record_saves/[key3].sav")
@@ -452,7 +452,7 @@ var/global/list/debug_data = list()
 		v.linked_account = account
 	if(v.linked_account)
 		v.linked_account = v.linked_account.after_load()
-
+		v.linked_account.owner_name = get_name()
 	for(var/datum/computer_file/report/crew_record/record2 in GLOB.all_crew_records)
 		if(record2.get_name() == v.get_name())
 			if(v.linked_account && !record2.linked_account || (record2.linked_account && v.linked_account && record2.linked_account.money < v.linked_account))

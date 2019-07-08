@@ -79,12 +79,14 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 		new/datum/track("Trai`Tor", 'sound/music/traitor.ogg', "SS13"),
 		new/datum/track("A Little Bit", 'sound/music/jukebox/A Little Bit.ogg', "Cyberpunk"),
 		new/datum/track("Astrogenesis", 'sound/music/jukebox/Astrogenesis.ogg', "Cyberpunk"),
+		new/datum/track("Bluespace Ocean", 'sound/music/jukebox/Bluespace Ocean.ogg', "Cyberpunk"),
 		new/datum/track("Decay", 'sound/music/jukebox/Decay.ogg', "Cyberpunk"),
 		new/datum/track("Drunk", 'sound/music/jukebox/Drunk.ogg', "Cyberpunk"),
 		new/datum/track("Half Moon", 'sound/music/jukebox/Half Moon.ogg', "Cyberpunk"),
 		new/datum/track("Metropolis", 'sound/music/jukebox/Metropolis.ogg', "Cyberpunk"),
 		new/datum/track("Midnight Market", 'sound/music/jukebox/Midnight Market.ogg', "Cyberpunk"),
 		new/datum/track("Native", 'sound/music/jukebox/Native.ogg', "Cyberpunk"),
+		new/datum/track("This is Rain", 'sound/music/jukebox/This is Rain.ogg', "Cyberpunk"),
 		new/datum/track("When I'm Gone", "sound/music/jukebox/When I'm Gone.ogg", "Cyberpunk"),
 		new/datum/track("All Systems Go!", 'sound/music/jukebox/all_systems_go.mid', "Rockin"),
 		new/datum/track("Bloody Stream", 'sound/music/jukebox/Bloody_Stream.mid', "Rockin"),
@@ -200,19 +202,19 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 		if(T.genre == "Classical")
 			tracks_classical[++tracks_classical.len] = list("track" = T.title)
 	data["tracks_classical"] = tracks_classical
-	
+
 	var/list/tracks_faeren = list()
 	for(var/datum/track/T in tracks)
 		if(T.genre == "Faeren")
 			tracks_faeren[++tracks_faeren.len] = list("track" = T.title)
 	data["tracks_faeren"] = tracks_faeren
-	
+
 	var/list/tracks_spacer = list()
 	for(var/datum/track/T in tracks)
 		if(T.genre == "Mercenary/Spacer")
 			tracks_spacer[++tracks_spacer.len] = list("track" = T.title)
 	data["tracks_spacer"] = tracks_spacer
-	
+
 	var/list/tracks_ss13 = list()
 	for(var/datum/track/T in tracks)
 		if(T.genre == "SS13")

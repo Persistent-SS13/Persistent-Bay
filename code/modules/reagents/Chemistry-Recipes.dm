@@ -1435,6 +1435,15 @@
 	result_amount = 2
 	mix_message = "The solution thickens into a creamy white oil."
 
+/datum/chemical_reaction/molasses
+	name = "Molasses"
+	result = /datum/reagent/nutriment/molasses
+	required_reagents = list(/datum/reagent/sugar = 1)
+	result_amount = 1
+	minimum_temperature = 60 CELSIUS
+	maximum_temperature = (60 CELSIUS) + 100
+	mix_message = "The sugar thickens into a thick brown syrup."
+
 /datum/chemical_reaction/cheesewheel
 	name = "Cheesewheel"
 	result = null
@@ -1600,6 +1609,33 @@
 	result_amount = 10
 	mix_message = "The solution roils as it rapidly ferments into a rich red liquid."
 
+/datum/chemical_reaction/cognac
+	name = "Cognac"
+	result = /datum/reagent/ethanol/cognac
+	required_reagents = list(/datum/reagent/ethanol/wine = 1)
+	minimum_temperature = 50 CELSIUS
+	maximum_temperature = (50 CELSIUS) + 100
+	result_amount = 1
+	mix_message = "The wine rapidly cooks off some of its properties and becomes clearer."
+
+datum/chemical_reaction/vermouth
+	name = "Vermouth"
+	result = /datum/reagent/ethanol/vermouth
+	required_reagents = list(/datum/reagent/ethanol/wine = 1, /datum/reagent/ethanol/vodka = 1)
+	minimum_temperature = 40 CELSIUS
+	maximum_temperature = (40 CELSIUS) + 100
+	result_amount = 2
+	mix_message = "The wine and vodka roil together to make a strong smelling amber liquid."
+
+/datum/chemical_reaction/gin
+	name = "Gin"
+	result = /datum/reagent/ethanol/gin
+	required_reagents = list(/datum/reagent/drink/juice/berry = 1)
+	minimum_temperature = 50 CELSIUS
+	maximum_temperature = (50 CELSIUS) + 100
+	result_amount = 1
+	mix_message = "The berry juice rapidly cooks off most of its properties and becomes entirely clear."
+
 /datum/chemical_reaction/pwine
 	name = "Poison Wine"
 	result = /datum/reagent/ethanol/pwine
@@ -1632,13 +1668,22 @@
 	result_amount = 10
 	mix_message = "The solution roils as it rapidly ferments into a foaming amber liquid."
 
-/datum/chemical_reaction/spacebeer
-	name = "Space Beer"
-	result = /datum/reagent/ethanol/beer
+/datum/chemical_reaction/beer
+	name = "Beer"
+	result = /datum/reagent/ethanol/beer/good
+	required_reagents = list(/datum/reagent/nutriment/flour = 1)
+	minimum_temperature = 50 CELSIUS
+	maximum_temperature = (50 CELSIUS) + 100
+	result_amount = 1
+	mix_message = "The solution roils as it rapidly ferments into a foaming amber liquid."
+
+/datum/chemical_reaction/tequilla
+	name = "Tequila"
+	result = /datum/reagent/ethanol/tequilla
 	required_reagents = list(/datum/reagent/nutriment/cornoil = 10)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
-	mix_message = "The solution roils as it rapidly ferments into a foaming amber liquid."
+	mix_message = "The solution roils as it rapidly ferments into a clear amber liquid."
 
 /datum/chemical_reaction/vodka
 	name = "Vodka"
@@ -1951,7 +1996,7 @@
 	required_reagents = list(/datum/reagent/nutriment/honey = 2)
 	minimum_temperature = 100 CELSIUS
 	result_amount = 1
-	
+
 /datum/chemical_reaction/iced_beer
 	name = "Iced Beer"
 	result = /datum/reagent/ethanol/iced_beer
@@ -2117,10 +2162,49 @@
 /datum/chemical_reaction/rum
 	name = "Rum"
 	result = /datum/reagent/ethanol/rum
-	required_reagents = list(/datum/reagent/sugar = 1, /datum/reagent/water = 1)
+	required_reagents = list(/datum/reagent/sugar = 1, /datum/reagent/water = 1, /datum/reagent/nutriment = 1)
 	catalysts = list(/datum/reagent/enzyme = 5)
-	result_amount = 2
+	result_amount = 3
 	mix_message = "The solution roils as it rapidly ferments into a red-brown liquid."
+
+/datum/chemical_reaction/whiskey
+	name = "Whiskey"
+	result = /datum/reagent/ethanol/whiskey
+	required_reagents = list(/datum/reagent/nutriment/molasses = 10)
+	catalysts = list(/datum/reagent/enzyme = 5)
+	result_amount = 10
+	mix_message = "The solution diminishes as it rapidly ferments into a clear brown liquid."
+
+/datum/chemical_reaction/starrycola
+	name = "Starry Cola"
+	result = /datum/reagent/ethanol/starrycola
+	required_reagents = list(/datum/reagent/ethanol/moonshine = 1, /datum/reagent/drink/space_cola = 2)
+	result_amount = 3
+
+datum/chemical_reaction/bluebird
+	name = "Blue Bird"
+	result = /datum/reagent/ethanol/bluebird
+	required_reagents = list(/datum/reagent/ethanol/gin = 1, /datum/reagent/ethanol/bluecuracao = 1, /datum/reagent/drink/juice/lemon = 1)
+	result_amount = 3
+
+/datum/chemical_reaction/bj
+	name = "BJ"
+	result = /datum/reagent/ethanol/bj
+	required_reagents = list(/datum/reagent/ethanol/coffee/kahlua = 1, /datum/reagent/drink/milk = 1)
+	result_amount = 2
+
+/datum/chemical_reaction/calvincraig
+	name = "Calvin Craig"
+	result = /datum/reagent/ethanol/calvincraig
+	required_reagents = list(/datum/reagent/drink/dr_gibb = 1, /datum/reagent/drink/space_up = 1, /datum/reagent/sugar = 1,  /datum/reagent/drink/juice/lemon = 1, /datum/reagent/ethanol/melonliquor = 2)
+	result_amount = 6
+
+/datum/chemical_reaction/hessia
+	name = "Hessia"
+	result = /datum/reagent/ethanol/hessia
+	required_reagents = list(/datum/reagent/psilocybin = 1, /datum/reagent/water = 1, /datum/reagent/sugar = 1)
+	catalysts = list(/datum/reagent/enzyme = 5)
+	result_amount = 3
 
 /datum/chemical_reaction/ships_surgeon
 	name = "Ship's Surgeon"
@@ -2334,4 +2418,3 @@
 	minimum_temperature = 150 CELSIUS
 	maximum_temperature = 200 CELSIUS
 	result_amount = 3
-

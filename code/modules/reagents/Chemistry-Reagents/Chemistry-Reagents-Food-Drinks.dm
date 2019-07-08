@@ -269,6 +269,15 @@
 	nutriment_factor = 20
 	color = "#302000"
 
+/datum/reagent/nutriment/molasses
+	name = "Molasses"
+	description = "A dark brown syrup derived from heated sugars."
+	taste_description = "savory sweetness"
+	taste_mult = 1.5
+	reagent_state = LIQUID
+	nutriment_factor = 2
+	color = "#472500"
+
 /datum/reagent/nutriment/cornoil/touch_turf(var/turf/simulated/T)
 	if(!istype(T))
 		return
@@ -1196,7 +1205,7 @@
 	strength = 15
 
 	glass_name = "gin"
-	glass_desc = "A crystal clear glass of Griffeater gin."
+	glass_desc = "A crystal clear glass of gin."
 
 //Base type for alchoholic drinks containing coffee
 /datum/reagent/ethanol/coffee
@@ -1225,7 +1234,7 @@
 	color = "#4c3100"
 	strength = 15
 
-	glass_name = "RR coffee liquor"
+	glass_name = "coffee liquor"
 	glass_desc = "DAMN, THIS THING LOOKS ROBUST"
 
 /datum/reagent/ethanol/melonliquor
@@ -2216,4 +2225,17 @@
 
 	glass_name = "Calvin Craig"
 	glass_desc = "A sweet something-or-other for that special someone."
+	glass_special = list(DRINK_FIZZ)
+
+/datum/reagent/ethanol/hessia
+	name = "Hessia"
+	description = "Moghan jungle liquor. Looks unappetizing."
+	taste_description = "sweet earthy fruit"
+	reagent_state = LIQUID
+	color = "#876316"
+	strength = 20
+	druggy = 50
+
+	glass_name = "Hessia"
+	glass_desc = "A dark and earthy fizzing liquid with cultural significance. You think, anyway."
 	glass_special = list(DRINK_FIZZ)

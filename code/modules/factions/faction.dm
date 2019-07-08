@@ -3438,7 +3438,7 @@ var/PriorityQueue/all_feeds
 /datum/business_spec/mining/monsterhunter
 	name = "Monster Hunter"
 	desc = "This specialization gives the business capacity for a medical fabricator and tech that can produce machines and equipment to keep employees alive while fighting the top tier of monsters. Travel to the outer reaches and dig for riches, let the monsters come to you."
-	limits = /datum/machine_limits/retail/spec/bigstore
+	limits = /datum/machine_limits/mining/spec/monsterhunter
 	hourly_objectives = list(/datum/module_objective/hourly/monsters)
 	daily_objectives = list(/datum/module_objective/daily/monsters)
 	weekly_objectives = list(/datum/module_objective/weekly/monsters)

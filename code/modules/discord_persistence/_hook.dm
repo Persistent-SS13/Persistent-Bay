@@ -59,6 +59,9 @@ GLOBAL_DATUM_INIT(discord_api, /datum/discord_api, new)
 /datum/discord_api/proc/broadcast(message)
 	src.send_message("BROADCAST", list(), message)
 
+/datum/discord_api/proc/on_new_ahelp(var/mob/user, message)
+	src.send_message("AHELP", list(user.ckey, "[user]"), message)
+
 //A broadcast bot, for the broadcasting needs. (This was mainly for testing, probably should have no use at all.) EDIT: It is actually fun portraying as the all seeing AI
 /datum/admins/proc/discord_broadcast()
 	set category = "Admin"

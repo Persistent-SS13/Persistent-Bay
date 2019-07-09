@@ -497,18 +497,25 @@
 			// The character doesn't have a spawn_loc_2, so use the one for their assignment or the default
 			character.spawn_loc_2 = " default"
 
-		for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
-			if(!pod.loc)
-				qdel(pod)
-				continue
-			if(pod.req_access_faction == character.spawn_loc)
-				if(pod.network == character.spawn_loc_2)
-					spawnTurf = get_turf(pod)
+		if(character.spawn_personal)
+			var/turf/T = locate(character.spawn_p_x,character.spawn_p_y,character.spawn_p_z)
+			if(T)
+				for(var/obj/machinery/cryopod/pod in T.contents)
+					spawnTurf = T
 					break
-				else
+		if(!spawnTurf)
+			for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+				if(!pod.loc)
+					qdel(pod)
+					continue
+				if(pod.req_access_faction == character.spawn_loc)
+					if(pod.network == character.spawn_loc_2)
+						spawnTurf = get_turf(pod)
+						break
+					else
+						spawnTurf = get_turf(pod)
+				else if(!spawnTurf)
 					spawnTurf = get_turf(pod)
-			else if(!spawnTurf)
-				spawnTurf = get_turf(pod)
 
 		if(!spawnTurf)
 			log_and_message_admins("WARNING! No cryopods avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")

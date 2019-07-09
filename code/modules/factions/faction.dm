@@ -2167,7 +2167,11 @@ var/PriorityQueue/all_feeds
 			var/datum/accesses/access = new()
 			access.name = "CEO"
 			access.pay = 45
+			access.expense_limit = 10000000
 			CEO.accesses |= access
+		else
+			var/datum/accesses/access = CEO.accesses[1]
+			access.expense_limit = 10000000
 	..()
 /datum/world_faction/proc/get_limits()
 	return limits

@@ -205,7 +205,7 @@
 			to_chat(usr, "Dock is not big enough.")
 			return 1
 		beacon.status = 4
-		shuttle.short_jump(beacon.get_top_turf(), dock.get_top_turf())
+		shuttle.short_jump(beacon, dock)
 		dock.status = 2
 		dock = beacon
 		dock.status = 4

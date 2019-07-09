@@ -587,3 +587,134 @@
 		if(occupant && !launched)
 			launch()
 		..()
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+/obj/machinery/cryopod/personal
+	name = "personal cryogenic freezer"
+	desc = "A man-sized pod for entering suspended animation. This type ensures you return to the same cryopod you entered."
+	circuit_type = /obj/item/weapon/circuitboard/cryopod/personal
+
+/obj/machinery/cryopod/personal/attackby(var/obj/item/O, var/mob/user = usr)
+	src.add_fingerprint(user)
+	if(occupant)
+		to_chat(user, "<span class='notice'>\The [src] is in use.</span>")
+		return
+	if(istype(O, /obj/item/grab))
+		var/obj/item/grab/G = O
+		if(check_occupant_allowed(G.affecting))
+			user.visible_message("<span class='notice'>\The [user] begins placing \the [G.affecting] into \the [src].</span>", "<span class='notice'>You start placing \the [G.affecting] into \the [src].</span>")
+			if(do_after(user, 20, src))
+				if(!G || !G.affecting) return
+			insertOccupant(G.affecting, user)
+			return
+	if(istype(O, /obj/item/organ/internal/stack))
+		insertOccupant(O, user)
+		return
+	if(InsertedContents())
+		to_chat(user, "<span class='notice'>\The [src] must be emptied of all stored users first.</span>")
+		return
+	if(default_deconstruction_screwdriver(user, O))
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+
+/obj/machinery/cryopod/personal/attack_hand(var/mob/user = usr)
+	user.set_machine(src)
+	src.add_fingerprint(user)
+
+	var/datum/world_faction/faction = get_faction(req_access_faction)
+
+	var/data[]
+	data += "<hr><br><b>Cryopod Control</b></br>"
+	data += "<a href='?src=\ref[src];enter=1'>Enter Pod</a><br>"
+	data += "<a href='?src=\ref[src];eject=1'>Eject Occupant</a><br><br>"
+	show_browser(user, data, "window=cryopod")
+	onclose(user, "cryopod")
+
+/obj/machinery/cryopod/personal/OnTopic(var/mob/user = usr, href_list)
+	if(href_list["enter"])
+		insertOccupant(user, user)
+	if(href_list["eject"])
+		ejectOccupant()
+
+/obj/machinery/cryopod/proc/despawn_occupant(var/autocryo = 0)
+	if(!occupant)
+		return 0
+	if(despawning)
+		log_error("[src]\ref[src] tried to despawn occupant [occupant]\ref[occupant] twice!")
+		return 0
+
+	despawning = TRUE //Make sure we don't try to despawn twice at the same time for whatever reasons
+	var/mob/character
+	var/key
+	var/saveslot = 0
+	var/islace = istype(occupant, /obj/item/organ/internal/stack)
+	occupant.should_save = 1
+	if(istype(occupant, /obj/item/organ/internal/stack))
+		var/obj/item/organ/internal/stack/S = occupant
+		if(S.lacemob.ckey)
+			S.lacemob.stored_ckey = S.lacemob.ckey
+			key = S.lacemob.ckey
+		else
+			key = S.lacemob.stored_ckey
+		name = S.get_owner_name()
+		character = S.lacemob
+		saveslot = S.lacemob.save_slot
+		S.lacemob.spawn_personal = 1
+		S.lacemob.spawn_p_x = x
+		S.lacemob.spawn_p_y = y
+		S.lacemob.spawn_p_z = z
+		S.lacemob.spawn_type = CHARACTER_SPAWN_TYPE_CRYONET
+	else
+		var/mob/M = occupant
+		if(M.ckey)
+			M.stored_ckey = M.ckey
+			key = M.ckey
+		else
+			key = M.stored_ckey
+		name = M.real_name
+		character = M
+		saveslot = M.save_slot
+		M.pawn_personal = 1
+		M.spawn_p_x = x
+		M.spawn_p_y = y
+		M.spawn_p_z = z
+		M.spawn_type = CHARACTER_SPAWN_TYPE_CRYONET
+
+	key = copytext(key, max(findtext(key, "@"), 1))
+
+	if(!saveslot)
+		saveslot = SScharacter_setup.find_character_save_slot(occupant, key)
+
+	announce.autosay("[character.real_name] [on_store_message]", "[on_store_name]", character.GetFaction())
+	visible_message("<span class='notice'>\The [initial(name)] hums and hisses as it moves [character.real_name] into storage.</span>", 3)
+
+	//Lace retrieval?
+	if(islace && control_computer)
+		control_computer.add_lace(occupant, src)
+
+	SScharacter_setup.save_character(saveslot, key, character)
+	SetName(initial(src.name))
+	icon_state = base_icon_state
+	var/mob/new_player/player = new()
+	player.loc = locate(200,200,19)
+	if(occupant.client)
+		occupant.client.eye = player
+	player.key = key
+	player.loc = locate(200,200,19)
+	if(occupant && occupant.client)
+		occupant.client.eye = player
+	if(istype(occupant, /mob/))
+		var/mob/M = occupant
+		M.stored_ckey = null
+		M.ckey = null
+	QDEL_NULL(occupant)
+	time_despawn = 0
+	despawning = FALSE
+

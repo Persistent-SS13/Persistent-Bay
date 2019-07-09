@@ -369,7 +369,7 @@
 		return 1
 
 	if(href_list["edit_recipient"])
-		var/newrecipient = sanitize(input(user,"Enter recipient's email address:", "Recipient", msg_recipient), 100)
+		var/newrecipient = sanitize(input(user,"Enter recipient's name:", "Recipient", msg_recipient), 100)
 		if(newrecipient)
 			msg_recipient = newrecipient
 			addressbook = 0

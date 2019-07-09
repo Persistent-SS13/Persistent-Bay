@@ -157,7 +157,7 @@
 
 /datum/shuttle/proc/short_jump(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/location)
 	if(moving_status != SHUTTLE_IDLE) return
-
+	current_location = location
 	moving_status = SHUTTLE_WARMUP
 	playsound(current_location.loc, sound_takeoff, 100, 20, 1)
 	sleep(warmup_time*10)
@@ -234,10 +234,7 @@
 		if(istype(A, /area/space))
 			message_admins("Shuttle [src] is trying to move space area.")
 			return
-		if(!istype(A, /area/shuttle))
-			message_admins("broken shuttle [src] with areas [english_list(shuttle_area)] trying to move.")
-			return
-		translation += get_turf_translation(get_turf(current_location), get_turf(destination), A.contents)
+		translation += get_turf_translation(get_turf(current_location), get_turf(destination), A.get_turfs())
 	shuttle_moved(destination, translation)
 	return TRUE
 

@@ -627,9 +627,6 @@
 /obj/machinery/cryopod/personal/attack_hand(var/mob/user = usr)
 	user.set_machine(src)
 	src.add_fingerprint(user)
-
-	var/datum/world_faction/faction = get_faction(req_access_faction)
-
 	var/data[]
 	data += "<hr><br><b>Cryopod Control</b></br>"
 	data += "<a href='?src=\ref[src];enter=1'>Enter Pod</a><br>"
@@ -643,7 +640,7 @@
 	if(href_list["eject"])
 		ejectOccupant()
 
-/obj/machinery/cryopod/proc/despawn_occupant(var/autocryo = 0)
+/obj/machinery/cryopod/personal/despawn_occupant(var/autocryo = 0)
 	if(!occupant)
 		return 0
 	if(despawning)
@@ -681,7 +678,7 @@
 		name = M.real_name
 		character = M
 		saveslot = M.save_slot
-		M.pawn_personal = 1
+		M.spawn_personal = 1
 		M.spawn_p_x = x
 		M.spawn_p_y = y
 		M.spawn_p_z = z

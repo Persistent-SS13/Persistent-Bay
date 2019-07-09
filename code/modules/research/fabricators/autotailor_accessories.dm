@@ -791,12 +791,12 @@
 	id = "latex"
 	build_path = /obj/item/clothing/gloves/latex
 	materials = list(MATERIAL_PLASTIC = 2000)
-
+	build_type = list(AUTOTAILOR_ACCESSORIES, MEDICALFAB)
 /datum/design/item/autotailor/accessories/gloves/nitrile
 	name = "Medical gloves - nitrile"
 	id = "nitrile"
 	build_path = /obj/item/clothing/gloves/latex/nitrile
-	materials = list(MATERIAL_PLASTIC = 10000)
+	materials = list(MATERIAL_PLASTIC = 1 SHEET)
 	build_type = list(AUTOTAILOR_ACCESSORIES, MEDICALFAB)
 
 /datum/design/item/autotailor/accessories/gloves/dressgloves_white	//custom colors

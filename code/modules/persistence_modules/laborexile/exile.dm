@@ -30,7 +30,6 @@
 
 /obj/item/weapon/implant/laborexile/Process()
 	if (!implanted) return
-	var/mob/M = imp_in
 	if(time_left)
 		time_left -= 1
 	if(!time_left)

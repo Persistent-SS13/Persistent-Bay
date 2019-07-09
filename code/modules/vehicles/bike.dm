@@ -271,7 +271,7 @@
 		load.set_dir(dir)
 
 /obj/vehicle/bike/Move(var/turf/destination)
-	if(!use_fuel())
+	if(on && !use_fuel())
 		turn_off()
 		return 0
 
@@ -359,7 +359,7 @@
 
 	update_icon()
 
-	move_delay = STARTING_DELAY
+	move_delay = starting_delay
 	stopped = TRUE
 
 	update_fuel()
@@ -377,11 +377,11 @@
 /obj/vehicle/bike/proc/update_fuel()
 	for(var/datum/reagent/R in reagents.reagent_list)
 		if(istype(R, /datum/reagent/ethanol))
-			fuel_points += 10 * reagents.get_reagent_amount(/datum/reagent/ethanol)
+			fuel_points += 10 * reagents.get_reagent_amount(R.type)
 		if(istype(R, /datum/reagent/fuel))
-			fuel_points += 30 * reagents.get_reagent_amount(/datum/reagent/fuel)
+			fuel_points += 30 * reagents.get_reagent_amount(R.type)
 		if(istype(R, /datum/reagent/toxin/phoron))
-			fuel_points += 50 * reagents.get_reagent_amount(/datum/reagent/toxin/phoron)
+			fuel_points += 50 * reagents.get_reagent_amount(R.type)
 
 	reagents.clear_reagents()
 

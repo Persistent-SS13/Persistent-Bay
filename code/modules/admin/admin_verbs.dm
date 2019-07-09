@@ -51,6 +51,7 @@ var/list/admin_verbs_admin = list(
 	/client/proc/cmd_admin_audible_narrate,
 	/client/proc/cmd_admin_local_narrate,
 	/client/proc/cmd_admin_world_narrate,	//sends text to all players with no padding,
+	/client/proc/cmd_admin_nexus_narrate,
 	/client/proc/cmd_admin_create_centcom_report,
 	/client/proc/check_ai_laws,			//shows AI and borg laws,
 	/client/proc/rename_silicon,		//properly renames silicons,
@@ -271,6 +272,7 @@ var/list/admin_verbs_hideable = list(
 	/client/proc/cmd_admin_audible_narrate,
 	/client/proc/cmd_admin_local_narrate,
 	/client/proc/cmd_admin_world_narrate,
+	/client/proc/cmd_admin_nexus_narrate,
 	/client/proc/play_local_sound,
 	/client/proc/play_sound,
 	/client/proc/play_server_sound,
@@ -509,13 +511,13 @@ var/list/admin_verbs_mentor = list(
 /client/proc/unban_panel()
 	set name = "Unban Panel"
 	set category = "Admin"
-	// if(holder)
-	// 	if(config.ban_legacy_system)
-	// 		holder.unbanpanel()
-	// 	else
-	// 		holder.DB_ban_panel()
-	// SSstatistics.add_field_details("admin_verb","UBP") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-	// return
+	if(holder)
+		if(config.ban_legacy_system)
+			holder.unbanpanel()
+		else
+			holder.DB_ban_panel()
+	SSstatistics.add_field_details("admin_verb","UBP") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	return
 
 /client/proc/game_panel()
 	set name = "Game Panel"

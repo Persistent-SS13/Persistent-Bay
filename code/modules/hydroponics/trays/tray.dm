@@ -146,14 +146,18 @@
 	ADD_SAVED_VAR(mutation_level)
 	ADD_SAVED_VAR(tray_light)
 	ADD_SAVED_VAR(plant_health)
-	ADD_SAVED_VAR(lastproduce)
-	ADD_SAVED_VAR(lastcycle)
-	ADD_SAVED_VAR(cycledelay)
+
 	ADD_SAVED_VAR(closed_system)
-	ADD_SAVED_VAR(force_update)
+
 	ADD_SAVED_VAR(temp_chem_holder)
 	ADD_SAVED_VAR(labelled)
 	ADD_SAVED_VAR(seed)
+	ADD_SAVED_VAR(req_access_faction)
+
+/obj/machinery/portable_atmospherics/hydroponics/before_save()
+	. = ..()
+	if(connected_faction)
+		req_access_faction = connected_faction.uid
 
 /obj/machinery/portable_atmospherics/hydroponics/after_load()
 	..()

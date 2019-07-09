@@ -29,7 +29,7 @@
 
 /datum/extension/holster/after_load()
 	. = ..()
-	atom_holder.verbs += /atom/proc/holster_verb
+	atom_holder.verbs |= /atom/proc/holster_verb
 
 /datum/extension/holster/Destroy()
 	storage = null

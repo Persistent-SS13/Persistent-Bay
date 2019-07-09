@@ -206,7 +206,7 @@ var/global/chicken_count = 0
 	speak_chance = 2
 	turns_per_move = 3
 	meat_type = /obj/item/weapon/reagent_containers/food/snacks/meat/chicken
-	meat_amount = 4
+	meat_amount = 2
 	response_help  = "pets"
 	response_disarm = "gently pushes aside"
 	response_harm   = "kicks"
@@ -242,7 +242,8 @@ var/global/chicken_count = 0
 				user.visible_message("<span class='notice'>[user] feeds [O] to [name]! It clucks happily.</span>","<span class='notice'>You feed [O] to [name]! It clucks happily.</span>")
 				user.drop_item()
 				qdel(O)
-				eggsleft += rand(1, 4)
+				if(prob(25))
+					eggsleft++
 			else
 				to_chat(user, "<span class='notice'>[name] doesn't seem hungry!</span>")
 		else
@@ -254,7 +255,7 @@ var/global/chicken_count = 0
 	. = ..()
 	if(!.)
 		return FALSE
-	if(prob(3) && eggsleft > 0)
+	if(prob(1) && eggsleft > 0)
 		visible_message("[src] [pick("lays an egg.","squats down and croons.","begins making a huge racket.","begins clucking raucously.")]")
 		eggsleft--
 		var/obj/item/weapon/reagent_containers/food/snacks/egg/E = new(get_turf(src))

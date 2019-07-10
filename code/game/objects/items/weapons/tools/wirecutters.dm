@@ -19,13 +19,18 @@
 	matter = list(MATERIAL_STEEL = 80)
 	center_of_mass = "x=18;y=10"
 	attack_verb = list("pinched", "nipped")
-	sharpness = 2
+	sharpness = 1
 	damtype = DAM_CUT
 	mass = 0.100
 	var/build_from_parts = TRUE
 	var/handle_icon = "cutters_handle"
 	var/hardware_icon = "cutters_hardware"
 	var/valid_colours = list(COLOR_RED, PIPE_COLOR_YELLOW, COLOR_BLUE_GRAY, COLOR_MAROON, COLOR_SEDONA, COLOR_BABY_BLUE, COLOR_VIOLET, COLOR_GRAY80, COLOR_GRAY20)
+
+/obj/item/weapon/tool/wirecutters/New()
+	. = ..()
+	ADD_SAVED_VAR(build_from_parts)
+	ADD_SAVED_VAR(color)
 
 /obj/item/weapon/tool/wirecutters/Initialize()
 	if(build_from_parts)

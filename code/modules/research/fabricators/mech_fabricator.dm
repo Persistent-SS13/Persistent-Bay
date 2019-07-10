@@ -919,16 +919,3 @@
 	materials = list(MATERIAL_STEEL = 750, MATERIAL_GLASS = 750)
 	build_path = /obj/item/device/flash/synthetic
 	category = "Misc"
-
-////////////////////////////////////////////////////
-//////////////////////VEHICLES//////////////////////
-////////////////////////////////////////////////////
-
-/datum/design/item/mechfab/bike
-	name = "Motor bike"
-	id = "m_bike"
-	req_tech = list(TECH_POWER = 1, TECH_ENGINEERING = 1, TECH_MATERIAL = 1)
-	materials = list(MATERIAL_STEEL = 40000, MATERIAL_TUNGSTEN = 20000, MATERIAL_GLASS = 20000, MATERIAL_GOLD = 20000)
-	build_path = /obj/vehicle/bike
-	category = "Vehicles"
-	time = 50

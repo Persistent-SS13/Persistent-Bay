@@ -91,6 +91,9 @@
 	matter = list(MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
 	build_machine_type = /obj/machinery/light_construct/small
 
+//
+// Buttons
+//
 /obj/item/frame/button
 	name = "button frame"
 	desc = "Used for building buttons"
@@ -98,6 +101,64 @@
 	icon_state = "launcherbtt_frame"
 	matter = list(MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
 	build_machine_type = /obj/machinery/button
+
+/obj/item/frame/button/door
+	name = "door button frame"
+	desc = "Used for building buttons that looks like a door control button."
+	icon = 'icons/obj/machines/buttons.dmi'
+	icon_state = "doorctrl-p"
+	build_machine_type = /obj/machinery/button/alternate
+
+/obj/item/frame/button/switch
+	name = "switch button frame"
+	desc = "Used for building buttons that look like a lightswitch"
+	icon = 'icons/obj/machines/buttons.dmi'
+	icon_state = "light-p"
+	matter = list(MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
+	build_machine_type = /obj/machinery/button/switch
+
+/obj/item/frame/button/toggle
+	name = "toggle button frame"
+	desc = "Used for building buttons that can toggle between 2 states."
+	icon = 'icons/obj/machines/buttons.dmi'
+	icon_state = "launcherbtt_frame"
+	matter = list(MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
+	build_machine_type = /obj/machinery/button/toggle
+
+/obj/item/frame/button/toggle/alernate
+	name = "door toggle button frame"
+	desc = "Used for building buttons that can toggle between 2 states."
+	icon = 'icons/obj/machines/buttons.dmi'
+	icon_state = "doorctrl-p"
+	matter = list(MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
+	build_machine_type = /obj/machinery/button/toggle/alternate
+
+/obj/item/frame/button/toggle/switch
+	name = "switch toggle button frame"
+	desc = "Used for building buttons that can toggle between 2 states and look like a lightswitch."
+	icon = 'icons/obj/machines/buttons.dmi'
+	icon_state = "doorctrl-p"
+	matter = list(MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
+	build_machine_type = /obj/machinery/button/toggle/switch
+
+/obj/item/frame/button/toggle/lever
+	name = "lever frame"
+	desc = "Used for building levers that can toggle between 2 states."
+	icon = 'icons/obj/machines/buttons.dmi'
+	icon_state = "switch-up"
+	matter = list(MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
+	build_machine_type = /obj/machinery/button/toggle/lever
+
+/obj/item/frame/button/toggle/lever/double
+	name = "double lever frame"
+	desc = "Used for building heavy duty levers that can toggle between 2 states."
+	icon = 'icons/obj/machines/buttons.dmi'
+	icon_state = "switch-dbl-up"
+	matter = list(MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
+	build_machine_type = /obj/machinery/button/toggle/lever/dbl
+
+
+
 
 /obj/item/frame/light_switch
 	name = "light switch frame"
@@ -146,7 +207,7 @@
 	desc = "Used for building Mirrors"
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "mirror"
-	matter = list(MATERIAL_SILVER = 2 * SHEET_MATERIAL_AMOUNT)
+	matter = list(MATERIAL_SILVER = 2 SHEETS)
 	build_machine_type = /obj/item/weapon/storage/mirror
 
 /obj/item/frame/plastic/shower

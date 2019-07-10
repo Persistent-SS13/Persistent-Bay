@@ -41,3 +41,6 @@
 
 /obj/item/weapon/tool/screwdriver/play_tool_sound()
 	playsound(loc, 'sound/items/Screwdriver.ogg', 50, 1)
+
+/obj/item/weapon/tool/screwdriver/can_graffiti()
+	return TRUE

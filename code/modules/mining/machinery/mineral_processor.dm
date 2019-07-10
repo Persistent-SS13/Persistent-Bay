@@ -47,7 +47,7 @@
 	if(input_turf)
 		for(var/obj/item/stack/S in input_turf)
 			// If we are deleted or are neither dust or ore, continue
-			if(QDELETED(S) || (!istype(S, /obj/item/stack/material_dust) && !istype(S, /obj/item/stack/ore)) || !LAZYLEN(S.matter))
+			if(QDELETED(S) || (!istype(S, /obj/item/stack/material_dust) && !istype(S, /obj/item/stack/ore) && !istype(S, /obj/item/stack/material)) || !LAZYLEN(S.matter))
 				continue
 
 			// Otherwise add the matter in the stack to our stores.
@@ -58,7 +58,7 @@
 				LAZYASSOC(materials_processing, M.name)
 
 			qdel(S)
-			
+
 	if(output_turf)
 		var/list/attempt_to_alloy = list()
 		var/max_sheets = sheets_per_tick
@@ -122,7 +122,7 @@
 	var/result = Clamp(Floor(materials_stored[M.name] / M.units_per_sheet), 0, max_result)
 	if(!result)
 		return 0
-		
+
 	materials_stored[M.name] -= result * M.units_per_sheet
 
 	use_power_oneoff(active_power_usage)
@@ -132,7 +132,7 @@
 		N.place_sheet(output_turf, result)
 	else
 		M.place_sheet(output_turf, result)
-		
+
 	return result
 
 /obj/machinery/mineral/processing_unit/proc/attempt_compression(var/material/M, var/max_result)

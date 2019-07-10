@@ -29,6 +29,8 @@
 
 	material = materialtype
 	..()
+	ADD_SAVED_VAR(paint_color)
+	ADD_SAVED_VAR(stripe_color)
 
 /obj/structure/wall_frame/Initialize()
 	if(!material)

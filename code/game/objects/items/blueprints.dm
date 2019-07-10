@@ -49,9 +49,11 @@
 			merge_area()
 		if("add_to_area")
 			add_to_area()
-		if ("delete_area")
+		if ("remove_area")
 			//skip the sanity checking, delete_area() does it anyway
 			delete_area()
+		else
+			log_warning("[src]\ref[src] got [href_list["action"]] from UI, but its not handled by the Topic() proc!")
 
 /obj/item/blueprints/admin/interact()
 	var/area/A = get_area()

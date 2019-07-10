@@ -248,3 +248,24 @@
 				/datum/reagent/nutriment/protein = 10,
 				/datum/reagent/blood = 10,
 				)
+
+	
+//Wax sheets, now using the material system, like everything else
+/material/wax
+	name = MATERIAL_BEESWAX
+	sheet_singular_name = "piece"
+	sheet_plural_name = "pieces"
+	stack_type = /obj/item/stack/material/edible/beeswax
+	icon_colour = "#fff343"
+	icon_base = "puck"
+	integrity = 10
+	hardness = 1
+	weight = 4
+	explosion_resistance = 0
+	brute_armor = 0
+	conductive = 0
+	melting_point = T0C+62
+	ignition_point = T0C+204
+	chem_products = list(
+		/datum/reagent/beeswax = 20,
+	)

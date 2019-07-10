@@ -44,8 +44,8 @@
 		shuttle_area = list(shuttle_area)
 	for(var/T in shuttle_area)
 		var/area/A = locate(T)
-		if(!istype(A))
-			CRASH("Shuttle \"[name]\" couldn't locate area [T].")
+	//	if(!istype(A))
+	//		CRASH("Shuttle \"[name]\" couldn't locate area [T].")
 		areas += A
 	shuttle_area = areas
 
@@ -53,11 +53,11 @@
 		current_location = initial_location
 	else
 		current_location = SSshuttle.get_landmark(current_location)
-	if(!istype(current_location))
-		CRASH("Shuttle \"[name]\" could not find its starting location.")
+//	if(!istype(current_location))
+//		CRASH("Shuttle \"[name]\" could not find its starting location.")
 
-	if(src.name in SSshuttle.shuttles)
-		CRASH("A shuttle with the name '[name]' is already defined.")
+//	if(src.name in SSshuttle.shuttles)
+//		CRASH("A shuttle with the name '[name]' is already defined.")
 	SSshuttle.shuttles[src.name] = src
 	if(logging_home_tag)
 		new /datum/shuttle_log(src)
@@ -157,7 +157,7 @@
 
 /datum/shuttle/proc/short_jump(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/location)
 	if(moving_status != SHUTTLE_IDLE) return
-
+	current_location = location
 	moving_status = SHUTTLE_WARMUP
 	playsound(current_location.loc, sound_takeoff, 100, 20, 1)
 	sleep(warmup_time*10)
@@ -234,10 +234,7 @@
 		if(istype(A, /area/space))
 			message_admins("Shuttle [src] is trying to move space area.")
 			return
-		if(!istype(A, /area/shuttle))
-			message_admins("broken shuttle [src] with areas [english_list(shuttle_area)] trying to move.")
-			return
-		translation += get_turf_translation(get_turf(current_location), get_turf(destination), A.contents)
+		translation += get_turf_translation(get_turf(current_location), get_turf(destination), A.get_turfs())
 	shuttle_moved(destination, translation)
 	return TRUE
 

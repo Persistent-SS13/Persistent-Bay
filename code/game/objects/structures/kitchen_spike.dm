@@ -58,6 +58,20 @@
 	var/meat_type
 	var/victim_name = "corpse"
 
+/obj/structure/kitchenspike/New()
+	. = ..()
+	ADD_SAVED_VAR(meat)
+	ADD_SAVED_VAR(occupied)
+	ADD_SAVED_VAR(meat_type)
+	ADD_SAVED_VAR(victim_name)
+	ADD_SAVED_VAR(icon_state)
+
+/obj/structure/kitchenspike/dismantle()
+	var/obj/F = new /obj/structure/kitchenspike_frame(src.loc)
+	transfer_fingerprints_to(F)
+	new /obj/item/stack/material/rods(loc, 4)
+	qdel(src)
+
 /obj/structure/kitchenspike/attackby(obj/item/I, mob/living/carbon/human/user)
 	if(istype(I, /obj/item/grab))
 		var/obj/item/grab/G = I
@@ -79,10 +93,7 @@
 		to_chat(user, "<span class='notice'>You begin prying the spikes out of the frame...</span>")
 		if(do_after(user, 20, src))
 			to_chat(user, "<span class='notice'>You pry the spikes out of the frame.</span>")
-			var/obj/F = new /obj/structure/kitchenspike_frame(src.loc)
-			transfer_fingerprints_to(F)
-			new /obj/item/stack/material/rods(loc, 4)
-			qdel(src)
+			dismantle()
 
 /obj/structure/kitchenspike/proc/spike(var/mob/living/victim)
 

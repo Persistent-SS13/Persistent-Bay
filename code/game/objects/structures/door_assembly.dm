@@ -25,8 +25,13 @@
 	var/allow_keypad = 	 FALSE // accepts keypad electronics
 	var/allow_personal = FALSE // accepts personal electronics
 
-	New()
-		update_state()
+/obj/structure/door_assembly/New()
+	..()
+	update_state()
+	ADD_SAVED_VAR(state)
+	ADD_SAVED_VAR(electronics)
+	ADD_SAVED_VAR(glass)
+	ADD_SAVED_VAR(created_name)
 
 
 /obj/structure/door_assembly/door_assembly_keyp
@@ -82,7 +87,8 @@
 		else
 			bound_width = world.icon_size
 			bound_height = width * world.icon_size
-		update_state()
+		..()
+		ADD_SAVED_VAR(width)
 
 	Move()
 		. = ..()

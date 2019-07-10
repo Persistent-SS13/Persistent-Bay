@@ -7,8 +7,7 @@
 
 /atom/New()
 	..()
-	if(!(atom_flags & ATOM_FLAG_NO_TEMP_CHANGE))
-		ADD_SAVED_VAR(temperature) //Save temp only when its actually relevant
+	ADD_SAVED_VAR(temperature)
 	
 /atom/movable/Entered(var/atom/movable/atom, var/atom/old_loc)
 	. = ..()
@@ -25,7 +24,7 @@
 
 /obj/Initialize()
 	. = ..()
-	temperature_coefficient = isnull(temperature_coefficient) ? Clamp(MAX_TEMPERATURE_COEFFICIENT - w_class, MIN_TEMPERATURE_COEFFICIENT, MAX_TEMPERATURE_COEFFICIENT) : temperature_coefficient
+	temperature_coefficient = !temperature_coefficient? Clamp(MAX_TEMPERATURE_COEFFICIENT - w_class, MIN_TEMPERATURE_COEFFICIENT, MAX_TEMPERATURE_COEFFICIENT) : temperature_coefficient
 
 /obj/proc/HandleObjectHeating(var/obj/item/heated_by, var/mob/user, var/adjust_temp)
 	if(ATOM_IS_TEMPERATURE_SENSITIVE(src))

@@ -54,6 +54,11 @@
 /datum/design/item/medicalfab/medicines
 	category = "Medicines"
 
+/datum/design/item/medicalfab/medicines/splint
+	name = "Medical splint"
+	build_path = /obj/item/stack/medical/splint
+	materials = list(MATERIAL_CLOTH = 1 SHEETS, MATERIAL_WOOD = 1 SHEETS)
+
 /datum/design/item/medicalfab/medicines/bruise_pack
 	build_path = /obj/item/stack/medical/bruise_pack
 	materials = list(MATERIAL_CLOTH = 5 SHEETS)
@@ -90,6 +95,10 @@
 /datum/design/item/medicalfab/meditools/adv/rescuebag
 	build_path = /obj/item/bodybag/rescue
 	materials = list(MATERIAL_CLOTH = 2 SHEETS, MATERIAL_PHORON = 1 SHEET)
+
+/datum/design/item/medicalfab/meditools/autoinjector
+	build_path = /obj/item/weapon/reagent_containers/hypospray/autoinjector
+	materials = list(MATERIAL_GLASS = 600)
 
 /datum/design/item/medicalfab/meditools/dropper
 	name = "dropper"

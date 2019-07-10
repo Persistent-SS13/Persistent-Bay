@@ -405,12 +405,12 @@
 			to_chat(user, "<span class='warning'>\The [src] does not have any slots open for \the [C] to fit into!</span>")
 		return
 
-	if(!C.label_text)
+	if(!C.get_first_label())
 		if(user)
 			to_chat(user, "<span class='warning'>\The [C] does not have a label!</span>")
 		return
 
-	if(cartridges[C.label_text])
+	if(cartridges[C.get_first_label()])
 		if(user)
 			to_chat(user, "<span class='warning'>\The [src] already contains a cartridge with that label!</span>")
 		return
@@ -420,7 +420,7 @@
 		to_chat(user, "<span class='notice'>You add \the [C] to \the [src].</span>")
 
 	C.loc = src
-	cartridges[C.label_text] = C
+	cartridges[C.get_first_label()] = C
 	cartridges = sortAssoc(cartridges)
 	SSnano.update_uis(src)
 

@@ -139,5 +139,6 @@ var/list/adminhelp_ignored_words = list("unknown","the","a","an","of","monkey","
 		adminmsg2adminirc(src, null, "[html_decode(original_msg)]")
 
 	SSstatistics.add_field_details("admin_verb","AH") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	GLOB.discord_api.on_new_ahelp(mob, original_msg)
 	return
 

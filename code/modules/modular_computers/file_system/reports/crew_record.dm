@@ -110,8 +110,8 @@ FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_synd
 	if(linked_account.money < cost)
 		to_chat(user, "Insufficent funds.")
 		return
-	var/datum/transaction/T = new("Nexus Account Upgrade", "Nexus Account Upgrade", cost, "Nexus Account Upgrade")
-	linked_account.do_transaction(T)
+	var/datum/transaction/Te = new("Nexus Account Upgrade", "Nexus Account Upgrade", -cost, "Nexus Account Upgrade")
+	linked_account.do_transaction(Te)
 	network_level++
 
 /datum/computer_file/report/crew_record/proc/get_stock_limit()

@@ -157,7 +157,6 @@ Some standard magazines, speedloaders and clips
 	matter = list(MATERIAL_STEEL = 1440)
 	max_ammo = 4
 	multiple_sprites = 1
-	w_class = ITEM_SIZE_NORMAL
 	mass = 80 GRAMS
 	var/marking_color
 
@@ -245,7 +244,6 @@ Some standard magazines, speedloaders and clips
 	ammo_type = /obj/item/ammo_casing/c9mm
 	max_ammo = 20
 	multiple_sprites = 1
-	w_class = ITEM_SIZE_NORMAL
 	mass = 150 GRAMS
 /obj/item/ammo_magazine/box/c9mm/_20/empty
 	initial_ammo = 0
@@ -332,7 +330,6 @@ Some standard magazines, speedloaders and clips
 	ammo_type = /obj/item/ammo_casing/c45
 	max_ammo = 20
 	multiple_sprites = 1
-	w_class = ITEM_SIZE_NORMAL
 	mass = 150 GRAMS
 /obj/item/ammo_magazine/box/c45/_20/empty
 	initial_ammo = 0
@@ -410,7 +407,6 @@ Some standard magazines, speedloaders and clips
 	ammo_type = /obj/item/ammo_casing/c762
 	max_ammo = 15 //if we lived in a world where normal mags had 30 rounds, this would be a 20 round mag
 	multiple_sprites = 1
-	w_class = ITEM_SIZE_NORMAL
 	mass = 180 GRAMS
 /obj/item/ammo_magazine/box/c762/empty
 	initial_ammo = 0

@@ -117,6 +117,44 @@
 	parent_substance = /datum/reagent/ethanol
 	addiction_display_name = "Alcohol"
 
+	var/global/list/drink_tipsy_messages = list(
+		"You feel pleasantly warm.",
+		"You feel nice and toasty.",
+		"You're feeling pretty good.",
+		"You're ready for a party.",
+		"You wouldn't mind another drink.",
+	)	
+	
+	var/global/list/drink_buzzed_messages = list(
+		"You feel nice and toasty.",
+		"Your face feels warm.",
+		"You're full of energy.",
+		"You're feeling very chatty.",
+		"You wouldn't mind another drink.",
+		"You're in a good mood."
+	)	
+	
+	var/global/list/drink_drunk_messages = list(
+		"You're having trouble keeping your balance.",
+		"The world spins around you.",
+		"You feel nice and toasty.",
+		"You're full of energy.",
+		"Your face is burning.",
+		"You're feeling very chatty."
+	)	
+	
+	var/global/list/drink_hammered_messages = list(
+		"You feel like trash.",
+		"The world spins around you.",
+		"You're having trouble keeping your balance.",
+		"You can't remember the last few minutes.",
+		"You're absolutely hammered.",
+		"You're completely trashed.",
+		"You feel angry.",
+		"You feel sad.",
+		"You catch yourself staggering."
+	)	
+	
 	glass_name = "ethanol"
 	glass_desc = "A well-known alcohol with a variety of applications."
 	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_FUEL | XGM_GAS_REAGENT_GAS
@@ -139,28 +177,43 @@
 	if(alien == IS_DIONA)
 		strength_mod = 0
 
+	var/drink_message = FALSE
+
 	M.add_chemical_effect(CE_ALCOHOL, 1)
 	var/effective_dose = M.chem_doses[type] * strength_mod * (1 + volume/60) //drinking a LOT will make you go down faster
 
-	if(effective_dose >= strength) // Early warning
+	if(effective_dose >= strength) // Just give a nice message
+		drink_message = pick(drink_tipsy_messages)
+	if(effective_dose >= strength * 2) // Early warning
 		M.make_dizzy(6) // It is decreased at the speed of 3 per tick
-	if(effective_dose >= strength * 2) // Slurring
+		drink_message = pick(drink_buzzed_messages)
+	if(effective_dose >= strength * 3) // Slurring
 		M.add_chemical_effect(CE_PAINKILLER, 150/strength)
 		M.slurring = max(M.slurring, 30)
-	if(effective_dose >= strength * 3) // Confusion - walking in random directions
-		M.add_chemical_effect(CE_PAINKILLER, 150/strength)
-		M.confused = max(M.confused, 20)
+		drink_message = pick(drink_buzzed_messages)
 	if(effective_dose >= strength * 4) // Blurry vision
 		M.add_chemical_effect(CE_PAINKILLER, 150/strength)
 		M.eye_blurry = max(M.eye_blurry, 10)
-	if(effective_dose >= strength * 5) // Drowsyness - periodically falling asleep
+		drink_message = pick(drink_drunk_messages)
+	if(effective_dose >= strength * 5) // Confusion - walking in random directions
+		M.add_chemical_effect(CE_PAINKILLER, 150/strength)
+		M.confused = max(M.confused, 20)
+		drink_message = pick(drink_drunk_messages)
+	if(effective_dose >= strength * 6) // Drowsyness - periodically falling asleep
 		M.add_chemical_effect(CE_PAINKILLER, 150/strength)
 		M.drowsyness = max(M.drowsyness, 20)
-	if(effective_dose >= strength * 6) // Toxic dose
+		drink_message = SPAN_WARNING(pick(drink_hammered_messages))
+	if(effective_dose >= strength * 7) // Toxic dose
 		M.add_chemical_effect(CE_ALCOHOL_TOXIC, toxicity)
-	if(effective_dose >= strength * 7) // Pass out
+		drink_message = SPAN_WARNING(pick(drink_hammered_messages))
+	if(effective_dose >= strength * 8) // Pass out
+		drink_message = SPAN_DANGER("You black out...")
 		M.Paralyse(20)
 		M.Sleeping(30)
+
+	if(drink_message)
+		if(prob(10))
+			to_chat(M, "[drink_message]")
 
 	if(druggy != 0)
 		M.druggy = max(M.druggy, druggy)

@@ -83,7 +83,7 @@
 
 /datum/chemical_reaction/methyl_bromide2
 	name = "Methyl Bromide"
-	required_reagents = list(/datum/reagent/boron = 1, /datum/reagent/methanol = 1, /datum/reagent/hydrogen = 2)
+	required_reagents = list(/datum/reagent/toxin/bromide = 1, /datum/reagent/methanol = 1, /datum/reagent/hydrogen = 2)
 	result_amount = 3
 	result = /datum/reagent/toxin/methyl_bromide
 	mix_message = "The solution begins to bubble, emitting a dark vapor."

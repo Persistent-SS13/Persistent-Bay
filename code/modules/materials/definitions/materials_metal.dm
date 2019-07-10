@@ -136,7 +136,7 @@
 
 /material/osmium
 	name = MATERIAL_OSMIUM
-	lore_text = "An extremely hard form of platinum."
+	lore_text = "An extremely dense metal."
 	stack_type = /obj/item/stack/material/osmium
 	icon_colour = "#9999ff"
 	stack_origin_tech = list(TECH_MATERIAL = 5)

@@ -1578,6 +1578,7 @@
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 	mix_message = "The solution exudes the powerful reek of raw alcohol."
+	maximum_temperature = T0C + 60
 
 /datum/chemical_reaction/grenadine
 	name = "Grenadine Syrup"
@@ -1593,6 +1594,7 @@
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 	mix_message = "The solution roils as it rapidly ferments into a rich red liquid."
+	maximum_temperature = T0C + 60
 
 /datum/chemical_reaction/pwine
 	name = "Poison Wine"
@@ -1601,6 +1603,7 @@
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 	mix_message = "The solution roils as it rapidly ferments into a shifting purple liquid."
+	maximum_temperature = T0C + 60
 
 /datum/chemical_reaction/melonliquor
 	name = "Melon Liquor"
@@ -1609,6 +1612,7 @@
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 	mix_message = "The solution roils as it rapidly ferments into a pale liquor."
+	maximum_temperature = T0C + 60
 
 /datum/chemical_reaction/bluecuracao
 	name = "Blue Curacao"
@@ -1617,6 +1621,7 @@
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 	mix_message = "The solution roils as it rapidly ferments into a shockingly blue liquor."
+	maximum_temperature = T0C + 60
 
 /datum/chemical_reaction/ale
 	name = "Ale"
@@ -1625,6 +1630,7 @@
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 	mix_message = "The solution roils as it rapidly ferments into a foaming amber liquid."
+	maximum_temperature = T0C + 60
 
 /datum/chemical_reaction/spacebeer
 	name = "Space Beer"
@@ -1633,6 +1639,7 @@
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 	mix_message = "The solution roils as it rapidly ferments into a foaming amber liquid."
+	maximum_temperature = T0C + 60
 
 /datum/chemical_reaction/vodka
 	name = "Vodka"
@@ -1641,6 +1648,7 @@
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 	mix_message = "The solution roils as it rapidly ferments into a crystal clear liquid."
+	maximum_temperature = T0C + 60
 
 /datum/chemical_reaction/vodka2
 	name = "Vodka"
@@ -1649,6 +1657,7 @@
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 	mix_message = "The solution roils as it rapidly ferments into a crystal clear liquid."
+	maximum_temperature = T0C + 60
 
 /datum/chemical_reaction/sake
 	name = "Sake"
@@ -1657,6 +1666,7 @@
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 	mix_message = "The solution roils as it rapidly ferments into a crystal clear liquid."
+	maximum_temperature = T0C + 60
 
 /datum/chemical_reaction/kahlua
 	name = "Kahlua"
@@ -1665,6 +1675,7 @@
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 5
 	mix_message = "The solution roils as it rapidly ferments into a rich brown liquid."
+	maximum_temperature = T0C + 60
 
 /datum/chemical_reaction/gin_tonic
 	name = "Gin and Tonic"
@@ -2108,6 +2119,7 @@
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 2
 	mix_message = "The solution roils as it rapidly ferments into a red-brown liquid."
+	maximum_temperature = T0C + 60
 
 /datum/chemical_reaction/ships_surgeon
 	name = "Ship's Surgeon"

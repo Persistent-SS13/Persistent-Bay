@@ -20,7 +20,8 @@ SUBSYSTEM_DEF(autosave)
 	CalculateTimeNextSave()
 
 /datum/controller/subsystem/autosave/stat_entry()
-	..(saving ? "Currently Saving" : "Next autosave in [round(time_next_save/(1 MINUTE), 0.1)] minutes.")
+	var/time_diff = time_next_save - world.time
+	..(saving ? "Currently Saving" : "Next autosave in [round(time_diff/(1 MINUTE), 0.1)] minutes.")
 
 /datum/controller/subsystem/autosave/fire()
 	var/time_diff = time_next_save - world.time

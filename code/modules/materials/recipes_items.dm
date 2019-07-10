@@ -337,10 +337,11 @@
 	time = 25 SECONDS
 	difficulty = 1
 
+/**
 /datum/stack_recipe/bandage
 	title = "Makeshift bandage"
 	result_type = /obj/item/stack/medical/bruise_pack/makeshift
 	req_amount = 1
 	time = 2 SECONDS
 	difficulty = 0
-
+**/

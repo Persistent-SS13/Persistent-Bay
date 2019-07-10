@@ -8,9 +8,9 @@
 	icon_state = "colt"
 	magazine_type = /obj/item/ammo_magazine/box/m1911
 	allowed_magazines = /obj/item/ammo_magazine/box/m1911
-	accuracy_power = 5
-	one_hand_penalty = 2
-	fire_delay = 7
+	accuracy_power = 6
+	one_hand_penalty = 1
+	fire_delay = 5
 	caliber = CALIBER_45
 	origin_tech = list(TECH_COMBAT = 2, TECH_MATERIAL = 2)
 

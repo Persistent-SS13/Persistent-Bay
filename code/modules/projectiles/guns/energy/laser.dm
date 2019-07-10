@@ -1,5 +1,5 @@
 /obj/item/weapon/gun/energy/laser
-	name = "laser carbine"
+	name = "HI G40E laser carbine"
 	desc = "A Hephaestus Industries G40E carbine, designed to kill with concentrated energy blasts."
 	icon = 'icons/obj/guns/laser_carbine.dmi'
 	icon_state = "laser"
@@ -23,7 +23,7 @@
 	load_method = ENERGY_LOAD_FIXED_CELL
 
 /obj/item/weapon/gun/energy/laser/practice
-	name = "practice laser carbine"
+	name = "practice HI G40E laser carbine"
 	desc = "A modified version of the HI G40E, this one fires less concentrated energy bolts designed for target practice."
 	icon_state = "laserp"
 	projectile_type = /obj/item/projectile/beam/practice

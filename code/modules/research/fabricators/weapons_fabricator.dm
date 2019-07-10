@@ -320,6 +320,12 @@
 	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/pistol/holdout
 	research = "pistol_1"
+/datum/design/item/weaponfab/weapons/guns/pistol/holdout/silencer // tier 1
+	name = "LAP3 silencer attachment"
+	materials = list(MATERIAL_STEEL = 6 SHEETS) //TODO
+	build_path = /obj/item/weapon/silencer
+	research = "pistol_1"
+
 /datum/design/item/weaponfab/weapons/guns/pistol/bhp // tier 1
 	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/pistol/bhp

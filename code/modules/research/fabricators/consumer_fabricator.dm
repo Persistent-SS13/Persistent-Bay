@@ -74,6 +74,10 @@
 	build_path = /obj/item/weapon/wrapping_paper
 	materials = list(MATERIAL_WOOD = 0.5 SHEETS)
 
+/datum/design/item/consumerfab/consumer/latexballoon
+	build_path = /obj/item/latexballon
+	materials = list(MATERIAL_PLASTIC = 0.2 SHEETS)
+
 /datum/design/item/consumerfab/consumer/bikehorn
 	build_path = /obj/item/weapon/bikehorn
 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_PLASTIC = 2 SHEETS)
@@ -112,6 +116,15 @@
 	build_path = /obj/item/device/megaphone
 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 1 SHEET)
 
+/datum/design/item/consumerfab/consumer/scissors
+	build_path = /obj/item/weapon/tool/scissors
+	materials = list(MATERIAL_ALUMINIUM = 500)
+/datum/design/item/consumerfab/consumer/scissors/barber
+	build_path = /obj/item/weapon/tool/scissors/barber
+	materials = list(MATERIAL_STEEL = 800)
+/datum/design/item/consumerfab/consumer/scissors/craft
+	build_path = /obj/item/weapon/tool/scissors/craft
+	materials = list(MATERIAL_PLASTIC = 500)
 
 /datum/design/item/consumerfab/consumer/rsf // tier 3
 	build_path = /obj/item/weapon/rsf
@@ -192,6 +205,11 @@
 	build_path = /obj/item/weapon/mop
 	materials = list(MATERIAL_STEEL = 1.5 SHEETS, MATERIAL_CLOTH = 0.25 SHEETS)
 
+/datum/design/item/consumerfab/consumer/cleaning/mop/advanced
+	name = "advanced mop"
+	build_path = /obj/item/weapon/mop/advanced
+	materials = list(MATERIAL_ALUMINIUM = 4.5 SHEETS, MATERIAL_CLOTH = 1 SHEETS, MATERIAL_PHORON = 2)
+
 /datum/design/item/consumerfab/consumer/cleaning/rag
 	build_path = /obj/item/weapon/reagent_containers/glass/rag
 	materials = list(MATERIAL_CLOTH = 0.5 SHEETS)
@@ -208,6 +226,11 @@
 	build_path = /obj/item/weapon/caution
 	materials = list(MATERIAL_PLASTIC = 1 SHEETS)
 
+/datum/design/item/consumerfab/consumer/cleaning/holowet
+	name = "holographic wet sign projector"
+	build_path = /obj/item/holosign_creator
+	materials = list(MATERIAL_COPPER = 5 SHEETS, MATERIAL_ALUMINIUM = 10 SHEETS, MATERIAL_GOLD = 2 SHEETS, MATERIAL_PLASTIC = 5 SHEETS)
+
 /datum/design/item/consumerfab/consumer/cleaning/mouestrap
 	build_path = /obj/item/device/assembly/mousetrap
 	materials = list(MATERIAL_STEEL = 0.25 SHEETS, MATERIAL_WOOD = 0.25 SHEETS)
@@ -216,6 +239,23 @@
 	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GLASS = 3 SHEETS, MATERIAL_SILVER = 1 SHEETS)
 	build_path = /obj/item/weapon/reagent_containers/spray/chemsprayer
 
+/datum/design/item/consumerfab/consumer/cleaning/ironingiron
+	name = "ironing iron"
+	materials = list(MATERIAL_ALUMINIUM = 1 SHEET, MATERIAL_COPPER = 1 SHEET)
+	build_path = /obj/item/weapon/ironingiron
+
+/datum/design/item/consumerfab/consumer/cleaning/ironingboard
+	name = "ironing board"
+	materials = list(MATERIAL_ALUMINIUM = 2 SHEET)
+	build_path = /obj/item/roller/ironingboard
+
+/datum/design/item/consumerfab/consumer/cleaning/janitorcart
+	materials = list(MATERIAL_ALUMINIUM = 10 SHEET, MATERIAL_PLASTIC = 5)
+	build_path = /obj/structure/janitorialcart
+
+/datum/design/item/consumerfab/consumer/cleaning/plunger
+	materials = list(MATERIAL_WOOD = 500, MATERIAL_PLASTIC = 250)
+	build_path = /obj/item/clothing/mask/plunger
 
 
 /datum/design/item/consumerfab/consumer/lipstick

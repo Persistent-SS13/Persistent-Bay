@@ -166,12 +166,12 @@
 /datum/design/item/servicefab/culinarytools/mixsstick
 	name = "mixing stick"
 	build_path = /obj/item/weapon/glass_extra/stick
-	materials = list(MATERIAL_PLASTIC = 0.1 SHEET)
+	materials = list(MATERIAL_WOOD = 0.01 SHEET)
 
 /datum/design/item/servicefab/culinarytools/straw
 	name = "drink straw"
 	build_path = /obj/item/weapon/glass_extra/straw
-	materials = list(MATERIAL_PLASTIC = 0.1 SHEET)
+	materials = list(MATERIAL_PLASTIC = 0.01 SHEET)
 
 
 /datum/design/item/servicefab/culinarytools/utensil_spoon_plastic
@@ -189,6 +189,10 @@
 	build_path = /obj/item/weapon/material/kitchen/rollingpin
 	materials = list(MATERIAL_WOOD = 0.5 SHEET)
 
+/datum/design/item/servicefab/culinarytools/bowl
+	name = "mixing bowl"
+	build_path = /obj/item/weapon/reagent_containers/glass/beaker/bowl
+	materials = list(MATERIAL_GLASS = 0.5 SHEET)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

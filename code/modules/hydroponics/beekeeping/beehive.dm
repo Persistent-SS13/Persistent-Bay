@@ -219,7 +219,7 @@
 	if(processing)
 		if(world.time >= time_end_processing)
 			new /obj/item/honey_frame(loc)
-			new /obj/item/stack/wax(loc)
+			new /obj/item/stack/material/edible/beeswax(loc)
 			honey += processing
 			processing = 0
 			time_end_processing = 0
@@ -320,20 +320,20 @@
 		qdel(src)
 	return
 
-/obj/item/stack/wax
-	name = "wax"
-	singular_name = "wax piece"
-	desc = "Soft substance produced by bees. Used to make candles."
-	icon = 'icons/obj/beekeeping.dmi'
-	icon_state = "wax"
+// /obj/item/stack/wax
+// 	name = "wax"
+// 	singular_name = "wax piece"
+// 	desc = "Soft substance produced by bees. Used to make candles."
+// 	icon = 'icons/obj/beekeeping.dmi'
+// 	icon_state = "wax"
 
-/obj/item/stack/wax/New()
-	..()
-	recipes = wax_recipes
+// /obj/item/stack/wax/New()
+// 	..()
+// 	recipes = wax_recipes
 
-var/global/list/datum/stack_recipe/wax_recipes = list(
-	new/datum/stack_recipe/candle
-)
+// var/global/list/datum/stack_recipe/wax_recipes = list(
+// 	new/datum/stack_recipe/candle
+// )
 
 /obj/item/bee_pack
 	name = "bee pack"

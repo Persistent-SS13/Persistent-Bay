@@ -61,7 +61,7 @@
 /obj/item/stack/material/list_recipes(mob/user, recipes_sublist)
 	if(!material)
 		return
-	recipes = material.get_recipes(reinf_material && reinf_material.name)
+	recipes = material.get_recipes(reinf_material? reinf_material.name : null)
 	..()
 
 /obj/item/stack/material/get_codex_value()
@@ -900,13 +900,29 @@
 //	Pink Goo
 //--------------------------------
 /obj/item/stack/material/edible/pink_goo_slab
-	name = "pink goo"
+	name = MATERIAL_PINK_GOO
 	desc = "A mix of meats, from various origins and species, grinded finely and pressed into thick meaty slabs.."
 	singular_name = "pink goo slab"
 	icon_state = "sheet-leather"
-	default_type = "pinkgoo"
+	default_type = MATERIAL_PINK_GOO
 
 /obj/item/stack/material/edible/pink_goo_slab/ten
 	amount = 10
 /obj/item/stack/material/edible/pink_goo_slab/fifty
+	amount = 50
+
+//--------------------------------
+//	Beeswax
+//--------------------------------
+/obj/item/stack/material/edible/beeswax
+	name = MATERIAL_BEESWAX
+	desc = "Soft substance produced by bees. Used to make candles mainly."
+	singular_name = "piece"
+	icon = 'icons/obj/beekeeping.dmi'
+	icon_state = "Wax"
+	default_type = MATERIAL_BEESWAX
+
+/obj/item/stack/material/edible/beeswax/ten
+	amount = 10
+/obj/item/stack/material/edible/beeswax/fifty
 	amount = 50

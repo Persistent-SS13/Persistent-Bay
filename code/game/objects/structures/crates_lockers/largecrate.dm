@@ -8,6 +8,7 @@
 	mass = 20
 	max_health = 200
 	damthreshold_brute 	= 5
+	matter = list(MATERIAL_WOOD = 5 SHEETS)
 
 /obj/structure/largecrate/Initialize()
 	. = ..()
@@ -22,16 +23,21 @@
 
 /obj/structure/largecrate/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(isCrowbar(W))
-		new /obj/item/stack/material/wood(src)
-		var/turf/T = get_turf(src)
-		for(var/atom/movable/AM in contents)
-			if(AM.simulated) AM.forceMove(T)
 		user.visible_message("<span class='notice'>[user] pries \the [src] open.</span>", \
 							 "<span class='notice'>You pry open \the [src].</span>", \
 							 "<span class='notice'>You hear splitting wood.</span>")
-		qdel(src)
+		dismantle()
+		return 1
 	else
-		return attack_hand(user)
+		return ..()
+
+/obj/structure/largecrate/dismantle()
+	refund_matter()
+	var/turf/T = get_turf(src)
+	for(var/atom/movable/AM in contents)
+		if(AM.simulated) 
+			AM.forceMove(T)
+	..()
 
 /obj/structure/largecrate/mule
 	name = "MULE crate"

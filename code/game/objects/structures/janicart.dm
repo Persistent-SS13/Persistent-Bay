@@ -32,11 +32,27 @@
 
 
 /obj/structure/janitorialcart/New()
+	..()
+	ADD_SAVED_VAR(mybag)
+	ADD_SAVED_VAR(mymop)
+	ADD_SAVED_VAR(myspray)
+	ADD_SAVED_VAR(myreplacer)
+	ADD_SAVED_VAR(signs)
+
+/obj/structure/janitorialcart/SetupReagents()
+	. = ..()
 	create_reagents(500)
 
 /obj/structure/janitorialcart/after_load()
 	..()
-	update_icon()
+	queue_icon_update()
+
+/obj/structure/janitorialcart/Destroy()
+	mybag = null
+	mymop = null
+	myspray = null
+	myreplacer = null
+	. = ..()
 
 /obj/structure/janitorialcart/examine(mob/user)
 	if(..(user, 1))

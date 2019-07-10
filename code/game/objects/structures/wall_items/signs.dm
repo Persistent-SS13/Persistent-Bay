@@ -37,6 +37,9 @@
 
 /obj/structure/sign/on_update_icon()
 	..()
+	update_offset()
+
+/obj/structure/sign/proc/update_offset()
 	src.pixel_y = 0
 	src.pixel_x = 0
 	switch(dir)
@@ -48,6 +51,7 @@
 			src.pixel_x = -32
 		if(WEST)
 			src.pixel_x = 32
+
 
 //---------------------------------------
 // Sign Item

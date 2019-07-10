@@ -91,7 +91,7 @@ var/list/worths = list(
 					/obj/item/stack/nanopaste = -30,
 					/obj/item/stack/material/rods = -5,
 					/obj/item/stack/telecrystal = -100,
-					/obj/item/stack/wax = -5,
+					/obj/item/stack/material/edible/beeswax = -5,
 					/obj/item/stack = -5,
 //STORAGE,
 					/obj/item/weapon/storage/briefcase/crimekit = -50,

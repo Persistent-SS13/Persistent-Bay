@@ -5,6 +5,7 @@
 	icon = 'icons/obj/janitor.dmi' // move these into their own dmi if we ever add more than 1 of these
 	var/obj/item/holosign_creator/projector
 	icon_state = "holosign"
+	should_save = FALSE
 
 /obj/structure/holosign/Initialize(var/maploading, var/source_projector)
 	if(source_projector)

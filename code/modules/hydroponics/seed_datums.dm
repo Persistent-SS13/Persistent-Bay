@@ -39,7 +39,7 @@
 	name = "berries"
 	seed_name = "berry"
 	display_name = "berry bush"
-	mutants = list("glowberries","poisonberries","blueberries")
+	mutants = list("glowberries","poisonberries","blueberries", "juniperberries")
 	chems = list(/datum/reagent/nutriment = list(1,10), /datum/reagent/drink/juice/berry = list(10,10))
 	kitchen_tag = "berries"
 
@@ -61,7 +61,7 @@
 	name = "blueberries"
 	seed_name = "blueberry"
 	display_name = "blueberry bush"
-	mutants = list("berries","poisonberries","glowberries")
+	mutants = list("berries","poisonberries","glowberries", "juniperberries")
 	chems = list(/datum/reagent/nutriment = list(1,10), /datum/reagent/drink/juice/berry = list(10,10))
 	kitchen_tag = "blueberries"
 
@@ -448,7 +448,7 @@
 	name = "amanita"
 	seed_name = "fly amanita"
 	display_name = "fly amanita mushrooms"
-	mutants = list("destroyingangel",MATERIAL_PLASTIC)
+	mutants = list("destroyingangel", "plastic")
 	chems = list(/datum/reagent/nutriment = list(1), /datum/reagent/toxin/amatoxin = list(3,3), /datum/reagent/psilocybin = list(1,25))
 
 /datum/seed/mushroom/poison/New()
@@ -631,7 +631,7 @@
 	seed_name = "green grape"
 	display_name = "green grapevines"
 	mutants = null
-	chems = list(/datum/reagent/nutriment = list(1,10), /datum/reagent/kelotane = list(3,5), /datum/reagent/drink/juice/grape = list(10,10))
+	chems = list(/datum/reagent/nutriment = list(1,10), /datum/reagent/kelotane = list(3,5), /datum/reagent/drink/juice/grape/green = list(10,10))
 
 /datum/seed/grapes/green/New()
 	..()
@@ -911,7 +911,7 @@
 	name = "sugarcane"
 	seed_name = "sugarcane"
 	display_name = "sugarcanes"
-	chems = list(/datum/reagent/sugar = list(4,5))
+	chems = list(/datum/reagent/sugar = list(4,5), /datum/reagent/drink/juice/sugarcane_juice = list(4,5))
 
 /datum/seed/sugarcane/New()
 	..()
@@ -1239,7 +1239,7 @@
 		/datum/reagent/toxin/bromide = list(3,8)
 	)
 	kitchen_tag = "algae"
-	exude_gasses = list("methyl_bromide" = 3)
+	exude_gasses = list(GAS_METHYL_BROMIDE = 3)
 
 /datum/seed/algae/New()
 	..()
@@ -1276,3 +1276,54 @@
 	set_trait(TRAIT_IDEAL_HEAT, 298)
 	set_trait(TRAIT_IDEAL_LIGHT, 6)
 	set_trait(TRAIT_WATER_CONSUMPTION, 6)
+
+
+/datum/seed/agave
+	name = "agave"
+	seed_name = "agave"
+	display_name = "agave"
+	chems = list(/datum/reagent/nutriment = list(2,6), /datum/reagent/drink/juice/agave_sap = list(4,5))
+/datum/seed/agave/New()
+	..()
+	set_trait(TRAIT_HARVEST_REPEAT,1)
+	set_trait(TRAIT_MATURATION,4)
+	set_trait(TRAIT_PRODUCTION,6)
+	set_trait(TRAIT_YIELD,4)
+	set_trait(TRAIT_POTENCY,10)
+	set_trait(TRAIT_PRODUCT_ICON,"stalk")
+	set_trait(TRAIT_PRODUCT_COLOUR,"#6bbd9f")
+	set_trait(TRAIT_PLANT_COLOUR,"#6bbd9f")
+	set_trait(TRAIT_PLANT_ICON,"stalk3")
+	set_trait(TRAIT_IDEAL_HEAT, T0C + 40)
+	set_trait(TRAIT_IDEAL_LIGHT, 7)
+	set_trait(TRAIT_WATER_CONSUMPTION, 2)
+
+/datum/seed/berry/juniper
+	name = "juniper berries"
+	seed_name = "juniper berries"
+	display_name = "juniper tree"
+	mutants = list("blueberries", "berries","poisonberries","glowberries")
+	chems = list(/datum/reagent/nutriment = list(1,10), /datum/reagent/drink/juice/berry/juniper = list(10,10))
+	kitchen_tag = "juniperberries"
+
+/datum/seed/berry/juniper/New()
+	..()
+	set_trait(TRAIT_PRODUCT_COLOUR,"#1c227c")
+
+/datum/seed/anise
+	name = "anise"
+	seed_name = "anise"
+	display_name = "anise"
+	chems = list(/datum/reagent/nutriment = list(1,2), /datum/reagent/nutriment/oil/aniseoil = list(2,5))
+
+/datum/seed/anise/New()
+	..()
+	set_trait(TRAIT_HARVEST_REPEAT,1)
+	set_trait(TRAIT_MATURATION,3)
+	set_trait(TRAIT_PRODUCTION,6)
+	set_trait(TRAIT_YIELD,3)
+	set_trait(TRAIT_POTENCY,10)
+	set_trait(TRAIT_PRODUCT_ICON,"nuts")
+	set_trait(TRAIT_PRODUCT_COLOUR, COLOR_LIME)
+	set_trait(TRAIT_PLANT_ICON,"bush2")
+	set_trait(TRAIT_IDEAL_LIGHT, 5)

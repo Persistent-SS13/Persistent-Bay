@@ -54,6 +54,11 @@
 /datum/design/item/medicalfab/medicines
 	category = "Medicines"
 
+/datum/design/item/medicalfab/medicines/splint
+	name = "Medical splint"
+	build_path = /obj/item/stack/medical/splint
+	materials = list(MATERIAL_CLOTH = 1 SHEETS, MATERIAL_WOOD = 1 SHEETS)
+
 /datum/design/item/medicalfab/medicines/bruise_pack
 	build_path = /obj/item/stack/medical/bruise_pack
 	materials = list(MATERIAL_CLOTH = 5 SHEETS)

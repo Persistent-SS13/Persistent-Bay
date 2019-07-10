@@ -21,6 +21,7 @@
 	mass = 50
 	max_health = 200
 	damthreshold_brute 	= 5
+	matter = list()
 	var/material/padding_material
 	var/base_icon = "bed"
 	var/buckling_sound = 'sound/effects/buckle.ogg'
@@ -43,7 +44,16 @@
 		return
 	if(new_padding_material && !map_storage_loaded)
 		padding_material = SSmaterials.get_material_by_name(new_padding_material)
+	
+	update_material()
 	queue_icon_update()
+
+/obj/structure/bed/proc/update_material()
+	//Setup matter values so refunds works properly
+	matter = list()
+	matter[material.name] = 2 SHEETS
+	if(padding_material)
+		matter[padding_material.name] = 1 SHEET
 
 /obj/structure/bed/get_material()
 	return material
@@ -171,16 +181,17 @@
 	if(padding_material)
 		padding_material.place_sheet(get_turf(src))
 		padding_material = null
+	update_material()
 	update_icon()
 
 /obj/structure/bed/proc/add_padding(var/padding_type)
 	padding_material = SSmaterials.get_material_by_name(padding_type)
+	update_material()
 	update_icon()
 
 /obj/structure/bed/dismantle()
 	refund_matter()
-	if(padding_material)
-		padding_material.place_sheet(get_turf(src))
+	return ..()
 
 /obj/structure/bed/psych
 	name = "psychiatrist's couch"
@@ -214,6 +225,12 @@
 	var/obj/item/weapon/reagent_containers/beaker
 	var/iv_attached = 0
 	var/iv_stand = TRUE
+
+/obj/structure/bed/roller/New(newloc, new_material, new_padding_material)
+	. = ..()
+	ADD_SAVED_VAR(beaker)
+	ADD_SAVED_VAR(iv_attached)
+	ADD_SAVED_VAR(iv_stand)
 
 /obj/structure/bed/roller/on_update_icon()
 	overlays.Cut()

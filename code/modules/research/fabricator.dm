@@ -84,8 +84,13 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 
 /obj/machinery/fabricator/Destroy()
 	can_disconnect(connected_faction)
+	connected_faction = null
+	selected_design = null
+	LAZYCLEARLIST(queue)
+	queue = null
+	if(files)
+		QDEL_NULL(files)
 	..()
-	QDEL_NULL(src)
 
 /obj/machinery/fabricator/Process()
 	..()

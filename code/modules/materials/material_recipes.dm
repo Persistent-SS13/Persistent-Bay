@@ -307,7 +307,7 @@
 	. = ..()
 	if(reinforce_material)
 		return
-	recipes_buffer.items += new/datum/stack_recipe/bandage(src)
+//	recipes_buffer.items += new/datum/stack_recipe/bandage(src)
 	. += finish_generate_recipes()
 
 /material/beeswax/generate_recipes(reinforce_material)

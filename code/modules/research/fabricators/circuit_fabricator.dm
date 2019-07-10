@@ -546,9 +546,13 @@
 
 /datum/design/circuit/cryopod
 	name = "Cryopod Person Storage"
-	id = "cryopod"
-	req_tech = list(TECH_ENGINEERING = 2)
 	build_path = /obj/item/weapon/circuitboard/cryopod
+
+/datum/design/circuit/cryopod/personal
+	name = "Personal Cryopod Person Storage"
+	build_path = /obj/item/weapon/circuitboard/cryopod/personal
+
+
 
 /**
 /datum/design/circuit/atm

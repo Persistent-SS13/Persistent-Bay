@@ -2,13 +2,20 @@
 	expected_type = /atom
 	var/atom/atom_holder
 	var/list/labels
+	should_save = TRUE
 
 /datum/extension/labels/New()
 	..()
 	atom_holder = holder
+	ADD_SAVED_VAR(atom_holder)
+	ADD_SAVED_VAR(labels)
+	ADD_SKIP_EMPTY(labels)
 
 /datum/extension/labels/Destroy()
 	atom_holder = null
+	LAZYCLEARLIST(labels)
+	QDEL_NULL(labels)
+	RemoveAllLabels()
 	return ..()
 
 /datum/extension/labels/proc/AttachLabel(var/mob/user, var/label)
@@ -19,8 +26,9 @@
 		atom_holder.verbs += /atom/proc/RemoveLabel
 	LAZYADD(labels, label)
 
-	user.visible_message("<span class='notice'>\The [user] attaches a label to \the [atom_holder].</span>", \
-						 "<span class='notice'>You attach a label, '[label]', to \the [atom_holder].</span>")
+	if(user)
+		user.visible_message("<span class='notice'>\The [user] attaches a label to \the [atom_holder].</span>", \
+						 	"<span class='notice'>You attach a label, '[label]', to \the [atom_holder].</span>")
 
 	var/old_name = atom_holder.name
 	atom_holder.name = "[atom_holder.name] ([label])"
@@ -38,9 +46,9 @@
 	var/index = findtextEx(atom_holder.name, full_label)
 	if(!index) // Playing it safe, something might not have set the name properly
 		return
-
-	user.visible_message("<span class='notice'>\The [user] removes a label from \the [atom_holder].</span>", \
-						 "<span class='notice'>You remove a label, '[label]', from \the [atom_holder].</span>")
+	if(user)
+		user.visible_message("<span class='notice'>\The [user] removes a label from \the [atom_holder].</span>", \
+							"<span class='notice'>You remove a label, '[label]', from \the [atom_holder].</span>")
 
 	var/old_name = atom_holder.name
 	// We find and replace the first instance, since that's the one we removed from the list
@@ -91,3 +99,10 @@
 		if(has_extension(src, /datum/extension/labels))
 			var/datum/extension/labels/L = get_extension(src, /datum/extension/labels)
 			L.RemoveLabel(usr, label)
+
+//Convenience proc to clear labels, and properly clear the atom_holder's name
+/datum/extension/labels/proc/RemoveAllLabels(var/mob/user)
+	if(!LAZYLEN(labels))
+		return
+	for(var/lbl in labels)
+		RemoveLabel(user, lbl)

@@ -23,13 +23,21 @@
 	var/force_divisor = 400                             // Force equates to speed. Speed/5 equates to a damage multiplier for whoever you hit.
 	                                                    // For reference, a fully pressurized oxy tank at 50% gas release firing a health
 	                                                    // analyzer with a force_divisor of 10 hit with a damage multiplier of 3000+.
+
+/obj/item/weapon/gun/launcher/pneumatic/New()
+	. = ..()
+	ADD_SAVED_VAR(tank)
+	ADD_SAVED_VAR(item_storage)
+	ADD_SAVED_VAR(fire_pressure)
+
 /obj/item/weapon/gun/launcher/pneumatic/Initialize()
 	. = ..()
-	item_storage = new(src)
-	item_storage.SetName("hopper")
-	item_storage.max_w_class = max_w_class
-	item_storage.max_storage_space = max_storage_space
-	item_storage.use_sound = null
+	if(!map_storage_loaded)
+		item_storage = new(src)
+		item_storage.SetName("hopper")
+		item_storage.max_w_class = max_w_class
+		item_storage.max_storage_space = max_storage_space
+		item_storage.use_sound = null
 
 /obj/item/weapon/gun/launcher/pneumatic/verb/set_pressure() //set amount of tank pressure.
 	set name = "Set Valve Pressure"

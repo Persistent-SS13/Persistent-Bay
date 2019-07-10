@@ -14,6 +14,10 @@
 	mass = 5
 	max_health = 40
 
+/obj/structure/lattice/New()
+	. = ..()
+	ADD_SAVED_VAR(init_material)
+
 /obj/structure/lattice/get_material()
 	return material
 
@@ -35,7 +39,7 @@
 		if(LAT != src)
 			log_debug("Found multiple lattices at '[log_info_line(loc)]'. Deleting extra lattices!")
 			qdel(LAT)
-	update_icon()
+	queue_icon_update()
 	if(!mapload)
 		update_neighbors()
 

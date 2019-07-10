@@ -24,17 +24,16 @@
 	fill_reagents()
 
 /obj/item/weapon/reagent_containers/food/snacks/grown/Initialize()
-	. = ..()
 	if(!map_storage_loaded)
 		//Only get plant type from SSPlant if we're newly created. Otherwise keep our stored properties
 		if(!SSplants)
 			log_error("<span class='danger'>Plant controller does not exist and [src] requires it. Aborting.</span>")
 			return INITIALIZE_HINT_QDEL
 		seed = SSplants.seeds[plantname]
-		SetupReagents()
 	if(!seed)
+		log_error("[src]\ref[src] at loc [loc]([x], [y], [z]) didn't have a seed when initialized!")
 		return INITIALIZE_HINT_QDEL
-
+	. = ..() //SetupReagents is called in the base class, and it calls fill_reagents, which needs the seed to be setup!
 	SetName("[seed.seed_name]")
 	trash = seed.get_trash_type()
 	if(!dried_type)
@@ -45,6 +44,7 @@
 
 /obj/item/weapon/reagent_containers/food/snacks/grown/proc/fill_reagents()
 	if(!seed)
+		log_error("[src]\ref[src] had no seed when reagents were intialized!")
 		return
 
 	if(!seed.chems)

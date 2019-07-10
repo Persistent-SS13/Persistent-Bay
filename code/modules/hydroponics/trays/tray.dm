@@ -132,7 +132,33 @@
 
 /obj/machinery/portable_atmospherics/hydroponics/New()
 	. = ..()
-	
+	ADD_SAVED_VAR(waterlevel)
+	ADD_SAVED_VAR(nutrilevel)
+	ADD_SAVED_VAR(pestlevel)
+	ADD_SAVED_VAR(weedlevel)
+	ADD_SAVED_VAR(dead)
+	ADD_SAVED_VAR(harvest)
+	ADD_SAVED_VAR(age)
+	ADD_SAVED_VAR(sampled)
+	ADD_SAVED_VAR(yield_mod)
+	ADD_SAVED_VAR(mutation_mod)
+	ADD_SAVED_VAR(toxins)
+	ADD_SAVED_VAR(mutation_level)
+	ADD_SAVED_VAR(tray_light)
+	ADD_SAVED_VAR(plant_health)
+
+	ADD_SAVED_VAR(closed_system)
+
+	ADD_SAVED_VAR(temp_chem_holder)
+	ADD_SAVED_VAR(labelled)
+	ADD_SAVED_VAR(seed)
+	ADD_SAVED_VAR(req_access_faction)
+
+/obj/machinery/portable_atmospherics/hydroponics/before_save()
+	. = ..()
+	if(connected_faction)
+		req_access_faction = connected_faction.uid
+
 /obj/machinery/portable_atmospherics/hydroponics/after_load()
 	..()
 	if(req_access_faction)

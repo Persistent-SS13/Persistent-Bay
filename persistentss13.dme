@@ -2502,6 +2502,7 @@
 #include "code\modules\paperwork\stamps.dm"
 #include "code\modules\persistence\filth.dm"
 #include "code\modules\persistence\graffiti.dm"
+#include "code\modules\persistence_modules\laborexile\exile.dm"
 #include "code\modules\power\apc.dm"
 #include "code\modules\power\batteryrack.dm"
 #include "code\modules\power\breaker_box.dm"

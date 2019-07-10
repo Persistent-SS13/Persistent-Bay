@@ -252,7 +252,7 @@
 						"body" = pencode2html(message.stored_data),
 						"source" = message.source,
 						"timestamp" = message.timestamp,
-						"ref" = "\ref[message.uid]"
+						"ref" = "\ref[message]"
 					)))
 				data["messages"] = all_messages
 				data["messagecount"] = all_messages.len
@@ -369,7 +369,7 @@
 		return 1
 
 	if(href_list["edit_recipient"])
-		var/newrecipient = sanitize(input(user,"Enter recipient's email address:", "Recipient", msg_recipient), 100)
+		var/newrecipient = sanitize(input(user,"Enter recipient's name:", "Recipient", msg_recipient), 100)
 		if(newrecipient)
 			msg_recipient = newrecipient
 			addressbook = 0

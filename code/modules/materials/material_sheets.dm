@@ -61,7 +61,7 @@
 /obj/item/stack/material/list_recipes(mob/user, recipes_sublist)
 	if(!material)
 		return
-	recipes = material.get_recipes(reinf_material && reinf_material.name)
+	recipes = material.get_recipes(reinf_material? reinf_material.name : null)
 	..()
 
 /obj/item/stack/material/get_codex_value()

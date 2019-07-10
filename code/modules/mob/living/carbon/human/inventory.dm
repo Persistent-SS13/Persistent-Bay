@@ -246,9 +246,13 @@ This saves us from having to call add_fingerprint() any time something is put in
 	if(l_hand)
 		W = l_hand
 		W.hud_layerise()
+		W.screen_loc = ui_lhand
 	if(r_hand)
 		W = r_hand
 		W.hud_layerise()
+		W.screen_loc = ui_rhand
+
+
 	if(belt)
 		W = belt
 		W.hud_layerise()

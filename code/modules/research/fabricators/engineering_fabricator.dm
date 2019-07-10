@@ -254,21 +254,21 @@
 	name = "Experimental welding tool"
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_PLASTEEL = 5 SHEETS, MATERIAL_PHORON = 5 SHEETS)
 	build_path = /obj/item/weapon/tool/weldingtool/experimental
-
+	research = "welding_experimental"
 /datum/design/item/engifab/engitools/adv/electric_welder
 	name = "Electric welding tool"
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GRAPHITE = 2 SHEETS, MATERIAL_COPPER = 5 SHEETS)
 	build_path = /obj/item/weapon/tool/weldingtool/electric
-
+	research = "welding_experimental"
 /datum/design/item/engifab/engitools/adv/airlock_brace
 	name = "Airlock brace"
-	materials = list(MATERIAL_STEEL = 5 SHEET, MATERIAL_PLASTEEL = 5 SHEETS)
+	materials = list(MATERIAL_STEEL = 6 SHEET, MATERIAL_PLASTEEL = 6 SHEETS)
 	build_path = /obj/item/weapon/airlock_brace
 	research = "bracejack"
 
 /datum/design/item/engifab/engitools/adv/brace_jack
 	name = "Brace jack"
-	materials = list(MATERIAL_STEEL = 3 SHEETS)
+	materials = list(MATERIAL_STEEL = 4 SHEETS)
 	build_path = /obj/item/weapon/tool/crowbar/brace_jack
 	research = "bracejack"
 
@@ -284,24 +284,12 @@
 	build_path = /obj/item/clothing/glasses/meson
 	research = "mesons"
 
-
 /datum/design/item/engifab/engitools/adv/RPED
 	name = "Rapid Part Exchange Device"
 	desc = "Special mechanical module made to store, sort, and apply standard machine parts."
 	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GLASS = 1.5 SHEETS, MATERIAL_GOLD = 1 SHEET, MATERIAL_PHORON = 1 SHEET)
 	build_path = /obj/item/weapon/storage/part_replacer
 	research = "rped"
-
-/datum/design/item/engifab/engitools/adv/brace_jack
-	name = "Brace jack"
-	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 2)
-	materials = list(MATERIAL_STEEL = 2 SHEETS)
-	build_path = /obj/item/weapon/tool/crowbar/brace_jack
-
-/datum/design/item/engifab/engitools/adv/airlock_brace
-	name = "Airlock Brace"
-	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 2 SHEETS)
-	build_path = /obj/item/weapon/airlock_brace
 
 //What's this duplicated entry for? Seems like its using the old format too
 // /datum/design/item/engifab/engitools/adv/experimental_welder
@@ -549,7 +537,7 @@
 	build_path = /obj/item/weapon/light/bulb/orange
 
 
-
+// STOCK PARTS //
 
 
 /datum/design/item/engifab/parts/cell_device

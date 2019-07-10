@@ -5,6 +5,12 @@
 	var/desc=""
 	var/icon_state=""
 
+/datum/poster/New()
+	. = ..()
+	ADD_SAVED_VAR(name)
+	ADD_SAVED_VAR(desc)
+	ADD_SAVED_VAR(icon_state)
+
 /obj/structure/sign/poster
 	name = "poster"
 	desc = "A large piece of space-resistant printed paper."
@@ -20,29 +26,28 @@
 
 /obj/structure/sign/poster/New(var/newloc, var/placement_dir=null, var/serial=null)
 	..(newloc)
-
+	set_dir(placement_dir)
 	if(!serial)
 		serial = rand(1, poster_designs.len) //use a random serial if none is given
-
 	serial_number = serial
-	var/datum/poster/design = poster_designs[serial_number]
-	set_poster(design)
-
-	switch (placement_dir)
-		if (NORTH)
-			pixel_x = 0
-			pixel_y = 32
-		if (SOUTH)
-			pixel_x = 0
-			pixel_y = -32
-		if (EAST)
-			pixel_x = 32
-			pixel_y = 0
-		if (WEST)
-			pixel_x = -32
-			pixel_y = 0
+	ADD_SAVED_VAR(serial_number)
+	ADD_SAVED_VAR(poster_type)
+	ADD_SAVED_VAR(ruined)
 
 /obj/structure/sign/poster/Initialize()
+	if(serial_number <= 0 || serial_number >= LAZYLEN(poster_designs))
+		//If our serial number is out of date, update it
+		serial_number = null
+		for(var/key in poster_designs)
+			var/datum/poster/P = poster_designs[key]
+			if(P && P.type == poster_type)
+				serial_number = key
+		if(!serial_number)
+			log_error("[src]\ref[src]([x], [y], [z]) deleted poster because poster design [poster_type] doesn't exist!")
+			return INITIALIZE_HINT_QDEL
+
+	set_poster(poster_designs[serial_number])
+
 	if(!map_storage_loaded)
 		if (poster_type)
 			var/path = ispath(poster_type) ? poster_type : text2path(poster_type)
@@ -54,6 +59,7 @@
 	name = "[initial(name)] - [design.name]"
 	desc = "[initial(desc)] [design.desc]"
 	icon_state = design.icon_state // poster[serial_number]
+	poster_type = design.type
 
 /obj/structure/sign/poster/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(isWirecutter(W) || isScissors(W))
@@ -86,3 +92,18 @@
 	P.loc = newloc
 	src.loc = P
 	qdel(src)
+
+/obj/structure/sign/poster/update_offset()
+	switch (dir)
+		if (NORTH)
+			pixel_x = 0
+			pixel_y = 32
+		if (SOUTH)
+			pixel_x = 0
+			pixel_y = -32
+		if (EAST)
+			pixel_x = 32
+			pixel_y = 0
+		if (WEST)
+			pixel_x = -32
+			pixel_y = 0

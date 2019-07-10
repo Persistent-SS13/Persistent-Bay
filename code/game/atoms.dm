@@ -37,6 +37,10 @@
 		verbs += /atom/proc/climb_on
 	
 	ADD_SAVED_VAR(reagents)
+	ADD_SAVED_VAR(blood_DNA)
+	ADD_SAVED_VAR(was_bloodied)
+	ADD_SAVED_VAR(blood_color)
+	ADD_SAVED_VAR(germ_level)
 	ADD_SKIP_EMPTY(reagents)
 
 //Called after New if the map is being loaded. mapload = TRUE

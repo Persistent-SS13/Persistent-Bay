@@ -9,6 +9,12 @@
 	var/list/transfer_amounts = list(REM, 1, 2)
 	var/transfer_amount = 1
 
+/obj/structure/iv_drip/New()
+	. = ..()
+	ADD_SAVED_VAR(mode)
+	ADD_SAVED_VAR(beaker)
+	ADD_SAVED_VAR(transfer_amount)
+
 /obj/structure/iv_drip/verb/set_amount_per_transfer_from_this()
 	set name = "Set IV transfer amount"
 	set category = "Object"

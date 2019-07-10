@@ -15,15 +15,19 @@
 	icon_state = "rolled_poster"
 	var/serial_number = 0
 
+/obj/item/weapon/contraband/poster/New(turf/loc, given_serial)
+	. = ..()
+	ADD_SAVED_VAR(serial_number)
 
-/obj/item/weapon/contraband/poster/New(turf/loc, var/given_serial = 0)
-	if(given_serial == 0)
-		serial_number = rand(1, poster_designs.len)
-	else
-		serial_number = given_serial
-	name += " - No. [serial_number]"
-	..(loc)
-
+/obj/item/weapon/contraband/poster/Initialize(mapload, var/given_serial = 0)
+	if(!map_storage_loaded)
+		if(given_serial == 0)
+			serial_number = rand(1, poster_designs.len)
+		else
+			serial_number = given_serial
+	SetName("rolled-up poster - No. [serial_number]")
+	. = ..()
+	
 //Places the poster on a wall
 /obj/item/weapon/contraband/poster/afterattack(var/atom/A, var/mob/user, var/adjacent, var/clickparams)
 	if (!adjacent)

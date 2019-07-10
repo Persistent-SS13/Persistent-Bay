@@ -83,8 +83,13 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 		CRASH("[src]\ref[src] no circuit found for the fabricator")
 
 /obj/machinery/fabricator/Destroy()
+	connected_faction = null
+	selected_design = null
+	LAZYCLEARLIST(queue)
+	queue = null
+	if(files)
+		QDEL_NULL(files)
 	..()
-	QDEL_NULL(src)
 
 /obj/machinery/fabricator/Process()
 	..()

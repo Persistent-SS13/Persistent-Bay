@@ -46,7 +46,7 @@ SUBSYSTEM_DEF(market)
 					if((faction.weekly_assigned + 7 DAY) < world.realtime)
 						faction.assign_weekly_objective()
 			else
-				if((faction.daily_assigned + 7 DAYS) < world.realtime)
+				if((faction.weekly_assigned + 7 DAYS) < world.realtime)
 					faction.assign_weekly_objective()
 
 
@@ -149,7 +149,7 @@ SUBSYSTEM_DEF(market)
 			if(R)
 				payee_account = R.linked_account
 		if(payee_account)
-			if(payee_account.money >= pay_amount)
+			if(payer_account.money >= pay_amount)
 				var/datum/transaction/T = new("[payee] (via recurring contract)", "Contract Payment", -pay_amount, "Recurring Contract")
 				payer_account.do_transaction(T)
 				//transfer the money

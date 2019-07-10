@@ -13,7 +13,9 @@
 /material/proc/get_recipes(var/reinf_mat)
 	var/key = reinf_mat ? reinf_mat : "base"
 	if(!LAZYACCESS(recipes,key))
-		LAZYSET(recipes,key,generate_recipes(reinf_mat))
+		var/list/generated_recipes = generate_recipes(reinf_mat)
+		generated_recipes +=  finish_generate_recipes()
+		LAZYSET(recipes,key,generated_recipes)
 	return recipes[key]
 
 /material/proc/create_recipe_list(base_type)
@@ -42,7 +44,7 @@
 	recipes_buffer.items += new/datum/stack_recipe/spoon(src)
 	recipes_buffer.items += new/datum/stack_recipe/ring(src)
 	recipes_buffer.items += new/datum/stack_recipe/clipboard(src)
-		
+
 	if(integrity>50)
 		recipes_buffer.furnitures += new/datum/stack_recipe/furniture/chair(src) //NOTE: the wood material has it's own special chair recipe
 		. += new/datum/stack_recipe_list("padded [display_name] chairs", create_recipe_list(/datum/stack_recipe/furniture/chair/padded))
@@ -84,7 +86,7 @@
 		. += new/datum/stack_recipe_list("Weapons", recipes_buffer.weapons.Copy())
 	if(LAZYLEN(recipes_buffer.flooring))
 		. += new/datum/stack_recipe_list("Flooring", recipes_buffer.flooring.Copy())
-		
+
 	//Clean up
 	qdel(recipes_buffer)
 	recipes_buffer = null
@@ -143,11 +145,11 @@
 	recipes_buffer.storage += new/datum/stack_recipe/furniture/coffin(src)
 	recipes_buffer.storage += new/datum/stack_recipe/morgue(src)
 	recipes_buffer.storage += new/datum/stack_recipe/storage/tank_dispenser(src)
-	
+
 	recipes_buffer.structures += new/datum/stack_recipe/stairs(src)
 	recipes_buffer.structures += new/datum/stack_recipe/ladder(src)
 	recipes_buffer.structures += new/datum/stack_recipe/handrail(src)
-	
+
 	. += new/datum/stack_recipe_list("Wall-Mounted Frames", list(
 			new/datum/stack_recipe/light_switch(src),
 			new/datum/stack_recipe/light_small(src),
@@ -168,8 +170,6 @@
 	recipes_buffer.items += new/datum/stack_recipe/grenade(src)
 	recipes_buffer.weapons += new/datum/stack_recipe/cannon(src)
 
-	. += finish_generate_recipes()
-
 
 /material/plasteel/generate_recipes(var/reinforce_material)
 	. = ..()
@@ -179,7 +179,6 @@
 	recipes_buffer.storage += new/datum/stack_recipe/furniture/crate(src)
 	recipes_buffer.furnitures += new/datum/stack_recipe/anomaly_container(src)
 	recipes_buffer.weapons += new/datum/stack_recipe/grip(src)
-	. += finish_generate_recipes()
 
 /material/stone/generate_recipes(var/reinforce_material)
 	. = ..()
@@ -187,7 +186,6 @@
 		return
 	recipes_buffer.structures |= new/datum/stack_recipe/furniture/planting_bed(src)
 	recipes_buffer.structures |= new/datum/stack_recipe/fountain(src)
-	. += finish_generate_recipes()
 
 /material/plastic/generate_recipes(var/reinforce_material)
 	. = ..()
@@ -207,9 +205,6 @@
 	recipes_buffer.furnitures += new/datum/stack_recipe/furniture/punching_bag(src)
 
 	. += new/datum/stack_recipe_list("Target dummies", create_recipe_list(/datum/stack_recipe/target))
-
-
-	. += finish_generate_recipes()
 
 /material/wood/generate_recipes(var/reinforce_material)
 	. = ..()
@@ -240,35 +235,30 @@
 	recipes_buffer.storage += new/datum/stack_recipe/furniture/coffin/wooden(src)
 	recipes_buffer.storage += new/datum/stack_recipe/orebox(src)
 	recipes_buffer.storage += new/datum/stack_recipe/storage/shipping_crate(src)
-	. += finish_generate_recipes()
 
 /material/wood/mahogany/generate_recipes(var/reinforce_material)
 	. = ..()
 	if(reinforce_material)
 		return
 	recipes_buffer.flooring += new/datum/stack_recipe/tile/mahogany(src)
-	. += finish_generate_recipes()
 
 /material/wood/maple/generate_recipes(var/reinforce_material)
 	. = ..()
 	if(reinforce_material)
 		return
 	recipes_buffer.flooring += new/datum/stack_recipe/tile/maple(src)
-	. += finish_generate_recipes()
 
 /material/wood/ebony/generate_recipes(var/reinforce_material)
 	. = ..()
 	if(reinforce_material)
 		return
 	recipes_buffer.flooring += new/datum/stack_recipe/tile/ebony(src)
-	. += finish_generate_recipes()
 
 /material/wood/walnut/generate_recipes(var/reinforce_material)
 	. = ..()
 	if(reinforce_material)
 		return
 	recipes_buffer.flooring += new/datum/stack_recipe/tile/walnut(src)
-	. += finish_generate_recipes()
 
 /material/cardboard/generate_recipes(var/reinforce_material)
 	. = ..()
@@ -278,7 +268,6 @@
 	recipes_buffer.items += new/datum/stack_recipe/cardborg_helmet(src)
 	. += new/datum/stack_recipe_list("boxes", create_recipe_list(/datum/stack_recipe/box))
 	. += new/datum/stack_recipe_list("folders", create_recipe_list(/datum/stack_recipe/folder))
-	. += finish_generate_recipes()
 
 /material/aluminium/generate_recipes(var/reinforce_material)
 	. = ..()
@@ -294,23 +283,19 @@
 	recipes_buffer.storage += new/datum/stack_recipe/storage/wall/extinguisher_cabinet(src)
 
 	recipes_buffer.items += new/datum/stack_recipe/grenade(src)
-	. += finish_generate_recipes()
 
 /material/silver/generate_recipes(reinforce_material)
 	. = ..()
 	if(reinforce_material)
 		return
 	recipes_buffer.furnitures += new/datum/stack_recipe/furniture/mirror(src)
-	. += finish_generate_recipes()
 
 /material/cloth/generate_recipes(reinforce_material)
 	. = ..()
 	if(reinforce_material)
 		return
 //	recipes_buffer.items += new/datum/stack_recipe/bandage(src)
-	. += finish_generate_recipes()
 
 /material/beeswax/generate_recipes(reinforce_material)
 	. = ..()
 	recipes_buffer.items += new/datum/stack_recipe/candle(src)
-	. += finish_generate_recipes()

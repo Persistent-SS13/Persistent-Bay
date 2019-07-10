@@ -43,6 +43,9 @@
 	else
 		return ..()
 
+/obj/item/weapon/tool/scissors/can_graffiti()
+	return TRUE
+
 // Barber scissors, used especially for cutting of hair
 /obj/item/weapon/tool/scissors/barber
 	name = "Barber's Scissors"

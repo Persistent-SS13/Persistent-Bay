@@ -29,23 +29,24 @@
 		/datum/reagent/nutriment/vinegar = /obj/item/weapon/reagent_containers/food/condiment/vinegar
 		)
 
-/obj/item/weapon/reagent_containers/food/condiment/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
-	if(istype(W, /obj/item/weapon/pen) || istype(W, /obj/item/device/flashlight/pen))
-		var/tmp_label = sanitizeSafe(input(user, "Enter a label for [name]", "Label", label_text), MAX_NAME_LEN)
-		if(tmp_label == label_text)
-			return
-		if(length(tmp_label) > 10)
-			to_chat(user, "<span class='notice'>The label can be at most 10 characters long.</span>")
-		else
-			if(length(tmp_label))
-				to_chat(user, "<span class='notice'>You set the label to \"[tmp_label]\".</span>")
-				label_text = tmp_label
-				name = addtext(name," ([label_text])")
-			else
-				to_chat(user, "<span class='notice'>You remove the label.</span>")
-				label_text = null
-				on_reagent_change()
-		return
+//Handled in base class
+// /obj/item/weapon/reagent_containers/food/condiment/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
+// 	if(istype(W, /obj/item/weapon/pen) || istype(W, /obj/item/device/flashlight/pen))
+// 		var/tmp_label = sanitizeSafe(input(user, "Enter a label for [name]", "Label", label), MAX_NAME_LEN)
+// 		if(tmp_label == label)
+// 			return
+// 		if(length(tmp_label) > 10)
+// 			to_chat(user, "<span class='notice'>The label can be at most 10 characters long.</span>")
+// 		else
+// 			if(length(tmp_label))
+// 				to_chat(user, "<span class='notice'>You set the label to \"[tmp_label]\".</span>")
+// 				label = tmp_label
+// 				name = addtext(name," ([label])")
+// 			else
+// 				to_chat(user, "<span class='notice'>You remove the label.</span>")
+// 				label = null
+// 				on_reagent_change()
+// 		return
 
 
 
@@ -101,8 +102,9 @@
 			icon_state = "mixedcondiments"
 		else
 			icon_state = "emptycondiment"
-	if(label_text)
-		name = addtext(name," ([label_text])")
+	//Handled by label extension via events
+	// if(label)
+	// 	name = addtext(name," ([label])")
 
 /obj/item/weapon/reagent_containers/food/condiment/enzyme
 	name = "universal enzyme"

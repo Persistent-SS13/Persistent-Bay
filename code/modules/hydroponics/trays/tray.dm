@@ -222,6 +222,10 @@
 
 /obj/machinery/portable_atmospherics/hydroponics/Destroy()
 	STOP_PROCESSING(SSplants, src)
+	QDEL_NULL(temp_chem_holder)
+	if(seed)
+		QDEL_NULL(seed)
+	connected_faction = null
 	. = ..()
 
 /obj/machinery/portable_atmospherics/hydroponics/LateInitialize()

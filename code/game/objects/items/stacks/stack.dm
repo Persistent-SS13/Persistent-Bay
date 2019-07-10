@@ -45,6 +45,7 @@
 		return 1
 	if (src && usr && usr.machine == src)
 		usr << browse(null, "window=stack")
+	synths = null
 	return ..()
 
 //Called whenever stacked amount changes
@@ -118,6 +119,7 @@
 				if (!(max_multiplier in multipliers))
 					t1 += " <A href='?src=\ref[src];make=[i];multiplier=[max_multiplier]'>[max_multiplier*R.res_amount]x</A>"
 
+	t1 += "<br><div><a href='?src=\ref[src];top=1'>go back</a></div>"
 	t1 += "</TT></body></HTML>"
 	user << browse(JOINTEXT(t1), "window=stack")
 	onclose(user, "stack")
@@ -146,7 +148,6 @@
 	if (use(required))
 		var/atom/O = recipe.spawn_result(user, user.loc, produced)
 		O.add_fingerprint(user)
-
 		user.put_in_hands(O)
 
 /obj/item/stack/Topic(href, href_list)
@@ -171,6 +172,9 @@
 			return
 
 		src.produce_recipe(R, multiplier, usr)
+	
+	if(href_list["top"])
+		list_recipes(usr) //Otherwise just draw the main screen again
 
 	if (src && usr.machine==src) //do not reopen closed window
 		spawn( 0 )

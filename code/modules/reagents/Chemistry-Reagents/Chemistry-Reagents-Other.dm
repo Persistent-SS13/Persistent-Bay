@@ -617,3 +617,14 @@
 	if(E && !BP_IS_ROBOTIC(E))
 		E.take_internal_damage(removed * 2)  //Methanol causes blindness
 
+//Gonna be used in a few upcoming things like cheap salves and stuff
+//C15 H31 C O O C30 H61
+/datum/reagent/beeswax
+	name = "beeswax"
+	description = "Beeswax, from bees."
+	taste_description = "chewy"
+	taste_mult = 2
+	reagent_state = LIQUID
+	heating_point = T0C + 64 //Melting point
+	color = "#fff343"
+	gas_burn_product = GAS_CARBON_MONOXIDE //Beeswax is loaded with carbon and hydrogen sooo

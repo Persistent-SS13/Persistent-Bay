@@ -9,6 +9,10 @@
 
 	var/construction_stage = 1
 
+/obj/item/weapon/coilgun_assembly/New()
+	. = ..()
+	ADD_SAVED_VAR(construction_stage)
+
 /obj/item/weapon/coilgun_assembly/attackby(var/obj/item/thing, var/mob/user)
 
 	if(istype(thing, /obj/item/stack/material) && construction_stage == 1)

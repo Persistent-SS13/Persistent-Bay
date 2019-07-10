@@ -9,5 +9,5 @@
 		if("large") C = new /obj/item/weapon/reagent_containers/chem_disp_cartridge(usr.loc)
 	C.reagents.add_reagent(reagent, C.volume)
 	var/datum/reagent/R = reagent
-	C.setLabel(initial(R.name))
+	C.set_label(null, initial(R.name))
 	log_and_message_admins("spawned a [size] reagent container containing [reagent]")

@@ -58,6 +58,8 @@
 #define MATERIAL_FIBERGLASS              "fiberglass"
 #define MATERIAL_GRAPHENE                "graphene"
 #define MATERIAL_BORON                   "boron"
+#define MATERIAL_BEESWAX                 "beeswax"
+#define MATERIAL_PINK_GOO                "pink goo"
 
 //ORES
 #define MATERIAL_TETRAHEDRITE            "tetrahedrite"

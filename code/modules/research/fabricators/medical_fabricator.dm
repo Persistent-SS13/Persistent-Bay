@@ -96,6 +96,10 @@
 	build_path = /obj/item/bodybag/rescue
 	materials = list(MATERIAL_CLOTH = 2 SHEETS, MATERIAL_PHORON = 1 SHEET)
 
+/datum/design/item/medicalfab/meditools/autoinjector
+	build_path = /obj/item/weapon/reagent_containers/hypospray/autoinjector
+	materials = list(MATERIAL_GLASS = 600)
+
 /datum/design/item/medicalfab/meditools/dropper
 	name = "dropper"
 	build_path = /obj/item/weapon/reagent_containers/dropper

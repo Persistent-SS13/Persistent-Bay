@@ -644,7 +644,7 @@ research holder datum.
 	name = "Pump Shotgun Implementation"
 	desc = "The pump shotgun is an effective weapon for personal security at home or abroad. Unlocks double barrel shotgun designs for the appropriate fabricators."
 	tier = 2
-	points = 350
+	points = 500
 	uid = "shotgun_2"
 	prereqs = list("shotgun_1")
 
@@ -652,7 +652,7 @@ research holder datum.
 	name = "Combat Shotgun Implementation"
 	desc = "The combat shotgun is a powerful weapon that can take down high value targets. Unlocks combat shotgun designs for the appropriate fabricators."
 	tier = 3
-	points = 700
+	points = 1200
 	uid = "shotgun_3"
 	prereqs = list("shotgun_2")
 
@@ -660,7 +660,7 @@ research holder datum.
 	name = "Improved Automatics"
 	desc = "Larger automatic weapons require both hands free in order to be effective. Unlocks 10mm sub-machine gun designs for the appropriate fabricators."
 	tier = 3
-	points = 800
+	points = 1200
 	uid = "autos_2"
 	prereqs = list("autos_1")
 
@@ -668,7 +668,7 @@ research holder datum.
 	name = "Deadly Revolvers"
 	desc = "Building on prior shotgun designs, revolvers could be absolutely deadly. Unlocks mateba .50 revolver designs for the appropriate fabricators."
 	tier = 3
-	points = 750
+	points = 1400
 	uid = "pistol_2"
 	prereqs = list("pistol_1", "shotgun_2")
 	
@@ -677,18 +677,18 @@ research holder datum.
 	name = "The Assault Rifle"
 	desc = "It's an incredibly effective and supremely cool assault rifle. This is what you've been waiting for. Unlocks assault rifle designs for the appropriate fabricators."
 	tier = 4
-	points = 1600
+	points = 3000
 	uid = "autos_3"
 	prereqs = list("autos_2")
-	uses = 2
+	uses = 1
 /datum/tech_entry/combat/proj/sniper
 	name = "Anti-Material Rifles"
 	desc = "The application of phoron heavily throughout the design of a rifle gives it a powerful structural penetration capability. Unlocks anti-material sniper designs for the appropriate fabricators."
 	tier = 4
-	points = 1400
+	points = 500
 	uid = "antimaterial"
 	prereqs = list("pistol_2", "shotgun_3")
-	uses = 2
+	uses = 1
 
 // END BALLISTIC WEAPONS
 
@@ -707,7 +707,7 @@ research holder datum.
 	name = "Xray Laser Weapons"
 	desc = "Xray based weapons can penetrate armors that are otherwise effective against energy weapons. Unlocks xray laser pistol & xray laser carbine gun designs for the appropriate fabricators."
 	tier = 3
-	points = 750
+	points = 2000
 	uid = "xray_1"
 	prereqs = list("energy_1", "high_micro_laser")
 
@@ -715,7 +715,7 @@ research holder datum.
 	name = "Advanced Energy Rifle"
 	desc = "Phoron can enrich an energy weapons to be more efficent and deadly. Unlocks laser carbine designs for the appropriate fabricators."
 	tier = 3
-	points = 850
+	points = 2000
 	uid = "energy_2"
 	prereqs = list("energy_1")
 
@@ -723,7 +723,7 @@ research holder datum.
 	name = "Ion Projectiles"
 	desc = "Ion projectiles cause an EMP effect on whatever electronics they hit. Unlocks ion pistol designs for the appropriate fabricators."
 	tier = 3
-	points = 800
+	points = 2500
 	uid = "ion_1"
 	prereqs = list("energy_1", "phasic_sensor")
 
@@ -731,27 +731,27 @@ research holder datum.
 	name = "Ion Detonation"
 	desc = "Larger ion projectiles with additional enrichment could detonate to cause an EMP in a small area. Unlocks ion rifle designs for the appropriate fabricators."
 	tier = 4
-	points = 1700
+	points = 4000
 	uid = "ion_2"
 	prereqs = list("ion_1", "energy_2")
-	uses = 2
+	uses = 1
 /datum/tech_entry/combat/energy/heavy
 	name = "Masterful Energy Weapons"
 	desc = "Putting together all the prior applications of beam and laser weapons, a heavy sniper and assault-cannon can be developed. Unlocks ion rifle designs for the appropriate fabricators."
 	tier = 4
-	points = 1500
+	points = 5000
 	uid = "energy_3"
 	prereqs = list("xray_1", "energy_2")
-	uses = 2
+	uses = 1
 
 /datum/tech_entry/combat/energy/pulse
 	name = "Pulse Weapons"
 	desc = "Extremely powerful energy weapons that fire in devestating bursts. Unlocks the pulse pistol & pulse carbine designs for the appropriate fabricators."
 	tier = 4
-	points = 1800
+	points = 6000
 	uid = "pulse_1"
 	prereqs = list("energy_2", "super_capacitor")
-	uses = 2
+	uses = 1
 
 // END ENERGY WEAPONS
 
@@ -768,7 +768,7 @@ research holder datum.
 	name = "Exotic Weapons"
 	desc = "A variety of cultural weapons from across history could be developed. Unlocks a variety of exotic weapon designs for the appropriate fabricators."
 	tier = 2
-	points = 200
+	points = 400
 	uid = "melee_2"
 	prereqs = list("melee_1")
 	uses = -10
@@ -776,7 +776,7 @@ research holder datum.
 	name = "Blade Mastery"
 	desc = "The last and best of the conventional melee weapon designs can be completed. Unlocks fancy melee weapon designs for the appropriate fabricators."
 	tier = 3
-	points = 400
+	points = 2500
 	uid = "melee_3"
 	prereqs = list("melee_2")
 	uses = -10
@@ -784,7 +784,7 @@ research holder datum.
 	name = "Energy Blades"
 	desc = "By enriching the point of contact with uranium reactant with phoron a variety of melee energy wepaons can be developed. Unlocks energy melee weapon designs for the appropriate fabricators."
 	tier = 4
-	points = 800
+	points = 3000
 	uid = "melee_4"
 	prereqs = list("melee_3", "energy_2")
 
@@ -796,18 +796,18 @@ research holder datum.
 	name = "(RESTRICTED) Kidnapping Tools"
 	desc = "Tools to keep hostages in line and block suit senors could be developed, but they are both considered unethical. Unlocks suit sensor jammers & electropack designs for the appropriate fabricators."
 	tier = 3
-	points = 600
+	points = 2000
 	uid = "illegal_1"
 	prereqs = list("adv_capacitor", "shotgun_2")
-	uses = 2
+	uses = 1
 /datum/tech_entry/combat/illegal/spying
 	name = "(RESTRICTED) Clandestine Monitoring Equipment"
 	desc = "A spy bug and monitor pairing could be designed, but these are instruments of sabotage. Unlocks spy bug and spy monitor designs for the appropriate fabricators."
 	tier = 4
-	points = 1300
+	points = 4000
 	uid = "illegal_2"
 	prereqs = list("illegal_1", "pico_mani")
-	uses = 5
+	uses = 3
 
 // END ILLEGAL DEVICES
 
@@ -925,10 +925,21 @@ research holder datum.
 	name = "Incision Management System"
 	desc = "Phoron and the application of other related technologies can create the ultimate surgeons tool. Unlocks incision managment system designs for the appropriate fabricators."
 	tier = 4
-	points = 1350
+	points = 2000
 	uid = "scalpel_4"
 	prereqs = list("scalpel_3", "ultra_micro_laser", "nano_mani")
 	uses = 5
+
+/datum/tech_entry/medical/scalpel/hypospray
+	name = "Advanced Injection Mechanics"
+	desc = "Develop an advanced hypospray that can inject chemicals directly into the bloodstream with extreme speed and efficency."
+	tier = 4
+	points = 2000
+	uid = "hypospray"
+	prereqs = list("ultra_micro_laser", "nano_mani")
+	uses = 2
+
+
 /datum/tech_entry/medical/defib
 	name = "Electro-Resuscitation"
 	desc = "An electro-pulse sent through the body can restart a heart. Unlocks auto-resuscitator designs for the appropriate fabricators."

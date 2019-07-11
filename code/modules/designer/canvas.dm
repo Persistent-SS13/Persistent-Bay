@@ -110,6 +110,10 @@
 		designer_disassociate()
 		. = ..()
 
+
+/obj/structure/canvas/after_load()
+	designer_update_icon()
+
 /obj/structure/canvas/attackby(var/obj/item/O as obj, var/mob/user as mob)
 	if (isCrowbar(O))
 		//PUT SOUND HERE... LATA.

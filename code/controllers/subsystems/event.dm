@@ -45,8 +45,6 @@ SUBSYSTEM_DEF(event)
 	event_containers = SSevent.event_containers
 
 /datum/controller/subsystem/event/fire(resumed = FALSE)
-	SSautosave.AnnounceSave()	// A warning is kinda like an event, right?
-
 	if (!resumed)
 		processing_events = active_events.Copy()
 		pos = EVENT_LEVEL_MUNDANE

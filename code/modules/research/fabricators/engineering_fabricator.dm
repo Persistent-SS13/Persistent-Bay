@@ -383,7 +383,8 @@
 /datum/design/item/engifab/electronics/firealarm
 	name = "Fire alarm electronics"
 	build_path = /obj/item/weapon/firealarm_electronics
-
+	build_type = list(ENGIFAB, GENERALFAB)
+	
 /datum/design/item/engifab/electronics/simple/powermodule
 	name = "Power control module"
 	build_path = /obj/item/weapon/module/power_control

@@ -265,7 +265,7 @@ var/PriorityQueue/all_feeds
 		else
 			to_chat(usr, "\icon[src]<span class='warning'>Account not found.</span>")
 			return
-		signed_by = signed_account.owner_name
+		signed_by = usr.real_name
 		if(linked.contract_signed(src))
 			signed = 1
 			info = replacetext(info, "*Unsigned*", "[signed_account.owner_name]")

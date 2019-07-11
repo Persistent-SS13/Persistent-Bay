@@ -234,7 +234,7 @@
 		if(istype(A, /area/space))
 			message_admins("Shuttle [src] is trying to move space area.")
 			return
-		translation += get_turf_translation(get_turf(current_location), get_turf(destination), A.get_turfs())
+		translation += get_turf_translation(get_turf(location), get_turf(destination), A.get_turfs())
 	shuttle_moved(destination, translation)
 	return TRUE
 

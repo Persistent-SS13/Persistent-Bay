@@ -2478,7 +2478,6 @@
 	"virusDB",
 	"visual_nets",
 	"vsc",
-	"wax_recipes",
 	"weighted_mundaneevent_locations",
 	"weighted_randomevent_locations",
 	"whitelist",

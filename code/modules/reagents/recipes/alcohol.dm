@@ -100,18 +100,18 @@
 	mix_message = "The solution roils as it rapidly ferments. A puff of saltwater scented black smoke erupts out of the mix."
 
 /datum/chemical_reaction/hessia
-    name = "Hessia"
-    result = /datum/reagent/ethanol/hessia
-    required_reagents = list(/datum/reagent/ethanol/pwine = 5, /datum/reagent/psilocybin = 5, /datum/reagent/enzyme = 5)
-    catalysts = list(/datum/reagent/sugar = 1) //The irony!
-    result_amount = 15
+	name = "Hessia"
+	result = /datum/reagent/ethanol/hessia
+	required_reagents = list(/datum/reagent/ethanol/pwine = 5, /datum/reagent/psilocybin = 5, /datum/reagent/enzyme = 5)
+	catalysts = list(/datum/reagent/sugar = 1) //The irony!
+	result_amount = 15
 
 /datum/chemical_reaction/goodbeer
-    name = "Good beer"
-    result = /datum/reagent/ethanol/beer/good
-    required_reagents = list(/datum/reagent/ethanol/beer = 5, /datum/reagent/ethanol/ale = 5)
-    catalysts = list(/datum/reagent/enzyme = 1)
-    result_amount = 3
+	name = "Good beer"
+	result = /datum/reagent/ethanol/beer/good
+	required_reagents = list(/datum/reagent/ethanol/beer = 5, /datum/reagent/ethanol/ale = 5)
+	catalysts = list(/datum/reagent/enzyme = 1)
+	result_amount = 3
 
 /*
 	Drink Mixes

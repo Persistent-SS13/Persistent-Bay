@@ -2284,14 +2284,14 @@
 	glass_desc = "Its grapes! Its green! Its juice!"
 
 /datum/reagent/ethanol/hessia
-    name = "Hessia"
-    description = "Moghan jungle liquor. Looks unappetizing."
-    taste_description = "sweet earthy fruit"
-    reagent_state = LIQUID
-    color = "#876316"
-    strength = 20
-    druggy = 50
+	name = "Hessia"
+	description = "Moghan jungle liquor. Looks unappetizing."
+	taste_description = "sweet earthy fruit"
+	reagent_state = LIQUID
+	color = "#876316"
+	strength = 20
+	druggy = 50
 
-    glass_name = "Hessia"
-    glass_desc = "A dark and earthy fizzing liquid with cultural significance. You think, anyway."
-    glass_special = list(DRINK_FIZZ)
+	glass_name = "Hessia"
+	glass_desc = "A dark and earthy fizzing liquid with cultural significance. You think, anyway."
+	glass_special = list(DRINK_FIZZ)

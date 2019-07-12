@@ -56,7 +56,7 @@
 
 			visible_message("<span class='danger'>[H] has punched \the [src]!</span>")
 
-			apply_damage(damage, DAM_BLUNT, affecting)
+			apply_damage(damage, DAM_PAIN, affecting)
 			if(damage >= 9)
 				visible_message("<span class='danger'>[H] has weakened \the [src]!</span>")
 				var/armor_block = 100 * get_blocked_ratio(affecting, DAM_BLUNT)

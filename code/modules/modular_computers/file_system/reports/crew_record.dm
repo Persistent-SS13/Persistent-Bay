@@ -227,6 +227,7 @@ FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_synd
 	ADD_SAVED_VAR(expenses)
 	ADD_SAVED_VAR(citizenship)
 	ADD_SAVED_VAR(ckey)
+	ADD_SAVED_VAR(network_level)
 
 	ADD_SKIP_EMPTY(assignment_uid)
 	ADD_SKIP_EMPTY(custom_title)

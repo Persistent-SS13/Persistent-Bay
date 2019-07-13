@@ -54,6 +54,12 @@
 
 	time = 50						   // Time in seconds for the item to be produced - This changes based off the components used in the fabricator
 
+/datum/design/item/voidfab/magboots
+	name = "Magboots"
+	id = "magboots"
+	buildpath = /obj/item/clothing/shoes/magboots
+	materials = list(MATERIAL_STEEL = 10 SHEETS, MATERIAL_COPPER = 10 SHEETS)
+
 /datum/design/item/voidfab/engineering
 	category = "Engineering"
 	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 3)
@@ -178,6 +184,21 @@
 	build_path = /obj/item/clothing/head/helmet/space/void/mining/alt
 	materials = list(MATERIAL_PLASTEEL = 15 SHEETS, MATERIAL_COPPER = 5 SHEETS, MATERIAL_GLASS = 10 SHEETS, MATERIAL_BRONZE = 5 SHEETS)
 
+/datum/design/item/voidfab/exploration
+	category = "Exploration"
+	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 3, TECH_BIO = 3)
+
+/datum/design/item/voidfab/exploration/helm
+	name = "Exploration voidsuit helmet"
+	id = "explovoid"
+	build_path = /obj/item/clothing/head/helmet/space/void/pilot
+	materials = list(MATERIAL_PLASTEEL = 5 SHEETS, MATERIAL_GLASS = 5 SHEETS)
+
+/datum/design/item/voidfab/exploration/suit
+	name = "Exploration voidsuit"
+	id = "explovoidsuit"
+	build_path = /obj/item/clothing/suit/space/void/pilot
+	materials = list(MATERIAL_PLASTEEL = 10 SHEETS, MATERIAL_ZINC = 10 SHEETS)
 //Softsuits
 
 /datum/design/item/voidfab/softsuit/

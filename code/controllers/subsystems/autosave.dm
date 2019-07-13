@@ -7,7 +7,7 @@ SUBSYSTEM_DEF(autosave)
 	var/time_next_save = 0
 	var/saving = 0
 	var/announced = 0
-	var/save_interval = 3 HOURS
+	var/save_interval = 1.5 HOURS
 
 /datum/controller/subsystem/autosave/Initialize(start_timeofday)
 	CalculateTimeNextSave()
@@ -43,14 +43,7 @@ SUBSYSTEM_DEF(autosave)
 		saving = 1
 		for(var/datum/controller/subsystem/S in Master.subsystems)
 			S.disable()
-		
-		//Run save in the try/catch, since otherwise it'll defcon and make recovery really hard
-		try
-			Save_World()
-		catch(var/exception/E)
-			var/msg = "[name]: Save failed. Caught exception '[E]'"
-			log_error(msg)
-			message_staff(msg)
+		Save_World()
 		
 		for(var/datum/controller/subsystem/S in Master.subsystems)
 			S.enable()

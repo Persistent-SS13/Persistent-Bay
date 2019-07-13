@@ -7,7 +7,6 @@
 	var/amount_per_transfer_from_this = 5
 	var/possible_transfer_amounts = "5;10;15;25;30"
 	var/volume = 30
-	var/label_text
 	var/list/datum/reagent/starts_with = null
 
 /obj/item/weapon/reagent_containers/proc/cannot_interact(mob/user)
@@ -36,8 +35,10 @@
 	if(!possible_transfer_amounts)
 		src.verbs -= /obj/item/weapon/reagent_containers/verb/set_amount_per_transfer_from_this
 	ADD_SAVED_VAR(amount_per_transfer_from_this)
-	ADD_SAVED_VAR(label_text)
 	ADD_SAVED_VAR(atom_flags) //Since we change the open_container flag a lot
+
+/obj/item/weapon/reagent_containers/Initialize()
+	. = ..()
 
 /obj/item/weapon/reagent_containers/SetupReagents()
 	..()
@@ -60,21 +61,20 @@
 
 /obj/item/weapon/reagent_containers/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W, /obj/item/weapon/pen) || istype(W, /obj/item/device/flashlight/pen))
-		var/tmp_label = sanitizeSafe(input(user, "Enter a label for [name]", "Label", label_text), MAX_NAME_LEN)
-		if(length(tmp_label) > 10)
-			to_chat(user, "<span class='notice'>The label can be at most 10 characters long.</span>")
-		else
-			to_chat(user, "<span class='notice'>You set the label to \"[tmp_label]\".</span>")
-			label_text = tmp_label
-			update_name_label()
+		var/datum/extension/labels/L = get_extension(src, /datum/extension/labels)
+		var/old_label = LAZYLEN(L.labels) ? L.labels[1] : ""
+		var/tmp_label = sanitizeSafe(input(user, "Enter a label for [name]", "Label", old_label), MAX_NAME_LEN)
+		set_label(user, tmp_label)
+		return 1 //Keeps afterattack from triggering
 	else
 		return ..()
 
-/obj/item/weapon/reagent_containers/proc/update_name_label()
-	if(label_text == "")
-		SetName(initial(name))
-	else
-		SetName("[initial(name)] ([label_text])")
+//Don't need this anymore. The label extension does it
+// /obj/item/weapon/reagent_containers/proc/update_name_label()
+// 	if(label == "")
+// 		SetName(initial(name))
+// 	else
+// 		SetName("[initial(name)] ([label])")
 
 /obj/item/weapon/reagent_containers/proc/standard_dispenser_refill(var/mob/user, var/obj/structure/reagent_dispensers/target) // This goes into afterattack
 	if(!istype(target))
@@ -238,3 +238,24 @@
 		for(var/datum/reagent/R in reagents.reagent_list)
 			R.ex_act(src, severity)
 	..()
+
+/obj/item/weapon/reagent_containers/proc/get_first_label()
+	. = ""
+	var/datum/extension/labels/L = get_extension(src, /datum/extension/labels)
+	if(L && LAZYLEN(L.labels))
+		. = L.labels[1]
+	return .
+
+/obj/item/weapon/reagent_containers/proc/set_label(var/mob/user, var/tmp_label)
+	var/datum/extension/labels/L = get_or_create_extension(src, /datum/extension/labels, /datum/extension/labels)
+	//var/old_label = LAZYLEN(L.labels) ? L.labels[1] : ""
+	if(length(tmp_label) > 25)
+		if(user) to_chat(user, SPAN_WARNING("The label can be at most 25 characters long."));
+	else
+		L.RemoveAllLabels() 
+
+		if(length(tmp_label) == 0)
+			if(user) to_chat(user, SPAN_NOTICE("You remove the label."));
+		else
+			//if(user) to_chat(user, SPAN_NOTICE("You set the label to \"[tmp_label]\"."));
+			L.AttachLabel(user, tmp_label)

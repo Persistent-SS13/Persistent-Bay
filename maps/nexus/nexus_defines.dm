@@ -76,10 +76,10 @@ proc/GetNbSavedZLevels()
 	mus.environment = -1 //Don't do silly reverb stuff
 	mus.status = SOUND_STREAM //Cheaper to do streams
 	sound_to(newchar, mus)
-	
 	spawn()
 		new /obj/effect/portal(get_turf(newchar), null, 5 SECONDS, 0)
 		shake_camera(newchar, 3, 1)
+	GLOB.global_announcer.autosay("[newchar.real_name] has just arrived on Nexus City from outside the frontier. Welcome [newchar.real_name]!", "Nexus Arrival Announcer")	
 	newchar.druggy = 3
 	newchar.Weaken(3)
 	to_chat(newchar, "<span class='danger'>You are carried through the swirling amber portal to your new home, Nexus City.</span>")

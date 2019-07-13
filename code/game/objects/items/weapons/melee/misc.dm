@@ -2,7 +2,7 @@
 	name = "whip"
 	desc = "A generic whip."
 	icon_state = "chain"
-	item_state = "chain"
+	item_state = "whip"
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT
 	force = 8

@@ -1,5 +1,5 @@
 /obj/item/frame/canvas
-	name = "Canvas (30x30)"
+	name = "Canvas"
 	desc = "Such avant-garde, much art."
 	gender = NEUTER
 	icon = 'icons/obj/bureaucracy.dmi'
@@ -27,10 +27,14 @@
 		onclose(user, "[name]")
 		return
 
-
-
 /obj/item/frame/canvas/New()
 	desc += "This canvas has a size of [icon_width] by [icon_height]."
+
+/obj/item/frame/canvas/before_save()
+	GLOB.designer_system.backup_design(src)
+
+/obj/item/frame/canvas/after_load()
+	GLOB.designer_system.restore_design(src)
 
 /obj/item/frame/canvas/Destroy()
 	designer_disassociate()
@@ -67,9 +71,9 @@
 	gender = NEUTER
 	icon = 'icons/obj/bureaucracy.dmi'
 	icon_state = "canvas"
+	anchored = 1
 
 	var/canvas_item = /obj/item/frame/canvas
-
 
 /obj/structure/canvas/examine(mob/user)
 	show(user)
@@ -85,29 +89,31 @@
 		onclose(user, "[name]")
 		return
 
-
 /obj/structure/canvas/New(loc, dir, atom/frame)
 	..(loc)
-
 	if(dir)
 		src.set_dir(dir)
-
-	if(istype(frame))
+	if(frame)
 		pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? -32 : 32)
 		pixel_y = (src.dir & 3)? (src.dir ==1 ? -32 : 32) : 0
 		frame.transfer_fingerprints_to(src)
-
-	icon = frame.icon
-	icon_state = frame.icon_state
-	name = frame.name
-	desc = frame.desc
-	canvas_item = frame.type
-	designer_associate(frame.designer_unit)
-	designer_update_icon()
+		icon = frame.icon
+		icon_state = frame.icon_state
+		name = frame.name
+		desc = frame.desc
+		canvas_item = frame.type
+		designer_associate(frame.designer_unit)
+		designer_update_icon()
 
 /obj/structure/canvas/Destroy()
-		designer_disassociate()
-		. = ..()
+	designer_disassociate()
+	. = ..()
+
+/obj/structure/canvas/before_save()
+	GLOB.designer_system.backup_design(src)
+
+/obj/structure/canvas/after_load()
+	GLOB.designer_system.restore_design(src)
 
 /obj/structure/canvas/attackby(var/obj/item/O as obj, var/mob/user as mob)
 	if (isCrowbar(O))

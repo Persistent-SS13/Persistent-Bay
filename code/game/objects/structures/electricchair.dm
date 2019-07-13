@@ -11,8 +11,8 @@
 
 /obj/structure/bed/chair/e_chair/New()
 	..()
-	overlays += image(src.icon, src, "echair_over", MOB_LAYER + 1, dir)
-	return
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(part)
 
 /obj/structure/bed/chair/e_chair/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(isWrench(W))
@@ -33,18 +33,15 @@
 
 	if(on)
 		on = 0
-		icon_state = "echair0"
 	else
 		on = 1
-		icon_state = "echair1"
 	to_chat(usr, "<span class='notice'>You switch [on ? "on" : "off"] [src].</span>")
+	update_icon()
 	return
 
 /obj/structure/bed/chair/e_chair/rotate()
 	..()
-	overlays.Cut()
-	overlays += image(icon, src, "echair_over", MOB_LAYER + 1, dir)	//there's probably a better way of handling this, but eh. -Pete
-	return
+	update_icon()
 
 /obj/structure/bed/chair/e_chair/on_update_icon()
 	..()
@@ -53,7 +50,6 @@
 	icon_state = "echair0"
 	overlays.Cut()
 	overlays += image(icon, src, "echair_over", MOB_LAYER + 1, dir)	//there's probably a better way of handling this, but eh. -Pete
-	return
 
 /obj/structure/bed/chair/e_chair/proc/shock()
 	if(!on)
@@ -86,4 +82,5 @@
 
 	A.power_light = light
 	A.update_icon()
+	update_icon()
 	return

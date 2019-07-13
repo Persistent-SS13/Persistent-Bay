@@ -155,3 +155,18 @@
 	var/location = get_turf(holder.my_atom)
 	for(var/i = 1, i <= created_volume, i++)
 		new /obj/item/weapon/soap/syndie(location)
+
+//-------------------------------------
+//	Cooling beeswax
+//-------------------------------------
+/datum/chemical_reaction/cooling_beeswax
+	name = "Cooled beeswax"
+	result = null
+	required_reagents = list(/datum/reagent/beeswax = 20)
+	result_amount = 1
+	minimum_temperature = T0C - 10 //Let it go down under 0 just so we don't possibly interfere with new reactions
+	maximum_temperature = T0C
+/datum/chemical_reaction/cooling_beeswax/on_reaction(var/datum/reagents/holder, var/created_volume)
+	var/location = get_turf(holder.my_atom)
+	for(var/i = 1, i <= created_volume, i++)
+		new /obj/item/stack/material/edible/beeswax(location)

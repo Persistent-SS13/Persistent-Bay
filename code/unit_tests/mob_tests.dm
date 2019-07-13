@@ -699,7 +699,7 @@ datum/unit_test/species_base_skin/start_test()
 
 	return 1	// return 1 to show we're done and don't want to recheck the result.
 
-
+/*
 /datum/unit_test/mob_nullspace
 	name = "MOB: Mob in nullspace shall not cause runtimes"
 	var/list/test_subjects = list()
@@ -723,7 +723,7 @@ datum/unit_test/species_base_skin/start_test()
 	// No failure state, we just rely on the general runtime check to fail the entire build for us
 	pass("Mob nullspace test concluded.")
 	return TRUE
-
+*/
 /datum/unit_test/mob_organ_size
 	name = "MOB: Internal organs fit inside external organs."
 

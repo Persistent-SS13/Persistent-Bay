@@ -65,6 +65,7 @@
 		use(1)
 
 	M.updatehealth()
+
 /obj/item/stack/medical/bruise_pack
 	name = "roll of gauze"
 	singular_name = "gauze length"
@@ -74,7 +75,18 @@
 	animal_heal = 5
 	apply_sounds = list('sound/effects/rip1.ogg','sound/effects/rip2.ogg')
 	amount = 10
+	materials_per_unit = list(MATERIAL_CLOTH = 2000)
+/obj/item/stack/medical/bruise_pack/makeshift
+	name = "makeshift bandage"
+	singular_name = "bandage length"
+	desc = "Some non-sterilized cloth to dress bleeding wounds."
+	color = COLOR_GRAY
+	heal_brute = 1
+	animal_heal = 1
+	amount = 1
+	max_amount = 5
 	materials_per_unit = list(MATERIAL_CLOTH = 1000)
+	germ_level = 200
 
 /obj/item/stack/medical/bruise_pack/attack(var/mob/living/carbon/M, var/mob/user)
 	if(..())

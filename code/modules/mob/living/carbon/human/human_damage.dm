@@ -364,11 +364,11 @@ This function restores all organs.
 					return
 				def_zone = ran_zone(def_zone)
 			organ = get_organ(check_zone(def_zone))
-	log_debug("[src], apply_damage([damage], [damagetype], [def_zone], [blocked], [damage_flags], [used_weapon]), organ is [organ]")
+	//log_debug("[src], apply_damage([damage], [damagetype], [def_zone], [blocked], [damage_flags], [used_weapon]), organ is [organ]")
 
 	//Handle other types of damage
 	if(!(damagetype in list(DAM_BLUNT, DAM_BULLET, DAM_CUT, DAM_PIERCE, DAM_LASER, DAM_ENERGY, DAM_ELECTRIC, DAM_BOMB, DAM_BURN, DAM_PAIN, DAM_CLONE)))
-		log_debug("[src], apply damage, run parent proc")
+		//log_debug("[src], apply damage, run parent proc")
 		return ..()
 	if(!istype(organ))
 		return 0 // This is reasonable and means the organ is missing.

@@ -57,7 +57,7 @@
 /datum/design/item/voidfab/magboots
 	name = "Magboots"
 	id = "magboots"
-	buildpath = /obj/item/clothing/shoes/magboots
+	build_path = /obj/item/clothing/shoes/magboots
 	materials = list(MATERIAL_STEEL = 10 SHEETS, MATERIAL_COPPER = 10 SHEETS)
 
 /datum/design/item/voidfab/engineering

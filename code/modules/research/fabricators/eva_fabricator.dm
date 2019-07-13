@@ -174,13 +174,13 @@
 
 /datum/design/item/voidfab/mining/heavysuit
 	name = "Reinforced mining voidsuit"
-	id = "mining_voidsuit_voidfab"
+	id = "mining_voidsuit_voidfab_heavy"
 	build_path = /obj/item/clothing/suit/space/void/mining/alt
 	materials = list(MATERIAL_PLASTEEL = 20 SHEETS, MATERIAL_COPPER = 15 SHEETS, MATERIAL_ZINC = 10 SHEETS, MATERIAL_BRONZE = 10 SHEETS)
 
 /datum/design/item/voidfab/mining/heavyhelm
 	name = "Reinforced mining voidsuit helmet"
-	id = "mining_voidsuit_helmet_voidfab"
+	id = "mining_voidsuit_helmet_voidfab_heavy"
 	build_path = /obj/item/clothing/head/helmet/space/void/mining/alt
 	materials = list(MATERIAL_PLASTEEL = 15 SHEETS, MATERIAL_COPPER = 5 SHEETS, MATERIAL_GLASS = 10 SHEETS, MATERIAL_BRONZE = 5 SHEETS)
 

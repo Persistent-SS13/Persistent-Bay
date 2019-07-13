@@ -179,7 +179,7 @@
 	name = "corporate badge"
 	desc = "A leather-backed plastic badge with a variety of information printed on it. Belongs to a corporate executive."
 	icon_state = "ntbadge"
-	badge_string = "Nexus Business Council"
+	badge_string = "Executive"
 
 /obj/item/clothing/accessory/badge/ocieagent
 	name = "\improper Council appointee's badge"

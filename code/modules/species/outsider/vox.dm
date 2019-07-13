@@ -66,10 +66,8 @@
 	flesh_color = "#808d11"
 
 	reagent_tag = IS_VOX
-
-	inherent_verbs = list(
-		/mob/living/carbon/human/proc/leap
-		)
+	maneuvers = list(/decl/maneuver/leap/grab)
+	standing_jump_range = 5
 
 	override_limb_types = list(
 		BP_GROIN = /obj/item/organ/external/groin/vox
@@ -112,6 +110,11 @@
 		),
 		TAG_RELIGION =  list(
 			RELIGION_VOX
+		),
+		TAG_AMBITION = list(
+			AMBITION_FREEDOM,
+			AMBITION_OPPORTUNITY,
+			AMBITION_KNOWLEDGE
 		)
 	)
 	spawns_with_stack = TRUE
@@ -123,14 +126,11 @@
 	if(istype(H.get_equipped_item(slot_back), /obj/item/weapon/storage/backpack))
 		H.equip_to_slot_or_del(new /obj/item/weapon/tank/nitrogen(H), slot_r_hand)
 		H.equip_to_slot_or_del(new /obj/item/weapon/storage/box/vox(H.back), slot_in_backpack)
-		H.internal = H.r_hand
+		H.set_internals(H.r_hand)
 	else
 		H.equip_to_slot_or_del(new /obj/item/weapon/tank/nitrogen(H), slot_back)
 		H.equip_to_slot_or_del(new /obj/item/weapon/storage/box/vox(H), slot_r_hand)
-		H.internal = H.back
-
-	if(H.internals)
-		H.internals.icon_state = "internal1"
+		H.set_internals(H.back)
 
 /datum/species/vox/disfigure_msg(var/mob/living/carbon/human/H)
 	var/datum/gender/T = gender_datums[H.get_gender()]

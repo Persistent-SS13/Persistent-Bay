@@ -203,12 +203,14 @@
 #define BP_HINDTONGUE "hindtongue"
 
 // Robo Organs.
-#define BP_POSIBRAIN	"posibrain"
-#define BP_VOICE		"vocal synthesiser"
-#define BP_STACK		"stack"
-#define BP_FLOAT		"floatation disc"
-#define BP_JETS			"maneuvering jets"
-#define BP_COOLING_FINS "cooling fins"
+#define BP_POSIBRAIN         "posibrain"
+#define BP_VOICE             "vocal synthesiser"
+#define BP_STACK             "stack"
+#define BP_OPTICS            "optics"
+#define BP_FLOAT             "floatation disc"
+#define BP_JETS              "maneuvering jets"
+#define BP_COOLING_FINS      "cooling fins"
+#define BP_SYSTEM_CONTROLLER "system controller"
 
 //Augmetations
 #define BP_AUGMENT_R_ARM         "right arm augment"
@@ -281,6 +283,9 @@
 #define SYNTH_HEAT_LEVEL_2 1000
 #define SYNTH_HEAT_LEVEL_3 2000
 
+#define CORPSE_CAN_REENTER 1
+#define CORPSE_CAN_REENTER_AND_RESPAWN 2
+
 #define SPECIES_HUMAN       "Human"
 #define SPECIES_DIONA       "Diona"
 #define SPECIES_VOX         "Vox"
@@ -336,10 +341,15 @@
 
 #define MOB_FACTION_NEUTRAL "neutral"
 
+#define MOB_PIXEL_Z 7
+
 #define ROBOT_MODULE_TYPE_GROUNDED "grounded"
 #define ROBOT_MODULE_TYPE_FLYING   "flying"
 
 #define RADIO_INTERRUPT_DEFAULT 30
+
+#define MOB_FLAG_HOLY_BAD                0x001  // If this mob is allergic to holiness
+#define MOB_FLAG_NO_SHADOW               0x002  // If this mob is has no shadow (vampire?)
 
 //Spawn types for characters
 #define CHARACTER_SPAWN_TYPE_CRYONET         1 //Will spawn at a cryopod of the last network and faction stored in the character

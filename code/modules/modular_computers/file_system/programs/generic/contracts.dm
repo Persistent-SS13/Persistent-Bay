@@ -17,6 +17,7 @@
 	var/selected_paytype = CONTRACT_PAY_NONE
 	var/selected_pay = 0
 	var/selected_service = "None"
+	var/selected_balance = 0
 	var/selected_type = CONTRACT_BUSINESS
 	var/datum/recurring_contract/selected_contract
 	var/last_print = 0
@@ -50,6 +51,9 @@
 		switch(selected_paytype)
 			if(CONTRACT_PAY_NONE)
 				data["payment_type"] = "None"
+			if(CONTRACT_PAY_HOURLY)
+				data["payment_type"] = "Hourly"
+				data["paytype"] = 1
 			if(CONTRACT_PAY_DAILY)
 				data["payment_type"] = "Daily"
 				data["paytype"] = 1
@@ -71,6 +75,7 @@
 			data["can_print"] = 1
 		data["contract_status"] = selected_contract.get_status()
 		data["payment_type"] = selected_contract.get_paytype()
+		data["balance"] = selected_contract.balance
 		data["pay"] = selected_contract.pay_amount
 		data["paytime"] = time2text(selected_contract.last_pay+config.year_skip)
 		data["service"] = selected_contract.func
@@ -102,6 +107,7 @@
 		if("change_menu")
 			menu = text2num(href_list["menu_target"])
 			selected_pay = 0
+			selected_balance = 0
 			selected_contract = null
 			selected_desc = ""
 			selected_title = ""
@@ -134,6 +140,8 @@
 				switch(choice)
 					if("No Auto Payments")
 						selected_paytype = CONTRACT_PAY_NONE
+					if("Hourly")
+						selected_paytype = CONTRACT_PAY_HOURLY
 					if("Weekly")
 						selected_paytype = CONTRACT_PAY_WEEKLY
 					if("Daily")
@@ -143,9 +151,14 @@
 			var/chose_pay = max(0, input(usr, "Enter the auto-pay amount.", "Autopay amount", selected_pay) as null|num)
 			if(!isnull(chose_pay))
 				selected_pay = chose_pay
-
+				
+		if("change_balance")
+			var/chose_balance = max(0, input(usr, "Enter the repayment amount.", "Repayment amount", selected_balance) as null|num)
+			if(!isnull(chose_balance))
+				selected_balance = chose_balance
+				
 		if("change_service")
-			var/list/choices = list(CONTRACT_SERVICE_NONE, CONTRACT_SERVICE_MEDICAL, CONTRACT_SERVICE_SECURITY)
+			var/list/choices = list(CONTRACT_SERVICE_NONE, CONTRACT_SERVICE_MEDICAL, CONTRACT_SERVICE_SECURITY, CONTRACT_SERVICE_LOAN)
 			var/choice = input(usr, "Select an additional service.") as null|anything in choices
 			if(choice)
 				selected_service = choice

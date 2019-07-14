@@ -544,11 +544,6 @@
 // STOCK PARTS //
 
 
-/datum/design/item/engifab/parts/cell_device
-	name = "Device cell"
-	build_path = /obj/item/weapon/cell/device/standard/empty
-	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 1 SHEET)
-
 /datum/design/item/engifab/parts/basic_capacitor
 	name = "Basic capacitor"
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 1 SHEET)

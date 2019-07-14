@@ -54,6 +54,12 @@
 
 	time = 50						   // Time in seconds for the item to be produced - This changes based off the components used in the fabricator
 
+/datum/design/item/voidfab/magboots
+	name = "Magboots"
+	id = "magboots"
+	build_path = /obj/item/clothing/shoes/magboots
+	materials = list(MATERIAL_STEEL = 10 SHEETS, MATERIAL_COPPER = 10 SHEETS)
+
 /datum/design/item/voidfab/engineering
 	category = "Engineering"
 	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 3)
@@ -70,6 +76,18 @@
 	build_path = /obj/item/clothing/head/helmet/space/void/engineering
 	materials = list(MATERIAL_PLASTEEL = 1 SHEET, MATERIAL_GLASS = 2 SHEETS)
 
+/datum/design/item/voidfab/engineering/engineeringsuitheavy
+	name = "Reinforced engineering voidsuit"
+	id = "engi_voidsuit_heavy"
+	build_path = /obj/item/clothing/suit/space/void/engineering/alt // The path to the item produced
+	materials = list(MATERIAL_PLASTEEL = 20 SHEETS, MATERIAL_STEEL = 35 SHEETS, MATERIAL_BRONZE = 15 SHEETS, MATERIAL_LEAD = 10 SHEETS)	// The amount of material required for the item. 2000 = 1 sheet
+
+/datum/design/item/voidfab/engineering/engineeringhelmetheavy
+	name = "Reinforced engineering voidsuit helmet"
+	id = "engi_helment_heavy"
+	build_path = /obj/item/clothing/head/helmet/space/void/engineering/alt
+	materials = list(MATERIAL_PLASTEEL = 10 SHEET, MATERIAL_GLASS = 10 SHEETS, MATERIAL_BRONZE = 10 SHEETS, MATERIAL_LEAD = 5 SHEETS)
+
 /datum/design/item/voidfab/engineering/atmossuit
 	name = "Atmospherics voidsuit"
 	id = "atmos_voidsuit"
@@ -81,6 +99,18 @@
 	id = "atmos_helmet"
 	build_path = /obj/item/clothing/head/helmet/space/void/atmos
 	materials = list(MATERIAL_OSMIUM_CARBIDE_PLASTEEL = 40000, MATERIAL_GOLD = 10000, MATERIAL_GLASS = 20000)
+
+/datum/design/item/voidfab/engineering/atmoshelmetheavy
+	name = "Reinforced atmospherics voidsuit helmet"
+	id = "atmos_helmet_heavy"
+	build_path = /obj/item/clothing/head/helmet/space/void/atmos/alt
+	materials = list(MATERIAL_OSMIUM_CARBIDE_PLASTEEL = 5 SHEETS, MATERIAL_GOLD = 10 SHEETS, MATERIAL_GLASS = 10 SHEETS)
+
+/datum/design/item/voidfab/engineering/atmossuitheavy
+	name = "Reinforced atmospherics voidsuit"
+	id = "atmos_voidsuit_heavy"
+	build_path = /obj/item/clothing/suit/space/void/atmos/alt
+	materials = list(MATERIAL_OSMIUM_CARBIDE_PLASTEEL = 15 SHEETS, MATERIAL_GOLD = 15 SHEETS, MATERIAL_PLASTEEL = 15 SHEETS)
 
 /datum/design/item/voidfab/security
 	category = "Security"
@@ -98,6 +128,18 @@
 	build_path = /obj/item/clothing/head/helmet/space/void/security
 	materials = list(MATERIAL_PLASTEEL = 80000, MATERIAL_GLASS = 20000, MATERIAL_PLATINUM = 40000)
 
+/datum/design/item/voidfab/security/riotsuit
+	name = "Security riot voidsuit"
+	id = "sec_voidsuit_riot"
+	build_path = /obj/item/clothing/suit/space/void/security/alt
+	materials = list(MATERIAL_PLASTEEL = 20 SHEETS, MATERIAL_PLATINUM = 20 SHEETS, MATERIAL_TUNGSTEN = 15 SHEETS)
+
+/datum/design/item/voidfab/security/riotsuithelmet
+	name = "Security riot voidsuit helmet"
+	id = "sec_helmet_riot"
+	build_path = /obj/item/clothing/head/helmet/space/void/security/alt
+	materials = list(MATERIAL_PLASTEEL = 7.5 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_PLATINUM = 7.5 SHEETS, MATERIAL_MATERIAL_TUNGSTEN = 7.5 SHEETS)
+
 /datum/design/item/voidfab/medical
 	category = "Medical"
 	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 3, TECH_BIO = 3)
@@ -114,6 +156,49 @@
 	build_path = /obj/item/clothing/head/helmet/space/void/medical/alt
 	materials = list(MATERIAL_PLASTEEL = 40000, MATERIAL_GLASS = 20000)
 
+/datum/design/item/voidfab/mining
+	category = "Mining"
+	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 3, TECH_BIO = 3)
+
+/datum/design/item/voidfab/mining/normsuit
+	name = "Mining voidsuit"
+	id = "mining_voidsuit_voidfab"
+	build_path = /obj/item/clothing/suit/space/void/mining
+	materials = list(MATERIAL_PLASTEEL = 10 SHEETS, MATERIAL_COPPER = 5 SHEETS)
+
+/datum/design/item/voidfab/mining/normhelm
+	name = "Mining voidsuit helmet"
+	id = "mining_voidsuit_helmet_voidfab"
+	build_path = /obj/item/clothing/head/helmet/space/void/mining
+	materials = list(MATERIAL_PLASTEEL = 5 SHEETS, MATERIAL_COPPER = 2.5 SHEETS, MATERIAL_GLASS = 5 SHEETS)
+
+/datum/design/item/voidfab/mining/heavysuit
+	name = "Reinforced mining voidsuit"
+	id = "mining_voidsuit_voidfab_heavy"
+	build_path = /obj/item/clothing/suit/space/void/mining/alt
+	materials = list(MATERIAL_PLASTEEL = 20 SHEETS, MATERIAL_COPPER = 15 SHEETS, MATERIAL_ZINC = 10 SHEETS, MATERIAL_BRONZE = 10 SHEETS)
+
+/datum/design/item/voidfab/mining/heavyhelm
+	name = "Reinforced mining voidsuit helmet"
+	id = "mining_voidsuit_helmet_voidfab_heavy"
+	build_path = /obj/item/clothing/head/helmet/space/void/mining/alt
+	materials = list(MATERIAL_PLASTEEL = 15 SHEETS, MATERIAL_COPPER = 5 SHEETS, MATERIAL_GLASS = 10 SHEETS, MATERIAL_BRONZE = 5 SHEETS)
+
+/datum/design/item/voidfab/exploration
+	category = "Exploration"
+	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 3, TECH_BIO = 3)
+
+/datum/design/item/voidfab/exploration/helm
+	name = "Exploration voidsuit helmet"
+	id = "explovoid"
+	build_path = /obj/item/clothing/head/helmet/space/void/pilot
+	materials = list(MATERIAL_PLASTEEL = 5 SHEETS, MATERIAL_GLASS = 5 SHEETS)
+
+/datum/design/item/voidfab/exploration/suit
+	name = "Exploration voidsuit"
+	id = "explovoidsuit"
+	build_path = /obj/item/clothing/suit/space/void/pilot
+	materials = list(MATERIAL_PLASTEEL = 10 SHEETS, MATERIAL_ZINC = 10 SHEETS)
 //Softsuits
 
 /datum/design/item/voidfab/softsuit/

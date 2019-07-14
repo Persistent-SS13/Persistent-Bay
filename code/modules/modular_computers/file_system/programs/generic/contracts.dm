@@ -181,9 +181,9 @@
 			contract.contract_paytype = selected_paytype
 			contract.contract_pay = selected_pay
 			if (selected_service == CONTRACT_SERVICE_LOAN)
-				contract.balance = selected_balance
+				contract.contract_balance = selected_balance
 			else
-				contract.balance = 0
+				contract.contract_balance = 0
 			contract.additional_function = selected_service
 			contract.name = "[connected_faction.name] Contract"
 			var/text_pay = ""

@@ -153,7 +153,7 @@
 				selected_pay = chose_pay
 				
 		if("change_balance")
-			var/chose_balance = max(0, input(usr, "Enter the repayment amount.", "Repayment amount", selected_balance) as null|num)
+			var/chose_balance = max(0, input(usr, "Enter the amount that must be repaid.", "Repayment amount", selected_balance) as null|num)
 			if(!isnull(chose_balance))
 				selected_balance = chose_balance
 				
@@ -180,11 +180,17 @@
 			contract.contract_title = selected_title
 			contract.contract_paytype = selected_paytype
 			contract.contract_pay = selected_pay
+			if (selected_service == CONTRACT_SERVICE_LOAN)
+				contract.balance = selected_balance
+			else
+				contract.balance = 0
 			contract.additional_function = selected_service
 			contract.name = "[connected_faction.name] Contract"
 			var/text_pay = ""
 
 			switch(selected_paytype)
+				if(CONTRACT_PAY_HOURLY)
+					text_pay = "[selected_pay] paid hourly"
 				if(CONTRACT_PAY_WEEKLY)
 					text_pay = "[selected_pay] paid weekly"
 				if(CONTRACT_PAY_DAILY)
@@ -225,6 +231,7 @@
 			contract.update_icon()
 			menu = 1
 			selected_pay = 0
+			balance = 0
 			selected_contract = null
 			selected_desc = ""
 			selected_title = ""

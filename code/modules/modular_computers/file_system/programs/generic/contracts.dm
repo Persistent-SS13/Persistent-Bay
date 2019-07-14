@@ -231,7 +231,7 @@
 			contract.update_icon()
 			menu = 1
 			selected_pay = 0
-			balance = 0
+			selected_balance = 0
 			selected_contract = null
 			selected_desc = ""
 			selected_title = ""

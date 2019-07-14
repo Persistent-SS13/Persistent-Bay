@@ -270,6 +270,7 @@ SUBSYSTEM_DEF(market)
 
 	var/auto_pay = CONTRACT_PAY_NONE
 	var/pay_amount = 0
+	var/balance = 0
 
 	var/last_pay = 0 // real time the payment went through
 

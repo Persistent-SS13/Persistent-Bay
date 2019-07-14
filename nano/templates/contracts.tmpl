@@ -62,6 +62,17 @@
 			</div>
 		</div>
 	{{/if}}
+	{{if data.selected_service == "Loan" }}
+		<div class="item">
+			<div class="itemLabel">
+				Until the following balance is repaid: 
+			</div>
+			<div class="itemContent">
+				{{:helper.link(data.balance, null, {'action' : 'change_balance'})}}
+			</div>
+		</div>
+	{{/if}}
+	
 	<div class="item">
 		<div class="itemLabel">
 			Additional Service 
@@ -114,6 +125,16 @@
 			</div>
 			<div class="itemContent">
 				{{:data.paytime}}
+			</div>
+		</div>
+	{{/if}}
+	{{if data.selected_service == "Loan" }}
+		<div class="item">
+			<div class="itemLabel">
+				Remaining Balance: 
+			</div>
+			<div class="itemContent">
+				{{:data.balance}}
 			</div>
 		</div>
 	{{/if}}

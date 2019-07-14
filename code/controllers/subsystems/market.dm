@@ -227,24 +227,27 @@ SUBSYSTEM_DEF(market)
 	if(auto_pay == CONTRACT_PAY_HOURLY)
 		if(world.realtime >= (last_pay + 1 HOUR))
 			if(!handle_payment())
-				cancel_party = payer
-				cancel_reason = "Insufficent funds for autopay"
-				status = CONTRACT_STATUS_CANCELLED
-				remove_services()
+				if (balance <= 0)
+					cancel_party = payer
+					cancel_reason = "Insufficent funds for autopay"
+					status = CONTRACT_STATUS_CANCELLED
+					remove_services()
 	if(auto_pay == CONTRACT_PAY_DAILY)
 		if(world.realtime >= (last_pay + 1 DAY))
 			if(!handle_payment())
-				cancel_party = payer
-				cancel_reason = "Insufficent funds for autopay"
-				status = CONTRACT_STATUS_CANCELLED
-				remove_services()
+				if (balance <= 0)
+					cancel_party = payer
+					cancel_reason = "Insufficent funds for autopay"
+					status = CONTRACT_STATUS_CANCELLED
+					remove_services()
 	if(auto_pay == CONTRACT_PAY_WEEKLY)
 		if(world.realtime >= (last_pay + 7 DAYS))
 			if(!handle_payment())
-				cancel_party = payer
-				cancel_reason = "Insufficent funds for autopay"
-				status = CONTRACT_STATUS_CANCELLED
-				remove_services()
+				if (balance <= 0)
+					cancel_party = payer
+					cancel_reason = "Insufficent funds for autopay"
+					status = CONTRACT_STATUS_CANCELLED
+					remove_services()
 	update_status()
 
 /datum/recurring_contract

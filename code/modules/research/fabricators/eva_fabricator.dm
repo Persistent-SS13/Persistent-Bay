@@ -138,7 +138,7 @@
 	name = "Security riot voidsuit helmet"
 	id = "sec_helmet_riot"
 	build_path = /obj/item/clothing/head/helmet/space/void/security/alt
-	materials = list(MATERIAL_PLASTEEL = 7.5 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_PLATINUM = 7.5 SHEETS, MATERIAL_MATERIAL_TUNGSTEN = 7.5 SHEETS)
+	materials = list(MATERIAL_PLASTEEL = 7.5 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_PLATINUM = 7.5 SHEETS, MATERIAL_TUNGSTEN = 7.5 SHEETS)
 
 /datum/design/item/voidfab/medical
 	category = "Medical"

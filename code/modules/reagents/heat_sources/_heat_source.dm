@@ -23,9 +23,9 @@
 
 	var/heater_mode =          HEATER_MODE_HEAT
 	var/list/permitted_types = list(/obj/item/weapon/reagent_containers/glass)
-	var/max_temperature =      200 CELSIUS
-	var/min_temperature =      40  CELSIUS
-	var/heating_power =        10 // K
+	var/max_temperature =      300 CELSIUS
+	var/min_temperature =      20  CELSIUS
+	var/heating_power =        100 // K
 	var/last_temperature
 	var/target_temperature
 	var/obj/item/container
@@ -37,7 +37,7 @@
 	icon_state = "coldplate"
 	heater_mode =      HEATER_MODE_COOL
 	max_temperature =  30 CELSIUS
-	min_temperature = -80 CELSIUS
+	min_temperature = -100 CELSIUS
 	circuit_type =     /obj/item/weapon/circuitboard/reagent_heater/cooler
 
 /obj/machinery/reagent_temperature/New()
@@ -128,6 +128,10 @@
 	// 		visible_message(SPAN_NOTICE("\The [user] [anchored ? "secured" : "unsecured"] \the [src]."))
 	// 		playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
 	// 	return
+	if(thing.is_open_container() && container && container.is_open_container())
+		var/obj/item/weapon/reagent_containers/C = thing
+		if(C)
+			C.standard_pour_into(user, container)
 
 	if(thing.reagents)
 		for(var/checktype in permitted_types)
@@ -176,12 +180,12 @@
 	dat += "<tr><td>Target temperature:</td><td>"
 
 	if(target_temperature > min_temperature)
-		dat += "<a href='?src=\ref[src];adjust_temperature=-[heating_power]'>-</a> "
+		dat += "<a href='?src=\ref[src];adjust_temperature=-10'>-</a> "
 
 	dat += "[target_temperature - T0C]C"
 
 	if(target_temperature < max_temperature)
-		dat += " <a href='?src=\ref[src];adjust_temperature=[heating_power]'>+</a>"
+		dat += " <a href='?src=\ref[src];adjust_temperature=10'>+</a>"
 
 	dat += "</td></tr>"
 

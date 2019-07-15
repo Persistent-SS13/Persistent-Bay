@@ -15,8 +15,8 @@
 	result = /datum/reagent/ethanol
 	result_amount = 6
 	required_reagents = list(/datum/reagent/sugar = 4, /datum/reagent/water = 4, /datum/reagent/enzyme = 2)
-	minimum_temperature = T0C + 100 //Normally you'd wanna distill. But this will do
-	maximum_temperature = T0C + 150
+	minimum_temperature = T0C + 80 //Normally you'd wanna distill. But this will do
+	maximum_temperature = T0C + 100
 
 //Precursor Chem recipies.
 /datum/chemical_reaction/acetone_production

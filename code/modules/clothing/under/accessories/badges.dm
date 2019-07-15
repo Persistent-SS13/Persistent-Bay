@@ -72,11 +72,11 @@
  */
 /obj/item/clothing/accessory/badge/holo
 	name = "holobadge"
-	desc = "This glowing blue badge marks the holder as a member of security."
+	desc = "This glowing blue badge marks the holder as a member of the Nexus Police."
 	color = COLOR_PALE_BLUE_GRAY
 	icon_state = "holobadge"
 	item_state = "holobadge"
-	badge_string = "Security"
+	badge_string = "Nexus Police"
 	var/badge_access = access_security
 	var/badge_number
 	var/emagged //emag_act removes access requirements
@@ -164,38 +164,38 @@
 	badge_string = "Unknown"
 
 /obj/item/clothing/accessory/badge/defenseintel
-	name = "\improper DIA investigator's badge"
-	desc = "A leather-backed silver badge bearing the crest of the Defense Intelligence Agency."
+	name = "\improper security contractor badge"
+	desc = "A leather-backed silver badge for a private security contractor."
 	icon_state = "diabadge"
-	badge_string = "Defense Intelligence Agency"
+	badge_string = "Security Contractor"
 
 /obj/item/clothing/accessory/badge/interstellarintel
-	name = "\improper OII agent's badge"
-	desc = "A synthleather holographic badge bearing the crest of the Office of Interstellar Intelligence."
+	name = "\improper OIC agent's badge"
+	desc = "A synthleather holographic badge bearing the crest of the Office of Internal Control."
 	icon_state = "intelbadge"
-	badge_string = "Office of Interstellar Intelligence"
+	badge_string = "Office of Internal Control"
 
 /obj/item/clothing/accessory/badge/nanotrasen
 	name = "corporate badge"
 	desc = "A leather-backed plastic badge with a variety of information printed on it. Belongs to a corporate executive."
 	icon_state = "ntbadge"
-	badge_string = "Corporate Executive Body"
+	badge_string = "Executive"
 
 /obj/item/clothing/accessory/badge/ocieagent
-	name = "\improper OCIE Agent's badge"
-	desc = "A leather-backed gold badge displaying the crest of the Office of Civil Investigation and Enforcement."
+	name = "\improper Council appointee's badge"
+	desc = "A leather-backed gold badge displaying the crest of the Nexus Council."
 	icon_state = "agentbadge"
 	slot_flags = SLOT_BELT | SLOT_TIE
 	slot = ACCESSORY_SLOT_INSIGNIA
-	badge_string = "Office of Civil Investigation and Enforcement"
+	badge_string = "Nexus Council"
 
 /obj/item/clothing/accessory/badge/tracker
-	name = "\improper Tracker's badge"
-	desc = "A blue leather-backed gold badge displaying the crest of the Office of Civil Investigation and Enforcement."
+	name = "\improper City appointee's badge"
+	desc = "A blue leather-backed gold badge displaying the symbol of the Office of the Governor."
 	icon_state = "trackerbadge"
 	slot_flags = SLOT_BELT | SLOT_TIE
 	slot = ACCESSORY_SLOT_INSIGNIA
-	badge_string = "Office of Civil Investigation and Enforcement"
+	badge_string = "Office of the Governor"
 
 /obj/item/clothing/accessory/badge/press
 	name = "press badge"

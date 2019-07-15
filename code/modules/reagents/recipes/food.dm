@@ -23,11 +23,11 @@
 /datum/chemical_reaction/cream
 	name = "cream"
 	result = /datum/reagent/drink/milk/cream
-	required_reagents = list(/datum/reagent/drink/milk = 5)
-	result_amount = 1
+	required_reagents = list(/datum/reagent/drink/milk = 10)
+	result_amount = 5
 	mix_message = "The solution thickens into a smooth creamy substance."
-	minimum_temperature = 40 CELSIUS
-	maximum_temperature = (40 CELSIUS) + 100
+	minimum_temperature = 50 CELSIUS //so it doesn't conflicts with cheese
+	maximum_temperature = 60 CELSIUS
 
 /datum/chemical_reaction/vinegar3
 	name = "vinegar"

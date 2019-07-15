@@ -213,3 +213,8 @@
 	id = "chemcooler"
 	build_path = /obj/item/weapon/circuitboard/reagent_heater/cooler
 	materials = list(MATERIAL_COPPER = 1250, MATERIAL_GLASS = 1500)
+
+/datum/design/item/servicefab/culinarytools/icecream_vat
+	name = "icecream vat"
+	build_path = /obj/machinery/icecream_vat
+	materials = list(MATERIAL_COPPER = 1250, MATERIAL_GLASS = 1500)

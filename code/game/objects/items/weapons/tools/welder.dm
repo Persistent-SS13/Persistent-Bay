@@ -316,13 +316,9 @@
 		if(safety<FLASH_PROTECTION_MAJOR)
 			if(E.get_damages() > 10)
 				to_chat(user, SPAN_WARNING("Your eyes are really starting to hurt. This can't be good for you!"))
-
-			if (E.get_damages() >= E.min_broken_damage)
-				to_chat(H, SPAN_DANGER("You go blind!"))
-				H.sdisabilities |= BLIND
 			else if (E.get_damages() >= E.min_bruised_damage)
-				to_chat(H, SPAN_DANGER("You go blind!"))
-				H.eye_blind = 5
+				to_chat(H, SPAN_DANGER("It gets hard to see!"))
+				H.eye_blind = 15
 				H.eye_blurry = 5
 				// We don't want this to cure nearsightedness accidentally
 				if(!(H.disabilities & NEARSIGHTED))

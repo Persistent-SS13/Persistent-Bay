@@ -35,15 +35,14 @@
 /obj/structure/wall_frame/Initialize()
 	if(!material)
 		material = DEFAULT_WALL_MATERIAL
-		
 	if(istext(material))
 		material = SSmaterials.get_material_by_name(material)
-
 	max_health = material.integrity
-
-	update_connections(TRUE)
-	queue_icon_update()
 	. = ..()
+
+/obj/structure/wall_frame/LateInitialize()
+	. = ..()
+	update_connections(TRUE) //Do that when walls are done setting up their materials so we don't runtime neighbors!
 
 /obj/structure/wall_frame/examine(mob/user)
 	if(paint_color)
@@ -97,6 +96,8 @@
 // icon related
 
 /obj/structure/wall_frame/on_update_icon()
+	if(!material || istext(material))
+		return //Don't let it update the icon when the material isn't set!
 	overlays.Cut()
 	var/image/I
 

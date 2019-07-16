@@ -17,6 +17,7 @@
 	density = 1
 	anchored = 0
 	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_NO_REACT | ATOM_FLAG_OPEN_CONTAINER
+	circuit_type = /obj/item/weapon/circuitboard/icecream_vat
 
 	var/list/product_types = list()
 	var/dispense_flavour = ICECREAM_VANILLA
@@ -71,11 +72,7 @@
 
 /obj/machinery/icecream_vat/SetupParts()
 	. = ..()
-	create_reagents(100)
-	reagents.add_reagent(/datum/reagent/drink/milk, 5)
-	reagents.add_reagent(/datum/reagent/nutriment/flour, 5)
-	reagents.add_reagent(/datum/reagent/sugar, 5)
-	reagents.add_reagent(/datum/reagent/drink/ice, 5)
+	create_reagents(200)
 
 /obj/machinery/icecream_vat/attack_hand(mob/user as mob)
 	user.set_machine(src)
@@ -125,7 +122,7 @@
 	else if(O.is_open_container())
 		return
 	else
-		..()
+		return ..()
 
 /obj/machinery/icecream_vat/proc/make(var/mob/user, var/make_type, var/amount)
 	for(var/R in get_ingredient_list(make_type))

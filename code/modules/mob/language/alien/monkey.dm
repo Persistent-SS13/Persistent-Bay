@@ -9,21 +9,21 @@
 	shorthand = "HM"
 
 /datum/language/unathi/monkey
-	name = "Stok"
+	name = SPECIES_STOK
 	desc = "Hiss hiss hiss."
 	key = "7"
 	syllables = list("hiss","gronk")
 	shorthand = "UM"
 
 /datum/language/skrell/monkey
-	name = "Neaera"
+	name = SPECIES_NEAERA
 	desc = "Squik squik squik."
 	key = "8"
 	syllables = list("squick","croak")
 	shorthand = "SM"
 
 /datum/language/xenos/monkey
-	name = "Farwa"
+	name = SPECIES_FARWA
 	desc = "Meow meow meow."
 	key = "9"
 	syllables = list("meow","mew")

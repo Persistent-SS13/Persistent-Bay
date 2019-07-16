@@ -1,7 +1,7 @@
 /datum/species/human
 	name = SPECIES_HUMAN
 	name_plural = "Humans"
-	primitive_form = "Monkey"
+	primitive_form = SPECIES_MONKEY
 	unarmed_types = list(/datum/unarmed_attack/stomp, /datum/unarmed_attack/kick, /datum/unarmed_attack/punch, /datum/unarmed_attack/bite)
 	description = "Humanity originated in the Sol system, a has spread colonies across a wide swathe of space. They hold a wide range of forms and creeds."
 	assisted_langs = list(LANGUAGE_NABBER)
@@ -93,7 +93,7 @@
 	deform = 'icons/mob/human_races/species/skrell/deformed_body.dmi'
 	preview_icon = 'icons/mob/human_races/species/skrell/preview.dmi'
 	bandages_icon = 'icons/mob/bandage.dmi'
-	primitive_form = "Neaera"
+	primitive_form = SPECIES_NEAERA
 	unarmed_types = list(/datum/unarmed_attack/stomp, /datum/unarmed_attack/kick, /datum/unarmed_attack/punch, /datum/unarmed_attack/bite)
 	description = "An amphibious species, Skrell come from the star system known as Qerr'Vallis, which translates to 'Star of \
 	the royals' or 'Light of the Crown'.<br/><br/>Skrell are a highly advanced and logical race who live under the rule \

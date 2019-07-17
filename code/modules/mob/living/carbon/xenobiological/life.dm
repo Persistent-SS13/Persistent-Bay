@@ -139,32 +139,33 @@
 
 /mob/living/carbon/slime/proc/handle_nutrition()
 
-	adjust_nutrition(-(0.1 + 0.05 * is_adult))
+	nutrition -= 0.05 + 0.025 * is_adult
 
 	if(nutrition <= 0)
+		nutrition = 0
 		adjustToxLoss(2)
 		if (client && prob(5))
 			to_chat(src, "<span class='danger'>You are starving!</span>")
 
 	else if (nutrition >= get_grow_nutrition() && amount_grown < SLIME_EVOLUTION_THRESHOLD)
-		adjust_nutrition(-20)
+		nutrition -= 20
 		amount_grown++
 
 /mob/living/carbon/slime/proc/get_max_nutrition() // Can't go above it
-	if (is_adult) return 1200
-	else return 1000
+	if (is_adult) return 3200
+	else return 2800
 
 /mob/living/carbon/slime/proc/get_grow_nutrition() // Above it we grow, below it we can eat
-	if (is_adult) return 1000
-	else return 800
+	if (is_adult) return 2800
+	else return 2400
 
 /mob/living/carbon/slime/proc/get_hunger_nutrition() // Below it we will always eat
-	if (is_adult) return 600
-	else return 500
+	if (is_adult) return 1800
+	else return 1500
 
 /mob/living/carbon/slime/proc/get_starve_nutrition() // Below it we will eat before everything else
-	if (is_adult) return 300
-	else return 200
+	if (is_adult) return 500
+	else return 300
 
 /mob/living/carbon/slime/slip() //Can't slip something without legs.
 	return 0

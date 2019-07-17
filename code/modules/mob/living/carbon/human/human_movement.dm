@@ -1,6 +1,3 @@
-/mob/living/carbon/human
-	move_intents = list(/decl/move_intent/walk)
-
 /mob/living/carbon/human/movement_delay()
 	var/tally = ..()
 
@@ -13,6 +10,10 @@
 		if(skill_check(SKILL_EVA, SKILL_PROF))
 			tally -= 2
 		tally -= 1
+
+	var/obj/item/organ/internal/stomach/stomach = internal_organs_by_name[BP_STOMACH]
+	if(embedded_flag || (stomach && stomach.contents.len))
+		handle_embedded_and_stomach_objects() //Moving with objects stuck in you can cause bad times.
 
 	if(CE_SPEEDBOOST in chem_effects)
 		tally -= chem_effects[CE_SPEEDBOOST]
@@ -53,8 +54,7 @@
 			var/obj/item/organ/external/E = get_organ(organ_name)
 			tally += E ? E.movement_delay(4) : 4
 
-	if(shock_stage >= 10 || get_stamina() <= 0)
-		tally += 3
+	if(shock_stage >= 10) tally += 3
 
 	if(is_asystole()) tally += 10  //heart attacks are kinda distracting
 
@@ -62,8 +62,8 @@
 
 	if(MUTATION_FAT in src.mutations)
 		tally += 1.5
-	if (bodytemperature < species.cold_discomfort_level)
-		tally += (species.cold_discomfort_level - bodytemperature) / 10 * 1.75
+	if (bodytemperature < 283.222)
+		tally += (283.222 - bodytemperature) / 10 * 1.75
 
 	tally += max(2 * stance_damage, 0) //damaged/missing feet or legs is slow
 
@@ -144,7 +144,6 @@
 	var/lac_chance =  10 * encumbrance()
 	if(lac_chance && prob(skill_fail_chance(SKILL_HAULING, lac_chance)))
 		make_reagent(1, /datum/reagent/lactate)
-		adjust_hydration(-DEFAULT_THIRST_FACTOR)
 		switch(rand(1,20))
 			if(1)
 				visible_message("<span class='notice'>\The [src] is sweating heavily!</span>", "<span class='notice'>You are sweating heavily!</span>")
@@ -165,6 +164,3 @@
 				crutches--
 			else
 				E.add_pain(10)
-
-/mob/living/carbon/human/can_sprint()
-	return (stamina > 0)

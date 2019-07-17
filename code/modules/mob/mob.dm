@@ -2,7 +2,6 @@
 	STOP_PROCESSING(SSmobs, src)
 	GLOB.dead_mob_list_ -= src
 	GLOB.living_mob_list_ -= src
-	GLOB.player_list -= src
 	unset_machine()
 	QDEL_NULL(hud_used)
 	if(istype(skillset))
@@ -49,8 +48,6 @@
 	zone_sel = null
 
 /mob/Initialize()
-	if(!move_intent)
-		move_intent = move_intents[1]
 	if(ispath(move_intent))
 		move_intent = decls_repository.get_decl(move_intent) //Do it very early, because subclasses need it in initialize
 	. = ..()
@@ -1013,7 +1010,12 @@
 
 //Check for brain worms in head.
 /mob/proc/has_brain_worms()
-	return locate(/mob/living/simple_animal/borer) in contents
+
+	for(var/I in contents)
+		if(istype(I,/mob/living/simple_animal/borer))
+			return I
+
+	return 0
 
 // A mob should either use update_icon(), overriding this definition, or use update_icons(), not touching update_icon().
 // It should not use both.
@@ -1218,9 +1220,6 @@
 	return FALSE
 
 /mob/proc/get_footstep(var/footstep_type)
-	return
-
-/mob/proc/handle_embedded_and_stomach_objects()
 	return
 
 /mob/proc/get_id_name(var/if_no_id = "Unknown")

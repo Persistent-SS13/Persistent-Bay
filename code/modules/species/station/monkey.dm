@@ -22,8 +22,6 @@
 	death_message = "lets out a faint chimper as it collapses and stops moving..."
 	tail = "chimptail"
 
-	pixel_offset_z = -7
-
 	unarmed_types = list(/datum/unarmed_attack/bite, /datum/unarmed_attack/claws, /datum/unarmed_attack/punch)
 	inherent_verbs = list(/mob/living/proc/ventcrawl)
 	hud_type = /datum/hud_data/monkey
@@ -56,9 +54,6 @@
 		TAG_AMBITION = AMBITION_OPPORTUNITY, //Get some bannanas
 	)
 
-	var/list/no_touchie = list(/obj/item/weapon/mirror,
-							   /obj/item/weapon/storage/mirror)
-
 /datum/species/monkey/New()
 	equip_adjust = list(
 		slot_l_hand_str = list("[NORTH]" = list("x" = 1, "y" = 3), "[EAST]" = list("x" = -3, "y" = 2), "[SOUTH]" = list("x" = -1, "y" = 3), "[WEST]" = list("x" = 3, "y" = 2)),
@@ -89,7 +84,7 @@
 	if(!held && !H.restrained() && prob(5))
 		var/list/touchables = list()
 		for(var/obj/O in range(1,get_turf(H)))
-			if(O.simulated && O.Adjacent(H) && !is_type_in_list(O, no_touchie))
+			if(O.simulated && O.Adjacent(H))
 				touchables += O
 		if(touchables.len)
 			var/obj/touchy = pick(touchables)

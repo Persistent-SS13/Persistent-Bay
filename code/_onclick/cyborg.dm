@@ -107,7 +107,7 @@
 	A.BorgShiftClick(src)
 
 /mob/living/silicon/robot/CtrlClickOn(var/atom/A)
-	return A.BorgCtrlClick(src)
+	A.BorgCtrlClick(src)
 
 /mob/living/silicon/robot/AltClickOn(var/atom/A)
 	A.BorgAltClick(src)
@@ -125,16 +125,16 @@
 	AIShiftClick()
 
 /atom/proc/BorgCtrlClick(var/mob/living/silicon/robot/user) //forward to human click if not overriden
-	return CtrlClick(user)
+	CtrlClick(user)
 
 /obj/machinery/door/airlock/BorgCtrlClick() // Bolts doors. Forwards to AI code.
-	return AICtrlClick()
+	AICtrlClick()
 
 /obj/machinery/power/apc/BorgCtrlClick() // turns off/on APCs. Forwards to AI code.
-	return AICtrlClick()
+	AICtrlClick()
 
 /obj/machinery/turretid/BorgCtrlClick() //turret control on/off. Forwards to AI code.
-	return AICtrlClick()
+	AICtrlClick()
 
 /atom/proc/BorgAltClick(var/mob/living/silicon/robot/user)
 	AltClick(user)
@@ -159,11 +159,10 @@
 */
 /mob/living/silicon/robot/UnarmedAttack(atom/A)
 	A.attack_robot(src)
-
-/mob/living/silicon/robot/RangedAttack(atom/A, var/params)
+/mob/living/silicon/robot/RangedAttack(atom/A)
 	A.attack_robot(src)
-	return TRUE
 
 /atom/proc/attack_robot(mob/user as mob)
-	attack_ai(user)
+	if(Adjacent(user))
+		attack_ai(user)
 	return

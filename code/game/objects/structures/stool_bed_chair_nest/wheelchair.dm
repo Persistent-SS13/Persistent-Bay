@@ -137,8 +137,7 @@
 			to_chat(usr, "You let go of \the [name]'s handles.")
 			pulling.pulledby = null
 			pulling = null
-		return TRUE
-	return FALSE
+		return
 
 /obj/structure/bed/chair/wheelchair/Bump(atom/A)
 	..()

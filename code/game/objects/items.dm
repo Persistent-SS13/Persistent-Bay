@@ -135,10 +135,6 @@
 			M.update_inv_r_hand()
 
 /obj/item/proc/is_held_twohanded(mob/living/M)
-
-	if(istype(loc, /obj/item/rig_module) || istype(loc, /obj/item/weapon/rig))
-		return TRUE
-
 	var/check_hand
 	if(M.l_hand == src && !M.r_hand)
 		check_hand = BP_R_HAND //item in left hand, check right hand
@@ -236,23 +232,20 @@
 			to_chat(user, "<span class='notice'>You try to use your hand, but realize it is no longer attached!</span>")
 			return
 
-	var/old_loc = loc
+	var/old_loc = src.loc
 
-	pickup(user)
-	if (istype(loc, /obj/item/weapon/storage))
-		var/obj/item/weapon/storage/S = loc
+	src.pickup(user)
+	if (istype(src.loc, /obj/item/weapon/storage))
+		var/obj/item/weapon/storage/S = src.loc
 		S.remove_from_storage(src)
 
-	throwing = 0
-	if (loc == user)
+	src.throwing = 0
+	if (src.loc == user)
 		if(!user.unEquip(src))
 			return
 	else
-		if(isliving(loc))
+		if(isliving(src.loc))
 			return
-
-	if(QDELETED(src))
-		return // Unequipping changes our state, so must check here.
 
 	if(user.put_in_active_hand(src))
 		if (isturf(old_loc))
@@ -467,9 +460,6 @@ var/list/global/slot_flags_enumeration = list(
 	if(!M.slot_is_accessible(slot, src, disable_warning? null : M))
 		return 0
 	return 1
-
-/obj/item/proc/can_be_dropped_by_client(mob/M)
-	return M.canUnEquip(src)
 
 /obj/item/verb/verb_pickup()
 	set src in oview(1)

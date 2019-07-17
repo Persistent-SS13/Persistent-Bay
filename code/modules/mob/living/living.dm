@@ -80,16 +80,6 @@ default behaviour is:
 	return ..()
 
 /mob/living/Bump(atom/movable/AM, yes)
-
-	// This is boilerplate from /atom/movable/Bump() but in all honest
-	// I have no clue what is going on in the logic below this and I'm
-	// afraid to touch it in case it explodes and kills me.
-	if(throwing)
-		throw_impact(AM)
-		throwing = FALSE
-		return
-	// End boilerplate.
-
 	spawn(0)
 		if ((!( yes ) || now_pushing) || !loc)
 			return
@@ -108,6 +98,13 @@ default behaviour is:
 						to_chat(src, "<span class='warning'>[tmob] is restraining [M], you cannot push past</span>")
 					now_pushing = 0
 					return
+
+			//Leaping mobs just land on the tile, no pushing, no anything.
+			if(status_flags & LEAPING)
+				loc = tmob.loc
+				status_flags &= ~LEAPING
+				now_pushing = 0
+				return
 
 			if(can_swap_with(tmob)) // mutual brohugs all around!
 				var/turf/oldloc = loc
@@ -724,7 +721,6 @@ default behaviour is:
 //called when the mob receives a bright flash
 /mob/living/flash_eyes(intensity = FLASH_PROTECTION_MODERATE, override_blindness_check = FALSE, affect_silicon = FALSE, visual = FALSE, type = /obj/screen/fullscreen/flash)
 	if(override_blindness_check || !(disabilities & BLIND))
-		..()
 		overlay_fullscreen("flash", type)
 		spawn(25)
 			if(src)
@@ -808,8 +804,8 @@ default behaviour is:
 		to_chat(src, "<span class='notice'>You reach out with tendrils of ectoplasm and invade the mind of \the [src]...</span>")
 		to_chat(src, "<b>You have assumed direct control of \the [src].</b>")
 		to_chat(src, "<span class='notice'>Due to the spookiness of the round, you have taken control of the poor animal as an invading, possessing spirit - roleplay accordingly.</span>")
-		src.universal_speak = TRUE
-		src.universal_understand = TRUE
+		src.universal_speak = 1
+		src.universal_understand = 1
 		//src.cultify() // Maybe another time.
 		return
 
@@ -827,7 +823,6 @@ default behaviour is:
 /mob/living/update_icons()
 	if(auras)
 		overlays |= auras
-	update_shadow()
 
 /mob/living/proc/add_aura(var/obj/aura/aura)
 	LAZYDISTINCTADD(auras,aura)
@@ -912,22 +907,3 @@ default behaviour is:
 
 /mob/living/proc/eyecheck()
 	return FLASH_PROTECTION_NONE
-
-/mob/living/regenerate_icons()
-	..()
-	overlays.Cut()
-	update_shadow(0)
-
-/mob/living/proc/update_shadow(var/update_icons=1)
-	if(mob_flags & MOB_FLAG_NO_SHADOW)
-		return
-
-	var/turf/T = get_turf(src)
-	if(lying || (T && T.is_open())) // dont display shadows if we're laying down or in space
-		return
-
-	var/image/shadow = overlay_image('icons/effects/effects.dmi', icon_state="mob_shadow")
-	shadow.plane = HIDING_MOB_PLANE
-	shadow.layer = MOB_SHADOW_LAYER
-	shadow.pixel_z = shadow_offset // putting it lower than our mob
-	overlays += shadow

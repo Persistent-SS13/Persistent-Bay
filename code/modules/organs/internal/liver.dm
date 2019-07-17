@@ -61,9 +61,9 @@
 	var/blood_volume = owner.get_blood_volume()
 	if(blood_volume < BLOOD_VOLUME_SAFE || is_bruised())
 		if(owner.nutrition >= 300)
-			owner.adjust_nutrition(-10)
+			owner.nutrition -= 10
 		else if(owner.nutrition >= 200)
-			owner.adjust_nutrition(-3)
+			owner.nutrition -= 3
 
 	var/scarring = get_scarring_level()
 	if(owner.chem_effects[CE_ALCOHOL] && scarring) // If your liver is messed up, you can't hold liqour very well

@@ -201,18 +201,12 @@
 	animals lunging, etc.
 */
 /mob/proc/RangedAttack(var/atom/A, var/params)
-	if(!mutations.len) 
-		return FALSE
-
+	if(!mutations.len) return
 	if((MUTATION_LASER in mutations) && a_intent == I_HURT)
 		LaserEyes(A) // moved into a proc below
-		return TRUE
-
-	if(MUTATION_TK in mutations)
+	else if(MUTATION_TK in mutations)
 		setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
 		A.attack_tk(src)
-		return TRUE
-
 /*
 	Restrained ClickOn
 
@@ -258,16 +252,14 @@
 	For most objects, pull
 */
 /mob/proc/CtrlClickOn(var/atom/A)
-	return A.CtrlClick(src)
-	
+	A.CtrlClick(src)
+	return
 /atom/proc/CtrlClick(var/mob/user)
-	return FALSE
+	return
 
 /atom/movable/CtrlClick(var/mob/user)
 	if(Adjacent(user))
 		user.start_pulling(src)
-		return TRUE
-	. = ..()
 
 /*
 	Alt click
@@ -339,10 +331,10 @@
 /mob/living/carbon/human/LaserEyes()
 	if(nutrition>0)
 		..()
-		adjust_nutrition(-(rand(1,5)))
+		nutrition = max(nutrition - rand(1,5),0)
 		handle_regular_hud_updates()
 	else
-		to_chat(src, SPAN_WARNING("You're out of energy! You need food!"))
+		to_chat(src, "<span class='warning'>You're out of energy!  You need food!</span>")
 
 // Simple helper to face what you clicked on, in case it should be needed in more than one place
 /mob/proc/face_atom(var/atom/A)

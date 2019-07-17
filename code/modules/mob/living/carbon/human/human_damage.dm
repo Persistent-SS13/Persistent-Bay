@@ -302,11 +302,6 @@
 
 	var/dam_avg = damage / length(parts)
 	for(var/obj/item/organ/external/E in parts)
-		if(QDELETED(E))
-			continue
-		if(E.owner != src)
-			continue // The code below may affect the children of an organ.
-
 		apply_damage(dam_avg, damtype, used_weapon = used_weapon, silent = TRUE, given_organ = E)
 	updatehealth()
 	BITSET(hud_updateflag, HEALTH_HUD)

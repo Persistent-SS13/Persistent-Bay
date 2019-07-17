@@ -5,7 +5,6 @@
 	icon_state = "chair_preview"
 	color = "#666666"
 	base_icon = "chair"
-	buckle_pixel_shift = "x=0;y=0;z=0"
 	buckle_dir = 0
 	buckle_lying = 0 //force people to sit up in chairs when buckled
 	mass = 8

@@ -34,9 +34,6 @@
 
 		return 0
 
-	if(!canUnEquip(W))
-		return 0
-
 	equip_to_slot(W, slot, redraw_mob) //This proc should not ever fail.
 	return 1
 
@@ -215,7 +212,7 @@ var/list/slot_equipment_priority = list( \
 	if(!I) //If there's nothing to drop, the drop is automatically successful.
 		return 1
 	var/slot = get_inventory_slot(I)
-	if(!slot && !istype(I.loc, /obj/item/rig_module))
+	if(!slot)
 		return 1 //already unequipped, so success
 	return I.mob_can_unequip(src, slot)
 

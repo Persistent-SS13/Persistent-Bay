@@ -122,10 +122,7 @@
 	return TRUE
 
 /obj/structure/table/CtrlClick()
-	if(usr && usr.Adjacent(src))
-		if(!flipped)
-			do_flip()
-		else
-			do_put()
-		return TRUE
-	return FALSE
+	if(!flipped)
+		do_flip()
+	else
+		do_put()

@@ -24,7 +24,7 @@
 	layer = VEHICLE_BASE_LAYER
 
 	load_item_visible = TRUE
-	buckle_pixel_shift = "x=0;y=5"
+	buckle_pixel_shift = "x=0;y=0;z=-2"
 	max_health = 100
 	mass = 170.0 //kg or ~373 lb
 

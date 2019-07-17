@@ -1066,13 +1066,16 @@
 				return 1
 	return 0
 
-/mob/living/carbon/human/proc/handle_embedded_and_stomach_objects()
-	for(var/obj/item/organ/external/organ in src.organs)
-		if(organ.splinted)
-			continue
-		for(var/obj/item/O in organ.implants)
-			if(!istype(O,/obj/item/weapon/implant) && O.w_class > 1 && prob(5)) //Moving with things stuck in you could be bad.
-				jossle_internal_object(organ, O)
+/mob/living/carbon/human/handle_embedded_and_stomach_objects()
+
+	if(embedded_flag)
+		for(var/obj/item/organ/external/organ in organs)
+			if(organ.splinted)
+				continue
+			for(var/obj/item/O in organ.implants)
+				if(!istype(O,/obj/item/weapon/implant) && O.w_class > 1 && prob(5)) //Moving with things stuck in you could be bad.
+					jostle_internal_object(organ, O)
+
 	var/obj/item/organ/internal/stomach/stomach = internal_organs_by_name[BP_STOMACH]
 	if(stomach && stomach.contents.len)
 		for(var/obj/item/O in stomach.contents)
@@ -1084,9 +1087,9 @@
 					if(parent)
 						parent.embed(O)
 				else
-					jossle_internal_object(parent, O)
+					jostle_internal_object(parent, O)
 
-/mob/living/carbon/human/proc/jossle_internal_object(var/obj/item/organ/external/organ, var/obj/item/O)
+/mob/living/carbon/human/proc/jostle_internal_object(var/obj/item/organ/external/organ, var/obj/item/O)
 	// All kinds of embedded objects cause bleeding.
 	if(!organ.can_feel_pain())
 		to_chat(src, SPAN_DANGER("You feel [O] moving inside your [organ.name]."))
@@ -1209,8 +1212,10 @@
 
 	default_pixel_x = initial(pixel_x) + species.pixel_offset_x
 	default_pixel_y = initial(pixel_y) + species.pixel_offset_y
+	default_pixel_z = initial(pixel_z) + species.pixel_offset_z
 	pixel_x = default_pixel_x
 	pixel_y = default_pixel_y
+	pixel_z = default_pixel_z
 
 	if(LAZYLEN(descriptors))
 		descriptors = null
@@ -1223,6 +1228,8 @@
 
 	if(!(species.appearance_flags & HAS_UNDERWEAR))
 		QDEL_NULL_LIST(worn_underwear)
+
+	available_maneuvers = species.maneuvers.Copy()
 
 	spawn(0)
 		regenerate_icons()
@@ -1250,6 +1257,14 @@
 		else if(!cultural_info[token] || !(cultural_info[token] in species.available_cultural_info[token]))
 			update_lang = TRUE
 			set_cultural_value(token, species.default_cultural_info[token], defer_language_update = TRUE)
+
+	default_walk_intent = null
+	default_run_intent = null
+	move_intent = null
+	move_intents = species.move_intents.Copy()
+	set_move_intent(decls_repository.get_decl(move_intents[1]))
+	if(!istype(move_intent))
+		set_next_usable_move_intent()
 
 	if(update_lang)
 		languages.Cut()

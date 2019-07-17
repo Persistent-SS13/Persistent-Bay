@@ -8,7 +8,6 @@
 /*
  * Beds
  */
-
 /obj/structure/bed
 	name = "bed"
 	desc = "This is used to lie in, sleep in or strap on."
@@ -18,12 +17,15 @@
 	can_buckle = 1
 	buckle_dir = SOUTH
 	buckle_lying = 1
+	pixel_z = MOB_PIXEL_Z
+	buckle_pixel_shift = "x=0;y=0;z=7"
 	mass = 50
 	max_health = 200
 	damthreshold_brute 	= 5
 	matter = list()
 	var/material/padding_material
 	var/base_icon = "bed"
+	var/material_alteration = MATERIAL_ALTERATION_ALL
 	var/buckling_sound = 'sound/effects/buckle.ogg'
 
 	// It's fine if statics are inited right away
@@ -60,35 +62,34 @@
 
 // Reuse the cache/code from stools, todo maybe unify.
 /obj/structure/bed/on_update_icon()
-	// Clear prior icon
+	// Prep icon.
 	icon_state = "blank"
 	overlays.Cut()
-
-	var/cache_key
-
-	// Base Icon
-	cache_key = "[base_icon]-[material.name]"
-	if(!icon_cache[cache_key])
+	// Base icon.
+	var/cache_key = "[base_icon]-[material.name]"
+	if(isnull(icon_cache[cache_key]))
 		var/image/I = image(src.icon, "[base_icon]")
-		I.color = material.icon_colour
+		if(material_alteration & MATERIAL_ALTERATION_COLOR)
+			I.color = material.icon_colour
 		icon_cache[cache_key] = I
-	
 	overlays |= icon_cache[cache_key]
-
 	// Padding Icon
 	if(padding_material)
-		cache_key = "[base_icon]-padding-[padding_material.name]"
-		if(!icon_cache[cache_key])
+		var/padding_cache_key = "[base_icon]-padding-[padding_material.name]"
+		if(isnull(icon_cache[padding_cache_key]))
 			var/image/I = image(src.icon, "[base_icon]_padding")
-			I.color = padding_material.icon_colour
-			icon_cache[cache_key] = I
+			if(material_alteration & MATERIAL_ALTERATION_COLOR)
+				I.color = padding_material.icon_colour
+			icon_cache[padding_cache_key] = I
+		overlays |= icon_cache[padding_cache_key]
 
-		overlays |= icon_cache[cache_key]
+	// Strings.
+	if(material_alteration & MATERIAL_ALTERATION_NAME)
+		SetName(padding_material ? "[padding_material.adjective_name] [initial(name)]" : "[material.adjective_name] [initial(name)]") //this is not perfect but it will do for now.
 
-	// Fluff
-	// This is not perfect but it will do for now.
-	SetName(padding_material ? "[padding_material.adjective_name] [initial(name)]" : "[material.adjective_name] [initial(name)]") 
-	desc = padding_material ? "[initial(desc)] It's made of [material.use_name] and covered with [padding_material.use_name]." : "[initial(desc)] It's made of [material.use_name]."
+	if(material_alteration & MATERIAL_ALTERATION_DESC)
+		desc = initial(desc)
+		desc += padding_material ? " It's made of [material.use_name] and covered with [padding_material.use_name]." : " It's made of [material.use_name]."
 
 /obj/structure/bed/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
 	if(istype(mover) && mover.checkpass(PASS_FLAG_TABLE))
@@ -205,13 +206,6 @@
 /obj/structure/bed/padded/New(var/newloc)
 	..(newloc,MATERIAL_ALUMINIUM,MATERIAL_COTTON)
 
-/obj/structure/bed/alien
-	name = "resting contraption"
-	desc = "This looks similar to contraptions from earth. Could aliens be stealing our technology?"
-
-/obj/structure/bed/alien/New(var/newloc)
-	..(newloc,MATERIAL_RESIN)
-
 /*
  * Roller beds
  */
@@ -220,7 +214,7 @@
 	icon = 'icons/obj/rollerbed.dmi'
 	icon_state = "down"
 	anchored = 0
-	buckle_pixel_shift = "x=0;y=6"
+	buckle_pixel_shift = "x=0;y=0;z=13"
 	var/item_form_type = /obj/item/roller	//The folded-up object path.
 	var/obj/item/weapon/reagent_containers/beaker
 	var/iv_attached = 0
@@ -373,3 +367,10 @@
 	name = "dirty mattress"
 	icon_state = "dirty_mattress"
 	desc = "A dirty, smelly mattress covered in body fluids. You wouldn't want to touch this."
+
+/obj/structure/bed/alien
+	name = "resting contraption"
+	desc = "This looks similar to contraptions from earth. Could aliens be stealing our technology?"
+
+/obj/structure/bed/alien/New(var/newloc)
+	..(newloc,MATERIAL_RESIN)

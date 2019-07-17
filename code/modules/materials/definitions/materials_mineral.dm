@@ -203,7 +203,7 @@
 	ore_icon_overlay = "lump"
 	icon_colour = "#d1c0bc"
 	chem_products = list(
-		/datum/reagent/sodium = 10
+		/datum/reagent/sodium = 10,
 		/datum/reagent/toxin/chlorine = 10
 	)
 	door_icon_base = "stone"

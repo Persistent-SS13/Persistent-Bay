@@ -7,22 +7,22 @@
 	size = 14
 	requires_ntnet = TRUE
 	available_on_ntnet = TRUE
-	nanomodule_path = /datum/nano_module/records
+	nanomodule_path = /datum/nano_module/records_lookup
 	usage_flags = PROGRAM_ALL
-	category = PROG_OFFICE
+	category = PROG_SEC
 
-/datum/nano_module/records
+/datum/nano_module/records_lookup
 	name = Forensic Records"
 	var/datum/computer_file/report/crew_record/active_record
 	var/message = null
 
-/datum/nano_module/records/proc/get_connected_faction()
+/datum/nano_module/records_lookup/proc/get_connected_faction()
 	if(host)
 		var/obj/item/modular_computer/comp = host
 		return comp.ConnectedFaction()
 	return null
 
-/datum/nano_module/records/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
+/datum/nano_module/records_lookup/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
 	var/list/data = host.initial_data()
 	var/list/user_access = get_record_access(user)
 	var/list/faction_records = list()
@@ -92,13 +92,13 @@
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
-		ui = new(user, src, ui_key, "crew_records.tmpl", name, 700, 540, state = state)
+		ui = new(user, src, ui_key, "forensic_records.tmpl", name, 700, 540, state = state)
 		ui.auto_update_layout = 1
 		ui.set_initial_data(data)
 		ui.open()
 
 
-/datum/nano_module/records/proc/get_record_access(var/mob/user)
+/datum/nano_module/records_lookup/proc/get_record_access(var/mob/user)
 	var/list/user_access = using_access || user.GetAccess()
 
 	var/obj/item/modular_computer/PC = nano_host()
@@ -108,7 +108,7 @@
 
 	return user_access
 
-/datum/nano_module/records/proc/edit_field(var/mob/user, var/field_ID)
+/datum/nano_module/records_lookup/proc/edit_field(var/mob/user, var/field_ID)
 	var/datum/computer_file/report/crew_record/R = active_record
 	if(!R)
 		return
@@ -120,7 +120,7 @@
 		return
 	F.ask_value(user)
 
-/datum/nano_module/records/Topic(href, href_list)
+/datum/nano_module/records_lookup/Topic(href, href_list)
 	var/list/faction_records = list()
 	var/datum/world_faction/connected_faction = get_connected_faction()
 	if(connected_faction)
@@ -142,17 +142,21 @@
 		var/search = sanitize(input("Enter the value for search for.") as null|text)
 		if(!search)
 			return
-		for(var/datum/computer_file/report/crew_record/R in faction_records)
+		for(var/datum/computer_file/report/crew_record/R in GLOB.all_crew_records)
 			var/datum/report_field/field = R.field_from_name(field_name)
 			if(lowertext(field.get_value()) == lowertext(search))
 				active_record = R
+				return 1
+		if(!active_record)
+			active_record = Retrieve_Record(search)
+			if(active_record)
 				return 1
 		message = "Unable to find record containing '[search]'"
 		return 1
 
 	var/datum/computer_file/report/crew_record/R = active_record
 
-/datum/nano_module/records/proc/get_photo(var/mob/user)
+/datum/nano_module/records_lookup/proc/get_photo(var/mob/user)
 	if(istype(user.get_active_hand(), /obj/item/weapon/photo))
 		var/obj/item/weapon/photo/photo = user.get_active_hand()
 		return photo.img

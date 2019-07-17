@@ -31,7 +31,7 @@
 	. = ..()
 	if(.)
 		audible_emote("growls at [.]")
-    playsound = 'sound/hallucinations/growl1.ogg'
+    playsound(src.loc, 'sound/hallucinations/growl1.ogg', 50, 0)
 /mob/living/simple_animal/hostile/tormented/AttackingTarget()
 	. =..()
 	var/mob/living/L = .

@@ -82,9 +82,8 @@
 		data["fields"] = fields
 		////////////////////////////////// stuff ????
 	else
-		var/list/all_records = list()
-			data["dnasearch"] = check_access(user, core_access_security_programs)
-			data["fingersearch"] = check_access(user, core_access_security_programs)
+		data["dnasearch"] = check_access(user, core_access_security_programs)
+		data["fingersearch"] = check_access(user, core_access_security_programs)
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)

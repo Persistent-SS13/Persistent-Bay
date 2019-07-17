@@ -381,6 +381,12 @@
 	build_path = /obj/item/clothing/glasses/sunglasses/blindfold
 	materials = list("cloth" = 1000)
 
+/datum/design/item/medicalfab/restraint/roller
+	name = "Roller Bed"
+	id = "roller bed"
+	build_path = /obj/item/roller
+	materials = list("cloth" = 4000, MATERIAL_ALUMINIUM = 4000)
+
 /datum/design/item/medicalfab/restaint/facecover
 	name = "Face cover"
 	id = "facecover"

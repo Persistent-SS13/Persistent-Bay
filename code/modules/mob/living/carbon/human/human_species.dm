@@ -59,19 +59,17 @@
 /mob/living/carbon/human/phorosian/New(var/new_loc)
 	..(new_loc, SPECIES_PHOROSIAN)
 
-/mob/living/carbon/human/monkey/should_save = 0
-
 /mob/living/carbon/human/monkey/New(var/new_loc)
-	..(new_loc, "Monkey")
+	..(new_loc, SPECIES_MONKEY)
 
 /mob/living/carbon/human/farwa/New(var/new_loc)
-	..(new_loc, "Farwa")
+	..(new_loc, SPECIES_FARWA)
 
 /mob/living/carbon/human/neaera/New(var/new_loc)
-	..(new_loc, "Neaera")
+	..(new_loc, SPECIES_NEAERA)
 
 /mob/living/carbon/human/stok/New(var/new_loc)
-	..(new_loc, "Stok")
+	..(new_loc, SPECIES_STOK)
 
 /mob/living/carbon/human/adherent/New(var/new_loc)
 	..(new_loc, SPECIES_ADHERENT)

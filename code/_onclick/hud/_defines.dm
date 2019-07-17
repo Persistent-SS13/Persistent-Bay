@@ -56,6 +56,7 @@
 #define ui_movi "EAST-3:24,SOUTH:5"
 #define ui_zonesel "EAST-1:28,SOUTH:5"
 #define ui_acti_alt "EAST-1:28,SOUTH:5" //alternative intent switcher for when the interface is hidden (F12)
+#define ui_stamina "EAST-3:24,SOUTH+1:5"
 #define ui_kick_jump "CENTER+3:16,SOUTH:5"
 #define ui_fixeye "EAST-1:28,SOUTH+1:7"//"EAST-3:30,SOUTH+1:7"
 
@@ -83,8 +84,8 @@
 
 //Middle right (status indicators)
 #define ui_nutrition "EAST-1:28,CENTER-2:11"
+#define ui_nutrition_small "EAST-1:28,CENTER-2:24"
 #define ui_temp "EAST-1:28,CENTER-1:13"
-#define ui_stamina "EAST-1:28,CENTER-1:9"
 #define ui_health "EAST-1:28,CENTER:15"
 #define ui_internal "EAST-1:28,CENTER+1:17"
 #define ui_happiness "EAST+1, NORTH-13:18"

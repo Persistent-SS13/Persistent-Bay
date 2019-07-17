@@ -576,6 +576,13 @@ its easier to just keep the beam vertical.
 /atom/proc/get_cell()
 	return
 
+// Straight copy of the Translate(x,y) proc except it uses w and z instead for compatible use with spin-view procs
+/atom/proc/TranslateWZ(var/w_input = 0, var/z_input)
+	if(isnull(z_input))
+		z_input = w_input
+	pixel_w += w_input
+	pixel_z += z_input
+
 // Returns an amount of power drawn from the object (-1 if it's not viable).
 // If drain_check is set it will not actually drain power, just return a value.
 // If surge is set, it will destroy/damage the recipient and not return any power.

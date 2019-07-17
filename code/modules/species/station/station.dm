@@ -1,7 +1,7 @@
 /datum/species/human
 	name = SPECIES_HUMAN
 	name_plural = "Humans"
-	primitive_form = "Monkey"
+	primitive_form = SPECIES_MONKEY
 	unarmed_types = list(/datum/unarmed_attack/stomp, /datum/unarmed_attack/kick, /datum/unarmed_attack/punch, /datum/unarmed_attack/bite)
 	description = "Humanity originated in the Sol system, a has spread colonies across a wide swathe of space. They hold a wide range of forms and creeds."
 	assisted_langs = list(LANGUAGE_NABBER)
@@ -93,7 +93,7 @@
 	deform = 'icons/mob/human_races/species/skrell/deformed_body.dmi'
 	preview_icon = 'icons/mob/human_races/species/skrell/preview.dmi'
 	bandages_icon = 'icons/mob/bandage.dmi'
-	primitive_form = "Neaera"
+	primitive_form = SPECIES_NEAERA
 	unarmed_types = list(/datum/unarmed_attack/stomp, /datum/unarmed_attack/kick, /datum/unarmed_attack/punch, /datum/unarmed_attack/bite)
 	description = "An amphibious species, Skrell come from the star system known as Qerr'Vallis, which translates to 'Star of \
 	the royals' or 'Light of the Crown'.<br/><br/>Skrell are a highly advanced and logical race who live under the rule \
@@ -215,10 +215,10 @@
 // 	deform = 'icons/mob/human_races/species/diona/deformed_body.dmi'
 // 	preview_icon = 'icons/mob/human_races/species/diona/preview.dmi'
 // 	hidden_from_codex = FALSE
-
+// 	move_intents = list(/decl/move_intent/walk, /decl/move_intent/creep)
 // 	unarmed_types = list(/datum/unarmed_attack/stomp, /datum/unarmed_attack/kick, /datum/unarmed_attack/diona)
 // 	//primitive_form = "Nymph"
-// 	slowdown = 7
+// 	slowdown = 5
 // 	rarity_value = 3
 // 	hud_type = /datum/hud_data/diona
 // 	siemens_coefficient = 0.3
@@ -228,6 +228,7 @@
 // 	spawns_with_stack = 0
 // 	health_hud_intensity = 2
 // 	hunger_factor = 3
+// 	thirst_factor = 0.01
 
 // 	min_age = 1
 // 	max_age = 300
@@ -286,7 +287,7 @@
 
 // 	species_flags = SPECIES_FLAG_NO_SCAN | SPECIES_FLAG_IS_PLANT | SPECIES_FLAG_NO_PAIN | SPECIES_FLAG_NO_SLIP
 // 	appearance_flags = 0
-// 	spawn_flags = SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED | SPECIES_NO_FBP_CONSTRUCTION | SPECIES_NO_FBP_CHARGEN | SPECIES_NO_LACE
+// 	spawn_flags = SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED | SPECIES_NO_FBP_CONSTRUCTION | SPECIES_NO_FBP_CHARGEN
 
 // 	blood_color = "#004400"
 // 	flesh_color = "#907e4a"
@@ -380,5 +381,20 @@
 // 	return "sap"
 
 // /datum/species/diona/handle_environment_special(var/mob/living/carbon/human/H)
-// 	if(!H.InStasis() && H.stat != DEAD && H.nutrition < 10)
+// 	if(H.InStasis() || H.stat == DEAD)
+// 		return
+
+// 	if(H.nutrition < 10)
 // 		H.take_overall_damage(2,0)
+
+// 	if(H.hydration < 550 && H.loc)
+// 		var/is_in_water = FALSE
+// 		if(H.loc.is_flooded(lying_mob = TRUE))
+// 			is_in_water = TRUE
+// 		else
+// 			for(var/obj/structure/hygiene/shower/shower in H.loc)
+// 				if(shower.on)
+// 					is_in_water = TRUE
+// 					break
+// 		if(is_in_water)
+// 			H.adjust_hydration(100)

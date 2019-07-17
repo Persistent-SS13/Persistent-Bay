@@ -1,5 +1,5 @@
 /datum/species/monkey
-	name = "Monkey"
+	name = SPECIES_MONKEY
 	name_plural = "Monkeys"
 	description = "Ook."
 	codex_description = "Monkeys and other similar creatures tend to be found on science stations and vessels as \
@@ -21,6 +21,8 @@
 	dusted_anim = "dust-m"
 	death_message = "lets out a faint chimper as it collapses and stops moving..."
 	tail = "chimptail"
+
+	pixel_offset_z = -7
 
 	unarmed_types = list(/datum/unarmed_attack/bite, /datum/unarmed_attack/claws, /datum/unarmed_attack/punch)
 	inherent_verbs = list(/mob/living/proc/ventcrawl)
@@ -54,6 +56,9 @@
 		TAG_AMBITION = AMBITION_OPPORTUNITY, //Get some bannanas
 	)
 
+	var/list/no_touchie = list(/obj/item/weapon/mirror,
+							   /obj/item/weapon/storage/mirror)
+
 /datum/species/monkey/New()
 	equip_adjust = list(
 		slot_l_hand_str = list("[NORTH]" = list("x" = 1, "y" = 3), "[EAST]" = list("x" = -3, "y" = 2), "[SOUTH]" = list("x" = -1, "y" = 3), "[WEST]" = list("x" = 3, "y" = 2)),
@@ -84,7 +89,7 @@
 	if(!held && !H.restrained() && prob(5))
 		var/list/touchables = list()
 		for(var/obj/O in range(1,get_turf(H)))
-			if(O.simulated && O.Adjacent(H))
+			if(O.simulated && O.Adjacent(H) && !is_type_in_list(O, no_touchie))
 				touchables += O
 		if(touchables.len)
 			var/obj/touchy = pick(touchables)
@@ -110,7 +115,7 @@
 	H.item_state = lowertext(name)
 
 /datum/species/monkey/alien
-	name = "Farwa"
+	name = SPECIES_FARWA
 	name_plural = "Farwa"
 	health_hud_intensity = 2
 
@@ -127,7 +132,7 @@
 	)
 
 /datum/species/monkey/skrell
-	name = "Neaera"
+	name = SPECIES_NEAERA
 	name_plural = "Neaera"
 	health_hud_intensity = 1.75
 
@@ -147,7 +152,7 @@
 
 
 /datum/species/monkey/unathi
-	name = "Stok"
+	name = SPECIES_STOK
 	name_plural = "Stok"
 	health_hud_intensity = 1.5
 

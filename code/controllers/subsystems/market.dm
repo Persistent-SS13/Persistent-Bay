@@ -73,6 +73,8 @@ SUBSYSTEM_DEF(market)
 			return "Areas trespasser alarms from the signing party will be forwarded to the contracted organization. The signing party will be able to call security emergencies through a security-response beacon. For organization contracts this applies to everyone clocked in to the signing organization (but not areas those employees have leased)."
 		if(CONTRACT_SERVICE_LEASE)
 			return "As long as this contract is in place, this contracts APC and area it controls will be considered under the control of the signing party. The trespasser alarm will respond based on the settings of the signing party."
+		if(CONTRACT_SERVICE_LOAN)
+			return "The signing party agrees to automatic payment at the rate specified. Once the balance reaches zero, this contract will automatically complete in good standing. This type of contract can only be cancelled by the issuer."
 	return ""
 
 /datum/contract_database
@@ -117,6 +119,8 @@ SUBSYSTEM_DEF(market)
 	switch(auto_pay)
 		if(CONTRACT_PAY_NONE)
 			return "None"
+		if(CONTRACT_PAY_HOURLY)
+			return "[pay_amount] Hourly"
 		if(CONTRACT_PAY_DAILY)
 			return "[pay_amount] Daily"
 		if(CONTRACT_PAY_WEEKLY)
@@ -160,6 +164,17 @@ SUBSYSTEM_DEF(market)
 				var/datum/transaction/Te = new("[payer] (via recurring contract)", "Contract Payment", pay_amount, "Recurring Contract")
 				payee_account.do_transaction(Te)
 				last_pay = world.realtime
+				if(balance > 0)
+					balance -= pay_amount
+					if (balance < 0)
+						var/datum/transaction/RT = new("[payee] (via recurring contract)", "Reconciliation", -balance, "Recurring Contract")
+						payer_account.do_transaction(RT)
+						var/datum/transaction/RTe = new("[payer] (via recurring contract)", "Reconciliation", balance, "Recurring Contract")
+						payee_account.do_transaction(RTe)
+						balance = 0
+					if (balance == 0)
+						payee_completed = 1
+						payer_completed = 1
 				return 1
 	return 0
 
@@ -198,34 +213,45 @@ SUBSYSTEM_DEF(market)
 
 /datum/recurring_contract/proc/update_status()
 	if(CONTRACT_STATUS_OPEN)
+		if(payee_completed && payer_completed)
+			status = CONTRACT_STATUS_COMPLETED
 		if(payee_cancelled)
 			cancel_party = payee
 			status = CONTRACT_STATUS_CANCELLED
 			cancel_reason = "Manual Cancel"
 		if(payer_cancelled)
+			if (balance > 0) return
 			cancel_party = payer
 			status = CONTRACT_STATUS_CANCELLED
 			cancel_reason = "Manual Cancel"
-		if(payee_completed && payer_completed)
-			status = CONTRACT_STATUS_COMPLETED
 	if(payer_clear && payee_clear)
 		GLOB.contract_database.all_contracts -= src
 
 /datum/recurring_contract/proc/process()
+	if(auto_pay == CONTRACT_PAY_HOURLY)
+		if(world.realtime >= (last_pay + 1 HOUR))
+			if(!handle_payment())
+				if (balance <= 0)
+					cancel_party = payer
+					cancel_reason = "Insufficent funds for autopay"
+					status = CONTRACT_STATUS_CANCELLED
+					remove_services()
 	if(auto_pay == CONTRACT_PAY_DAILY)
 		if(world.realtime >= (last_pay + 1 DAY))
 			if(!handle_payment())
-				cancel_party = payer
-				cancel_reason = "Insufficent funds for autopay"
-				status = CONTRACT_STATUS_CANCELLED
-				remove_services()
+				if (balance <= 0)
+					cancel_party = payer
+					cancel_reason = "Insufficent funds for autopay"
+					status = CONTRACT_STATUS_CANCELLED
+					remove_services()
 	if(auto_pay == CONTRACT_PAY_WEEKLY)
 		if(world.realtime >= (last_pay + 7 DAYS))
 			if(!handle_payment())
-				cancel_party = payer
-				cancel_reason = "Insufficent funds for autopay"
-				status = CONTRACT_STATUS_CANCELLED
-				remove_services()
+				if (balance <= 0)
+					cancel_party = payer
+					cancel_reason = "Insufficent funds for autopay"
+					status = CONTRACT_STATUS_CANCELLED
+					remove_services()
 	update_status()
 
 /datum/recurring_contract
@@ -248,6 +274,7 @@ SUBSYSTEM_DEF(market)
 
 	var/auto_pay = CONTRACT_PAY_NONE
 	var/pay_amount = 0
+	var/balance = 0
 
 	var/last_pay = 0 // real time the payment went through
 

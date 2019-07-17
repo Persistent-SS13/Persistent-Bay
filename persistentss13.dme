@@ -2345,6 +2345,7 @@
 #include "code\modules\modular_computers\file_system\programs\medical\suit_sensors.dm"
 #include "code\modules\modular_computers\file_system\programs\research\research_manager.dm"
 #include "code\modules\modular_computers\file_system\programs\security\digitalwarrant.dm"
+#include "code\modules\modular_computers\file_system\programs\security\forensicsrecords.dm"
 #include "code\modules\modular_computers\file_system\reports\crew_record.dm"
 #include "code\modules\modular_computers\file_system\reports\deck_reports.dm"
 #include "code\modules\modular_computers\file_system\reports\people.dm"

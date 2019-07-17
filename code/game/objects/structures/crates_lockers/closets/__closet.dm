@@ -44,7 +44,6 @@
 
 /obj/structure/closet/Initialize()
 	..()
-
 	if((setup & CLOSET_HAS_LOCK))
 		verbs += /obj/structure/closet/proc/togglelock_verb
 
@@ -533,7 +532,7 @@
 		return FALSE
 
 /obj/structure/closet/proc/CanToggleLock(var/mob/user, var/obj/item/weapon/card/id/id_card)
-	return allowed(user)
+	return allowed(user) || (istype(id_card) && check_access_list(id_card.GetAccess(req_access_faction)))
 
 /obj/structure/closet/AltClick(var/mob/user)
 	if(!src.opened)

@@ -12,7 +12,7 @@
 	category = PROG_SEC
 
 /datum/nano_module/records_lookup
-	name = Forensic Records"
+	name = "Forensic Records"
 	var/datum/computer_file/report/crew_record/active_record
 	var/message = null
 
@@ -32,8 +32,6 @@
 
 	data["message"] = message
 	if(active_record)
-		send_rsc(user, active_record.photo_front, "front_[active_record.uid].png")
-		send_rsc(user, active_record.photo_side, "side_[active_record.uid].png")
 		data["pic_edit"] = check_access(user, core_access_reassignment, connected_faction.uid)
 		data += active_record.generate_nano_data(user_access, connected_faction)
 		data["uid"] = active_record.uid
@@ -85,9 +83,7 @@
 		////////////////////////////////// stuff ????
 	else
 		var/list/all_records = list()
-			
-			data["creation"] = check_access(user, core_access_reassignment)
-			data["dnasearch"] = check_access(user, core_access_medical_programs)
+			data["dnasearch"] = check_access(user, core_access_security_programs)
 			data["fingersearch"] = check_access(user, core_access_security_programs)
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)

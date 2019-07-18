@@ -81,6 +81,9 @@ GLOBAL_LIST_EMPTY(neural_laces)
 /obj/item/organ/internal/stack/Initialize()
 	. = ..()
 	if(owner)
+		var/obj/item/organ/internal/stack/oldlace = owner.internal_organs_by_name[BP_STACK]
+		if(istype(oldlace))
+			log_error(" obj/item/organ/internal/stack/Initialize(): [src]\ref[src] overwrote directly the active lace [oldlace]\ref[oldlace] in [owner]\ref[owner]! Bad things will happen!")
 		owner.internal_organs_by_name[BP_STACK] = src
 		owner.update_action_buttons()
 
@@ -97,6 +100,11 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		log_and_message_admins("Attempted to destroy an in-use neural lace!")
 		return QDEL_HINT_LETMELIVE
 	QDEL_NULL(lacemob)
+	selected_ballot = null
+	record = null
+	faction = null
+	backup = null
+	languages = null
 	GLOB.neural_laces -= src
 	. = ..()
 
@@ -394,8 +402,8 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 	if((!owner || !faction) && !robot)
 		return
-	if(!(owner && faction && owner.real_name == faction.get_leadername()))
-		var/datum/computer_file/report/crew_record/records
+	if(owner.real_name != faction.get_leadername())
+		var/datum/computer_file/report/crew_record/records //There's a member var called records too...
 		if(!robot)
 			records = faction.get_record(owner.real_name)
 		else
@@ -417,11 +425,11 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		else
 			return "No paying assignment."
 	else
-		var/datum/assignment/assignment = faction.get_assignment(null, owner.real_name)
+		var/datum/assignment/assignment = faction.get_assignment(null, owner.real_name) //This will never return not null except if the faction is a business and the person is a CEO
 		var/title
 		if(assignment && assignment.duty_able)
-			title = assignment.get_title(1)
-			return "Working as [title] for [faction.name].<br>Making [assignment.get_pay(record.rank)]$$ for every thirty minutes clocked in."
+			title = assignment.get_title()
+			return "Working as [title] for [faction.name].<br>Making [assignment.get_pay()]$$ for every thirty minutes clocked in."
 		else
 			return "No paying assignment."
 

@@ -105,13 +105,13 @@
 			switch_from_dead_to_living_mob_list()
 			set_stat(CONSCIOUS)
 			set_density(1)
-		return 0
+		return FALSE
 
 	handle_atmos()
 
 	if(health <= 0)
 		death()
-		return
+		return FALSE
 
 	if(health > maxHealth)
 		health = maxHealth

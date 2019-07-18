@@ -218,7 +218,7 @@
 
 		playsound(src.loc, 'sound/effects/splat.ogg', 50, 1)
 		operating = 0
-		for (var/obj/thing in contents)
+		for (var/obj/thing in InsertedContents())
 			// There's a chance that the gibber will fail to destroy some evidence.
 			if(istype(thing,/obj/item/organ) && prob(80))
 				qdel(thing)

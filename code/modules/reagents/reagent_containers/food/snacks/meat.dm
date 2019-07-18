@@ -43,6 +43,7 @@
 /obj/item/weapon/reagent_containers/food/snacks/meat/xenomeat
 	name = "meat"
 	desc = "A slab of green meat. Smells like acid."
+	icon = 'icons/obj/food.dmi'
 	icon_state = "xenomeat"
 	filling_color = "#43de18"
 	center_of_mass = "x=16;y=10"
@@ -52,6 +53,7 @@
 /obj/item/weapon/reagent_containers/food/snacks/meat/bearmeat
 	name = "bear meat"
 	desc = "A very manly slab of meat."
+	icon = 'icons/obj/food.dmi'
 	icon_state = "bearmeat"
 	filling_color = "#db0000"
 	center_of_mass = "x=16;y=10"

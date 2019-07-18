@@ -43,6 +43,7 @@
 /obj/structure/wall_frame/LateInitialize()
 	. = ..()
 	update_connections(TRUE) //Do that when walls are done setting up their materials so we don't runtime neighbors!
+	queue_icon_update()
 
 /obj/structure/wall_frame/examine(mob/user)
 	if(paint_color)

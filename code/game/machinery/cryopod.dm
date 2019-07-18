@@ -745,7 +745,8 @@
 		var/mob/M = occupant
 		M.stored_ckey = null
 		M.ckey = null
-	QDEL_NULL(occupant)
+	occupant.loc = null
+	qdel(occupant)
 	time_despawn = 0
 	despawning = FALSE
 

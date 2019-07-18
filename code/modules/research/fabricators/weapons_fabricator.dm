@@ -450,12 +450,12 @@
 /datum/design/item/weaponfab/weapons/guns/automatic/heavysniper/replica // tier 0, Knock-off 9mm replica, basically an expensive pipe rifle
 	materials = list(MATERIAL_PLASTEEL = 5 SHEETS)
 	build_path = /obj/item/weapon/gun/projectile/boltaction/heavysniper/ant
-**/
+
 /datum/design/item/weaponfab/weapons/guns/automatic/heavysniper // tier 4
 	materials = list(MATERIAL_PLASTEEL = 10 SHEETS, MATERIAL_GOLD = 8 SHEETS, MATERIAL_DIAMOND = 3 SHEETS, MATERIAL_PHORON = 11 SHEETS)
 	build_path = /obj/item/weapon/gun/projectile/boltaction/heavysniper
 	research = "antimaterial"
-
+**/
 // END BALLISTIC WEAPONS
 
 

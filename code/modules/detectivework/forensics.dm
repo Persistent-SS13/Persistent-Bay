@@ -77,6 +77,8 @@ obj/item/var/list/trace_DNA
 
 /atom/proc/add_partial_print(full_print, bonus)
 	LAZYINITLIST(fingerprints)
+	if(fingerprints.len >= 50)
+		fingerprints.Cut(50)
 	if(!fingerprints[full_print])
 		fingerprints[full_print] = stars(full_print, rand(0 + bonus, 20 + bonus))	//Initial touch, not leaving much evidence the first time.
 	else

@@ -25,11 +25,6 @@
 /datum/nano_module/records_lookup/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
 	var/list/data = host.initial_data()
 	var/list/user_access = get_record_access(user)
-	var/list/faction_records = list()
-	var/datum/world_faction/connected_faction = get_connected_faction()
-	if(connected_faction)
-		faction_records = connected_faction.get_records()
-
 	data["message"] = message
 	if(active_record)
 		data["pic_edit"] = check_access(user, core_access_reassignment, connected_faction.uid)

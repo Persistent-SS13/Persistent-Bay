@@ -129,7 +129,7 @@
 	name = "auto-tailor - costumes & special"
 	build_path = /obj/item/weapon/circuitboard/fabricator/autotailor/nonstandard
 
-/datum/design/circuit/autotailor_nonstandard
+/datum/design/circuit/autotailor_accessories
 	name = "auto-tailor - accessories and storage"
 	build_path = /obj/item/weapon/circuitboard/fabricator/autotailor/accessories
 

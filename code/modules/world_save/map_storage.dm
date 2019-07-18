@@ -454,7 +454,7 @@ var/global/list/debug_data = list()
 		v.linked_account = account
 	if(v.linked_account)
 		v.linked_account = v.linked_account.after_load()
-		v.linked_account.owner_name = get_name()
+		v.linked_account.owner_name = v.get_name()
 	GLOB.all_crew_records |= v
 	return v
 

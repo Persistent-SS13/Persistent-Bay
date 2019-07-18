@@ -330,7 +330,7 @@
 		bturf = bridge.dock.dock_interior == 1? current_location.base_turf : /turf/space
 	else if(bridge.dock.dock_interior == 1)
 		bturf = /turf/simulated/floor/plating
-		barea = get_area(current_location)
+	//	barea = get_area(current_location)
 	translate_turfs(turf_translation, barea, bturf)
 
 	// Reset interior lighting

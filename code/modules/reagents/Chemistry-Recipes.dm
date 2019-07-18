@@ -2125,14 +2125,15 @@
 	required_reagents = list(/datum/reagent/drink/space_up = 1, /datum/reagent/ethanol/bluecuracao = 1, /datum/reagent/ethanol/melonliquor = 1)
 	result_amount = 3
 
-/datum/chemical_reaction/rum
-	name = "Rum"
-	result = /datum/reagent/ethanol/rum
-	required_reagents = list(/datum/reagent/sugar = 1, /datum/reagent/water = 1)
-	catalysts = list(/datum/reagent/enzyme = 5)
-	result_amount = 2
-	mix_message = "The solution roils as it rapidly ferments into a red-brown liquid."
-	maximum_temperature = T0C + 60
+//Moved 
+// /datum/chemical_reaction/rum
+// 	name = "Rum"
+// 	result = /datum/reagent/ethanol/rum
+// 	required_reagents = list(/datum/reagent/sugar = 1, /datum/reagent/water = 1)
+// 	catalysts = list(/datum/reagent/enzyme = 5)
+// 	result_amount = 2
+// 	mix_message = "The solution roils as it rapidly ferments into a red-brown liquid."
+// 	maximum_temperature = T0C + 60
 
 /datum/chemical_reaction/ships_surgeon
 	name = "Ship's Surgeon"

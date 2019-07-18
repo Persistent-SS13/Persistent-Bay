@@ -14,7 +14,7 @@
 /datum/chemical_reaction/specialwhiskey
 	name = "Special blend whiskey"
 	result = /datum/reagent/ethanol/specialwhiskey
-	required_reagents = list(/datum/chemical_reaction/whiskey = 20, /datum/reagent/enzyme = 20, /datum/reagent/foaming_agent = 10)
+	required_reagents = list(/datum/chemical_reaction/whiskey = 20, /datum/reagent/enzyme = 20, /datum/reagent/hydrazine = 5)
 	catalysts = list(/datum/reagent/woodpulp = 10)
 	minimum_temperature = T0C + 60
 	maximum_temperature = T0C + 90

@@ -2217,6 +2217,7 @@
 #include "code\modules\mob\living\simple_animal\hostile\pirate.dm"
 #include "code\modules\mob\living\simple_animal\hostile\russian.dm"
 #include "code\modules\mob\living\simple_animal\hostile\syndicate.dm"
+#include "code\modules\mob\living\simple_animal\hostile\tormented.dm"
 #include "code\modules\mob\living\simple_animal\hostile\tree.dm"
 #include "code\modules\mob\living\simple_animal\hostile\vagrant.dm"
 #include "code\modules\mob\living\simple_animal\hostile\voxslug.dm"

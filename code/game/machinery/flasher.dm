@@ -6,6 +6,7 @@
 	icon = 'icons/obj/machines/flashers.dmi'
 	icon_state = "mflash1"
 	anchored = TRUE
+	density = 0
 	use_power = POWER_USE_IDLE
 	idle_power_usage = 2
 	movable_flags = MOVABLE_FLAG_PROXMOVE

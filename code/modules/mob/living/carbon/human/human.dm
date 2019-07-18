@@ -139,7 +139,7 @@
 
 	update_citizenship()
 	regenerate_icons()
-	handle_organs(1)
+	//handle_organs(1)
 
 	update_inv_back(1)
 	update_inv_ears(1)
@@ -165,7 +165,71 @@
 
 /mob/living/carbon/human/Destroy()
 	GLOB.human_mob_list -= src
+	remoteview_target = null
+	machine_visual = null
+	QDEL_NULL(vessel)
+	cultural_info = null
+	char_branch = null
+	char_rank = null
 	QDEL_NULL_LIST(worn_underwear)
+	default_attack = null
+	current_grab_type = null
+	wearing_rig = null
+	if(descriptors)
+		descriptors.Cut()
+
+	lying_icon = null
+	stand_icon = null
+	lip_style = null
+
+	if(equipment_overlays)
+		equipment_overlays.Cut()
+	if(flavor_texts)
+		flavor_texts.Cut()
+	if(backpack_setup)
+		QDEL_NULL(backpack_setup)
+
+	//Items
+	if(s_store)
+		s_store.dropInto(null)
+		QDEL_NULL(s_store)
+	if(l_store)
+		l_store.dropInto(null)
+		QDEL_NULL(l_store)
+	if(r_store)
+		r_store.dropInto(null)
+		QDEL_NULL(r_store)
+	if(wear_id)
+		wear_id.dropInto(null)
+		QDEL_NULL(wear_id)
+	if(r_ear)
+		r_ear.dropInto(null)
+		QDEL_NULL(r_ear)
+	if(l_ear)
+		l_ear.dropInto(null)
+		QDEL_NULL(l_ear)
+	if(head)
+		head.dropInto(null)
+		QDEL_NULL(head)
+	if(glasses)
+		glasses.dropInto(null)
+		QDEL_NULL(glasses)
+	if(gloves)
+		gloves.dropInto(null)
+		QDEL_NULL(gloves)
+	if(belt)
+		belt.dropInto(null)
+		QDEL_NULL(belt)
+	if(shoes)
+		shoes.dropInto(null)
+		QDEL_NULL(shoes)
+	if(w_uniform)
+		w_uniform.dropInto(null)
+		QDEL_NULL(w_uniform)
+	if(wear_suit)
+		wear_suit.dropInto(null)
+		QDEL_NULL(wear_suit)
+
 	for(var/organ in internal_organs)
 #ifndef UNIT_TEST
 		if(src.loc && istype(organ, /obj/item/organ/internal/stack))
@@ -177,7 +241,16 @@
 		qdel(organ)
 	for(var/organ in organs)
 		qdel(organ)
-	return ..()
+	if(bad_external_organs)
+		bad_external_organs.Cut()
+	if(grasp_limbs)
+		grasp_limbs.Cut()
+	if(stance_limbs)
+		stance_limbs.Cut()
+	if(cloaking_sources)
+		cloaking_sources.Cut()
+	..()
+	return QDEL_HINT_FINDREFERENCE
 
 /mob/living/carbon/human/get_ingested_reagents()
 	if(should_have_organ(BP_STOMACH))
@@ -1262,6 +1335,14 @@
 		var/obj/item/clothing/C = get_equipped_item(slot)
 		if(istype(C) && !C.mob_can_equip(src, slot, 1))
 			unEquip(C)
+
+	//Human hide should only be from humans..
+	if(species == SPECIES_HUMAN)
+		hide_type = /obj/item/stack/animalhide/human
+		hide_amount = 1
+	else if(species == SPECIES_MONKEY)
+		hide_type = /obj/item/stack/animalhide/monkey
+		hide_amount = 1
 
 	return 1
 

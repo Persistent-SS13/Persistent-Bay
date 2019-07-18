@@ -6,6 +6,7 @@
 	icon_state = "flood00"
 	density = 1
 	max_health = 100
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
 	var/on = 0
 	var/obj/item/weapon/cell/cell = null
 	var/use = 200 // 200W light

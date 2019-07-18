@@ -316,8 +316,11 @@
 // note this isn't called during the initial dressing of a player
 /obj/item/equipped(var/mob/user, var/slot)
 	hud_layerise()
-	if(user.client)	user.client.screen |= src
-	if(user.pulling == src) user.stop_pulling()
+	if(user)
+		if(user.client)	user.client.screen |= src
+		if(user.pulling == src) user.stop_pulling()
+	else 
+		log_warning(" obj/item/equipped(): [user] tried to equip [src]\ref[src] to slot [slot]. Caller is [usr]\ref[usr]")
 
 	//Update two-handing status
 	var/mob/M = loc

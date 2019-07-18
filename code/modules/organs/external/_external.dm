@@ -175,6 +175,7 @@ var/global/list/ORGAN_ENERGY_DAMAGES = list(DAM_BURN, DAM_LASER)
 		owner.organs_by_name -= organ_tag
 		while(null in owner.organs)
 			owner.organs -= null
+		owner = null
 
 	if(autopsy_data)    autopsy_data.Cut()
 

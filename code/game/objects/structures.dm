@@ -18,18 +18,30 @@
 /obj/structure/New()
 	..()
 	ADD_SAVED_VAR(anchored)
-	ADD_SAVED_VAR(material)
+	//Material is saved below
+
+/obj/structure/Write(savefile/f)
+	. = ..()
+	if(istype(material))
+		to_file(f["material"], material.name)
 	
-	ADD_SKIP_EMPTY(material)
+/obj/structure/Read(savefile/f)
+	. = ..()
+	var/mat 
+	from_file(f["material"], mat)
+	if(mat && istext(mat))
+		material = SSmaterials.get_material_by_name(mat)
+		if(!istype(material))
+			CRASH("[src]\ref[src] has non-existant material, '[mat]'")
+		
 
 /obj/structure/after_load()
-	update_connections(1)
+	//update_connections(1)
 	..()
 
 /obj/structure/Destroy()
 	var/turf/T = get_turf(src)
-	if(T && parts)
-		new parts(T)
+	material = null
 	. = ..()
 	if(istype(T))
 		T.fluid_update()

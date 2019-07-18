@@ -29,7 +29,7 @@
 
 /mob/living/carbon/lace/after_load()
 	. = ..()
-	if(container)
+	if(istype(container))
 		container.lacemob = src
 	for(var/datum/action/action in actions)
 		action.SetTarget(container)

@@ -36,7 +36,7 @@ var/const/HOLOPAD_MODE = RANGE_BASED
 	desc = "It's a floor-mounted device for projecting holographic images."
 	icon = 'icons/obj/machines/holopads.dmi'
 	icon_state = "holopad-B0"
-
+	density = 0
 	plane = ABOVE_TURF_PLANE
 	layer = FLOOR_MACHINE_LAYER
 

@@ -8,6 +8,7 @@
 	dir = WEST
 	req_access = core_access_command_programs
 	circuit_type = /obj/item/weapon/circuitboard/cryopod
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
 
 	var/base_icon_state = "cryopod_open"
 	var/occupied_icon_state = "cryopod_closed"
@@ -125,28 +126,35 @@
 			despawn_occupant()
 
 /obj/machinery/cryopod/attackby(var/obj/item/O, var/mob/user = usr)
-	src.add_fingerprint(user)
+	if(allowed(user) && default_deconstruction_screwdriver(user, O))
+		return TRUE
+	else
+		to_chat(user, SPAN_WARNING("The maintenance panel is locked!"))
+		return TRUE
+	if(default_deconstruction_crowbar(user, O)) //This requires the panel to be open to even do anything
+		return TRUE
+	if(default_part_replacement(user, O))
+		return TRUE
+
 	if(!req_access_faction)
 		to_chat(user, "<span class='notice'>\The [src] hasn't been connected to an organization.</span>")
 		return
-	if(occupant)
+	else if(occupant)
 		to_chat(user, "<span class='notice'>\The [src] is in use.</span>")
 		return
-	if(istype(O, /obj/item/grab))
-		var/obj/item/grab/G = O
-		if(check_occupant_allowed(G.affecting))
-			user.visible_message("<span class='notice'>\The [user] begins placing \the [G.affecting] into \the [src].</span>", "<span class='notice'>You start placing \the [G.affecting] into \the [src].</span>")
-			if(do_after(user, 20, src))
-				if(!G || !G.affecting) return
-			insertOccupant(G.affecting, user)
-			return
-	if(istype(O, /obj/item/organ/internal/stack))
-		insertOccupant(O, user)
-		return
-	if(default_deconstruction_screwdriver(user, O))
-		return
-	if(default_deconstruction_crowbar(user, O))
-		return
+	else
+		if(istype(O, /obj/item/grab))
+			var/obj/item/grab/G = O
+			if(check_occupant_allowed(G.affecting))
+				user.visible_message("<span class='notice'>\The [user] begins placing \the [G.affecting] into \the [src].</span>", "<span class='notice'>You start placing \the [G.affecting] into \the [src].</span>")
+				if(do_after(user, 20, src))
+					if(!G || !G.affecting) return
+				insertOccupant(G.affecting, user)
+				return 
+		if(istype(O, /obj/item/organ/internal/stack))
+			insertOccupant(O, user)
+			return TRUE
+	return ..()
 
 /obj/machinery/cryopod/attack_hand(var/mob/user = usr)
 	if(stat)	// If there are any status flags, it shouldn't be opperable
@@ -547,8 +555,8 @@
 	. = ..()
 	airtank = new()
 	airtank.temperature = T0C
-	airtank.adjust_gas("oxygen", MOLES_O2STANDARD, 0)
-	airtank.adjust_gas("nitrogen", MOLES_N2STANDARD)
+	airtank.adjust_gas(GAS_OXYGEN, MOLES_O2STANDARD, 0)
+	airtank.adjust_gas(GAS_NITROGEN, MOLES_N2STANDARD)
 
 /obj/machinery/cryopod/lifepod/return_air()
 	return airtank

@@ -143,11 +143,11 @@
 
 /obj/machinery/alarm/after_load()
 	. = ..()
-	alarm_area = get_area(src)
-	if(!alarm_area)
-		log_debug(" /obj/machinery/alarm/after_load() : [src]\ref[src]'s area is null area after load!!")
-		return
-	area_uid = alarm_area.uid
+	// alarm_area = get_area(src)
+	// if(!alarm_area)
+	// 	log_debug(" /obj/machinery/alarm/after_load() : [src]\ref[src]'s area is null area after load!!")
+	// 	return
+	// area_uid = alarm_area.uid
 	if(!TLV)
 		log_warning(" obj/machinery/alarm/after_load(): TLV for [src]\ref[src] after loading was null!!")
 		TLV = list()
@@ -166,8 +166,8 @@
 	. = ..()
 	alarm_area = get_area(src)
 	if(!alarm_area)
-		log_debug(" /obj/machinery/alarm/Initialize() : Alarm is in null area on initialize!!")
-		return
+		log_debug(" /obj/machinery/alarm/Initialize() : Alarm is in null area on initialize!! Deleting!")
+		return INITIALIZE_HINT_QDEL
 	area_uid = alarm_area.uid
 	if (name == initial(name))
 		SetName("[alarm_area.name] Air Alarm")
@@ -175,7 +175,9 @@
 	if(!wires)
 		wires = new(src)
 
-	if(!TLV?.len)
+	if(!LAZYLEN(TLV))
+		LAZYCLEARLIST(TLV)
+		TLV = list()
 		TLV[GAS_OXYGEN] =		list(16, 19, 135, 140) // Partial pressure, kpa
 		TLV[GAS_CO2] = 			list(-1.0, -1.0, 5, 10) // Partial pressure, kpa
 		TLV[GAS_CARBON_MONOXIDE] = list(-1.0, -1.0, 5, 10) // Partial pressure, kpa

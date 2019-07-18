@@ -1,11 +1,7 @@
 // GENERIC PRINTER - DO NOT USE THIS OBJECT.
 // Flesh and robot printers are defined below this object.
-
 /obj/machinery/organ_printer
-	name = "organ printer"
-	desc = "It's a machine that prints organs."
 	icon = 'icons/obj/surgery.dmi'
-	icon_state = "bioprinter"
 	anchored = 1
 	density = 1
 	idle_power_usage = 40
@@ -130,6 +126,7 @@ Time left: [time_print_end != 0? (time_print_end - world.time)/10 : "N/A"] secon
 		update_use_power(POWER_USE_IDLE)
 		queue_icon_update()
 	updateUsrDialog()
+
 
 /obj/machinery/organ_printer/proc/can_print(var/choice)
 	if(stored_matter < products[choice][2])

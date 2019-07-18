@@ -38,6 +38,7 @@
 			owner.internal_organs -= null
 		var/obj/item/organ/external/E = owner.organs_by_name[parent_organ]
 		if(istype(E)) E.internal_organs -= src
+		owner = null
 	return ..()
 
 /obj/item/organ/internal/set_dna(var/datum/dna/new_dna)

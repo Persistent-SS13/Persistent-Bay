@@ -317,7 +317,7 @@ obj/item/organ/external/take_general_damage(var/amount, var/silent = FALSE)
 //3. If the organ has already reached or would be put over it's max damage amount (currently redundant),
 //   and the brute damage dealt exceeds the tearoff threshold, the organ is torn off.
 /obj/item/organ/external/proc/attempt_dismemberment(brute, burn, edge, used_weapon, spillover, force_droplimb)
-	log_debug("[src] attempt_dismemberment([brute], [burn], [edge], [used_weapon], [spillover], [force_droplimb])")
+	//log_debug("[src] attempt_dismemberment([brute], [burn], [edge], [used_weapon], [spillover], [force_droplimb])")
 	//Check edge eligibility
 	var/edge_eligible = 0
 	if(edge)

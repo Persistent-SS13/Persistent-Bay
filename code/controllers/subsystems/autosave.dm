@@ -1,20 +1,41 @@
 SUBSYSTEM_DEF(autosave)
 	name = "Autosave"
-	wait = 3 HOURS
-	next_fire = 3 HOURS	// To prevent saving upon start.
-	runlevels = RUNLEVEL_GAME
+	wait = 1 MINUTES
+	// runlevels = RUNLEVEL_GAME
+	init_order = SS_INIT_AUTOSAVE
 
+	var/time_next_save = 0
 	var/saving = 0
 	var/announced = 0
+	var/save_interval = 1.5 HOURS
+
+/datum/controller/subsystem/autosave/Initialize(start_timeofday)
+	CalculateTimeNextSave()
+	return ..()
+
+/datum/controller/subsystem/autosave/Recover()
+	. = ..()
+	saving = 0
+	announced = 0
+	CalculateTimeNextSave()
 
 /datum/controller/subsystem/autosave/stat_entry()
-	..(saving ? "Currently Saving" : "Next autosave in [round((next_fire - world.time) / (1 MINUTE), 0.1)] minutes.")
-
+	var/time_diff = time_next_save - world.time
+	..(saving ? "Currently Saving" : "Next autosave in [round(time_diff/(1 MINUTE), 0.1)] minutes.")
 
 /datum/controller/subsystem/autosave/fire()
-	Save()
-
-
+	var/time_diff = time_next_save - world.time
+	if(time_diff <= 0)
+		Save()
+	else if(time_diff <= (1 MINUTES))
+		to_world("<font size=4 color='green'>Autosave in 1 Minute!</font>")
+		announced = 2
+	else if(time_diff <= (5 MINUTES))
+		to_world("<font size=4 color='green'>Autosave in 5 Minutes!</font>")
+		announced = 1
+	else if(announced)
+		announced = 0
+	
 /datum/controller/subsystem/autosave/proc/Save()
 	if(saving)
 		message_admins(SPAN_DANGER("Attempted to save while already saving!"))
@@ -23,19 +44,11 @@ SUBSYSTEM_DEF(autosave)
 		for(var/datum/controller/subsystem/S in Master.subsystems)
 			S.disable()
 		Save_World()
+		
 		for(var/datum/controller/subsystem/S in Master.subsystems)
 			S.enable()
 		saving = 0
+	CalculateTimeNextSave()
 
-
-/datum/controller/subsystem/autosave/proc/AnnounceSave()
-	var/minutes = (next_fire - world.time) / (1 MINUTE)
-
-	if(!announced && minutes <= 5)
-		to_world("<font size=4 color='green'>Autosave in 5 Minutes!</font>")
-		announced = 1
-	if(announced == 1 && minutes <= 1)
-		to_world("<font size=4 color='green'>Autosave in 1 Minute!</font>")
-		announced = 2
-	if(announced == 2 && minutes >= 6)
-		announced = 0
+/datum/controller/subsystem/autosave/proc/CalculateTimeNextSave()
+	time_next_save = world.time + save_interval

@@ -234,7 +234,7 @@
 		if(istype(A, /area/space))
 			message_admins("Shuttle [src] is trying to move space area.")
 			return
-		translation += get_turf_translation(get_turf(current_location), get_turf(destination), A.get_turfs())
+		translation += get_turf_translation(get_turf(location), get_turf(destination), A.get_turfs())
 	shuttle_moved(destination, translation)
 	return TRUE
 
@@ -330,7 +330,7 @@
 		bturf = bridge.dock.dock_interior == 1? current_location.base_turf : /turf/space
 	else if(bridge.dock.dock_interior == 1)
 		bturf = /turf/simulated/floor/plating
-		barea = get_area(current_location)
+	//	barea = get_area(current_location)
 	translate_turfs(turf_translation, barea, bturf)
 
 	// Reset interior lighting

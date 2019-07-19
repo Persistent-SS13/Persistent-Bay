@@ -83,3 +83,13 @@
 							/obj/item/stack/cable_coil = 5,
 							/obj/item/weapon/reagent_containers/glass/beaker = 1,
 							)
+
+/obj/item/weapon/circuitboard/icecream_vat
+	name = T_BOARD("icecream vat")
+	build_path = /obj/machinery/icecream_vat
+	board_type = "machine"
+	origin_tech = list(TECH_POWER = 1, TECH_ENGINEERING = 1)
+	req_components = list(
+							/obj/item/weapon/stock_parts/manipulator = 2,
+							/obj/item/weapon/stock_parts/matter_bin = 2,
+							/obj/item/weapon/reagent_containers/glass/bucket = 2)

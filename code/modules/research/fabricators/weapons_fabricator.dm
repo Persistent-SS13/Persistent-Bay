@@ -444,12 +444,12 @@
 /datum/design/item/weaponfab/weapons/guns/automatic/heavysniper/replica // tier 0, Knock-off 9mm replica, basically an expensive pipe rifle
 	materials = list(MATERIAL_PLASTEEL = 5 SHEETS)
 	build_path = /obj/item/weapon/gun/projectile/boltaction/heavysniper/ant
-**/
+
 /datum/design/item/weaponfab/weapons/guns/automatic/heavysniper // tier 4
 	materials = list(MATERIAL_PLASTEEL = 10 SHEETS, MATERIAL_GOLD = 8 SHEETS, MATERIAL_DIAMOND = 3 SHEETS, MATERIAL_PHORON = 11 SHEETS)
 	build_path = /obj/item/weapon/gun/projectile/boltaction/heavysniper
 	research = "antimaterial"
-
+**/
 // END BALLISTIC WEAPONS
 
 
@@ -1362,25 +1362,25 @@
 	materials = list("cloth" = 0.5 SHEETS)
 
 /datum/design/item/weaponfab/armor/accessory/holobadge
-	name = "Holobadge - security"
+	name = "Holobadge - Police"
 	id = "holobadge"
 	build_path = /obj/item/clothing/accessory/badge/holo
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_PHORON = 0.5 SHEETS)
 
 /datum/design/item/weaponfab/armor/accessory/holotag
-	name = "Holobadge tags - security"
+	name = "Holobadge lanyard - Police"
 	id = "holotag"
 	build_path = /obj/item/clothing/accessory/badge/holo/cord
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_PHORON = 0.5 SHEETS)
 
 /datum/design/item/weaponfab/armor/accessory/holobadge_det
-	name = "Holobadge - detective"
+	name = "Holobadge - Private Security"
 	id = "holobadge_det"
 	build_path = /obj/item/clothing/accessory/badge/defenseintel
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_PHORON = 0.5 SHEETS)
 
 /datum/design/item/weaponfab/armor/accessory/holobadge_det_old
-	name = "Holobadge old - detective"
+	name = "Holobadge - Old"
 	id = "holobadge_det_old"
 	build_path = /obj/item/clothing/accessory/badge/old
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_PHORON = 0.5 SHEETS)
@@ -1392,25 +1392,37 @@
 // 	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_PHORON = 0.5 SHEETS)
 
 /datum/design/item/weaponfab/armor/accessory/holotag_det
-	name = "Holotag - detective"
+	name = "Badge - Detective"
 	id = "holotag_det"
 	build_path = /obj/item/clothing/accessory/badge
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_PHORON = 0.5 SHEETS)
 
 /datum/design/item/weaponfab/armor/accessory/holotag_agent
-	name = "Holotag - agent"
+	name = "Badge - Office of Internal Control"
 	id = "holotag_agent"
 	build_path = /obj/item/clothing/accessory/badge/interstellarintel
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_PHORON = 0.5 SHEETS)
 
+/datum/design/item/weaponfab/armor/accessory/holotag_agent
+	name = "Badge - Governor Appointee"
+	id = "holotag_agent"
+	build_path = /obj/item/clothing/accessory/badge/tracker
+	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_PHORON = 0.5 SHEETS)
+	
+/datum/design/item/weaponfab/armor/accessory/holotag_agent
+	name = "Badge - Council Appointee"
+	id = "holotag_agent"
+	build_path = /obj/item/clothing/accessory/badge/ocieagent
+	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_PHORON = 0.5 SHEETS)
+	
 /datum/design/item/weaponfab/armor/accessory/holotag_press
-	name = "Holotag - press"
+	name = "Holotag - Press"
 	id = "holotag_press"
 	build_path = /obj/item/clothing/accessory/badge/press
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_PHORON = 0.5 SHEETS)
 
 /datum/design/item/weaponfab/armor/accessory/holotag_nt	//nt item
-	name = "Holotag - NT"
+	name = "Holotag - Corporate Exec"
 	id = "holotag_nt"
 	build_path = /obj/item/clothing/accessory/badge/nanotrasen
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_PHORON = 0.5 SHEETS)

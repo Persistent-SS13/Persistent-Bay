@@ -12,6 +12,7 @@
 	atom_flags = ATOM_FLAG_CLIMBABLE
 	density =    TRUE
 	anchored =   TRUE
+	use_power = POWER_USE_OFF
 	idle_power_usage = 0
 	active_power_usage = 1.2 KILOWATTS
 	circuit_type = /obj/item/weapon/circuitboard/reagent_heater
@@ -22,9 +23,9 @@
 
 	var/heater_mode =          HEATER_MODE_HEAT
 	var/list/permitted_types = list(/obj/item/weapon/reagent_containers/glass)
-	var/max_temperature =      200 CELSIUS
-	var/min_temperature =      40  CELSIUS
-	var/heating_power =        10 // K
+	var/max_temperature =      300 CELSIUS
+	var/min_temperature =      20  CELSIUS
+	var/heating_power =        100 // K
 	var/last_temperature
 	var/target_temperature
 	var/obj/item/container
@@ -36,15 +37,13 @@
 	icon_state = "coldplate"
 	heater_mode =      HEATER_MODE_COOL
 	max_temperature =  30 CELSIUS
-	min_temperature = -80 CELSIUS
+	min_temperature = -100 CELSIUS
 	circuit_type =     /obj/item/weapon/circuitboard/reagent_heater/cooler
 
 /obj/machinery/reagent_temperature/New()
 	. = ..()
 	ADD_SAVED_VAR(container)
 	ADD_SAVED_VAR(target_temperature)
-	
-	ADD_SKIP_EMPTY(container)
 
 /obj/machinery/reagent_temperature/Initialize()
 	target_temperature = min_temperature
@@ -67,14 +66,26 @@
 	if(comp)
 		change_power_consumption(max(0.5 KILOWATTS, initial(active_power_usage) - (comp.rating * 0.25 KILOWATTS)), POWER_USE_ACTIVE)
 
-/obj/machinery/reagent_temperature/Process()
+// /obj/machinery/reagent_temperature/Process()
+// 	. = ..()
+// 	if(. != PROCESS_KILL)
+// 		if(temperature != last_temperature)
+// 			queue_icon_update()
+
+/obj/machinery/reagent_temperature/power_change()
 	. = ..()
-	if(. != PROCESS_KILL)
-		if(temperature != last_temperature)
-			queue_icon_update()
-		if(((stat & (BROKEN|NOPOWER)) || !anchored) && use_power >= POWER_USE_ACTIVE)
-			update_use_power(POWER_USE_IDLE)
-			queue_icon_update()
+	if(!ispowered() && !isoff())
+		update_use_power(POWER_USE_OFF)
+		queue_icon_update()
+
+/obj/machinery/reagent_temperature/set_anchored(new_anchored)
+	if(!new_anchored && !isoff())
+		update_use_power(POWER_USE_OFF)
+	. = ..()
+	
+/obj/machinery/reagent_temperature/broken(damagetype)
+	update_use_power(POWER_USE_OFF)
+	. = ..()
 
 /obj/machinery/reagent_temperature/attack_hand(var/mob/user)
 	interact(user)
@@ -99,22 +110,28 @@
 /obj/machinery/reagent_temperature/attackby(var/obj/item/thing, var/mob/user)
 
 	if(default_deconstruction_screwdriver(user, thing))
-		return
+		return 1
 
 	if(default_deconstruction_crowbar(user, thing))
-		return
+		return 1
 
 	if(default_part_replacement(user, thing))
-		return
+		return 1
 
-	if(isWrench(thing))
-		if(use_power)
-			to_chat(user, SPAN_WARNING("Turn \the [src] off first!"))
-		else
-			anchored = !anchored
-			visible_message(SPAN_NOTICE("\The [user] [anchored ? "secured" : "unsecured"] \the [src]."))
-			playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
-		return
+	if(default_wrench_floor_bolts(user, thing))
+		return 1
+	// if(isWrench(thing))
+	// 	if(use_power)
+	// 		to_chat(user, SPAN_WARNING("Turn \the [src] off first!"))
+	// 	else
+	// 		anchored = !anchored
+	// 		visible_message(SPAN_NOTICE("\The [user] [anchored ? "secured" : "unsecured"] \the [src]."))
+	// 		playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
+	// 	return
+	if(thing.is_open_container() && container && container.is_open_container())
+		var/obj/item/weapon/reagent_containers/C = thing
+		if(C)
+			C.standard_pour_into(user, container)
 
 	if(thing.reagents)
 		for(var/checktype in permitted_types)
@@ -163,12 +180,12 @@
 	dat += "<tr><td>Target temperature:</td><td>"
 
 	if(target_temperature > min_temperature)
-		dat += "<a href='?src=\ref[src];adjust_temperature=-[heating_power]'>-</a> "
+		dat += "<a href='?src=\ref[src];adjust_temperature=-10'>-</a> "
 
 	dat += "[target_temperature - T0C]C"
 
 	if(target_temperature < max_temperature)
-		dat += " <a href='?src=\ref[src];adjust_temperature=[heating_power]'>+</a>"
+		dat += " <a href='?src=\ref[src];adjust_temperature=10'>+</a>"
 
 	dat += "</td></tr>"
 

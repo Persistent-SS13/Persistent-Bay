@@ -151,7 +151,7 @@ obj/item/organ/external/take_general_damage(var/amount, var/silent = FALSE)
 	if(owner && update_damstate())
 		owner.UpdateDamageIcon()
 
-	log_debug("[src] take_damage wound [created_wound]")
+	//log_debug("[src] take_damage wound [created_wound]")
 	return created_wound
 
 /obj/item/organ/external/heal_damage(brute, burn, internal = 0, robo_repair = 0)

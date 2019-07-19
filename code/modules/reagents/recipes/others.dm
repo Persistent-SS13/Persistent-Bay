@@ -15,8 +15,8 @@
 	result = /datum/reagent/ethanol
 	result_amount = 6
 	required_reagents = list(/datum/reagent/sugar = 4, /datum/reagent/water = 4, /datum/reagent/enzyme = 2)
-	minimum_temperature = T0C + 100 //Normally you'd wanna distill. But this will do
-	maximum_temperature = T0C + 150
+	minimum_temperature = T0C + 80 //Normally you'd wanna distill. But this will do
+	maximum_temperature = T0C + 100
 
 //Precursor Chem recipies.
 /datum/chemical_reaction/acetone_production
@@ -83,7 +83,7 @@
 
 /datum/chemical_reaction/methyl_bromide2
 	name = "Methyl Bromide"
-	required_reagents = list(/datum/reagent/boron = 1, /datum/reagent/methanol = 1, /datum/reagent/hydrogen = 2)
+	required_reagents = list(/datum/reagent/toxin/bromide = 1, /datum/reagent/methanol = 1, /datum/reagent/hydrogen = 2)
 	result_amount = 3
 	result = /datum/reagent/toxin/methyl_bromide
 	mix_message = "The solution begins to bubble, emitting a dark vapor."

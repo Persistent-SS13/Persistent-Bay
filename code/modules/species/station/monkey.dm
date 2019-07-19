@@ -1,5 +1,5 @@
 /datum/species/monkey
-	name = "Monkey"
+	name = SPECIES_MONKEY
 	name_plural = "Monkeys"
 	description = "Ook."
 	codex_description = "Monkeys and other similar creatures tend to be found on science stations and vessels as \
@@ -110,7 +110,7 @@
 	H.item_state = lowertext(name)
 
 /datum/species/monkey/alien
-	name = "Farwa"
+	name = SPECIES_FARWA
 	name_plural = "Farwa"
 	health_hud_intensity = 2
 
@@ -127,7 +127,7 @@
 	)
 
 /datum/species/monkey/skrell
-	name = "Neaera"
+	name = SPECIES_NEAERA
 	name_plural = "Neaera"
 	health_hud_intensity = 1.75
 
@@ -147,7 +147,7 @@
 
 
 /datum/species/monkey/unathi
-	name = "Stok"
+	name = SPECIES_STOK
 	name_plural = "Stok"
 	health_hud_intensity = 1.5
 

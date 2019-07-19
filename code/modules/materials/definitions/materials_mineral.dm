@@ -159,7 +159,8 @@
 	ore_icon_overlay = "lump"
 	icon_colour = "#e54e4e"
 	chem_products = list(
-		/datum/reagent/mercury  = 20
+		/datum/reagent/mercury  = 20,
+		/datum/reagent/toxin/bromide = 5, //Shouldn't be in cinnabar, but whatever
 	)
 	door_icon_base = "stone"
 	sheet_singular_name = "brick"
@@ -202,7 +203,8 @@
 	ore_icon_overlay = "lump"
 	icon_colour = "#d1c0bc"
 	chem_products = list(
-		/datum/reagent/sodium = 20
+		/datum/reagent/sodium = 10,
+		/datum/reagent/toxin/chlorine = 10
 	)
 	door_icon_base = "stone"
 	sheet_singular_name = "brick"

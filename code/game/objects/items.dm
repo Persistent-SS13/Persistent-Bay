@@ -841,3 +841,7 @@ modules/mob/living/carbon/human/life.dm if you die, you will be zoomed out.
 //Returns 1 if the given item is capable of popping things like balloons, inflatable barriers, or cutting police tape.
 /obj/item/proc/can_puncture()
 	return src.sharpness || ISDAMTYPE(src.damtype, DAM_PIERCE) || ISDAMTYPE(src.damtype, DAM_CUT)
+
+//Whether this item can engrave graffitis on turfs
+/obj/item/proc/can_graffiti()
+	return FALSE

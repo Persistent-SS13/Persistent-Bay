@@ -143,9 +143,6 @@
 	if(istype(O, /obj/item/organ/internal/stack))
 		insertOccupant(O, user)
 		return
-	if(InsertedContents())
-		to_chat(user, "<span class='notice'>\The [src] must be emptied of all stored users first.</span>")
-		return
 	if(default_deconstruction_screwdriver(user, O))
 		return
 	if(default_deconstruction_crowbar(user, O))
@@ -357,9 +354,10 @@
 		M.stored_ckey = null
 		M.ckey = null
 	QDEL_NULL(occupant)
+	occupant = null
 	time_despawn = 0
 	despawning = FALSE
-
+	occupant = null
 /*
  * Cryogenic refrigeration unit. Basically a despawner.
  * Stealing a lot of concepts/code from sleepers due to massive laziness.
@@ -624,12 +622,46 @@
 	if(default_deconstruction_crowbar(user, O))
 		return
 
+/obj/machinery/cryopod/personal/insertOccupant(var/atom/movable/A, var/mob/user = usr)
+	if(occupant)
+		to_chat(user, "<span class='notice'>\The [src] is in use.</span>")
+		return 0
+
+	if(!check_occupant_allowed(A))
+		to_chat(user, "<span class='notice'>\The [A] cannot be inserted into \the [src].</span>")
+		return 0
+
+	var/mob/M
+	if(istype(A, /mob))
+		M = A
+		if(M.buckled)
+			to_chat(user, "<span class='warning'>Unbuckle the subject before attempting to move them.</span>")
+			return 0
+
+		src.add_fingerprint(M)
+		M.stop_pulling()
+		to_chat(M, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b>(<a href='?src=\ref[src];despawn=1'>despawn now</a>)</span>")
+
+	if(istype(A, /obj/item/organ/internal/stack))
+		var/obj/item/organ/internal/stack/S = A
+		if(!S.lacemob)
+			to_chat(user, "<span class='notice'>\The [S] is inert.</span>")
+			return 0
+		M = S.lacemob
+		user.drop_from_inventory(A)
+
+	name = "[initial(name)] ([M.real_name])"
+	icon_state = "cryopod_closed"
+
+	occupant = A
+	A.forceMove(src)
+	time_despawn = world.time + time_till_despawn
+	src.add_fingerprint(user)
+
+
 /obj/machinery/cryopod/personal/attack_hand(var/mob/user = usr)
 	user.set_machine(src)
 	src.add_fingerprint(user)
-
-	var/datum/world_faction/faction = get_faction(req_access_faction)
-
 	var/data[]
 	data += "<hr><br><b>Cryopod Control</b></br>"
 	data += "<a href='?src=\ref[src];enter=1'>Enter Pod</a><br>"
@@ -643,7 +675,7 @@
 	if(href_list["eject"])
 		ejectOccupant()
 
-/obj/machinery/cryopod/proc/despawn_occupant(var/autocryo = 0)
+/obj/machinery/cryopod/personal/despawn_occupant(var/autocryo = 0)
 	if(!occupant)
 		return 0
 	if(despawning)
@@ -681,7 +713,7 @@
 		name = M.real_name
 		character = M
 		saveslot = M.save_slot
-		M.pawn_personal = 1
+		M.spawn_personal = 1
 		M.spawn_p_x = x
 		M.spawn_p_y = y
 		M.spawn_p_z = z
@@ -714,7 +746,9 @@
 		var/mob/M = occupant
 		M.stored_ckey = null
 		M.ckey = null
-	QDEL_NULL(occupant)
+	occupant.loc = null
+	qdel(occupant)
+	occupant = null
 	time_despawn = 0
 	despawning = FALSE
 

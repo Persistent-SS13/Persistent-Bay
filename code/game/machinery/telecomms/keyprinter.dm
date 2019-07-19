@@ -83,4 +83,4 @@
 	if(!reserved ||!radio_key ||printing || (stat & (BROKEN|NOPOWER)))
 		return
 
-	new /obj/item/device/encryptionkey/custom(src.loc, reserved_frequencies[reserved], radio_key, reserved)
+	new /obj/item/device/encryptionkey/custom(src.loc, reserved, radio_key, reserved)

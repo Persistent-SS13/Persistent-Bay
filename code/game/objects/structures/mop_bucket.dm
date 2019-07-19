@@ -12,8 +12,11 @@
 	matter = list(MATERIAL_PLASTIC = 3000)
 
 /obj/structure/mopbucket/New()
-	create_reagents(250)
 	..()
+
+/obj/structure/mopbucket/SetupReagents()
+	..()
+	create_reagents(250)
 
 /obj/structure/mopbucket/examine(mob/user)
 	if(..(user, 1))

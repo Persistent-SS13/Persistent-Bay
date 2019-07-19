@@ -54,6 +54,11 @@
 /datum/design/item/medicalfab/medicines
 	category = "Medicines"
 
+/datum/design/item/medicalfab/medicines/splint
+	name = "Medical splint"
+	build_path = /obj/item/stack/medical/splint
+	materials = list(MATERIAL_CLOTH = 1 SHEETS, MATERIAL_WOOD = 1 SHEETS)
+
 /datum/design/item/medicalfab/medicines/bruise_pack
 	build_path = /obj/item/stack/medical/bruise_pack
 	materials = list(MATERIAL_CLOTH = 5 SHEETS)
@@ -263,6 +268,10 @@
 	build_path = /obj/item/weapon/scalpel/manager
 	research = "scalpel_4"
 
+/datum/design/item/medicalfab/meditools/adv/hypospray
+	materials = list (MATERIAL_STEEL = 10 SHEET, MATERIAL_GLASS = 10 SHEET, MATERIAL_SILVER = 10 SHEET, MATERIAL_DIAMOND = 3 SHEET, MATERIAL_PHORON = 2 SHEET)
+	build_path = /obj/item/weapon/reagent_containers/hypospray/vial
+	research = "hypospray"
 
 /datum/design/item/medicalfab/meditools/adv/defib
 	name = "auto-resuscitator"
@@ -371,6 +380,12 @@
 	id = "blindfold"
 	build_path = /obj/item/clothing/glasses/sunglasses/blindfold
 	materials = list("cloth" = 1000)
+
+/datum/design/item/medicalfab/restraint/roller
+	name = "Roller Bed"
+	id = "roller bed"
+	build_path = /obj/item/roller
+	materials = list("cloth" = 4000, MATERIAL_ALUMINIUM = 4000)
 
 /datum/design/item/medicalfab/restaint/facecover
 	name = "Face cover"

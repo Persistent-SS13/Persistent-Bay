@@ -80,9 +80,13 @@
 
 /obj/item/organ/internal/eyes/take_internal_damage(amount, var/silent=0)
 	var/oldbroken = is_broken()
+	var/oldbruised = is_bruised()
 	. = ..()
-	if(is_broken() && !oldbroken && owner && !owner.stat)
-		to_chat(owner, SPAN_DANGER("You go blind!"))
+	if(owner && !owner.stat)
+		if(is_bruised() && !oldbruised)
+			to_chat(owner, SPAN_DANGER("It gets hard to see!"))
+		if(is_broken() && !oldbroken)
+			to_chat(owner, SPAN_DANGER("You go blind!"))
 
 /obj/item/organ/internal/eyes/Process() //Eye damage replaces the old eye_stat var.
 	..()
@@ -113,4 +117,5 @@
 	icon_state = "camera"
 	dead_icon = "camera_broken"
 	verbs |= /obj/item/organ/internal/eyes/proc/change_eye_color
+	innate_flash_protection = FLASH_PROTECTION_MODERATE //Robot eyes don't care as much about welders
 	update_colour()

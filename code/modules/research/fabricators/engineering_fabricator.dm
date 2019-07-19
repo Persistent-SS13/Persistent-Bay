@@ -397,6 +397,10 @@
 	name = "Airlock keypad electronics"
 	build_path = /obj/item/weapon/airlock_electronics/keypad_electronics
 
+/datum/design/item/engifab/electronics/intercom
+	name = "Intercom panel"
+	build_path = /obj/item/frame/intercom
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // PARTS
@@ -539,11 +543,6 @@
 
 // STOCK PARTS //
 
-
-/datum/design/item/engifab/parts/cell_device
-	name = "Device cell"
-	build_path = /obj/item/weapon/cell/device/standard/empty
-	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 1 SHEET)
 
 /datum/design/item/engifab/parts/basic_capacitor
 	name = "Basic capacitor"

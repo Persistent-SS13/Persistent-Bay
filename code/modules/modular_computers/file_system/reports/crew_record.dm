@@ -313,11 +313,10 @@ FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_synd
 		update_ids(get_name())
 		return
 	for(var/name in demote_votes)
-
 		if(name == faction.get_leadername())
-			five_promotes |= name
-			three_promotes |= name
-			all_promotes |= name
+			five_demotes |= name
+			three_demotes |= name
+			all_demotes |= name
 			continue
 		if(name == get_name()) continue
 		var/datum/computer_file/report/crew_record/record = faction.get_record(name)

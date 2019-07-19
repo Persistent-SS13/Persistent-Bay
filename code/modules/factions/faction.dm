@@ -55,6 +55,7 @@ var/PriorityQueue/all_feeds
 	var/contract_title = ""
 	var/additional_function = CONTRACT_SERVICE_NONE
 	var/contract_paytype = CONTRACT_PAY_NONE
+	var/contract_balance = 0
 	var/contract_pay = 0
 /obj/item/weapon/paper/contract/recurring/update_icon()
 	if(approved)
@@ -126,6 +127,7 @@ var/PriorityQueue/all_feeds
 
 							new_contract.auto_pay = contract_paytype
 							new_contract.pay_amount = contract_pay
+							new_contract.balance = contract_balance
 							new_contract.func = additional_function
 							new_contract.signer_name = usr.real_name
 
@@ -161,6 +163,7 @@ var/PriorityQueue/all_feeds
 
 				new_contract.auto_pay = contract_paytype
 				new_contract.pay_amount = contract_pay
+				new_contract.balance = contract_balance
 				new_contract.func = additional_function
 				new_contract.signer_name = usr.real_name
 
@@ -265,7 +268,7 @@ var/PriorityQueue/all_feeds
 		else
 			to_chat(usr, "\icon[src]<span class='warning'>Account not found.</span>")
 			return
-		signed_by = signed_account.owner_name
+		signed_by = usr.real_name
 		if(linked.contract_signed(src))
 			signed = 1
 			info = replacetext(info, "*Unsigned*", "[signed_account.owner_name]")

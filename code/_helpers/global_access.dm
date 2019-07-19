@@ -401,8 +401,6 @@
 			return global.department_radio_keys;
 		if("description_icons")
 			return global.description_icons;
-		if("designer_system")
-			return global.designer_system;
 		if("diary")
 			return global.diary;
 		if("dna_activity_bounds")
@@ -969,8 +967,6 @@
 			return global.visual_nets;
 		if("vsc")
 			return global.vsc;
-		if("wax_recipes")
-			return global.wax_recipes;
 		if("weighted_mundaneevent_locations")
 			return global.weighted_mundaneevent_locations;
 		if("weighted_randomevent_locations")
@@ -1400,8 +1396,6 @@
 			global.department_radio_keys=newval;
 		if("description_icons")
 			global.description_icons=newval;
-		if("designer_system")
-			global.designer_system=newval;
 		if("diary")
 			global.diary=newval;
 		if("dna_activity_bounds")
@@ -1968,8 +1962,6 @@
 			global.visual_nets=newval;
 		if("vsc")
 			global.vsc=newval;
-		if("wax_recipes")
-			global.wax_recipes=newval;
 		if("weighted_mundaneevent_locations")
 			global.weighted_mundaneevent_locations=newval;
 		if("weighted_randomevent_locations")
@@ -2198,7 +2190,6 @@
 	"department_accounts",
 	"department_radio_keys",
 	"description_icons",
-	"designer_system",
 	"diary",
 	"dna_activity_bounds",
 	"dna_genes",
@@ -2482,7 +2473,6 @@
 	"virusDB",
 	"visual_nets",
 	"vsc",
-	"wax_recipes",
 	"weighted_mundaneevent_locations",
 	"weighted_randomevent_locations",
 	"whitelist",

@@ -71,6 +71,7 @@
 #define SS_INIT_BAY_LEGACY      -200
 #define SS_INIT_LATE_INIT       -201
 #define SS_INIT_UNIT_TESTS      -100
+#define SS_INIT_AUTOSAVE        -300
 
 // SS runlevels
 

@@ -1,0 +1,34 @@
+{{if data.message}}
+<p>{{:helper.link('X', null, {'clear_message' : 1})}}{{:data.message}}</p>
+{{/if}}
+{{if data.uid}}
+{{:helper.link('BACK', '', {'clear_active' : 1})}}{{:helper.link('PRINT', '', {'print_active' : 1})}}<br><br>
+<div class='statusDisplay'>
+	<div style="text-align: center">
+		<h3>GENERIC INFORMATION</h3>
+	</div>
+	{{for data.fields}}
+		{{if value.access}}
+			<div class='item'>
+				<div class='itemLabel'>{{:value.name}}:</div>
+				{{if value.needs_big_box}}
+					<div style="display: inline-block;">
+					{{:value.value}}
+					</div>
+				{{else}}
+					<div class='itemBody'>{{:value.value}}</div>
+				{{/if}}
+			</div>
+		{{/if}}
+	{{/for}}
+</div>
+{{else}}
+{{:helper.link('Name Search', 'search', {'search' : 'Name'}, null)}}
+{{if data.dnasearch}}
+	{{:helper.link('DNA Search', 'search', {'search' : 'DNA'}, null)}}
+{{/if}}
+{{if data.fingersearch}}
+	{{:helper.link('Fingerprint Search', 'search', {'search' : 'Fingerprint'}, null)}}
+{{/if}}
+<br><br>
+{{/if}}

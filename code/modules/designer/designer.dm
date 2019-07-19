@@ -2,6 +2,7 @@
 
 //Any proc can have a designer_unit attached. The way they handle it is highly derivative
 /atom/var/datum/designer_unit/designer_unit
+/atom/var/designer_unit_saved_id
 
 //A general proc so any atom may be able to hook into the designer feature. It is called after a design change
 /atom/proc/designer_update_icon()
@@ -12,6 +13,9 @@
 	if (!(src in design.associated_atoms))
 		design.associated_atoms += src
 
+/atom/proc/designer_associate_via_id(var/id)
+	designer_unit = GLOB.designer_system.get_design(id)
+
 /atom/proc/designer_disassociate()
 	if (designer_unit)
 		designer_unit.associated_atoms -= src
@@ -19,7 +23,7 @@
 
 
 //The global designer_system var. Stores all designs in its list/designs.
-var/global/datum/designer_system/designer_system = new()
+GLOBAL_DATUM_INIT(designer_system, /datum/designer_system, new)
 //The actual designer_system datum
 /datum/designer_system
 	var/list/designs = list()
@@ -30,7 +34,7 @@ var/global/datum/designer_system/designer_system = new()
 	designs.Insert(designs.len +1, unit)
 	unit.id = designs.len -1 > 0 ? designs[designs.len -1].id +1 : 1
 
-//A DEBUG verb, more for admemeing than that to be honest.
+// A DEBUG verb, more for admemeing than that to be honest.
 // Doesn't actually delete designs, it deletes their icons.
 /datum/designer_system/proc/delete_designs()
 	set category = "Debug"
@@ -41,13 +45,28 @@ var/global/datum/designer_system/designer_system = new()
 	var/count = 0
 
 	usr << "Searching for designs made by ckey: [ckey]"
-	for (var/datum/designer_unit/design in designer_system.designs)
+	for (var/datum/designer_unit/design in GLOB.designer_system.designs)
 		if (design.creator_ckey == lowertext(ckey))
 			design.delete_icon()
 			count++
 	usr << "[count] designs made by [ckey] have been purged, only their associated atoms were left behind."
 
-//Our dear design holder. Almost everything related to designer happens under this datum.
+/datum/designer_system/proc/get_design(var/id)
+	return designs[id]
+
+/datum/designer_system/proc/backup_design(var/atom/caller)
+	if (!caller.designer_unit)
+		return
+	caller.designer_unit_saved_id = caller.designer_unit.id
+
+/datum/designer_system/proc/restore_design(var/atom/caller)
+	if (!caller.designer_unit_saved_id)
+		log_and_message_admins("Failed to load designer_unit at [caller]. No numeric ID ( '[caller.designer_unit_saved_id]' )", location=caller)
+		return
+	caller.designer_unit = get_design(caller.designer_unit_saved_id)
+	caller.designer_update_icon()
+
+// Our dear design holder. Almost everything related to designer happens under this datum.
 /datum/designer_unit
 	var/id
 
@@ -59,15 +78,20 @@ var/global/datum/designer_system/designer_system = new()
 
 	var/list/colors
 	var/icon/icon_custom
+	var/image/baked_image
 
 	var/creator_ckey
 	var/title = ""
 
 	var/list/associated_atoms = list()
 
-//On new design_unit, add itself to the global list of designs.
+// On new design_unit, add itself to the global list of designs.
 /datum/designer_unit/New()
-	designer_system.newDesign(src)
+	GLOB.designer_system.newDesign(src)
+
+/datum/designer_unit/after_load()
+	icon_custom = baked_image?.icon
+	update_associated_atoms()
 
 //The general proc to use when you want to draw to this design_unit
 /datum/designer_unit/proc/Design(var/atom/source)
@@ -145,6 +169,7 @@ var/global/datum/designer_system/designer_system = new()
 	icon_custom.Flip(NORTH)
 	icon_custom.Shift(EAST, icon_offset_x)
 	icon_custom.Shift(SOUTH, icon_offset_y)
+	baked_image = new(icon_custom)
 	update_associated_atoms()
 
 /datum/designer_unit/proc/update_associated_atoms()
@@ -163,7 +188,7 @@ var/global/datum/designer_system/designer_system = new()
 	delete_icon()
 	for (var/atom/obj in associated_atoms)
 		qdel(obj)
-	designer_system.designs -= src
+	GLOB.designer_system.designs -= src
 	qdel(src)
 
 //-----------------------------------------------------------------------------------------

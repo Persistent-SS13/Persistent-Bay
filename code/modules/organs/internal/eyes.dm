@@ -62,8 +62,9 @@
 /obj/item/organ/internal/eyes/removed(mob/living/user, drop_organ, detach)
 	. = ..()
 	//reset eye stuff, so after a transplant we don't stay blind..
-	target.eye_blind = 0
-	target.eye_blurry = 0
+	if(user)
+		user.eye_blind = 0
+		user.eye_blurry = 0
 
 /obj/item/organ/internal/eyes/replaced(var/mob/living/carbon/human/target)
 

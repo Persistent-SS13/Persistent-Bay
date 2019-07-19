@@ -373,9 +373,7 @@
 		if(!R) return 0
 		var/expense_limit = 0
 		var/datum/assignment/assignment = connected_faction.get_assignment(R.assignment_uid, R.get_name())
-		if()
-
-		else if(assignment)
+		if(assignment)
 			var/datum/accesses/expenses = assignment.accesses[R.rank]
 			if(expenses)
 				expense_limit = expenses.expense_limit

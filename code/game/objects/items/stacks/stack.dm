@@ -167,6 +167,7 @@
 			recipes_list = srl.recipes
 
 		var/datum/stack_recipe/R = recipes_list[text2num(href_list["make"])]
+		ASSERT(istype(R))
 		var/multiplier = text2num(href_list["multiplier"])
 		if (!multiplier || (multiplier <= 0)) //href exploit protection
 			return

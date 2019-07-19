@@ -59,3 +59,11 @@
 	center_of_mass = "x=16;y=10"
 	bitesize = 3
 	starts_with = list(/datum/reagent/nutriment/protein = 12, /datum/reagent/hyperzine = 5)
+
+//replace with new meat type
+/obj/item/weapon/reagent_containers/food/snacks/bearmeat/Initialize()
+	new/obj/item/weapon/reagent_containers/food/snacks/meat/bearmeat(src.loc)
+	return INITIALIZE_HINT_QDEL
+/obj/item/weapon/reagent_containers/food/snacks/xenomeat/Initialize()
+	new/obj/item/weapon/reagent_containers/food/snacks/meat/xenomeat(src.loc)
+	return INITIALIZE_HINT_QDEL

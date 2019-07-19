@@ -30,7 +30,7 @@
 	var/open_sound = null
 
 /obj/item/weapon/storage/Destroy()
-	if(isobj(storage_ui)) //Don't try to delete a type path
+	if(storage_ui && !ispath(storage_ui)) //Don't try to delete a type path
 		QDEL_NULL(storage_ui)
 	. = ..()
 

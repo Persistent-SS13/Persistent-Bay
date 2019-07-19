@@ -29,6 +29,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 /obj/item/organ/internal/stack
 	name = "neural lace"
 	parent_organ = BP_HEAD
+	icon = 'icons/obj/surgery.dmi'
 	icon_state = "cortical-stack"
 	organ_tag = BP_STACK
 	status = ORGAN_ROBOTIC

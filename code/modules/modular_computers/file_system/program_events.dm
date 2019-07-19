@@ -21,3 +21,7 @@
 // Called when an item is used on the computer, so specific handling can be done. But honestly, you'd better use the scanner system.
 /datum/computer_file/program/proc/event_item_used(var/obj/item/I, var/mob/user)
 	return
+
+// Called when a cloning pod is destroyed, so it doesn't keep it in its list!
+/datum/computer_file/program/proc/event_clonepod_removed(var/obj/machinery/clonepod/pod)
+	return

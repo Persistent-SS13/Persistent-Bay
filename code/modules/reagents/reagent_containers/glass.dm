@@ -52,7 +52,7 @@
 
 /obj/item/weapon/reagent_containers/glass/proc/update_temperature_coefficient()
 	//area for a 50ml beaker as a cylinder is 0.010952 m2.
-	temperature_coefficient = 0.010952 * w_class //Lets try this by default I guess..
+	temperature_coefficient = max(0.010952 * w_class, 0.01) //Lets try this by default I guess.. 
 
 /obj/item/weapon/reagent_containers/glass/examine(var/mob/user)
 	if(!..(user, 2))

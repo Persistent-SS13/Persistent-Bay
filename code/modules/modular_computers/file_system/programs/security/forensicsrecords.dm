@@ -113,9 +113,6 @@
 /datum/nano_module/records_lookup/Topic(href, href_list)
 	var/list/faction_records = list()
 	var/datum/world_faction/connected_faction = get_connected_faction()
-	if(connected_faction)
-		faction_records = connected_faction.get_records()
-
 	if(..())
 		return 1
 	if(!faction_records) //safety check

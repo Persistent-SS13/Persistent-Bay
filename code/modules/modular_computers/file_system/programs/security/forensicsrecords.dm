@@ -27,53 +27,22 @@
 	var/list/user_access = get_record_access(user)
 	data["message"] = message
 	if(active_record)
-		data["pic_edit"] = check_access(user, core_access_reassignment, connected_faction.uid)
-		data += active_record.generate_nano_data(user_access, connected_faction)
+		data += active_record.generate_nano_data(user_access)
 		data["uid"] = active_record.uid
 
 		///////////////////////////////////////// stuff ???
 		var/list/fields = list()
 		var/assignment = "Unassigned"
-		var/rank = 0
-		if(active_record.terminated)
-			assignment = "Terminated"
-			rank = 0
-		if(active_record.custom_title)
-			assignment = active_record.custom_title	//can be alt title or the actual job
-			rank = active_record.rank
-		else
-			if(connected_faction)
-				var/datum/assignment/job = connected_faction.get_assignment(active_record.assignment_uid, active_record.get_name())
-				if(!job)
-					assignment = "Unassigned"
-					rank = 0
-				else
-					assignment = job.get_title(active_record.rank)
-		fields.Add(list(list(
-			"key" = "assignment",
-			"name" = "Assignment",
-			"val" = assignment,
-			"editable" = 0,
-			"large" = 0
-		)))
-		fields.Add(list(list(
-			"key" = "rank",
-			"name" = "Rank",
-			"val" = rank,
-			"editable" = 0,
-			"large" = 0
-		)))
 		for(var/datum/report_field/F in active_record.fields)
 			if(F.name == "Job" || F.name == "Branch" || F.name == "Rank")
 				continue
-			if(F.verify_access(user_access, connected_faction))
-				fields.Add(list(list(
-					"key" = F.type,
-					"name" = F.name,
-					"val" = F.get_value(),
-					"editable" = F.verify_access_edit(user_access, connected_faction.uid),
-					"large" = F.needs_big_box
-				)))
+			fields.Add(list(list(
+				"key" = F.type,
+				"name" = F.name,
+				"val" = F.get_value(),
+				"editable" = 0,
+				"large" = F.needs_big_box
+			)))
 		data["fields"] = fields
 		////////////////////////////////// stuff ????
 	else

@@ -357,7 +357,7 @@
 	occupant = null
 	time_despawn = 0
 	despawning = FALSE
-	occupant = nnull
+	occupant = null
 /*
  * Cryogenic refrigeration unit. Basically a despawner.
  * Stealing a lot of concepts/code from sleepers due to massive laziness.

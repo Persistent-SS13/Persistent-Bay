@@ -24,7 +24,7 @@
 	ADD_SAVED_VAR(scanner_progress)
 	ADD_SAVED_VAR(report_num)
 
-/obj/machinery/dnaforensics/attackby(var/obj/item/W, var/obj/item/O as obj, mob/user as mob)
+/obj/machinery/dnaforensics/attackby(var/obj/item/O as obj, mob/user as mob)
 	if(closed)
 		if(default_deconstruction_screwdriver(user, O))
 			return
@@ -38,12 +38,12 @@
 		to_chat(user, "<span class='warning'>Open the cover before inserting the sample.</span>")
 		return
 
-	var/obj/item/weapon/forensics/swab/swab = W
+	var/obj/item/weapon/forensics/swab/swab = O
 	if(istype(swab) && swab.is_used())
-		if(!user.unEquip(W, src))
+		if(!user.unEquip(O, src))
 			return
 		src.bloodsamp = swab
-		to_chat(user, "<span class='notice'>You insert \the [W] into \the [src].</span>")
+		to_chat(user, "<span class='notice'>You insert \the [O] into \the [src].</span>")
 	else
 		to_chat(user, "<span class='warning'>\The [src] only accepts used swabs.</span>")
 		return

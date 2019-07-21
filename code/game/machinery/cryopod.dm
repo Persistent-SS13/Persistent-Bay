@@ -354,9 +354,10 @@
 		M.stored_ckey = null
 		M.ckey = null
 	QDEL_NULL(occupant)
+	occupant = null
 	time_despawn = 0
 	despawning = FALSE
-
+	occupant = null
 /*
  * Cryogenic refrigeration unit. Basically a despawner.
  * Stealing a lot of concepts/code from sleepers due to massive laziness.
@@ -745,7 +746,9 @@
 		var/mob/M = occupant
 		M.stored_ckey = null
 		M.ckey = null
-	QDEL_NULL(occupant)
+	occupant.loc = null
+	qdel(occupant)
+	occupant = null
 	time_despawn = 0
 	despawning = FALSE
 

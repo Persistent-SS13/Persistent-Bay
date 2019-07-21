@@ -160,8 +160,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		ui_interact(loc.loc)	// A robot
 	else if(owner)
 		ui_interact(owner)
-	else
-		log_and_message_admins("[src] called ui_action_click without any owner!")
+
 
 /obj/item/organ/internal/stack/Topic(href, href_list)
 	switch (href_list["action"])
@@ -436,7 +435,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 			faction.connected_laces |= src
 			if(faction.employment_log.len > 100)
 				faction.employment_log.Cut(1,2)
-			faction.employment_log += "At [stationdate2text()] [stationtime2text()] [owner.real_name] clocked in."		
+			faction.employment_log += "At [stationdate2text()] [stationtime2text()] [owner.real_name] clocked in."
 		else
 			faction = null
 			return 0

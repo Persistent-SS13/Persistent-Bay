@@ -89,12 +89,12 @@
 	tracks.AddTracks(bloodDNA,comingdir,goingdir,bloodcolor)
 
 /turf/simulated/proc/update_dirt()
-	dirt = min(dirt+0.5, 101)
+	dirt = min(dirt+0.1, .5)
 	var/obj/effect/decal/cleanable/dirt/dirtoverlay = locate(/obj/effect/decal/cleanable/dirt, src)
 	if (dirt > 50)
 		if (!dirtoverlay)
 			dirtoverlay = new/obj/effect/decal/cleanable/dirt(src)
-		dirtoverlay.alpha = min((dirt - 50) * 5, 255)
+		dirtoverlay.alpha = min((dirt - 50) * 5, 120)
 
 /turf/simulated/remove_cleanables()
 	dirt = 0
@@ -199,4 +199,3 @@
 		coil.turf_place(src, user)
 		return
 	return ..()
-

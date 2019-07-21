@@ -105,21 +105,21 @@
 				connected_faction.create_proposal(user.real_name, STOCKPROPOSAL_CEOREPLACE, select_name)
 			else
 				to_chat(usr, "Invalid Entry.")
-		if("ceo_wage")
+		if("change_wage")
 			var/new_pay = input(usr, "Enter new proposed CEO wage.","CEO Wage") as null|num
 			if(!new_pay && new_pay != 0) return 1
 			if(connected_faction.has_proposal(user.real_name))
 				to_chat(user, "You can only have one active proposal at a time.")
 				return 1
 			connected_faction.create_proposal(user.real_name, STOCKPROPOSAL_CEOWAGE, new_pay)
-		if("ceo_revenue")
+		if("change_ceo_revenue")
 			var/new_pay = input(usr, "Enter new proposed CEO revenue share. 30% Max","CEO Revenue Share") as null|num
 			if(!new_pay && new_pay != 0 || new_pay > 30) return 1
 			if(connected_faction.has_proposal(user.real_name))
 				to_chat(user, "You can only have one active proposal at a time.")
 				return 1
 			connected_faction.create_proposal(user.real_name, STOCKPROPOSAL_CEOTAX, new_pay)
-		if("stockholder_revenue")
+		if("change_stockholder_revenue")
 			var/new_pay = input(usr, "Enter new proposed stockholder revenue share. 30% Max","Stockholder Revenue Share") as null|num
 			if(!new_pay && new_pay != 0 || new_pay > 30) return 1
 			if(connected_faction.has_proposal(user.real_name))

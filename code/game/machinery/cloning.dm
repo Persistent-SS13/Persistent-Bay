@@ -15,6 +15,7 @@
 	icon_state = "pod_0"
 	req_access = list(core_access_medical_programs) //For premature unlocking.
 	circuit_type = /obj/item/weapon/circuitboard/clonepod
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
 	var/mob/living/occupant
 	var/heal_level = 90 //The clone is released once its health reaches this level.
 	var/locked = 0

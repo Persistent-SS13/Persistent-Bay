@@ -56,9 +56,9 @@
 /datum/metabolism_effects/Destroy()
 	clear_effects()
 	parent = null
-	qdel(withdrawal_levels)
-	qdel(addiction_levels)
-	qdel(last_doses)
+	QDEL_NULL_LIST(withdrawal_levels)
+	QDEL_NULL_LIST(addiction_levels)
+	last_doses = null
 	. = ..()
 
 /datum/metabolism_effects/proc/check_reagent(datum/reagent/RT, var/volume, var/removed)

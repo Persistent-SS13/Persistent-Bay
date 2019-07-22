@@ -249,8 +249,10 @@
 		stance_limbs.Cut()
 	if(cloaking_sources)
 		cloaking_sources.Cut()
-	..()
+	. = ..()
+#ifdef TESTING
 	return QDEL_HINT_FINDREFERENCE
+#endif
 
 /mob/living/carbon/human/get_ingested_reagents()
 	if(should_have_organ(BP_STOMACH))

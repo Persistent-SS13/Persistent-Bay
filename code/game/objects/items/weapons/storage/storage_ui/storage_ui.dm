@@ -1,7 +1,9 @@
 /datum/storage_ui
 	var/obj/item/weapon/storage/storage
 
-/datum/storage_ui/New(var/storage)
+/datum/storage_ui/New(var/obj/item/weapon/storage/storage)
+	if(!istype(storage))
+		log_warning("[src]\ref[src] was built with an invalid storage object type! ([storage? storage.type : "null" ])")
 	src.storage = storage
 	..()
 

@@ -274,7 +274,7 @@
 		if(T)
 			forceMove(T)
 
-/mob/simple_animal/hostile/touch_map_edge()
+/mob/living/simple_animal/hostile/touch_map_edge()
 
 	var/new_x = x
 	var/new_y = y

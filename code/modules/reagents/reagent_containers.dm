@@ -4,6 +4,7 @@
 	icon = 'icons/obj/chemical.dmi'
 	icon_state = null
 	w_class = ITEM_SIZE_SMALL
+	temperature_coefficient = 0.5 //defaults to this, so it can be heated
 	var/amount_per_transfer_from_this = 5
 	var/possible_transfer_amounts = "5;10;15;25;30"
 	var/volume = 30
@@ -79,10 +80,9 @@
 /obj/item/weapon/reagent_containers/proc/standard_dispenser_refill(var/mob/user, var/obj/structure/reagent_dispensers/target) // This goes into afterattack
 	if(!istype(target))
 		return 0
-
-	if(target.tankcap)
-		to_chat(user, SPAN_NOTICE("\The [target]'s tank cap is opened for pouring."))
-		return standard_pour_into(user, target)
+	
+	if(target.can_fill)
+		return 0 //Run regular reagent container code if the dispenser is open!
 
 	if(!target.reagents || !target.reagents.total_volume)
 		to_chat(user, "<span class='notice'>[target] is empty.</span>")

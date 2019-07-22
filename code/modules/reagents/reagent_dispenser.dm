@@ -11,7 +11,7 @@
 	var/initial_reagent_types  // A list of reagents and their ratio relative the initial capacity. list(/datum/reagent/water = 0.5) would fill the dispenser halfway to capacity.
 	var/amount_per_transfer_from_this = 10
 	var/possible_transfer_amounts = "10;25;50;100;500"
-	var/tankcap = FALSE //Whether the tank's cap is opened for pouring reagents in
+	var/can_fill = FALSE //Whether the tank's cap is opened for pouring reagents in
 
 /obj/structure/reagent_dispensers/New()
 	..()
@@ -31,18 +31,21 @@
 
 /obj/structure/reagent_dispensers/attackby(var/obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W,/obj/item/weapon/reagent_containers))
-		return 1 //Don't hit the dispenser idiot!
+		return //Don't hit the dispenser idiot!
 	else 
 		return ..()
 
 /obj/structure/reagent_dispensers/attack_hand(mob/user)
 	if(user.a_intent == I_HELP)
-		if(tankcap)
-			visible_message(SPAN_NOTICE("[user] tighten the cap."))
-			tankcap = FALSE
-		else 
+		can_fill = !can_fill
+
+		if(can_fill)
 			visible_message(SPAN_NOTICE("[user] pop off the cap."))
-			tankcap = TRUE
+			atom_flags |= ATOM_FLAG_OPEN_CONTAINER
+		else
+			visible_message(SPAN_NOTICE("[user] tighten the cap."))
+			atom_flags &= ~ATOM_FLAG_OPEN_CONTAINER
+			
 		src.add_fingerprint(user)
 		return 1
 	else
@@ -57,8 +60,8 @@
 			to_chat(user, SPAN_NOTICE("[R.volume] units of [R.name]"))
 	else
 		to_chat(user, SPAN_NOTICE("Nothing."))
-	if(tankcap)
-		to_chat(user, SPAN_WARNING("Its cap is open to pour in reagents."))
+	if(can_fill)
+		to_chat(user, SPAN_WARNING("Its cap is off."))
 
 /obj/structure/reagent_dispensers/verb/set_amount_per_transfer_from_this()
 	set name = "Set transfer amount"

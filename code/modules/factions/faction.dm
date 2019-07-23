@@ -1170,6 +1170,10 @@ var/PriorityQueue/all_feeds
 
 
 /datum/world_faction/democratic/proc/start_election(var/datum/election/election)
+	for(var/datum/democracy/ballot in election.ballots)
+		for(var/datum/candidate/candidate in ballot.candidates)
+			candidate.votes = list()
+
 	current_election = election
 	if(election.typed)
 		election_toggle = !election_toggle
@@ -1221,6 +1225,7 @@ var/PriorityQueue/all_feeds
 		ballot.candidates.Cut()
 		ballot.voted_ckeys.Cut()
 		if(leader)
+			leader.votes.Cut()
 			ballot.candidates |= leader
 			ballot.seeking_reelection = 1
 	current_election = null

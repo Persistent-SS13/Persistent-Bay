@@ -160,7 +160,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 /datum/zlevel_data/three
 	z = 3
 	difficulty = 0
-
+	W_connect = 16
 /datum/zlevel_data/four
 	z = 4
 	coord = "(0,1)"
@@ -269,6 +269,17 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	monster_quantity = 0 // and how many will occur/respawn
 	obj_quantity = 0
 	difficulty = 0
+
+/datum/zlevel_data/sixteen
+	z = 16
+	coord = "(-1,0)"
+	name = "Temple Run"
+	E_connect = 3
+	monster_types = list(/mob/living/simple_animal/hostile/creature, /mob/living/simple_animal/hostile/carp/pike, /mob/living/simple_animal/hostile/tormented) // types of monsters that will occur on this map.
+	monster_quantity = 200 // and how many will occur/respawn
+	obj_quantity = 10
+	difficulty = 6
+
 
 #undef ZLEVEL_INACTIVE
 #undef ZLEVEL_DORMANT

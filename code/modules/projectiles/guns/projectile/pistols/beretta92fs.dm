@@ -23,6 +23,7 @@
 	icon_state = "pistol"
 	caliber = CALIBER_9MM
 	matter = list(MATERIAL_STEEL = 1050)
+	ammo_type = /obj/item/ammo_casing/c9mm
 	max_ammo = 15
 /obj/item/ammo_magazine/box/b92fs/empty
 	initial_ammo = 0

@@ -82,7 +82,7 @@
 	if(!new_anchored && !isoff())
 		update_use_power(POWER_USE_OFF)
 	. = ..()
-	
+
 /obj/machinery/reagent_temperature/broken(damagetype)
 	update_use_power(POWER_USE_OFF)
 	. = ..()

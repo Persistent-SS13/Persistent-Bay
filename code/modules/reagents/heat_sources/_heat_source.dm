@@ -10,7 +10,7 @@
 	icon = 'icons/obj/machines/heat_sources.dmi'
 	icon_state = "hotplate"
 	atom_flags = ATOM_FLAG_CLIMBABLE
-	density =    TRUE
+	density =    0
 	anchored =   TRUE
 	use_power = POWER_USE_OFF
 	idle_power_usage = 0
@@ -82,7 +82,7 @@
 	if(!new_anchored && !isoff())
 		update_use_power(POWER_USE_OFF)
 	. = ..()
-	
+
 /obj/machinery/reagent_temperature/broken(damagetype)
 	update_use_power(POWER_USE_OFF)
 	. = ..()

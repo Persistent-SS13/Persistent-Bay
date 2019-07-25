@@ -58,7 +58,8 @@
 /datum/design/item/consumerfab/consumer/games
 	category = "Games"
 
-
+/datum/design/item/consumerfab/consumer/recreation
+	category = "Recreation"
 
 ////////////////////////////////////////////////////////////////////
 
@@ -633,6 +634,7 @@
 	name = "spaceball booster pack"
 	build_path = /obj/item/weapon/pack/spaceball
 	materials = list(MATERIAL_PLASTIC = 0.25 SHEETS)
+
 ////////////////////////////////////////////////////
 //////////////////////VEHICLES//////////////////////
 ////////////////////////////////////////////////////
@@ -646,3 +648,38 @@
 	id = "m_bike"
 	materials = list(MATERIAL_STEEL = 40000, MATERIAL_TUNGSTEN = 20000, MATERIAL_GLASS = 20000, MATERIAL_GOLD = 20000)
 	build_path = /obj/vehicle/bike
+
+	////////////////////////////////////////////////////
+	//////////////////////RECREATION//////////////////////
+	////////////////////////////////////////////////////
+
+/*	/datum/design/item/consumerfab/consumer/recreation
+		name = ""
+		materials = list()
+		build_path =
+*/
+
+	/datum/design/item/consumerfab/consumer/recreation/basketball
+		name = "Basketball"
+		materials = list(MATERIAL_PLASTIC = 1 SHEETS)
+		build_path = /obj/item/weapon/basketball
+
+	/datum/design/item/consumerfab/consumer/recreation/basketballhoop
+		name = "Basketball Hoop"
+		materials = list(MATERIAL_STEEL = 4, SHEETS MATERIAL_PLASTIC = 1)
+		build_path = /obj/structure/basketballhoop
+
+	/datum/design/item/consumerfab/consumer/recreation/Weightlifting
+		name = "Weightlifting Machine"
+		materials = list(MATERIAL_STEEL = 4, MATERIAL_PLASTIC = 2, MATERIAL_ALUMINIUM = 4)
+		build_path = /obj/structure/fitness/weightlifter
+
+	/datum/design/item/consumerfab/consumer/recreation/punchbag
+		name = "Punching Bag"
+		materials = (MATERIAL_WOOD = 2, MATERIAL_PLASTIC = 2, MATERIAL_STEEL = 2)
+		build_path = /obj/structure/fitness/punchingbag
+
+	/datum/design/item/consumerfab/consumer/recreation/beachball
+		name = "Beach Ball"
+		materials = list(MATERIAL_PLASTIC = .5)
+		build_path = /obj/item/weapon/beach_ball

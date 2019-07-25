@@ -7,6 +7,10 @@
 	dead_icon = "stomach"
 	organ_tag = BP_STOMACH
 	parent_organ = BP_GROIN
+	max_health = 60
+	min_bruised_damage = 30
+	broken_threshold = 45
+	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 	var/stomach_capacity
 	var/datum/reagents/metabolism/ingested
 	var/next_cramp = 0

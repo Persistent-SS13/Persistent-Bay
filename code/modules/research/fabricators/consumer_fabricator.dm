@@ -659,27 +659,27 @@
 		build_path =
 */
 
-	/datum/design/item/consumerfab/consumer/recreation/basketball
-		name = "Basketball"
-		materials = list(MATERIAL_PLASTIC = 1 SHEETS)
-		build_path = /obj/item/weapon/basketball
+/datum/design/item/consumerfab/consumer/recreation/basketball
+	name = "Basketball"
+	materials = list(MATERIAL_PLASTIC = 1 SHEETS)
+	build_path = /obj/item/weapon/basketball
 
-	/datum/design/item/consumerfab/consumer/recreation/basketballhoop
-		name = "Basketball Hoop"
-		materials = list(MATERIAL_STEEL = 4, SHEETS MATERIAL_PLASTIC = 1)
-		build_path = /obj/structure/basketballhoop
+/datum/design/item/consumerfab/consumer/recreation/basketballhoop
+	name = "Basketball Hoop"
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_PLASTIC = 1 SHEETS)
+	build_path = /obj/structure/basketballhoop
 
-	/datum/design/item/consumerfab/consumer/recreation/Weightlifting
-		name = "Weightlifting Machine"
-		materials = list(MATERIAL_STEEL = 4, MATERIAL_PLASTIC = 2, MATERIAL_ALUMINIUM = 4)
-		build_path = /obj/structure/fitness/weightlifter
+/datum/design/item/consumerfab/consumer/recreation/Weightlifting
+	name = "Weightlifting Machine"
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_PLASTIC = 2 SHEETS, MATERIAL_ALUMINIUM = 4 SHEETS)
+	build_path = /obj/structure/fitness/weightlifter
 
-	/datum/design/item/consumerfab/consumer/recreation/punchbag
-		name = "Punching Bag"
-		materials = (MATERIAL_WOOD = 2, MATERIAL_PLASTIC = 2, MATERIAL_STEEL = 2)
-		build_path = /obj/structure/fitness/punchingbag
+/datum/design/item/consumerfab/consumer/recreation/punchbag
+	name = "Punching Bag"
+	materials = (MATERIAL_WOOD = 2 SHEETS, MATERIAL_PLASTIC = 2 SHEETS, MATERIAL_STEEL = 2 SHEETS)
+	build_path = /obj/structure/fitness/punchingbag
 
-	/datum/design/item/consumerfab/consumer/recreation/beachball
-		name = "Beach Ball"
-		materials = list(MATERIAL_PLASTIC = .5)
-		build_path = /obj/item/weapon/beach_ball
+/datum/design/item/consumerfab/consumer/recreation/beachball
+	name = "Beach Ball"
+	materials = list(MATERIAL_PLASTIC = 0.5 SHEETS)
+	build_path = /obj/item/weapon/beach_ball

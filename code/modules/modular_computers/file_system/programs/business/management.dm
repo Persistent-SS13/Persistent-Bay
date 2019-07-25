@@ -16,7 +16,8 @@
 	name = "Business Central Options"
 	available_to_ai = TRUE
 	var/menu = 1
-	var/curr_page
+	var/curr_page = 1
+	var/curr_tran = 1
 /datum/nano_module/program/management/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/datum/world_faction/business/connected_faction
 	if(program.computer.network_card && program.computer.network_card.connected_network)
@@ -119,6 +120,24 @@
 				data["objective_weekly_status"] = "*None*"
 			data["objective_weekly_timer"] = time2text(connected_faction.daily_assigned + 7 DAYS, "MMM DD hh:mm:ss")
 
+	if(menu == 6)
+		var/list/transactions = connected_faction.central_account.transaction_log
+		var/pages = transactions.len/10
+		if(pages < 1)
+			pages = 1
+		var/list/formatted_transactions[0]
+		if(transactions.len)
+			for(var/i=0; i<10; i++)
+				var/minus = i+(10*(curr_tran-1))
+				if(minus < transactions.len)
+					var/datum/transaction/T = transactions[transactions.len-minus]
+					if(T && istype(T))
+						formatted_transactions[++formatted_transactions.len] = list("date" = T.date, "time" = T.time, "target_name" = T.target_name, "purpose" = T.purpose, "amount" = T.amount ? T.amount : 0)
+		if(formatted_transactions.len)
+			data["transactions"] = formatted_transactions
+		data["page"] = curr_tran
+		data["page_up"] = curr_tran < pages
+		data["page_down"] = curr_tran > 1
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
@@ -140,6 +159,13 @@
 		return 1
 	if(href_list["page_down"])
 		curr_page--
+		return 1
+
+	if(href_list["tran_up"])
+		curr_tran++
+		return 1
+	if(href_list["tran_down"])
+		curr_tran--
 		return 1
 	switch(href_list["action"])
 		if("change_menu")

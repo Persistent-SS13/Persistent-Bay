@@ -24,15 +24,13 @@
 	noblend_objects = list(/obj/machinery/door/window)
 
 /obj/structure/wall_frame/New(var/new_loc, var/materialtype)
-	if(!materialtype)
-		materialtype = DEFAULT_WALL_MATERIAL
-
-	material = materialtype
 	..()
 	ADD_SAVED_VAR(paint_color)
 	ADD_SAVED_VAR(stripe_color)
 
-/obj/structure/wall_frame/Initialize()
+/obj/structure/wall_frame/Initialize(mapload, var/materialtype)
+	if(materialtype)
+		material = materialtype
 	if(!material)
 		material = DEFAULT_WALL_MATERIAL
 	if(istext(material))
@@ -42,13 +40,11 @@
 
 /obj/structure/wall_frame/LateInitialize()
 	. = ..()
-	update_connections(TRUE) //Do that when walls are done setting up their materials so we don't runtime neighbors!
 	queue_icon_update()
 
 /obj/structure/wall_frame/examine(mob/user)
 	if(paint_color)
 		to_chat(user, "<span class='notice'>It has a smooth coat of paint applied.</span>")
-
 	. = ..()
 
 /obj/structure/wall_frame/attackby(var/obj/item/weapon/W, var/mob/user)

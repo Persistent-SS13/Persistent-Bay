@@ -25,10 +25,7 @@
 /datum/nano_module/records_lookup/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
 	var/list/data = host.initial_data()
 	var/list/user_access = get_record_access(user)
-	var/list/faction_records = list()
 	var/datum/world_faction/connected_faction = get_connected_faction()
-	if(connected_faction)
-		faction_records = connected_faction.get_records()
 
 	data["message"] = message
 	if(active_record)
@@ -148,8 +145,6 @@
 				return 1
 		message = "Unable to find record containing '[search]'"
 		return 1
-
-	var/datum/computer_file/report/crew_record/R = active_record
 
 /datum/nano_module/records_lookup/proc/get_photo(var/mob/user)
 	if(istype(user.get_active_hand(), /obj/item/weapon/photo))

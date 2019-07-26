@@ -324,7 +324,7 @@ var/list/organ_cache = list()
  */
 /obj/item/organ/proc/removed(var/mob/living/user, var/drop_organ=1)
 
-	if(!istype(owner))
+	if(!istype(owner) || QDELETED(owner))
 		return
 	GLOB.dismembered_event.raise_event(owner, src)
 

@@ -138,6 +138,9 @@ var/global/list/datum/dna/gene/dna_genes[0]
 		UpdateUI()
 
 /datum/dna/proc/ResetUIFrom(var/mob/living/carbon/human/character)
+	if(!istype(character))
+		return //Only humans have hair styles and etc..
+
 	// INITIALIZE!
 	ResetUI(1)
 	// Hair

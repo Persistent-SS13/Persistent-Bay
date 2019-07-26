@@ -144,6 +144,7 @@ if(current_step == this_step || (check_resumed && !resumed)) {\
 /datum/controller/subsystem/machines/proc/process_pipenets(resumed = 0)
 	if (!resumed)
 		src.current_run = pipenets.Copy()
+
 	//cache for sanic speed (lists are references anyways)
 	var/list/current_run = src.current_run
 	while(current_run.len)
@@ -165,11 +166,20 @@ if(current_step == this_step || (check_resumed && !resumed)) {\
 	var/list/current_run = src.current_run
 	while(current_run.len)
 		var/obj/machinery/M = current_run[current_run.len]
+#ifdef TESTING
+		var/time_before = world.realtime
+#endif
 		current_machine = "Machinery[M]\ref[M]"
 		current_run.len--
 		if(!QDELETED(M) && (M.Process(wait) == PROCESS_KILL))
 			processing.Remove(M)
 			M.is_processing = null
+
+#ifdef TESTING
+		var/runningtime = world.realtime - time_before
+		if(runningtime > 1 SECONDS) 
+			log_debug("[M]\ref[M] ran for [runningtime/10]s")
+#endif
 		if(MC_TICK_CHECK)
 			return
 

@@ -29,15 +29,22 @@
 		var/obj/item/organ/external/E = H.get_organ(parent_organ)
 		E.cavity_max_w_class = max(E.cavity_max_w_class, w_class)
 	..()
+
 /obj/item/organ/internal/Destroy()
 	if(owner)
-		owner.internal_organs.Remove(src)
-		owner.internal_organs_by_name[organ_tag] = null
-		owner.internal_organs_by_name -= organ_tag
-		while(null in owner.internal_organs)
-			owner.internal_organs -= null
-		var/obj/item/organ/external/E = owner.organs_by_name[parent_organ]
-		if(istype(E)) E.internal_organs -= src
+		LAZYREMOVE(owner.internal_organs, src)
+		if(LAZYLEN(owner.internal_organs_by_name))
+			owner.internal_organs_by_name[organ_tag] = null
+			owner.internal_organs_by_name -= organ_tag
+		
+		if(LAZYLEN(owner.internal_organs))
+			while(null in owner.internal_organs)
+				owner.internal_organs -= null
+			
+			if(LAZYLEN(owner.organs_by_name))
+				var/obj/item/organ/external/E = owner.organs_by_name[parent_organ]
+				if(istype(E)) 
+					E.internal_organs -= src
 		owner = null
 	return ..()
 

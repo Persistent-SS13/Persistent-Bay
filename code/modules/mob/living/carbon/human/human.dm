@@ -17,21 +17,6 @@
 /mob/living/carbon/human/New(var/new_loc, var/new_species = null)
 	grasp_limbs = list()
 	stance_limbs = list()
-	if(!dna)
-		dna = new /datum/dna(null)
-		// Species name is handled by set_species()
-	if(!species)
-		if(new_species)
-			set_species(new_species,1)
-		else
-			set_species()
-	var/decl/cultural_info/culture = SSculture.get_culture(cultural_info[TAG_CULTURE])
-	if(culture)
-		real_name = culture.get_random_name(gender, species.name)
-		name = real_name
-		if(mind)
-			mind.name = real_name
-
 	hud_list[HEALTH_HUD]      = new /image/hud_overlay('icons/mob/hud_med.dmi', src, "100")
 	hud_list[STATUS_HUD]      = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudhealthy")
 	hud_list[LIFE_HUD]	      = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudhealthy")
@@ -42,15 +27,8 @@
 	hud_list[IMPTRACK_HUD]    = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
 	hud_list[SPECIALROLE_HUD] = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
 	hud_list[STATUS_HUD_OOC]  = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudhealthy")
-
 	GLOB.human_mob_list |= src
 	..()
-	if(dna)
-		dna.ready_dna(src)
-		dna.real_name = real_name
-		dna.s_base = s_base
-		sync_organ_dna()
-	make_blood()
 	
 	ADD_SAVED_VAR(r_hair)
 	ADD_SAVED_VAR(g_hair)
@@ -116,18 +94,37 @@
 	ADD_SKIP_EMPTY(decaylevel)
 	ADD_SKIP_EMPTY(branded)
 
-/mob/living/carbon/human/Initialize()
-	. = ..()
-	update_citizenship()
-	updatehealth()
-	update_action_buttons()	
-	queue_icon_update()
-	redraw_inv()
+/mob/living/carbon/human/Initialize(mapload, var/new_species = null)
+	if(!dna)
+		dna = new /datum/dna(null)
+	dna.ready_dna(src)
+	dna.real_name = real_name
+	dna.s_base = s_base
+	if(!species)
+		set_species(new_species, TRUE)
+	if(!real_name)
+		var/decl/cultural_info/culture = SSculture.get_culture(cultural_info[TAG_CULTURE])
+		if(culture)
+			real_name = culture.get_random_name(gender, species.name)
+			if(mind)
+				mind.name = real_name
+		name = real_name
+	. = ..(mapload)
+	sync_organ_dna()
 	return INITIALIZE_HINT_LATELOAD
 
 /mob/living/carbon/human/LateInitialize()
 	. = ..()
+	update_citizenship()
+	updatehealth()
+	regenerate_icons()
 	redraw_inv() //Refresh the hud damn you
+	update_action_buttons()
+	//Force hud update
+	BITSET(hud_updateflag, HEALTH_HUD) 
+	BITSET(hud_updateflag, STATUS_HUD)
+	BITSET(hud_updateflag, LIFE_HUD)
+	queue_icon_update()
 
 /mob/living/carbon/human/after_load()
 	. = ..()
@@ -137,33 +134,12 @@
 		if(B.type == /datum/reagent/blood)
 			B.sync_to(src)
 
-	update_citizenship()
-	regenerate_icons()
+	//update_citizenship()
 	//handle_organs(1)
 
-	update_inv_back(1)
-	update_inv_ears(1)
-	update_inv_wear_mask(1)
-	update_inv_handcuffed(1)
-	update_inv_l_hand(1)
-	update_inv_r_hand(1)
-	update_inv_belt(1)
-	update_inv_wear_id(1)
-	update_inv_glasses(1)
-	update_inv_gloves(1)
-	update_inv_head(1)
-	update_inv_shoes(1)
-	update_inv_w_uniform(1)
-	update_inv_wear_suit(1)
-	update_inv_pockets(1)
-	update_inv_s_store(1)
 
-	BITSET(hud_updateflag, HEALTH_HUD) //Force hud update
-	BITSET(hud_updateflag, STATUS_HUD)
-	BITSET(hud_updateflag, LIFE_HUD)
-	redraw_inv()
-
-/mob/living/carbon/human/Destroy()
+//Force param is to force delete everything inside the mob, aka it deletes the lace and all
+/mob/living/carbon/human/Destroy(var/clearlace = FALSE)
 	GLOB.human_mob_list -= src
 	remoteview_target = null
 	machine_visual = null
@@ -171,21 +147,19 @@
 	cultural_info = null
 	char_branch = null
 	char_rank = null
-	QDEL_NULL_LIST(worn_underwear)
+//	QDEL_NULL_LIST(worn_underwear) //Last qdeleted?
 	default_attack = null
 	current_grab_type = null
 	wearing_rig = null
-	if(descriptors)
-		descriptors.Cut()
-
+	// if(descriptors)
+	// 	descriptors.Cut() //Probably last line ran before runtime
+	descriptors = null
 	lying_icon = null
 	stand_icon = null
 	lip_style = null
 
-	if(equipment_overlays)
-		equipment_overlays.Cut()
-	if(flavor_texts)
-		flavor_texts.Cut()
+	LAZYCLEARLIST(equipment_overlays)
+	LAZYCLEARLIST(flavor_texts)
 	if(backpack_setup)
 		QDEL_NULL(backpack_setup)
 
@@ -230,25 +204,10 @@
 		wear_suit.dropInto(null)
 		QDEL_NULL(wear_suit)
 
-	for(var/organ in internal_organs)
-#ifndef UNIT_TEST
-		if(src.loc && istype(organ, /obj/item/organ/internal/stack))
-			var/obj/item/organ/internal/stack/lace = organ
-			lace.removed()
-			lace.loc = loc
-			continue
-#endif
-		qdel(organ)
-	for(var/organ in organs)
-		qdel(organ)
-	if(bad_external_organs)
-		bad_external_organs.Cut()
-	if(grasp_limbs)
-		grasp_limbs.Cut()
-	if(stance_limbs)
-		stance_limbs.Cut()
-	if(cloaking_sources)
-		cloaking_sources.Cut()
+	LAZYCLEARLIST(bad_external_organs)
+	LAZYCLEARLIST(grasp_limbs)
+	LAZYCLEARLIST(stance_limbs)
+	LAZYCLEARLIST(cloaking_sources)
 	. = ..()
 #ifdef TESTING
 	return QDEL_HINT_FINDREFERENCE
@@ -749,10 +708,11 @@
 	var/total_protection = flash_protection
 	if(species.has_organ[species.vision_organ])
 		var/obj/item/organ/internal/eyes/I = internal_organs_by_name[species.vision_organ]
-		if(I && !I.is_usable())
-			return FLASH_PROTECTION_MAJOR
-		else
-			total_protection = I.get_total_protection(flash_protection)
+		if(I) 
+			if(!I.is_usable())
+				return FLASH_PROTECTION_MAJOR
+			else
+				total_protection = I.get_total_protection(flash_protection)
 	else // They can't be flashed if they don't have eyes.
 		return FLASH_PROTECTION_MAJOR
 	return total_protection
@@ -1225,12 +1185,11 @@
 		to_chat(src, "<span class='notice'>You can't look up right now.</span>")
 	return
 
-/mob/living/carbon/human/proc/set_species(var/new_species, var/default_colour = 1)
-	if(!dna)
-		if(!new_species)
+/mob/living/carbon/human/proc/set_species(var/new_species, var/default_colour = TRUE)
+	if(!new_species)
+		if(!dna)
 			new_species = SPECIES_HUMAN
-	else
-		if(!new_species)
+		else
 			new_species = dna.species
 
 	// No more invisible screaming wheelchairs because of set_species() typos.
@@ -1300,6 +1259,8 @@
 		QDEL_NULL_LIST(worn_underwear)
 
 	//spawn(0)
+	if(!vessel)
+		make_blood()
 	regenerate_icons()
 	if(vessel.total_volume < species.blood_volume)
 		vessel.maximum_volume = species.blood_volume

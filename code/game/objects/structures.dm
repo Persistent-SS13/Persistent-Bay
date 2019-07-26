@@ -27,12 +27,14 @@
 	
 /obj/structure/Read(savefile/f)
 	. = ..()
-	var/mat 
+	var/material/mat 
 	from_file(f["material"], mat)
 	if(mat && istext(mat))
 		material = SSmaterials.get_material_by_name(mat)
-		if(!istype(material))
-			CRASH("[src]\ref[src] has non-existant material, '[mat]'")
+	else if(istype(mat, /material)) //Backward compatibility
+		material = SSmaterials.get_material_by_name(mat.name)
+	if(!istype(material))
+		CRASH("[src]\ref[src] has non-existant material, '[mat]'")
 		
 
 /obj/structure/after_load()
@@ -46,10 +48,14 @@
 	if(istype(T))
 		T.fluid_update()
 
-/obj/structure/Initialize()
+/obj/structure/Initialize(mapload)
 	. = ..()
 	if(!CanFluidPass())
 		fluid_update()
+	if(!mapload)
+		update_connections(TRUE)
+	else
+		update_connections(FALSE) //Don't propagate during init!!!
 
 /obj/structure/Move()
 	. = ..()
@@ -122,7 +128,7 @@
 /obj/structure/proc/can_visually_connect_to(var/obj/structure/S)
 	return istype(S, src)
 
-/obj/structure/proc/update_connections(propagate = 0)
+/obj/structure/proc/update_connections(propagate = FALSE)
 	var/list/dirs = list()
 	var/list/other_dirs = list()
 

@@ -20,6 +20,10 @@
 	var/datum/world_faction/democratic/connected_faction
 	if(program.computer.network_card && program.computer.network_card.connected_network)
 		connected_faction = program.computer.network_card.connected_network.holder
+	if(!istype(connected_faction))
+		to_chat(user, SPAN_WARNING("The computer isn't connected to a democratic faction's network! Please connect to a democratic faction network!"))
+		return FALSE
+
 	var/list/data = host.initial_data()
 	if(selected_vote)
 		data["selected_vote"] = selected_vote.name

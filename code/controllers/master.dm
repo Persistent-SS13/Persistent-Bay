@@ -242,16 +242,16 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	rtn = Loop()
 	if (rtn > 0 || processing < 0)
 		return //this was suppose to happen.
-	// catch(var/exception/e)
-	// 	log_error(" /datum/controller/master/proc/StartProcessing(): '[e]'([e.file]:[e.line])")
+	//catch(var/exception/e)
+	//	log_error(" /datum/controller/master/proc/StartProcessing(): '[e]'([e.file]:[e.line])")
 	//loop ended, restart the mc
 	log_game("MC crashed or runtimed (returned [rtn]), restarting")
 	message_admins("MC crashed or runtimed (returned [rtn]), restarting")
 	var/rtn2 = -1
-	try
-		rtn2 = Recreate_MC()
-	catch(var/exception/ex)
-		log_error(" /datum/controller/master/proc/StartProcessing(): '[ex]'([ex.file]:[ex.line])")
+	// try
+	rtn2 = Recreate_MC()
+	// catch(var/exception/ex)
+	// 	log_error(" /datum/controller/master/proc/StartProcessing(): '[ex]'([ex.file]:[ex.line])")
 	if (rtn2 <= 0)
 		log_game("Failed to recreate MC (Error code: [rtn2]), it's up to the failsafe now")
 		message_admins("Failed to recreate MC (Error code: [rtn2]), it's up to the failsafe now")

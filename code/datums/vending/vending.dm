@@ -13,3 +13,6 @@
 	src.price = price
 	src.display_color = color
 	src.category = category
+	ADD_SAVED_VAR(price)
+	ADD_SAVED_VAR(display_color)
+	ADD_SAVED_VAR(category)

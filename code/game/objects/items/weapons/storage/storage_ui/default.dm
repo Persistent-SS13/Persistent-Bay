@@ -95,6 +95,11 @@
 			storage.close(M)
 
 /datum/storage_ui/default/show_to(var/mob/user)
+	if(!user)
+		return
+	if(!user.client)
+		return
+
 	if(user.s_active != storage)
 		for(var/obj/item/I in storage)
 			if(I.on_found(user))

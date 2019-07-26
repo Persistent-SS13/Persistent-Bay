@@ -30,9 +30,10 @@ obj/item/organ/external/take_general_damage(var/amount, var/silent = FALSE)
 			burn = Floor(burn * 0.1)
 			if(burn)
 				brute += burn // Stress fracturing from heat!
-				owner.bodytemperature += burn
+				if(owner) 
+					owner.bodytemperature += burn
 				burn = 0
-			if(prob(25))
+			if(owner && prob(25))
 				owner.visible_message("<span class='warning'>\The [owner]'s crystalline [name] shines with absorbed energy!</span>")
 		if(brute)
 			brute = Floor(brute * 0.8)
@@ -98,7 +99,7 @@ obj/item/organ/external/take_general_damage(var/amount, var/silent = FALSE)
 	//Handle pain
 	if(status & ORGAN_BROKEN && brute)
 		jostle_bone(brute)
-		if(can_feel_pain() && prob(40))
+		if(owner && can_feel_pain() && prob(40))
 			owner.emote("scream")	//getting hit on broken hand hurts
 
 	// If the limbs can break, make sure we don't exceed the maximum damage a limb can take before breaking
@@ -118,7 +119,7 @@ obj/item/organ/external/take_general_damage(var/amount, var/silent = FALSE)
 	if(burn)
 		if(laser)
 			createwound(DAM_LASER, burn)
-			if(prob(40))
+			if(owner && prob(40))
 				owner.IgniteMob()
 		else
 			createwound(DAM_BURN, burn)
@@ -134,23 +135,23 @@ obj/item/organ/external/take_general_damage(var/amount, var/silent = FALSE)
 				W.disinfected = 0
 				W.salved = 0
 				disturbed += W.damage
-		if(disturbed)
-			to_chat(owner,"<span class='warning'>Ow! Your burns were disturbed.</span>")
+		if(owner && disturbed)
+			to_chat(owner, SPAN_WARNING("Ow! Your burns were disturbed."))
 			add_pain(0.5*disturbed)
 
 	//If there are still hurties to dispense
-	if (spillover)
+	if (owner && spillover)
 		owner.shock_stage += spillover * config.organ_damage_spillover_multiplier
 
 	// sync the organ's damage with its wounds
 	update_damages()
-	owner.updatehealth()
-	if(status & ORGAN_BLEEDING)
-		owner.update_bandages()
+	if(owner)
+		owner.updatehealth()
+		if(status & ORGAN_BLEEDING)
+			owner.update_bandages()
 
-	if(owner && update_damstate())
-		owner.UpdateDamageIcon()
-
+		if(owner && update_damstate())
+			owner.UpdateDamageIcon()
 	//log_debug("[src] take_damage wound [created_wound]")
 	return created_wound
 

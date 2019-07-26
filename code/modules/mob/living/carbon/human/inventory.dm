@@ -245,10 +245,12 @@ This saves us from having to call add_fingerprint() any time something is put in
 		W.hud_layerise()
 	if(l_hand)
 		W = l_hand
+		W.update_held_icon()
 		W.hud_layerise()
 		W.screen_loc = ui_lhand
 	if(r_hand)
 		W = r_hand
+		W.update_held_icon()
 		W.hud_layerise()
 		W.screen_loc = ui_rhand
 

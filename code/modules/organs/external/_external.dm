@@ -145,40 +145,30 @@ var/global/list/ORGAN_ENERGY_DAMAGES = list(DAM_BURN, DAM_LASER)
 	get_icon()
 
 /obj/item/organ/external/Destroy()
-
-	if(wounds)
-		for(var/datum/wound/wound in wounds)
-			qdel(wound)
-
+	QDEL_NULL_LIST(wounds)
 	if(parent && parent.children)
 		parent.children -= src
 		parent = null
-
-	if(children)
-		for(var/obj/item/organ/external/C in children)
-			qdel(C)
-
-	if(internal_organs)
-		for(var/obj/item/organ/O in internal_organs)
-			qdel(O)
-
+	QDEL_NULL_LIST(children)
+	QDEL_NULL_LIST(internal_organs)
 	applied_pressure = null
 	if(splinted && splinted.loc == src)
 		qdel(splinted)
 	splinted = null
 
 	if(owner)
-		if(limb_flags & ORGAN_FLAG_CAN_GRASP) owner.grasp_limbs -= src
-		if(limb_flags & ORGAN_FLAG_CAN_STAND) owner.stance_limbs -= src
-		owner.organs -= src
-		owner.organs_by_name[organ_tag] = null
-		owner.organs_by_name -= organ_tag
+		if(limb_flags & ORGAN_FLAG_CAN_GRASP) LAZYREMOVE(owner.grasp_limbs, src)
+		if(limb_flags & ORGAN_FLAG_CAN_STAND) LAZYREMOVE(owner.stance_limbs, src)
+		LAZYREMOVE(owner.organs, src)
+
+		if(LAZYLEN(owner.organs_by_name))
+			owner.organs_by_name[organ_tag] = null
+			owner.organs_by_name -= organ_tag
 		while(null in owner.organs)
 			owner.organs -= null
 		owner = null
 
-	if(autopsy_data)    autopsy_data.Cut()
-
+	LAZYCLEARLIST(autopsy_data)
 	return ..()
 
 /obj/item/organ/external/set_dna(var/datum/dna/new_dna)

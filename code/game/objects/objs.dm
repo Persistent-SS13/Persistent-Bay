@@ -475,6 +475,7 @@
 /obj/hitby(atom/movable/AM as mob|obj, var/speed = THROWFORCE_SPEED_DIVISOR, var/damageoverride = null)
 	..()
 	var/obj/O = AM
+	var/isobject = istype(O)
 	//Handle missing
 	var/miss_chance = ThrowMissChance
 	if(AM.throw_source)
@@ -485,13 +486,13 @@
 		return 0
 
 	//Handle damages
-	var/damtype = O? O.damtype : DAM_BLUNT
-	var/ap = O? O.armor_penetration : 0
+	var/damtype = isobject? O.damtype : DAM_BLUNT
+	var/ap = isobject? O.armor_penetration : 0
 	var/throw_damage = 0
 	if(damageoverride)
 		throw_damage = damageoverride
 	else
-		throw_damage = O? O.throwforce*(speed/THROWFORCE_SPEED_DIVISOR) : (AM.throw_speed/THROWFORCE_SPEED_DIVISOR * AM.mass)
+		throw_damage = isobject? O.throwforce*(speed/THROWFORCE_SPEED_DIVISOR) : (AM.throw_speed/THROWFORCE_SPEED_DIVISOR * AM.mass)
 
 	//When damages don't go through the damage threshold, give player feedback
 	if(!pass_damage_threshold(throw_damage, damtype))

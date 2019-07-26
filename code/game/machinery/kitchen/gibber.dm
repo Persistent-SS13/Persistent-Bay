@@ -12,7 +12,7 @@
 	var/operating = 0        //Is it on?
 	var/dirty = 0            // Does it need cleaning?
 	var/mob/living/occupant  // Mob who has been put inside
-	var/gib_time = 40        // Time from starting until meat appears
+	var/gib_time = 3 SECONDS // Time from starting until meat appears
 	var/gib_throw_dir = WEST // Direction to spit meat and gibs in.
 
 	idle_power_usage = 2
@@ -49,14 +49,14 @@
 	src.go_out()
 	return
 
-/obj/machinery/gibber/attack_hand(mob/user as mob)
+/obj/machinery/gibber/attack_hand(mob/user)
 	if(inoperable())
 		return
 	if(operating)
 		to_chat(user, "<span class='danger'>\The [src] is locked and running, wait for it to finish.</span>")
 		return
 	else
-		src.startgibbing(user)
+		startgibbing(user)
 
 /obj/machinery/gibber/examine()
 	. = ..()
@@ -68,7 +68,14 @@
 	return 1
 
 /obj/machinery/gibber/attackby(var/obj/item/W, var/mob/user)
-	if(istype(W, /obj/item/grab))
+	if(default_deconstruction_screwdriver(user, W))
+		updateUsrDialog()
+		return
+	else if(default_deconstruction_crowbar(user, W))
+		return
+	else if(default_part_replacement(user, W))
+		return
+	else if(istype(W, /obj/item/grab))
 		var/obj/item/grab/G = W
 		if(!G.force_danger())
 			to_chat(user, "<span class='danger'>You need a better grip to do that!</span>")
@@ -93,6 +100,7 @@
 
 		qdel(W)
 		user.visible_message("<span class='danger'>\The [user] feeds \the [W] into \the [src], obliterating it.</span>")
+		return
 	else if(W.is_open_container() && W.reagents && W.reagents.get_free_space())
 		reagents.trans_to_obj(W, W.reagents.get_free_space())
 		user.visible_message("[user] empties \the [src] into \the [W].", "You empty \the [src]'s content into \the [W].")
@@ -167,11 +175,11 @@
 	if(src.operating)
 		return
 	if(!src.occupant)
-		visible_message("<span class='danger'>You hear a loud metallic grinding sound.</span>")
+		to_chat(user, SPAN_WARNING("There's nothing to grind inside!"))
 		return
 
 	use_power_oneoff(1000)
-	visible_message("<span class='danger'>You hear a loud [occupant.isSynthetic() ? "metallic" : "squelchy"] grinding sound.</span>")
+	audible_message("<span class='danger'>You hear a loud [occupant.isSynthetic() ? "metallic" : "squelchy"] grinding sound.</span>")
 	src.operating = 1
 	update_icon()
 
@@ -209,7 +217,7 @@
 				src.occupant.reagents.trans_to_obj(new_meat, round(occupant.reagents.total_volume/slab_count,1))
 
 	admin_attack_log(user, occupant, "Gibbed the victim", "Was gibbed", "gibbed")
-
+	playsound(src.loc, 'sound/machines/juicer.ogg', 50, 1)
 	spawn(gib_time)
 
 		src.operating = 0
@@ -226,14 +234,3 @@
 			thing.dropInto(loc) // Attempts to drop it onto the turf for throwing.
 			thing.throw_at(get_edge_target_turf(src,gib_throw_dir),rand(0,3),emagged ? 100 : 50) // Being pelted with bits of meat and bone would hurt.
 		update_icon()
-
-/obj/machinery/gibber/attackby(var/obj/item/O as obj, var/mob/user as mob)
-
-	if(default_deconstruction_screwdriver(user, O))
-		updateUsrDialog()
-		return
-	if(default_deconstruction_crowbar(user, O))
-		return
-	if(default_part_replacement(user, O))
-		return
-	return ..()

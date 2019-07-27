@@ -172,28 +172,13 @@ if(current_step == this_step || (check_resumed && !resumed)) {\
 	machine_data = list()
 	while(current_run.len)
 		var/obj/machinery/M = current_run[current_run.len]
-		var/start_time = round_duration_in_ticks
 		current_machine = "Machinery[M]\ref[M]"
 		current_run.len--
 		if(!QDELETED(M) && (M.Process(wait) == PROCESS_KILL))
 			processing.Remove(M)
 			M.is_processing = null
-		if("[M.type]" in machine_data)
-			var/datum/machine_count/count = machine_data["[M.type]"]
-			count.amount++
-			count.usage += round_duration_in_ticks - start_time
-		else
-			var/datum/machine_count/count = new()
-			machine_data["[M.type]"] = count
-			count.amount++
-			count.usage = round_duration_in_ticks - start_time
-
 		if(MC_TICK_CHECK)
 			return
-/datum/controller/subsystem/machines/proc/print_data()
-	for(var/type in machine_data)
-		var/datum/machine_count/count = machine_data[type]
-		message_admins("[type] AMOUNT:[count.amount] COST:[count.usage]")
 /datum/controller/subsystem/machines/proc/process_powernets(resumed = 0)
 	if (!resumed)
 		src.current_run = powernets.Copy()

@@ -394,7 +394,7 @@
 	if(href_list["delete"])
 		if(!istype(current_account))
 			return 1
-		var/datum/computer_file/data/email_message/M = find_message_by_fuid(href_list["delete"])
+		var/datum/computer_file/data/email_message/M = locate(href_list["view"])
 		if(!istype(M))
 			return 1
 		if(folder == "Deleted")
@@ -435,7 +435,7 @@
 		return 1
 
 	if(href_list["reply"])
-		var/datum/computer_file/data/email_message/M = find_message_by_fuid(href_list["reply"])
+		var/datum/computer_file/data/email_message/M = locate(href_list["view"])
 		if(!istype(M))
 			return 1
 		error = null

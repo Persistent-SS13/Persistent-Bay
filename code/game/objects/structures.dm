@@ -32,10 +32,7 @@
 	if(mat && istext(mat))
 		material = SSmaterials.get_material_by_name(mat)
 	else if(istype(mat, /material)) //Backward compatibility
-		material = SSmaterials.get_material_by_name(mat.name)
-	if(!istype(material))
-		CRASH("[src]\ref[src] has non-existant material, '[mat]'")
-		
+		material = SSmaterials.get_material_by_name(mat.name)		
 
 /obj/structure/after_load()
 	//update_connections(1)

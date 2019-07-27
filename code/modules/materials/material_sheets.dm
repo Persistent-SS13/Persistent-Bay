@@ -81,7 +81,10 @@
 
 	//testing("Initialized [src] \ref[src], [src.default_type] - ([src.material]), [src.default_reinf_type] - ([src.reinf_material])")
 	update_strings()
-	queue_icon_update()
+	if(mapload)
+		queue_icon_update() //on init its faster to do it deferred
+	else
+		update_icon()
 
 /obj/item/stack/material/list_recipes(mob/user, recipes_sublist)
 	if(!material)
@@ -130,7 +133,6 @@
 /obj/item/stack/material/use(var/used)
 	. = ..()
 	update_strings()
-	return
 
 /obj/item/stack/material/proc/is_same(obj/item/stack/material/M)
 	if((stacktype != M.stacktype))
@@ -201,6 +203,7 @@
 	icon_state = "sheet"
 	plural_icon_state = "sheet-mult"
 	max_icon_state = "sheet-max"
+	stacktype = /obj/item/stack/material
 
 /obj/item/stack/material/generic/Initialize()
 	. = ..()

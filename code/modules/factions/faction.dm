@@ -465,9 +465,9 @@ var/PriorityQueue/all_feeds
 	story.parent = current_issue
 	if(story.announce)
 		for(var/obj/machinery/newscaster/caster in allCasters)
-			caster.newsAlert("(From [name]) [announcement] ([story.name])")			
+			caster.newsAlert("(From [name]) [announcement] ([story.name])")
 	GLOB.recent_articles |= story
-	GLOB.discord_api.broadcast("(From [name]) [announcement] ([story.name])")		
+	GLOB.discord_api.broadcast("(From [name]) [announcement] ([story.name])")
 
 /datum/LibraryDatabase
 	var/list/books = list()
@@ -1269,13 +1269,13 @@ var/PriorityQueue/all_feeds
 
 /datum/world_faction/democratic/proc/repeal_policy(var/datum/council_vote/vote)
 	policy -= vote
-	command_announcement.Announce("Governor [vote.signer] has repealed an executive policy! [vote.name].","Governor Action")
-	GLOB.discord_api.broadcast("Governor [vote.signer] has repealed an executive policy! [vote.name].")
+	command_announcement.Announce("Governor [gov.real_name] has repealed an executive policy! [vote.name].","Governor Action")
+	GLOB.discord_api.broadcast("Governor [gov.real_name] has repealed an executive policy! [vote.name].")
 /datum/world_faction/democratic/proc/pass_policy(var/datum/council_vote/vote)
 	policy |= vote
 	command_announcement.Announce("Governor [vote.signer] has passed an executive policy! [vote.name].","Governor Action")
 	GLOB.discord_api.broadcast("Governor [vote.signer] has passed an executive policy! [vote.name].")
-	
+
 /datum/world_faction/democratic/proc/pass_nomination_judge(var/datum/democracy/judge)
 	judges |= judge
 	command_announcement.Announce("The government has approved the nomination of [judge.real_name] for judge. They are now Judge [judge.real_name].","Nomination Pass")
@@ -1340,6 +1340,14 @@ var/PriorityQueue/all_feeds
 		judge.real_name = vote.nominated
 		pass_nomination_judge(judge)
 
+	else if(vote.bill_type == 6)
+		if(vote.repealing)
+			civil_laws -= vote.repealing
+			criminal_laws -= vote.repealing
+			command_announcement.Announce("The government has just repealed a law! ([vote.repealing.name]).","Law Repeal")
+			GLOB.discord_api.broadcast("The government has just repealed a law! ([vote.repealing.name]).")
+
+
 	else if(vote.bill_type == 1)
 		criminal_laws |= vote
 		command_announcement.Announce("The government has just passed a new criminal law. [vote.name]","New Criminal Law")
@@ -1352,7 +1360,7 @@ var/PriorityQueue/all_feeds
 
 /datum/council_vote
 	var/name = "" // title of votes
-	var/bill_type = 1 //  1 = criminal law, 2 = civil law, 3 = tax policy, 4 = impeachment (judge) 5 = nomination (judge)
+	var/bill_type = 1 //  1 = criminal law, 2 = civil law, 3 = tax policy, 4 = impeachment (judge) 5 = nomination (judge) 6 = repeal law
 
 	var/sponsor = "" // real_name of the vote starter
 	var/time_started // realtime of when the vote started.
@@ -1383,6 +1391,8 @@ var/PriorityQueue/all_feeds
 	var/impeaching = "" // real_name of impaechment target
 
 	var/nominated = ""
+
+	var/datum/council_vote/repealing
 /datum/election
 	var/name = "Station Council Election"
 	var/list/ballots = list() // populate this with the /datum/democracy for every participant of the election

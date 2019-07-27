@@ -127,7 +127,7 @@
 	if(href_list["page_down"])
 		curr_page--
 		return 1
-
+	
 	switch(href_list["action"])
 		if("change_menu")
 			menu = text2num(href_list["menu_target"])

@@ -2,13 +2,13 @@
 	<h2>Recent Articles</h2><hr>
 		<div class='block'>
 			{{for data.articles}}
-				{{:helper.link(value.name, '', {'action' : 'selectArticle', 'target' : value.ref}, null)}}<br>
+				{{:helper.link(value.name, '', {'action' : 'selectArticle', 'target' : value.ref}, null)}}<br><br>
 			{{/for}}
 		</div>
 	<h2>Recently Published Feeds</h2><hr>
 		<div class='block'>
 			{{for data.feeds}}
-				{{:helper.link(value.name, '', {'action' : 'selectFeed', 'target' : value.ref}, null)}}<br> 
+				{{:helper.link(value.name, '', {'action' : 'selectFeed', 'target' : value.ref}, null)}}<br><br>
 			{{/for}}
 		</div>
 {{/if}}
@@ -36,7 +36,7 @@
 	<h2>Articles</h2><hr>
 		<div class='block'>
 			{{for data.articles}}
-				{{:helper.link(value.name, '', {'action' : 'selectArticle', 'target' : value.ref}, null)}}<br>
+				{{:helper.link(value.name, '', {'action' : 'selectArticle', 'target' : value.ref}, null)}}<br><br>
 			{{/for}}
 		</div>
 		

@@ -139,7 +139,7 @@
 	{{/if}}
 	{{if data.menu == 5}}
 		<h4>Transaction Log</h4>
-		{{:helper.link('Newer Page', 'bullet', {'tran_down' : 1}, data.page_down ? null : 'disabled')}}{{:helper.link('Older Page', 'bullet', {'tran_up' : 1}, data.page_up ? null : 'disabled')}}<br><br>
+		{{:helper.link('Newer Page', 'bullet', {'page_down' : 1}, data.page_down ? null : 'disabled')}}{{:helper.link('Older Page', 'bullet', {'page_up' : 1}, data.page_up ? null : 'disabled')}}<br><br>
 		<div class="statusDisplay" style="overflow: auto;">
 			{{if data.transactions}}
 				<table style='width: 100%'>

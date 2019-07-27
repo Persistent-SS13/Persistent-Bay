@@ -157,7 +157,7 @@
 // Merchant
 /obj/item/modular_computer/console/preset/merchant/install_default_programs()
 	..()
-	hard_drive.store_file(new/datum/computer_file/program/merchant())
+
 	hard_drive.store_file(new/datum/computer_file/program/wordprocessor())
 
 // Library

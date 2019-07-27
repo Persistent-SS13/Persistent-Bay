@@ -34,6 +34,7 @@
 	var/synced = 0
 	var/menu = 1
 	var/curr_page = 1
+	var/datum/council_vote/selected_law
 /datum/nano_module/program/citycouncil/proc/sync_from_faction()
 	var/datum/world_faction/democratic/connected_faction
 	if(program.computer.network_card && program.computer.network_card.connected_network)
@@ -146,6 +147,7 @@
 			var/list/formatted_judges[0]
 			for(var/datum/democracy/judge in connected_faction.judges)
 				formatted_judges[++formatted_judges.len] = list("name" = "Impeach [judge.real_name]", "ref" = "\ref[judge]")
+			data["judges"] = formatted_judges
 		if(menu == 5)
 			var/list/transactions =	connected_faction.central_account.transaction_log
 			var/pages = transactions.len/10
@@ -166,6 +168,24 @@
 			data["page_down"] = curr_page > 1
 
 			data["money"] = connected_faction.central_account.money
+
+		if(menu == 6)
+			if(selected_law)
+				data["selected_law"] = selected_law.name
+				data["sponsor"] = selected_law.sponsor
+				data["passed_date"] = time2text(selected_law.time_signed)
+				data["vote_body"] = selected_law.body
+			else
+				var/list/formatted_votes[0]
+				for(var/datum/council_vote/vote in reverselist(connected_faction.civil_laws.Copy()))
+					formatted_votes[++formatted_votes.len] = list("name" = vote.name, "ref" = "\ref[vote]")
+				if(formatted_votes.len)
+					data["civil_laws"] = formatted_votes
+				var/list/formatted_votes2[0]
+				for(var/datum/council_vote/vote in reverselist(connected_faction.criminal_laws.Copy()))
+					formatted_votes2[++formatted_votes2.len] = list("name" = vote.name, "ref" = "\ref[vote]")
+				if(formatted_votes2.len)
+					data["criminal_laws"] = formatted_votes2
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "citycouncil.tmpl", name, 550, 600, state = state)
@@ -187,6 +207,9 @@
 			menu = text2num(href_list["menu_target"])
 		if("deselect_vote")
 			selected_vote = null
+
+		if("deselect_law")
+			selected_law = null
 		if("vote_yes")
 			if(!selected_vote) return
 			if(usr.real_name in selected_vote.no_votes) return
@@ -205,6 +228,34 @@
 			selected_vote = null
 		if("select_vote")
 			selected_vote = locate(href_list["ref"])
+		if("select_law")
+			selected_law = locate(href_list["ref"])
+
+		if("repeal_vote")
+			if(!selected_law) return
+			var/law_type = "Criminal Law"
+			if(selected_law.bill_type == 2)
+				law_type = "Civil Law"
+			var/datum/council_vote/vote = new()
+			vote.name = "Repeal [law_type] ([vote.name])"
+			vote.body = "Repeal the law_type titled [vote.name]."
+			vote.sponsor = usr.real_name
+			vote.time_started = world.realtime
+			vote.bill_type = 6
+			connected_faction.start_vote(vote)
+			to_chat(usr, "Vote Started.")
+			menu = 1
+		if("print")
+			if(!selected_law) return
+			if(program.computer && program.computer.nano_printer) //This option should never be called if there is no printer
+				if(!program.computer.nano_printer.print_text(selected_law.body,selected_vote.name))
+					to_chat(usr, "<span class='notice'>Hardware error: Printer was unable to print the file. It may be out of paper.</span>")
+					return
+				else
+					program.computer.visible_message("<span class='notice'>\The [program.computer] prints out paper.</span>")
+			else
+				to_chat(usr, "<span class='notice'>Hardware error: There is no printer installed in this computer!.</span>")
+				return
 
 		if("select_criminal")
 			law_type = 1

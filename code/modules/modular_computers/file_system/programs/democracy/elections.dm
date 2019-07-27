@@ -116,10 +116,10 @@
 						return 0
 					var/datum/computer_file/report/crew_record/record = Retrieve_Record(usr.real_name)
 					if(record && record.linked_account)
-						if(record.linked_account.money < 500)
+						if(record.linked_account.money < 100)
 							to_chat(usr, "Insufficent Funds.")
 							return 0
-						var/datum/transaction/T = new("Election Fee ([ballot.title])", "Election Fee ([ballot.title])", -500, "Program")
+						var/datum/transaction/T = new("Election Fee ([ballot.title])", "Election Fee ([ballot.title])", -100, "Program")
 						record.linked_account.do_transaction(T)
 						var/datum/candidate/candidate = new()
 						candidate.real_name = usr.real_name

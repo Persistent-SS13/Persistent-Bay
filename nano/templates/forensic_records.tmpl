@@ -8,18 +8,16 @@
 		<h3>GENERIC INFORMATION</h3>
 	</div>
 	{{for data.fields}}
-		{{if value.access}}
-			<div class='item'>
-				<div class='itemLabel'>{{:value.name}}:</div>
-				{{if value.needs_big_box}}
-					<div style="display: inline-block;">
-					{{:value.value}}
-					</div>
-				{{else}}
-					<div class='itemBody'>{{:value.value}}</div>
-				{{/if}}
-			</div>
-		{{/if}}
+		<div class='item'>
+			<div class='itemLabel'>{{:value.name}}:</div>
+			{{if value.needs_big_box}}
+				<div style="display: inline-block;">
+				{{:value.value}}
+				</div>
+			{{else}}
+				<div class='itemBody'>{{:value.value}}</div>
+			{{/if}}
+		</div>
 	{{/for}}
 </div>
 {{else}}

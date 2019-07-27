@@ -389,7 +389,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 /obj/machinery/fabricator/proc/can_build(var/datum/design/D)
 	if(!connected_faction) return 0
 	for(var/M in D.materials)
-		if(materials[M] <= D.materials[M] * mat_efficiency)
+		if(materials[M] < D.materials[M] * mat_efficiency)
 			return 0
 	for(var/C in D.chemicals)
 		if(!reagents.has_reagent(C, D.chemicals[C] * mat_efficiency))
@@ -400,12 +400,12 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 
 /obj/machinery/fabricator/proc/has_mats(var/datum/design/D)
 	for(var/M in D.materials)
-		if(materials[M] <= D.materials[M] * mat_efficiency)
+		if(materials[M] < D.materials[M] * mat_efficiency)
 			return 0
 	return 1
 
 /obj/machinery/fabricator/proc/has_mat(var/datum/design/D, var/M)
-	if(materials[M] <= D.materials[M] * mat_efficiency)
+	if(materials[M] < D.materials[M] * mat_efficiency)
 		return 0
 	return 1
 

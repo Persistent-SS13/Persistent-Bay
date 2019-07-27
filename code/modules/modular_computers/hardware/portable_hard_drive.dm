@@ -43,4 +43,4 @@
 
 /obj/item/weapon/computer_hardware/hard_drive/portable/merchant/Initialize()
 	. = ..()
-	store_file(new/datum/computer_file/program/merchant(src))
+

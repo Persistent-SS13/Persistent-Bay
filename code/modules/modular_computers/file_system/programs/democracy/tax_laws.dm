@@ -108,5 +108,5 @@
 
 	switch(href_list["action"])
 		if("change_tax")
-			taxee = href_list["menu_target"]
+			taxee = text2num(href_list["menu_target"])
 			synced = 0

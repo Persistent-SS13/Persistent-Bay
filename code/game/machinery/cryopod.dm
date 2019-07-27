@@ -123,7 +123,7 @@
 					log_debug("[src] \ref[src] ([x], [y], [z]): No control computer, skipping advanced stuff.")
 
 			despawn_occupant()
-
+	..()
 /obj/machinery/cryopod/attackby(var/obj/item/O, var/mob/user = usr)
 	src.add_fingerprint(user)
 	if(!req_access_faction)
@@ -310,6 +310,8 @@
 		S.lacemob.spawn_loc_2 = network
 		S.lacemob.spawn_type = CHARACTER_SPAWN_TYPE_CRYONET
 		S.loc = null
+		S.lacemob.spawn_personal = 0
+		S.lacemob.spawn_type = CHARACTER_SPAWN_TYPE_CRYONET
 	else
 		var/mob/M = occupant
 		if(M.ckey)
@@ -324,6 +326,7 @@
 			M.spawn_loc = req_access_faction
 			M.spawn_loc_2 = network
 			M.spawn_type = CHARACTER_SPAWN_TYPE_CRYONET
+			M.spawn_personal = 0
 			M.loc = null
 
 	key = copytext(key, max(findtext(key, "@"), 1))

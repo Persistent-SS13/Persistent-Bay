@@ -4,13 +4,13 @@
 
 /obj/structure/fitness/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(isWrench(W))
-	 	if(anchored)
-	      anchored = 0
-	      user.visible_message("[user] unsecures [src] from the floor.", "You unsecure [src] from the floor.")
-	  else
-	      anchored = 1
-	      user.visible_message("[user] secures [src] to the floor.", "You secure [src] to the floor.")
-	  playsound(loc, 'sound/items/Ratchet.ogg', 100, 1)
+		if(anchored)
+			anchored = 0
+			user.visible_message("[user] unsecures [src] from the floor.", "You unsecure [src] from the floor.")
+	else
+		anchored = 1
+		user.visible_message("[user] secures [src] to the floor.", "You secure [src] to the floor.")
+		playsound(loc, 'sound/items/Ratchet.ogg', 100, 1)
 	return ..()
 
 /obj/structure/fitness/punchingbag

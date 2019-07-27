@@ -19,20 +19,21 @@
 	var/bill_title = ""
 	var/bill_body = ""
 	var/taxee = 1 // 1 = personal, 2 = business
-	
+
 	var/tax_type = 1 // 1 = flat, 2 = progressie
 	var/tax_prog1_rate = 0
 	var/tax_prog2_rate = 0
 	var/tax_prog3_rate = 0
 	var/tax_prog4_rate = 0
-	
+
 	var/tax_prog2_amount = 0
 	var/tax_prog3_amount = 0
 	var/tax_prog4_amount = 0
-	
+
 	var/tax_flat_rate = 0
 	var/synced = 0
 	var/menu = 1
+	var/curr_page = 1
 /datum/nano_module/program/citycouncil/proc/sync_from_faction()
 	var/datum/world_faction/democratic/connected_faction
 	if(program.computer.network_card && program.computer.network_card.connected_network)
@@ -44,11 +45,11 @@
 			tax_prog2_rate = connected_faction.tax_bprog2_rate
 			tax_prog3_rate = connected_faction.tax_bprog3_rate
 			tax_prog4_rate = connected_faction.tax_bprog4_rate
-			
+
 			tax_prog2_amount = connected_faction.tax_bprog2_amount
 			tax_prog3_amount = connected_faction.tax_bprog3_amount
 			tax_prog4_amount = connected_faction.tax_bprog4_amount
-			
+
 			tax_flat_rate = connected_faction.tax_bflat_rate
 		else
 			tax_type = connected_faction.tax_type_p
@@ -56,14 +57,14 @@
 			tax_prog2_rate = connected_faction.tax_pprog2_rate
 			tax_prog3_rate = connected_faction.tax_pprog3_rate
 			tax_prog4_rate = connected_faction.tax_pprog4_rate
-			
+
 			tax_prog2_amount = connected_faction.tax_pprog2_amount
 			tax_prog3_amount = connected_faction.tax_pprog3_amount
 			tax_prog4_amount = connected_faction.tax_pprog4_amount
-			
+
 			tax_flat_rate = connected_faction.tax_pflat_rate
 	synced = 1
-			
+
 /datum/nano_module/program/citycouncil/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/datum/world_faction/democratic/connected_faction
 	if(program.computer.network_card && program.computer.network_card.connected_network)
@@ -133,14 +134,14 @@
 				data["tax_prog2_rate"] = tax_prog2_rate
 				data["tax_prog3_rate"] = tax_prog3_rate
 				data["tax_prog4_rate"] = tax_prog4_rate
-				
+
 				data["tax_prog2_amount"] = tax_prog2_amount
 				data["tax_prog3_amount"] = tax_prog3_amount
 				data["tax_prog4_amount"] = tax_prog4_amount
-				
+
 			else
 				data["tax_flat_rate"] = tax_flat_rate
-			
+
 		if(menu == 4)
 			var/list/formatted_judges[0]
 			for(var/datum/democracy/judge in connected_faction.judges)
@@ -175,12 +176,12 @@
 /datum/nano_module/program/citycouncil/Topic(href, href_list)
 	if(..())
 		return 1
-	. = SSnano.update_uis(src)	
+	. = SSnano.update_uis(src)
 	var/mob/user = usr
 	var/datum/world_faction/democratic/connected_faction = program.computer.network_card.connected_network.holder
 	if(!istype(connected_faction) || !(connected_faction.is_councillor(user.real_name)))
 		return 1
-		
+
 	switch(href_list["action"])
 		if("change_menu")
 			menu = text2num(href_list["menu_target"])
@@ -204,7 +205,7 @@
 			selected_vote = null
 		if("select_vote")
 			selected_vote = locate(href_list["ref"])
-	
+
 		if("select_criminal")
 			law_type = 1
 		if("select_civil")
@@ -267,36 +268,36 @@
 				to_chat(usr, "Invalid Entry.")
 				return
 			tax_prog4_rate = attempt
-			
-			
+
+
 		if("change_prog2_amount")
 			var/attempt = input("Enter new tax bracket 2 qualifying amount.", "Qualifying Account Balance") as num|null
 			if(attempt < 0)
 				to_chat(usr, "Invalid Entry.")
 				return
-			tax_prog2_amount = attempt	
-		
+			tax_prog2_amount = attempt
+
 		if("change_prog3_amount")
 			var/attempt = input("Enter new tax bracket 3 qualifying amount.", "Qualifying Account Balance") as num|null
 			if(attempt < 0)
 				to_chat(usr, "Invalid Entry.")
 				return
-			tax_prog3_amount = attempt	
-			
+			tax_prog3_amount = attempt
+
 		if("change_prog4_amount")
 			var/attempt = input("Enter new tax bracket 4 qualifying amount.", "Qualifying Account Balance") as num|null
 			if(attempt < 0)
 				to_chat(usr, "Invalid Entry.")
 				return
 			tax_prog4_amount = attempt
-			
+
 		if("change_flat_rate")
 			var/attempt = input("Enter new flat tax rate.", "Tax rate") as num|null
 			if(attempt < 0 || attempt > 99)
 				to_chat(usr, "Invalid Entry.")
 				return
 			tax_flat_rate = attempt
-	
+
 		if("propose_tax")
 			if(connected_faction.has_vote(usr.real_name))
 				to_chat(usr, "You already have a bill being voted on.")
@@ -334,21 +335,21 @@
 				vote.body += "Bracket 3 Qualifying Amount: [tax_prog3_amount]  Rate : [tax_prog3_rate]<br>"
 				vote.body += "<br>"
 				vote.body += "Bracket 4 Qualifying Amount: [tax_prog4_amount]  Rate : [tax_prog4_rate]<br>"
-							
+
 				vote.sponsor = usr.real_name
 				vote.time_started = world.realtime
-				
+
 				vote.prograte1 = tax_prog1_rate
 				vote.prograte2 = tax_prog2_rate
 				vote.prograte3 = tax_prog3_rate
 				vote.prograte4 = tax_prog4_rate
-				
+
 				vote.progamount2 = tax_prog2_amount
 				vote.progamount3 = tax_prog3_amount
 				vote.progamount4 = tax_prog4_amount
-				
+
 				vote.bill_type = 3
-				
+
 				connected_faction.start_vote(vote)
 				to_chat(usr, "Vote Started.")
 				menu = 1

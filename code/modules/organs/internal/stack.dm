@@ -307,26 +307,27 @@ GLOBAL_LIST_EMPTY(neural_laces)
 			load_records()
 			if(!record || !record.linked_account)
 				to_chat(owner, "Cannot retrieve account info! Contact Administrator.")
-			data["account_balance"] = record.linked_account.money
-			var/list/transactions = record.linked_account.transaction_log
-			var/pages = transactions.len/10
-			if(pages < 1)
-				pages = 1
-			var/list/formatted_transactions[0]
-			if(transactions.len)
-				for(var/i=0; i<10; i++)
-					var/minus = i+(10*(curr_page-1))
-					if(minus >= transactions.len) break
-					var/datum/transaction/T = transactions[transactions.len-minus]
-					formatted_transactions[++formatted_transactions.len] = list("date" = T.date, "time" = T.time, "target_name" = T.target_name, "purpose" = T.purpose, "amount" = T.amount ? T.amount : 0)
-			data["transactions"] = formatted_transactions
-			data["page"] = curr_page
-			data["page_up"] = curr_page < pages
-			data["page_down"] = curr_page > 1
+			else
+				data["account_balance"] = record.linked_account.money
+				var/list/transactions = record.linked_account.transaction_log
+				var/pages = transactions.len/10
+				if(pages < 1)
+					pages = 1
+				var/list/formatted_transactions[0]
+				if(transactions.len)
+					for(var/i=0; i<10; i++)
+						var/minus = i+(10*(curr_page-1))
+						if(minus >= transactions.len) break
+						var/datum/transaction/T = transactions[transactions.len-minus]
+						formatted_transactions[++formatted_transactions.len] = list("date" = T.date, "time" = T.time, "target_name" = T.target_name, "purpose" = T.purpose, "amount" = T.amount ? T.amount : 0)
+				data["transactions"] = formatted_transactions
+				data["page"] = curr_page
+				data["page_up"] = curr_page < pages
+				data["page_down"] = curr_page > 1
 
 		if(menu == 3)
 			var/datum/world_faction/democratic/F = get_faction(GLOB.using_map.default_faction_uid)
-			if(F)
+			if(istype(F))
 				if(F.current_election)
 					data["current_election"] = 1
 					data["election_name"] = F.current_election.name

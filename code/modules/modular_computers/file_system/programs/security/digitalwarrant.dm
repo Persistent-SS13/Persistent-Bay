@@ -12,7 +12,6 @@ LEGACY_RECORD_STRUCTURE(all_warrants, warrant)
 	program_menu_icon = "star"
 	requires_ntnet = TRUE
 	available_on_ntnet = TRUE
-	required_access = core_access_security_programs
 	usage_flags = PROGRAM_ALL
 	nanomodule_path = /datum/nano_module/digitalwarrant/
 	category = PROG_SEC
@@ -20,6 +19,7 @@ LEGACY_RECORD_STRUCTURE(all_warrants, warrant)
 /datum/nano_module/digitalwarrant/
 	name = "Warrant Assistant"
 	var/datum/computer_file/data/warrant/activewarrant
+	var/datum/world_faction/democratic/connected_faction
 
 /datum/nano_module/digitalwarrant/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/list/data = host.initial_data()
@@ -77,16 +77,15 @@ LEGACY_RECORD_STRUCTURE(all_warrants, warrant)
 				activewarrant = W
 				break
 
-	// The following actions will only be possible if the user has an ID with security access equipped. This is in line with modular computer framework's authentication methods,
-	// which also use RFID scanning to allow or disallow access to some functions. Anyone can view warrants, editing requires ID. This also prevents situations where you show a tablet
-	// to someone who is to be arrested, which allows them to change the stuff there.
+	// The following actions will only be possible if the user has an ID with a name that is considered a judge.
+	// They must be a judge with the main democratic faction (e.g. Nexus)
 
 	var/mob/user = usr
 	if(!istype(user))
 		return
 	var/obj/item/weapon/card/id/I = user.GetIdCard()
-	if(!istype(I) || !I.registered_name || !(core_access_security_programs in I.access))
-		to_chat(user, "Authentication error: Unable to locate ID with apropriate access to allow this operation.")
+	if(!istype(I) || !I.registered_name || !(connected_faction.is_judge(I.registered_name)))
+		to_chat(user, "Authentication error: only Judges may create, edit, and delete warrants.")
 		return
 
 	if(href_list["sendtoarchive"])

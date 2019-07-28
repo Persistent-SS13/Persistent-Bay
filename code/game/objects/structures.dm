@@ -191,6 +191,8 @@
 /obj/structure/proc/dismantle()
 	if(parts)
 		new parts(loc)
+	else if(matter && matter.len)
+		refund_matter()
 	qdel(src)
 
 /obj/structure/proc/default_deconstruction_screwdriver(var/obj/item/weapon/tool/screwdriver/S, var/mob/living/user, var/deconstruct_time = null)

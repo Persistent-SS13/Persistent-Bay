@@ -11,10 +11,6 @@
 /obj/structure/reagent_dispensers/beerkeg/empty
 	initial_reagent_types = list()
 
-/obj/structure/reagent_dispensers/beerkeg/dismantle()
-	refund_matter()
-	qdel(src)
-
 /obj/structure/reagent_dispensers/beerkeg/default_deconstruction_screwdriver(obj/item/weapon/tool/screwdriver/S, mob/living/user, deconstruct_time)
 	if(reagents.total_volume == 0)
 		. = ..()

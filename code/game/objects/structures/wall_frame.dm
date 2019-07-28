@@ -141,11 +141,6 @@
 	take_damage(damage)
 	return
 
-
-/obj/structure/wall_frame/dismantle()
-	refund_matter()
-	qdel(src)
-
 /obj/structure/wall_frame/destroyed()
 	dismantle()
 

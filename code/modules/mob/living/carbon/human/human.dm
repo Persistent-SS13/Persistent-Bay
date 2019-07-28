@@ -208,6 +208,12 @@
 	LAZYCLEARLIST(grasp_limbs)
 	LAZYCLEARLIST(stance_limbs)
 	LAZYCLEARLIST(cloaking_sources)
+#ifdef TESTING
+	testing("Destroying [src]\ref[src]([x], [y], [z]), in \the '[loc]'\ref[loc]([loc?.x], [loc?.y], [loc?.z])!")
+	testing("Organs still contained:")
+	for(var/obj/item/organ/O in contents)
+		testing("[O]\ref[O]([O?.x], [O?.y], [O?.z]), in \the '[O?.loc]'\ref[O?.loc]([O?.loc?.x], [O?.loc?.y], [O?.loc?.z])!")
+#endif
 	. = ..()
 #ifdef TESTING
 	return QDEL_HINT_FINDREFERENCE
@@ -1846,7 +1852,7 @@
 			update_citizenship()
 
 /mob/living/carbon/human/proc/get_cultural_value(var/token)
-	return cultural_info[token]
+	return LAZYACCESS(cultural_info, token)
 
 /mob/living/carbon/human/needs_wheelchair()
 	var/stance_damage = 0

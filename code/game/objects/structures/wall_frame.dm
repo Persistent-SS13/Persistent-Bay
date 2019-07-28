@@ -93,12 +93,10 @@
 // icon related
 
 /obj/structure/wall_frame/on_update_icon()
-	if(!material || istext(material))
-		return //Don't let it update the icon when the material isn't set!
 	overlays.Cut()
 	var/image/I
 
-	var/new_color = (paint_color ? paint_color : material.icon_colour)
+	var/new_color = (paint_color ? paint_color : material?.icon_colour)
 	color = new_color
 
 	for(var/i = 1 to 4)
@@ -117,7 +115,10 @@
 			I.color = stripe_color
 			overlays += I
 
-	SetName("[material.display_name] [initial(name)]")
+	if(istype(material))
+		SetName("[material.display_name] [initial(name)]")
+	else
+		SetName(initial(name))
 
 /obj/structure/wall_frame/hull/Initialize()
 	. = ..()

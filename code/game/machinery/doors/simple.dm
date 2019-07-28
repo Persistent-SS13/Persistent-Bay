@@ -8,7 +8,7 @@
 	icon_state 	= "metal"
 	sound_hit 	= 'sound/weapons/genhit.ogg'
 	autoset_access = FALSE // Doesn't even use access
-
+	broken_threshold = 0.3
 	var/material/material
 	var/icon_base
 	var/datum/lock/lock
@@ -67,7 +67,6 @@
 	name 				= "[material.display_name] door"
 	max_health 			= max(100, material.integrity * SIMPLE_DOOR_HEALTH_MULTIPLIER)
 	health 				= max_health
-	broken_threshold 	= max_health / 3
 	sound_hit 			= material.hitsound
 
 	armor = list(

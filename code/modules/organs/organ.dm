@@ -108,6 +108,9 @@ var/list/organ_cache = list()
 	ADD_SAVED_VAR(organ_tag)
 
 /obj/item/organ/Destroy()
+#ifdef TESTING
+	testing("Destroying [src]\ref[src]([x], [y], [z]), in \the '[loc]'\ref[loc]([loc?.x], [loc?.y], [loc?.z]), with owner: [owner? owner : "null"]\ref[owner]([owner?.x], [owner?.y], [owner?.z])!")
+#endif
 	owner = null
 	dna = null
 	species = null

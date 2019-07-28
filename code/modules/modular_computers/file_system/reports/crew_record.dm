@@ -605,9 +605,11 @@ FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_synd
 //Options builderes
 /datum/report_field/options/crew_record/rank/proc/record_ranks()
 	var/datum/computer_file/report/crew_record/record = owner
+	if(!mil_branches || !record)
+		return null
 	var/datum/mil_branch/branch = mil_branches.get_branch(record.get_branch())
 	if(!branch)
-		return
+		return null
 	. = list()
 	. |= "Unset"
 	for(var/rank in branch.ranks)

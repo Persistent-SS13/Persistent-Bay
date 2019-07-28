@@ -343,11 +343,9 @@ var/global/list/ORGAN_ENERGY_DAMAGES = list(DAM_BURN, DAM_LASER)
 
 /obj/item/organ/external/replaced(var/mob/living/carbon/human/target)
 	..()
-
 	if(istype(owner))
-
-		if(limb_flags & ORGAN_FLAG_CAN_GRASP) owner.grasp_limbs[src] = TRUE
-		if(limb_flags & ORGAN_FLAG_CAN_STAND) owner.stance_limbs[src] = TRUE
+		if(limb_flags & ORGAN_FLAG_CAN_GRASP) LAZYDISTINCTADD(owner.grasp_limbs, src)
+		if(limb_flags & ORGAN_FLAG_CAN_STAND) LAZYDISTINCTADD(owner.stance_limbs, src)
 		owner.organs_by_name[organ_tag] = src
 		owner.organs |= src
 

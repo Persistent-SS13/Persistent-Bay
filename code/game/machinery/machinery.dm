@@ -140,15 +140,11 @@ Class Procs:
 	ADD_SAVED_VAR(malf_upgraded)
 	ADD_SAVED_VAR(emagged)
 	ADD_SAVED_VAR(stat)
-	ADD_SAVED_VAR(faction)
-	ADD_SKIP_EMPTY(faction_uid)
+	ADD_SAVED_VAR(faction_uid)
 	ADD_SAVED_VAR(id_tag)
 
 	ADD_SKIP_EMPTY(extensions)
 	ADD_SKIP_EMPTY(component_parts)
-	ADD_SKIP_EMPTY(faction)
-	ADD_SKIP_EMPTY(faction_uid)
-	ADD_SKIP_EMPTY(id_tag)
 
 /obj/machinery/after_load()
 	..()
@@ -165,13 +161,16 @@ Class Procs:
 	init_transmitter()
 	if(d)
 		set_dir(d)
-	START_PROCESSING(SSmachines, src) // It's safe to remove machines from here.
+	if(ShouldInitProcess())
+		START_PROCESSING(SSmachines, src) // It's safe to remove machines from here.
 	SSmachines.machinery += src // All machines should remain in this list, always.
 
 	if(faction_uid && !faction)
-		faction = get_faction(faction_uid)
+		connect_faction(get_faction(faction_uid))
 
 /obj/machinery/Destroy()
+	if(has_transmitter())
+		delete_transmitter()
 	GLOB.moved_event.unregister(src, src, .proc/update_power_on_move)
 	REPORT_POWER_CONSUMPTION_CHANGE(get_power_usage(), 0)
 	SSmachines.machinery -= src
@@ -182,9 +181,7 @@ Class Procs:
 				qdel(A)
 			else // Otherwise we assume they were dropped to the ground during deconstruction, and were not removed from the component_parts list by deconstruction code.
 				component_parts -= A
-	if(has_transmitter())
-		delete_transmitter()
-	faction = null
+	disconnect_faction()
 	. = ..()
 
 //Installs parts when creating a machine for the first time
@@ -203,6 +200,7 @@ Class Procs:
 /obj/machinery/proc/RefreshParts() //Placeholder proc for machines that are built using frames.
 	return
 
+//Returns content that's not the components inside the machine
 /obj/machinery/InsertedContents()
 	return (contents - component_parts)
 
@@ -210,6 +208,11 @@ Class Procs:
 	uid = gl_uid
 	gl_uid++
 
+//This is checked by the machine init to see if it should make the machine start processing or not
+/obj/machinery/proc/ShouldInitProcess()
+	return TRUE
+
+//Main processing proc
 /obj/machinery/Process()
 	if(time_emped && world.realtime >= time_emped)
 		time_emped = 0
@@ -242,6 +245,10 @@ Class Procs:
 /obj/machinery/proc/set_maintenance(var/state)
 	src.stat = state? (src.stat | MAINT) : (stat & ~MAINT)
 	queue_icon_update()
+
+/obj/machinery/set_anchored(var/new_anchored)
+	. = ..()
+	power_change()
 
 /obj/machinery/proc/ison()
 	return !isoff()
@@ -308,6 +315,22 @@ Class Procs:
 /obj/machinery/proc/can_connect(var/datum/world_faction/trying)
 	return 1
 
+/obj/machinery/proc/connect_faction(var/datum/world_faction/F, var/mob/user)
+	if(istext(F))
+		F = get_faction(F)
+	if(F && can_connect(F))
+		faction = F
+		faction_uid = F.uid
+		req_access_faction = faction_uid
+		return TRUE
+	return FALSE
+
+/obj/machinery/proc/disconnect_faction(var/mob/user)
+	faction = null
+	faction_uid = null
+	req_access_faction = null
+	return TRUE
+
 /obj/machinery/proc/can_disconnect(var/datum/world_faction/trying, var/mob/M)
 	return 1
 
@@ -339,10 +362,10 @@ Class Procs:
 /obj/machinery/attack_hand(mob/user as mob)
 	if(inoperable(MAINT))
 		return TRUE
-	if(user.lying || user.stat)
+	if(user && (user.lying || user.stat))
 		return TRUE
-	if (!(istype(usr, /mob/living/carbon/human) || istype(usr, /mob/living/silicon)))
-		to_chat(usr, SPAN_WARNING("You don't have the dexterity to do this!"))
+	if (!(istype(user, /mob/living/carbon/human) || istype(user, /mob/living/silicon)))
+		to_chat(user, SPAN_WARNING("You don't have the dexterity to do this!"))
 		return TRUE
 
 	if (ishuman(user))
@@ -633,15 +656,28 @@ Class Procs:
 //----------------------------------
 // Damage procs
 //----------------------------------
-/obj/machinery/update_health(var/damagetype)
-	..()
-	//Determine if we're broken or not
-	if(health <= (max_health * broken_threshold))
-		broken(damagetype)
+/obj/machinery/update_health(var/damagetype, var/user = null)
+	if(!isdamageable())
+		return //Assume we don't care about damages
+	if(health <= min_health)
+		if(ISDAMTYPE(damagetype, DAM_BURN))
+			melt(user)
+		else
+			destroyed(damagetype,user)
+	else //Handle broken state
+		if(health <= (broken_threshold * get_max_health()))
+			broken(damagetype, user)
+		else if(stat & BROKEN)
+			unbroken()
+	update_icon()
 
 //Called when the machine is broken
 /obj/machinery/broken(var/damagetype)
 	set_broken(TRUE)
+	update_icon()
+
+/obj/machinery/unbroken()
+	set_broken(FALSE)
 	update_icon()
 
 /obj/machinery/emp_act(severity)

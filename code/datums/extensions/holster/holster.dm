@@ -8,33 +8,30 @@
 
 /datum/extension/holster/New(holder, storage, sound_in, sound_out, can_holster)
 	..()
-	if(!holder)
-		log_debug("[src] has null holder!!")
 	atom_holder = holder
-	if(!storage)
-		src.storage = storage
-	else
-		log_error("extension/holster/New(): Created a [src]\ref[src] without a proper storage pocket linked!")
+	src.storage = storage
 	src.sound_in = sound_in || src.sound_in
 	src.sound_out = sound_out || src.sound_out
-	if(!can_holster)
-		src.can_holster = can_holster
-
-	atom_holder.verbs += /atom/proc/holster_verb
+	src.can_holster = can_holster
+	if(holder)
+		atom_holder.verbs += /atom/proc/holster_verb
 	ADD_SAVED_VAR(holstered)
 	ADD_SAVED_VAR(atom_holder)
 	ADD_SAVED_VAR(storage)
 
-	ADD_SKIP_EMPTY(holstered)
-
 /datum/extension/holster/after_load()
 	. = ..()
+	if(!holder)
+		log_error("[src] has null holder!!")
+	if(!storage)
+		log_error("extension/holster/after_load(): loaded a [src]\ref[src] without a proper storage pocket linked!")
 	atom_holder.verbs |= /atom/proc/holster_verb
 
 /datum/extension/holster/Destroy()
 	storage = null
 	holstered = null
 	atom_holder.verbs -= /atom/proc/holster_verb
+	atom_holder = null
 	. = ..()
 
 /datum/extension/holster/proc/can_holster(var/obj/item/I)

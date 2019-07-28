@@ -18,9 +18,9 @@
 	var/health 					= null	//Current health
 	var/max_health 				= 0		//Maximum health
 	var/min_health 				= 0 	//Minimum health. If you want negative health numbers, change this to a negative number! Used to determine at what health something "dies"
-	var/broken_threshold		= -1 	//If the object's health goes under this value, its considered "broken", and the broken() proc is called.
+	var/broken_threshold		= 0 	//Percentage {0.0 to 1.0} of the object's max health at which the broken() proc is called! 
 	var/const/MaxArmorValue 	= 100	//Maximum armor resistance possible for objects (Was hardcoded to 100 for mobs..)
-	var/list/armor						//Resistance to damage types
+	var/list/armor						//Associative list of resistances to damage types. Format for entries is damagetype = damageresistance
 	var/damthreshold_brute 		= 0		//Minimum amount of brute damages required to damage the object. Damages of that type below this value have no effect.
 	var/damthreshold_burn		= 0		//Minimum amount of burn damages required to damage the object. Damages of that type below this value have no effect.
 	var/explosion_base_damage 	= 5 	//The base of the severity exponent used. See ex_act for details
@@ -291,10 +291,14 @@
 	set_health(min_health, damagetype)
 
 /obj/proc/isbroken()
-	return health <= broken_threshold
+	return health <= (broken_threshold * get_max_health())
 
 //Called when the health of the object goes below the broken_threshold, and while the health is higher than min_health
 /obj/proc/broken(var/damagetype, var/user)
+	//do stuff
+
+//Called when the health gets back above the broken health threshold
+/obj/proc/unbroken()
 	//do stuff
 
 //Handles checking if the object is destroyed and etc..
@@ -308,7 +312,7 @@
 			melt(user)
 		else
 			destroyed(damagetype,user)
-	else if(health <= broken_threshold)
+	else if(health <= (broken_threshold * get_max_health()))
 		broken(damagetype, user)
 	update_icon()
 
@@ -386,7 +390,7 @@
 	add_fingerprint(user)
 
 	//Ideally unarmed attacks should be handled by the mobs.. But for now I guess We'll make do.
-	var/hitsoundoverride = sound_hit //So we can override the sound for special cases
+	var/hitsoundoverride = sound_hit? sound_hit : "swing_hit" //So we can override the sound for special cases
 	var/damoverride = damtype
 	var/mob/living/carbon/human/H = user
 	if(MUTATION_HULK in user.mutations)

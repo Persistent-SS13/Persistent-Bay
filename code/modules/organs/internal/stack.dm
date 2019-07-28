@@ -518,6 +518,12 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		transfer_identity(owner)
 	..(user, drop_organ, detach)
 
+//Whether the lace should still display its action button on the button bar
+// Meant to be used to clear deleted laces from the UI of people still stuck with them after it was hastily replaced and etc..
+/obj/item/organ/internal/stack/proc/can_delete_stack_action()
+	if( (owner == null && lacemob == null) || loc == null || QDELETED(src))
+		return TRUE
+	return FALSE
 
 /obj/item/organ/internal/stack/vox/removed()
 	var/obj/item/organ/external/head = owner.get_organ(parent_organ)

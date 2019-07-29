@@ -2,6 +2,10 @@
 	var/obj/item/weapon/storage/internal/pockets/pockets
 	var/slots = 2
 
+/obj/item/clothing/suit/storage/New()
+	. = ..()
+	ADD_SAVED_VAR(pockets)
+
 /obj/item/clothing/suit/storage/Initialize()
 	. = ..()
 	if(!map_storage_loaded)

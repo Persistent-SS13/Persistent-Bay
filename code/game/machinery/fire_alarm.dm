@@ -31,6 +31,8 @@ FIRE ALARM
 		buildstage = 0
 		wiresexposed = TRUE
 		frame.transfer_fingerprints_to(src)
+	ADD_SAVED_VAR(buildstage)
+	ADD_SAVED_VAR(wiresexposed)
 
 /obj/machinery/firealarm/examine(mob/user)
 	. = ..(user)

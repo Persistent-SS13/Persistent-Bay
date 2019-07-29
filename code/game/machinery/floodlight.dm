@@ -21,6 +21,10 @@
 	if(!map_storage_loaded)
 		cell = new/obj/item/weapon/cell/apc(src)
 	..()
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(cell)
+	ADD_SAVED_VAR(unlocked)
+	ADD_SAVED_VAR(open)
 
 /obj/machinery/floodlight/on_update_icon()
 	overlays.Cut()

@@ -4,22 +4,20 @@
 	var/obj/item/master_item
 
 /obj/item/weapon/storage/internal/New(obj/item/MI)
+	. = ..()
+	ADD_SAVED_VAR(master_item)
+
+/obj/item/weapon/storage/internal/Initialize(mapload, obj/item/MI)
+	. = ..()	
 	if(MI)
 		master_item = MI
-		loc = master_item
-		name = master_item.name
-		verbs -= /obj/item/verb/verb_pickup	//make sure this is never picked up.
-		..()
-	ADD_SAVED_VAR(master_item)
-	
-/obj/item/weapon/storage/internal/after_load()
-	// storage_ui = new storage_ui(src)
-	// prepare_ui()
-	if(master_item)
-		loc = master_item
-		name = master_item.name
-		verbs -= /obj/item/verb/verb_pickup	//make sure this is never picked up.
-		..()
+	if(!master_item)
+		log_warning("[src]\ref[src] has null master item. Deleting!")
+		return INITIALIZE_HINT_QDEL
+	loc = master_item
+	name = master_item.name
+	verbs -= /obj/item/verb/verb_pickup	//make sure this is never picked up.
+
 /obj/item/weapon/storage/internal/Destroy()
 	master_item = null
 	. = ..()
@@ -104,19 +102,21 @@
 	storage_slots = slots
 	max_w_class = slot_size
 	..()
-/obj/item/weapon/storage/internal/pockets/after_load()
-	if(master_item)
-		loc = master_item
-		name = master_item.name
-		if(istype(loc, /obj/item/clothing/suit/storage))
-			var/obj/item/clothing/suit/storage/coat = loc
-			if(coat)
-				coat.pockets = src
-		if(istype(loc, /obj/item/clothing/accessory/storage))
-			var/obj/item/clothing/accessory/storage/web = loc
-			if(web)
-				web.hold = src
-		..()
+
+// /obj/item/weapon/storage/internal/pockets/after_load()
+// 	if(master_item)
+// 		loc = master_item
+// 		name = master_item.name
+// 		if(istype(loc, /obj/item/clothing/suit/storage))
+// 			var/obj/item/clothing/suit/storage/coat = loc
+// 			if(coat)
+// 				coat.pockets = src
+// 		if(istype(loc, /obj/item/clothing/accessory/storage))
+// 			var/obj/item/clothing/accessory/storage/web = loc
+// 			if(web)
+// 				web.hold = src
+// 		..()
+	
 /obj/item/weapon/storage/internal/pouch/New(var/newloc, var/storage_space)
 	max_storage_space = storage_space
 	..()

@@ -11,6 +11,18 @@
 	anchored = 1
 	density = 1
 	req_access = list()
+	circuit_type =  /obj/item/weapon/circuitboard/suit_storage_unit
+	max_health = 500
+	broken_threshold = 0.05
+	damthreshold_brute = 15
+	damthreshold_burn = 40
+	armor = list(
+		DAM_BLUNT = 50,
+		DAM_PIERCE = 50,
+		DAM_CUT = 50,
+		DAM_BOMB = 40,
+		DAM_BULLET = 60,
+	)
 	var/mob/living/carbon/human/occupant = null
 	var/obj/item/clothing/suit/space/suit = null
 	var/suit_type = null
@@ -25,10 +37,7 @@
 	var/isopen = 0
 	var/islocked = 0
 	var/isUV = 0
-	var/ispowered = 1 //starts powered
-	var/isbroken = 0
 	var/issuperUV = 0
-	var/panelopen = 0
 	var/safetieson = 1
 	var/cycletime_left = 0
 
@@ -140,34 +149,40 @@
 	req_access = list(core_access_security_programs) 	//security are the closest thing we have to antags
 	islocked = 1
 
-
-
 /obj/machinery/suit_storage_unit/New()
-	src.update_icon()
-	if(suit_type)
-		suit = new suit_type(src)
-	if(helmet_type)
-		helmet = new helmet_type(src)
-	if(boots_type)
-		boots = new boots_type(src)
-	if(tank_type)
-		tank = new tank_type(src)
-	if(mask_type)
-		mask = new mask_type(src)
+	..()
+	ADD_SAVED_VAR(occupant)
+	ADD_SAVED_VAR(suit)
+	ADD_SAVED_VAR(helmet)
+	ADD_SAVED_VAR(boots)
+	ADD_SAVED_VAR(tank)
+	ADD_SAVED_VAR(mask)
+	ADD_SAVED_VAR(isopen)
+	ADD_SAVED_VAR(islocked)
+	ADD_SAVED_VAR(isUV)
+	ADD_SAVED_VAR(issuperUV)
+	ADD_SAVED_VAR(safetieson)
 
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/suit_storage_unit(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	RefreshParts()
+/obj/machinery/suit_storage_unit/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		if(suit_type)
+			suit = new suit_type(src)
+		if(helmet_type)
+			helmet = new helmet_type(src)
+		if(boots_type)
+			boots = new boots_type(src)
+		if(tank_type)
+			tank = new tank_type(src)
+		if(mask_type)
+			mask = new mask_type(src)
+	queue_icon_update()
 
 /obj/machinery/suit_storage_unit/dismantle()
 	src.dump_everything()
 	return ..()
 
-
-/obj/machinery/suit_storage_unit/update_icon()
+/obj/machinery/suit_storage_unit/on_update_icon()
 	var/hashelmet = 0
 	var/hassuit = 0
 	var/hashuman = 0
@@ -177,40 +192,12 @@
 		hassuit = 1
 	if(occupant)
 		hashuman = 1
-	icon_state = text("suitstorage[][][][][][][][][]",hashelmet,hassuit,hashuman,src.isopen,src.islocked,src.isUV,src.ispowered,src.isbroken,src.issuperUV)
+	icon_state = text("suitstorage[][][][][][][][][]",hashelmet,hassuit,hashuman, src.isopen, src.islocked, src.isUV, powered(), isbroken(), src.issuperUV)
 
 
-/obj/machinery/suit_storage_unit/power_change()
+/obj/machinery/suit_storage_unit/destroyed(damagetype, user)
+	dump_everything()
 	. = ..()
-	if(.)
-		if( !(stat & NOPOWER) )
-			src.ispowered = 1
-			src.update_icon()
-		else
-			spawn(rand(0, 15))
-				src.ispowered = 0
-				src.islocked = 0
-				src.isopen = 1
-				src.dump_everything()
-				src.update_icon()
-
-
-/obj/machinery/suit_storage_unit/ex_act(severity)
-	switch(severity)
-		if(1.0)
-			if(prob(50))
-				src.dump_everything() //So suits dont survive all the time
-			qdel(src)
-			return
-		if(2.0)
-			if(prob(50))
-				src.dump_everything()
-				qdel(src)
-			return
-		else
-			return
-	return
-
 
 /obj/machinery/suit_storage_unit/attack_hand(mob/user as mob)
 	var/dat
@@ -220,7 +207,7 @@
 		return
 	if(!user.IsAdvancedToolUser())
 		return 0
-	if(src.panelopen) //The maintenance panel is open. Time for some shady stuff
+	if(panel_open) //The maintenance panel is open. Time for some shady stuff
 		dat+= "<HEAD><TITLE>Suit storage unit: Maintenance panel</TITLE></HEAD>"
 		dat+= "<Font color ='black'><B>Maintenance panel controls</B></font><HR>"
 		dat+= "<font color ='grey'>The panel is ridden with controls, button and meters, labeled in strange signs and symbols that <BR>you cannot understand. Probably the manufactoring world's language.<BR> Among other things, a few controls catch your eye.</font><BR><BR>"
@@ -229,7 +216,7 @@
 		dat+= text("<HR><BR><A href='?src=\ref[];mach_close=suit_storage_unit'>Close panel</A>", user)
 		//user << browse(dat, "window=ssu_m_panel;size=400x500")
 		//onclose(user, "ssu_m_panel")
-	else if(src.isUV) //The thing is running its cauterisation cycle. You have to wait.
+	else if(isUV) //The thing is running its cauterisation cycle. You have to wait.
 		dat += "<HEAD><TITLE>Suit storage unit</TITLE></HEAD>"
 		dat+= "<font color ='red'><B>Unit is cauterising contents with selected UV ray intensity. Please wait.</font></B><BR>"
 		//dat+= "<font colr='black'><B>Cycle end in: [src.cycletimeleft()] seconds. </font></B>"
@@ -237,7 +224,7 @@
 		//onclose(user, "ssu_cycling_panel")
 
 	else
-		if(!src.isbroken)
+		if(!isbroken())
 			dat+= "<HEAD><TITLE>Suit storage unit</TITLE></HEAD>"
 			dat+= "<font color='blue'><font size = 4><B>U-Stor-It Suit Storage Unit, model DS1900</B></FONT><BR>"
 			dat+= "<B>Welcome to the Unit control panel.</B></FONT><HR>"
@@ -276,7 +263,7 @@
 			//user << browse(dat, "window=suit_storage_unit;size=400x500")
 			//onclose(user, "suit_storage_unit")
 
-	user << browse(dat, "window=suit_storage_unit;size=400x500")
+	show_browser(user, dat, "window=suit_storage_unit;size=400x500")
 	onclose(user, "suit_storage_unit")
 	return
 
@@ -337,50 +324,24 @@
 
 
 /obj/machinery/suit_storage_unit/proc/toggleUV(mob/user as mob)
-//	var/protected = 0
-//	var/mob/living/carbon/human/H = user
-	if(!src.panelopen)
+	if(!src.panel_open)
 		return
 
-	/*if(istype(H)) //Let's check if the guy's wearing electrically insulated gloves
-		if(H.gloves)
-			var/obj/item/clothing/gloves/G = H.gloves
-			if(istype(G,/obj/item/clothing/gloves/insulated))
-				protected = 1
-
-	if(!protected)
-		playsound(src.loc, "sparks", 75, 1, -1)
-		to_chat(user, "<span class='warning'>You try to touch the controls but you get zapped. There must be a short circuit somewhere.</span>")
-		return*/
-	else  //welp, the guy is protected, we can continue
-		if(src.issuperUV)
-			to_chat(user, "You slide the dial back towards \"185nm\".")
-			src.issuperUV = 0
-		else
-			to_chat(user, "You crank the dial all the way up to \"15nm\".")
-			src.issuperUV = 1
-		return
+	if(src.issuperUV)
+		to_chat(user, "You slide the dial back towards \"185nm\".")
+		src.issuperUV = 0
+	else
+		to_chat(user, "You crank the dial all the way up to \"15nm\".")
+		src.issuperUV = 1
+	return
 
 
 /obj/machinery/suit_storage_unit/proc/togglesafeties(mob/user as mob)
-//	var/protected = 0
-//	var/mob/living/carbon/human/H = user
-	if(!src.panelopen) //Needed check due to bugs
+	if(!src.panel_open) //Needed check due to bugs
 		return
 
-	/*if(istype(H)) //Let's check if the guy's wearing electrically insulated gloves
-		if(H.gloves)
-			var/obj/item/clothing/gloves/G = H.gloves
-			if(istype(G,/obj/item/clothing/gloves/insulated) )
-				protected = 1
-
-	if(!protected)
-		playsound(src.loc, "sparks", 75, 1, -1)
-		to_chat(user, "<span class='warning'>You try to touch the controls but you get zapped. There must be a short circuit somewhere.</span>")
-		return*/
-	else
-		to_chat(user, "You push the button. The coloured LED next to it changes.")
-		src.safetieson = !src.safetieson
+	to_chat(user, "You push the button. The coloured LED next to it changes.")
+	src.safetieson = !src.safetieson
 
 #define dispense_clothing(item) if(src.item){item.dropInto(loc); src.item = null}
 
@@ -490,7 +451,7 @@
 				if(src.mask)
 					src.mask = null
 				visible_message("<font color='red'>With a loud whining noise, the Suit Storage Unit's door grinds open. Puffs of ashen smoke come out of its chamber.</font>", 3)
-				src.isbroken = 1
+				take_damage(max(health - 5, 1), DAM_ENERGY, 100, "equipment malfunction")
 				src.isopen = 1
 				src.islocked = 0
 				src.eject_occupant(occupant) //Mixing up these two lines causes bug. DO NOT DO IT.
@@ -578,7 +539,7 @@
 	if (!src.isopen)
 		to_chat(usr, "<span class='warning'>The unit's doors are shut.</span>")
 		return
-	if (!src.ispowered || src.isbroken)
+	if (!src.powered() || src.isbroken())
 		to_chat(usr, "<span class='warning'>The unit is not operational.</span>")
 		return
 	if ( (src.occupant) || (src.helmet) || (src.suit) )
@@ -621,7 +582,7 @@
 		src.updateUsrDialog()
 		return
 
-	if(!src.ispowered)
+	if(!src.powered())
 		return
 
 	if ( istype(I, /obj/item/grab) )
@@ -631,7 +592,7 @@
 		if (!src.isopen)
 			to_chat(usr, "<span class='warning'>The unit's doors are shut.</span>")
 			return
-		if (!src.ispowered || src.isbroken)
+		if (!src.powered() || src.isbroken())
 			to_chat(usr, "<span class='warning'>The unit is not operational.</span>")
 			return
 		if ( (src.occupant) || (src.helmet) || (src.suit) || (src.boots) || (src.tank) || (src.mask)) //Unit needs to be absolutely empty

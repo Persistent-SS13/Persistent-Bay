@@ -214,10 +214,12 @@ Class Procs:
 
 //Main processing proc
 /obj/machinery/Process()
-	if(time_emped && world.realtime >= time_emped)
-		time_emped = 0
-		set_emped(FALSE)
-		emp_end()
+	return PROCESS_KILL
+///obj/machinery/Process()
+	// if(time_emped && world.realtime >= time_emped)
+	// 	time_emped = 0
+	// 	set_emped(FALSE)
+	// 	emp_end()
 
 	// if(!(use_power || idle_power_usage || active_power_usage) && !interact_offline)
 	// 	return PROCESS_KILL
@@ -540,9 +542,7 @@ Class Procs:
 	//log_debug("Created radio transmitter for [src] \ref[src]. id: '[id]', frequency: [frequency], filter: [filter], range: [range? range : "null"], filterout: [filterout? filterout : filter]")
 
 /obj/machinery/proc/delete_transmitter()
-	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
-	if(T)
-		qdel(T)
+	remove_extension(src, RADIO_TRANSMITTER_TYPE)
 
 /obj/machinery/proc/set_radio_frequency(var/freq as num)
 	src.frequency = freq

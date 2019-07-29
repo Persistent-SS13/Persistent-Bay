@@ -247,7 +247,6 @@
 	ADD_SAVED_VAR(on_temperature)
 
 /obj/machinery/computer/general_air_control/fuel_injection/Process()
-	..()
 	if(inoperable() || !has_transmitter() || !transmitter_ready())
 		return
 	if(automation)

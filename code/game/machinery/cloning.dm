@@ -172,7 +172,6 @@
 
 //Grow clones to maturity then kick them out.  FREELOADERS
 /obj/machinery/clonepod/Process()
-	. = ..()
 	if(inoperable()) //Autoeject if power is lost
 		if(occupant)
 			locked = 0

@@ -230,7 +230,6 @@ var/const/OUTPUT_DELAY = 5 SECONDS //intervals between material being outputed b
 	output_materials()
 
 /obj/machinery/recycler/Process()
-	..()
 	if(operable())
 		output_materials()
 

@@ -43,7 +43,8 @@
 	var/const/fancyfont = "Segoe Script"
 
 	var/scan_file_type = /datum/computer_file/data/text
-
+	
+	var/info_links_fixed
 /obj/item/weapon/paper/New(loc, text, title, list/md = null)
 	..(loc)
 	ADD_SAVED_VAR(info)
@@ -75,8 +76,10 @@
 	..()
 
 /obj/item/weapon/paper/Write(savefile/f)
+	var/proper_links = info_links
 	info_links = replacetext(info_links,"\ref[src]","***MY_REF***")
 	StandardWrite(f)
+	info_links = proper_links
 
 /obj/item/weapon/paper/proc/set_content(text,title)
 	if(title)

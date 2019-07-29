@@ -162,7 +162,13 @@
 	BITSET(hud_updateflag, STATUS_HUD)
 	BITSET(hud_updateflag, LIFE_HUD)
 	redraw_inv()
-
+	
+	if(dna && dna.real_name == "Unknown")
+		dna.ResetUIFrom(src)
+		dna.ready_dna(src)
+		var/datum/computer_file/report/crew_record/record = Retrieve_Record(real_name)
+		if(record)
+			record.set_fingerprint(dna.unique_enzymes)
 /mob/living/carbon/human/Destroy()
 	GLOB.human_mob_list -= src
 	QDEL_NULL_LIST(worn_underwear)

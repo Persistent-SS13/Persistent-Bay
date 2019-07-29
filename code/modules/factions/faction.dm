@@ -1955,7 +1955,7 @@ var/PriorityQueue/all_feeds
 	possible |= module.spec.weekly_objectives
 	var/chose_type = pick(possible)
 	weekly_objective = new chose_type()
-	weekly_objective.parent = new chose_type()
+	weekly_objective.parent = src
 	weekly_assigned = world.realtime
 
 /datum/world_faction/business/New()

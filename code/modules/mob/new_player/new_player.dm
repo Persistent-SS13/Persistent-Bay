@@ -334,6 +334,16 @@
 	character.spawn_cit = CITIZEN
 	//DNA should be last
 	var/datum/computer_file/report/crew_record/R = Retrieve_Record(character.real_name)
+	character.dna.ResetUIFrom(character)
+	character.dna.ready_dna(character)
+	character.dna.b_type = client.prefs.b_type
+	character.sync_organ_dna()
+	character.spawn_loc = "nexus"
+	// Do the initial caching of the player's body icons.
+	character.force_update_limbs()
+	character.update_eyes()
+	character.regenerate_icons()
+	character.spawn_type = CHARACTER_SPAWN_TYPE_IMPORT //For first time spawn
 	if(R)
 		R.linked_account.money = 1000
 		R.email = new()
@@ -344,16 +354,7 @@
 		client.prefs.setup_new_accounts(character) //make accounts before! Outfit setup needs the record set
 
 
-	character.dna.ResetUIFrom()
-	character.dna.ready_dna(character)
-	character.dna.b_type = client.prefs.b_type
-	character.sync_organ_dna()
-	character.spawn_loc = "nexus"
-	// Do the initial caching of the player's body icons.
-	character.force_update_limbs()
-	character.update_eyes()
-	character.regenerate_icons()
-	character.spawn_type = CHARACTER_SPAWN_TYPE_IMPORT //For first time spawn
+
 	var/decl/hierarchy/outfit/clothes
 	clothes = outfit_by_type(/decl/hierarchy/outfit/nexus/starter)
 	ASSERT(istype(clothes))

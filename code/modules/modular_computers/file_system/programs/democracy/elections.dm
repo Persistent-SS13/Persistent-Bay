@@ -107,7 +107,7 @@
 			var/datum/democracy/ballot = locate(href_list["ref"])
 			if(ballot)
 
-				var/choice = input(usr,"Are you sure you want to pay 500$$ to enter the election for [ballot.title]?") in list("Confirm", "Cancel")
+				var/choice = input(usr,"Are you sure you want to pay 100$$ to enter the election for [ballot.title]?") in list("Confirm", "Cancel")
 				if(choice == "Confirm")
 					var/desc = sanitize(input(usr, "Enter Candidacy Description. Maximum 300 Characters", "Candidacy Description", "") as message|null, 300)
 					if(!desc)

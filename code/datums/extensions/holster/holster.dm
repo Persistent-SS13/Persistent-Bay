@@ -5,6 +5,7 @@
 	var/sound_out = 'sound/effects/holster/holsterout.ogg'
 	var/list/can_holster = null
 	var/obj/item/holstered = null
+	should_save = FALSE
 
 /datum/extension/holster/New(holder, storage, sound_in, sound_out, can_holster)
 	..()
@@ -15,17 +16,6 @@
 	src.can_holster = can_holster
 	if(holder)
 		atom_holder.verbs += /atom/proc/holster_verb
-	ADD_SAVED_VAR(holstered)
-	ADD_SAVED_VAR(atom_holder)
-	ADD_SAVED_VAR(storage)
-
-/datum/extension/holster/after_load()
-	. = ..()
-	if(!holder)
-		log_error("[src] has null holder!!")
-	if(!storage)
-		log_error("extension/holster/after_load(): loaded a [src]\ref[src] without a proper storage pocket linked!")
-	atom_holder.verbs |= /atom/proc/holster_verb
 
 /datum/extension/holster/Destroy()
 	storage = null

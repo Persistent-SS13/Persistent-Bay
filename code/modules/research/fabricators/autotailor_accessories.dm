@@ -1487,6 +1487,7 @@
 	id = "bag_holding"
 	build_path = /obj/item/weapon/storage/backpack/holding
 	materials = list(MATERIAL_DIAMOND = 10000, MATERIAL_PHORON = 10000, MATERIAL_GOLD = 10000, MATERIAL_CLOTH = 5000, MATERIAL_LEATHER = 5000, MATERIAL_GLASS = 1000, MATERIAL_STEEL = 1500)
+	research = "TECH_BLUESPACE"
 
 //
 //belt slot

@@ -816,7 +816,7 @@
 	id = "eng"
 	build_path = /obj/item/clothing/gloves/insulated
 	materials = list(MATERIAL_LEATHER = 2000, MATERIAL_TITANIUM = 5000)	//not sure if this generates on roid, change if not
-	
+
 /datum/design/item/autotailor/accessories/gloves/forensic
 	name = "Forensic gloves"
 	id = "forensic"
@@ -1481,6 +1481,12 @@
 	id = "tact_d_ammo"
 	build_path = /obj/item/weapon/storage/backpack/dufflebag/syndie/ammo
 	materials = list(MATERIAL_CLOTH = 15000, MATERIAL_PHORON = 4000)
+
+/datum/design/item/autotailor/accessories/backpacks/bag_holding
+	name = "Bluespace Bag of Holding"
+	id = "bag_holding"
+	build_path = /obj/item/weapon/storage/backpack/holding
+	materials = list(MATERIAL_DIAMOND = 10000, MATERIAL_PHORON = 10000, MATERIAL_GOLD = 10000, MATERIAL_CLOTH = 5000, MATERIAL_LEATHER = 5000, MATERIAL_GLASS = 1000, MATERIAL_STEEL = 1500)
 
 //
 //belt slot

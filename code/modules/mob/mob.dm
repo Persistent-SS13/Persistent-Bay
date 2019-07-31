@@ -693,6 +693,7 @@
 			stat("Local Time", stationtime2text())
 			stat("Local Date", stationdate2text())
 			stat("Server Uptime", roundduration2text())
+			stat("Autosave Timer"), "Next autosave in [round(time_diff/(1 MINUTE), 0.1)] minutes."
 		if(client.holder || isghost(client.mob))
 			stat("Location:", "([x], [y], [z]) [loc]")
 
@@ -1329,4 +1330,3 @@
 
 /mob/after_load()
 	. = ..()
-

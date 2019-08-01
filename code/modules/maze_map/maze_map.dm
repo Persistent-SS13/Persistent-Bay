@@ -208,6 +208,17 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	obj_quantity = 10
 	difficulty = 6
 
+/datum/zlevel_data/seventeen
+	z = 17
+	coord = "Unknown"
+	name = "Crash Site"
+	monster_types = list(/mob/living/simple_animal/hostile/tormented, /mob/living/simple_animal/hostile/creature, /mob/living/simple_animal/hostile/faithless) // types of monsters that will occur on this map.
+	monster_quantity = 150 // and how many will occur/respawn
+	obj_types = list(/obj/structure/cryo_crate)
+	obj_quantity = 0
+	difficulty = 6
+
+
 
 #undef ZLEVEL_INACTIVE
 #undef ZLEVEL_DORMANT

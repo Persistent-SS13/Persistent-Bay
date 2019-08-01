@@ -80,7 +80,7 @@
 	**/
 	return 1
 
-//This saves the initial character after creation is complete
+//This saves the initial character, before its tweaked again
 /datum/preferences/proc/save_character()
 	SScharacter_setup.save_character(chosen_slot, client.ckey, create_initial_character())
 	character_list = list()
@@ -134,21 +134,18 @@
 		F.records.faction_records |= record
 
 	//ID stuff is handled by the outfit code later on, when the actual final ID is spawned
-
-	if(F)
-		H.spawn_loc = F.uid
-		//testing("Setting spawn loc for [H]. Got faction name: [H.spawn_loc], and faction uid [src.faction]")
-	else
-		H.spawn_loc = "null"
-		log_warning("[H]'s spawn_loc is null! Got faction: [src.faction]'")
-
+	H.spawn_loc = F? F.uid : ""
 
 //Creates the dummy mob used to store initial character data in the save file
 /datum/preferences/proc/create_initial_character()
 	var/mob/living/carbon/human/H = new()
-	H.name = real_name
-	H.real_name = real_name
-	H.spawn_type = CHARACTER_SPAWN_TYPE_FRONTIER_BEACON //For first time spawn
+	H.name 			= real_name
+	H.real_name 	= real_name
+	H.spawn_type 	= CHARACTER_SPAWN_TYPE_FRONTIER_BEACON //For first time spawn
+	H.age 			= age
+	H.gender 		= gender
+	H.b_type		= b_type
+	H.set_species(species)
 	if(!H.mind)
 		H.mind = new()
 
@@ -168,14 +165,12 @@
 
 	//DNA should be last
 	H.dna.ResetUIFrom(H)
-	H.dna.ready_dna(H)
-	H.dna.b_type = client.prefs.b_type
-	H.sync_organ_dna()
-
+	H.dna.ready_dna(H) //Do this before setting disabilities
 	if(client.prefs.disabilities)
 		// Set defer to 1 if you add more crap here so it only recalculates struc_enzymes once. - N3X
 		H.dna.SetSEState(GLOB.GLASSESBLOCK,1,0)
 		H.disabilities |= NEARSIGHTED
+	H.sync_organ_dna()
 
 	// Give them their cortical stack if we're using them.
 	if(config && config.use_cortical_stacks && client && client.prefs.has_cortical_stack)

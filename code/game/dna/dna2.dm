@@ -395,9 +395,10 @@ var/global/list/datum/dna/gene/dna_genes[0]
 // BACK-COMPAT!
 //  Initial DNA setup.  I'm kind of wondering why the hell this doesn't just call the above.
 /datum/dna/proc/ready_dna(mob/living/carbon/human/character)
+	real_name = character.real_name
+	b_type = character.b_type
+	species = character.species? character.species.name : SPECIES_HUMAN
 	ResetUIFrom(character)
-
 	ResetSE()
-
 	unique_enzymes = md5(character.real_name)
 	GLOB.reg_dna[unique_enzymes] = character.real_name

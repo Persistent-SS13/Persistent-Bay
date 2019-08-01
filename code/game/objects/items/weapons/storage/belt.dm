@@ -460,19 +460,19 @@
 	item_state = "ammobelt"
 	storage_slots = 9
 
-/obj/item/weapon/storage/belt/security/military
-	name = "parade belt"
-	desc = "A striking red ammo belt, more for style than camouflage."
-	icon_state = "military"
-	item_state = "military"
-	storage_slots = 9
+// /obj/item/weapon/storage/belt/security/military
+// 	name = "parade belt"
+// 	desc = "A striking red ammo belt, more for style than camouflage."
+// 	icon_state = "military" //Missing sprite!
+// 	item_state = "military"
+// 	storage_slots = 9
 
-/obj/item/weapon/storage/belt/security/assault
-	name = "assault belt"
-	desc = "A tactical assault belt."
-	icon_state = "assault"
-	item_state = "assault"
-	storage_slots = 6
+// /obj/item/weapon/storage/belt/security/assault
+// 	name = "assault belt"
+// 	desc = "A tactical assault belt."
+// 	icon_state = "assault" //Missing sprites!
+// 	item_state = "assault"
+// 	storage_slots = 6
 
 /obj/item/weapon/storage/belt/waistpack
 	name = "waist pack"

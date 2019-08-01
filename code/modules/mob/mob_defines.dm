@@ -189,7 +189,6 @@
 	var/spawn_loc // set to a faction_uid to have them spawn in that factions spawners
 	var/spawn_loc_2 // this is used for secondary cryobed networks
 
-	var/spawn_personal = 0 // toggled when they last entered a personal cryo
 	var/spawn_p_x = 0 // x
 	var/spawn_p_y = 0 // y
 	var/spawn_p_z = 0 // z coordinates of the personal cryo.

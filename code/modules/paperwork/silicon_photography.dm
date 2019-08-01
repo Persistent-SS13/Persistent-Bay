@@ -6,6 +6,11 @@
 	var/photos_taken = 0
 	var/list/obj/item/weapon/photo/aipictures = list()
 
+/obj/item/device/camera/siliconcam/New()
+	. = ..()
+	ADD_SAVED_VAR(photos_taken)
+	ADD_SAVED_VAR(aipictures)
+
 /obj/item/device/camera/siliconcam/ai_camera //camera AI can take pictures with
 	name = "AI photo camera"
 

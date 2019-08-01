@@ -20,6 +20,10 @@
 	collection_mode = 1
 	var/linked
 
+/obj/item/weapon/storage/laundry_basket/after_load()
+	. = ..()
+	if(ismob(loc))
+		pickup(loc) //Make sure to recreate the offhand marker if held
 
 /obj/item/weapon/storage/laundry_basket/attack_hand(mob/user as mob)
 	if(ishuman(user))
@@ -80,6 +84,7 @@
 	icon_state = "offhand"
 	name = "second hand"
 	use_to_pickup = 0
+	should_save = FALSE
 
 /obj/item/weapon/storage/laundry_basket/offhand/dropped(mob/user as mob)
 	..()

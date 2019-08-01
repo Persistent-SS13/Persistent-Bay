@@ -11,7 +11,7 @@
 	idle_power_usage = 100
 	active_power_usage = 10000
 	circuit_type = /obj/item/weapon/circuitboard/cracker
-
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
 
 	var/list/reagent_buffer = list()
 	var/tmp/fluid_consumption_per_tick = 100

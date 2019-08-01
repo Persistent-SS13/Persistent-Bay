@@ -80,103 +80,102 @@ default behaviour is:
 	return ..()
 
 /mob/living/Bump(atom/movable/AM, yes)
-	spawn(0)
-		if ((!( yes ) || now_pushing) || !loc)
+	if ((!( yes ) || now_pushing) || !loc)
+		return
+	now_pushing = 1
+	if (istype(AM, /mob/living))
+		var/mob/living/tmob = AM
+
+		for(var/mob/living/M in range(tmob, 1))
+			if(LAZYLEN(tmob.pinned) ||  ((M.pulling == tmob && ( tmob.restrained() && !( M.restrained() ) && M.stat == 0)) || locate(/obj/item/grab, LAZYLEN(tmob.grabbed_by))) )
+				if ( !(world.time % 5) )
+					to_chat(src, "<span class='warning'>[tmob] is restrained, you cannot push past</span>")
+				now_pushing = 0
+				return
+			if( tmob.pulling == M && ( M.restrained() && !( tmob.restrained() ) && tmob.stat == 0) )
+				if ( !(world.time % 5) )
+					to_chat(src, "<span class='warning'>[tmob] is restraining [M], you cannot push past</span>")
+				now_pushing = 0
+				return
+
+		//Leaping mobs just land on the tile, no pushing, no anything.
+		if(status_flags & LEAPING)
+			loc = tmob.loc
+			status_flags &= ~LEAPING
+			now_pushing = 0
 			return
-		now_pushing = 1
-		if (istype(AM, /mob/living))
-			var/mob/living/tmob = AM
 
-			for(var/mob/living/M in range(tmob, 1))
-				if(tmob.pinned.len ||  ((M.pulling == tmob && ( tmob.restrained() && !( M.restrained() ) && M.stat == 0)) || locate(/obj/item/grab, tmob.grabbed_by.len)) )
-					if ( !(world.time % 5) )
-						to_chat(src, "<span class='warning'>[tmob] is restrained, you cannot push past</span>")
+		if(can_swap_with(tmob)) // mutual brohugs all around!
+			var/turf/oldloc = loc
+			forceMove(tmob.loc)
+			tmob.forceMove(oldloc)
+			now_pushing = 0
+			for(var/mob/living/carbon/slime/slime in view(1,tmob))
+				if(slime.Victim == tmob)
+					slime.UpdateFeed()
+			return
+
+		if(!can_move_mob(tmob, 0, 0))
+			now_pushing = 0
+			return
+		if(src.restrained())
+			now_pushing = 0
+			return
+		if(tmob.a_intent != I_HELP)
+			if(istype(tmob, /mob/living/carbon/human) && (MUTATION_FAT in tmob.mutations))
+				if(prob(40) && !(MUTATION_FAT in src.mutations))
+					to_chat(src, "<span class='danger'>You fail to push [tmob]'s fat ass out of the way.</span>")
 					now_pushing = 0
 					return
-				if( tmob.pulling == M && ( M.restrained() && !( tmob.restrained() ) && tmob.stat == 0) )
-					if ( !(world.time % 5) )
-						to_chat(src, "<span class='warning'>[tmob] is restraining [M], you cannot push past</span>")
+			if(tmob.r_hand && istype(tmob.r_hand, /obj/item/weapon/shield/riot))
+				if(prob(99))
 					now_pushing = 0
 					return
+			if(tmob.l_hand && istype(tmob.l_hand, /obj/item/weapon/shield/riot))
+				if(prob(99))
+					now_pushing = 0
+					return
+		if(!(tmob.status_flags & CANPUSH))
+			now_pushing = 0
+			return
+		tmob.LAssailant = src
+	if(isobj(AM) && !AM.anchored)
+		var/obj/I = AM
+		if(!can_pull_size || can_pull_size < I.w_class)
+			to_chat(src, "<span class='warning'>It won't budge!</span>")
+			now_pushing = 0
+			return
 
-			//Leaping mobs just land on the tile, no pushing, no anything.
-			if(status_flags & LEAPING)
-				loc = tmob.loc
-				status_flags &= ~LEAPING
-				now_pushing = 0
-				return
+	now_pushing = 0
+	spawn(0)
+		..()
+		if (!istype(AM, /atom/movable) || AM.anchored)
+			if(confused && prob(50) && !MOVING_DELIBERATELY(src))
+				Weaken(2)
+				playsound(loc, "punch", 25, 1, -1)
+				visible_message("<span class='warning'>[src] [pick("ran", "slammed")] into \the [AM]!</span>")
+				src.apply_damage(5, DAM_BLUNT)
+			return
+		if (!now_pushing)
+			now_pushing = 1
 
-			if(can_swap_with(tmob)) // mutual brohugs all around!
-				var/turf/oldloc = loc
-				forceMove(tmob.loc)
-				tmob.forceMove(oldloc)
-				now_pushing = 0
-				for(var/mob/living/carbon/slime/slime in view(1,tmob))
-					if(slime.Victim == tmob)
-						slime.UpdateFeed()
-				return
-
-			if(!can_move_mob(tmob, 0, 0))
-				now_pushing = 0
-				return
-			if(src.restrained())
-				now_pushing = 0
-				return
-			if(tmob.a_intent != I_HELP)
-				if(istype(tmob, /mob/living/carbon/human) && (MUTATION_FAT in tmob.mutations))
-					if(prob(40) && !(MUTATION_FAT in src.mutations))
-						to_chat(src, "<span class='danger'>You fail to push [tmob]'s fat ass out of the way.</span>")
-						now_pushing = 0
-						return
-				if(tmob.r_hand && istype(tmob.r_hand, /obj/item/weapon/shield/riot))
-					if(prob(99))
-						now_pushing = 0
-						return
-				if(tmob.l_hand && istype(tmob.l_hand, /obj/item/weapon/shield/riot))
-					if(prob(99))
-						now_pushing = 0
-						return
-			if(!(tmob.status_flags & CANPUSH))
-				now_pushing = 0
-				return
-			tmob.LAssailant = src
-		if(isobj(AM) && !AM.anchored)
-			var/obj/I = AM
-			if(!can_pull_size || can_pull_size < I.w_class)
-				to_chat(src, "<span class='warning'>It won't budge!</span>")
-				now_pushing = 0
-				return
-
-		now_pushing = 0
-		spawn(0)
-			..()
-			if (!istype(AM, /atom/movable) || AM.anchored)
-				if(confused && prob(50) && !MOVING_DELIBERATELY(src))
-					Weaken(2)
-					playsound(loc, "punch", 25, 1, -1)
-					visible_message("<span class='warning'>[src] [pick("ran", "slammed")] into \the [AM]!</span>")
-					src.apply_damage(5, DAM_BLUNT)
-				return
-			if (!now_pushing)
-				now_pushing = 1
-
-				var/t = get_dir(src, AM)
-				if (istype(AM, /obj/structure/window))
-					for(var/obj/structure/window/win in get_step(AM,t))
-						now_pushing = 0
-						return
-				step(AM, t)
-				if (istype(AM, /mob/living))
-					var/mob/living/tmob = AM
-					if(istype(tmob.buckled, /obj/structure/bed))
-						if(!tmob.buckled.anchored)
-							step(tmob.buckled, t)
-				if(ishuman(AM))
-					var/mob/living/carbon/human/M = AM
-					for(var/obj/item/grab/G in M.grabbed_by)
-						step(G.assailant, get_dir(G.assailant, AM))
-						G.adjust_position()
-				now_pushing = 0
+			var/t = get_dir(src, AM)
+			if (istype(AM, /obj/structure/window))
+				for(var/obj/structure/window/win in get_step(AM,t))
+					now_pushing = 0
+					return
+			step(AM, t)
+			if (istype(AM, /mob/living))
+				var/mob/living/tmob = AM
+				if(istype(tmob.buckled, /obj/structure/bed))
+					if(!tmob.buckled.anchored)
+						step(tmob.buckled, t)
+			if(ishuman(AM))
+				var/mob/living/carbon/human/M = AM
+				for(var/obj/item/grab/G in M.grabbed_by)
+					step(G.assailant, get_dir(G.assailant, AM))
+					G.adjust_position()
+			now_pushing = 0
 
 /proc/swap_density_check(var/mob/swapper, var/mob/swapee)
 	var/turf/T = get_turf(swapper)

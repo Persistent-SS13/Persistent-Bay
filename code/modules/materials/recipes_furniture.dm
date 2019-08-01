@@ -118,18 +118,22 @@ ARMCHAIR(yellow)
 	title = "door"
 	result_type = /obj/machinery/door/unpowered/simple
 	req_amount = 10
-	time = 50
-	send_material_data = 0
+	time = 10 SECONDS
+	send_material_data = TRUE
+	difficulty = 3
 
 /datum/stack_recipe/furniture/barricade
 	title = "barricade"
 	result_type = /obj/structure/barricade
 	req_amount = 5
-	time = 50
+	send_material_data = TRUE
+	time = 15 SECONDS
+	difficulty = 0
 
 /datum/stack_recipe/furniture/stool
 	title = "stool"
 	result_type = /obj/item/weapon/stool
+	difficulty = 1
 
 /datum/stack_recipe/furniture/bar_stool
 	title = "bar stool"

@@ -196,12 +196,13 @@
 	return 0
 
 /mob/living/carbon/human/proc/regenerate_blood(var/amount)
-	amount *= (species.blood_volume / SPECIES_BLOOD_DEFAULT)
-	var/blood_volume_raw = vessel.get_reagent_amount(/datum/reagent/blood)
-	amount = max(0,min(amount, species.blood_volume - blood_volume_raw))
-	if(amount)
-		vessel.add_reagent(/datum/reagent/blood, amount, get_blood_data())
-	return amount
+	if(vessel)
+		. = amount * (species.blood_volume / SPECIES_BLOOD_DEFAULT)
+		var/blood_volume_raw = vessel.get_reagent_amount(/datum/reagent/blood)
+		. = max(0,min(amount, species.blood_volume - blood_volume_raw))
+		if(.)
+			vessel.add_reagent(/datum/reagent/blood, ., get_blood_data())
+	return .
 
 /mob/living/carbon/proc/get_blood_data()
 	var/data = list()

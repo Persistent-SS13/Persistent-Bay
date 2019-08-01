@@ -4,6 +4,7 @@
 	icon = 'icons/obj/rubble.dmi'
 	icon_state = "base"
 	appearance_flags = PIXEL_SCALE
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
 	opacity = 1
 	density = 1
 	anchored = 1

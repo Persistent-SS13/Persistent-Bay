@@ -1,7 +1,7 @@
 /obj/machinery/door/airlock/gold
 	name = "Gold Airlock"
 	door_color = COLOR_SUN
-	mineral = MATERIAL_GOLD
+	material = MATERIAL_GOLD
 	armor = list(
 		DAM_BLUNT  	= 60,
 		DAM_PIERCE 	= 20,
@@ -20,7 +20,7 @@
 /obj/machinery/door/airlock/silver
 	name = "Silver Airlock"
 	door_color = COLOR_SILVER
-	mineral = MATERIAL_SILVER
+	material = MATERIAL_SILVER
 	armor = list(
 		DAM_BLUNT  	= 60,
 		DAM_PIERCE 	= 20,
@@ -39,7 +39,7 @@
 /obj/machinery/door/airlock/diamond
 	name = "Diamond Airlock"
 	door_color = COLOR_CYAN_BLUE
-	mineral = MATERIAL_DIAMOND
+	material = MATERIAL_DIAMOND
 	armor = list(
 		DAM_BLUNT  	= MaxArmorValue,
 		DAM_PIERCE 	= MaxArmorValue,
@@ -59,7 +59,7 @@
 	name = "Uranium Airlock"
 	desc = "And they said I was crazy."
 	door_color = COLOR_PAKISTAN_GREEN
-	mineral = MATERIAL_URANIUM
+	material = MATERIAL_URANIUM
 	var/last_event = 0
 	var/rad_power = 7.5
 	armor = list(
@@ -80,7 +80,7 @@
 /obj/machinery/door/airlock/sandstone
 	name = "\improper Sandstone Airlock"
 	door_color = COLOR_BEIGE
-	mineral = MATERIAL_SANDSTONE
+	material = MATERIAL_SANDSTONE
 	armor = list(
 		DAM_BLUNT  	= 60,
 		DAM_PIERCE 	= 60,
@@ -100,7 +100,7 @@
 	name = "\improper Phoron Airlock"
 	desc = "No way this can end badly."
 	door_color = COLOR_PURPLE
-	mineral = MATERIAL_PHORON
+	material = MATERIAL_PHORON
 
 /obj/machinery/door/airlock/uranium/Process()
 	if(world.time > last_event+20)

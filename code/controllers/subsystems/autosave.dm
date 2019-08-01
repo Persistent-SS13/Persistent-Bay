@@ -27,10 +27,10 @@ SUBSYSTEM_DEF(autosave)
 	var/time_diff = time_next_save - world.time
 	if(time_diff <= 0)
 		Save()
-	else if(time_diff <= (1 MINUTES))
+	else if(announced != 2 && time_diff <= (1 MINUTES))
 		to_world("<font size=4 color='green'>Autosave in 1 Minute!</font>")
 		announced = 2
-	else if(time_diff <= (5 MINUTES))
+	else if(announced != 1 && time_diff <= (5 MINUTES))
 		to_world("<font size=4 color='green'>Autosave in 5 Minutes!</font>")
 		announced = 1
 	else if(announced)

@@ -130,10 +130,6 @@
 		src.connected = null
 	return
 
-/obj/structure/morgue/dismantle()
-	refund_matter()
-	qdel(src)
-
 /*
  * Morgue tray
  */

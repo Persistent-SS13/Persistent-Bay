@@ -2,12 +2,6 @@
 	STOP_PROCESSING(SSmobs, src)
 	GLOB.dead_mob_list_ -= src
 	GLOB.living_mob_list_ -= src
-	unset_machine()
-	QDEL_NULL(hud_used)
-	if(istype(skillset))
-		QDEL_NULL(skillset)
-	for(var/obj/item/grab/G in grabbed_by)
-		qdel(G)
 	clear_fullscreen()
 	if(client)
 		remove_screen_obj_references()
@@ -18,12 +12,19 @@
 		client.screen = list()
 	if(mind && mind.current == src)
 		spellremove(src)
+	unset_machine()
+	QDEL_NULL(hud_used)
+	QDEL_NULL_LIST(embedded)
+	if(istype(skillset))
+		QDEL_NULL(skillset)
+	for(var/obj/item/grab/G in grabbed_by)
+		qdel(G)
 	ghostize()
 	..()
 	return QDEL_HINT_HARDDEL
 
 /mob/proc/get_stack()
-	return 0
+	return null
 
 /mob/proc/remove_screen_obj_references()
 	hands = null
@@ -48,11 +49,11 @@
 	zone_sel = null
 
 /mob/Initialize()
+	if(!map_storage_loaded)
+		skillset = new skillset(src)
 	if(ispath(move_intent))
 		move_intent = decls_repository.get_decl(move_intent) //Do it very early, because subclasses need it in initialize
 	. = ..()
-	if(!map_storage_loaded)
-		skillset = new skillset(src)
 	START_PROCESSING(SSmobs, src)
 
 /mob/proc/show_message(msg, type, alt, alt_type)//Message, type of message (1 or 2), alternative message, alt message type (1 or 2)
@@ -235,7 +236,7 @@
 	if ((incapacitation_flags & INCAPACITATION_STUNNED) && stunned)
 		return 1
 
-	if ((incapacitation_flags & INCAPACITATION_FORCELYING) && (weakened || resting || pinned.len))
+	if ((incapacitation_flags & INCAPACITATION_FORCELYING) && (weakened || resting || LAZYLEN(pinned)))
 		return 1
 
 	if ((incapacitation_flags & INCAPACITATION_KNOCKOUT) && (stat || paralysis || sleeping || (status_flags & FAKEDEATH)))
@@ -590,7 +591,7 @@
 
 /mob/proc/start_pulling(var/atom/movable/AM)
 
-	if ( !AM || !usr || src==AM || !isturf(src.loc) )	//if there's no person pulling OR the person is pulling themself OR the object being pulled is inside something: abort!
+	if ( !AM || !usr || src==AM || !isturf(AM.loc) )	//if there's no person pulling OR the person is pulling themself OR the object being pulled is inside something: abort!
 		return
 
 	if (AM.anchored)
@@ -1315,6 +1316,10 @@
 	ADD_SAVED_VAR(spawn_loc)
 	ADD_SAVED_VAR(spawn_loc_2)
 	ADD_SAVED_VAR(spawn_cit)
+	ADD_SAVED_VAR(spawn_p_x)
+	ADD_SAVED_VAR(spawn_p_y)
+	ADD_SAVED_VAR(spawn_p_z)
+
 	ADD_SKIP_EMPTY(dna)
 	ADD_SKIP_EMPTY(l_hand)
 	ADD_SKIP_EMPTY(r_hand)
@@ -1326,8 +1331,6 @@
 	ADD_SKIP_EMPTY(active_genes)
 	ADD_SKIP_EMPTY(mutations)
 	ADD_SKIP_EMPTY(skillset)
-	ADD_SKIP_EMPTY(spawn_loc)
-	ADD_SKIP_EMPTY(spawn_loc_2)
 
 /mob/after_load()
 	. = ..()

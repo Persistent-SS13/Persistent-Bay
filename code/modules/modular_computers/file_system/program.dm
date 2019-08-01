@@ -44,6 +44,8 @@
 
 /datum/computer_file/program/Destroy()
 	computer = null
+	NM = null
+	ui_header = null
 	. = ..()
 
 /datum/computer_file/program/proc/ConnectedFaction()

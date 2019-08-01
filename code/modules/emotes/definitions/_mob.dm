@@ -223,3 +223,18 @@
 		/decl/emote/slime/frown,
 		/decl/emote/slime/smile
 		)
+
+/mob/living/simple_animal/mouse
+	default_emotes = list(
+		/decl/emote/audible/mouse_Squeak,
+		/decl/emote/visible/twitch,
+		/decl/emote/visible/shiver,
+		/decl/emote/audible/sneeze,
+		/decl/emote/audible/sniff,
+		/decl/emote/audible/snore,
+		/decl/emote/audible/whimper,
+		/decl/emote/visible/vibrate,
+		/decl/emote/visible/look,
+		/decl/emote/visible/stare,
+		)
+

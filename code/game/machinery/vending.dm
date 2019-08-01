@@ -13,10 +13,20 @@
 	obj_flags = OBJ_FLAG_ANCHORABLE | OBJ_FLAG_DAMAGEABLE
 	clicksound = "button"
 	clickvol = 40
-
+	max_health = 500 //make them fairly tanky
+	broken_threshold = 0.10
+	damthreshold_brute = 10
+	armor = list(
+		DAM_BLUNT = 60,
+		DAM_PIERCE = 60,
+		DAM_CUT = 60,
+	)
+	req_access_faction = list()
+	emagged = 0 //Ignores if somebody doesn't have card access to that machine.
+	mass  = 300 KILOGRAMS
 	var/icon_vend //Icon_state when vending
 	var/icon_deny //Icon_state when denying access
-	//var/diona_spawn_chance = 0.1
+	var/vermin_spawn_chance = 12 //%
 
 	// Power
 	idle_power_usage = 10
@@ -42,7 +52,7 @@
 	var/list/prices     = list() // Prices for each item, list(/type/path = price), items not in the list don't have a price.
 
 	// List of vending_product items available.
-	var/list/product_records = list()
+	var/list/datum/stored_items/vending_products/product_records = list()
 
 
 	// Variables used to initialize advertising
@@ -60,7 +70,6 @@
 	var/slogan_delay = 6000 //How long until we can pitch again?
 
 	// Things that can go wrong
-	emagged = 0 //Ignores if somebody doesn't have card access to that machine.
 	var/seconds_electrified = 0 //Shock customers like an airlock.
 	var/shoot_inventory = 0 //Fire items at customers! We're broken!
 	var/shooting_chance = 2 //The chance that items are being shot per tick
@@ -69,27 +78,66 @@
 	var/obj/item/weapon/material/coin/coin
 	var/datum/wires/vending/wires = null
 
+	//Faction things
+	var/locked = FALSE
+	var/tmp/datum/money_account/linked_account //reference on the money account where to put the accumulated money
+	var/lacepay = TRUE //Whether lacepay(TM) is enabled. Basically automatically paying remotely via lace
+
+	//Restocking
+	var/list/allowed_products	//types that are accepted when refilling the machine!
+	var/max_nb_products = 10 //At most 10 different products can be simultaneously inside
+	var/max_single_product = 60 //At most of a single product can be inside
+	var/max_size_class = ITEM_SIZE_TINY
+
 /obj/machinery/vending/New()
-	..()
+	. = ..()
 	wires = new(src)
-	spawn(4)
-		if(src.product_slogans)
-			src.slogan_list += splittext(src.product_slogans, ";")
+	ADD_SAVED_VAR(name)
+	ADD_SAVED_VAR(categories)
+	ADD_SAVED_VAR(product_records)
+	ADD_SAVED_VAR(ads_list)
+	ADD_SAVED_VAR(slogan_list)
+	ADD_SAVED_VAR(locked)
+	ADD_SAVED_VAR(coin)
+	ADD_SAVED_VAR(lacepay)
+	ADD_SAVED_VAR(scan_id)
+	ADD_SAVED_VAR(vend_reply)
+	ADD_SAVED_VAR(shut_up)
 
-			// So not all machines speak at the exact same time.
-			// The first time this machine says something will be at slogantime + this random value,
-			// so if slogantime is 10 minutes, it will say it at somewhere between 10 and 20 minutes after the machine is crated.
-			src.last_slogan = world.time + rand(0, slogan_delay)
+	ADD_SKIP_EMPTY(slogan_list)
+	ADD_SKIP_EMPTY(ads_list)
+	ADD_SKIP_EMPTY(product_records)
 
-		if(src.product_ads)
-			src.ads_list += splittext(src.product_ads, ";")
+/obj/machinery/vending/Initialize(mapload)
+	. = ..()
+	get_or_create_extension(src, /datum/extension/base_icon_state, /datum/extension/base_icon_state, icon_state)
+	if(src.product_slogans)
+		update_slogans()
+	if(src.product_ads)
+		update_ads()
 
+	//Basically legacy mapper placed vending machines
+	if(!map_storage_loaded)
 		src.build_inventory()
-		power_change()
+	
+	if(mapload)
+		queue_icon_update()
+	else
+		update_icon()
 
-		return
+/obj/machinery/vending/proc/update_slogans()
+	if(product_slogans)
+		slogan_list.Cut()
+		slogan_list += splittext(product_slogans, ";")
+		// So not all machines speak at the exact same time.
+		// The first time this machine says something will be at slogantime + this random value,
+		// so if slogantime is 10 minutes, it will say it at somewhere between 10 and 20 minutes after the machine is crated.
+		last_slogan = world.time + rand(0, slogan_delay)
 
-	return
+/obj/machinery/vending/proc/update_ads()
+	if(product_ads)
+		ads_list.Cut()
+		ads_list += splittext(product_ads, ";")
 
 /**
  *  Build src.produdct_records from the products lists
@@ -109,52 +157,31 @@
 
 		for(var/entry in current_list[1])
 			var/datum/stored_items/vending_products/product = new/datum/stored_items/vending_products(src, entry)
-
 			product.price = (entry in src.prices) ? src.prices[entry] : 0
 			product.amount = (current_list[1][entry]) ? current_list[1][entry] : 1
 			product.category = category
-
 			src.product_records.Add(product)
 
 /obj/machinery/vending/Destroy()
-	qdel(wires)
-	wires = null
-	qdel(coin)
-	coin = null
-	for(var/datum/stored_items/vending_products/R in product_records)
-		qdel(R)
-	product_records = null
+	QDEL_NULL(wires)
+	QDEL_NULL(coin)
+	QDEL_NULL_LIST(product_records)
+	linked_account = null
 	return ..()
 
-/obj/machinery/vending/ex_act(severity)
-	switch(severity)
-		if(1.0)
-			qdel(src)
-			return
-		if(2.0)
-			if (prob(50))
-				qdel(src)
-				return
-		if(3.0)
-			if (prob(25))
-				spawn(0)
-					src.malfunction()
-					return
-				return
-		else
-	return
+/obj/machinery/vending/connect_faction()
+	. = ..()
+	if(. && faction)
+		linked_account = faction.central_account
 
-/obj/machinery/vending/emag_act(var/remaining_charges, var/mob/user)
-	if (!emagged)
-		src.emagged = 1
-		to_chat(user, "You short out the product lock on \the [src]")
-		return 1
+/obj/machinery/vending/disconnect_faction()
+	. = ..()
+	if(.)
+		linked_account = null
 
-/obj/machinery/vending/attackby(obj/item/weapon/W as obj, mob/user as mob)
-
+/obj/machinery/vending/proc/handle_transactions(obj/item/weapon/W, mob/user)
 	var/obj/item/weapon/card/id/I = W.GetIdCard()
-
-	if (currently_vending && vendor_account && !vendor_account.suspended)
+	if (currently_vending && linked_account && !linked_account.suspended)
 		var/paid = 0
 		var/handled = 0
 
@@ -172,50 +199,140 @@
 
 		if(paid)
 			src.vend(currently_vending, usr)
-			return
+			return TRUE
 		else if(handled)
 			SSnano.update_uis(src)
-			return // don't smack that machine with your 2 thalers
+			return TRUE// don't smack that machine with your 2 thalers
 
 	if (I || istype(W, /obj/item/weapon/spacecash))
 		attack_hand(user)
-		return
-	else if(istype(W, /obj/item/weapon/tool/screwdriver))
-		src.panel_open = !src.panel_open
-		to_chat(user, "You [src.panel_open ? "open" : "close"] the maintenance panel.")
-		update_icon()
-		SSnano.update_uis(src)  // Speaker switch is on the main UI, not wires UI
-		return
-	else if(isMultitool(W) || isWirecutter(W))
-		if(src.panel_open)
-			attack_hand(user)
-		return
-	else if((obj_flags & OBJ_FLAG_ANCHORABLE) && default_wrench_floor_bolts(user, W))
-		power_change()
-		return
-	else if(istype(W, /obj/item/weapon/material/coin) && premium.len > 0)
+		return TRUE
+
+	if(istype(W, /obj/item/weapon/material/coin) && premium.len > 0)
 		if(!user.unEquip(W, src))
 			return
 		coin = W
 		categories |= VENDINGM_CAT_COIN
 		to_chat(user, "<span class='notice'>You insert \the [W] into \the [src].</span>")
 		SSnano.update_uis(src)
-		return
-	else if(attempt_to_stock(W, user))
-		return
-	..()
-	return
+		return TRUE
+	return FALSE
 
-/obj/machinery/vending/MouseDrop_T(var/obj/item/I as obj, var/mob/user as mob)
+/obj/machinery/vending/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	//Deconstruction
+	if(isScrewdriver(W))
+		if(!locked && default_deconstruction_screwdriver(user, W))
+			SSnano.update_uis(src)
+			return TRUE
+		else 
+			to_chat(user, SPAN_WARNING("The maintenance panel is locked shut!"))	
+			return TRUE	
+
+	if(!locked && default_part_replacement(user, W))
+		SSnano.update_uis(src)
+		return TRUE
+
+	if(isWrench(W))
+		if(!locked && default_wrench_floor_bolts(user, W))
+			SSnano.update_uis(src)
+			return TRUE
+		else if(locked)
+			to_chat(user, SPAN_WARNING("The floor bolts are covered!"))
+			return TRUE
+
+	if(default_deconstruction_crowbar(user, W))
+		return TRUE
+
+	if(isMultitool(W))
+		if(src.panel_open)
+			var/choice = input(user, "Do you really want to unlink \the [src] from [faction.name]?") in list("yes", "no")
+			if(choice == "yes" && disconnect_faction())
+				to_chat(user, SPAN_NOTICE("Faction disconnected!"))
+				SSnano.update_uis(src)
+			return TRUE
+		else
+			return FALSE //Handle multitool stuff in resolve attack
+	
+	//Faction linking
+	if(!currently_vending && istype(W, /obj/item/weapon/card/id/))
+		var/obj/item/weapon/card/id/I = W.GetIdCard()
+		if(!faction_uid && I.selected_faction && connect_faction(get_faction(I.selected_faction), user))
+			to_chat(user, SPAN_NOTICE("\The [src] was linked to [faction.name], and will now deposit money to that account!"))
+			SSnano.update_uis(src)
+			return TRUE
+		else if(!I.selected_faction)
+			to_chat(user, SPAN_NOTICE("You don't have a faction selected on your ID card!"))
+			return FALSE
+		//Maintenance unlocking/locking
+		if(faction_uid && check_access(I, faction))
+			locked = !locked
+			to_chat(user, SPAN_NOTICE("Maintenance access [locked? "locked" : "unlocked"]!"))
+			SSnano.update_uis(src)
+			return TRUE
+		else
+			to_chat(user, SPAN_WARNING("Access denied!"))
+			return FALSE
+
+	//Transactions
+	if(handle_transactions(W, user))
+		return 
+
+	//Stocking
+	if(src.panel_open && istype(W)) 
+		//If we get a bag that has stuff in it, just mass move it in
+		if(istype(W, /obj/item/weapon/storage))
+			var/obj/item/weapon/storage/bag = W
+			for(var/obj/item/IT in bag)
+				if(attempt_to_stock(IT, user))
+					bag.remove_from_storage(IT, src, TRUE)
+			bag.finish_bulk_removal()
+		else
+			attempt_to_stock(W, user)
+		return FALSE
+	return ..()
+
+/obj/machinery/vending/MouseDrop_T(var/obj/item/I, var/mob/user)
 	if(!CanMouseDrop(I, user) || (I.loc != user))
-		return
+		return FALSE
+	if(locked)
+		to_chat(user, SPAN_WARNING("The maintenance panel is locked! You can't add anything to the machine."))
+		return FALSE
+	if(user)
+		user.visible_message(SPAN_NOTICE("[user] inserts \the [I] in \the [src]."), SPAN_NOTICE("You insert \the [I] in \the [src]."))
 	return attempt_to_stock(I, user)
 
-/obj/machinery/vending/proc/attempt_to_stock(var/obj/item/I as obj, var/mob/user as mob)
+//Whether this item can be added to the machine!
+/obj/machinery/vending/proc/can_stock(var/obj/item/I)
+	if(I.w_class > max_size_class)
+		return FALSE
+	var/datum/stored_items/vending_products/foundexisting = contains_product(I)
+	if((!foundexisting && product_records.len < max_nb_products) || (foundexisting && foundexisting.get_amount() < max_single_product))
+		return TRUE
+	return FALSE
+	
+//Whether the machine already contains this product. Returns the entry if found!
+/obj/machinery/vending/proc/contains_product(var/obj/item/I)
 	for(var/datum/stored_items/vending_products/R in product_records)
-		if(I.type == R.item_path)
-			stock(I, R, user)
-			return 1
+		if(istype(I, R.item_path) && I.name == R.item_name)
+			return R
+	return FALSE
+
+//Tries inserting the object into the product list
+/obj/machinery/vending/proc/attempt_to_stock(var/obj/item/I, var/mob/user)
+	if(istype(I, /obj/item/weapon/vending_refill))
+		return FALSE
+	if(!can_stock(I))
+		to_chat(user, SPAN_WARNING("\The [I] won't fit in \the [src]!"))
+		return FALSE
+
+	//if there wasn't an existing product
+	var/datum/stored_items/vending_products/foundexisting = contains_product(I)
+	//Add a new product to the list if we don't have that one already, and still got space
+	if(!foundexisting && product_records.len < max_nb_products)
+		var/datum/stored_items/vending_products/P = new(src, I.type, I.name)
+		dd_insertObjectList(product_records, P)
+		foundexisting = P
+	return stock(I, foundexisting, user)
 
 /**
  *  Receive payment with cashmoney.
@@ -296,7 +413,7 @@
 		return 0
 	else
 		// Okay to move the money at this point
-		var/datum/transaction/T = new("[vendor_account.owner_name] (via [name])", "Purchase of [currently_vending.item_name]", -currently_vending.price, name)
+		var/datum/transaction/T = new("[linked_account.owner_name] (via [name])", "Purchase of [currently_vending.item_name]", -currently_vending.price, name)
 
 		customer_account.do_transaction(T)
 
@@ -306,30 +423,71 @@
 		credit_purchase(customer_account.owner_name)
 		return 1
 
+/obj/machinery/vending/proc/pay_with_lace(var/obj/item/organ/internal/stack/S)
+	if(!currently_vending)
+		return FALSE //Its possible it was cancelled
+	if(!S)
+		src.status_message = "Error: User has no neural lace!"
+		src.status_error = 1
+		return FALSE
+	if(!S.record)
+		//If no records, try to force load it..
+		S.load_records()
+		if(!S.record)
+			src.status_message = "Error: User has no linked records!"
+			src.status_error = 1
+			return FALSE
+	if(!S.record.linked_account)
+		src.status_message = "Error: User has no linked bank account in their records!"
+		src.status_error = 1
+		return FALSE
+
+	var/datum/money_account/customer_account = S.record.linked_account
+	if (!customer_account)
+		src.status_message = "Error: Unable to access account. Please contact technical support if problem persists."
+		src.status_error = 1
+		return FALSE
+	if(customer_account.suspended)
+		src.status_message = "Unable to access account: account suspended."
+		src.status_error = 1
+		return FALSE
+	
+	if(currently_vending.price > customer_account.money)
+		src.status_message = "Insufficient funds in account."
+		src.status_error = 1
+		return FALSE
+	else
+		var/datum/transaction/T = new("[linked_account.owner_name] (via [name])", "Purchase of [currently_vending.item_name]", -currently_vending.price, name)
+		customer_account.do_transaction(T)
+		credit_purchase(customer_account.owner_name)
+		playsound(src, 'sound/items/timer.ogg', 50, TRUE)
+		return TRUE
+
 /**
  *  Add money for current purchase to the vendor account.
  *
  *  Called after the money has already been taken from the customer.
  */
 /obj/machinery/vending/proc/credit_purchase(var/target as text)
-	vendor_account.money += currently_vending.price
+	linked_account.money += currently_vending.price
 
 	var/datum/transaction/T = new(target, "Purchase of [currently_vending.item_name]", currently_vending.price, name)
-	vendor_account.do_transaction(T)
+	linked_account.do_transaction(T)
 
 /obj/machinery/vending/attack_ai(mob/user as mob)
 	return attack_hand(user)
 
-/obj/machinery/vending/attack_hand(mob/user as mob)
-	if(stat & (BROKEN|NOPOWER))
+/obj/machinery/vending/attack_hand(mob/living/user as mob)
+	if(user.a_intent != I_HURT && inoperable())
+		to_chat(user, SPAN_WARNING("It seems to not be working.."))
 		return
-
-	if(src.seconds_electrified != 0)
-		if(src.shock(user, 100))
-			return
-
-	wires.Interact(user)
-	ui_interact(user)
+	if(src.seconds_electrified != 0 && src.shock(user, 100))
+		return
+	if(user.a_intent != I_HURT)
+		wires.Interact(user)
+		ui_interact(user)
+		return 
+	return ..()
 
 /**
  *  Display the NanoUI window for the vending machine.
@@ -375,14 +533,22 @@
 	else
 		data["panel"] = 0
 
+	data["locked"] = src.locked
+	data["faction_name"] = faction? faction.name : "NA"
+	data["faction_UID"] = faction? faction.uid : "NA"
+	data["max_single"] = max_single_product
+	data["max_products"] = max_nb_products
+	data["max_size"] = max_size_class
+	data["can_change_icon"] = can_change_base_icon()
+
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
-		ui = new(user, src, ui_key, "vending_machine.tmpl", src.name, 440, 600)
+		ui = new(user, src, ui_key, "vending_machine.tmpl", src.name, 540, 600)
 		ui.set_initial_data(data)
 		ui.open()
 
 /obj/machinery/vending/Topic(href, href_list)
-	if(stat & (BROKEN|NOPOWER))
+	if(inoperable())
 		return
 	if(..())
 		return
@@ -398,6 +564,54 @@
 		to_chat(usr, "<span class='notice'>You remove \the [coin] from \the [src]</span>")
 		coin = null
 		categories &= ~VENDINGM_CAT_COIN
+
+	if(href_list["set_price"])
+		var/key = text2num(href_list["set_price"])
+		var/datum/stored_items/vending_products/R = product_records[key]
+		var/newprice = text2num(input(usr, "Set the product's price:", "", R.price) as num)
+		if(newprice)
+			R.price = newprice
+		SSnano.update_uis(src)
+
+	if(href_list["set_name"])
+		var/key = text2num(href_list["set_name"])
+		var/datum/stored_items/vending_products/R = product_records[key]
+		var/new_name = sanitizeSafe(input(usr, "Name the product:", "", R.item_name) as text)
+		if(new_name)
+			R.item_name = new_name
+		SSnano.update_uis(src)
+
+	if(href_list["flush_product"])
+		var/key = text2num(href_list["flush_product"])
+		var/datum/stored_items/vending_products/R = product_records[key]
+		src.vend_ready = 0
+		while(R.amount > 0)
+			var/obj/item/IT = R.get_product(get_turf(src))
+			IT.dropInto(get_turf(src))
+		product_records.Remove(R) //remove the record
+		SSnano.update_uis(src)
+		src.vend_ready = 1
+
+	if(href_list["edit_slogans"])
+		var/new_slogans = sanitizeSafe(input(usr, "Enter promotional slogans list (separated by semi-colons)", "Promotional Slogans", product_slogans) as text)
+		if(new_slogans != product_slogans)
+			product_slogans = new_slogans
+			update_slogans()
+		SSnano.update_uis(src)
+
+	if(href_list["edit_ads"])
+		var/new_ads = sanitizeSafe(input(usr, "Enter promotional ads list (separated by semi-colons)", "Advertisement", product_ads) as text)
+		if(new_ads != product_ads)
+			product_ads = new_ads
+			update_ads()
+		SSnano.update_uis(src)
+	
+	if(href_list["edit_name"])
+		var/new_name = sanitizeName(input(usr, "Enter a new name for the machine", "Change name", name) as text)
+		if(new_name)
+			SetName(new_name)
+		spawn(0)
+			SSnano.update_uis(src)
 
 	if ((usr.contents.Find(src) || (in_range(src, usr) && istype(src.loc, /turf))))
 		if ((href_list["vend"]) && (src.vend_ready) && (!currently_vending))
@@ -415,17 +629,27 @@
 
 			if(R.price <= 0)
 				src.vend(R, usr)
-			else if(istype(usr,/mob/living/silicon)) //If the item is not free, provide feedback if a synth is trying to buy something.
-				to_chat(usr, "<span class='danger'>Artificial unit recognized.  Artificial units cannot complete this transaction.  Purchase canceled.</span>")
-				return
-			else
-				src.currently_vending = R
-				if(!vendor_account || vendor_account.suspended)
-					src.status_message = "This machine is currently unable to process payments due to problems with the associated account."
-					src.status_error = 1
-				else
-					src.status_message = "Please swipe a card or insert cash to pay for the item."
+			// else if(istype(usr,/mob/living/silicon)) //If the item is not free, provide feedback if a synth is trying to buy something.
+			// 	to_chat(usr, "<span class='danger'>Artificial unit recognized.  Artificial units cannot complete this transaction.  Purchase canceled.</span>")
+			// 	return
+			// else
+			var/mob/living/carbon/human/user = usr
+			var/obj/item/organ/internal/stack/ST
+			if(istype(user))
+				ST = user.get_stack()
+
+			src.currently_vending = R
+			if(!linked_account || linked_account.suspended)
+				src.status_message = "This machine is currently unable to process payments due to problems with the associated account."
+				src.status_error = 1
+			else if(istype(ST)) //If we got a lace with a record and account, we can bypass payment!
+				if(pay_with_lace(ST))
+					src.status_message = "Payment processing using LacePay&trade;, the leading payment option in the frontier."
 					src.status_error = 0
+					src.vend(src.currently_vending, usr)
+			else
+				src.status_message = "Please swipe a card or insert cash to pay for the item."
+				src.status_error = 0
 
 		else if (href_list["cancelpurchase"])
 			src.currently_vending = null
@@ -471,10 +695,11 @@
 	if (src.icon_vend) //Show the vending animation if needed
 		flick(src.icon_vend,src)
 	spawn(src.vend_delay) //Time to vend
-		/*if(prob(diona_spawn_chance)) //Hehehe
+		if(prob(vermin_spawn_chance)) //Hehehe
 			var/turf/T = get_turf(src)
-			var/mob/living/carbon/alien/diona/S = new(T)
-			src.visible_message("<span class='notice'>\The [src] makes an odd grinding noise before coming to a halt as \a [S.name] slurmps out from the receptacle.</span>") */
+			var/mob/living/simple_animal/mouse/V = new(T)
+			src.visible_message("<span class='notice'>\The [src] makes an odd grinding noise before coming to a halt as \a [V.name] slurmps out from the receptacle.</span>")
+			V.emote("squeak")
 //Just a normal vend, then
 		R.get_product(get_turf(src))
 		src.visible_message("\The [src] whirs as it vends \the [R.item_name].")
@@ -496,14 +721,15 @@
  * calling. W is the item being inserted, R is the associated vending_product entry.
  */
 /obj/machinery/vending/proc/stock(obj/item/weapon/W, var/datum/stored_items/vending_products/R, var/mob/user)
+	if(product_records.len >= max_single_product)
+		to_chat(user, SPAN_WARNING("There's not enough space left for \the [W]!"))
+		return FALSE
 	if(!user.unEquip(W))
-		return
-
+		return FALSE
 	if(R.add_product(W))
 		to_chat(user, "<span class='notice'>You insert \the [W] in the product receptor.</span>")
-		SSnano.update_uis(src)
-		return 1
-
+	else
+		to_chat(user, SPAN_WARNING("Couldn't insert the \the [W]!"))
 	SSnano.update_uis(src)
 
 /obj/machinery/vending/Process()
@@ -528,7 +754,7 @@
 	return
 
 /obj/machinery/vending/proc/speak(var/message)
-	if(stat & NOPOWER)
+	if(inoperable())
 		return
 
 	if (!message)
@@ -543,23 +769,16 @@
 
 /obj/machinery/vending/on_update_icon()
 	overlays.Cut()
+	var/datum/extension/base_icon_state/bis = get_extension(src, /datum/extension/base_icon_state)
 	if(stat & BROKEN)
-		icon_state = "[initial(icon_state)]-broken"
+		icon_state = "[bis.base_icon_state]-broken"
 	else if( !(stat & NOPOWER) )
-		icon_state = initial(icon_state)
+		icon_state = bis.base_icon_state
 	else
 		spawn(rand(0, 15))
-			src.icon_state = "[initial(icon_state)]-off"
+			src.icon_state = "[bis.base_icon_state]-off"
 	if(panel_open)
-		overlays += image(src.icon, "[initial(icon_state)]-panel")
-
-//Oh no we're malfunctioning!  Dump out some product and break.
-/obj/machinery/vending/proc/malfunction()
-	for(var/datum/stored_items/vending_products/R in src.product_records)
-		while(R.get_amount()>0)
-			R.get_product(loc)
-		break
-	set_broken(TRUE)
+		overlays += image(src.icon, "[bis.base_icon_state]-panel")
 
 //Somebody cut an important wire and now we're following a new definition of "pitch."
 /obj/machinery/vending/proc/throw_item()
@@ -579,9 +798,72 @@
 	src.visible_message("<span class='warning'>\The [src] launches \a [throw_item] at \the [target]!</span>")
 	return 1
 
+/obj/machinery/vending/proc/can_change_base_icon()
+	return FALSE
+
 /*
  * Vending machine types
  */
+
+/obj/machinery/vending/custom
+	circuit_type = /obj/item/weapon/circuitboard/vending_machine
+	var/global/list/possible_base_icons = list(
+		"Generic machine"				= "generic",
+		"Booze machine" 				= "boozeomat",
+		"Coffee machine" 				= "coffee",
+		"Snack machine" 				= "snack",
+		"Soda machine" 					= "Cola_Machine",
+		"Fitness machine" 				= "fitness",
+		"Cigarettes machine" 			= "cigs",
+		"Medical machine" 				= "med",
+		"Military gear machine" 		= "sec",
+		"Farming supplies machine" 		= "nutri",
+		"Farming supplies machine2" 	= "nutri_generic",
+		"Seeds machine" 				= "seeds",
+		"Seeds machine 2" 				= "seeds_generic",
+		"Magi machine" 					= "MagiVend",
+		"Dinnerware machine" 			= "dinnerware",
+		"Soviet soda machine" 			= "sovietsoda",
+		"Tool machine" 					= "tool",
+		"Engineer equipment machine" 	= "engivend",
+		"Engineer equipment machine2" 	= "engi",
+		"Robotics machine" 				= "robotics",
+		"Costume machine" 				= "theater",
+		"Games machine" 				= "games",
+		"Lavatory supplies machine" 	= "lavatory",
+		"Old snack machine" 			= "snix",
+		"Hot food machine" 				= "hotfood", 
+		"Uniform machine"				= "uniform",
+		"Laptop machine"				= "laptop",
+	)
+
+/obj/machinery/vending/custom/OnTopic(mob/user, href_list, datum/topic_state/state)
+	. = ..()
+	if(href_list["set_icon"])
+		var/datum/extension/base_icon_state/bis = get_extension(src, /datum/extension/base_icon_state)
+		var/chosen = input(user, "Chose the model of the machine you want.", "Appearence modification", possible_base_icons[1]) in possible_base_icons
+		if(chosen)
+			bis.base_icon_state = possible_base_icons[chosen]
+			icon_state 			= possible_base_icons[chosen]
+			icon_deny			= "[possible_base_icons[chosen]]-deny"
+			icon_vend			= "[possible_base_icons[chosen]]-vend"
+
+/obj/machinery/vending/custom/RefreshParts()
+	. = ..()
+	var/binrating 	= 0
+	var/maniprating = 0
+	for(var/obj/item/weapon/stock_parts/matter_bin/B in component_parts)
+		binrating += B.rating
+	for(var/obj/item/weapon/stock_parts/manipulator/M in component_parts)
+		maniprating += M.rating
+
+	vermin_spawn_chance = between(0, (maniprating * 2) - vermin_spawn_chance, initial(vermin_spawn_chance))
+	max_nb_products		= between(initial(max_nb_products),    (binrating * 2),  24)
+	max_single_product 	= between(initial(max_single_product), (binrating * 20), 240)
+	max_size_class		= between(ITEM_SIZE_TINY, round(binrating/3.0), ITEM_SIZE_LARGE)
+
+/obj/machinery/vending/can_change_base_icon()
+	return TRUE
 
 /*
 

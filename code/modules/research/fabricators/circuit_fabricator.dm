@@ -997,6 +997,11 @@
 	build_path = /obj/item/weapon/circuitboard/igniter
 	build_type = ENGIFAB
 
+/datum/design/circuit/vending_machine
+	name = "custom vending machine"
+	id = "vendingmachine"
+	build_path = /obj/item/weapon/circuitboard/vending_machine
+	build_type = GENERALFAB
 
 /**
 

@@ -993,7 +993,7 @@
 
 /datum/design/circuit/igniter
 	name = "gas igniter"
-	id = "igniter"
+	id = "machineigniter"
 	build_path = /obj/item/weapon/circuitboard/igniter
 	build_type = ENGIFAB
 

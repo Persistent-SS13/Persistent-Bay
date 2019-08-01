@@ -1,4 +1,6 @@
 //A little datum to help while generating recipes. Is discarded afterwards
+//Basically all the lists correspond to a categorie that will be generated. Just add recipes you want in the correpsonding
+//categorie in one of those list, and it'll be grouped with all the other recipes in that list in a sub-list.
 /datum/material_recipes_helper
 	var/tmp/list/items = list()
 	var/tmp/list/weapons = list()
@@ -145,6 +147,9 @@
 	recipes_buffer.storage += new/datum/stack_recipe/furniture/coffin(src)
 	recipes_buffer.storage += new/datum/stack_recipe/morgue(src)
 	recipes_buffer.storage += new/datum/stack_recipe/storage/tank_dispenser(src)
+	recipes_buffer.storage += new/datum/stack_recipe/storage/reagents/watertank(src)
+	recipes_buffer.storage += new/datum/stack_recipe/storage/reagents/fueltank(src)
+
 
 	recipes_buffer.structures += new/datum/stack_recipe/stairs(src)
 	recipes_buffer.structures += new/datum/stack_recipe/ladder(src)

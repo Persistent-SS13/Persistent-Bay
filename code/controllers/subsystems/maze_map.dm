@@ -18,13 +18,6 @@ SUBSYSTEM_DEF(mazemap)
 	map_data["5"] = new /datum/zlevel_data/five()
 	map_data["6"] = new /datum/zlevel_data/six()
 	map_data["7"] = new /datum/zlevel_data/seven()
-	map_data["8"] = new /datum/zlevel_data/eight()
-	map_data["9"] = new /datum/zlevel_data/nine()
-	map_data["10"] = new /datum/zlevel_data/ten()
-	map_data["11"] = new /datum/zlevel_data/eleven()
-	map_data["12"] = new /datum/zlevel_data/twelve()
-	map_data["13"] = new /datum/zlevel_data/thirteen()
-
 	for(var/x in map_data)
 		var/datum/zlevel_data/data = map_data[x]
 		var/op_z = data.z

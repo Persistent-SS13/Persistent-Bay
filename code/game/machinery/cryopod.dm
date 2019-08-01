@@ -633,4 +633,3 @@
 	M.spawn_p_z 		= z
 	M.spawn_type 		= CHARACTER_SPAWN_TYPE_PERSONAL
 	return M
-

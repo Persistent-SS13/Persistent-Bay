@@ -528,7 +528,7 @@
 			to_chat(user, "<span class='notice'>The pages of [title] have been cut out!</span>")
 			return
 	browse_mob(user)
-	user.visible_message("[user] opens a book titled \"[src.title]\" and begins reading intently.")
+//	user.visible_message("[user] opens a book titled \"[src.title]\" and begins reading intently.")
 	onclose(user, "book")
 
 /obj/item/weapon/book/multipage/attackby(obj/item/weapon/W as obj, mob/user as mob)

@@ -3,7 +3,8 @@
 {{:helper.link("Module Info/Upgrades", '', {'action' : 'change_menu', 'menu_target' : '4'}, data.menu == 4 ? 'selected' : null)}}
 {{:helper.link("Objectives View", '', {'action' : 'change_menu', 'menu_target' : '5'}, data.menu == 5 ? 'selected' : null)}}
 {{:helper.link("Employee Log", '', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
-{{:helper.link("View/Edit General Task", '', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}	
+{{:helper.link("Transaction Log", '', {'action' : 'change_menu', 'menu_target' : '6'}, data.menu == 6 ? 'selected' : null)}}	
+
 <br><br>
 <b>Current Account Balance:</b> {{:data.account_balance}}
 <hr>
@@ -212,5 +213,36 @@
 	{{:helper.link('Edit Task', '', {'action' : 'business_task'})}}
 	<div class="statusDisplay" style="overflow: auto;">
 		{{:data.business_task}}
+	</div>
+{{/if}}
+
+{{if data.menu == 6}}
+	<h4>Transaction Log</h4>
+	{{:helper.link('Newer Page', 'bullet', {'tran_down' : 1}, data.page_down ? null : 'disabled')}}{{:helper.link('Older Page', 'bullet', {'tran_up' : 1}, data.page_up ? null : 'disabled')}}<br><br>
+	<div class="statusDisplay" style="overflow: auto;">
+		{{if data.transactions}}
+			<table style='width: 100%'>
+			  <thead>
+				<tr>
+				  <th><b>Timestamp</b></th>
+				  <th><b>Target</b></th>
+				  <th><b>Reason</b></th>
+				  <th><b>Ethericoin</b></th>
+				</th>
+			  </thead>
+			  <tbody>
+				  {{for data.transactions}}
+					<tr>
+						<td>{{:value.date}} {{:value.time}}</td>
+						<td>{{:value.target_name}}</td>
+						<td>{{:value.purpose}}</td>
+						<td>$${{:value.amount}}</td>
+					</tr>
+				  {{/for}}
+			  </tbody>
+			</table>
+		{{else}}
+		  <span class='alert'>This account has no financial transactions on record.</span>
+		{{/if}}
 	</div>
 {{/if}}

@@ -223,7 +223,7 @@
 			data["cur_body"] = pencode2html(current_message.stored_data)
 			data["cur_timestamp"] = current_message.timestamp
 			data["cur_source"] = current_message.source
-			data["cur_uid"] = current_message.uid
+			data["cur_uid"] = "\ref[current_message]"
 			if(istype(current_message.attachment))
 				data["cur_hasattachment"] = 1
 				data["cur_attachment_filename"] = "[current_message.attachment.filename].[current_message.attachment.filetype]"
@@ -394,7 +394,7 @@
 	if(href_list["delete"])
 		if(!istype(current_account))
 			return 1
-		var/datum/computer_file/data/email_message/M = find_message_by_fuid(href_list["delete"])
+		var/datum/computer_file/data/email_message/M = locate(href_list["delete"])
 		if(!istype(M))
 			return 1
 		if(folder == "Deleted")
@@ -435,7 +435,7 @@
 		return 1
 
 	if(href_list["reply"])
-		var/datum/computer_file/data/email_message/M = find_message_by_fuid(href_list["reply"])
+		var/datum/computer_file/data/email_message/M = locate(href_list["reply"])
 		if(!istype(M))
 			return 1
 		error = null

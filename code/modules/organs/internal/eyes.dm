@@ -10,7 +10,9 @@
 	var/phoron_guard = 0
 	var/list/eye_colour = list(0,0,0)
 	var/innate_flash_protection = FLASH_PROTECTION_NONE
-	max_health = 45
+	max_health = 60
+	broken_threshold = 50
+	min_bruised_damage = 35
 	var/eye_icon = 'icons/mob/human_races/species/default_eyes.dmi'
 	var/apply_eye_colour = TRUE
 	var/tmp/last_cached_eye_colour

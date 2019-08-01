@@ -304,7 +304,7 @@
 		to_chat(src, "Your character slots are full. Import failed.")
 		return
 	var/mob/living/carbon/human/character = SScharacter_setup.load_import_character(chosen_slot, ckey)
-	
+
 	if(!character)
 		return
 	if(!character.mind)
@@ -334,6 +334,16 @@
 	character.spawn_cit = CITIZEN
 	//DNA should be last
 	var/datum/computer_file/report/crew_record/R = Retrieve_Record(character.real_name)
+	character.dna.ResetUIFrom(character)
+	character.dna.ready_dna(character)
+	character.dna.b_type = client.prefs.b_type
+	character.sync_organ_dna()
+	character.spawn_loc = "nexus"
+	// Do the initial caching of the player's body icons.
+	character.force_update_limbs()
+	character.update_eyes()
+	character.regenerate_icons()
+	character.spawn_type = CHARACTER_SPAWN_TYPE_IMPORT //For first time spawn
 	if(R)
 		R.linked_account.money = DEFAULT_NEW_CHARACTER_MONEY
 		R.email = new()
@@ -508,7 +518,7 @@
 			if(pod.x == character.spawn_p_x && pod.y == character.spawn_p_y && pod.z == character.spawn_p_z)
 				spawnTurf = get_turf(pod)
 				break
-		
+
 		if(!spawnTurf)
 			if(character.spawn_p_x && character.spawn_p_y && character.spawn_p_z)
 				spawnTurf = locate(character.spawn_p_x, character.spawn_p_y, character.spawn_p_z)

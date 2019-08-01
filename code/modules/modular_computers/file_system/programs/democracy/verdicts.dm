@@ -39,6 +39,7 @@
 				data["trials"] = formatted_trials
 	if(menu == 2)
 		if(selected_verdict)
+			data["selected_verdict"] = selected_verdict.name
 			data["verdict_title"] = selected_verdict.name
 			data["defendant_verdict"] = selected_verdict.defendant
 			data["verdict_body"] = selected_verdict.body
@@ -61,7 +62,7 @@
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
-		ui = new(user, src, ui_key, "executive_policy.tmpl", name, 600, 500, state = state)
+		ui = new(user, src, ui_key, "verdicts.tmpl", name, 600, 500, state = state)
 		ui.auto_update_layout = 1
 		ui.set_initial_data(data)
 		ui.open()

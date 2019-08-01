@@ -134,6 +134,8 @@ Time left: [time_print_end != 0? round((time_print_end - world.time)/10, 1) : "N
 		updateUsrDialog()
 		return TOPIC_REFRESH
 
+/**
+
 /obj/machinery/organ_printer/Process()
 	if(inoperable())
 		return
@@ -146,6 +148,7 @@ Time left: [time_print_end != 0? round((time_print_end - world.time)/10, 1) : "N
 		update_use_power(POWER_USE_IDLE)
 		queue_icon_update()
 
+**/
 /obj/machinery/organ_printer/proc/can_print(var/choice)
 	if(stored_matter < products[choice].cost)
 		visible_message("<span class='notice'>\The [src] displays a warning: 'Not enough matter. [stored_matter]u stored and [products[choice].cost]u needed.'</span>")

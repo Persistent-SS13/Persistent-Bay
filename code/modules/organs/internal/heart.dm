@@ -9,7 +9,9 @@
 	var/beat_sound = 'sound/effects/singlebeat.ogg'
 	var/tmp/next_blood_squirt = 0
 	relative_size = 15
-	max_health = 45
+	max_health = 64
+	broken_threshold = 56
+	min_bruised_damage = 32
 	var/open
 	var/list/external_pump
 

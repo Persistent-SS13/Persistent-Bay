@@ -29,7 +29,7 @@
 	hud_list[STATUS_HUD_OOC]  = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudhealthy")
 	GLOB.human_mob_list |= src
 	..()
-	
+
 	ADD_SAVED_VAR(r_hair)
 	ADD_SAVED_VAR(g_hair)
 	ADD_SAVED_VAR(b_hair)
@@ -121,7 +121,7 @@
 	redraw_inv() //Refresh the hud damn you
 	update_action_buttons()
 	//Force hud update
-	BITSET(hud_updateflag, HEALTH_HUD) 
+	BITSET(hud_updateflag, HEALTH_HUD)
 	BITSET(hud_updateflag, STATUS_HUD)
 	BITSET(hud_updateflag, LIFE_HUD)
 	queue_icon_update()
@@ -714,7 +714,7 @@
 	var/total_protection = flash_protection
 	if(species.has_organ[species.vision_organ])
 		var/obj/item/organ/internal/eyes/I = internal_organs_by_name[species.vision_organ]
-		if(I) 
+		if(I)
 			if(!I.is_usable())
 				return FLASH_PROTECTION_MAJOR
 			else

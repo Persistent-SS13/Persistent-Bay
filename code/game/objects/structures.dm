@@ -1,12 +1,13 @@
 /obj/structure
-	icon = 'icons/obj/structures.dmi'
-	w_class = ITEM_SIZE_NO_CONTAINER
-	layer = STRUCTURE_LAYER
-	obj_flags = OBJ_FLAG_DAMAGEABLE
+	icon 				= 'icons/obj/structures.dmi'
+	w_class 			= ITEM_SIZE_NO_CONTAINER
+	layer 				= STRUCTURE_LAYER
+	obj_flags 			= OBJ_FLAG_DAMAGEABLE
 	damthreshold_brute 	= 5
-	damthreshold_burn = 5
-	max_health = 100
-	min_health = 0
+	damthreshold_burn 	= 5
+	max_health 			= 100
+	min_health 			= 0
+
 	var/parts
 	var/list/connections = list("0", "0", "0", "0")
 	var/list/other_connections = list("0", "0", "0", "0")
@@ -34,9 +35,9 @@
 	else if(istype(mat, /material)) //Backward compatibility
 		material = SSmaterials.get_material_by_name(mat.name)		
 
-/obj/structure/after_load()
-	//update_connections(1)
-	..()
+///obj/structure/after_load()
+	//update_connections(1) //Causes a whole lot of recomputations for nothing
+//	..()
 
 /obj/structure/Destroy()
 	var/turf/T = get_turf(src)
@@ -58,20 +59,6 @@
 	. = ..()
 	if(. && !CanFluidPass())
 		fluid_update()
-
-// When destroyed by explosions, properly handle contents.
-/obj/structure/ex_act(severity)
-	switch(severity)
-		if(1.0)
-			for(var/atom/movable/AM in contents)
-				AM.loc = loc
-				AM.ex_act(severity++)
-		if(2.0)
-			if(prob(50))
-				for(var/atom/movable/AM in contents)
-					AM.loc = loc
-					AM.ex_act(severity++)
-	return ..()
 
 /obj/structure/attack_hand(mob/user)
 	if(isdamageable())
@@ -217,3 +204,13 @@
 		return TRUE
 	return FALSE
 
+/obj/structure/proc/default_deconstruction_welder(var/obj/item/weapon/tool/weldingtool/W, var/mob/living/user, var/deconstruct_time = null)
+	if(!istype(W))
+		return FALSE
+	src.add_fingerprint(user)
+	user.visible_message(SPAN_NOTICE("You begin to dismantle \the [src]."), SPAN_NOTICE("[user] begins to dismantle \the [src]."))
+	if(W.use_tool(user, src, deconstruct_time? deconstruct_time : (2 * w_class) SECONDS) && src)
+		user.visible_message(SPAN_NOTICE("You finish dismantling \the [src]."), SPAN_NOTICE("[user] finishes dismantling \the [src]."))
+		dismantle()
+		return TRUE
+	return FALSE

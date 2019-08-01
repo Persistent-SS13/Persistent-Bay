@@ -2333,7 +2333,6 @@
 	"pai_emotions",
 	"pai_software_by_key",
 	"paramslist_cache",
-	"photo_count",
 	"pipe_colors",
 	"plant_seed_sprites",
 	"playable_species",

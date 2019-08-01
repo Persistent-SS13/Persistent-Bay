@@ -493,8 +493,6 @@
 		var/datum/computer_file/report/crew_record/new_record = CreateModularRecord(character)
 		GLOB.all_crew_records |= new_record
 	var/turf/spawnTurf = locate(0,0,0) //Instead of null start with 0,0,0 because the unsafe spawn check will kick in and warn the user if there's something wrong
-
-	var/turf/spawnTurf = locate(0,0,0) //Instead of null start with 0,0,0 because the unsafe spawn check will kick in and warn the user if there's something wrong
 	if(character.spawn_type == CHARACTER_SPAWN_TYPE_CRYONET)
 		//var/datum/world_faction/faction = get_faction(character.spawn_loc)
 		for(var/obj/machinery/cryopod/pod in GLOB.cryopods)

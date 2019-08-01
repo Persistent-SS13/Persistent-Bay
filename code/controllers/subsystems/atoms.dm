@@ -69,7 +69,6 @@ SUBSYSTEM_DEF(atoms)
 		return TRUE
 
 	var/start_tick = world.time
-	var/start_time = world.realtime
 	var/result = A.Initialize(arglist(arguments))
 
 	if(start_tick != world.time)

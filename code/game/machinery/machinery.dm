@@ -471,6 +471,30 @@ Class Procs:
 //----------------------------------
 //	Default Interaction Procs
 //----------------------------------
+
+/obj/machinery/attackby(obj/item/O, mob/user)
+	if(standard_machine_procs(O, user))
+		return TRUE //No resolve attack
+	else
+		return ..()
+
+//Implements the deconstruction, anchoring, and part replacement interactions
+/obj/machinery/proc/standard_machine_procs(obj/item/O, mob/user)
+	. = FALSE
+	var/allowed = allowed(user)
+	if(allowed && default_deconstruction_screwdriver(user, O))
+		. =  TRUE
+	else if(default_deconstruction_crowbar(user, O))
+		. = TRUE
+	else if(LAZYLEN(component_parts) && default_part_replacement(user, O))
+		. =  TRUE
+	else if(obj_flags & OBJ_FLAG_ANCHORABLE && allowed && default_wrench_floor_bolts(user, O))
+		. =  TRUE
+	if(.)
+		updateUsrDialog()
+		if(obj_flags & OBJ_FLAG_ANCHORABLE && use_power) 
+			power_change()
+
 /obj/machinery/proc/default_deconstruction_crowbar(var/mob/user, var/obj/item/weapon/tool/crowbar/C)
 	if(!istype(C))
 		return 0

@@ -600,3 +600,17 @@
 		to_chat(user, SPAN_NOTICE("You [anchored? "un" : ""]secured \the [src]!"))
 		set_anchored(!anchored)
 	return TRUE
+
+//Simple quick proc for repairing things with a welder.
+/obj/proc/default_welder_repair(var/mob/user, var/obj/item/weapon/tool/weldingtool/W, var/delay=5 SECONDS, var/repairedhealth = max_health)
+	if(!istype(W))
+		return FALSE
+	if(!isdamaged())
+		to_chat(user, SPAN_WARNING("\The [src] does not need repairs!"))
+		return FALSE
+	user.visible_message("[user] begins repairing \the [src].", "You begin repairing \the [src].")
+	if(W.use_tool(user, src, delay))
+		if(!src) return
+		to_chat(user, SPAN_NOTICE("You repaired some damage!"))
+		add_health(repairedhealth)
+	return TRUE

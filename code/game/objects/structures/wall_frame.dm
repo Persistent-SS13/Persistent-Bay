@@ -37,6 +37,8 @@
 		material = SSmaterials.get_material_by_name(material)
 	max_health = material.integrity
 	. = ..()
+	if(. != INITIALIZE_HINT_QDEL)
+		return INITIALIZE_HINT_LATELOAD
 
 /obj/structure/wall_frame/LateInitialize()
 	. = ..()

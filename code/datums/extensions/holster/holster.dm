@@ -6,8 +6,9 @@
 	var/list/can_holster = null
 	var/obj/item/holstered = null
 	should_save = FALSE
+	flags = EXTENSION_FLAG_IMMEDIATE //Otherwise causes issues
 
-/datum/extension/holster/New(holder, storage, sound_in, sound_out, can_holster)
+/datum/extension/holster/New(var/atom/holder, var/obj/item/weapon/storage/storage, var/sound_in, var/sound_out, var/list/can_holster)
 	..()
 	atom_holder = holder
 	src.storage = storage
@@ -17,7 +18,19 @@
 	if(holder)
 		atom_holder.verbs += /atom/proc/holster_verb
 
+	//When we're created on an object that already contains stuff, check for anything that
+	// would have been considered "holstered" normally
+	if(storage)
+		for(var/obj/item/I in storage)
+			if(can_holster(I))
+				holster(I, null)
+				break //Stop when we got something
+
+	ADD_SAVED_VAR(atom_holder)
+
 /datum/extension/holster/Destroy()
+	if(atom_holder)
+		clear_holster() //Clear listeners if possible
 	storage = null
 	holstered = null
 	atom_holder.verbs -= /atom/proc/holster_verb
@@ -25,7 +38,7 @@
 	. = ..()
 
 /datum/extension/holster/proc/can_holster(var/obj/item/I)
-	if(can_holster)
+	if(LAZYLEN(can_holster))
 		if(is_type_in_list(I,can_holster))
 			return 1
 		return 0
@@ -38,21 +51,23 @@
 		return 1
 	if(!holstered && storage.storage_slots != null && storage.contents.len >= storage.storage_slots - 1)
 		if(!can_holster(I))
-			to_chat(user, "<span class='notice'>\The [I] won't fit in \the [atom_holder]'s holster!.</span>")
+			if(user)
+				to_chat(user, "<span class='notice'>\The [I] won't fit in \the [atom_holder]'s holster!.</span>")
 			return 1
 	if(can_holster(I))
 		if(holstered && istype(user))
 			to_chat(user, "<span class='warning'>There is already \a [holstered] holstered here!</span>")
 			return 1
-		if(sound_in)
+		if(sound_in && user)
 			playsound(get_turf(atom_holder), sound_in, 50)
 		if(istype(user))
 			user.stop_aiming(no_message=1)
 		holstered = I
 		storage.handle_item_insertion(holstered, 1)
-		holstered.add_fingerprint(user)
+		if(user)
+			holstered.add_fingerprint(user)
+			user.visible_message("<span class='notice'>\The [user] holsters \the [holstered].</span>", "<span class='notice'>You holster \the [holstered].</span>")
 		storage.w_class = max(storage.w_class, holstered.w_class)
-		user.visible_message("<span class='notice'>\The [user] holsters \the [holstered].</span>", "<span class='notice'>You holster \the [holstered].</span>")
 		atom_holder.SetName("occupied [initial(atom_holder.name)]")
 		atom_holder.update_icon()
 		GLOB.moved_event.register(holstered, src, .proc/check_holster)
@@ -98,6 +113,7 @@
 		user.put_in_hands(holstered)
 		storage.w_class = initial(storage.w_class)
 		atom_holder.update_icon()
+		clear_holster()
 		return 1
 	return 0
 

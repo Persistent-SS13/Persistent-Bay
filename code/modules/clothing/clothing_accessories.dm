@@ -61,13 +61,6 @@
 			usr.put_in_l_hand(src)
 	src.add_fingerprint(usr)
 
-/obj/item/clothing/after_load()
-	var/list/real_accessories = list()
-	for(var/obj/item/clothing/accessory/A in accessories)
-		real_accessories |= A
-	accessories = real_accessories
-	..()
-
 /obj/item/clothing/examine(var/mob/user)
 	. = ..(user)
 	for(var/obj/item/clothing/accessory/A in accessories)

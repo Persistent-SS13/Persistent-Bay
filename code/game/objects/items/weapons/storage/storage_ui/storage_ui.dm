@@ -1,5 +1,6 @@
 /datum/storage_ui
 	var/obj/item/weapon/storage/storage
+	should_save = FALSE
 
 /datum/storage_ui/New(var/obj/item/weapon/storage/storage)
 	if(!istype(storage))

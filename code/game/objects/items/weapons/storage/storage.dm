@@ -29,6 +29,10 @@
 	var/opened = null
 	var/open_sound = null
 
+/obj/item/weapon/storage/New()
+	. = ..()
+	prepare_ui()
+
 /obj/item/weapon/storage/Initialize()
 	. = ..()
 	if(allow_quick_empty)
@@ -44,7 +48,6 @@
 	if(isnull(max_storage_space) && !isnull(storage_slots))
 		max_storage_space = storage_slots * base_storage_cost(max_w_class)
 
-	prepare_ui()
 	if(!map_storage_loaded && startswith)
 		for(var/item_path in startswith)
 			var/list/data = startswith[item_path]

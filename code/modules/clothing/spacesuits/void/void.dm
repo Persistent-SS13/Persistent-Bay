@@ -27,10 +27,12 @@
 	sprite_sheets = list(
 		SPECIES_UNATHI = 'icons/mob/species/unathi/onmob_head_helmet_unathi.dmi',
 		SPECIES_SKRELL = 'icons/mob/species/skrell/onmob_head_skrell.dmi',
+		//Resomi have a general sprite sheet defined in modules/clothing/clothing.dm. Yell at Drax if this doesn't work.
 		)
 	sprite_sheets_obj = list(
 		SPECIES_UNATHI = 'icons/obj/clothing/species/unathi/obj_head_unathi.dmi',
 		SPECIES_SKRELL = 'icons/obj/clothing/species/skrell/obj_head_skrell.dmi',
+		SPECIES_RESOMI = 'icons/obj/clothing/species/seromi/hats.dmi'
 		)
 
 	light_overlay = "helmet_light"
@@ -64,8 +66,10 @@
 	sprite_sheets = list(
 		SPECIES_UNATHI = 'icons/mob/species/unathi/onmob_suit_unathi.dmi',
 		SPECIES_SKRELL = 'icons/mob/species/skrell/onmob_suit_skrell.dmi',
+		//Teshari have a general sprite sheet defined in modules/clothing/clothing.dm. Yell at Drax if this doesn't work
 		)
 	sprite_sheets_obj = list(
+		SPECIES_RESOMI = 'icons/obj/clothing/species/seromi/suits.dmi',
 		SPECIES_UNATHI = 'icons/obj/clothing/species/unathi/obj_suit_unathi.dmi',
 		SPECIES_SKRELL = 'icons/obj/clothing/species/skrell/obj_suit_skrell.dmi',
 		)

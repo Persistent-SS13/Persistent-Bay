@@ -1577,6 +1577,7 @@
 #include "code\modules\clothing\under\shorts.dm"
 #include "code\modules\clothing\under\skirts.dm"
 #include "code\modules\clothing\under\syndicate.dm"
+#include "code\modules\clothing\under\xenowear_resomi.dm"
 #include "code\modules\clothing\under\accessories\accessory.dm"
 #include "code\modules\clothing\under\accessories\armband.dm"
 #include "code\modules\clothing\under\accessories\armor.dm"
@@ -2891,6 +2892,7 @@
 #include "code\modules\species\station\nabber.dm"
 #include "code\modules\species\station\phorosian.dm"
 #include "code\modules\species\station\prometheans.dm"
+#include "code\modules\species\station\resomi.dm
 #include "code\modules\species\station\station.dm"
 #include "code\modules\species\xenomorphs\alien_powers.dm"
 #include "code\modules\species\xenomorphs\alien_species.dm"

@@ -20,8 +20,12 @@
 	for(var/obj/item/grab/G in grabbed_by)
 		qdel(G)
 	ghostize()
-	..()
+	. = ..()
+#ifdef TESTING
+	return QDEL_HINT_IFFAIL_FINDREFERENCE
+#else
 	return QDEL_HINT_HARDDEL
+#endif
 
 /mob/proc/get_stack()
 	return null

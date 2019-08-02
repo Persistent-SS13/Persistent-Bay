@@ -246,7 +246,8 @@ var/list/mob/living/forced_ambiance_list = new
 		else	//stop any old area's forced ambience, and try to play our non-forced ones
 			sound_to(L, sound(null, channel = GLOB.lobby_sound_channel))
 			forced_ambiance_list -= L
-		L.playsound_local(T, sound(pick(ambience), repeat = 0, wait = 0, volume = 15, channel = GLOB.lobby_sound_channel))
+		if(LAZYLEN(ambience))
+			L.playsound_local(T, sound(pick(ambience), repeat = 0, wait = 0, volume = 15, channel = GLOB.lobby_sound_channel))
 	if(LAZYLEN(ambience) && prob(35) && (world.time >= L.client.played + 3 MINUTES))
 		L.client.played = world.time
 

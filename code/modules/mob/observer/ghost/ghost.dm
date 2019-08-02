@@ -153,12 +153,12 @@ Works together with spawning an observer, noted above.
 			if(ghost.client && !ghost.client.holder && !config.antag_hud_allowed)		// For new ghosts we remove the verb from even showing up if it's not allowed.
 				ghost.verbs -= /mob/observer/ghost/verb/toggle_antagHUD	// Poor guys, don't know what they are missing!
 			return ghost
-		else
+		else if(client)
 			var/mob/new_player/M = new /mob/new_player()
 			client.eye = M
 			M.key = key
 			M.loc = null
-			return null
+	return null
 
 /*
 This is the proc mobs get to turn into a ghost. Forked from ghostize due to compatibility issues.

@@ -24,8 +24,6 @@
 
 /obj/item/stack/material/New(loc, amount)
 	. = ..()
-	ADD_SAVED_VAR(material)
-	ADD_SAVED_VAR(reinf_material)
 
 /obj/item/stack/material/Write(savefile/f)
 	. = ..()

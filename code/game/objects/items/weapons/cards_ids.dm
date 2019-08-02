@@ -334,6 +334,10 @@ var/const/NO_EMAG_ACT = -50
 	icon_state = "base"
 	item_state = "card-id"
 	slot_flags = SLOT_ID
+	
+	sprite_sheets = list(
+	SPECIES_RESOMI = 'icons/mob/species/seromi/id.dmi'
+	)
 
 	var/access = list()
 	var/registered_name = "Unknown" // The name registered_name on the card

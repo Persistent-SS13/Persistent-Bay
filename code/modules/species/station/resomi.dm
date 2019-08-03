@@ -23,6 +23,7 @@
 	gluttonous = GLUT_TINY
 	slowdown = -1
 	blood_volume = 400
+	pass_flags = PASS_FLAG_TABLE
 	
 	health_hud_intensity = 3
 	hunger_factor = DEFAULT_HUNGER_FACTOR * 2
@@ -67,11 +68,22 @@
   	"Your feathers puff out, insulating you from the cold.",
   	"You shiver for warmth.")
   
-	inherent_verbs = list(/mob/living/carbon/human/proc/sonar_ping)
+	inherent_verbs = list(
+		/mob/living/carbon/human/proc/sonar_ping,
+		/mob/living/proc/hide
+		)
 	
 	descriptors = list(
-		/datum/mob_descriptor/height = 0.5,
-		/datum/mob_descriptor/build = 0.5
+		/datum/mob_descriptor/height = -1.5,
+		/datum/mob_descriptor/build = -1.5
 		)
 
-	override_organ_types = list(BP_EYES = /obj/item/organ/internal/eyes/resomi)
+	override_organ_types = list(
+		BP_R_HAND = /obj/item/organ/external/hand/right/resomi,
+		BP_L_HAND = /obj/item/organ/external/hand/resomi,
+		BP_R_FOOT = /obj/item/organ/external/foot/right/resomi,
+		BP_L_FOOT = /obj/item/organ/external/foot/resomi,
+		BP_LIVER = /obj/item/organ/internal/liver/resomi,
+		BP_KIDNEYS = /obj/item/organ/internal/kidneys/resomi,
+		BP_EYES = /obj/item/organ/internal/eyes/resomi
+		)

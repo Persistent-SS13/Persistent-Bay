@@ -1,6 +1,6 @@
 /datum/sprite_accessory/hair/somi
 	name = "Resomi Default"
-	icon = 'icons/mob/human_races/species/resomi/hair.dmi'
+	icon = 'icons/mob/human_races/species/seromi/hair.dmi'
 	icon_state = "teshari_default"
 	blend = ICON_MULTIPLY
   species_allowed = list(SPECIES_RESOMI)
@@ -62,20 +62,8 @@
 ////////////////////////////////////////////////////////
 // Body Markings
 
-/datum/sprite_accessory/marking
-	icon = 'icons/mob/human_races/species/default_markings.dmi'
-	do_colouration = 1 //Almost all of them have it, COLOR_ADD
-
-	var/layer_blend = ICON_OVERLAY
-
-
-	species_allowed = list()
-
-	var/body_parts = list() //A list of bodyparts this covers, in organ_tag defines
-//Reminder: BP_L_FOOT,BP_R_FOOT,BP_L_LEG,BP_R_LEG,BP_L_ARM,BP_R_ARM,BP_L_HAND,BP_R_HAND,BP_CHEST,BP_GROIN,BP_HEAD
-
 /datum/sprite_accessory/marking/somi
-  icon = 'icons/mob/human_races/species/resomi/markings.dmi'
+  icon = 'icons/mob/human_races/species/seromi/markings.dmi'
   species_allowed = list(SPECIES_RESOMI)
 
 /datum/sprite_accessory/marking/somi/fluff

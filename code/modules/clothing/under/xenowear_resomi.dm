@@ -283,4 +283,4 @@
 	name = "internal affairs undercoat"
 	desc = "A traditional Teshari garb made for the Internal Affairs Agent"
 	icon_state = "tesh_uniform_iaa"
-item_state = "tesh_uniform_iaa"
+	item_state = "tesh_uniform_iaa"

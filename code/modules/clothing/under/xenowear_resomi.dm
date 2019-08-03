@@ -1,5 +1,5 @@
 /obj/item/clothing/under/seromi
-	icon = 'icons/obj/clothing/species/seromi/uniform.dmi'
+	icon = 'icons/obj/clothing/species/resomi/uniform.dmi'
 	icon_state = "seromi_grey"
 	species_restricted = list(SPECIES_RESOMI)
 

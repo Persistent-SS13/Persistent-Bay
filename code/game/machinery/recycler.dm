@@ -260,11 +260,8 @@ var/const/OUTPUT_DELAY = 5 SECONDS //intervals between material being outputed b
 			continue
 		//OUTPUT TO DUST
 
-/obj/machinery/recycler/verb/rotate()
-	set name = "Rotate Clockwise"
-	set category = "Object"
-	set src in oview(1)
-
+//Since there are no sprites for other dir, we improvise
+/obj/machinery/recycler/rotate()
 	var/mob/living/user = usr
 
 	if(usr.incapacitated())

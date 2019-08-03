@@ -358,7 +358,14 @@
 	var/list/holdingitems = list()
 	var/list/bag_whitelist = list(
 		/obj/item/weapon/storage/pill_bottle,
-		/obj/item/weapon/storage/plants
+		/obj/item/weapon/storage/plants,
+		/obj/item/weapon/storage/ore,
+		/obj/item/weapon/storage/bag/trash,
+		/obj/item/weapon/storage/bag/plasticbag,
+		/obj/item/weapon/storage/chewables,
+		/obj/item/weapon/storage/fancy/crayons,
+		/obj/item/weapon/storage/fancy/egg_box,
+		/obj/item/weapon/storage/fancy/crackers,
 	) // These bags will fast-empty into the grinder.
 
 /obj/machinery/reagentgrinder/New()

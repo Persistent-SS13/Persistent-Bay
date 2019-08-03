@@ -91,11 +91,7 @@ So, hopefully this is helpful if any more icons are to be added/changed/wonderin
 /obj/structure/particle_accelerator/AltClick()
 	rotate()
 
-/obj/structure/particle_accelerator/verb/rotate()
-	set name = "Rotate Clockwise"
-	set category = "Object"
-	set src in oview(1)
-
+/obj/structure/particle_accelerator/rotate()
 	if(!usr || !Adjacent(usr))
 		return
 	
@@ -277,17 +273,6 @@ So, hopefully this is helpful if any more icons are to be added/changed/wonderin
 
 /obj/machinery/particle_accelerator/AltClick()
 	rotate()
-
-/obj/machinery/particle_accelerator/verb/rotate()
-	set name = "Rotate Clockwise"
-	set category = "Object"
-	set src in oview(1)
-
-	if (src.anchored || usr:stat)
-		to_chat(usr, "It is fastened to the floor!")
-		return 0
-	src.set_dir(turn(src.dir, 270))
-	return 1
 
 /obj/machinery/particle_accelerator/verb/rotateccw()
 	set name = "Rotate Counter-Clockwise"

@@ -94,7 +94,7 @@ SUBSYSTEM_DEF(atoms)
 		BadInitializeCalls[the_type] |= BAD_INIT_DIDNT_INIT
 
 #ifdef TESTING
-	var/init_time = world.realtime - start_time
+	var/init_time = world.realtime - start_tick
 	if(init_time > 0)
 		log_debug("[A.type]\ref[A] : inited in [init_time/10]s")
 #endif

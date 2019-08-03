@@ -120,7 +120,8 @@
 				if (!(max_multiplier in multipliers))
 					t1 += " <A href='?src=\ref[src];make=[i];multiplier=[max_multiplier]'>[max_multiplier*R.res_amount]x</A>"
 
-	t1 += "<br><div><a href='?src=\ref[src];top=1'>go back</a></div>"
+	if(!recipes_sublist)  //Only show in a sublist
+		t1 += "<br><div><a href='?src=\ref[src];top=1'>go back</a></div>"
 	t1 += "</TT></body></HTML>"
 	user << browse(JOINTEXT(t1), "window=stack")
 	onclose(user, "stack")

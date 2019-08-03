@@ -181,8 +181,8 @@
 	return ..()
 
 /obj/item/stack/material/on_update_icon()
-	if(!material)
-		log_error("[src] has null material")
+	if(!istype(material))
+		log_error("[src] has invalid/null material '[material]'!")
 		return
 	if(material_flags & USE_MATERIAL_COLOR)
 		color = material.icon_colour

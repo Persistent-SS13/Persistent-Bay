@@ -280,3 +280,7 @@
 	SetName(final_name)
 	overlays += filling_overlay
 	overlays += panel_overlay
+
+/obj/structure/door_assembly/AltClick(mob/user)
+	. = ..()
+	rotate()

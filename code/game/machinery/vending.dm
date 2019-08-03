@@ -586,8 +586,8 @@
 		var/datum/stored_items/vending_products/R = product_records[key]
 		src.vend_ready = 0
 		while(R.amount > 0)
-			var/obj/item/IT = R.get_product(get_turf(src))
-			IT.dropInto(get_turf(src))
+			var/obj/item/IT = R.get_product(loc)
+			IT.forceMove(loc)
 		product_records.Remove(R) //remove the record
 		SSnano.update_uis(src)
 		src.vend_ready = 1

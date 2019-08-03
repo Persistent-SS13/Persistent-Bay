@@ -3,7 +3,7 @@
 	icon = 'icons/mob/human_races/species/seromi/hair.dmi'
 	icon_state = "teshari_default"
 	blend = ICON_MULTIPLY
-	species_allowed = list('SPECIES_RESOMI')
+	species_allowed = list(SPECIES_RESOMI)
 
 /datum/sprite_accessory/hair/somi/upright_ears
   name = "Resomi Perked Ears"

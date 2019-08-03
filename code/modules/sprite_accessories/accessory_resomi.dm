@@ -68,18 +68,18 @@
 
 /datum/sprite_accessory/marking/somi/fluff
   name = "Resomi underfluff"
-  	icon_state = "teshi_fluff"
-	color_blend_mode = ICON_MULTIPLY
+  icon_state = "teshi_fluff"
+  color_blend_mode = ICON_MULTIPLY
 	body_parts = list(BP_L_FOOT,BP_R_FOOT,BP_GROIN,BP_TORSO,BP_HEAD)
 
 /datum/sprite_accessory/marking/somi/somi_small_feathers
 	name = "Resomi Small Wingfeathers"
 	icon_state = "teshi_sf"
 	color_blend_mode = ICON_MULTIPLY
-  body_parts = list(BP_L_FOOT,BP_R_FOOT,BP_L_HAND,BP_R_HAND,BP_TORSO)
+	body_parts = list(BP_L_FOOT,BP_R_FOOT,BP_L_HAND,BP_R_HAND,BP_TORSO)
 
 /datium/sprite_accessory/marking/somi/somi_feathers
 	name = "Resomi Feathers"
-  icon_state = "tesh-feathers"
-  color_blend_mode = ICON_MULTIPLY
-  body_parts = list(BP_L_FOOT,BP_R_FOOT,BP_L_HAND,BP_R_HAND)
+	icon_state = "tesh-feathers"
+	color_blend_mode = ICON_MULTIPLY
+	body_parts = list(BP_L_FOOT,BP_R_FOOT,BP_L_HAND,BP_R_HAND)

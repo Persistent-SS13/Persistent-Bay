@@ -5,7 +5,7 @@
 	blend = ICON_ADD
 	species_allowed = list(SPECIES_RESOMI)
 
-/datum/sprite_accessory/hair/somi/upright_ears
+/datum/sprite_accessory/hair/somi/upright_ears //The sprite for this needs redone to be lighter, currently it doesn't accept color very well
   name = "Resomi Perked Ears"
   icon_state = "teshari"
   

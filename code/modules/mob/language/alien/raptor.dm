@@ -1,6 +1,6 @@
-/datum/language/seromi
+/datum/language/resomi
 	name = LANGUAGE_SCHECHI
-	desc = "A trilling language spoken by the diminutive Teshari."
+	desc = "A trilling language spoken by the diminutive Resomi."
 	speech_verb = "chirps"
 	ask_verb = "chirrups"
 	exclaim_verb = "trills"
@@ -14,5 +14,5 @@
 			"ci", "ri", "mi", "si", "ni", "ti", "li", "shi", "schi", "i", "i"
 		)
 
-/datum/language/seromi/get_random_name(gender)
+/datum/language/resomi/get_random_name(gender)
 return ..(gender, 1, 4, 1.5)

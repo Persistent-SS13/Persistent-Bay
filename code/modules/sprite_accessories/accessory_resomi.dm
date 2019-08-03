@@ -1,6 +1,6 @@
 /datum/sprite_accessory/hair/somi
 	name = "Resomi Default"
-	icon = 'icons/mob/human_races/species/seromi/hair.dmi'
+	icon = 'icons/mob/human_races/species/resomi/hair.dmi'
 	icon_state = "teshari_default"
 	blend = ICON_ADD
 	species_allowed = list(SPECIES_RESOMI)
@@ -61,7 +61,7 @@
 // Body Markings
 
 /datum/sprite_accessory/marking/somi
-	icon = 'icons/mob/human_races/species/seromi/markings.dmi'
+	icon = 'icons/mob/human_races/species/resomi/markings.dmi'
 	species_allowed = list(SPECIES_RESOMI)
 	blend = ICON_ADD
 

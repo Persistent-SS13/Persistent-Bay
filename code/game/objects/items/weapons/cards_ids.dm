@@ -334,9 +334,9 @@ var/const/NO_EMAG_ACT = -50
 	icon_state = "base"
 	item_state = "card-id"
 	slot_flags = SLOT_ID
-	
+
 	sprite_sheets = list(
-	SPECIES_RESOMI = 'icons/mob/species/seromi/id.dmi'
+	SPECIES_RESOMI = 'icons/mob/species/resomi/id.dmi'
 	)
 
 	var/access = list()

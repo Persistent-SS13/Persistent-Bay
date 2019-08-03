@@ -2,10 +2,10 @@
 	name = SPECIES_RESOMI
 	name_plural = "Resomii"
 	icobase = 'icons/mob/human_races/species/seromi/body.dmi'
-	deform = 'icons/mob/human_races/r_resomi.dmi'
+	deform = 'icons/mob/human_races/species/seromi/body.dmi
 	damage_overlays = 'icons/mob/human_races/species/seromi/damage_overlay_seromi.dmi'
-	damage_mask = 'icons/mob/human_races/species/seromi/damage_mask/seromi.dmi'
-	blood_mask = 'icons/mob/human_races/species/seromi/blood_mask_seromi.dmi'
+	damage_mask = 'icons/mob/human_races/species/seromi/damage_mask_seromi.dmi'
+	blood_mask = 'icons/mob/human_races/species/seromi/blood_mask_resomi.dmi'
 	husk_icon = 'icons/mob/human_races/species/seromi/husk.dmi'
 	tail = "resomitail"
 	tail_hair = "feathers"
@@ -74,25 +74,4 @@
 		/datum/mob_descriptor/build = 0.5
 		)
 
-	has_limbs = list(
-		BP_CHEST =  list("path" = /obj/item/organ/external/chest),
-		BP_GROIN =  list("path" = /obj/item/organ/external/groin),
-		BP_HEAD =   list("path" = /obj/item/organ/external/head/resomi),
-		BP_L_ARM =  list("path" = /obj/item/organ/external/arm),
-		BP_R_ARM =  list("path" = /obj/item/organ/external/arm/right),
-		BP_L_LEG =  list("path" = /obj/item/organ/external/leg),
-		BP_R_LEG =  list("path" = /obj/item/organ/external/leg/right),
-		BP_L_HAND = list("path" = /obj/item/organ/external/hand/resomi),
-		BP_R_HAND = list("path" = /obj/item/organ/external/hand/right/resomi),
-		BP_L_FOOT = list("path" = /obj/item/organ/external/foot/resomi),
-		BP_R_FOOT = list("path" = /obj/item/organ/external/foot/right/resomi)
-		)
-
-	has_organ = list(
-		BP_HEART =    /obj/item/organ/internal/heart,
-		BP_LUNGS =    /obj/item/organ/internal/lungs,
-		BP_LIVER =    /obj/item/organ/internal/liver/resomi,
-		BP_KIDNEYS =  /obj/item/organ/internal/kidneys/resomi,
-		BP_BRAIN =    /obj/item/organ/internal/brain,
-		BP_EYES =     /obj/item/organ/internal/eyes
-		)
+override_organ_types = list(BP_EYES = /obj/item/organ/internal/eyes/resomi)

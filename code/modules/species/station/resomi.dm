@@ -1,11 +1,12 @@
 /datum/species/resomi
 	name = SPECIES_RESOMI
 	name_plural = "Resomii"
-	icobase = 'icons/mob/human_races/r_resomi.dmi'
+	icobase = 'icons/mob/human_races/species/seromi/body.dmi'
 	deform = 'icons/mob/human_races/r_resomi.dmi'
-	damage_overlays = 'icons/mob/human_races/masks/dam_resomi.dmi'
-	damage_mask = 'icons/mob/human_races/masks/dam_mask_resomi.dmi'
-	blood_mask = 'icons/mob/human_races/masks/blood_resomi.dmi'
+	damage_overlays = 'icons/mob/human_races/species/seromi/damage_overlay_seromi.dmi'
+	damage_mask = 'icons/mob/human_races/species/seromi/damage_mask/seromi.dmi'
+	blood_mask = 'icons/mob/human_races/species/seromi/blood_mask_seromi.dmi'
+	husk_icon = 'icons/mob/human_races/species/seromi/husk.dmi'
 	tail = "resomitail"
 	tail_hair = "feathers"
 	hidden_from_codex = FALSE

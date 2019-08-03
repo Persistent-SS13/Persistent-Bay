@@ -82,6 +82,5 @@
 
 /datum/sprite_accessory/marking/somi/somi_ear_inner
 	name = "Resomi Inner Ear"
-	icon = 'icons/mob/human_races/species/seromi/hair.dmi'
-	icon_state = 'teshariinner'
+	icon_state = "tesh_inner"
 	body_parts = list(BP_HEAD)

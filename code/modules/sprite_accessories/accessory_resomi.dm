@@ -66,19 +66,9 @@
   	species_allowed = list(SPECIES_RESOMI)
 
 /datum/sprite_accessory/marking/somi/fluff
-	name = "Resomi underfluff"
+	name = "Resomi Underfluff"
 	icon_state = "teshi_fluff"
 	body_parts = list(BP_L_FOOT,BP_R_FOOT,BP_GROIN,BP_CHEST,BP_HEAD)
-
-/datum/sprite_accessory/marking/somi/somi_small_feathers
-	name = "Resomi Small Wingfeathers"
-	icon_state = "teshi_sf"
-	body_parts = list(BP_L_FOOT,BP_R_FOOT,BP_L_HAND,BP_R_HAND,BP_CHEST)
-
-/datum/sprite_accessory/marking/somi/somi_feathers
-	name = "Resomi Feathers"
-	icon_state = "tesh-feathers"
-	body_parts = list(BP_L_FOOT,BP_R_FOOT,BP_L_HAND,BP_R_HAND)
 
 /datum/sprite_accessory/marking/somi/somi_ear_inner
 	name = "Resomi Inner Ear"

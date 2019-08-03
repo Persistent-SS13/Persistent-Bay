@@ -62,7 +62,7 @@
 
 /datum/sprite_accessory/marking/somi
  	icon = 'icons/mob/human_races/species/seromi/markings.dmi'
-  	species_allowed = list(SPECIES_RESOMI)
+	species_allowed = list(SPECIES_RESOMI)
 
 /datum/sprite_accessory/marking/somi/fluff
 	name = "Resomi Underfluff"

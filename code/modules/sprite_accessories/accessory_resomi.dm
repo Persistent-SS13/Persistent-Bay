@@ -61,7 +61,7 @@
 // Body Markings
 
 /datum/sprite_accessory/marking/somi
- 	icon = 'icons/mob/human_races/species/seromi/markings.dmi'
+ 	icon = 'icons/mob/human_races/species/seromi/markings.dmi'  // All of these markings need to be redone to be darker. They do not accept color very well, currently.
 	species_allowed = list(SPECIES_RESOMI)
 
 /datum/sprite_accessory/marking/somi/fluff

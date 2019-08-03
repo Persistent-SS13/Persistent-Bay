@@ -63,11 +63,17 @@
 /datum/sprite_accessory/marking/somi
  	icon = 'icons/mob/human_races/species/seromi/markings.dmi'  // All of these markings need to be redone to be darker. They do not accept color very well, currently.
 	species_allowed = list(SPECIES_RESOMI)
+	blend = ICON_ADD
 
 /datum/sprite_accessory/marking/somi/fluff
 	name = "Resomi Underfluff"
 	icon_state = "teshi_fluff"
 	body_parts = list(BP_L_FOOT,BP_R_FOOT,BP_GROIN,BP_CHEST,BP_HEAD)
+	
+/datum/sprite_accessory/marking/somi/small_feathers
+	name = "Resomi Small Feathers"
+	icon_state = "teshi_sf"
+	body_parts = list(BP_L_FOOT,BP_R_FOOT,BP_L_HAND,BP_R_HAND,BP_CHEST)
 
 /datum/sprite_accessory/marking/somi/somi_ear_inner
 	name = "Resomi Perked Inner Ear"

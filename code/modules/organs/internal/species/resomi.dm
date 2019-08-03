@@ -1,4 +1,4 @@
-/obj/item/organ/internal/eyes/unathi
+/obj/item/organ/internal/eyes/resomi
 	name = "avian eyes"
 	desc = "Eyes belonging to a small, bird-like creature. The pupils are large and sensitive to light."
 	icon = 'icons/mob/human_races/species/unathi/organs.dmi' //Todo: Make an eye sprite for Resomi

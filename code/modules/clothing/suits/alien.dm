@@ -343,4 +343,4 @@
 	name = "internal affairs cloak"
 	desc = "A soft Teshari cloak made for the Internal Affairs Agent"
 	icon_state = "tesh_cloak_iaa"
-item_state = "tesh_cloak_iaa"
+	item_state = "tesh_cloak_iaa"

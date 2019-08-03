@@ -50,6 +50,31 @@
 		src.default_reinf_type = rmat
 	//Initialize will handle getting the proper material datums!
 
+/obj/item/stack/material/Write(savefile/f)
+	. = ..()
+	if(material)
+		to_file(f["material"], material.name)
+	if(reinf_material)
+		to_file(f["reinf_material"], reinf_material.name)
+	
+/obj/item/stack/material/Read(savefile/f)
+	. = ..()
+	var/material/mat
+	var/material/rmat
+	from_file(f["material"], mat)
+	from_file(f["reinf_material"], rmat)
+
+	if(istype(mat, /material))
+		src.default_type = mat.name //Backward compatibility
+	else if(mat)
+		src.default_type = mat
+	
+	if(istype(rmat, /material))
+		src.default_reinf_type = rmat.name //Backward compatibility
+	else if(rmat)
+		src.default_reinf_type = rmat
+	//Initialize will handle getting the proper material datums!
+
 /obj/item/stack/material/Initialize(mapload, var/amount, var/material, var/reinf_material)
 	. = ..()
 	//testing("Initialized [src] \ref[src], mapload=[mapload], amount=[amount], material=[src.material], reinf_material=[src.reinf_material]")

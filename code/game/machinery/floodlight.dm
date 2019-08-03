@@ -149,23 +149,5 @@
 
 	return ..()
 
-/obj/machinery/floodlight/verb/rotate()
-	set name = "Rotate Light"
-	set category = "Object"
-	set src in oview(1)
-
-	if(!usr || !Adjacent(usr))
-		return
-
-	if(usr.stat == DEAD)
-		if(!round_is_spooky())
-			to_chat(src, "<span class='warning'>The veil is not thin enough for you to do that.</span>")
-			return
-	else if(usr.incapacitated())
-		return
-
-	src.set_dir(turn(src.dir, 90))
-	return
-
 /obj/machinery/floodlight/AltClick()
 	rotate()

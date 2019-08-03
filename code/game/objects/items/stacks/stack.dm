@@ -46,6 +46,7 @@
 	if (src && usr && usr.machine == src)
 		close_browser(usr, "window=stack")
 	synths = null
+	recipes = null
 	return ..()
 
 //Called whenever stacked amount changes

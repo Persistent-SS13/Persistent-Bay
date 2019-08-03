@@ -2,7 +2,7 @@
 	name = SPECIES_RESOMI
 	name_plural = "Resomii"
 	icobase = 'icons/mob/human_races/species/seromi/body.dmi'
-	deform = 'icons/mob/human_races/species/seromi/body.dmi
+	deform = 'icons/mob/human_races/species/seromi/body.dmi'
 	damage_overlays = 'icons/mob/human_races/species/seromi/damage_overlay_seromi.dmi'
 	damage_mask = 'icons/mob/human_races/species/seromi/damage_mask_seromi.dmi'
 	blood_mask = 'icons/mob/human_races/species/seromi/blood_mask_resomi.dmi'

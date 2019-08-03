@@ -74,4 +74,4 @@
 		/datum/mob_descriptor/build = 0.5
 		)
 
-override_organ_types = list(BP_EYES = /obj/item/organ/internal/eyes/resomi)
+	override_organ_types = list(BP_EYES = /obj/item/organ/internal/eyes/resomi)

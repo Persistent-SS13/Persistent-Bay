@@ -8,7 +8,6 @@
 /datum/sprite_accessory/hair/somi/upright_ears
   name = "Resomi Perked Ears"
   icon_state = "teshari"
-  do_colouration = 1
   
 /datum/sprite_accessory/hair/somi/tight
   name = "Resomi Tight"

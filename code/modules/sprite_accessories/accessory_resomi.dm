@@ -62,12 +62,12 @@
 // Body Markings
 
 /datum/sprite_accessory/marking/somi
-  icon = 'icons/mob/human_races/species/seromi/markings.dmi'
-  species_allowed = list(SPECIES_RESOMI)
+ 	icon = 'icons/mob/human_races/species/seromi/markings.dmi'
+  	species_allowed = list(SPECIES_RESOMI)
 
 /datum/sprite_accessory/marking/somi/fluff
-  name = "Resomi underfluff"
-  icon_state = "teshi_fluff"
+	name = "Resomi underfluff"
+	icon_state = "teshi_fluff"
 	body_parts = list(BP_L_FOOT,BP_R_FOOT,BP_GROIN,BP_TORSO,BP_HEAD)
 
 /datum/sprite_accessory/marking/somi/somi_small_feathers

@@ -46,7 +46,6 @@
 	if (src && usr && usr.machine == src)
 		close_browser(usr, "window=stack")
 	synths = null
-	QDEL_NULL_LIST(recipes)
 	return ..()
 
 //Called whenever stacked amount changes

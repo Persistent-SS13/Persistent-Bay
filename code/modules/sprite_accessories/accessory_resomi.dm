@@ -2,7 +2,7 @@
 	name = "Resomi Default"
 	icon = 'icons/mob/human_races/species/seromi/hair.dmi'
 	icon_state = "teshari_default"
-	blend = ICON_MULTIPLY
+	blend = ICON_add
 	species_allowed = list(SPECIES_RESOMI)
 
 /datum/sprite_accessory/hair/somi/upright_ears
@@ -71,6 +71,6 @@
 	body_parts = list(BP_L_FOOT,BP_R_FOOT,BP_GROIN,BP_CHEST,BP_HEAD)
 
 /datum/sprite_accessory/marking/somi/somi_ear_inner
-	name = "Resomi Inner Ear"
+	name = "Resomi Perked Inner Ear"
 	icon_state = "tesh_inner"
 	body_parts = list(BP_HEAD)

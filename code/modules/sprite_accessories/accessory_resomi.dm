@@ -13,7 +13,7 @@
   
 /datum/sprite_accessory/hair/somi/tight
   name = "Resomi Tight"
-  icon_state = "teshari_tight
+  icon_state = "teshari_tight"
   
 /datum/sprite_accessory/hair/somi/excited
   name = "Resomi Spiky"
@@ -80,7 +80,7 @@
 
 /datum/sprite_accessory/marking/somi/fluff
   name = "Resomi underfluff"
-	icon_state = "teshi_fluff"
+  	icon_state = "teshi_fluff"
 	color_blend_mode = ICON_MULTIPLY
 	body_parts = list(BP_L_FOOT,BP_R_FOOT,BP_GROIN,BP_TORSO,BP_HEAD)
 

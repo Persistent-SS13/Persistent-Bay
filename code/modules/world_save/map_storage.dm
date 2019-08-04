@@ -65,7 +65,7 @@ var/global/list/debug_data = list()
 
 /turf
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
-	skip_empty = "contents;saved_decals"
+	skip_empty = "contents;saved_decals;req_access;req_access_personal_list;req_one_access;req_one_access_business_list"
 
 /obj
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
@@ -369,6 +369,7 @@ var/global/list/debug_data = list()
 		for(var/x in 1 to world.maxx step SAVECHUNK_SIZEX)
 			for(var/y in 1 to world.maxy step SAVECHUNK_SIZEY)
 				Save_Chunk(x,y,z,f)
+		f.Del()
 		f = null
 	fcopy("map_saves/extras.sav", "backups/[dir]/extras.sav")
 	fdel("map_saves/extras.sav")

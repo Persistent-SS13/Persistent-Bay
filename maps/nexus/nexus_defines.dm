@@ -1,5 +1,5 @@
 proc/GetNbSavedZLevels()
-	return 20
+	return 12
 
 /datum/map/nexus
 	name = "Nexus"
@@ -12,10 +12,10 @@ proc/GetNbSavedZLevels()
 
 	station_levels = list(1,2,3)
 	contact_levels = list(1,2,3)
-	player_levels = list(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)
-	admin_levels = list(25)
-	empty_levels = list(24)
-	accessible_z_levels = list("1"=1,"2"=1,"3"=1,"4"=1,"5"=1,"6"=1,"7"=1,"8"=1,"9"=1,"10"=1,"11"=1,"12"=1,"13"=1,"14"=1,"15"=1,"16"=1,"17"=1,"18"=1,"19"=1,"20"=1)
+	player_levels = list(1,2,3,4,5,6,7,8,9)
+	admin_levels = list(10, 11, 12)
+	empty_levels = list(10, 11, 12)
+	accessible_z_levels = list("1"=1,"2"=1,"3"=1,"4"=1,"5"=1,"6"=1,"7"=1,"8"=1,"9"=1,"10"=1,"11"=1,"12"=1)
 	usable_email_tlds = list(EMAIL_DOMAIN_DEFAULT)
 
 	allowed_spawns = list("Cryogenic Storage", "Cyborg Storage")

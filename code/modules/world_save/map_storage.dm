@@ -476,11 +476,19 @@ var/global/list/debug_data = list()
 
 /proc/Load_World()
 	var/starttime = REALTIMEOFDAY
-	var/savefile/f = new("map_saves/extras.sav")
+	var/savefile/f
 	all_loaded = list()
 	found_vars = list()
 	debug_data = list()
 	var/turf/ve = null
+	for(var/z in 1 to SAVED_ZLEVELS)
+		var/starttime2 = REALTIMEOFDAY
+		f = new("map_saves/z[z].sav")
+		while(!f.eof)
+			from_file(f,ve)
+		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
+		f = null
+	f = new("map_saves/extras.sav")	
 	from_file(f["email"],ntnet_global.email_accounts)
 	from_file(f["records"],GLOB.all_crew_records)
 	LAZYINITLIST(GLOB.all_crew_records)
@@ -514,16 +522,6 @@ var/global/list/debug_data = list()
 			A.contents.Add(turfs)
 		catch(var/exception/e)
 			message_admins("error [e]")
-	f = null
-	for(var/z in 1 to SAVED_ZLEVELS)
-		var/starttime2 = REALTIMEOFDAY
-		f = new("map_saves/z[z].sav")
-		while(!f.eof)
-			from_file(f,ve)
-		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
-
-	f = null
-	f = new("map_saves/extras.sav")
 	var/list/zones
 
 	from_file(f["zones"],zones)

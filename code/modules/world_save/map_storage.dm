@@ -319,19 +319,13 @@ var/global/list/debug_data = list()
 			L.linked_account = L.linked_account.after_load()
 			L.linked_account.money = DEFAULT_NEW_CHARACTER_MONEY
 		to_file(f, L.linked_account)
-	//	if(L.linked_account)
-		//	var/key2 = L.linked_account.account_number
-
-		//	fdel("record_saves/[key2].sav")
-		//	var/savefile/fa = new("record_saves/[key2].sav")
-		//	to_file(fa, L)
-		//	to_file(fa, L.linked_account)
+		f = null
 		var/key3 = L.get_fingerprint()
 		fdel("record_saves/[key3].sav")
 		var/savefile/fe = new("record_saves/[key3].sav")
 		to_file(fe, L)
 		to_file(fe, L.linked_account)
-
+		fe = null
 	to_world("<font size=3 color='green'>Saving faction records..</font>")
 	for(var/datum/world_faction/faction in GLOB.all_world_factions)
 		var/list/records = faction.get_records()
@@ -341,8 +335,9 @@ var/global/list/debug_data = list()
 			fdel("record_saves/[faction.uid]/[key].sav")
 			var/savefile/f = new("record_saves/[faction.uid]/[key].sav")
 			to_file(f, L)
-
+			f = null
 /proc/Save_World()
+	set background = TRUE
 	to_world("<font size=4 color='green'>The world is saving! Characters are frozen and you won't be able to join at this time.</font>")
 	sleep(20)
 	var/reallow = 0
@@ -370,6 +365,7 @@ var/global/list/debug_data = list()
 			for(var/y in 1 to world.maxy step SAVECHUNK_SIZEY)
 				Save_Chunk(x,y,z,f)
 		f.Del()
+		sleep(500)
 		f = null
 	fcopy("map_saves/extras.sav", "backups/[dir]/extras.sav")
 	fdel("map_saves/extras.sav")
@@ -405,6 +401,12 @@ var/global/list/debug_data = list()
 	to_world("Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!")
 	to_world("Saving Complete")
 	f = null
+	found_vars = list()
+	all_loaded = list()
+	saved = list()
+	areas_to_save = list()
+	zones_to_save = list()
+	debug_data = list()
 	return 1
 
 
@@ -475,6 +477,7 @@ var/global/list/debug_data = list()
 
 
 /proc/Load_World()
+	set background = TRUE
 	var/starttime = REALTIMEOFDAY
 	var/savefile/f
 	all_loaded = list()
@@ -542,11 +545,13 @@ var/global/list/debug_data = list()
 		var/datum/dat = all_loaded[ind]
 		dat.after_load()
 
-	all_loaded = list()
+	all_loaded.Cut()
+	found_vars.Cut()
 	SSmachines.makepowernets()
 
 	for(var/x in debug_data)
 		to_world("Loaded [debug_data[x][1]] [x] in [debug_data[x][2]] seconds!")
+	debug_data.Cut()
 	to_world("Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!")
 	to_world("Loading Complete")
 	return 1

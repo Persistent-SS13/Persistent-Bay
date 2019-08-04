@@ -500,17 +500,20 @@ var/global/list/debug_data = list()
 	var/list/areas
 	from_file(f["areas"],areas)
 	for(var/datum/area_holder/holder in areas)
-		var/area/A = new holder.area_type
-		A.name = holder.name
-		A.shuttle = holder.shuttle
-		var/list/turfs = list()
-		for(var/ind in 1 to holder.turfs.len)
-			var/list/coords = holder.turfs[ind]
-			var/turf/T = locate(text2num(coords[1]),text2num(coords[2]),text2num(coords[3]))
-			if(!T)
-				message_admins("No turf found for area load")
-			turfs |= T
-		A.contents.Add(turfs)
+		try
+			var/area/A = new holder.area_type
+			A.name = holder.name
+			A.shuttle = holder.shuttle
+			var/list/turfs = list()
+			for(var/ind in 1 to holder.turfs.len)
+				var/list/coords = holder.turfs[ind]
+				var/turf/T = locate(text2num(coords[1]),text2num(coords[2]),text2num(coords[3]))
+				if(!T)
+					message_admins("No turf found for area load")
+				turfs |= T
+			A.contents.Add(turfs)
+		catch(var/exception/e)
+			message_admins("error [e]")
 	f = null
 	for(var/z in 1 to SAVED_ZLEVELS)
 		var/starttime2 = REALTIMEOFDAY

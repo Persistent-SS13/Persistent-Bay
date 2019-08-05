@@ -337,7 +337,6 @@ var/global/list/debug_data = list()
 			to_file(f, L)
 			f = null
 /proc/Save_World()
-	set background = TRUE
 	to_world("<font size=4 color='green'>The world is saving! Characters are frozen and you won't be able to join at this time.</font>")
 	sleep(20)
 	var/reallow = 0
@@ -382,9 +381,12 @@ var/global/list/debug_data = list()
 		formatted_areas += holder
 	var/list/zones = list()
 	to_world("<font size=3 color='green'>Saving zones..</font>")
-	for(var/zone/Z in zones_to_save)
-		Z.turf_coords = Z.get_turf_coords()
-		zones |= Z
+	try
+		for(var/zone/Z in zones_to_save)
+			Z.turf_coords = Z.get_turf_coords()
+			zones |= Z
+	catch(var/exception/e)
+		message_admins("error [e]")		
 	to_world("<font size=3 color='green'>Saving factions..</font>")
 	to_file(f["factions"],GLOB.all_world_factions)
 	to_world("<font size=3 color='green'>Saving marketplace..</font>")

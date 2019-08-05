@@ -363,8 +363,6 @@ var/global/list/debug_data = list()
 		for(var/x in 1 to world.maxx step SAVECHUNK_SIZEX)
 			for(var/y in 1 to world.maxy step SAVECHUNK_SIZEY)
 				Save_Chunk(x,y,z,f)
-		f.Del()
-		sleep(500)
 		f = null
 	fcopy("map_saves/extras.sav", "backups/[dir]/extras.sav")
 	fdel("map_saves/extras.sav")
@@ -381,12 +379,13 @@ var/global/list/debug_data = list()
 		formatted_areas += holder
 	var/list/zones = list()
 	to_world("<font size=3 color='green'>Saving zones..</font>")
-	try
-		for(var/zone/Z in zones_to_save)
+	
+	for(var/zone/Z in zones_to_save)
+		try	
 			Z.turf_coords = Z.get_turf_coords()
 			zones |= Z
-	catch(var/exception/e)
-		message_admins("error [e]")		
+		catch(var/exception/e)
+			message_admins("error [e]")		
 	to_world("<font size=3 color='green'>Saving factions..</font>")
 	to_file(f["factions"],GLOB.all_world_factions)
 	to_world("<font size=3 color='green'>Saving marketplace..</font>")

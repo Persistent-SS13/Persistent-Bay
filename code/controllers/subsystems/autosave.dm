@@ -37,17 +37,15 @@ SUBSYSTEM_DEF(autosave)
 		announced = 0
 	
 /datum/controller/subsystem/autosave/proc/Save()
-	set background = 1
 	if(saving)
 		message_admins(SPAN_DANGER("Attempted to save while already saving!"))
 	else
 		saving = 1
 		for(var/datum/controller/subsystem/S in Master.subsystems)
 			S.disable()
-		try
-			Save_World()
-		catch(var/exception/e)
-			message_admins("e")
+
+		Save_World()
+		
 		for(var/datum/controller/subsystem/S in Master.subsystems)
 			S.enable()
 		saving = 0

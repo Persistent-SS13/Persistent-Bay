@@ -43,8 +43,10 @@ SUBSYSTEM_DEF(autosave)
 		saving = 1
 		for(var/datum/controller/subsystem/S in Master.subsystems)
 			S.disable()
-		Save_World()
-		
+		try
+			Save_World()
+		catch(var/exception/e)
+			message_admins("e")
 		for(var/datum/controller/subsystem/S in Master.subsystems)
 			S.enable()
 		saving = 0

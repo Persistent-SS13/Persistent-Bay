@@ -37,6 +37,7 @@ SUBSYSTEM_DEF(autosave)
 		announced = 0
 	
 /datum/controller/subsystem/autosave/proc/Save()
+	set background = 1
 	if(saving)
 		message_admins(SPAN_DANGER("Attempted to save while already saving!"))
 	else

@@ -126,7 +126,7 @@
 	var/str = sanitizeSafe(input("New area name:","Blueprint Editing", ""), MAX_NAME_LEN)
 	if(!str || !length(str)) //cancel
 		return
-	if(length(str) > 50)
+	if(length(str) > 128)
 		to_chat(usr, "<span class='warning'>Name too long.</span>")
 		return
 	var/area/A = new

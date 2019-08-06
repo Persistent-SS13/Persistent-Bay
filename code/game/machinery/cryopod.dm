@@ -356,6 +356,8 @@
 	SetName(initial(src.name))
 	var/mob/occupant_ref = occupant
 	occupant.loc = null
+	occupant.stored_ckey = null
+	occupant.ckey = null
 	occupant = null //For some reasons the mob sometimes stay stuck in there if the qdel has some issues.. so we clear it early
 	time_despawn = 0
 	despawning = FALSE

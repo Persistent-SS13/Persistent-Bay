@@ -24,56 +24,18 @@
 
 /obj/item/stack/material/New(loc, amount)
 	. = ..()
+	ADD_SAVED_VAR(default_type)
+	ADD_SAVED_VAR(default_reinf_type)
 
-/obj/item/stack/material/Write(savefile/f)
+/obj/item/stack/material/before_save()
 	. = ..()
-	if(material)
-		to_file(f["material"], material.name)
-	if(reinf_material)
-		to_file(f["reinf_material"], reinf_material.name)
-	
-/obj/item/stack/material/Read(savefile/f)
-	. = ..()
-	var/material/mat
-	var/material/rmat
-	from_file(f["material"], mat)
-	from_file(f["reinf_material"], rmat)
+	default_type 		= istype(material)? material.name : material
+	default_reinf_type 	= istype(reinf_material)? reinf_material.name : reinf_material
 
-	if(istype(mat, /material))
-		src.default_type = mat.name //Backward compatibility
-	else if(mat)
-		src.default_type = mat
-	
-	if(istype(rmat, /material))
-		src.default_reinf_type = rmat.name //Backward compatibility
-	else if(rmat)
-		src.default_reinf_type = rmat
-	//Initialize will handle getting the proper material datums!
-
-/obj/item/stack/material/Write(savefile/f)
+/obj/item/stack/material/after_save()
 	. = ..()
-	if(material)
-		to_file(f["material"], material.name)
-	if(reinf_material)
-		to_file(f["reinf_material"], reinf_material.name)
-	
-/obj/item/stack/material/Read(savefile/f)
-	. = ..()
-	var/material/mat
-	var/material/rmat
-	from_file(f["material"], mat)
-	from_file(f["reinf_material"], rmat)
-
-	if(istype(mat, /material))
-		src.default_type = mat.name //Backward compatibility
-	else if(mat)
-		src.default_type = mat
-	
-	if(istype(rmat, /material))
-		src.default_reinf_type = rmat.name //Backward compatibility
-	else if(rmat)
-		src.default_reinf_type = rmat
-	//Initialize will handle getting the proper material datums!
+	default_type 		= initial(default_type)
+	default_reinf_type 	= initial(default_reinf_type)
 
 /obj/item/stack/material/Initialize(mapload, var/amount, var/material, var/reinf_material)
 	. = ..()

@@ -27,6 +27,18 @@
 	ADD_SAVED_VAR(default_type)
 	ADD_SAVED_VAR(default_reinf_type)
 
+//Backward compatibility
+/obj/item/stack/material/Read(savefile/f)
+	. = ..()
+	var/mat
+	var/rmat
+	from_file(f["material"], mat)
+	from_file(f["reinf_material"], rmat)
+	if(istext(mat))
+		default_type = mat
+	if(istext(rmat))
+		default_reinf_type = rmat
+
 /obj/item/stack/material/before_save()
 	. = ..()
 	default_type 		= istype(material)? material.name : material

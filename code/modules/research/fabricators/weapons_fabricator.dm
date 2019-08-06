@@ -374,11 +374,13 @@
 	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GOLD = 3 SHEETS, MATERIAL_COPPER = 2.5 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/revolver
 	research = "pistol_2"
+
+/**
 /datum/design/item/weaponfab/weapons/guns/revolver/auto // tier 2
 	materials = list(MATERIAL_STEEL = 2500, MATERIAL_ALUMINIUM = 1200, MATERIAL_SILVER = 250) //TODO
 	build_path = /obj/item/weapon/gun/projectile/revolver/medium/auto
 	research = "pistol_2"
-
+**/
 /datum/design/item/weaponfab/weapons/guns/revolver/c44 // tier 3
 	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GOLD = 3 SHEETS, MATERIAL_COPPER = 2.5 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/revolver/webley
@@ -1412,13 +1414,13 @@
 	id = "holotag_agent"
 	build_path = /obj/item/clothing/accessory/badge/tracker
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_PHORON = 0.5 SHEETS)
-	
+
 /datum/design/item/weaponfab/armor/accessory/holotag_agent
 	name = "Badge - Council Appointee"
 	id = "holotag_agent"
 	build_path = /obj/item/clothing/accessory/badge/ocieagent
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_PHORON = 0.5 SHEETS)
-	
+
 /datum/design/item/weaponfab/armor/accessory/holotag_press
 	name = "Holotag - Press"
 	id = "holotag_press"

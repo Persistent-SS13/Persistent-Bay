@@ -43,6 +43,7 @@ SUBSYSTEM_DEF(autosave)
 		saving = 1
 		for(var/datum/controller/subsystem/S in Master.subsystems)
 			S.disable()
+
 		Save_World()
 		
 		for(var/datum/controller/subsystem/S in Master.subsystems)

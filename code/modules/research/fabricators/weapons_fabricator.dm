@@ -375,6 +375,12 @@
 	build_path = /obj/item/weapon/gun/projectile/revolver
 	research = "pistol_2"
 
+/**
+/datum/design/item/weaponfab/weapons/guns/revolver/auto // tier 2
+	materials = list(MATERIAL_STEEL = 2500, MATERIAL_ALUMINIUM = 1200, MATERIAL_SILVER = 250) //TODO
+	build_path = /obj/item/weapon/gun/projectile/revolver/medium/auto
+	research = "pistol_2"
+**/
 /datum/design/item/weaponfab/weapons/guns/revolver/c44 // tier 3
 	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GOLD = 3 SHEETS, MATERIAL_COPPER = 2.5 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/revolver/webley
@@ -1408,13 +1414,13 @@
 	id = "holotag_agent"
 	build_path = /obj/item/clothing/accessory/badge/tracker
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_PHORON = 0.5 SHEETS)
-	
+
 /datum/design/item/weaponfab/armor/accessory/holotag_agent
 	name = "Badge - Council Appointee"
 	id = "holotag_agent"
 	build_path = /obj/item/clothing/accessory/badge/ocieagent
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_PHORON = 0.5 SHEETS)
-	
+
 /datum/design/item/weaponfab/armor/accessory/holotag_press
 	name = "Holotag - Press"
 	id = "holotag_press"
@@ -1781,13 +1787,14 @@
 	build_path = /obj/item/ammo_magazine/box/c44
 	materials = list(MATERIAL_STEEL = 1.25 SHEET)
 
-/datum/design/item/weaponfab/magazines/empty/c50
-	name = ".50 Magazine (empty)"
-	build_path = /obj/item/ammo_magazine/box/c50/empty
-/datum/design/item/weaponfab/magazines/c50
-	name = ".50 Magazine"
-	build_path = /obj/item/ammo_magazine/box/c50
-	materials = list(MATERIAL_STEEL = 1.25 SHEET)
+//For now apparently the gun using this disapeared...
+// /datum/design/item/weaponfab/magazines/empty/c50
+// 	name = ".50 Magazine (empty)"
+// 	build_path = /obj/item/ammo_magazine/box/c50/empty
+// /datum/design/item/weaponfab/magazines/c50
+// 	name = ".50 Magazine"
+// 	build_path = /obj/item/ammo_magazine/box/c50
+// 	materials = list(MATERIAL_STEEL = 1.25 SHEET)
 
 /datum/design/item/weaponfab/magazines/empty/c762
 	name = "Standard 7.62mm, 15 rounds magazine (empty)"

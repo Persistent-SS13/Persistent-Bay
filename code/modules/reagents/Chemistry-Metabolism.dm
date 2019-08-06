@@ -22,6 +22,10 @@
 	ADD_SAVED_VAR(metabolism_class)
 	ADD_SAVED_VAR(parent)
 
+/datum/reagents/metabolism/Destroy()
+	parent = null //clear your refs please
+	. = ..()
+
 /datum/reagents/metabolism/proc/metabolize()
 	if(parent)
 		var/metabolism_type = 0 //non-human mobs
@@ -42,14 +46,20 @@
 
 /datum/metabolism_effects/New(mob/living/carbon/parent_mob)
 	..()
-
 	if(istype(parent_mob))
 		parent = parent_mob
-
 	ADD_SAVED_VAR(parent)
 	ADD_SAVED_VAR(withdrawal_levels)
 	ADD_SAVED_VAR(addiction_levels)
 	ADD_SAVED_VAR(last_doses)
+
+/datum/metabolism_effects/Destroy()
+	clear_effects()
+	parent = null
+	QDEL_NULL_LIST(withdrawal_levels)
+	QDEL_NULL_LIST(addiction_levels)
+	last_doses = null
+	. = ..()
 
 /datum/metabolism_effects/proc/check_reagent(datum/reagent/RT, var/volume, var/removed)
 	// Addiction

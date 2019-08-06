@@ -80,20 +80,7 @@
 	ADD_SAVED_VAR(logistic_processor)
 	ADD_SAVED_VAR(stored_pen)
 
-	ADD_SKIP_EMPTY(active_program)
 	ADD_SKIP_EMPTY(idle_threads)
-	ADD_SKIP_EMPTY(processor_unit)
-	ADD_SKIP_EMPTY(network_card)
-	ADD_SKIP_EMPTY(hard_drive)
-	ADD_SKIP_EMPTY(battery_module)
-	ADD_SKIP_EMPTY(card_slot)
-	ADD_SKIP_EMPTY(nano_printer)
-	ADD_SKIP_EMPTY(portable_drive)
-	ADD_SKIP_EMPTY(ai_slot)
-	ADD_SKIP_EMPTY(tesla_link)
-	ADD_SKIP_EMPTY(scanner)
-	ADD_SKIP_EMPTY(logistic_processor)
-	ADD_SKIP_EMPTY(stored_pen)
 
 /obj/item/modular_computer/Initialize()
 	. = ..()
@@ -116,6 +103,7 @@
 /obj/item/modular_computer/after_load()
 	. = ..()
 	if(active_program)
+		active_program.computer = src
 		run_program(active_program.filename)
 	update_verbs()
 
@@ -123,6 +111,18 @@
 	kill_program(1)
 	QDEL_NULL_LIST(terminals)
 	STOP_PROCESSING(SSobj, src)
+	logistic_processor = null
+	scanner = null
+	tesla_link = null
+	ai_slot = null
+	portable_drive = null
+	nano_printer = null
+	card_slot = null
+	battery_module = null
+	hard_drive = null
+	network_card = null
+	processor_unit = null
+	active_program = null
 	if(istype(stored_pen))
 		QDEL_NULL(stored_pen)
 	for(var/obj/item/weapon/computer_hardware/CH in src.get_all_components())

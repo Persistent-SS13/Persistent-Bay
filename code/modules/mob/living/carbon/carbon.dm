@@ -60,12 +60,32 @@
 	//Clear the saved species var to save some memory
 	saved_species = null
 
-/mob/living/carbon/Destroy()
+/mob/living/carbon/Destroy(var/clearlace = FALSE)
+	//Drop the lace
+#ifndef UNIT_TEST
+	if(LAZYLEN(internal_organs_by_name))
+		var/obj/item/organ/internal/stack/lace = internal_organs_by_name[BP_STACK]
+		if(clearlace)
+			qdel(lace, clearlace, clearlace) //Die stack :D
+		else
+			lace.removed(dolace = !clearlace)
+			lace.dropInto(get_turf(src))
+#endif
+
 	QDEL_NULL(touching)
 	QDEL_NULL(metabolism_effects)
 	bloodstr = null // We don't qdel(bloodstr) because it's the same as qdel(reagents)
-	QDEL_NULL_LIST(internal_organs)
 	QDEL_NULL_LIST(hallucinations)
+	QDEL_NULL(internal)
+	QDEL_NULL_LIST(virus2)
+	QDEL_NULL(handcuffed)
+	LAZYCLEARLIST(stasis_sources)
+
+	QDEL_NULL_LIST(internal_organs)
+	//Do those after deleting the organs, since they access the parent's organ lists directly on destroy
+	QDEL_NULL_LIST(organs)
+	LAZYCLEARLIST(organs_by_name)
+
 	if(loc)
 		for(var/mob/M in contents)
 			M.dropInto(loc)
@@ -81,8 +101,10 @@
 	var/datum/reagents/R = get_ingested_reagents()
 	if(istype(R))
 		R.clear_reagents()
-	if(!(src.species.species_flags & SPECIES_FLAG_NO_HUNGER))
+	if(species && !(species.species_flags & SPECIES_FLAG_NO_HUNGER))
 		nutrition = 400
+	else if(!species)
+		admin_notice("rejuvenating a mob with no species!")
 	..()
 
 /mob/living/carbon/Move(NewLoc, direct)

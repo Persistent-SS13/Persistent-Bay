@@ -9,9 +9,8 @@
 	response_help = "passes through"
 	response_disarm = "shoves"
 	response_harm = "hits"
-	speed = -1
-	maxHealth = 120
-	health = 120
+	maxHealth = 50
+	health = 50
 
 	harm_intent_damage = 10
 	melee_damage_lower = 15
@@ -22,7 +21,7 @@
 	min_gas = null
 	max_gas = null
 	minbodytemp = 0
-	speed = 4
+	speed = 3
 
 /mob/living/simple_animal/hostile/tormented/Allow_Spacemove(var/check_drift = 0)
 	return 1

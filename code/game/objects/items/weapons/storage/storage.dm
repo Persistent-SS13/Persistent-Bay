@@ -29,8 +29,41 @@
 	var/opened = null
 	var/open_sound = null
 
+/obj/item/weapon/storage/New()
+	. = ..()
+	prepare_ui()
+
+/obj/item/weapon/storage/Initialize()
+	. = ..()
+	if(allow_quick_empty)
+		verbs += /obj/item/weapon/storage/verb/quick_empty
+	else
+		verbs -= /obj/item/weapon/storage/verb/quick_empty
+
+	if(allow_quick_gather)
+		verbs += /obj/item/weapon/storage/verb/toggle_gathering_mode
+	else
+		verbs -= /obj/item/weapon/storage/verb/toggle_gathering_mode
+
+	if(isnull(max_storage_space) && !isnull(storage_slots))
+		max_storage_space = storage_slots * base_storage_cost(max_w_class)
+
+	if(!map_storage_loaded && startswith)
+		for(var/item_path in startswith)
+			var/list/data = startswith[item_path]
+			if(islist(data))
+				var/qty = data[1]
+				var/list/argsl = data.Copy()
+				argsl[1] = src
+				for(var/i in 1 to qty)
+					new item_path(arglist(argsl))
+			else
+				for(var/i in 1 to (isnull(data)? 1 : data))
+					new item_path(src)
+	queue_icon_update()
+
 /obj/item/weapon/storage/Destroy()
-	if(isobj(storage_ui)) //Don't try to delete a type path
+	if(storage_ui && !ispath(storage_ui)) //Don't try to delete a type path
 		QDEL_NULL(storage_ui)
 	. = ..()
 
@@ -355,39 +388,6 @@
 	for(var/obj/item/I in contents)
 		remove_from_storage(I, T, 1)
 	finish_bulk_removal()
-
-/obj/item/weapon/storage/Initialize()
-	. = ..()
-	if(allow_quick_empty)
-		verbs += /obj/item/weapon/storage/verb/quick_empty
-	else
-		verbs -= /obj/item/weapon/storage/verb/quick_empty
-
-	if(allow_quick_gather)
-		verbs += /obj/item/weapon/storage/verb/toggle_gathering_mode
-	else
-		verbs -= /obj/item/weapon/storage/verb/toggle_gathering_mode
-
-	if(isnull(max_storage_space) && !isnull(storage_slots))
-		max_storage_space = storage_slots*base_storage_cost(max_w_class)
-
-	prepare_ui()
-	if(!map_storage_loaded && startswith)
-		for(var/item_path in startswith)
-			var/list/data = startswith[item_path]
-			if(islist(data))
-				var/qty = data[1]
-				var/list/argsl = data.Copy()
-				argsl[1] = src
-				for(var/i in 1 to qty)
-					new item_path(arglist(argsl))
-			else
-				for(var/i in 1 to (isnull(data)? 1 : data))
-					new item_path(src)
-	queue_icon_update()
-
-/obj/item/weapon/storage/after_load()
-	. = ..()
 
 /obj/item/weapon/storage/emp_act(severity)
 	if(!istype(src.loc, /mob/living))

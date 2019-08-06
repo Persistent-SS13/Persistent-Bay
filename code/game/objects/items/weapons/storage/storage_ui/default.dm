@@ -11,8 +11,10 @@
 	var/obj/screen/storage/stored_end
 	var/obj/screen/close/closer
 
-/datum/storage_ui/default/New(var/storage)
+/datum/storage_ui/default/New(var/obj/item/weapon/storage/storage)
 	..()
+	if(storage && storage.storage_ui == src)
+		log_warning(" datum/storage_ui/default/New(): Tried to make a new storage_ui for an object that already has one that's not this one!")
 	boxes = new /obj/screen/storage(  )
 	boxes.SetName("storage")
 	boxes.master = storage
@@ -93,6 +95,11 @@
 			storage.close(M)
 
 /datum/storage_ui/default/show_to(var/mob/user)
+	if(!user)
+		return
+	if(!user.client)
+		return
+
 	if(user.s_active != storage)
 		for(var/obj/item/I in storage)
 			if(I.on_found(user))
@@ -138,6 +145,8 @@
 		slot_orient_objs()
 
 /datum/storage_ui/default/close_all()
+	if(!storage)
+		return //Make sure it doesn't crash since its used in the Destroy proc
 	for(var/mob/M in can_see_contents())
 		storage.close(M)
 		. = 1

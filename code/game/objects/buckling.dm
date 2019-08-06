@@ -17,6 +17,10 @@
 	if(can_buckle && istype(M))
 		user_buckle_mob(M, user)
 
+/obj/New()
+	. = ..()
+	ADD_SAVED_VAR(buckled_mob)
+	
 /obj/Destroy()
 	unbuckle_mob()
 	return ..()
@@ -25,7 +29,7 @@
 /obj/proc/buckle_mob(mob/living/M)
 	if(buckled_mob) //unless buckled_mob becomes a list this can cause problems
 		return 0
-	if(!istype(M) || (M.loc != loc) || M.buckled || M.pinned.len || (buckle_require_restraints && !M.restrained()))
+	if(!istype(M) || (M.loc != loc) || M.buckled || LAZYLEN(M.pinned) || (buckle_require_restraints && !M.restrained()))
 		return 0
 	if(ismob(src))
 		var/mob/living/carbon/C = src //Don't wanna forget the xenos.

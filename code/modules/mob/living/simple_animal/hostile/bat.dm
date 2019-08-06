@@ -8,7 +8,7 @@
 	icon_gib = "bat_dead"
 	speak_chance = 0
 	turns_per_move = 3
-	meat_amount = 2
+	meat_amount = 1
 	meat_type = /obj/item/weapon/reagent_containers/food/snacks/meat
 	response_help = "pets the"
 	response_disarm = "gently pushes aside the"
@@ -36,6 +36,10 @@
 	..()
 	if(istype(L))
 		owner = L
+
+/mob/living/simple_animal/hostile/scarybat/Destroy()
+	. = ..()
+	owner = null
 
 /mob/living/simple_animal/hostile/scarybat/Allow_Spacemove(var/check_drift = 0)
 	return 1 // Ripped from space carp, no more floating

@@ -412,6 +412,12 @@ BLIND     // can't see anything
 		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_head_unathi.dmi',
 		)
 	blood_overlay_type = "helmetblood"
+	//Light defaults
+	light_max_bright = 0.5
+	light_inner_range = 2
+	light_outer_range = 4
+	light_falloff_curve = 1
+	light_color = COLOUR_LTEMP_100W_TUNGSTEN
 
 /obj/item/clothing/head/New()
 	. = ..()
@@ -421,7 +427,7 @@ BLIND     // can't see anything
 /obj/item/clothing/head/after_load()
 	. = ..()
 	if(on)
-		update_flashlight(loc)
+		update_flashlight()
 
 /obj/item/clothing/head/equipped(var/mob/user, var/slot)
 	light_overlay_image = null
@@ -460,13 +466,14 @@ BLIND     // can't see anything
 
 /obj/item/clothing/head/proc/update_flashlight(var/mob/user = null)
 	if(on && !light_applied)
-		set_light(0.5, 1, 3)
+		set_light(light_max_bright, light_inner_range, light_outer_range, light_falloff_curve, light_color)
 		light_applied = 1
 	else if(!on && light_applied)
 		set_light(0)
 		light_applied = 0
 	update_icon(user)
-	user.update_action_buttons()
+	if(user)
+		user.update_action_buttons()
 
 /obj/item/clothing/head/attack_ai(var/mob/user)
 	if(!mob_wear_hat(user))

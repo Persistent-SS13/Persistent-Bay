@@ -573,7 +573,7 @@
 			var/datum/accesses/copy = selected_assignment.accesses[selected_rank]
 			if(istype(copy))
 				var/new_pay = input("Enter new wage. This wage is paid every thirty minutes.","Rank 1 Wage") as null|num
-				if(!new_pay && new_pay != 0) return 1
+				if(!new_pay || new_pay < 0) return 1
 				copy.pay = new_pay
 			else
 				selected_assignment.accesses |= new /datum/accesses()
@@ -583,7 +583,7 @@
 			var/datum/accesses/copy = selected_assignment.accesses[selected_rank]
 			if(istype(copy))
 				var/new_pay = input("Enter new authority level. This assignment can modify those with the same or lower authority requirement.","Authority Requirement", copy.auth_level) as null|num
-				if(!new_pay && new_pay != 0) return 1
+				if(!new_pay || new_pay < 0) return 1
 				copy.auth_level = new_pay
 			else
 				selected_assignment.accesses |= new /datum/accesses()

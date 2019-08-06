@@ -77,7 +77,10 @@
 
 /mob/living/simple_animal/New()
 	. = ..()
+	ADD_SAVED_VAR(name) //For renamed pets
+	ADD_SAVED_VAR(desc)
 	ADD_SAVED_VAR(bleed_ticks)
+	ADD_SAVED_VAR(meat_amount) //for mess-ups subtracting from the meat amount
 
 /mob/living/simple_animal/Initialize()
 	. = ..()
@@ -102,13 +105,13 @@
 			switch_from_dead_to_living_mob_list()
 			set_stat(CONSCIOUS)
 			set_density(1)
-		return 0
+		return FALSE
 
 	handle_atmos()
 
 	if(health <= 0)
 		death()
-		return
+		return FALSE
 
 	if(health > maxHealth)
 		health = maxHealth
@@ -421,6 +424,7 @@
 
 // Harvest an animal's delicious byproducts
 /mob/living/simple_animal/proc/harvest(var/mob/user, var/skill_level)
+	var/success = FALSE
 	var/actual_meat_amount = round(max(1,(meat_amount / 2) + skill_level / 2))
 	user.visible_message("<span class='danger'>\The [user] chops up \the [src]!</span>")
 	if(meat_type && actual_meat_amount > 0 && (stat == DEAD))
@@ -431,7 +435,17 @@
 				var/obj/effect/decal/cleanable/blood/splatter/splat = new(get_turf(src))
 				splat.basecolor = bleed_colour
 				splat.update_icon()
-			qdel(src)
+			success = TRUE
+
+	//Get some hide too
+	if(hide_type && hide_amount && (stat == DEAD))
+		for(var/i = 0; i < hide_amount; i++)
+			new hide_type(get_turf(src))
+			success = TRUE
+	
+	if(stat == DEAD && success)
+		qdel(src)
+
 
 /mob/living/simple_animal/proc/subtract_meat(var/mob/user)
 	meat_amount--

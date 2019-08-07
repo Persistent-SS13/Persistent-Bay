@@ -392,6 +392,7 @@
 				vote.body += "Bracket 4 Qualifying Amount: [tax_prog4_amount]  Rate : [tax_prog4_rate]<br>"
 
 				vote.sponsor = usr.real_name
+				vote.yes_votes |= usr.real_name
 				vote.time_started = world.realtime
 
 				vote.prograte1 = tax_prog1_rate

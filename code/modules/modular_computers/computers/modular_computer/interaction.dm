@@ -1,5 +1,6 @@
 /obj/item/modular_computer/proc/update_verbs()
 	verbs.Cut()
+	verbs += /obj/proc/rotate
 	if(ai_slot)
 		verbs |= /obj/item/modular_computer/verb/eject_ai
 	if(portable_drive)

@@ -51,6 +51,8 @@
 
 /obj/item/weapon/stool/on_update_icon()
 	. = ..()
+	if(!material)
+		return
 	// Clear prior icon
 	icon_state = "blank"
 	overlays.Cut()

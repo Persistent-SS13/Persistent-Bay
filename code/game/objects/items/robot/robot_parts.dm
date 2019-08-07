@@ -16,16 +16,23 @@
 
 /obj/item/robot_parts/New(var/newloc, var/model)
 	..(newloc)
-	if(model_info && model)
-		model_info = model
-		var/datum/robolimb/R = all_robolimbs[model]
-		if(R)
-			SetName("[R.company] [initial(name)]")
-			desc = "[R.desc]"
-			if(icon_state in icon_states(R.icon))
-				icon = R.icon
-	else
-		SetDefaultName()
+	ADD_SAVED_VAR(part)
+	ADD_SAVED_VAR(sabotaged)
+	ADD_SAVED_VAR(model_info)
+
+/obj/item/robot_parts/Initialize(mapload, var/model)
+	. = ..()
+	if(!map_storage_loaded)
+		if(model_info && model)
+			model_info = model
+			var/datum/robolimb/R = all_robolimbs[model]
+			if(R)
+				SetName("[R.company] [initial(name)]")
+				desc = "[R.desc]"
+				if(icon_state in icon_states(R.icon))
+					icon = R.icon
+		else
+			SetDefaultName()
 
 /obj/item/robot_parts/proc/SetDefaultName()
 	SetName("robot [initial(name)]")
@@ -75,6 +82,11 @@
 	var/obj/item/device/flash/flash1 = null
 	var/obj/item/device/flash/flash2 = null
 
+/obj/item/robot_parts/head/New(newloc, model)
+	. = ..()
+	ADD_SAVED_VAR(flash1)
+	ADD_SAVED_VAR(flash2)
+
 /obj/item/robot_parts/head/can_install(mob/user)
 	var/success = TRUE
 	if(!flash1 || !flash2)
@@ -91,6 +103,11 @@
 	bp_tag = BP_CHEST
 	var/wires = 0.0
 	var/obj/item/weapon/cell/cell = null
+	
+/obj/item/robot_parts/chest/New(newloc, model)
+	. = ..()
+	ADD_SAVED_VAR(wires)
+	ADD_SAVED_VAR(cell)
 
 /obj/item/robot_parts/chest/can_install(mob/user)
 	var/success = TRUE

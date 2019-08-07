@@ -96,11 +96,10 @@
 		reset_position()
 		affecting.grabbed_by -= src
 		affecting.reset_plane_and_layer()
-	affecting = null
+		affecting = null
 	if(assailant)
 		GLOB.zone_selected_event.unregister(assailant.zone_sel, src)
-	assailant = null
-	QDEL_NULL(current_grab)
+		assailant = null
 	return ..()
 
 /*

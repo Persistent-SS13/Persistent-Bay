@@ -153,6 +153,7 @@ Class Procs:
 
 /obj/machinery/Initialize(mapload, d=0)
 	. = ..()
+	verbs += /obj/proc/rotate
 	if(!map_storage_loaded)
 		SetupParts()
 	REPORT_POWER_CONSUMPTION_CHANGE(0, get_power_usage())
@@ -169,6 +170,7 @@ Class Procs:
 		connect_faction(get_faction(faction_uid))
 
 /obj/machinery/Destroy()
+	verbs -= /obj/proc/rotate
 	if(has_transmitter())
 		delete_transmitter()
 	GLOB.moved_event.unregister(src, src, .proc/update_power_on_move)

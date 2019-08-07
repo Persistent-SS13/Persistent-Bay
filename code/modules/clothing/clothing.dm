@@ -413,10 +413,10 @@ BLIND     // can't see anything
 		)
 	blood_overlay_type = "helmetblood"
 	//Light defaults
-	light_max_bright = 0.5
+	light_max_bright = 0.9
 	light_inner_range = 2
-	light_outer_range = 4
-	light_falloff_curve = 1
+	light_outer_range = 10
+	light_falloff_curve = 2
 	light_color = COLOUR_LTEMP_100W_TUNGSTEN
 
 /obj/item/clothing/head/New()

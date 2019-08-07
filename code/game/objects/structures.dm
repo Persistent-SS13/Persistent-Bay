@@ -40,6 +40,7 @@
 //	..()
 
 /obj/structure/Destroy()
+	verbs -= /obj/proc/rotate
 	var/turf/T = get_turf(src)
 	material = null
 	. = ..()
@@ -48,6 +49,7 @@
 
 /obj/structure/Initialize(mapload)
 	. = ..()
+	verbs += /obj/proc/rotate
 	if(!CanFluidPass())
 		fluid_update()
 	if(!mapload)

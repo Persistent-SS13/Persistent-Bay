@@ -266,8 +266,11 @@
 		//Maintenance unlocking/locking
 		if(faction_uid && check_access(I, faction))
 			locked = !locked
+			if(locked)
+				panel_open = FALSE //Force the maintenance panel closed, because people are weird
 			to_chat(user, SPAN_NOTICE("Maintenance access [locked? "locked" : "unlocked"]!"))
 			SSnano.update_uis(src)
+			update_icon()
 			return TRUE
 		else
 			to_chat(user, SPAN_WARNING("Access denied!"))
@@ -585,9 +588,8 @@
 		var/key = text2num(href_list["flush_product"])
 		var/datum/stored_items/vending_products/R = product_records[key]
 		src.vend_ready = 0
-		while(R.amount > 0)
-			var/obj/item/IT = R.get_product(get_turf(src))
-			IT.dropInto(get_turf(src))
+		while(R.get_amount() > 0)
+			R.get_product(get_turf(src))
 		product_records.Remove(R) //remove the record
 		SSnano.update_uis(src)
 		src.vend_ready = 1
@@ -860,7 +862,7 @@
 	vermin_spawn_chance = between(0, (maniprating * 2) - vermin_spawn_chance, initial(vermin_spawn_chance))
 	max_nb_products		= between(initial(max_nb_products),    (binrating * 2),  24)
 	max_single_product 	= between(initial(max_single_product), (binrating * 20), 240)
-	max_size_class		= between(ITEM_SIZE_TINY, round(binrating/3.0), ITEM_SIZE_LARGE)
+	max_size_class		= between(ITEM_SIZE_SMALL, round(binrating/3.0) + 1, ITEM_SIZE_LARGE) //Minimum size should be small
 
 /obj/machinery/vending/can_change_base_icon()
 	return TRUE

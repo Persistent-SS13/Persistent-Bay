@@ -28,6 +28,13 @@
 		newTank = new /obj/structure/reagent_dispensers/watertank(src)
 	tank = newTank
 	tank.forceMove(src)
+	ADD_SAVED_VAR(waters_trays)
+	ADD_SAVED_VAR(refills_water)
+	ADD_SAVED_VAR(uproots_weeds)
+	ADD_SAVED_VAR(replaces_nutriment)
+	ADD_SAVED_VAR(collects_produce)
+	ADD_SAVED_VAR(removes_dead)
+	ADD_SAVED_VAR(tank)
 
 /mob/living/bot/farmbot/premade
 	name = "Old Ben"
@@ -299,7 +306,9 @@
 	else
 		tank = theTank
 		tank.forceMove(src)
-
+	ADD_SAVED_VAR(build_step)
+	ADD_SAVED_VAR(created_name)
+	ADD_SAVED_VAR(tank)
 
 /obj/structure/reagent_dispensers/watertank/attackby(var/obj/item/robot_parts/S, mob/user as mob)
 	if ((!istype(S, /obj/item/robot_parts/l_arm)) && (!istype(S, /obj/item/robot_parts/r_arm)))

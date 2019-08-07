@@ -24,33 +24,30 @@
 
 /obj/item/stack/material/New(loc, amount)
 	. = ..()
-	ADD_SAVED_VAR(material)
-	ADD_SAVED_VAR(reinf_material)
+	ADD_SAVED_VAR(default_type)
+	ADD_SAVED_VAR(default_reinf_type)
 
-/obj/item/stack/material/Write(savefile/f)
-	. = ..()
-	if(material)
-		to_file(f["material"], material.name)
-	if(reinf_material)
-		to_file(f["reinf_material"], reinf_material.name)
-	
+//Backward compatibility
 /obj/item/stack/material/Read(savefile/f)
 	. = ..()
-	var/material/mat
-	var/material/rmat
+	var/mat
+	var/rmat
 	from_file(f["material"], mat)
 	from_file(f["reinf_material"], rmat)
+	if(istext(mat))
+		default_type = mat
+	if(istext(rmat))
+		default_reinf_type = rmat
 
-	if(istype(mat, /material))
-		src.default_type = mat.name //Backward compatibility
-	else if(mat)
-		src.default_type = mat
-	
-	if(istype(rmat, /material))
-		src.default_reinf_type = rmat.name //Backward compatibility
-	else if(rmat)
-		src.default_reinf_type = rmat
-	//Initialize will handle getting the proper material datums!
+/obj/item/stack/material/before_save()
+	. = ..()
+	default_type 		= istype(material)? material.name : material
+	default_reinf_type 	= istype(reinf_material)? reinf_material.name : reinf_material
+
+/obj/item/stack/material/after_save()
+	. = ..()
+	default_type 		= initial(default_type)
+	default_reinf_type 	= initial(default_reinf_type)
 
 /obj/item/stack/material/Initialize(mapload, var/amount, var/material, var/reinf_material)
 	. = ..()
@@ -183,8 +180,8 @@
 	return ..()
 
 /obj/item/stack/material/on_update_icon()
-	if(!material)
-		log_error("[src] has null material")
+	if(!istype(material))
+		log_error("[src] has invalid/null material '[material]'!")
 		return
 	if(material_flags & USE_MATERIAL_COLOR)
 		color = material.icon_colour

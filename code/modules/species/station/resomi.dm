@@ -45,6 +45,7 @@
 	heat_level_3 = 600 //Default 1000
 
 	spawn_flags = SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED
+	spawns_with_stack = TRUE
 	appearance_flags = HAS_HAIR_COLOR | HAS_SKIN_COLOR | HAS_EYE_COLOR
 	bump_flag = MONKEY
 	swap_flags = MONKEY|SLIME|SIMPLE_ANIMAL

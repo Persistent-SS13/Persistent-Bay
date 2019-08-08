@@ -13,14 +13,15 @@
 
 	unarmed_types = list(/datum/unarmed_attack/bite/sharp, /datum/unarmed_attack/claws, /datum/unarmed_attack/stomp/weak)
 	darksight_range = 5
+	darksight_tint = DARKTINT_GOOD
 	total_health = 50
-	brute_mod = 1.35
-	burn_mod = 1.35
+	brute_mod = 1 //Damage mod values are up for debate. At base value, with 50 health, three mildly damaging attacks (15 each) is enough to knock one unconscious. Beyond 1.1, two is required, instead.
+	burn_mod = 1
 	flash_mod = 1.5
-	metabolism_mod = 2.0
 	mob_size = MOB_SMALL
 	holder_type = /obj/item/weapon/holder/human
 	gluttonous = GLUT_TINY
+	strength = STR_HIGH //This is only to avoid slowdown from carrying literally any item, including small tools or clothing. Otherwise, carrying anything at all removes their only real strength, speed.
 	slowdown = -1
 	blood_volume = 400
 	pass_flags = PASS_FLAG_TABLE
@@ -75,8 +76,8 @@
 		)
 
 	descriptors = list(
-		/datum/mob_descriptor/height = -1.5,
-		/datum/mob_descriptor/build = -1.5
+		/datum/mob_descriptor/height = -2,
+		/datum/mob_descriptor/build = -2
 		)
 
 	override_organ_types = list(

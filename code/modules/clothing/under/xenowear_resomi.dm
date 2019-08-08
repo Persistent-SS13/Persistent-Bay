@@ -3,6 +3,9 @@
 	icon_state = "seromi_grey"
 	species_restricted = list(SPECIES_RESOMI)
 
+///////////////////////////////////////////////////////////////
+//Smocks
+
 /obj/item/clothing/under/resomi/smock
 	name = "small grey smock"
 	desc = "It looks fitted to nonhuman proportions."
@@ -32,6 +35,29 @@
 /obj/item/clothing/under/resomi/smock/rainbow
 	name = "small rainbow smock"
 	icon_state = "seromi_rainbow"
+
+/obj/item/clothing/under/resomi/smock/black
+	name = "small black smock"
+	icon_state = "seromi_black"
+
+/obj/item/clothing/under/resomi/smock/black_red
+	name = "small black and red smock"
+	icon_state = "seromi_black_red"
+
+/obj/item/clothing/under/resomi/smock/hazard
+	name = "small hazard smock"
+	icon_state = "seromi_hazard"
+
+/obj/item/clothing/under/resomi/smock/white_blue
+	name = "small white and blue smock"
+	icon_state = "seromi_white_blue"
+
+/obj/item/clothing/under/resomi/smock/white_purple
+	name = "small white and purple smock"
+	icon_state = "seromi_white_purple"
+
+///////////////////////////////////////////////////////////
+//Undercoats
 
 /obj/item/clothing/under/resomi/undercoat
 	name = "Undercoat"

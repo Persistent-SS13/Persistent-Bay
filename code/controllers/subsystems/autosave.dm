@@ -41,13 +41,7 @@ SUBSYSTEM_DEF(autosave)
 		message_admins(SPAN_DANGER("Attempted to save while already saving!"))
 	else
 		saving = 1
-		for(var/datum/controller/subsystem/S in Master.subsystems)
-			S.disable()
-
 		Save_World()
-		
-		for(var/datum/controller/subsystem/S in Master.subsystems)
-			S.enable()
 		saving = 0
 	CalculateTimeNextSave()
 

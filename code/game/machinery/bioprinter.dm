@@ -134,7 +134,6 @@ Time left: [time_print_end != 0? round((time_print_end - world.time)/10, 1) : "N
 		updateUsrDialog()
 		return TOPIC_REFRESH
 
-
 /obj/machinery/organ_printer/Process()
 	if(inoperable())
 		return

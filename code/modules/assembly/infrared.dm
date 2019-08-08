@@ -98,17 +98,13 @@
 		update_icon()
 
 	if(href_list["close"])
-		usr << browse(null, "window=infra")
+		close_browser(usr, "window=infra")
 		return
 
 	if(usr)
 		attack_self(usr)
 
-/obj/item/device/assembly/infra/verb/rotate()//This could likely be better
-	set name = "Rotate Infrared Laser"
-	set category = "Object"
-	set src in usr
-
+/obj/item/device/assembly/infra/rotate()//This could likely be better
 	set_dir(turn(dir, 90))
 
 /obj/item/device/assembly/infra/proc/on_beam_entered(var/atom/enterer)

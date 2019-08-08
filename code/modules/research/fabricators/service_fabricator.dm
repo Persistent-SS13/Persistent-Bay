@@ -84,7 +84,7 @@
 	materials = list(MATERIAL_STEEL = 3 SHEET, MATERIAL_WOOD = 2 SHEET)
 
 /datum/design/item/servicefab/botanytools/tray // tier 2
-	materials = list(MATERIAL_STEEL = 8 SHEET, MATERIAL_GLASS = 5 SHEETS, MATERIAL_COPPER = 1 SHEET)
+	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_COPPER = 1 SHEET)
 	build_path = /obj/machinery/portable_atmospherics/hydroponics
 
 /datum/design/item/servicefab/botanytools/flora_gun // tier 2

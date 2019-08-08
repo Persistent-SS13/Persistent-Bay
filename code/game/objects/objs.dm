@@ -56,7 +56,10 @@
 
 /obj/Destroy()
 	STOP_PROCESSING(SSobj, src)
-	return ..()
+	. = ..()
+#ifdef TESTING
+	return QDEL_HINT_IFFAIL_FINDREFERENCE
+#endif
 
 /obj/item/proc/is_used_on(obj/O, mob/user)
 	return
@@ -614,3 +617,24 @@
 		to_chat(user, SPAN_NOTICE("You repaired some damage!"))
 		add_health(repairedhealth)
 	return TRUE
+
+/obj/proc/rotate()
+	set name = "Rotate"
+	set category = "Object"
+	set src in oview(1)
+
+	if(!usr || !Adjacent(usr))
+		return
+	if(src.anchored)
+		to_chat(usr, SPAN_WARNING("\The [src] is bolted to the floor!"))
+		return FALSE
+
+	if(usr.stat == DEAD)
+		if(!round_is_spooky())
+			to_chat(src, "<span class='warning'>The veil is not thin enough for you to do that.</span>")
+			return
+	else if(usr.incapacitated())
+		return
+
+	src.set_dir(turn(src.dir, 90))
+	update_icon()

@@ -93,12 +93,6 @@ SUBSYSTEM_DEF(atoms)
 	else if(!(A.atom_flags & ATOM_FLAG_INITIALIZED))
 		BadInitializeCalls[the_type] |= BAD_INIT_DIDNT_INIT
 
-#ifdef TESTING
-	var/init_time = world.realtime - start_time
-	if(init_time > 0)
-		log_debug("[A.type]\ref[A] : inited in [init_time/10]s")
-#endif
-
 	return qdeleted || QDELING(A)
 
 /datum/controller/subsystem/atoms/stat_entry(msg)

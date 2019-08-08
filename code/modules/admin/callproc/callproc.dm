@@ -227,7 +227,10 @@
 			returnval = call(target, procname)()
 	else
 		log_admin("[key_name(src)] called [procname]() with [arguments.len ? "the arguments [list2params(arguments)]" : "no arguments"].")
-		returnval = call(procname)(arglist(arguments))
+		try
+			returnval = call(procname)(arglist(arguments))
+		catch(var/exception/E)
+			log_admin("[procname] failed with exception: [E] in [E.file]:[E.line], [E.desc]")
 
 	to_chat(usr, "<span class='info'>[procname]() returned: [json_encode(returnval)]</span>")
 	SSstatistics.add_field_details("admin_verb","APC") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!

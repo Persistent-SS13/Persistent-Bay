@@ -105,7 +105,6 @@ obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 		update_use_power(POWER_USE_OFF)
 
 /obj/machinery/recharger/Process()
-	. = ..()
 	if(inoperable() || !anchored)
 		return
 	//Since a lot of these are on the map, and don't change that often, we really don't care about updating each ticks..

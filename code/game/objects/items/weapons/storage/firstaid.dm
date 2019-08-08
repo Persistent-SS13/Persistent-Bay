@@ -221,7 +221,7 @@
 	item_state = "contsolid"
 	w_class = ITEM_SIZE_SMALL
 	max_w_class = ITEM_SIZE_TINY
-	matter = list(MATERIAL_GLASS = 100)
+	matter = list(MATERIAL_PLASTIC = 100)
 	max_storage_space = 21
 	can_hold = list(/obj/item/weapon/reagent_containers/pill,/obj/item/weapon/dice,/obj/item/weapon/paper)
 	allow_quick_gather = 1
@@ -229,6 +229,21 @@
 	use_sound = 'sound/effects/storage/pillbottle.ogg'
 	var/wrapper_color
 	var/label
+
+/obj/item/weapon/storage/pill_bottle/New()
+	. = ..()
+	ADD_SAVED_VAR(wrapper_color)
+	ADD_SAVED_VAR(label)
+
+/obj/item/weapon/storage/pill_bottle/Initialize()
+	. = ..()
+	update_icon() //don't queue it, because it does weirdness in the autolathe recipe datum
+
+#ifdef TESTING
+/obj/item/weapon/storage/pill_bottle/Destroy()
+	. = ..()
+	return QDEL_HINT_FINDREFERENCE
+#endif
 
 /obj/item/weapon/storage/pill_bottle/afterattack(mob/living/target, mob/living/user, proximity_flag)
 	if(!proximity_flag || !istype(target) || target != user)
@@ -246,10 +261,6 @@
 			remove_from_storage(P)
 			P.attack(target,user)
 			return 1
-	
-/obj/item/weapon/storage/pill_bottle/Initialize()
-	. = ..()
-	update_icon()
 
 /obj/item/weapon/storage/pill_bottle/on_update_icon()
 	overlays.Cut()

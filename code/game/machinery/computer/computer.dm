@@ -61,6 +61,9 @@
 		return TRUE
 	return ..()
 
+//Standard stuff is bypassed for computers
+/obj/machinery/standard_machine_procs(obj/item/O, mob/user)
+	return
 
 /obj/machinery/computer/dismantle()
 	var/obj/structure/computerframe/A = new frame_type(src.loc)

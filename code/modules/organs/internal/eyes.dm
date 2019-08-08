@@ -10,7 +10,9 @@
 	var/phoron_guard = 0
 	var/list/eye_colour = list(0,0,0)
 	var/innate_flash_protection = FLASH_PROTECTION_NONE
-	max_health = 45
+	max_health = 60
+	broken_threshold = 50
+	min_bruised_damage = 35
 	var/eye_icon = 'icons/mob/human_races/species/default_eyes.dmi'
 	var/apply_eye_colour = TRUE
 	var/tmp/last_cached_eye_colour
@@ -59,6 +61,13 @@
 			owner.regenerate_icons()
 			owner.visible_message(SPAN_NOTICE("\The [owner] changes their eye color."),SPAN_NOTICE("You change your eye color."),)
 
+/obj/item/organ/internal/eyes/removed(mob/living/user, drop_organ, detach)
+	. = ..()
+	//reset eye stuff, so after a transplant we don't stay blind..
+	if(user)
+		user.eye_blind = 0
+		user.eye_blurry = 0
+
 /obj/item/organ/internal/eyes/replaced(var/mob/living/carbon/human/target)
 
 	// Apply our eye colour to the target.
@@ -68,6 +77,8 @@
 		target.b_eyes = eye_colour[3]
 		target.update_eyes()
 	..()
+	//run process once so eye damage is updated
+	Process()
 
 /obj/item/organ/internal/eyes/proc/update_colour()
 	if(!owner)

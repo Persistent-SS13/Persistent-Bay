@@ -29,7 +29,7 @@
 		<div class="statusDisplay" style="overflow: auto;">
 			{{if data.votes}}
 				{{for data.votes}}
-					{{:helper.link(value.name, '', {'action' : 'select_vote', 'ref' : value.ref})}}<br>
+					{{:helper.link(value.name, '', {'action' : 'select_vote', 'ref' : value.ref})}}<br><br>
 				{{/for}}
 			{{else}}
 				<span class='alert'>No civil laws.</span>

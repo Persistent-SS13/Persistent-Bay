@@ -5,6 +5,7 @@
 	icon_state = "stasis_cage"
 	density = 1
 	layer = ABOVE_OBJ_LAYER
+	atom_flags = ATOM_FLAG_CLIMBABLE
 	mass = 30
 	max_health = 150
 	armor = list(
@@ -21,7 +22,7 @@
 		DAM_STUN 	= MaxArmorValue,
 		DAM_PAIN	= MaxArmorValue,
 		DAM_CLONE   = MaxArmorValue)
-	damthreshold_brute 	= 5
+	damthreshold_brute 	= 40
 	damthreshold_burn	= 5
 	var/mob/living/simple_animal/contained
 

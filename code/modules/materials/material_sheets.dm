@@ -24,8 +24,30 @@
 
 /obj/item/stack/material/New(loc, amount)
 	. = ..()
-	ADD_SAVED_VAR(material)
-	ADD_SAVED_VAR(reinf_material)
+	ADD_SAVED_VAR(default_type)
+	ADD_SAVED_VAR(default_reinf_type)
+
+//Backward compatibility
+/obj/item/stack/material/Read(savefile/f)
+	. = ..()
+	var/mat
+	var/rmat
+	from_file(f["material"], mat)
+	from_file(f["reinf_material"], rmat)
+	if(istext(mat))
+		default_type = mat
+	if(istext(rmat))
+		default_reinf_type = rmat
+
+/obj/item/stack/material/before_save()
+	. = ..()
+	default_type 		= istype(material)? material.name : material
+	default_reinf_type 	= istype(reinf_material)? reinf_material.name : reinf_material
+
+/obj/item/stack/material/after_save()
+	. = ..()
+	default_type 		= initial(default_type)
+	default_reinf_type 	= initial(default_reinf_type)
 
 /obj/item/stack/material/Initialize(mapload, var/amount, var/material, var/reinf_material)
 	. = ..()
@@ -56,7 +78,10 @@
 
 	//testing("Initialized [src] \ref[src], [src.default_type] - ([src.material]), [src.default_reinf_type] - ([src.reinf_material])")
 	update_strings()
-	queue_icon_update()
+	if(mapload)
+		queue_icon_update() //on init its faster to do it deferred
+	else
+		update_icon()
 
 /obj/item/stack/material/list_recipes(mob/user, recipes_sublist)
 	if(!material)
@@ -71,6 +96,9 @@
 	return material
 
 /obj/item/stack/material/update_strings()
+	if(!material)
+		CRASH("[src]\ref[src] tried to run update_strings() with null material! (default_type: [default_type], default_reinf_type: [default_reinf_type])")
+		return FALSE
 	// Update from material datum.
 	matter = material.get_matter()
 	for(var/mat in matter)
@@ -102,7 +130,6 @@
 /obj/item/stack/material/use(var/used)
 	. = ..()
 	update_strings()
-	return
 
 /obj/item/stack/material/proc/is_same(obj/item/stack/material/M)
 	if((stacktype != M.stacktype))
@@ -153,8 +180,8 @@
 	return ..()
 
 /obj/item/stack/material/on_update_icon()
-	if(!material)
-		log_error("[src] has null material")
+	if(!istype(material))
+		log_error("[src] has invalid/null material '[material]'!")
 		return
 	if(material_flags & USE_MATERIAL_COLOR)
 		color = material.icon_colour
@@ -169,14 +196,15 @@
 //--------------------------------
 //	Generic
 //--------------------------------
-///obj/item/stack/material/generic
-	// icon_state = "sheet"
-	// plural_icon_state = "sheet-mult"
-	// max_icon_state = "sheet-max"
+/obj/item/stack/material/generic
+	icon_state = "sheet"
+	plural_icon_state = "sheet-mult"
+	max_icon_state = "sheet-max"
+	stacktype = /obj/item/stack/material
 
 /obj/item/stack/material/generic/Initialize()
 	. = ..()
-	// if(material) color = material.icon_colour
+	if(material) color = material.icon_colour
 	//This should make any existing stacks of generic material on the save turn into regular old material stacks
 	if(material && loc)
 		material.place_sheet(get_turf(src), amount)

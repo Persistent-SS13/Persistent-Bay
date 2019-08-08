@@ -32,7 +32,6 @@
 		return ..()
 
 /obj/structure/largecrate/dismantle()
-	refund_matter()
 	var/turf/T = get_turf(src)
 	for(var/atom/movable/AM in contents)
 		if(AM.simulated) 

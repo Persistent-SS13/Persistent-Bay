@@ -32,7 +32,6 @@
 
 		///////////////////////////////////////// stuff ???
 		var/list/fields = list()
-		var/assignment = "Unassigned"
 		for(var/datum/report_field/F in active_record.fields)
 			if(F.name == "Job" || F.name == "Branch" || F.name == "Rank")
 				continue
@@ -81,7 +80,6 @@
 
 /datum/nano_module/records_lookup/Topic(href, href_list)
 	var/list/faction_records = list()
-	var/datum/world_faction/connected_faction = get_connected_faction()
 	if(..())
 		return 1
 	if(!faction_records) //safety check
@@ -109,8 +107,6 @@
 				return 1
 		message = "Unable to find record containing '[search]'"
 		return 1
-
-	var/datum/computer_file/report/crew_record/R = active_record
 
 /datum/nano_module/records_lookup/proc/get_photo(var/mob/user)
 	if(istype(user.get_active_hand(), /obj/item/weapon/photo))

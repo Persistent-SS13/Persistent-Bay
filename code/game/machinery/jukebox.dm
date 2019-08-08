@@ -22,13 +22,12 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 	idle_power_usage = 10
 	active_power_usage = 100
 	clicksound = 'sound/machines/buttonbeep.ogg'
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
 	var/selected_genre = "ALL"
 	var/playing = 0
 	var/volume = 20
-
 	var/sound_id
 	var/datum/sound_token/sound_token
-
 	var/datum/track/current_track
 	var/list/datum/track/tracks = list(
 		new/datum/track("The Ball and Diner", 'sound/music/jukebox/ballanddiner.mid', "Pleasent"),

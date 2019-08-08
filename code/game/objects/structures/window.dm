@@ -50,10 +50,29 @@
 /obj/structure/window/New(Loc, start_dir=null, constructed=0, var/new_material, var/new_reinf_material)
 	..()
 	ADD_SAVED_VAR(state)
-	ADD_SAVED_VAR(reinf_material)
 	ADD_SAVED_VAR(init_material)
 	ADD_SAVED_VAR(init_reinf_material)
 	ADD_SAVED_VAR(reinf_basestate)
+
+/obj/structure/window/Read(savefile/f)
+	. = ..()
+	var/matname
+	from_file(f["reinf_material"], matname)
+	if(istype(matname, /material)) //Backward compatibility!
+		var/material/M = matname
+		reinf_material = M.name
+	else if(istext(matname))
+		reinf_material = matname
+	
+/obj/structure/window/Write(savefile/f)
+	. = ..()
+	if(reinf_material)
+		to_file(f["reinf_material"], reinf_material.name)
+
+/obj/structure/window/after_load()
+	. = ..()
+	if(istext(reinf_material))
+		reinf_material = SSmaterials.get_material_by_name(reinf_material)
 
 /obj/structure/window/Initialize(mapload, start_dir=null, constructed=0, var/new_material, var/new_reinf_material)
 	. = ..()
@@ -89,18 +108,29 @@
 
 		health = max_health
 
+	if(mapload)
+		//Don't propagate on map load since we're gonna init all of them anyways!!
+		update_connections(FALSE)  
+	else
+		update_connections(TRUE)
+		
 	set_anchored(!constructed)
-	update_connections(1)
-	update_icon()
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/structure/window/LateInitialize()
+	. = ..()
 	update_nearby_tiles(need_rebuild=1)
 
 /obj/structure/window/Destroy()
-	set_density(0)
-	update_nearby_tiles()
 	var/turf/location = loc
+	if(location)
+		set_density(0)
+		update_nearby_tiles()
 	. = ..()
-	for(var/obj/structure/window/W in orange(location, 1))
-		W.update_icon()
+	if(location)
+		for(var/obj/structure/window/W in orange(location, 1))
+			if(!QDELETED(W))
+				W.update_icon()
 
 /obj/structure/window/examine(mob/user)
 	. = ..(user)
@@ -306,11 +336,7 @@
 		take_damage(50)
 	return TRUE
 
-/obj/structure/window/proc/rotate()
-	set name = "Rotate Window Counter-Clockwise"
-	set category = "Object"
-	set src in oview(1)
-
+/obj/structure/window/rotate()
 	if(usr.incapacitated())
 		return 0
 
@@ -369,10 +395,10 @@
 //Updates the availabiliy of the rotation verbs
 /obj/structure/window/proc/update_verbs()
 	if(anchored)
-		verbs -= /obj/structure/window/proc/rotate
+		verbs -= /obj/structure/window/rotate
 		verbs -= /obj/structure/window/proc/revrotate
 	else
-		verbs += /obj/structure/window/proc/rotate
+		verbs += /obj/structure/window/rotate
 		verbs += /obj/structure/window/proc/revrotate
 
 // Visually connect with every type of window as long as it's full-tile.

@@ -4,6 +4,8 @@
 	base_turf = /turf/simulated/open
 	requires_power = 0
 	sound_env = SMALL_ENCLOSED
+	ambience = list()
+	forced_ambience = list('sound/music/elevatormusic.ogg')
 
 	var/lift_floor_label = null
 	var/lift_floor_name = null

@@ -5,9 +5,9 @@
 	organ_tag = BP_LUNGS
 	parent_organ = BP_CHEST
 	w_class = ITEM_SIZE_NORMAL
-	min_bruised_damage = 25
-	min_broken_damage = 45
-	max_health = 70
+	min_bruised_damage = 72
+	min_broken_damage = 96
+	max_health = 128
 	relative_size = 60
 
 	var/active_breathing = 1
@@ -151,7 +151,7 @@
 	var/int_pressure_diff = abs(last_int_pressure - breath_pressure)
 	var/ext_pressure_diff = abs(last_ext_pressure - ext_pressure) * owner.get_pressure_weakness()
 	if(int_pressure_diff > max_pressure_diff && ext_pressure_diff > max_pressure_diff)
-		var/lung_rupture_prob = BP_IS_ROBOTIC(src) ? prob(30) : prob(60) //Robotic lungs are less likely to rupture.
+		var/lung_rupture_prob = BP_IS_ROBOTIC(src) ? prob(5) : prob(30) //Robotic lungs are less likely to rupture.
 		if(!is_bruised() && lung_rupture_prob) //only rupture if NOT already ruptured
 			rupture()
 

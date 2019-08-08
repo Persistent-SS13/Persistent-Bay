@@ -32,6 +32,10 @@ if(Datum.is_processing) {\
 #define START_PROCESSING_POWER_OBJECT(Datum) START_PROCESSING_IN_LIST(Datum, power_objects)
 #define STOP_PROCESSING_POWER_OBJECT(Datum) STOP_PROCESSING_IN_LIST(Datum, power_objects)
 
+/datum/machine_count
+	var/amount = 0
+	var/usage = 0
+
 SUBSYSTEM_DEF(machines)
 	name = "Machines"
 	init_order = SS_INIT_MACHINES
@@ -54,6 +58,8 @@ SUBSYSTEM_DEF(machines)
 	var/list/processing  = list() // These are the machines which are processing.
 	var/list/current_run = list()
 	var/current_machine
+
+	var/list/machine_data = list()
 
 /datum/controller/subsystem/machines/Initialize(timeofday)
 	makepowernets()
@@ -144,6 +150,7 @@ if(current_step == this_step || (check_resumed && !resumed)) {\
 /datum/controller/subsystem/machines/proc/process_pipenets(resumed = 0)
 	if (!resumed)
 		src.current_run = pipenets.Copy()
+
 	//cache for sanic speed (lists are references anyways)
 	var/list/current_run = src.current_run
 	while(current_run.len)
@@ -163,6 +170,7 @@ if(current_step == this_step || (check_resumed && !resumed)) {\
 		src.current_run = processing.Copy()
 
 	var/list/current_run = src.current_run
+	machine_data = list()
 	while(current_run.len)
 		var/obj/machinery/M = current_run[current_run.len]
 		current_machine = "Machinery[M]\ref[M]"
@@ -172,6 +180,36 @@ if(current_step == this_step || (check_resumed && !resumed)) {\
 			M.is_processing = null
 		if(MC_TICK_CHECK)
 			return
+
+/datum/controller/subsystem/machines/proc/profile_machinery(resumed = 0)
+	if (!resumed)
+		src.current_run = processing.Copy()
+
+	var/list/current_run = src.current_run
+	machine_data = list()
+	while(current_run.len)
+		var/obj/machinery/M = current_run[current_run.len]
+		var/start_time = round_duration_in_ticks
+		current_machine = "Machinery[M]\ref[M]"
+		current_run.len--
+		if(!QDELETED(M) && (M.Process(wait) == PROCESS_KILL))
+			processing.Remove(M)
+			M.is_processing = null
+		if("[M.type]" in machine_data)
+			var/datum/machine_count/count = machine_data["[M.type]"]
+			count.amount++
+			count.usage += round_duration_in_ticks - start_time
+		else
+			var/datum/machine_count/count = new()
+			machine_data["[M.type]"] = count
+			count.amount++
+			count.usage = round_duration_in_ticks - start_time
+
+		if(MC_TICK_CHECK)
+			return
+	for(var/x in machine_data)
+		var/datum/machine_count/count = machine_data[x]
+		message_admins("[x] COUNT:[count.amount] COST:[count.usage]")
 
 /datum/controller/subsystem/machines/proc/process_powernets(resumed = 0)
 	if (!resumed)

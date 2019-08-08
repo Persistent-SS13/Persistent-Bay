@@ -19,20 +19,22 @@
 	var/bill_title = ""
 	var/bill_body = ""
 	var/taxee = 1 // 1 = personal, 2 = business
-	
+
 	var/tax_type = 1 // 1 = flat, 2 = progressie
 	var/tax_prog1_rate = 0
 	var/tax_prog2_rate = 0
 	var/tax_prog3_rate = 0
 	var/tax_prog4_rate = 0
-	
+
 	var/tax_prog2_amount = 0
 	var/tax_prog3_amount = 0
 	var/tax_prog4_amount = 0
-	
+
 	var/tax_flat_rate = 0
 	var/synced = 0
 	var/menu = 1
+	var/curr_page = 1
+	var/datum/council_vote/selected_law
 /datum/nano_module/program/citycouncil/proc/sync_from_faction()
 	var/datum/world_faction/democratic/connected_faction
 	if(program.computer.network_card && program.computer.network_card.connected_network)
@@ -44,11 +46,11 @@
 			tax_prog2_rate = connected_faction.tax_bprog2_rate
 			tax_prog3_rate = connected_faction.tax_bprog3_rate
 			tax_prog4_rate = connected_faction.tax_bprog4_rate
-			
+
 			tax_prog2_amount = connected_faction.tax_bprog2_amount
 			tax_prog3_amount = connected_faction.tax_bprog3_amount
 			tax_prog4_amount = connected_faction.tax_bprog4_amount
-			
+
 			tax_flat_rate = connected_faction.tax_bflat_rate
 		else
 			tax_type = connected_faction.tax_type_p
@@ -56,18 +58,22 @@
 			tax_prog2_rate = connected_faction.tax_pprog2_rate
 			tax_prog3_rate = connected_faction.tax_pprog3_rate
 			tax_prog4_rate = connected_faction.tax_pprog4_rate
-			
+
 			tax_prog2_amount = connected_faction.tax_pprog2_amount
 			tax_prog3_amount = connected_faction.tax_pprog3_amount
 			tax_prog4_amount = connected_faction.tax_pprog4_amount
-			
+
 			tax_flat_rate = connected_faction.tax_pflat_rate
 	synced = 1
-			
+
 /datum/nano_module/program/citycouncil/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/datum/world_faction/democratic/connected_faction
 	if(program.computer.network_card && program.computer.network_card.connected_network)
 		connected_faction = program.computer.network_card.connected_network.holder
+	if(!istype(connected_faction))
+		to_chat(user, SPAN_WARNING("The computer isn't connected to a democratic faction's network! Please change your current network and try again!"))
+		return FALSE
+	
 	var/list/data = host.initial_data()
 	if(connected_faction.is_councillor(user.real_name))
 		data["is_councillor"] = 1
@@ -133,18 +139,57 @@
 				data["tax_prog2_rate"] = tax_prog2_rate
 				data["tax_prog3_rate"] = tax_prog3_rate
 				data["tax_prog4_rate"] = tax_prog4_rate
-				
+
 				data["tax_prog2_amount"] = tax_prog2_amount
 				data["tax_prog3_amount"] = tax_prog3_amount
 				data["tax_prog4_amount"] = tax_prog4_amount
-				
+
 			else
 				data["tax_flat_rate"] = tax_flat_rate
-			
+
 		if(menu == 4)
 			var/list/formatted_judges[0]
 			for(var/datum/democracy/judge in connected_faction.judges)
 				formatted_judges[++formatted_judges.len] = list("name" = "Impeach [judge.real_name]", "ref" = "\ref[judge]")
+			data["judges"] = formatted_judges
+		if(menu == 5)
+			var/list/transactions =	connected_faction.central_account.transaction_log
+			var/pages = transactions.len/10
+			if(pages < 1)
+				pages = 1
+			var/list/formatted_transactions[0]
+			if(transactions.len)
+				for(var/i=0; i<10; i++)
+					var/minus = i+(10*(curr_page-1))
+					if(minus < transactions.len)
+						var/datum/transaction/T = transactions[transactions.len-minus]
+						if(T && istype(T))
+							formatted_transactions[++formatted_transactions.len] = list("date" = T.date, "time" = T.time, "target_name" = T.target_name, "purpose" = T.purpose, "amount" = T.amount ? T.amount : 0)
+			if(formatted_transactions.len)
+				data["transactions"] = formatted_transactions
+			data["page"] = curr_page
+			data["page_up"] = curr_page < pages
+			data["page_down"] = curr_page > 1
+
+			data["money"] = connected_faction.central_account.money
+
+		if(menu == 6)
+			if(selected_law)
+				data["selected_law"] = selected_law.name
+				data["sponsor"] = selected_law.sponsor
+				data["passed_date"] = time2text(selected_law.time_signed)
+				data["vote_body"] = selected_law.body
+			else
+				var/list/formatted_votes[0]
+				for(var/datum/council_vote/vote in reverselist(connected_faction.civil_laws.Copy()))
+					formatted_votes[++formatted_votes.len] = list("name" = vote.name, "ref" = "\ref[vote]")
+				if(formatted_votes.len)
+					data["civil_laws"] = formatted_votes
+				var/list/formatted_votes2[0]
+				for(var/datum/council_vote/vote in reverselist(connected_faction.criminal_laws.Copy()))
+					formatted_votes2[++formatted_votes2.len] = list("name" = vote.name, "ref" = "\ref[vote]")
+				if(formatted_votes2.len)
+					data["criminal_laws"] = formatted_votes2
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "citycouncil.tmpl", name, 550, 600, state = state)
@@ -155,17 +200,20 @@
 /datum/nano_module/program/citycouncil/Topic(href, href_list)
 	if(..())
 		return 1
-	. = SSnano.update_uis(src)	
+	. = SSnano.update_uis(src)
 	var/mob/user = usr
 	var/datum/world_faction/democratic/connected_faction = program.computer.network_card.connected_network.holder
 	if(!istype(connected_faction) || !(connected_faction.is_councillor(user.real_name)))
 		return 1
-		
+
 	switch(href_list["action"])
 		if("change_menu")
 			menu = text2num(href_list["menu_target"])
 		if("deselect_vote")
 			selected_vote = null
+
+		if("deselect_law")
+			selected_law = null
 		if("vote_yes")
 			if(!selected_vote) return
 			if(usr.real_name in selected_vote.no_votes) return
@@ -184,7 +232,35 @@
 			selected_vote = null
 		if("select_vote")
 			selected_vote = locate(href_list["ref"])
-	
+		if("select_law")
+			selected_law = locate(href_list["ref"])
+
+		if("repeal_vote")
+			if(!selected_law) return
+			var/law_type = "Criminal Law"
+			if(selected_law.bill_type == 2)
+				law_type = "Civil Law"
+			var/datum/council_vote/vote = new()
+			vote.name = "Repeal [law_type] ([vote.name])"
+			vote.body = "Repeal the law_type titled [vote.name]."
+			vote.sponsor = usr.real_name
+			vote.time_started = world.realtime
+			vote.bill_type = 6
+			connected_faction.start_vote(vote)
+			to_chat(usr, "Vote Started.")
+			menu = 1
+		if("print")
+			if(!selected_law) return
+			if(program.computer && program.computer.nano_printer) //This option should never be called if there is no printer
+				if(!program.computer.nano_printer.print_text(selected_law.body,selected_vote.name))
+					to_chat(usr, "<span class='notice'>Hardware error: Printer was unable to print the file. It may be out of paper.</span>")
+					return
+				else
+					program.computer.visible_message("<span class='notice'>\The [program.computer] prints out paper.</span>")
+			else
+				to_chat(usr, "<span class='notice'>Hardware error: There is no printer installed in this computer!.</span>")
+				return
+
 		if("select_criminal")
 			law_type = 1
 		if("select_civil")
@@ -247,36 +323,36 @@
 				to_chat(usr, "Invalid Entry.")
 				return
 			tax_prog4_rate = attempt
-			
-			
+
+
 		if("change_prog2_amount")
 			var/attempt = input("Enter new tax bracket 2 qualifying amount.", "Qualifying Account Balance") as num|null
 			if(attempt < 0)
 				to_chat(usr, "Invalid Entry.")
 				return
-			tax_prog2_amount = attempt	
-		
+			tax_prog2_amount = attempt
+
 		if("change_prog3_amount")
 			var/attempt = input("Enter new tax bracket 3 qualifying amount.", "Qualifying Account Balance") as num|null
 			if(attempt < 0)
 				to_chat(usr, "Invalid Entry.")
 				return
-			tax_prog3_amount = attempt	
-			
+			tax_prog3_amount = attempt
+
 		if("change_prog4_amount")
 			var/attempt = input("Enter new tax bracket 4 qualifying amount.", "Qualifying Account Balance") as num|null
 			if(attempt < 0)
 				to_chat(usr, "Invalid Entry.")
 				return
 			tax_prog4_amount = attempt
-			
+
 		if("change_flat_rate")
 			var/attempt = input("Enter new flat tax rate.", "Tax rate") as num|null
 			if(attempt < 0 || attempt > 99)
 				to_chat(usr, "Invalid Entry.")
 				return
 			tax_flat_rate = attempt
-	
+
 		if("propose_tax")
 			if(connected_faction.has_vote(usr.real_name))
 				to_chat(usr, "You already have a bill being voted on.")
@@ -314,21 +390,22 @@
 				vote.body += "Bracket 3 Qualifying Amount: [tax_prog3_amount]  Rate : [tax_prog3_rate]<br>"
 				vote.body += "<br>"
 				vote.body += "Bracket 4 Qualifying Amount: [tax_prog4_amount]  Rate : [tax_prog4_rate]<br>"
-							
+
 				vote.sponsor = usr.real_name
+				vote.yes_votes |= usr.real_name
 				vote.time_started = world.realtime
-				
+
 				vote.prograte1 = tax_prog1_rate
 				vote.prograte2 = tax_prog2_rate
 				vote.prograte3 = tax_prog3_rate
 				vote.prograte4 = tax_prog4_rate
-				
+
 				vote.progamount2 = tax_prog2_amount
 				vote.progamount3 = tax_prog3_amount
 				vote.progamount4 = tax_prog4_amount
-				
+
 				vote.bill_type = 3
-				
+
 				connected_faction.start_vote(vote)
 				to_chat(usr, "Vote Started.")
 				menu = 1

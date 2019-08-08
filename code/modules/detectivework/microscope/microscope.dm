@@ -69,7 +69,8 @@
 	var/scaned_object = sample.name
 	if(istype(sample, /obj/item/weapon/forensics/swab))
 		var/obj/item/weapon/forensics/swab/swab = sample
-		evidence["gunshot_residue"] = swab.gunshot_residue_sample.Copy()
+		if(swab.gunshot_residue_sample)
+			evidence["gunshot_residue"] = swab.gunshot_residue_sample.Copy()
 	else if(istype(sample, /obj/item/weapon/sample/fibers))
 		var/obj/item/weapon/sample/fibers/fibers = sample
 		scaned_object = fibers.object

@@ -112,19 +112,15 @@
 
 /datum/grab/proc/throw_held(var/obj/item/grab/G)
 	var/mob/living/carbon/human/affecting = G.affecting
-
 	if(can_throw)
 		. = affecting
 		var/mob/thrower = G.loc
-
 		animate(affecting, pixel_x = 0, pixel_y = 0, 4, 1)
-		qdel(G)
-
 		// check if we're grabbing with our inactive hand
 		G = thrower.get_inactive_hand()
-		if(!istype(G))	return
+		if(!istype(G))
+			return
 		qdel(G)
-		return
 	return null
 
 /datum/grab/proc/hit_with_grab(var/obj/item/grab/G)

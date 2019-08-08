@@ -5,7 +5,12 @@
 
 /obj/item/clothing/cloak/New()
 	..()
-	pockets = new/obj/item/weapon/storage/internal/pockets(src, slots = 2, slot_size = 2) //two slots, fit only pocket sized items
+	ADD_SAVED_VAR(pockets)
+
+/obj/item/clothing/cloak/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		pockets = new/obj/item/weapon/storage/internal/pockets(src, slots = 2, slot_size = 2) //two slots, fit only pocket sized items
 
 /obj/item/clothing/cloak/Destroy()
 	QDEL_NULL(pockets)

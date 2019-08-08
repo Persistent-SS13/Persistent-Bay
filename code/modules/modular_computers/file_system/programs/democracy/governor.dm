@@ -20,11 +20,15 @@
 	var/bill_body = ""
 
 	var/menu = 1
-
+	var/curr_page = 1
 /datum/nano_module/program/governor/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/datum/world_faction/democratic/connected_faction
 	if(program.computer.network_card && program.computer.network_card.connected_network)
 		connected_faction = program.computer.network_card.connected_network.holder
+	if(!istype(connected_faction))
+		to_chat(user, SPAN_WARNING("The computer isn't connected to a democratic faction's network! Please change your current network and try again!"))
+		return FALSE
+
 	var/list/data = host.initial_data()
 	if(connected_faction.is_governor(user.real_name))
 		data["is_governor"] = 1
@@ -85,6 +89,27 @@
 						formatted_policies[++formatted_policies.len] = list("name" = "[vote.name]", "ref" = "\ref[vote]")
 					data["policies"] = formatted_policies
 
+		if(menu == 5)
+			var/list/transactions =	connected_faction.central_account.transaction_log
+			var/pages = transactions.len/10
+			if(pages < 1)
+				pages = 1
+			var/list/formatted_transactions[0]
+			if(transactions.len)
+				for(var/i=0; i<10; i++)
+					var/minus = i+(10*(curr_page-1))
+					if(minus < transactions.len)
+						var/datum/transaction/T = transactions[transactions.len-minus]
+						if(T && istype(T))
+							formatted_transactions[++formatted_transactions.len] = list("date" = T.date, "time" = T.time, "target_name" = T.target_name, "purpose" = T.purpose, "amount" = T.amount ? T.amount : 0)
+			if(formatted_transactions.len)
+				data["transactions"] = formatted_transactions
+			data["page"] = curr_page
+			data["page_up"] = curr_page < pages
+			data["page_down"] = curr_page > 1
+
+			data["money"] = connected_faction.central_account.money
+
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "governor.tmpl", name, 600, 500, state = state)
@@ -100,6 +125,12 @@
 	var/datum/world_faction/democratic/connected_faction = program.computer.network_card.connected_network.holder
 	if(!istype(connected_faction) || !(connected_faction.is_governor(user.real_name)))
 		return .
+	if(href_list["page_up"])
+		curr_page++
+		return 1
+	if(href_list["page_down"])
+		curr_page--
+		return 1
 	
 	switch(href_list["action"])
 		if("change_menu")

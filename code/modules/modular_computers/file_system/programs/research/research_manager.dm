@@ -7,7 +7,7 @@
 	extended_desc = "Used to spend research points on the network to get new tech disks for fabricators."
 	requires_ntnet = 1
 	size = 12
-
+	required_access = core_access_command_programs
 
 /datum/nano_module/program/research
 	name = "Research Management"

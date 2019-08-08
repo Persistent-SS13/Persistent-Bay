@@ -15,12 +15,14 @@
 	ADD_SAVED_VAR(hold)
 
 /obj/item/clothing/accessory/storage/Initialize()
+	. = ..()
 	if(!map_storage_loaded)
 		create_storage()
-	. = ..()
 
 /obj/item/clothing/accessory/storage/proc/create_storage()
-	hold = new/obj/item/weapon/storage/internal/pockets(src, slots, max_w_class)
+	if(!hold)
+		testing("Created [src]\ref[src] in the [has_suit]\ref[has_suit] at [loc]")
+		hold = new/obj/item/weapon/storage/internal/pockets(src, slots, max_w_class)
 
 /obj/item/clothing/accessory/storage/attack_hand(mob/user as mob)
 	if(has_suit && hold)	//if we are part of a suit
@@ -118,9 +120,6 @@
 		/obj/item/weapon/material/hatchet,
 		/obj/item/weapon/material/knife,
 	)
-
-	new /obj/item/weapon/material/knife/table/unathi(hold)
-	new /obj/item/weapon/material/knife/table/unathi(hold)
 
 /obj/item/clothing/accessory/storage/bandolier
 	name = "bandolier"

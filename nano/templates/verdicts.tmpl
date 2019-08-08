@@ -1,6 +1,8 @@
 <h2>Trials & Verdicts</h2>
 <br><hr>
 <br>
+{{:helper.link("Trials", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
+{{:helper.link("Verdicts", '', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
 {{if data.menu == 1}}
 	<h3>Scheduled Trials</h3><br><hr>
 	{{if data.selected_trial}}
@@ -69,7 +71,7 @@
 					{{:helper.link(value.name, '', {'action' : 'select_verdict', 'ref' : value.ref})}}
 				{{/for}}
 			{{else}}
-				<span class='alert'>No trials scheduled.</span>
+				<span class='alert'>No verdicts rendered.</span>
 			{{/if}}
 		</div>
 	{{/if}}

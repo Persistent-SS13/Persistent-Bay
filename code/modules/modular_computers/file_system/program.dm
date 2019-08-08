@@ -44,6 +44,8 @@
 
 /datum/computer_file/program/Destroy()
 	computer = null
+	NM = null
+	ui_header = null
 	. = ..()
 
 /datum/computer_file/program/proc/ConnectedFaction()
@@ -65,6 +67,8 @@
 
 // Used by programs that manipulate files.
 /datum/computer_file/program/proc/get_file(var/filename)
+	if(!computer)
+		return
 	var/obj/item/weapon/computer_hardware/hard_drive/HDD = computer.hard_drive
 	if(!HDD)
 		return

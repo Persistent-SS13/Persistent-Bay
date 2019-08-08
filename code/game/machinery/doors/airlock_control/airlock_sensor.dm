@@ -60,7 +60,6 @@
 /obj/machinery/airlock_sensor/Process()
 	if(inoperable())
 		return
-	. = ..()
 	if(isoff())
 		return
 	var/datum/gas_mixture/air_sample = return_air()

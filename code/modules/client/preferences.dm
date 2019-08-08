@@ -211,9 +211,7 @@ datum/preferences
 	character.fully_replace_character_name(character2.real_name)
 	character.gender = character2.gender
 	character.age = character2.age
-
 	character.b_type = character2.b_type
-//	character.b_type = b_type
 
 	character.r_eyes = character2.r_eyes
 	character.g_eyes = character2.g_eyes
@@ -273,9 +271,7 @@ datum/preferences
 
 	character.gender = gender
 	character.age = age
-
-	character.b_type = pick(valid_bloodtypes)
-//	character.b_type = b_type
+	character.b_type = b_type
 
 	character.r_eyes = r_eyes
 	character.g_eyes = g_eyes

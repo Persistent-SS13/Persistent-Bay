@@ -21,7 +21,7 @@
 /********
 * photo *
 ********/
-var/global/photo_count = 0
+GLOBAL_VAR(photo_count)
 
 /obj/item/weapon/photo
 	name = "photo"
@@ -38,11 +38,20 @@ var/global/photo_count = 0
 	var/photo_size = 3
 
 /obj/item/weapon/photo/New()
-	id = photo_count++
+	. = ..()
+	ADD_SAVED_VAR(img)
+	ADD_SAVED_VAR(scribble)
+	ADD_SAVED_VAR(tiny)
+	ADD_SAVED_VAR(photo_size)
+
+/obj/item/weapon/photo/Initialize()
+	. = ..()
+	id = GLOB.photo_count++
 	
 /obj/item/weapon/photo/after_load()		
 	..()
 	queue_icon_update()
+
 /obj/item/weapon/photo/attack_self(mob/user as mob)
 	user.examinate(src)
 
@@ -181,12 +190,19 @@ var/global/photo_count = 0
 	var/icon_on = "camera"
 	var/icon_off = "camera_off"
 	var/size = 3
+
+/obj/item/device/camera/New()
+	. = ..()
+	ADD_SAVED_VAR(pictures_left)
+	ADD_SAVED_VAR(size)
+
 /obj/item/device/camera/on_update_icon()
 	var/datum/extension/base_icon_state/bis = get_extension(src, /datum/extension/base_icon_state)
 	if(on)
 		icon_state = "[bis.base_icon_state]"
 	else
 		icon_state = "[bis.base_icon_state]_off"
+
 /obj/item/device/camera/Initialize()
 	set_extension(src, /datum/extension/base_icon_state, /datum/extension/base_icon_state, icon_state)
 	update_icon()
@@ -307,7 +323,7 @@ var/global/photo_count = 0
 	p.SetName(name) // Do this first, manually, to make sure listeners are alerted properly.
 	p.appearance = appearance
 	p.icon = icon(icon, icon_state)
-	p.tiny = icon(tiny)
+	p.tiny = image(icon(tiny)) //tiny is an image, not an icon!!
 	p.desc = desc
 	p.pixel_x = pixel_x
 	p.pixel_y = pixel_y

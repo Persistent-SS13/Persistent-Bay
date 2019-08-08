@@ -21,7 +21,7 @@
 	if(LAZYLEN(zlevels))
 		for(var/A in GLOB.player_list) //if a tree ticks on the empty zlevel does it really tick
 			var/mob/M = A
-			if(M.stat != DEAD) //(no it doesn't)
+			if(M && M.stat != DEAD) //(no it doesn't)
 				var/turf/T = get_turf(M)
 				if(T && (T.z in zlevels))
 					return TRUE

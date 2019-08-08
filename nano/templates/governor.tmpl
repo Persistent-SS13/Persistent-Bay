@@ -4,7 +4,8 @@
 	{{:helper.link("Governors Desk", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
 	{{:helper.link("New Executive Policy", '', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
 	{{:helper.link("View/Repeal Executive Policies", '', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}	
-	{{:helper.link("Nominate Judge", '', {'action' : 'change_menu', 'menu_target' : '4'}, data.menu == 4 ? 'selected' : null)}}	
+	{{:helper.link("Nominate Judge", '', {'action' : 'change_menu', 'menu_target' : '4'}, data.menu == 4 ? 'selected' : null)}}
+	{{:helper.link("Transaction Log", '', {'action' : 'change_menu', 'menu_target' : '5'}, data.menu == 5 ? 'selected' : null)}}	
 	{{if data.menu == 1}}
 		<h3>Governors Desk</h3><br><hr>
 		{{if data.selected_vote}}
@@ -136,7 +137,36 @@
 		<br>
 		{{:helper.link('Nominate', '', {'action' : 'nominate_judge'})}}
 	{{/if}}
-	
+	{{if data.menu == 5}}
+		<h4>Transaction Log</h4>
+		{{:helper.link('Newer Page', 'bullet', {'page_down' : 1}, data.page_down ? null : 'disabled')}}{{:helper.link('Older Page', 'bullet', {'page_up' : 1}, data.page_up ? null : 'disabled')}}<br><br>
+		<div class="statusDisplay" style="overflow: auto;">
+			{{if data.transactions}}
+				<table style='width: 100%'>
+				  <thead>
+					<tr>
+					  <th><b>Timestamp</b></th>
+					  <th><b>Target</b></th>
+					  <th><b>Reason</b></th>
+					  <th><b>Ethericoin</b></th>
+					</th>
+				  </thead>
+				  <tbody>
+					  {{for data.transactions}}
+						<tr>
+							<td>{{:value.date}} {{:value.time}}</td>
+							<td>{{:value.target_name}}</td>
+							<td>{{:value.purpose}}</td>
+							<td>$${{:value.amount}}</td>
+						</tr>
+					  {{/for}}
+				  </tbody>
+				</table>
+			{{else}}
+			  <span class='alert'>This account has no financial transactions on record.</span>
+			{{/if}}
+		</div>
+	{{/if}}
 {{else}}
 	<br>
 	This program is only for the governor.

@@ -19,6 +19,7 @@
 	name = "\improper [machine_name] restocking unit"
 	if(isnum(amt) && amt > -1)
 		charges = amt
+	ADD_SAVED_VAR(charges)
 
 /obj/item/weapon/vending_refill/examine(mob/user)
 	..()

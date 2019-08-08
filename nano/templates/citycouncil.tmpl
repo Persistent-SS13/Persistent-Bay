@@ -4,6 +4,9 @@
 	{{:helper.link("Current Votes", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
 	{{:helper.link("New Bill", '', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
 	{{:helper.link("Tax Policy", '', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}	
+	{{:helper.link("Impeach Judge", '', {'action' : 'change_menu', 'menu_target' : '4'}, data.menu == 4 ? 'selected' : null)}}
+	{{:helper.link("View/Repeal Laws", '', {'action' : 'change_menu', 'menu_target' : '6'}, data.menu == 6 ? 'selected' : null)}}	
+	{{:helper.link("Transaction Log", '', {'action' : 'change_menu', 'menu_target' : '5'}, data.menu == 5 ? 'selected' : null)}}	
 	{{if data.menu == 1}}
 		<h3>Current Votes</h3><br><hr>
 		{{if data.selected_vote}}
@@ -222,6 +225,86 @@
 		
 	{{/if}}
 	
+	{{if data.menu == 5}}
+		<h4>Transaction Log</h4>
+		{{:helper.link('Newer Page', 'bullet', {'page_down' : 1}, data.page_down ? null : 'disabled')}}{{:helper.link('Older Page', 'bullet', {'page_up' : 1}, data.page_up ? null : 'disabled')}}<br><br>
+		<div class="statusDisplay" style="overflow: auto;">
+			{{if data.transactions}}
+				<table style='width: 100%'>
+				  <thead>
+					<tr>
+					  <th><b>Timestamp</b></th>ROCESS_REACTIO
+					  <th><b>Target</b></th>
+					  <th><b>Reason</b></th>
+					  <th><b>Ethericoin</b></th>
+					</th>
+				  </thead>
+				  <tbody>
+					  {{for data.transactions}}
+						<tr>
+							<td>{{:value.date}} {{:value.time}}</td>
+							<td>{{:value.target_name}}</td>
+							<td>{{:value.purpose}}</td>
+							<td>$${{:value.amount}}</td>
+						</tr>
+					  {{/for}}
+				  </tbody>
+				</table>
+			{{else}}
+			  <span class='alert'>This account has no financial transactions on record.</span>
+			{{/if}}
+		</div>
+	{{/if}}
+	{{if data.menu == 6}}
+		{{if data.selected_law}}
+			<h4>{{:data.selected_law}}</h4>
+			{{:helper.link('Back', '', {'action' : 'deselect_law'})}}{{:helper.link('Print Copy', 'print', {'action' : 'print'})}}<br><br>
+			<div class='item'>
+				<div class='itemLabel'>
+					Sponsor
+				</div>
+				<div class='itemContent'>
+					{{:data.sponsor}}
+				</div>
+			</div>
+			<div class='item'>
+				<div class='itemLabel'>
+					Date Passed
+				</div>
+				<div class='itemContent'>
+					{{:data.passed_date}}
+				</div>
+			</div>
+			<br><hr><br>
+			{{:data.vote_body}}
+			<br><hr>
+			<br>
+			{{:helper.link('Start Repeal Vote', '', {'action' : 'repeal_vote'})}}{{:helper.link('Print Copy', 'print', {'action' : 'print'})}}
+		{{else}}
+			<h3>Civil Laws</h3>
+			<div class="statusDisplay" style="overflow: auto;">
+				{{if data.civil_laws}}
+					{{for data.civil_laws}}
+						{{:helper.link(value.name, '', {'action' : 'select_law', 'ref' : value.ref})}}<br><br>
+					{{/for}}
+				{{else}}
+					<span class='alert'>No civil laws passed.</span>
+				{{/if}}
+			</div>
+			<h3>Criminal Laws</h3>
+			<div class="statusDisplay" style="overflow: auto;">
+				{{if data.criminal_laws}}
+					{{for data.criminal_laws}}
+						{{:helper.link(value.name, '', {'action' : 'select_law', 'ref' : value.ref})}}<br><br>
+					{{/for}}
+				{{else}}
+					<span class='alert'>No criminal laws passed.</span>
+				{{/if}}
+			</div>
+		{{/if}}
+
+		
+	{{/if}}
 {{else}}
 	<br>
 	This program is only for city councillors.

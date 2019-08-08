@@ -44,8 +44,9 @@
 	if(uses_charge)
 		return 1
 	if (src && usr && usr.machine == src)
-		usr << browse(null, "window=stack")
+		close_browser(usr, "window=stack")
 	synths = null
+	recipes = null
 	return ..()
 
 //Called whenever stacked amount changes
@@ -71,7 +72,7 @@
 	if (!recipes)
 		return
 	if (!src || get_amount() <= 0)
-		user << browse(null, "window=stack")
+		close_browser(user, "window=stack")
 	user.set_machine(src) //for correct work of onclose
 	var/list/recipe_list = recipes
 	if (recipes_sublist && recipe_list[recipes_sublist] && istype(recipe_list[recipes_sublist], /datum/stack_recipe_list))
@@ -119,14 +120,15 @@
 				if (!(max_multiplier in multipliers))
 					t1 += " <A href='?src=\ref[src];make=[i];multiplier=[max_multiplier]'>[max_multiplier*R.res_amount]x</A>"
 
-	t1 += "<br><div><a href='?src=\ref[src];top=1'>go back</a></div>"
+	if(!recipes_sublist)  //Only show in a sublist
+		t1 += "<br><div><a href='?src=\ref[src];top=1'>go back</a></div>"
 	t1 += "</TT></body></HTML>"
 	user << browse(JOINTEXT(t1), "window=stack")
 	onclose(user, "stack")
 
 /obj/item/stack/proc/produce_recipe(datum/stack_recipe/recipe, var/quantity, mob/user)
-	var/required = quantity*recipe.req_amount
-	var/produced = min(quantity*recipe.res_amount, recipe.max_res_amount)
+	var/required = quantity * recipe.req_amount
+	var/produced = min(quantity * recipe.res_amount, recipe.max_res_amount)
 	if(!user.skill_check(SKILL_CONSTRUCTION, recipe.difficulty))
 		return
 
@@ -167,11 +169,12 @@
 			recipes_list = srl.recipes
 
 		var/datum/stack_recipe/R = recipes_list[text2num(href_list["make"])]
-		var/multiplier = text2num(href_list["multiplier"])
-		if (!multiplier || (multiplier <= 0)) //href exploit protection
-			return
+		if(istype(R)) //Sometimes we end up with recipe lists in here...
+			var/multiplier = text2num(href_list["multiplier"])
+			if (!multiplier || (multiplier <= 0)) //href exploit protection
+				return
 
-		src.produce_recipe(R, multiplier, usr)
+			src.produce_recipe(R, multiplier, usr)
 	
 	if(href_list["top"])
 		list_recipes(usr) //Otherwise just draw the main screen again

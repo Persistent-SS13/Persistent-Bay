@@ -25,7 +25,8 @@ var/global/ntnrc_uid = 0
 
 /datum/ntnet_conversation/before_save()
 	. = ..()
-	saved_operatorid = operator.username
+	if(operator)
+		saved_operatorid = operator.username
 
 /datum/ntnet_conversation/after_load()
 	. = ..()

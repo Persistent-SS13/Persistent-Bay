@@ -1,28 +1,25 @@
 /datum/grab/normal/aggressive
-	state_name = NORM_AGGRESSIVE
+	state_name 			= NORM_AGGRESSIVE
+	upgrab_name 		= NORM_NECK
+	downgrab_name 		= NORM_PASSIVE
+	shift 				= 12
+	stop_move 			= TRUE
+	reverse_facing 		= 0
+	can_absorb 			= 0
+	shield_assailant 	= 0
+	point_blank_mult 	= 1.5
+	damage_stage 		= 1
+	same_tile 			= 0
+	can_throw 			= TRUE
+	force_danger 		= 1
+	breakability 		= 3
+	icon_state 			= "reinforce1"
+	break_chance_table 	= list(5, 20, 40, 80, 100)
 
-	upgrab_name = NORM_NECK
-	downgrab_name = NORM_PASSIVE
-
-	shift = 12
-
-
-	stop_move = 1
-	reverse_facing = 0
-	can_absorb = 0
-	shield_assailant = 0
-	point_blank_mult = 1.5
-	damage_stage = 1
-	same_tile = 0
-	can_throw = 1
-	force_danger = 1
-	breakability = 3
-
-	icon_state = "reinforce1"
-
-	break_chance_table = list(5, 20, 40, 80, 100)
 /datum/grab/normal/aggressive/process_effect(var/obj/item/grab/G)
 	var/mob/living/carbon/human/affecting = G.affecting
+	if(!istype(affecting))
+		return
 
 	if(G.target_zone in list(BP_L_HAND, BP_R_HAND))
 		affecting.drop_l_hand()

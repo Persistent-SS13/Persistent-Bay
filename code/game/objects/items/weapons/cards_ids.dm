@@ -236,7 +236,7 @@ var/const/NO_EMAG_ACT = -50
 		var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid, record.get_name())
 		if(!assignment)
 			return 0
-		var/datum/accesses/copy = assignment.accesses[record.rank]
+		var/datum/accesses/copy = assignment.accesses? assignment.accesses[record.rank] : null
 		if(!copy)
 			return 0
 		var/available = copy.expense_limit - record.expenses
@@ -636,8 +636,8 @@ var/const/NO_EMAG_ACT = -50
 				final_access |= text2num(x)
 			if(faction.allow_id_access) final_access |= access
 			var/datum/assignment/assignment = faction.get_assignment(record.try_duty(), registered_name)
-			if(assignment)
-				for(var/i=1; i<=record.rank; i++)
+			if(assignment && assignment.accesses)
+				for(var/i=1; i<=record.rank && i <= assignment.accesses.len; i++)
 					var/datum/accesses/copy = assignment.accesses[i]
 					if(copy)
 						for(var/x in copy.accesses)

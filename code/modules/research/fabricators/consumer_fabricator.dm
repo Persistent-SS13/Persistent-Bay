@@ -58,7 +58,8 @@
 /datum/design/item/consumerfab/consumer/games
 	category = "Games"
 
-
+/datum/design/item/consumerfab/consumer/recreation
+	category = "Recreation"
 
 ////////////////////////////////////////////////////////////////////
 
@@ -92,11 +93,11 @@
 
 /datum/design/item/consumerfab/consumer/guitar
 	build_path = /obj/item/instrument/guitar
-	materials = list(MATERIAL_WOOD = 1.5 SHEETS, MATERIAL_STEEL = 1 SHEET)
+	materials = list(MATERIAL_WOOD = 1 SHEETS, MATERIAL_STEEL = 1 SHEET)
 
 /datum/design/item/consumerfab/consumer/canvas
 	build_path = /obj/item/frame/canvas/size_m
-	materials = list(MATERIAL_WOOD = 3 SHEETS)
+	materials = list(MATERIAL_WOOD = 1.5 SHEETS)
 	build_type = list(CONSUMERFAB, SERVICEFAB)
 /datum/design/item/consumerfab/consumer/canvas/portrait
 	build_path = /obj/item/frame/canvas/size_m/portrait
@@ -173,7 +174,10 @@
 /datum/design/item/consumerfab/consumer/glowstick/yellow
 	build_path = /obj/item/device/flashlight/flare/glowstick/yellow
 
-
+/datum/design/item/consumerfab/consumer/hollowbook
+	name = "hollowed out book"
+	build_path = /obj/item/weapon/storage/fakebook/empty
+	materials = list(MATERIAL_PLASTIC = 1 SHEET, MATERIAL_WOOD = 1 SHEET)
 
 
 /datum/design/item/consumerfab/consumer/labeler
@@ -633,6 +637,7 @@
 	name = "spaceball booster pack"
 	build_path = /obj/item/weapon/pack/spaceball
 	materials = list(MATERIAL_PLASTIC = 0.25 SHEETS)
+
 ////////////////////////////////////////////////////
 //////////////////////VEHICLES//////////////////////
 ////////////////////////////////////////////////////
@@ -646,3 +651,37 @@
 	id = "m_bike"
 	materials = list(MATERIAL_STEEL = 40000, MATERIAL_TUNGSTEN = 20000, MATERIAL_GLASS = 20000, MATERIAL_GOLD = 20000)
 	build_path = /obj/vehicle/bike
+
+	////////////////////////////////////////////////////
+	//////////////////////RECREATION//////////////////////
+	////////////////////////////////////////////////////
+
+/datum/design/item/consumerfab/consumer/recreation
+	category = "Recreation"
+
+
+
+/datum/design/item/consumerfab/consumer/recreation/basketball
+	name = "Basketball"
+	materials = list(MATERIAL_PLASTIC = 1 SHEETS)
+	build_path = /obj/item/weapon/basketball
+
+/datum/design/item/consumerfab/consumer/recreation/basketballhoop
+	name = "Basketball Hoop"
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_PLASTIC = 1 SHEET)
+	build_path = /obj/structure/basketballhoop
+
+/datum/design/item/consumerfab/consumer/recreation/Weightlifting
+	name = "Weightlifting Machine"
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_PLASTIC = 2 SHEETS, MATERIAL_ALUMINIUM = 4 SHEETS)
+	build_path = /obj/structure/fitness/weightlifter
+
+/datum/design/item/consumerfab/consumer/recreation/punchbag
+	name = "Punching Bag"
+	materials = list(MATERIAL_WOOD = 2 SHEETS, MATERIAL_PLASTIC = 2 SHEETS, MATERIAL_STEEL = 2 SHEETS)
+	build_path = /obj/structure/fitness/punchingbag
+
+/datum/design/item/consumerfab/consumer/recreation/beachball
+	name = "Beach Ball"
+	materials = list(MATERIAL_PLASTIC = 5 SHEETS)
+	build_path = /obj/item/weapon/beach_ball

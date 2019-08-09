@@ -12,17 +12,17 @@
 	hidden_from_codex = FALSE
 
 	unarmed_types = list(/datum/unarmed_attack/bite/sharp, /datum/unarmed_attack/claws, /datum/unarmed_attack/stomp/weak)
-	darksight_range = 5
+	darksight_range = 6
 	darksight_tint = DARKTINT_GOOD
-	total_health = 50
-	brute_mod = 1 //Damage mod values are up for debate. At base value, with 50 health, three mildly damaging attacks (15 each) is enough to knock one unconscious. Beyond 1.1, two is required, instead.
-	burn_mod = 1
+	total_health = 150
+	brute_mod = 1.35
+	burn_mod = 1.35
 	flash_mod = 1.5
 	mob_size = MOB_SMALL
 	holder_type = /obj/item/weapon/holder/human
 	gluttonous = GLUT_TINY
 	strength = STR_HIGH //This is only to avoid slowdown from carrying literally any item, including small tools or clothing. Otherwise, carrying anything at all removes their only real strength, speed.
-	slowdown = -1
+	slowdown = -0.5
 	blood_volume = 400
 	pass_flags = PASS_FLAG_TABLE
 
@@ -30,7 +30,7 @@
 	hunger_factor = DEFAULT_HUNGER_FACTOR * 2
 
 	min_age = 12
-	max_age = 50
+	max_age = 45
 
 	description = "A race of feathered raptors who developed on a cold world, almost \
 	outside of the Goldilocks zone. Extremely fragile, they developed hunting skills \
@@ -57,7 +57,7 @@
 	blood_color = "#D514F7"
 	base_color = "#001144"
 
-	move_trail = /obj/effect/decal/cleanable/blood/tracks/claw
+	move_trail = /obj/effect/decal/cleanable/blood/tracks/paw
 
 	heat_discomfort_level = 296
 	heat_discomfort_strings = list(

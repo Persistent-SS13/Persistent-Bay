@@ -22,6 +22,11 @@
 	max_health = 800
 	assembly_type = /obj/structure/door_assembly/multi_tile
 
+
+/obj/machinery/door/airlock/multi_tile/after_load()
+	SetBounds()
+	..()
+
 /obj/machinery/door/airlock/multi_tile/should_save(var/datum/caller)
 	if(caller == loc)
 		return ..()
@@ -35,7 +40,7 @@
 		queue_icon_update()
 	else
 		update_icon()
-
+	SetBounds()
 /obj/machinery/door/airlock/multi_tile/Move()
 	. = ..()
 	SetBounds()

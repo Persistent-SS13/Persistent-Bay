@@ -2777,7 +2777,7 @@ var/PriorityQueue/all_feeds
 	required = 8
 
 /datum/module_objective/weekly/travel/check_completion()
-	if(parent)
+	if(parent && istype(parent))
 		for(var/obj/item/organ/internal/stack/stack in parent.connected_laces)
 			var/mob/M = stack.get_owner()
 			if(M && M.z > 3 && !("[M.z]" in unique_factions))

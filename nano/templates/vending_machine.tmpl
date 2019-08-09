@@ -4,6 +4,10 @@
 -->
 
 {{if data.mode == 0}} <!-- Listing -->
+{{if !data.locked}}
+	<div class='item'>Linked business: {{:data.faction_name}} &#40;UID:&quot;{{:data.faction_UID}}&quot;&#41;</div>
+{{/if}}
+<h3>Machine operated by: {{:data.faction_name}}</h3>
 <h2>Items available</h2>
 <div class='item'>
 	{{for data.products}}
@@ -19,7 +23,7 @@
 		{{if value.color}}<span style='color:{{:value.color}}'>{{:value.name}}</span>
 		{{else}}{{:value.name}}
 		{{/if}}
-			 ({{:value.amount ? value.amount : "NONE LEFT"}})
+			 ({{:value.amount ? value.amount : "NONE LEFT"}}{{if !data.locked}}&#47;{{:data.max_single}}{{/if}}){{if !data.locked}}{{:helper.link('Price', 'tag', { "set_price" : value.key })}} {{:helper.link('Name', 'pencil', { "set_name" : value.key })}} {{:helper.link('Eject', 'trash', { "flush_product" : value.key })}}{{/if}}
 		</div>
 	</div>
 	{{empty}}
@@ -51,6 +55,16 @@
 {{if data.panel}}
 <h2>Maintenance panel</h2>
 <div class='item'>
+	Max products: {{:data.max_products}}
+	Max Size: {{if data.max_size == 1}}tiny{{else data.max_size == 2}}small{{else data.max_size == 3}}normal{{else data.max_size == 4}}large{{else data.max_size == 5}}huge{{else data.max_size == 6}}gargantuan{{/if}}
+</div>
+<div class='item'>
 	<div class='itemLabel'>Speaker</div><div class='item'>{{:helper.link(data.speaker ? 'Enabled' : 'Disabled',  'gear', {'togglevoice' : 1})}}</div>
+	<div class='itemLabel'>Slogans</div><div class='item'>{{:helper.link('Edit', 'gear', {'edit_slogans' : 1})}}</div>
+	<div class='itemLabel'>Main menu ads</div><div class='item'>{{:helper.link('Edit', 'gear', {'edit_ads' : 1})}}</div>
+	<div class='itemLabel'>Machine name</div><div class='item'>{{:helper.link('Edit', 'gear', {'edit_name' : 1})}}</div>
+{{if data.can_change_icon}}
+	<div class='itemLabel'>Appearence</div><div class='item'>{{:helper.link('Edit', 'gear', {'set_icon' : 1})}}</div>
+{{/if}}
 </div>
 {{/if}}

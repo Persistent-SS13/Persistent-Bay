@@ -266,6 +266,22 @@ Class Procs:
 	update_use_power(POWER_USE_ACTIVE)
 	update_icon()
 
+/obj/machinery/proc/connect_faction(var/datum/world_faction/F, var/mob/user)
+	if(istext(F))
+		F = get_faction(F)
+	if(F && can_connect(F))
+		faction = F
+		faction_uid = F.uid
+		req_access_faction = faction_uid
+		return TRUE
+	return FALSE
+
+/obj/machinery/proc/disconnect_faction(var/mob/user)
+	faction = null
+	faction_uid = null
+	req_access_faction = null
+	return TRUE
+
 /obj/machinery/proc/turn_idle()
 	update_use_power(POWER_USE_IDLE)
 	update_icon()

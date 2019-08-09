@@ -1,5 +1,5 @@
 #ifndef T_BOARD
-#error T_BOARD macro is not defined but we need it! 
+#error T_BOARD macro is not defined but we need it!
 #endif
 
 //Stuff that doesn't fit into any category goes here
@@ -34,9 +34,9 @@
 		name = T_BOARD("[names_paths[build_path]] Vendor")
 		user << "<span class='notice'>You set the board to [names_paths[build_path]].</span>"
 		req_components = list(text2path("/obj/item/weapon/vending_refill/[copytext("[build_path]", 24)]") = 3)
-		
-		
-		
+
+
+
 /obj/item/weapon/circuitboard/jukebox
 	name = T_BOARD("Jukebox")
 	build_path = /obj/machinery/media/jukebox
@@ -46,7 +46,7 @@
 							/obj/item/weapon/stock_parts/capacitor = 1,
 							/obj/item/weapon/stock_parts/console_screen = 1,
 							/obj/item/stack/cable_coil = 1)
-		
+
 
 /obj/item/weapon/circuitboard/holopad
 	name = T_BOARD("Holopad")
@@ -185,13 +185,13 @@
 							/obj/item/device/assembly/igniter = 1,
 							/obj/item/weapon/stock_parts/capacitor = 5,
 							/obj/item/stack/material/phoron = 5)
-							
+
 /obj/item/weapon/circuitboard/bridge_computer
 	name = T_BOARD("bridge computer")
 	build_path = /obj/machinery/computer/bridge_computer
 	origin_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 4)
 	board_type = "computer"
-	
+
 /obj/item/weapon/circuitboard/docking_beacon
 	name = T_BOARD("docking beacon")
 	build_path = /obj/machinery/docking_beacon
@@ -213,3 +213,32 @@
 							/obj/item/stack/cable_coil = 20,
 							/obj/item/weapon/stock_parts/capacitor = 2)
 
+/obj/item/weapon/circuitboard/mass_driver
+	name = T_BOARD("Mass driver")
+	build_path = /obj/machinery/mass_driver
+	board_type = "machine"
+	origin_tech = list(TECH_ENGINEERING = 4)
+	req_components = list(
+							/obj/item/weapon/stock_parts/manipulator = 6,
+							/obj/item/stack/cable_coil = 20,
+							/obj/item/weapon/stock_parts/capacitor = 6)
+
+/obj/item/weapon/circuitboard/igniter
+	name = T_BOARD("Igniter")
+	build_path = /obj/machinery/igniter
+	board_type = "machine"
+	origin_tech = list(TECH_ENGINEERING = 4)
+	req_components = list(	/obj/item/device/assembly/igniter = 1,
+							/obj/item/stack/cable_coil = 20,
+							/obj/item/weapon/stock_parts/capacitor = 1)
+
+/obj/item/weapon/circuitboard/vending_machine
+	name = T_BOARD("Vending machine")
+	build_path = /obj/machinery/vending/custom
+	board_type = "machine"
+	origin_tech = list(TECH_ENGINEERING = 4)
+	req_components = list(
+		/obj/item/weapon/stock_parts/console_screen = 2,
+		/obj/item/weapon/stock_parts/manipulator = 2,
+		/obj/item/weapon/stock_parts/matter_bin = 4,
+		)

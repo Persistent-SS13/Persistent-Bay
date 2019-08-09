@@ -128,10 +128,7 @@
 	update_coverage()
 
 /obj/machinery/camera/Process()
-	if(time_emped && world.realtime >= time_emped)
-		time_emped = 0
-		set_emped(FALSE)
-		emp_end()
+	..()
 	return internal_process()
 
 /obj/machinery/camera/proc/internal_process()

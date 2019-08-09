@@ -24,29 +24,31 @@
 	noblend_objects = list(/obj/machinery/door/window)
 
 /obj/structure/wall_frame/New(var/new_loc, var/materialtype)
+	if(!materialtype)
+		materialtype = DEFAULT_WALL_MATERIAL
+
+	material = materialtype
 	..()
 	ADD_SAVED_VAR(paint_color)
 	ADD_SAVED_VAR(stripe_color)
 
-/obj/structure/wall_frame/Initialize(mapload, var/materialtype)
-	if(materialtype)
-		material = materialtype
+/obj/structure/wall_frame/Initialize()
 	if(!material)
 		material = DEFAULT_WALL_MATERIAL
+		
 	if(istext(material))
 		material = SSmaterials.get_material_by_name(material)
-	max_health = material.integrity
-	. = ..()
-	if(. != INITIALIZE_HINT_QDEL)
-		return INITIALIZE_HINT_LATELOAD
 
-/obj/structure/wall_frame/LateInitialize()
-	. = ..()
+	max_health = material.integrity
+
+	update_connections(TRUE)
 	queue_icon_update()
+	. = ..()
 
 /obj/structure/wall_frame/examine(mob/user)
 	if(paint_color)
 		to_chat(user, "<span class='notice'>It has a smooth coat of paint applied.</span>")
+
 	. = ..()
 
 /obj/structure/wall_frame/attackby(var/obj/item/weapon/W, var/mob/user)
@@ -98,7 +100,7 @@
 	overlays.Cut()
 	var/image/I
 
-	var/new_color = (paint_color ? paint_color : material?.icon_colour)
+	var/new_color = (paint_color ? paint_color : material.icon_colour)
 	color = new_color
 
 	for(var/i = 1 to 4)
@@ -117,10 +119,7 @@
 			I.color = stripe_color
 			overlays += I
 
-	if(istype(material))
-		SetName("[material.display_name] [initial(name)]")
-	else
-		SetName(initial(name))
+	SetName("[material.display_name] [initial(name)]")
 
 /obj/structure/wall_frame/hull/Initialize()
 	. = ..()
@@ -142,6 +141,11 @@
 	var/damage = min(proj_damage, 100)
 	take_damage(damage)
 	return
+
+
+/obj/structure/wall_frame/dismantle()
+	refund_matter()
+	qdel(src)
 
 /obj/structure/wall_frame/destroyed()
 	dismantle()

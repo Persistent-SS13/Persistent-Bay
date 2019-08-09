@@ -4,22 +4,23 @@
 	var/obj/item/master_item
 
 /obj/item/weapon/storage/internal/New(obj/item/MI)
-	. = ..()
 	if(MI)
 		master_item = MI
+		loc = master_item
+		name = master_item.name
+		verbs -= /obj/item/verb/verb_pickup	//make sure this is never picked up.
+		..()
 	ADD_SAVED_VAR(master_item)
-	//ADD_SAVED_VAR(extensions)
-
-/obj/item/weapon/storage/internal/Initialize()
-	. = ..()
-	testing("Created pockets [src]\ref[src] in the [master_item]\ref[master_item] at [loc], by [usr]")
+	
+/obj/item/weapon/storage/internal/after_load()
+	// storage_ui = new storage_ui(src)
+	// prepare_ui()
 	if(master_item)
 		loc = master_item
 		name = master_item.name
 		verbs -= /obj/item/verb/verb_pickup	//make sure this is never picked up.
-
+		..()
 /obj/item/weapon/storage/internal/Destroy()
-	testing("[src]\ref[src] was deleted from [master_item]!")
 	master_item = null
 	. = ..()
 
@@ -99,25 +100,23 @@
 	return master_item.Adjacent(neighbor)
 
 // Used by webbings, coat pockets, etc
-/obj/item/weapon/storage/internal/pockets/New(obj/item/MI, var/slots, var/slot_size)
+/obj/item/weapon/storage/internal/pockets/New(var/newloc, var/slots, var/slot_size)
 	storage_slots = slots
 	max_w_class = slot_size
 	..()
-
-// /obj/item/weapon/storage/internal/pockets/after_load()
-// 	if(master_item)
-// 		loc = master_item
-// 		name = master_item.name
-// 		if(istype(loc, /obj/item/clothing/suit/storage))
-// 			var/obj/item/clothing/suit/storage/coat = loc
-// 			if(coat)
-// 				coat.pockets = src
-// 		if(istype(loc, /obj/item/clothing/accessory/storage))
-// 			var/obj/item/clothing/accessory/storage/web = loc
-// 			if(web)
-// 				web.hold = src
-// 		..()
-
-/obj/item/weapon/storage/internal/pouch/New(obj/item/MI, var/storage_space)
+/obj/item/weapon/storage/internal/pockets/after_load()
+	if(master_item)
+		loc = master_item
+		name = master_item.name
+		if(istype(loc, /obj/item/clothing/suit/storage))
+			var/obj/item/clothing/suit/storage/coat = loc
+			if(coat)
+				coat.pockets = src
+		if(istype(loc, /obj/item/clothing/accessory/storage))
+			var/obj/item/clothing/accessory/storage/web = loc
+			if(web)
+				web.hold = src
+		..()
+/obj/item/weapon/storage/internal/pouch/New(var/newloc, var/storage_space)
 	max_storage_space = storage_space
 	..()

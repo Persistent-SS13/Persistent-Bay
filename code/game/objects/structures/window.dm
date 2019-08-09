@@ -50,29 +50,10 @@
 /obj/structure/window/New(Loc, start_dir=null, constructed=0, var/new_material, var/new_reinf_material)
 	..()
 	ADD_SAVED_VAR(state)
+	ADD_SAVED_VAR(reinf_material)
 	ADD_SAVED_VAR(init_material)
 	ADD_SAVED_VAR(init_reinf_material)
 	ADD_SAVED_VAR(reinf_basestate)
-
-/obj/structure/window/Read(savefile/f)
-	. = ..()
-	var/matname
-	from_file(f["reinf_material"], matname)
-	if(istype(matname, /material)) //Backward compatibility!
-		var/material/M = matname
-		reinf_material = M.name
-	else if(istext(matname))
-		reinf_material = matname
-	
-/obj/structure/window/Write(savefile/f)
-	. = ..()
-	if(reinf_material)
-		to_file(f["reinf_material"], reinf_material.name)
-
-/obj/structure/window/after_load()
-	. = ..()
-	if(istext(reinf_material))
-		reinf_material = SSmaterials.get_material_by_name(reinf_material)
 
 /obj/structure/window/Initialize(mapload, start_dir=null, constructed=0, var/new_material, var/new_reinf_material)
 	. = ..()
@@ -108,29 +89,18 @@
 
 		health = max_health
 
-	if(mapload)
-		//Don't propagate on map load since we're gonna init all of them anyways!!
-		update_connections(FALSE)  
-	else
-		update_connections(TRUE)
-		
 	set_anchored(!constructed)
-	return INITIALIZE_HINT_LATELOAD
-
-/obj/structure/window/LateInitialize()
-	. = ..()
+	update_connections(1)
+	update_icon()
 	update_nearby_tiles(need_rebuild=1)
 
 /obj/structure/window/Destroy()
+	set_density(0)
+	update_nearby_tiles()
 	var/turf/location = loc
-	if(location)
-		set_density(0)
-		update_nearby_tiles()
 	. = ..()
-	if(location)
-		for(var/obj/structure/window/W in orange(location, 1))
-			if(!QDELETED(W))
-				W.update_icon()
+	for(var/obj/structure/window/W in orange(location, 1))
+		W.update_icon()
 
 /obj/structure/window/examine(mob/user)
 	. = ..(user)

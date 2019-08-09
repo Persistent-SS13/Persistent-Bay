@@ -76,8 +76,7 @@
 	current_grab.hit_with_grab(src)
 
 /obj/item/grab/resolve_attackby(atom/A, mob/user, var/click_params)
-	if(assailant)
-		assailant.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
+	assailant.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
 	if(!A.grab_attack(src))
 		return ..()
 	action_used()
@@ -86,9 +85,9 @@
 	return TRUE
 
 /obj/item/grab/dropped()
-	loc = null
-	. = ..()
-	qdel(src)
+	..()
+	if(!QDELETED(src))
+		qdel(src)
 
 /obj/item/grab/Destroy()
 	if(affecting)
@@ -184,8 +183,6 @@
 		return 0
 
 /obj/item/grab/proc/action_used()
-	if(!assailant)
-		return
 	assailant.remove_cloaking_source(assailant.species)
 	last_action = world.time
 	leave_forensic_traces()

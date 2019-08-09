@@ -6,7 +6,6 @@
 	icon_state = "flood00"
 	density = 1
 	max_health = 100
-	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
 	var/on = 0
 	var/obj/item/weapon/cell/cell = null
 	var/use = 200 // 200W light
@@ -21,10 +20,6 @@
 	if(!map_storage_loaded)
 		cell = new/obj/item/weapon/cell/apc(src)
 	..()
-	ADD_SAVED_VAR(on)
-	ADD_SAVED_VAR(cell)
-	ADD_SAVED_VAR(unlocked)
-	ADD_SAVED_VAR(open)
 
 /obj/machinery/floodlight/on_update_icon()
 	overlays.Cut()

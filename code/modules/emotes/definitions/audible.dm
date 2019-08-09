@@ -181,9 +181,3 @@
 	emote_message_3p_target = "USER hisses at TARGET."
 	emote_message_3p = "USER hisses."
 	emote_sound = 'sound/voice/unathihiss.ogg' //Credit for sound: www.zapsplat.com
-
-/decl/emote/audible/mouse_Squeak
-	key = "squeak"
-	emote_message_3p_target = "USER squeaks at TARGET."
-	emote_message_3p = "USER squeaks."
-	emote_sound = 'sound/effects/mousesqueek.ogg'

@@ -23,7 +23,7 @@ var/const/PROXIMITY_EXCLUDE_HOLDER_TURF = 1 // When acquiring turfs to monitor, 
 	var/on_turf_entered
 	var/on_turfs_changed
 
-	var/range_ = 2
+	var/range_
 
 	var/list/turfs_in_range
 	var/list/seen_turfs_

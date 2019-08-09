@@ -1,10 +1,7 @@
 /datum/storage_ui
 	var/obj/item/weapon/storage/storage
-	should_save = FALSE
 
-/datum/storage_ui/New(var/obj/item/weapon/storage/storage)
-	if(!istype(storage))
-		log_warning("[src]\ref[src] was built with an invalid storage object type! ([storage? storage.type : "null" ])")
+/datum/storage_ui/New(var/storage)
 	src.storage = storage
 	..()
 

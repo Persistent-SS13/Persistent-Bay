@@ -43,6 +43,7 @@
 	. = ..()
 
 /obj/machinery/meter/Process()
+	. = ..()
 	if(!target)
 		return
 	var/datum/gas_mixture/pipe_air = target.return_air()

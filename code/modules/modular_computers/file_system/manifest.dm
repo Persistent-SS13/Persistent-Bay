@@ -11,7 +11,7 @@
 	dept_data[dept_data.len] = list("names" = list(), "header" = "Off duty", "flag" = "Off duty")
 	var/list/misc //Special departments for easier access
 	for(var/list/department in dept_data)
-		if(department["flag"] == MSC && LAZYLEN(department["names"]))
+		if(department["flag"] == MSC)
 			misc = department["names"]
 
 	var/list/isactive = new()
@@ -62,16 +62,12 @@
 						names[name] = rank
 						found_place = 1
 			if(!found_place)
-				if(LAZYLEN(misc))
-					var/list/names = misc["names"]
-					if(LAZYLEN(names))
-						names[name] = rank
+				var/list/names = misc["names"]
+				names[name] = rank
 		else
 			if(!rank) rank = "Unset"
-			if(LAZYLEN(misc))
-				var/list/names = misc["names"]
-				if(LAZYLEN(names))
-					names[name] = rank
+			var/list/names = misc["names"]
+			names[name] = rank
 		mil_ranks[name] = ""
 
 		if(GLOB.using_map.flags & MAP_HAS_RANK)
@@ -99,7 +95,7 @@
 		if(!rank) rank = "Unset"
 		for(var/list/department in dept_data)
 			var/list/names = department["names"]
-			if(LAZYLEN(names) && department["flag"] == "Off duty")
+			if(department["flag"] == "Off duty")
 				names[name] = rank
 		mil_ranks[name] = ""
 
@@ -118,7 +114,7 @@
 		isactive[name] = active ? "Active" : "Inactive"
 	for(var/list/department in dept_data)
 		var/list/names = department["names"]
-		if(LAZYLEN(names) > 0)
+		if(names.len > 0)
 			dat += "<tr><th colspan=3>[department["header"]]</th></tr>"
 			for(var/name in names)
 				if(isactive[name] != "Inactive")

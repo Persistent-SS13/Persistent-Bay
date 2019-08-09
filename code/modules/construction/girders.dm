@@ -280,10 +280,9 @@
 /obj/structure/girder/dismantle()
 	var/turf/curturf = get_turf(src)
 	playsound(curturf, 'sound/items/Welder.ogg', 100, 1)
-	if(istype(material))
-		new /obj/item/girderpart(curturf, material.name)
-		if(reinf_material)
-			new reinf_material.stack_type(curturf, 4)
+	new /obj/item/girderpart(curturf, material.name)
+	if(reinf_material)
+		new reinf_material.stack_type(curturf, 4)
 	material = null
 	reinf_material = null
 	qdel(src)

@@ -28,16 +28,11 @@
 /obj/structure/door_assembly/New()
 	..()
 	update_state()
-	ADD_SAVED_VAR(base_name)
-	ADD_SAVED_VAR(glass)
-	ADD_SAVED_VAR(created_name)
 	ADD_SAVED_VAR(state)
 	ADD_SAVED_VAR(electronics)
 	ADD_SAVED_VAR(glass)
 	ADD_SAVED_VAR(created_name)
-	ADD_SAVED_VAR(door_color)
-	ADD_SAVED_VAR(stripe_color)
-	ADD_SAVED_VAR(symbol_color)
+
 
 /obj/structure/door_assembly/door_assembly_keyp
  	base_name = "Keypad Airlock"

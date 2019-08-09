@@ -25,11 +25,6 @@
 
 /obj/machinery/deployable/barrier/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if (istype(W, /obj/item/weapon/card/id/))
-		var/obj/item/weapon/card/id/ID = W
-		if(!faction && ID.selected_faction)
-			connect_faction(ID.selected_faction, user)
-			to_chat(user, SPAN_NOTICE("[src] now connected to faction '[faction? faction.name : "null"]'!"))
-			return
 		if (src.allowed(user))
 			if	(src.emagged < 2.0)
 				src.locked = !src.locked

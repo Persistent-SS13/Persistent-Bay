@@ -40,7 +40,7 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	var/initializations_finished_with_no_players_logged_in	//I wonder what this could be?
 
 	// The type of the last subsystem to be process()'d.
-	var/last_type_processed
+	var/datum/controller/subsystem/processing/last_type_processed
 
 	var/datum/controller/subsystem/queue_head //Start of queue linked list
 	var/datum/controller/subsystem/queue_tail //End of queue linked list (used for appending to the list)

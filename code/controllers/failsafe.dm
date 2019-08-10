@@ -58,11 +58,15 @@ GLOBAL_REAL(Failsafe, /datum/controller/failsafe)
 						if(3)
 							to_chat(GLOB.admins, "<span class='adminnotice'>Notice: DEFCON [defcon_pretty()]. The Master Controller has not fired in the last [(5-defcon) * processing_interval] ticks.</span>")
 							--defcon
+							to_chat(GLOB.admins, "<span class='boldannounce'>BRAWLER DEBUG!! The last ran processor is [Master.last_type_processed.type] and it last processed a [Master.last_type_processed.last_processed].</span>")
 						if(2)
 							to_chat(GLOB.admins, "<span class='boldannounce'>Warning: DEFCON [defcon_pretty()]. The Master Controller has not fired in the last [(5-defcon) * processing_interval] ticks. Automatic restart in [processing_interval] ticks.</span>")
 							--defcon
-						if(1)
+							to_chat(GLOB.admins, "<span class='boldannounce'>BRAWLER DEBUG!! The last ran processor is [Master.last_type_processed.type] and it last processed a [Master.last_type_processed.last_processed]. I WILL TRY DELETING THIS!</span>")
+							del(Master.last_type_processed.last_processed)
 
+						if(1)
+							Save_World()
 							to_chat(GLOB.admins, "<span class='boldannounce'>Warning: DEFCON [defcon_pretty()]. The Master Controller has still not fired within the last [(5-defcon) * processing_interval] ticks. Killing and restarting...</span>")
 							--defcon
 							var/rtn = Recreate_MC()

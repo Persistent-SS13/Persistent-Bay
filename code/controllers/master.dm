@@ -256,7 +256,6 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 		log_game("Failed to recreate MC (Error code: [rtn2]), it's up to the failsafe now")
 		message_admins("Failed to recreate MC (Error code: [rtn2]), it's up to the failsafe now")
 		Failsafe.defcon = 2
-		Save_World()
 // Main loop.
 /datum/controller/master/proc/Loop()
 	. = -1

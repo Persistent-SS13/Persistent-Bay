@@ -66,7 +66,6 @@ GLOBAL_REAL(Failsafe, /datum/controller/failsafe)
 							del(Master.last_type_processed.last_processed)
 
 						if(1)
-							Save_World()
 							to_chat(GLOB.admins, "<span class='boldannounce'>Warning: DEFCON [defcon_pretty()]. The Master Controller has still not fired within the last [(5-defcon) * processing_interval] ticks. Killing and restarting...</span>")
 							--defcon
 							var/rtn = Recreate_MC()

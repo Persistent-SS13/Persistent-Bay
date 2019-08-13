@@ -484,6 +484,13 @@ research holder datum.
 	uid = "figures_4"
 	uses = 1
 
+/datum/tech_entry/consumer/unusal_trees
+	name = "Spacial Garneding"
+	desc = "this allows you to appease them with a unusal shrubbery."
+	tier = 1
+	points = 75
+	uid = "unusal_trees"
+
 //////////////////////////////////////////////////
 //////////////////////////////////////////////////
 // Combat designs

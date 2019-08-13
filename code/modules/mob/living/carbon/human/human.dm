@@ -130,7 +130,7 @@
 	redraw_inv() //Refresh the hud damn you
 
 /mob/living/carbon/human/after_load()
-	. = ..()
+	
 	//testing("loaded [src]\ref[src]([x], [y], [z]): blood vessel contain [vessel.reagent_list?.len] reagents")
 	//Sync blood since some things might get lost along the way
 	for(var/datum/reagent/blood/B in vessel.reagent_list)
@@ -166,9 +166,12 @@
 	if(dna && dna.real_name == "Unknown")
 		dna.ResetUIFrom(src)
 		dna.ready_dna(src)
+		dna.ResetSE()
 		var/datum/computer_file/report/crew_record/record = Retrieve_Record(real_name)
 		if(record)
 			record.set_fingerprint(dna.unique_enzymes)
+		sync_organ_dna()
+	. = ..()
 /mob/living/carbon/human/Destroy()
 	GLOB.human_mob_list -= src
 	QDEL_NULL_LIST(worn_underwear)

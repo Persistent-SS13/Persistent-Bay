@@ -1,7 +1,6 @@
 /mob/living/var/last_hud_update = 0
 /mob/living/Life()
 	set invisibility = 0
-	set background = BACKGROUND_ENABLED
 
 	..()
 	if(last_hud_update > world.time)

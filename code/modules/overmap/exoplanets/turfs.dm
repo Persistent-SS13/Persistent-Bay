@@ -69,7 +69,6 @@
 	return	// Water doesn't become dirty
 
 /turf/simulated/floor/exoplanet/Initialize()
-	. = ..()
 	update_icon(1)
 
 /turf/simulated/floor/exoplanet/on_update_icon(var/update_neighbors)

@@ -336,11 +336,7 @@
 		take_damage(50)
 	return TRUE
 
-/obj/structure/window/proc/rotate()
-	set name = "Rotate Window Counter-Clockwise"
-	set category = "Object"
-	set src in oview(1)
-
+/obj/structure/window/rotate()
 	if(usr.incapacitated())
 		return 0
 
@@ -399,10 +395,10 @@
 //Updates the availabiliy of the rotation verbs
 /obj/structure/window/proc/update_verbs()
 	if(anchored)
-		verbs -= /obj/structure/window/proc/rotate
+		verbs -= /obj/structure/window/rotate
 		verbs -= /obj/structure/window/proc/revrotate
 	else
-		verbs += /obj/structure/window/proc/rotate
+		verbs += /obj/structure/window/rotate
 		verbs += /obj/structure/window/proc/revrotate
 
 // Visually connect with every type of window as long as it's full-tile.

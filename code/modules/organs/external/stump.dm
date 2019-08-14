@@ -18,9 +18,5 @@
 		if(BP_IS_CRYSTAL(limb) && (!parent || BP_IS_CRYSTAL(parent)))
 			status |= ORGAN_CRYSTAL // Likewise with crystalline limbs.
 
-/obj/item/organ/external/stump/removed(mob/living/user, ignore_children)
-	. = ..()
-	qdel(src)
-
 /obj/item/organ/external/stump/is_stump()
 	return 1

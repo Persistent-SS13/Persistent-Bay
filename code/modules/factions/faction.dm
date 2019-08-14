@@ -2423,7 +2423,7 @@ var/PriorityQueue/all_feeds
 		accesses |= access
 /datum/assignment
 	var/name = ""
-	var/list/datum/accesses/accesses[0]
+	var/list/accesses[0]
 	var/uid = ""
 	var/datum/assignment_category/parent
 	var/payscale = 1.0
@@ -2578,7 +2578,7 @@ var/PriorityQueue/all_feeds
 	if(completed) return 1
 	if(filled >= required)
 		completed = 1
-		if(istype(parent))
+		if(parent)
 			var/datum/transaction/Te = new("Completed Objective", "Nexus Economic Stimulus", payout, "Nexus Economic Module")
 			parent.central_account.do_transaction(Te)
 			parent.research.points += research_payout
@@ -2777,7 +2777,7 @@ var/PriorityQueue/all_feeds
 	required = 8
 
 /datum/module_objective/weekly/travel/check_completion()
-	if(istype(parent))
+	if(parent && istype(parent))
 		for(var/obj/item/organ/internal/stack/stack in parent.connected_laces)
 			var/mob/M = stack.get_owner()
 			if(M && M.z > 3 && !("[M.z]" in unique_factions))

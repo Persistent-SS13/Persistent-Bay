@@ -32,24 +32,6 @@
 	if(istext(reinforced))
 		reinforced = SSmaterials.get_material_by_name(reinforced)
 	..()
-	ADD_SAVED_VAR(flipped)
-	ADD_SAVED_VAR(can_reinforce)
-	ADD_SAVED_VAR(can_plate)
-	ADD_SAVED_VAR(carpeted)
-
-/obj/structure/table/Read(savefile/f)
-	. = ..()
-	var/material/mat
-	from_file(f["reinforced"], mat)
-	if(istype(mat))
-		reinforced = SSmaterials.get_material_by_name(mat.name) //Backward compatibility
-	else if(istext(mat))
-		reinforced = SSmaterials.get_material_by_name(mat)
-	
-/obj/structure/table/Write(savefile/f)
-	. = ..()
-	if(istype(reinforced))
-		to_file(f["reinforced"], reinforced.name)
 
 /obj/structure/table/proc/update_material()
 	var/old_maxhealth = max_health
@@ -96,7 +78,7 @@
 	reinforced = null
 	update_connections(1) // Update tables around us to ignore us (material=null forces no connections)
 	for(var/obj/structure/table/T in oview(src, 1))
-		T.queue_icon_update() //Just queue them so we don't crash our destroy over other objects...
+		T.update_icon()
 	. = ..()
 
 /obj/structure/table/examine(mob/user)
@@ -205,12 +187,12 @@
 		update_material()
 
 /obj/structure/table/proc/update_desc()
-	if(istype(material))
+	if(material)
 		name = "[material.display_name] table"
 	else
 		name = "table frame"
 
-	if(istype(reinforced))
+	if(reinforced)
 		name = "reinforced [name]"
 		desc = "[initial(desc)] This one seems to be reinforced with [reinforced.display_name]."
 	else
@@ -322,7 +304,7 @@
 			overlays += I
 
 		// Standard table image
-		if(istype(material))
+		if(material)
 			for(var/i = 1 to 4)
 				I = image(icon, "[material.table_icon_base]_[connections[i]]", dir = 1<<(i-1))
 				if(material.icon_colour) I.color = material.icon_colour
@@ -330,7 +312,7 @@
 				overlays += I
 
 		// Reinforcements
-		if(istype(reinforced))
+		if(reinforced)
 			for(var/i = 1 to 4)
 				I = image(icon, "[reinforced.table_reinf]_[connections[i]]", dir = 1<<(i-1))
 				I.color = reinforced.icon_colour
@@ -359,7 +341,7 @@
 				type += "+"
 
 		icon_state = "flip[type]"
-		if(istype(material))
+		if(material)
 			var/image/I = image(icon, "[material.table_icon_base]_flip[type]")
 			I.color = material.icon_colour
 			I.alpha = 255 * material.opacity
@@ -368,7 +350,7 @@
 		else
 			name = "table frame"
 
-		if(istype(reinforced))
+		if(reinforced)
 			var/image/I = image(icon, "[reinforced.table_reinf]_flip[type]")
 			I.color = reinforced.icon_colour
 			I.alpha = 255 * reinforced.opacity

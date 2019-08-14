@@ -70,6 +70,13 @@
 	if(mRun in mutations)
 		tally = 0
 
+	
+	var/fullness = get_fullness()
+	if (fullness <= 50)
+		tally += 3
+	if (fullness > 50 && fullness <= 150)
+		tally += 2
+
 	return (tally+config.human_delay)
 
 /mob/living/carbon/human/size_strength_mod()

@@ -270,18 +270,18 @@
 				connected_faction.feed.name = select_name
 		if("change_price")
 			var/amount = input("Enter price to charge for this article.", "Article price", article_price) as null|num
-			if(!amount < 0)
+			if(amount < 0)
 				amount = 0
 			article_price = amount
 		if("feed_articleprice")
 			var/amount = input("Enter price to charge per article.", "Article price", 0) as null|num
-			if(!amount < 0)
+			if(amount < 0)
 				amount = 0
 			connected_faction.feed.per_article = amount
 
 		if("feed_paperprice")
 			var/amount = input("Enter price to charge per issue.", "Issue price", 0) as null|num
-			if(!amount < 0)
+			if(amount < 0)
 				amount = 0
 			connected_faction.feed.per_issue = amount
 		if("feed_announcement")

@@ -225,6 +225,9 @@
 /mob/living/carbon/human/proc/make_grab(var/mob/living/carbon/human/attacker, var/mob/living/carbon/human/victim, var/grab_tag)
 	var/obj/item/grab/G
 	if(!grab_tag)
+		if(!attacker.current_grab_type)
+			log_error("[src]\ref[src], [attacker]\ref[attacker] tried to make_grab on [victim]\ref[victim], grab_tag: [grab_tag],  attacker.current_grab_type: [attacker.current_grab_type]")
+			return FALSE
 		G = new attacker.current_grab_type(attacker, victim)
 	else
 		var/obj/item/grab/given_grab_type = all_grabobjects[grab_tag]

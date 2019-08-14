@@ -413,11 +413,11 @@ BLIND     // can't see anything
 		)
 	blood_overlay_type = "helmetblood"
 	//Light defaults
-	light_max_bright = 0.5
+	light_max_bright = 0.9
 	light_inner_range = 2
-	light_outer_range = 4
-	light_falloff_curve = 1
-	light_color = COLOUR_LTEMP_100W_TUNGSTEN
+	light_outer_range = 10
+	light_falloff_curve = 2
+//	light_color = COLOUR_LTEMP_100W_TUNGSTEN
 
 /obj/item/clothing/head/New()
 	. = ..()
@@ -427,7 +427,7 @@ BLIND     // can't see anything
 /obj/item/clothing/head/after_load()
 	. = ..()
 	if(on)
-		update_flashlight()
+		update_flashlight(loc)
 
 /obj/item/clothing/head/equipped(var/mob/user, var/slot)
 	light_overlay_image = null
@@ -466,14 +466,13 @@ BLIND     // can't see anything
 
 /obj/item/clothing/head/proc/update_flashlight(var/mob/user = null)
 	if(on && !light_applied)
-		set_light(light_max_bright, light_inner_range, light_outer_range, light_falloff_curve, light_color)
+		set_light(0.5, 1, 3)
 		light_applied = 1
 	else if(!on && light_applied)
 		set_light(0)
 		light_applied = 0
 	update_icon(user)
-	if(user)
-		user.update_action_buttons()
+	user.update_action_buttons()
 
 /obj/item/clothing/head/attack_ai(var/mob/user)
 	if(!mob_wear_hat(user))
@@ -854,7 +853,7 @@ BLIND     // can't see anything
 		verbs -= /obj/item/clothing/under/verb/rollsuit
 	if(rolled_sleeves == -1)
 		verbs -= /obj/item/clothing/under/verb/rollsleeves
-	
+
 	ADD_SAVED_VAR(sensor_mode)
 	ADD_SAVED_VAR(rolled_down)
 	ADD_SAVED_VAR(rolled_sleeves)

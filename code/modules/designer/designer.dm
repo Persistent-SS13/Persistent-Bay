@@ -10,15 +10,17 @@
 //Associates the target design to the current atom.
 /atom/proc/designer_associate(var/datum/designer_unit/design)
 	designer_unit = design
-	LAZYDISTINCTADD(design.associated_atoms, src)
+	if (!(src in design.associated_atoms))
+		design.associated_atoms += src
 
 /atom/proc/designer_associate_via_id(var/id)
 	designer_unit = GLOB.designer_system.get_design(id)
 
 /atom/proc/designer_disassociate()
 	if (designer_unit)
-		LAZYREMOVE(designer_unit.associated_atoms, src)
+		designer_unit.associated_atoms -= src
 		designer_unit = null
+
 
 //The global designer_system var. Stores all designs in its list/designs.
 GLOBAL_DATUM_INIT(designer_system, /datum/designer_system, new)

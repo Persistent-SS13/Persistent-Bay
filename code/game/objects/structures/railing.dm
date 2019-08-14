@@ -153,21 +153,6 @@
 						pix_offset_y = 32
 				overlays += image(icon, "mcorneroverlay[density]", pixel_x = pix_offset_x, pixel_y = pix_offset_y)
 
-/obj/structure/railing/verb/rotate()
-	set name = "Rotate Railing Counter-Clockwise"
-	set category = "Object"
-	set src in oview(1)
-
-	if(usr.incapacitated())
-		return 0
-
-	if(anchored)
-		to_chat(usr, "<span class='warning'>It is fastened to the floor and cannot be rotated.</span>")
-		return 0
-
-	set_dir(turn(dir, 90))
-	update_icon()
-
 /obj/structure/railing/verb/revrotate()
 	set name = "Rotate Railing Clockwise"
 	set category = "Object"

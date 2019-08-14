@@ -28,12 +28,10 @@
 	possession_candidate = 1
 	density = 0
 	pass_flags = PASS_FLAG_TABLE
-	hide_type = /obj/item/stack/animalhide/cat
-	hide_amount = 1
 
 /mob/living/simple_animal/cat/Life()
 	. = ..()
-	if(!. || stat == DEAD)
+	if(!.)
 		return FALSE
 	//MICE!
 	if((src.loc) && isturf(src.loc))

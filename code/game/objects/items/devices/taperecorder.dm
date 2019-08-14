@@ -5,13 +5,9 @@
 	icon_state = "taperecorder"
 	item_state = "analyzer"
 	w_class = ITEM_SIZE_SMALL
-	matter = list(MATERIAL_ALUMINIUM = 250, MATERIAL_COPPER = 250, MATERIAL_PLASTIC = 500)
-	obj_flags = OBJ_FLAG_CONDUCTIBLE
-	slot_flags = SLOT_BELT
-	throwforce = 2
-	throw_speed = 4
-	throw_range = 20
-	mass = 500 GRAMS
+
+	matter = list(MATERIAL_ALUMINIUM = 60,MATERIAL_GLASS = 30)
+
 	var/emagged = 0.0
 	var/recording = 0.0
 	var/playing = 0.0
@@ -20,36 +16,32 @@
 	var/canprint = 1
 	var/datum/wires/taperecorder/wires = null // Wires datum
 	var/maintenance = 0
-
-/obj/item/device/taperecorder/empty
-	mytape = null
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	slot_flags = SLOT_BELT
+	throwforce = 2
+	throw_speed = 4
+	throw_range = 20
 
 /obj/item/device/taperecorder/New()
 	..()
-	set_extension(src, /datum/extension/base_icon_state, /datum/extension/base_icon_state, icon_state)
 	wires = new(src)
+	set_extension(src, /datum/extension/base_icon_state, /datum/extension/base_icon_state, icon_state)
+	if(ispath(mytape))
+		mytape = new mytape(src)
 	GLOB.listening_objects += src
-	ADD_SAVED_VAR(maintenance)
-	ADD_SAVED_VAR(emagged)
-	ADD_SAVED_VAR(mytape)
-	ADD_SAVED_VAR(canprint)
-	ADD_SAVED_VAR(recording)
-	ADD_SAVED_VAR(playing)
-	ADD_SAVED_VAR(playsleepseconds)
+	update_icon()
 
-/obj/item/device/taperecorder/Initialize()
-	. = ..()
-	if(!map_storage_loaded)
-		if(ispath(mytape))
-			mytape = new mytape(src)
-	queue_icon_update()
+/obj/item/device/taperecorder/empty
+	mytape = null
 
 /obj/item/device/taperecorder/Destroy()
 	QDEL_NULL(wires)
 	GLOB.listening_objects -= src
 	if(mytape)
-		QDEL_NULL(mytape)
+		qdel(mytape)
+		mytape = null
 	return ..()
+
 
 /obj/item/device/taperecorder/attackby(obj/item/I, mob/user, params)
 	if(isScrewdriver(I))
@@ -393,7 +385,7 @@
 	icon_state = "tape_white"
 	item_state = "analyzer"
 	w_class = ITEM_SIZE_TINY
-	matter = list(MATERIAL_PLASTIC = 50, MATERIAL_ALUMINIUM = 20, MATERIAL_PLATINUM = 5)
+	matter = list(MATERIAL_PLASTIC=20, MATERIAL_STEEL=5, MATERIAL_GLASS=5)
 	force = 1
 	throwforce = 0
 	var/max_capacity = 600
@@ -403,17 +395,6 @@
 	var/ruined = 0
 	var/doctored = 0
 
-/obj/item/device/tape/New()
-	. = ..()
-	ADD_SAVED_VAR(max_capacity)
-	ADD_SAVED_VAR(used_capacity)
-	ADD_SAVED_VAR(storedinfo)
-	ADD_SAVED_VAR(timestamp)
-	ADD_SAVED_VAR(ruined)
-	ADD_SAVED_VAR(doctored)
-
-	ADD_SKIP_EMPTY(storedinfo)
-	ADD_SKIP_EMPTY(timestamp)
 
 /obj/item/device/tape/on_update_icon()
 	overlays.Cut()
@@ -476,7 +457,7 @@
 				SetName("tape")
 				to_chat(user, "<span class='notice'>You scratch off the label.</span>")
 		return
-	else if(isScissors(I))
+	else if(isWirecutter(I))
 		cut(user)
 	else if(istype(I, /obj/item/device/tape/loose))
 		join(user, I)

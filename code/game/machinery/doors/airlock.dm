@@ -47,7 +47,7 @@ var/list/airlock_overlays = list()
 	radio_check_id 		= TRUE
 
 	//Airlock controller
-	var/list/shockedby 	= list()
+	var/shockedby 		= list()
 	var/cur_command 	= null	//the command the door is currently attempting to complete
 
 	//Wires/hacking stuff
@@ -123,7 +123,7 @@ var/list/airlock_overlays = list()
 	var/emag_file 				= 'icons/obj/doors/station/emag.dmi'
 	var/obj/item/weapon/airlock_electronics/electronics = null
 	var/assembly_type = /obj/structure/door_assembly
-	var/material/material = null
+	var/mineral = null
 
 
 /obj/machinery/door/airlock/New(var/newloc, var/obj/structure/door_assembly/assembly=null)
@@ -140,7 +140,7 @@ var/list/airlock_overlays = list()
 	ADD_SAVED_VAR(safe)
 	ADD_SAVED_VAR(justzap)
 	ADD_SAVED_VAR(electronics)
-	ADD_SAVED_VAR(material)
+	ADD_SAVED_VAR(mineral)
 	ADD_SAVED_VAR(lockdownbyai)
 	ADD_SAVED_VAR(closeOtherId)
 	ADD_SAVED_VAR(closeOtherDir)
@@ -154,6 +154,12 @@ var/list/airlock_overlays = list()
 	ADD_SAVED_VAR(aiDisabledIdScanner)
 	ADD_SAVED_VAR(aiHacking)
 	ADD_SAVED_VAR(autoclose)
+
+	ADD_SKIP_EMPTY(brace)
+	ADD_SKIP_EMPTY(closeOtherId)
+	ADD_SKIP_EMPTY(closeOtherDir)
+	ADD_SKIP_EMPTY(_wifi_id)
+	ADD_SKIP_EMPTY(welded)
 
 	//if assembly is given, create the new door from the assembly
 	if (assembly && istype(assembly))
@@ -215,14 +221,14 @@ var/list/airlock_overlays = list()
 		brace = A
 		brace.airlock = src
 		brace.forceMove(src)
+	update_connections()
 	. = ..()
+	queue_icon_update()
 	return INITIALIZE_HINT_LATELOAD
 
 //Later on during init check for a nearby door
 /obj/machinery/door/airlock/LateInitialize()
 	. = ..()
-	update_connections()
-	queue_icon_update()
 	if(src.closeOtherId != null)
 		for (var/obj/machinery/door/airlock/A in world)
 			if(A.closeOtherId == src.closeOtherId && A != src)
@@ -241,8 +247,8 @@ var/list/airlock_overlays = list()
 	return ..()
 
 /obj/machinery/door/airlock/get_material()
-	if(material)
-		return SSmaterials.get_material_by_name(material)
+	if(mineral)
+		return SSmaterials.get_material_by_name(mineral)
 	return SSmaterials.get_material_by_name(MATERIAL_STEEL)
 
 
@@ -781,7 +787,7 @@ About the new airlock wires panel:
 //Radio signal handling
 /obj/machinery/door/airlock/OnSignal(var/datum/signal/signal)
 	. = ..()
-	//log_debug("[src]\ref[src] got signal [signal.data["command"]]")
+	log_debug("[src]\ref[src] got signal [signal.data["command"]]")
 	OnTopic(usr, signal.data, GLOB.default_state)
 
 /obj/machinery/door/airlock/OnTopic(mob/user, href_list, datum/topic_state/state)
@@ -1082,8 +1088,8 @@ About the new airlock wires panel:
 	var/obj/structure/door_assembly/da = new assembly_type(src.loc)
 	if (istype(da, /obj/structure/door_assembly/multi_tile))
 		da.set_dir(src.dir)
-	if(material)
-		da.glass = material
+	if(mineral)
+		da.glass = mineral
 	//else if(glass)
 	else if(glass && !da.glass)
 		da.glass = 1

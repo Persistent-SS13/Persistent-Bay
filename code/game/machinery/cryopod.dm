@@ -8,7 +8,6 @@
 	dir = WEST
 	req_access = core_access_command_programs
 	circuit_type = /obj/item/weapon/circuitboard/cryopod
-	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
 
 	var/base_icon_state = "cryopod_open"
 	var/occupied_icon_state = "cryopod_closed"
@@ -61,19 +60,16 @@
 	. = ..()
 
 /obj/machinery/cryopod/Destroy()
-	GLOB.cryopods -= src
+	if(announce)
+		QDEL_NULL(announce)
 	if(occupant)
 		var/mob/living/ocmob = occupant
 		occupant.forceMove(loc)
 		if(ocmob)
 			ocmob.resting = 1
-	occupant = null
-	if(announce)
-		QDEL_NULL(announce)
-	if(control_computer)
-		control_computer = null
 	for(var/atom/movable/A in InsertedContents())
 		A.forceMove(get_turf(src))
+	GLOB.cryopods -= src
 	. = ..()
 
 /obj/machinery/cryopod/before_save()
@@ -111,7 +107,7 @@
 
 //Lifted from Unity stasis.dm and refactored. ~Zuhayr
 /obj/machinery/cryopod/Process()
-	if(occupant && !QDELETED(occupant))
+	if(occupant)
 		if(applies_stasis && iscarbon(occupant))
 			var/mob/living/carbon/C = occupant
 			C.SetStasis(2)
@@ -127,47 +123,40 @@
 					log_debug("[src] \ref[src] ([x], [y], [z]): No control computer, skipping advanced stuff.")
 
 			despawn_occupant()
-
-//Whether we can even interact with the machine, beyond using settings and maintenance
-/obj/machinery/cryopod/proc/can_use(var/mob/user)
+	..()
+/obj/machinery/cryopod/attackby(var/obj/item/O, var/mob/user = usr)
+	src.add_fingerprint(user)
 	if(!req_access_faction)
 		to_chat(user, "<span class='notice'>\The [src] hasn't been connected to an organization.</span>")
-		return FALSE
-	else if(occupant)
+		return
+	if(occupant)
 		to_chat(user, "<span class='notice'>\The [src] is in use.</span>")
-		return FALSE
-	return TRUE
+		return
+	if(istype(O, /obj/item/grab))
+		var/obj/item/grab/G = O
+		if(check_occupant_allowed(G.affecting))
+			user.visible_message("<span class='notice'>\The [user] begins placing \the [G.affecting] into \the [src].</span>", "<span class='notice'>You start placing \the [G.affecting] into \the [src].</span>")
+			if(do_after(user, 20, src))
+				if(!G || !G.affecting) return
+			insertOccupant(G.affecting, user)
+			return
+	if(istype(O, /obj/item/organ/internal/stack))
+		insertOccupant(O, user)
+		return
+	if(default_deconstruction_screwdriver(user, O))
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
 
-/obj/machinery/cryopod/attackby(var/obj/item/O, var/mob/user = usr)
-	var/allowed = allowed(user)
-	if(allowed && default_deconstruction_screwdriver(user, O))
-		return TRUE
-	else if(!allowed)
-		to_chat(user, SPAN_WARNING("The maintenance panel is locked!"))
-		return TRUE
-	if(default_deconstruction_crowbar(user, O)) //This requires the panel to be open to even do anything
-		return TRUE
-	if(default_part_replacement(user, O))
-		return TRUE
+/obj/machinery/cryopod/attack_hand(var/mob/user = usr)
+	if(stat)	// If there are any status flags, it shouldn't be opperable
+		return
 
-	if(can_use(user))
-		if(istype(O, /obj/item/grab))
-			var/obj/item/grab/G = O
-			if(check_occupant_allowed(G.affecting))
-				user.visible_message("<span class='notice'>\The [user] begins placing \the [G.affecting] into \the [src].</span>", "<span class='notice'>You start placing \the [G.affecting] into \the [src].</span>")
-				if(do_after(user, 20, src))
-					if(!G || !G.affecting) return
-				insertOccupant(G.affecting, user)
-				return
-		if(istype(O, /obj/item/organ/internal/stack))
-			insertOccupant(O, user)
-			return TRUE
-	return ..()
-
-/obj/machinery/cryopod/interact(mob/user = usr)
 	user.set_machine(src)
 	src.add_fingerprint(user)
+
 	var/datum/world_faction/faction = get_faction(req_access_faction)
+
 	var/data[]
 	data += "<hr><br><b>Cryopod Control</b></br>"
 	data += "This cryopod is [faction ? "connected to " + faction.name : "Not Connected"]<br><hr>"
@@ -241,13 +230,18 @@
 	if(usr.stat)
 		return
 
-	if(can_use(usr) && check_occupant_allowed(usr))
+	if(check_occupant_allowed(usr))
 		visible_message("[usr] starts climbing into \the [src].", 3)
 		if(do_after(usr, 20, src))
 			insertOccupant(usr, usr)
 
 /obj/machinery/cryopod/proc/insertOccupant(var/atom/movable/A, var/mob/user = usr)
-	if(!can_use(user))
+	if(!req_access_faction)
+		to_chat(user, "<span class='notice'>\The [src] hasn't been connected to an organization.</span>")
+		return 0
+
+	if(occupant)
+		to_chat(user, "<span class='notice'>\The [src] is in use.</span>")
 		return 0
 
 	if(!check_occupant_allowed(A))
@@ -263,7 +257,7 @@
 
 		src.add_fingerprint(M)
 		M.stop_pulling()
-		to_chat(M, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b> (<a href='?src=\ref[src];despawn=1'>despawn now</a>)</span>")
+		to_chat(M, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b>(<a href='?src=\ref[src];despawn=1'>despawn now</a>)</span>")
 
 	if(istype(A, /obj/item/organ/internal/stack))
 		var/obj/item/organ/internal/stack/S = A
@@ -274,79 +268,74 @@
 		user.drop_from_inventory(A)
 
 	name = "[initial(name)] ([M.real_name])"
+	icon_state = "cryopod_closed"
+
 	occupant = A
 	A.forceMove(src)
 	time_despawn = world.time + time_till_despawn
 	src.add_fingerprint(user)
-	update_icon()
 
 /obj/machinery/cryopod/proc/ejectOccupant()
 	name = initial(name)
+	icon_state = initial(icon_state)
 
 	if(occupant)
 		occupant.forceMove(get_turf(src))
 		occupant = null
-	update_icon()
-
-/obj/machinery/cryopod/proc/get_occupant_ckey()
-	if(istype(occupant, /obj/item/organ/internal/stack))
-		var/obj/item/organ/internal/stack/S = occupant
-		if(S.lacemob.ckey)
-			. = S.lacemob.ckey
-		else
-			. = S.lacemob.stored_ckey
-	else if(ismob(occupant))
-		var/mob/M = occupant
-		if(M.ckey)
-			. = M.ckey
-		else
-			. = M.stored_ckey
-
-/obj/machinery/cryopod/proc/get_occupant_realname()
-	if(istype(occupant, /obj/item/organ/internal/stack))
-		var/obj/item/organ/internal/stack/S = occupant
-		. = S.get_owner_name()
-	else
-		var/mob/M = occupant
-		. = M.real_name
-
-/obj/machinery/cryopod/proc/get_occupant_savedmob()
-	if(istype(occupant, /obj/item/organ/internal/stack))
-		var/obj/item/organ/internal/stack/S = occupant
-		. = S.lacemob
-	else
-		. = occupant
-
-//Set up mob for saving
-/obj/machinery/cryopod/proc/setup_savedmob(var/mob/M)
-	M.stored_ckey  = M.ckey
-	M.spawn_loc    = req_access_faction
-	M.spawn_loc_2  = network
-	M.should_save  = TRUE
-	M.spawn_type   = CHARACTER_SPAWN_TYPE_CRYONET
-	return M
 
 /obj/machinery/cryopod/proc/despawn_occupant(var/autocryo = 0)
 	if(!occupant)
-		log_error("[src]\ref[src] tried to despawn null occupant!")
 		return 0
 	if(despawning)
 		log_error("[src]\ref[src] tried to despawn occupant [occupant]\ref[occupant] twice!")
 		return 0
 
 	despawning = TRUE //Make sure we don't try to despawn twice at the same time for whatever reasons
-	var/mob/character = get_occupant_savedmob()
-	var/key = get_occupant_ckey()
-	var/saveslot = character.save_slot
+	var/mob/character
+	var/key
+	var/saveslot = 0
 	var/islace = istype(occupant, /obj/item/organ/internal/stack)
-	character = setup_savedmob(character)
+	occupant.should_save = 1
+	if(istype(occupant, /obj/item/organ/internal/stack))
+		var/obj/item/organ/internal/stack/S = occupant
+		if(S.lacemob.ckey)
+			S.lacemob.stored_ckey = S.lacemob.ckey
+			key = S.lacemob.ckey
+		else
+			key = S.lacemob.stored_ckey
+		name = S.get_owner_name()
+		character = S.lacemob
+		saveslot = S.lacemob.save_slot
+		S.lacemob.spawn_loc = req_access_faction
+		S.lacemob.spawn_loc_2 = network
+		S.lacemob.spawn_type = CHARACTER_SPAWN_TYPE_CRYONET
+		S.loc = null
+		S.lacemob.spawn_personal = 0
+		S.lacemob.spawn_type = CHARACTER_SPAWN_TYPE_CRYONET
+	else
+		var/mob/M = occupant
+		if(M.ckey)
+			M.stored_ckey = M.ckey
+			key = M.ckey
+		else
+			key = M.stored_ckey
+		name = M.real_name
+		character = M
+		saveslot = M.save_slot
+		if(!autocryo)
+			M.spawn_loc = req_access_faction
+			M.spawn_loc_2 = network
+			M.spawn_type = CHARACTER_SPAWN_TYPE_CRYONET
+			M.spawn_personal = 0
+			M.loc = null
 
 	key = copytext(key, max(findtext(key, "@"), 1))
+
 	if(!saveslot)
 		saveslot = SScharacter_setup.find_character_save_slot(occupant, key)
 
 	announce.autosay("[character.real_name] [on_store_message]", "[on_store_name]", character.GetFaction())
-	visible_message("<span class='notice'>\The [initial(src.name)] hums and hisses as it moves [character.real_name] into storage.</span>", 3)
+	visible_message("<span class='notice'>\The [initial(name)] hums and hisses as it moves [character.real_name] into storage.</span>", 3)
 
 	//Lace retrieval?
 	if(islace && control_computer)
@@ -355,20 +344,23 @@
 	SScharacter_setup.save_character(saveslot, key, character)
 	SetName(initial(src.name))
 	var/mob/occupant_ref = occupant
+	var/mob/new_player/player = new()
+	player.loc = locate(200,200,19)
+	if(occupant.client)
+		occupant.client.eye = player
+	if(istype(occupant, /mob/))
+		var/mob/M = occupant
+		M.stored_ckey = null
+		M.ckey = null
 	occupant.loc = null
+	occupant.stored_ckey = null
+	occupant.ckey = null
 	occupant = null //For some reasons the mob sometimes stay stuck in there if the qdel has some issues.. so we clear it early
 	time_despawn = 0
 	despawning = FALSE
-	queue_icon_update()
-	qdel(occupant_ref, TRUE, TRUE)
-
-/obj/machinery/cryopod/on_update_icon()
-	. = ..()
-	if(occupant)
-		icon_state = occupied_icon_state
-	else
-		icon_state = base_icon_state
-
+	qdel(occupant)
+	occupant = null
+	
 /*
  * Cryogenic refrigeration unit. Basically a despawner.
  * Stealing a lot of concepts/code from sleepers due to massive laziness.
@@ -559,8 +551,8 @@
 	. = ..()
 	airtank = new()
 	airtank.temperature = T0C
-	airtank.adjust_gas(GAS_OXYGEN, MOLES_O2STANDARD, 0)
-	airtank.adjust_gas(GAS_NITROGEN, MOLES_N2STANDARD)
+	airtank.adjust_gas("oxygen", MOLES_O2STANDARD, 0)
+	airtank.adjust_gas("nitrogen", MOLES_N2STANDARD)
 
 /obj/machinery/cryopod/lifepod/return_air()
 	return airtank
@@ -601,19 +593,76 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+
 /obj/machinery/cryopod/personal
 	name = "personal cryogenic freezer"
 	desc = "A man-sized pod for entering suspended animation. This type ensures you return to the same cryopod you entered."
 	circuit_type = /obj/item/weapon/circuitboard/cryopod/personal
 
-//Reimplement this instead of the whole attackby
-/obj/machinery/cryopod/personal/can_use(mob/user)
+/obj/machinery/cryopod/personal/attackby(var/obj/item/O, var/mob/user = usr)
+	src.add_fingerprint(user)
 	if(occupant)
 		to_chat(user, "<span class='notice'>\The [src] is in use.</span>")
-		return FALSE
-	return TRUE
+		return
+	if(istype(O, /obj/item/grab))
+		var/obj/item/grab/G = O
+		if(check_occupant_allowed(G.affecting))
+			user.visible_message("<span class='notice'>\The [user] begins placing \the [G.affecting] into \the [src].</span>", "<span class='notice'>You start placing \the [G.affecting] into \the [src].</span>")
+			if(do_after(user, 20, src))
+				if(!G || !G.affecting) return
+			insertOccupant(G.affecting, user)
+			return
+	if(istype(O, /obj/item/organ/internal/stack))
+		insertOccupant(O, user)
+		return
+	if(InsertedContents())
+		to_chat(user, "<span class='notice'>\The [src] must be emptied of all stored users first.</span>")
+		return
+	if(default_deconstruction_screwdriver(user, O))
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
 
-/obj/machinery/cryopod/personal/interact(mob/user)
+/obj/machinery/cryopod/personal/insertOccupant(var/atom/movable/A, var/mob/user = usr)
+	if(occupant)
+		to_chat(user, "<span class='notice'>\The [src] is in use.</span>")
+		return 0
+
+	if(!check_occupant_allowed(A))
+		to_chat(user, "<span class='notice'>\The [A] cannot be inserted into \the [src].</span>")
+		return 0
+
+	var/mob/M
+	if(istype(A, /mob))
+		M = A
+		if(M.buckled)
+			to_chat(user, "<span class='warning'>Unbuckle the subject before attempting to move them.</span>")
+			return 0
+
+		src.add_fingerprint(M)
+		M.stop_pulling()
+		to_chat(M, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b>(<a href='?src=\ref[src];despawn=1'>despawn now</a>)</span>")
+
+	if(istype(A, /obj/item/organ/internal/stack))
+		var/obj/item/organ/internal/stack/S = A
+		if(!S.lacemob)
+			to_chat(user, "<span class='notice'>\The [S] is inert.</span>")
+			return 0
+		M = S.lacemob
+		user.drop_from_inventory(A)
+
+	name = "[initial(name)] ([M.real_name])"
+	icon_state = "cryopod_closed"
+
+	occupant = A
+	A.forceMove(src)
+	time_despawn = world.time + time_till_despawn
+	src.add_fingerprint(user)
+
+
+/obj/machinery/cryopod/personal/attack_hand(var/mob/user = usr)
 	user.set_machine(src)
 	src.add_fingerprint(user)
 	var/data[]
@@ -623,13 +672,82 @@
 	show_browser(user, data, "window=cryopod")
 	onclose(user, "cryopod")
 
-/obj/machinery/cryopod/personal/setup_savedmob(mob/M)
-	M.stored_ckey		= M.ckey
-	M.should_save 		= null
-	M.spawn_loc  		= null
-	M.spawn_loc_2  		= null
-	M.spawn_p_x 		= x
-	M.spawn_p_y 		= y
-	M.spawn_p_z 		= z
-	M.spawn_type 		= CHARACTER_SPAWN_TYPE_PERSONAL
-	return M
+/obj/machinery/cryopod/personal/OnTopic(var/mob/user = usr, href_list)
+	if(href_list["enter"])
+		insertOccupant(user, user)
+	if(href_list["eject"])
+		ejectOccupant()
+
+/obj/machinery/cryopod/personal/despawn_occupant(var/autocryo = 0)
+	if(!occupant)
+		return 0
+	if(despawning)
+		log_error("[src]\ref[src] tried to despawn occupant [occupant]\ref[occupant] twice!")
+		return 0
+
+	despawning = TRUE //Make sure we don't try to despawn twice at the same time for whatever reasons
+	var/mob/character
+	var/key
+	var/saveslot = 0
+	var/islace = istype(occupant, /obj/item/organ/internal/stack)
+	occupant.should_save = 1
+	if(istype(occupant, /obj/item/organ/internal/stack))
+		var/obj/item/organ/internal/stack/S = occupant
+		if(S.lacemob.ckey)
+			S.lacemob.stored_ckey = S.lacemob.ckey
+			key = S.lacemob.ckey
+		else
+			key = S.lacemob.stored_ckey
+		name = S.get_owner_name()
+		character = S.lacemob
+		saveslot = S.lacemob.save_slot
+		S.lacemob.spawn_personal = 1
+		S.lacemob.spawn_p_x = x
+		S.lacemob.spawn_p_y = y
+		S.lacemob.spawn_p_z = z
+		S.lacemob.spawn_type = CHARACTER_SPAWN_TYPE_CRYONET
+	else
+		var/mob/M = occupant
+		if(M.ckey)
+			M.stored_ckey = M.ckey
+			key = M.ckey
+		else
+			key = M.stored_ckey
+		name = M.real_name
+		character = M
+		saveslot = M.save_slot
+		M.spawn_personal = 1
+		M.spawn_p_x = x
+		M.spawn_p_y = y
+		M.spawn_p_z = z
+		M.spawn_type = CHARACTER_SPAWN_TYPE_CRYONET
+
+	key = copytext(key, max(findtext(key, "@"), 1))
+
+	if(!saveslot)
+		saveslot = SScharacter_setup.find_character_save_slot(occupant, key)
+
+	announce.autosay("[character.real_name] [on_store_message]", "[on_store_name]", character.GetFaction())
+	visible_message("<span class='notice'>\The [initial(name)] hums and hisses as it moves [character.real_name] into storage.</span>", 3)
+
+	//Lace retrieval?
+	if(islace && control_computer)
+		control_computer.add_lace(occupant, src)
+
+	SScharacter_setup.save_character(saveslot, key, character)
+	SetName(initial(src.name))
+	icon_state = base_icon_state
+	var/mob/new_player/player = new()
+	player.loc = locate(200,200,19)
+	if(occupant.client)
+		occupant.client.eye = player
+	if(istype(occupant, /mob/))
+		var/mob/M = occupant
+		M.stored_ckey = null
+		M.ckey = null
+	occupant.loc = null
+	qdel(occupant)
+	occupant = null
+	time_despawn = 0
+	despawning = FALSE
+

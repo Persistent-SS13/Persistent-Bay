@@ -8,7 +8,6 @@
 	density = TRUE
 	anchored = FALSE
 	mass = 15
-	matter = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 1 SHEET, MATERIAL_PLASTIC = 1 SHEET)
 	var/content_path = null
 	var/symbol = null
 	var/sealed = TRUE
@@ -46,6 +45,7 @@
 /obj/structure/cryo_crate/New()
 	if(sealed)
 		content_path = select_cont()
+	
 	..()
 
 /obj/structure/cryo_crate/attack_hand(mob/user)
@@ -71,10 +71,20 @@
 			return
 
 /obj/structure/cryo_crate/attackby(obj/item/W as obj, mob/user as mob)
-	if(!sealed && default_deconstruction_welder(user, W))
-		return TRUE
+	if(isWelder(W))
+		var/obj/item/weapon/tool/weldingtool/WT = W
+		if(WT.remove_fuel(5,user))
+			playsound(loc, 'sound/items/Welder.ogg', 50, 1)
+			to_chat(user, "<span class='notice'>You begin to deconstruct \the [src]...</span>")
+			if (do_after(user, 40, src))
+				playsound(loc, 'sound/items/Welder2.ogg', 50, 1)
+				user.visible_message( \
+					"<span class='notice'>\The [user] deconstructs \the [src].</span>", \
+					"<span class='notice'>You have deconstructed \the [src].</span>")
+				new /obj/item/stack/material/steel(loc, 5)
+				qdel(src)
 	else
-		return ..()
+		..()
 
 /obj/structure/cryo_crate/examine(mob/user)
 	to_chat(user, "[desc]")

@@ -58,4 +58,5 @@
 	onclose(user, "op")
 
 /obj/machinery/computer/operating/Process()
-	src.updateDialog()
+	if(..())
+		src.updateDialog()

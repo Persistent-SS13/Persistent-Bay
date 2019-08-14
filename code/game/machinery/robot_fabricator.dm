@@ -174,6 +174,7 @@ Please wait until completion...</TT><BR>
 	return ..()
 
 /obj/machinery/robotic_fabricator/Process()
+	. = ..()
 	if(operating && world.time >= time_finished)
 		if (!isnull(being_built))
 			being_built.dropInto(loc)

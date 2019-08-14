@@ -167,7 +167,7 @@
 //--------------------------------
 //	Gyrojet Rounds
 //--------------------------------
-///obj/item/ammo_casing/gyrojet
+//obj/item/ammo_casing/gyrojet
 //	desc = "A gyrojet bullet casing."
 //	caliber = CALIBER_GYROJET
 //	projectile_type = /obj/item/projectile/bullet/gyro

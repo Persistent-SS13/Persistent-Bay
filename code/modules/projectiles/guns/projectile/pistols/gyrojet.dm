@@ -1,7 +1,7 @@
 //
 //
 //
-///obj/item/weapon/gun/projectile/pistol/gyropistol
+//obj/item/weapon/gun/projectile/pistol/gyropistol
 //	name = "gyrojet pistol"
 //	desc = "A bulky pistol designed to fire self propelled rounds."
 //	icon = 'icons/obj/weapons/guns/gyropistol.dmi'
@@ -20,7 +20,7 @@
 //	empty_icon = FALSE
 //	mass = 0.625
 
-///obj/item/weapon/gun/projectile/pistol/gyropistol/on_update_icon()
+//obj/item/weapon/gun/projectile/pistol/gyropistol/on_update_icon()
 //	..()
 //	if(ammo_magazine)
 //		icon_state = "gyropistolloaded"
@@ -30,7 +30,7 @@
 //
 //	Gyrojet Magazine
 //
-///obj/item/ammo_magazine/box/gyrojet
+//obj/item/ammo_magazine/box/gyrojet
 //	name = "gyeojet pistol magazine"
 //	icon_state = "gyrojet"
 //	mag_type = MAGAZINE

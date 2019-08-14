@@ -38,5 +38,5 @@
 //	ammo_type = /obj/item/ammo_casing/gyrojet
 //	multiple_sprites = 1
 //	max_ammo = 6
-///obj/item/ammo_magazine/box/gyrojet/empty
+//obj/item/ammo_magazine/box/gyrojet/empty
 //	initial_ammo = 0

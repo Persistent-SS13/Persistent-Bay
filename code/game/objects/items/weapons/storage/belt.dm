@@ -456,22 +456,22 @@
 /obj/item/weapon/storage/belt/security/fed
 	name = "federation combat belt"
 	desc = "Can hold combat gear such as ammo magazines and grenades."
-	icon_state = "ammobelt"
-	item_state = "ammobelt"
+	icon_state = "basicsecuritybelt"
+	item_state = "basicsecuritybelt"
 	storage_slots = 9
 
 /obj/item/weapon/storage/belt/security/military
 	name = "parade belt"
 	desc = "A striking red ammo belt, more for style than camouflage."
-	icon_state = "military"
-	item_state = "military"
+	icon_state = "basicsecuritybelt"
+	item_state = "basicsecuritybelt"
 	storage_slots = 9
 
 /obj/item/weapon/storage/belt/security/assault
 	name = "assault belt"
 	desc = "A tactical assault belt."
-	icon_state = "assault"
-	item_state = "assault"
+	icon_state = "basicsecuritybelt"
+	item_state = "basicsecuritybelt"
 	storage_slots = 6
 
 /obj/item/weapon/storage/belt/waistpack

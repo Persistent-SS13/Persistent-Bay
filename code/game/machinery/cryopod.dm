@@ -348,7 +348,7 @@
 	player.loc = locate(200,200,19)
 	if(occupant.client)
 		occupant.client.eye = player
-	player.ckey = M.ckey
+	player.ckey = occupant.ckey
 	if(istype(occupant, /mob/))
 		var/mob/M = occupant
 		M.stored_ckey = null

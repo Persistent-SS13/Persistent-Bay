@@ -71,7 +71,7 @@
 	name = "hydrazine"
 	result = /datum/reagent/hydrazine
 	result_amount = 2
-	required_reagents = list(/datum/reagent/water = 1, /datum/reagent/oxygen = 1) //well H2O2.... not perfect. should work tho
+	required_reagents = list(/datum/reagent/water = 1, /datum/reagent/oxygen = 1) //well H2O2.. not perfect. should work tho
 	minimum_temperature = T0C + 20
 	maximum_temperature = T0C + 50
 

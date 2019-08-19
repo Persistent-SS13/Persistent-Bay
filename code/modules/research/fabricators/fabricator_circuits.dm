@@ -53,6 +53,15 @@
 	name = "storage fabricator"
 	build_path = /obj/item/weapon/circuitboard/fabricator/storagefab
 
+/obj/item/weapon/circuitboard/fabricator/sciencefab
+	name = "Circuit board (Science Fabricator)"
+	build_path = /obj/machinery/fabricator/science_fabricator
+
+
+/datum/design/circuit/sciencefabricator
+	name = "science fabricator"
+	build_path = /obj/item/weapon/circuitboard/fabricator/sciencefab
+
 
 
 /obj/item/weapon/circuitboard/fabricator/servicefab

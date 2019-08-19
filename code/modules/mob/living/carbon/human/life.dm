@@ -71,24 +71,6 @@
 		wearing_rig = null
 
 	..()
-
-	if(life_tick%30==15)
-		hud_updateflag = 1022
-		var/should_crit_alert = 0
-		if(get_blood_oxygenation() < 60)
-			should_crit_alert = 1
-		if(getOxyLoss() > 35)
-			should_crit_alert = 1
-		if(getToxLoss() > 35)
-			should_crit_alert = 1
-		if(should_crit_alert)
-			var/datum/computer_file/report/crew_record/E = Retrieve_Record(real_name)
-			if(E && E.last_health_alarm < world.time+1HOUR)
-				E.last_health_alarm = world.time
-				healthAlarm()
-
-
-
 	voice = GetVoice()
 
 	//No need to update all of these procs if the guy is dead.

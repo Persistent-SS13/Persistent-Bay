@@ -346,11 +346,6 @@
 	build_path = /obj/item/weapon/gun/projectile/pistol/usp
 	research = "pistol_2"
 
-/datum/design/item/weaponfab/weapons/guns/pistol/gyrojet // tier 3, but its not very good
-	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS) //TODO
-	build_path = /obj/item/weapon/gun/projectile/pistol/gyropistol
-	research = "pistol_2"
-
 /datum/design/item/weaponfab/weapons/guns/pistol/magnum_pistol // tier 4
 	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/pistol/magnum_pistol

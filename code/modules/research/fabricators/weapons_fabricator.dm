@@ -1450,12 +1450,6 @@
 	build_path = /obj/item/ammo_casing/c50
 	materials = list(MATERIAL_STEEL = 260)
 
-/datum/design/item/weaponfab/gyrojet
-	name = "gyrojet Round"
-	id = "gyrojet"
-	build_path = /obj/item/ammo_casing/gyrojet
-	materials = list(MATERIAL_STEEL = 320)
-
 /datum/design/item/weaponfab/c22lr
 	name = ".22 Long Rifle Bullet"
 	id = "c22"
@@ -1790,14 +1784,6 @@
 /datum/design/item/weaponfab/magazines/c762
 	name = "Standard 7.62mm, 15 rounds magazine"
 	build_path = /obj/item/ammo_magazine/box/c762
-	materials = list(MATERIAL_STEEL = 1.25 SHEET)
-
-/datum/design/item/weaponfab/magazines/empty/gyrojet
-	name = "Gyrojet 6 rounds magazine (empty)"
-	build_path = /obj/item/ammo_magazine/box/gyrojet/empty
-/datum/design/item/weaponfab/magazines/gyrojet
-	name = "Gyrojet 6 rounds magazine"
-	build_path = /obj/item/ammo_magazine/box/gyrojet
 	materials = list(MATERIAL_STEEL = 1.25 SHEET)
 
 /datum/design/item/weaponfab/magazines/empty/c556

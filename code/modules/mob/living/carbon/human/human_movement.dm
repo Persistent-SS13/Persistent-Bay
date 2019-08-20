@@ -72,11 +72,10 @@
 
 	
 	var/fullness = get_fullness()
-	if (fullness <= 50)
-		tally += 3
-	if (fullness > 50 && fullness <= 150)
+	if(fullness < 150)
 		tally += 2
-
+	else if(fullness < 250)
+		tally += 1
 	return (tally+config.human_delay)
 
 /mob/living/carbon/human/size_strength_mod()

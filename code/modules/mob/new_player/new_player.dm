@@ -602,13 +602,22 @@
 	return 1
 
 //Runs what happens after the character is loaded. Mainly for cinematics and lore text.
+
+/mob/proc/notify_friends()
+	var/datum/computer_file/report/crew_record/record2 = Retrieve_Record(real_name)
+	if(record2)
+		for(var/friend in record2.all_friends)
+			notify_lace(friend, "Your neural lace lets you know that [real_name] has just come out of cryosleep.")
+		
 /mob/proc/finishLoadCharacter()
 	if(spawn_type == CHARACTER_SPAWN_TYPE_CRYONET)
 		to_chat(src, "You eject from your cryosleep, ready to resume life in the frontier.")
+		notify_friends()
 	else if(spawn_type == CHARACTER_SPAWN_TYPE_FRONTIER_BEACON)
 		GLOB.using_map.on_new_spawn(src) //Moved to overridable map specific code
 	else if(spawn_type == CHARACTER_SPAWN_TYPE_LACE_STORAGE)
 		to_chat(src, "You regain consciousness, still prisoner of your neural lace.")
+		notify_friends()
 	else if(spawn_type == CHARACTER_SPAWN_TYPE_IMPORT)
 		import_spawn()
 /mob/proc/import_spawn()

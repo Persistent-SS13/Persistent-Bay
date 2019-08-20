@@ -169,7 +169,8 @@ var/PriorityQueue/all_feeds
 
 				GLOB.contract_database.add_contract(new_contract)
 				signed = 1
-
+				approved = 1
+				update_icon()
 				info = replacetext(info, "*Unsigned*", "[usr.real_name]")
 				signed_by = usr.real_name
 			else
@@ -781,7 +782,7 @@ var/PriorityQueue/all_feeds
 
 /datum/world_faction/proc/get_members()
 	var/list/members = list()
-	var/list/contracts = GLOB.contract_database.get_contracts(src, CONTRACT_BUSINESS)
+	var/list/contracts = GLOB.contract_database.get_contracts(src.uid, CONTRACT_BUSINESS)
 	for(var/datum/recurring_contract/contract in contracts)
 		if(contract.payee_cancelled || contract.payee_completed|| contract.payer_cancelled || contract.payer_completed)
 			continue
@@ -2569,6 +2570,26 @@ var/PriorityQueue/all_feeds
 	fact.starter_outfit = starter_outfit
 	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
 	return INITIALIZE_HINT_QDEL
+
+
+
+
+
+/datum/personal_objective
+	var/name = "Objective name"
+	var/payout = 0 // how much to pay upon completion
+	var/research_payout = 0 // ho many research points to award
+
+	var/filled = 0 // how much has been provided of whatever is required
+	var/required = 10 // How much of whatever is required to fill the objective
+
+	var/completed = 0 // is the objective completed
+
+	var/list/unique_characters = list() // a list of unique characters for objective tracking
+	var/list/unique_factions = list() // a list of unique factions for objective tracking
+
+	var/datum/computer_file/report/crew_record/parent
+
 
 
 

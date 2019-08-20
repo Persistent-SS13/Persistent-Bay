@@ -76,7 +76,7 @@
 		if("new_member")
 			var/obj/item/weapon/paper/contract/recurring/contract = new()
 			contract.sign_type = CONTRACT_PERSON
-			var/text_signtype
+
 			contract.contract_payee = connected_faction.uid
 			contract.contract_desc = "Membership contract to join [connected_faction.name]"
 			contract.contract_title = "Membership contract to join [connected_faction.name]"

@@ -366,7 +366,7 @@
 		'html/images/eclogo.png',
 		'html/images/fleetlogo.png',
 		'html/images/ocielogo.png',
-		'html/images/pdlogo.png'
+		'html/images/pdlogo.png',
 		'html/images/shenlogo.png'
 		)
 

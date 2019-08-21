@@ -37,16 +37,16 @@
 		for(var/datum/recurring_contract/contract in members)
 			offline_members |= contract
 			for(var/client/C in GLOB.clients)
-				if(C.mob && C.mob.real_name == contract.payee)
+				if(C.mob && C.mob.real_name == contract.payer)
 					online_members |= contract
 					offline_members -= contract
 		var/list/formatted_online_members[0]
 		for(var/datum/recurring_contract/contract in online_members)
-			formatted_online_members[++formatted_online_members.len] = list("name" = "[contract.payee]", "ref" = "\ref[contract]")
+			formatted_online_members[++formatted_online_members.len] = list("name" = "[contract.payer]", "ref" = "\ref[contract]")
 		data["online_members"] = formatted_online_members
 		var/list/formatted_offline_members[0]
 		for(var/datum/recurring_contract/contract in offline_members)
-			formatted_offline_members[++formatted_offline_members.len] = list("name" = "[contract.payee]", "ref" = "\ref[contract]")
+			formatted_offline_members[++formatted_offline_members.len] = list("name" = "[contract.payer]", "ref" = "\ref[contract]")
 		data["offline_members"] = formatted_offline_members
 
 	if(menu == 2)
@@ -72,7 +72,7 @@
 
 	switch(href_list["action"])
 		if("change_menu")
-			menu = text2num(href_list["target"])
+			menu = text2num(href_list["menu_target"])
 		if("new_member")
 			var/obj/item/weapon/paper/contract/recurring/contract = new()
 			contract.sign_type = CONTRACT_PERSON

@@ -580,6 +580,27 @@
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_COPPER = 1 SHEETS)
 	build_path = /obj/item/weapon/computer_hardware/tesla_link
 
+
+/datum/design/item/genfab/computer/adv/reagent_scanner
+	name = "reagent scanner module"
+	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_COPPER = 1 SHEETS)
+	build_path = /obj/item/weapon/computer_hardware/scanner/reagent
+
+/datum/design/item/genfab/computer/adv/paper_scanner
+	name = "paper scanner module"
+	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_COPPER = 1 SHEETS)
+	build_path = /obj/item/weapon/computer_hardware/scanner/paper
+
+/datum/design/item/genfab/computer/adv/atmos_scanner
+	name = "atmospheric scanner module"
+	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_COPPER = 1 SHEETS)
+	build_path = /obj/item/weapon/computer_hardware/scanner/atmos
+
+/datum/design/item/genfab/computer/adv/medical_scanner
+	name = "medical scanner module"
+	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_COPPER = 1 SHEETS)
+	build_path = /obj/item/weapon/computer_hardware/scanner/medical
+
 // Batteries
 /datum/design/item/genfab/computer/adv/battery/normal // tier 0
 	name = "standard battery module"

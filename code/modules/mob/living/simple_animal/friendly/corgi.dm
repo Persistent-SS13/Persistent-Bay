@@ -24,6 +24,8 @@
 	var/obj/item/inventory_head
 	var/obj/item/inventory_back
 	pass_flags = PASS_FLAG_TABLE
+	hide_type = /obj/item/stack/animalhide/corgi
+	hide_amount = 1
 
 //IAN! SQUEEEEEEEEE~
 /mob/living/simple_animal/corgi/Ian

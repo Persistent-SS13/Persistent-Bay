@@ -125,29 +125,29 @@
 			R.upgrade(usr)
 
 		if("mark_complete")
-			if(selected_contract.payee_type == CONTRACT_BUSINESS && selected_contract.payee == usr.real_name)
+			if(selected_contract.payee_type == CONTRACT_PERSON && selected_contract.payee == usr.real_name)
 				selected_contract.payee_completed = 1
-			if(selected_contract.payer_type == CONTRACT_BUSINESS && selected_contract.payer == usr.real_name)
+			if(selected_contract.payer_type == CONTRACT_PERSON && selected_contract.payer == usr.real_name)
 				selected_contract.payer_completed = 1
 			selected_contract.update_status()
 		if("unmark_complete")
-			if(selected_contract.payee_type == CONTRACT_BUSINESS && selected_contract.payee == usr.real_name)
+			if(selected_contract.payee_type == CONTRACT_PERSON && selected_contract.payee == usr.real_name)
 				selected_contract.payee_completed = 0
-			if(selected_contract.payer_type == CONTRACT_BUSINESS && selected_contract.payer == usr.real_name)
+			if(selected_contract.payer_type == CONTRACT_PERSON && selected_contract.payer == usr.real_name)
 				selected_contract.payer_completed = 0
 			selected_contract.update_status()
 		if("cancel_contract")
-			if(selected_contract.payee_type == CONTRACT_BUSINESS && selected_contract.payee == usr.real_name)
+			if(selected_contract.payee_type == CONTRACT_PERSON && selected_contract.payee == usr.real_name)
 				selected_contract.payee_cancelled = 1
-			if(selected_contract.payer_type == CONTRACT_BUSINESS && selected_contract.payer == usr.real_name)
+			if(selected_contract.payer_type == CONTRACT_PERSON && selected_contract.payer == usr.real_name)
 				selected_contract.payer_cancelled = 1
 			selected_contract.update_status()
 		if("clear_contract")
 			var/choice = input(usr,"This will clear the contract from the list and make the record inaccessible permanently.") in list("Confirm", "Cancel")
 			if(choice == "Confirm")
-				if(selected_contract.payee_type == CONTRACT_BUSINESS && selected_contract.payee == usr.real_name)
+				if(selected_contract.payee_type == CONTRACT_PERSON && selected_contract.payee == usr.real_name)
 					selected_contract.payee_clear = 1
-				if(selected_contract.payer_type == CONTRACT_BUSINESS && selected_contract.payer == usr.real_name)
+				if(selected_contract.payer_type == CONTRACT_PERSON && selected_contract.payer == usr.real_name)
 					selected_contract.payer_clear = 1
 		if("print")
 			if(last_print > world.time)

@@ -30,6 +30,10 @@
 
 	var/obj/vis_blocker/blocker
 	
+	
+/obj/machinery/door/airlock/multi_tile/New()
+	..()
+	SetBounds()
 /obj/machinery/door/airlock/multi_tile/after_load()
 	SetBounds()
 	..()

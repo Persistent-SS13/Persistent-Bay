@@ -24,7 +24,10 @@
 	. = ..()
 	if(!map_storage_loaded)
 		if(model_info && model)
-			model_info = model
+			if(model_info == 1)
+				model_info = model
+			else
+				model = model_info
 			var/datum/robolimb/R = all_robolimbs[model]
 			if(R)
 				SetName("[R.company] [initial(name)]")
@@ -48,6 +51,38 @@
 	model_info = 1
 	bp_tag = BP_L_ARM
 
+
+
+/obj/item/robot_parts/l_arm/nanotrasen
+	model_info = "NanoTrasen"
+
+/obj/item/robot_parts/l_arm/morpheus
+	model_info = "Morpheus"
+	
+/obj/item/robot_parts/l_arm/bishop
+	model_info = "Bishop"
+	
+/obj/item/robot_parts/l_arm/hephaestus
+	model_info = "Hephaestus Industries"
+
+/obj/item/robot_parts/l_arm/zenghu
+	model_info = "Zeng-Hu"
+
+/obj/item/robot_parts/l_arm/xion
+	model_info = "Xion"
+
+/obj/item/robot_parts/l_arm/nanotrasen
+	model_info = "NanoTrasen"
+
+/obj/item/robot_parts/l_arm/wardtakahshi
+	model_info = "Ward-Takashi"
+
+/obj/item/robot_parts/l_arm/veymed
+	model_info = "Vey-Med"
+
+/obj/item/robot_parts/l_arm/grayson
+	model_info = "Grayson"
+
 /obj/item/robot_parts/r_arm
 	name = "right arm"
 	desc = "A skeletal limb wrapped in pseudomuscles, with a low-conductivity case."
@@ -55,6 +90,37 @@
 	part = list(BP_R_ARM, BP_R_HAND)
 	model_info = 1
 	bp_tag = BP_R_ARM
+
+/obj/item/robot_parts/r_arm/nanotrasen
+	model_info = "NanoTrasen"
+
+/obj/item/robot_parts/r_arm/morpheus
+	model_info = "Morpheus"
+	
+/obj/item/robot_parts/r_arm/bishop
+	model_info = "Bishop"
+	
+/obj/item/robot_parts/r_arm/hephaestus
+	model_info = "Hephaestus Industries"
+
+/obj/item/robot_parts/r_arm/zenghu
+	model_info = "Zeng-Hu"
+
+/obj/item/robot_parts/r_arm/xion
+	model_info = "Xion"
+
+/obj/item/robot_parts/r_arm/nanotrasen
+	model_info = "NanoTrasen"
+
+/obj/item/robot_parts/r_arm/wardtakahshi
+	model_info = "Ward-Takashi"
+
+/obj/item/robot_parts/r_arm/veymed
+	model_info = "Vey-Med"
+
+/obj/item/robot_parts/r_arm/grayson
+	model_info = "Grayson"
+
 
 /obj/item/robot_parts/l_leg
 	name = "left leg"
@@ -64,6 +130,36 @@
 	model_info = 1
 	bp_tag = BP_L_LEG
 
+/obj/item/robot_parts/l_leg/nanotrasen
+	model_info = "NanoTrasen"
+
+/obj/item/robot_parts/l_leg/morpheus
+	model_info = "Morpheus"
+	
+/obj/item/robot_parts/l_leg/bishop
+	model_info = "Bishop"
+	
+/obj/item/robot_parts/l_leg/hephaestus
+	model_info = "Hephaestus Industries"
+
+/obj/item/robot_parts/l_leg/zenghu
+	model_info = "Zeng-Hu"
+
+/obj/item/robot_parts/l_leg/xion
+	model_info = "Xion"
+
+/obj/item/robot_parts/l_leg/nanotrasen
+	model_info = "NanoTrasen"
+
+/obj/item/robot_parts/l_leg/wardtakahshi
+	model_info = "Ward-Takashi"
+
+/obj/item/robot_parts/l_leg/veymed
+	model_info = "Vey-Med"
+
+/obj/item/robot_parts/l_leg/grayson
+	model_info = "Grayson"
+
 /obj/item/robot_parts/r_leg
 	name = "right leg"
 	desc = "A skeletal limb wrapped in pseudomuscles, with a low-conductivity case."
@@ -71,6 +167,36 @@
 	part = list(BP_R_LEG, BP_R_FOOT)
 	model_info = 1
 	bp_tag = BP_R_LEG
+
+/obj/item/robot_parts/r_leg/nanotrasen
+	model_info = "NanoTrasen"
+
+/obj/item/robot_parts/r_leg/morpheus
+	model_info = "Morpheus"
+	
+/obj/item/robot_parts/r_leg/bishop
+	model_info = "Bishop"
+	
+/obj/item/robot_parts/r_leg/hephaestus
+	model_info = "Hephaestus Industries"
+
+/obj/item/robot_parts/r_leg/zenghu
+	model_info = "Zeng-Hu"
+
+/obj/item/robot_parts/r_leg/xion
+	model_info = "Xion"
+
+/obj/item/robot_parts/r_leg/nanotrasen
+	model_info = "NanoTrasen"
+
+/obj/item/robot_parts/r_leg/wardtakahshi
+	model_info = "Ward-Takashi"
+
+/obj/item/robot_parts/r_leg/veymed
+	model_info = "Vey-Med"
+
+/obj/item/robot_parts/r_leg/grayson
+	model_info = "Grayson"
 
 /obj/item/robot_parts/head
 	name = "head"
@@ -81,6 +207,37 @@
 	bp_tag = BP_HEAD
 	var/obj/item/device/flash/flash1 = null
 	var/obj/item/device/flash/flash2 = null
+
+
+/obj/item/robot_parts/head/nanotrasen
+	model_info = "NanoTrasen"
+
+/obj/item/robot_parts/head/morpheus
+	model_info = "Morpheus"
+	
+/obj/item/robot_parts/head/bishop
+	model_info = "Bishop"
+	
+/obj/item/robot_parts/head/hephaestus
+	model_info = "Hephaestus Industries"
+
+/obj/item/robot_parts/head/zenghu
+	model_info = "Zeng-Hu"
+
+/obj/item/robot_parts/head/xion
+	model_info = "Xion"
+
+/obj/item/robot_parts/head/nanotrasen
+	model_info = "NanoTrasen"
+
+/obj/item/robot_parts/head/wardtakahshi
+	model_info = "Ward-Takashi"
+
+/obj/item/robot_parts/head/veymed
+	model_info = "Vey-Med"
+
+/obj/item/robot_parts/head/grayson
+	model_info = "Grayson"
 
 /obj/item/robot_parts/head/New(newloc, model)
 	. = ..()
@@ -103,6 +260,36 @@
 	bp_tag = BP_CHEST
 	var/wires = 0.0
 	var/obj/item/weapon/cell/cell = null
+	
+/obj/item/robot_parts/chest/nanotrasen
+	model_info = "NanoTrasen"
+
+/obj/item/robot_parts/chest/morpheus
+	model_info = "Morpheus"
+	
+/obj/item/robot_parts/chest/bishop
+	model_info = "Bishop"
+	
+/obj/item/robot_parts/chest/hephaestus
+	model_info = "Hephaestus Industries"
+
+/obj/item/robot_parts/chest/zenghu
+	model_info = "Zeng-Hu"
+
+/obj/item/robot_parts/chest/xion
+	model_info = "Xion"
+
+/obj/item/robot_parts/chest/nanotrasen
+	model_info = "NanoTrasen"
+
+/obj/item/robot_parts/chest/wardtakahshi
+	model_info = "Ward-Takashi"
+
+/obj/item/robot_parts/chest/veymed
+	model_info = "Vey-Med"
+
+/obj/item/robot_parts/chest/grayson
+	model_info = "Grayson"	
 	
 /obj/item/robot_parts/chest/New(newloc, model)
 	. = ..()

@@ -26,7 +26,7 @@
 
 	should_save = 0
 	meat_amount = 10
-	meat_type = /obj/item/weapon/reagent_containers/food/snacks/xenomeat
+	meat_type = /obj/item/weapon/reagent_containers/food/snacks/meat/xenomeat
 
 /mob/living/simple_animal/hostile/creature/Found(var/atom/A)
 	if(istype(A, /obj/machinery/mining/drill))

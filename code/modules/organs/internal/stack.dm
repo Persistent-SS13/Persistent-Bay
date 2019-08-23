@@ -254,7 +254,45 @@ GLOBAL_LIST_EMPTY(neural_laces)
 						record2.linked_account.do_transaction(T2)
 						notify_lace(chosename, "Your neural lace buzzes letting you know you've recieved a new money transfer.")
 
-
+		if("add_friend")
+			var/chosename = input(usr, "Enter the full name of the person you want to add as a friend", "Add a friend") as null|text
+			if(chosename)
+				var/datum/computer_file/report/crew_record/record = Retrieve_Record(chosename)
+				if(!record)
+					to_chat(usr, "An account by that name cannot be found.")
+					return
+				record.pending_friend_request |= owner.real_name
+				to_chat(owner, "Friend request sent.")
+		if("toggle_visible")
+			var/datum/computer_file/report/crew_record/record = Retrieve_Record(owner.real_name)
+			record.visibility_status = 1
+		if("toggle_invisible")
+			var/datum/computer_file/report/crew_record/record = Retrieve_Record(owner.real_name)
+			record.visibility_status = 0
+		if("accept_request")
+			var/target = href_list["ref"]
+			var/datum/computer_file/report/crew_record/record = Retrieve_Record(target)
+			if(!record)
+				to_chat(usr, "An account by that name cannot be found.")
+				return
+			record.all_friends |= owner.real_name
+			var/datum/computer_file/report/crew_record/record2 = Retrieve_Record(owner.real_name)
+			record2.all_friends |= target
+		if("deny_request")
+			var/target = href_list["ref"]
+			var/datum/computer_file/report/crew_record/record2 = Retrieve_Record(owner.real_name)
+			record2.pending_friend_request -= target
+		if("remove_friend")
+			var/target = href_list["ref"]
+			var/choice = input(usr,"This will remove you both from each others friends list. Are you sure?") in list("Confirm", "Cancel")
+			if(choice == "Confirm")
+				var/datum/computer_file/report/crew_record/record = Retrieve_Record(target)
+				if(!record)
+					to_chat(usr, "An account by that name cannot be found.")
+					return
+				record.all_friends -= owner.real_name
+				var/datum/computer_file/report/crew_record/record2 = Retrieve_Record(owner.real_name)
+				record2.all_friends -= target
 	if(href_list["page_up"])
 		curr_page++
 		return 1
@@ -350,6 +388,38 @@ GLOBAL_LIST_EMPTY(neural_laces)
 					for(var/datum/democracy/ballot in nexus.current_election.ballots)
 						formatted_ballots[++formatted_ballots.len] = list("name" = ballot.title, "ref" = "\ref[ballot]")
 					data["ballots"] = formatted_ballots
+
+		if(menu == 4)
+			if(!record)
+				record = Retrieve_Record(owner.real_name)
+			if(!record)
+				menu = 1
+				return
+
+			data["visible"] = record.visibility_status
+			var/list/friends = record.all_friends
+			var/list/online_friends = list()
+			var/list/offline_friends = list()
+			var/list/friend_requests = record.pending_friend_request
+			for(var/friend in friends)
+				offline_friends |= friend
+				for(var/client/C in GLOB.clients)
+					if(C.mob && C.mob.real_name == friend)
+						online_friends |= friend
+						offline_friends -= friend
+			var/list/formatted_online_friends[0]
+			for(var/friend in online_friends)
+				formatted_online_friends[++formatted_online_friends.len] = list("name" = friend)
+			data["online_friends"] = formatted_online_friends
+			var/list/formatted_offline_friends[0]
+			for(var/friend in offline_friends)
+				formatted_offline_friends[++formatted_offline_friends.len] = list("name" = friend)
+
+			var/list/formatted_friend_requests[0]
+			for(var/friend in friend_requests)
+				formatted_friend_requests[++formatted_friend_requests.len] = list("name" = friend)
+			data["friend_requests"] = formatted_friend_requests
+
 		data["menu"] = menu
 
 

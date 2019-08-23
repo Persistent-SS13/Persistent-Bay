@@ -79,8 +79,8 @@
 	name = "fire axe"
 	desc = "Truly, the weapon of a madman. Who would think to fight fire with an axe?"
 
-	force_divisor = 0.525
-	unwielded_force_divisor = 0.25
+	force_divisor = 0.27
+	unwielded_force_divisor = 0.15
 	sharpness = 2
 	attack_cooldown_modifier = 2
 	force_wielded = 15

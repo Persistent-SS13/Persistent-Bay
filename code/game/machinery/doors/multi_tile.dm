@@ -1,4 +1,10 @@
 //Terribly sorry for the code doubling, but things go derpy otherwise.
+
+/obj/vis_blocker
+	mouse_opacity = 0
+	should_save = 0
+	opacity = 1
+	anchored = 1
 /obj/machinery/door/airlock/multi_tile
 	airlock_type = "double"
 	name = "\improper Airlock"
@@ -22,7 +28,12 @@
 	max_health = 800
 	assembly_type = /obj/structure/door_assembly/multi_tile
 
-
+	var/obj/vis_blocker/blocker
+	
+	
+/obj/machinery/door/airlock/multi_tile/New()
+	..()
+	SetBounds()
 /obj/machinery/door/airlock/multi_tile/after_load()
 	SetBounds()
 	..()
@@ -52,8 +63,12 @@
 	else
 		bound_width = world.icon_size
 		bound_height = width * world.icon_size
-
-
+	if(opacity)
+		for(var/turf/T in locs)
+			if(T != loc)
+				if(blocker)
+					qdel(blocker)
+				blocker = new(T)
 /obj/machinery/door/airlock/multi_tile/on_update_icon(state=0, override=0)
 	..()
 	//Since some of the icons are off-center, we have to align them for now

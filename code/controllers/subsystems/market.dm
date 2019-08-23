@@ -75,6 +75,8 @@ SUBSYSTEM_DEF(market)
 			return "As long as this contract is in place, this contracts APC and area it controls will be considered under the control of the signing party. The trespasser alarm will respond based on the settings of the signing party."
 		if(CONTRACT_SERVICE_LOAN)
 			return "The signing party agrees to automatic payment at the rate specified. Once the balance reaches zero, this contract will automatically complete in good standing. This type of contract can only be cancelled by the issuer."
+		if(CONTRACT_SERVICE_MEMBERSHIP)
+			return "The signing party agrees to become a voluntary member in the organization. You may recieve emails related to your membership, and it can be cancelled at any time by either party."
 	return ""
 
 /datum/contract_database

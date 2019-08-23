@@ -5,6 +5,14 @@
 	icon = 'icons/obj/items.dmi'
 	icon_state = "sheet-hide"
 
+/obj/item/stack/animalhide/bear
+	name = "bear skin"
+	desc = "The by-product of bear farming."
+	singular_name = "bear skin piece"
+	icon = 'icons/obj/items.dmi'
+	icon_state = "sheet-hide"
+	color = COLOR_GRAY40
+
 /obj/item/stack/animalhide/corgi
 	name = "corgi hide"
 	desc = "The by-product of corgi farming."

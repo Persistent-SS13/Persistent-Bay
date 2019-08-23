@@ -10,7 +10,7 @@
 	response_disarm = "shoves"
 	response_harm = "hits"
 	speed = -1
-	meat_type = /obj/item/weapon/reagent_containers/food/snacks/xenomeat
+	meat_type = /obj/item/weapon/reagent_containers/food/snacks/meat/xenomeat
 	maxHealth = 100
 	health = 100
 	harm_intent_damage = 5
@@ -28,7 +28,8 @@
 	minbodytemp = 0
 	heat_damage_per_tick = 20
 	can_escape = 1
-
+	hide_type = /obj/item/stack/animalhide/xeno
+	hide_amount = 1
 
 /mob/living/simple_animal/hostile/alien/drone
 	name = "alien drone"

@@ -465,11 +465,6 @@ GLOBAL_LIST_EMPTY(neural_laces)
 /obj/item/organ/internal/stack/getToxLoss()
 	return 0
 
-/obj/item/organ/internal/stack/vox
-	name = "cortical stack"
-	invasive = 1
-	action_button_name = "Access Cortical Stack UI"
-
 /obj/item/organ/internal/stack/proc/do_backup()
 	if(owner && owner.stat != DEAD && !is_broken() && owner.mind)
 		languages = owner.languages.Copy()
@@ -513,22 +508,10 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	if(!istype(owner))
 		message_admins("Removed Failed")
 		return ..(user, drop_organ, detach)
-
 	if(name == initial(name))
 		name = "\the [owner.real_name]'s [initial(name)]"
-
 	transfer_identity(owner)
-
-
-	..(user, drop_organ, detach)
-
-/obj/item/organ/internal/stack/vox/removed()
-	var/obj/item/organ/external/head = owner.get_organ(parent_organ)
-	owner.visible_message("<span class='danger'>\The [src] rips gaping holes in \the [owner]'s [head.name] as it is torn loose!</span>")
-	head.take_damage(rand(15,20))
-	for(var/obj/item/organ/O in head.contents)
-		O.take_damage(rand(30,70))
-	..()
+	return ..(user, drop_organ, detach)
 
 /obj/item/organ/internal/stack/proc/overwrite()
 	if(owner.mind && owner.ckey) //Someone is already in this body!
@@ -545,6 +528,19 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	owner.save_slot = save_slot
 	to_chat(owner, "<span class='notice'>Consciousness slowly creeps over you as your new body awakens.</span>")
 	return 1
+
+/obj/item/organ/internal/stack/vox
+	name = "cortical stack"
+	invasive = 1
+	action_button_name = "Access Cortical Stack UI"
+
+/obj/item/organ/internal/stack/vox/removed()
+	var/obj/item/organ/external/head = owner.get_organ(parent_organ)
+	owner.visible_message("<span class='danger'>\The [src] rips gaping holes in \the [owner]'s [head.name] as it is torn loose!</span>")
+	head.take_damage(rand(15,20))
+	for(var/obj/item/organ/O in head.contents)
+		O.take_damage(rand(30,70))
+	return ..()
 
 /obj/item/organ/internal/stack/vat
 	action_button_name = "Access Vatchip UI"

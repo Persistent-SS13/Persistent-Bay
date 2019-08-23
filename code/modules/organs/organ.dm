@@ -331,25 +331,25 @@ var/list/organ_cache = list()
 
 	if(!istype(owner))
 		return
-	GLOB.dismembered_event.raise_event(owner, src)
-
+	if(!QDELETED(src))
+		GLOB.dismembered_event.raise_event(owner, src)
 	action_button_name = null
-
 	if(drop_organ)
-		dropInto(owner.loc)
+		dropInto(owner? owner.loc : null)
 
-	START_PROCESSING(SSobj, src)
+	if(!QDELETED(src))
+		START_PROCESSING(SSobj, src)
 	rejecting = null
-	if(!BP_IS_ROBOTIC(src))
-		var/datum/reagent/blood/organ_blood = locate(/datum/reagent/blood) in reagents.reagent_list //TODO fix this and all other occurences of locate(/datum/reagent/blood) horror
-		if(!organ_blood || !organ_blood.data["blood_DNA"])
-			owner.vessel.trans_to(src, 5, 1, 1)
+	if(!QDELETED(owner)) //Since this code can be called in the destructor, we better check again
+		if(!BP_IS_ROBOTIC(src))
+			var/datum/reagent/blood/organ_blood = locate(/datum/reagent/blood) in reagents.reagent_list //TODO fix this and all other occurences of locate(/datum/reagent/blood) horror
+			if(!organ_blood || !organ_blood.data["blood_DNA"])
+				owner.vessel.trans_to(src, 5, 1, 1)
 
-	if(owner && vital)
-		if(user)
-			admin_attack_log(user, owner, "Removed a vital organ ([src]).", "Had a vital organ ([src]) removed.", "removed a vital organ ([src]) from")
-		owner.death()
-
+		if(owner && vital)
+			if(user)
+				admin_attack_log(user, owner, "Removed a vital organ ([src]).", "Had a vital organ ([src]) removed.", "removed a vital organ ([src]) from")
+			owner.death()
 	owner = null
 
 /obj/item/organ/proc/replaced(var/mob/living/carbon/human/target, var/obj/item/organ/external/affected)

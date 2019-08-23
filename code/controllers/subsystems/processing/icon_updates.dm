@@ -26,10 +26,11 @@ PROCESSING_SUBSYSTEM_DEF(icon_update)
 		var/list/argv = curr[A]
 		curr.len--
 
-		if (islist(argv))
-			A.update_icon(arglist(argv))
-		else
-			A.update_icon()
+		if(!QDELETED(A))
+			if (islist(argv))
+				A.update_icon(arglist(argv))
+			else
+				A.update_icon()
 
 		if (no_mc_tick)
 			CHECK_TICK

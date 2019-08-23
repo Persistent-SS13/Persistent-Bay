@@ -166,7 +166,7 @@ Please contact me on #coderbus IRC. ~Carn x
 			visible_overlays = overlays_standing
 
 		var/matrix/M = matrix()
-		if(lying && (species.prone_overlay_offset[1] || species.prone_overlay_offset[2]))
+		if(lying && species && (species.prone_overlay_offset[1] || species.prone_overlay_offset[2]))
 			M.Translate(species.prone_overlay_offset[1], species.prone_overlay_offset[2])
 
 		for(var/i = 1 to LAZYLEN(visible_overlays))

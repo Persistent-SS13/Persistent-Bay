@@ -68,7 +68,7 @@
 		if(clearlace || !istype(lace))
 			qdel(lace, clearlace, clearlace) //Die stack :D
 		else
-			lace.removed(dolace = !clearlace)
+			lace.removed(detach = !clearlace)
 			lace.dropInto(get_turf(src))
 #endif
 

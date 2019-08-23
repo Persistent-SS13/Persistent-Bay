@@ -942,3 +942,9 @@
 	name = "gas sensor"
 	build_path = /obj/machinery/air_sensor
 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 1)
+
+/datum/design/item/engifab/machines/sparker
+	name = "sparker frame"
+	build_path = /obj/item/frame/sparker
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 1 SHEETS)
+

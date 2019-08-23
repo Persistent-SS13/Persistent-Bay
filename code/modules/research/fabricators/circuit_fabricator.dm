@@ -984,6 +984,13 @@
 	build_path = /obj/item/weapon/circuitboard/oxyregenerator
 	build_type = ENGIFAB
 
+
+/datum/design/circuit/igniter
+	name = "gas igniter"
+	id = "machineigniter"
+	build_path = /obj/item/weapon/circuitboard/igniter
+	build_type = ENGIFAB
+
 /**
 
 /datum/design/aimodule

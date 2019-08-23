@@ -53,3 +53,7 @@
 	var/obj/screen/cells = null
 
 	var/last_resist = 0
+
+	//For skinning mobs
+	var/hide_type = null
+	var/hide_amount = 0 

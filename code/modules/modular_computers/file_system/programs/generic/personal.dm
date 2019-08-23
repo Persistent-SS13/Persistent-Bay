@@ -12,7 +12,8 @@
 	name = "Personal Options"
 	available_to_ai = TRUE
 	var/menu = 1
-
+	var/datum/recurring_contract/selected_contract
+	var/last_print
 /datum/nano_module/program/personal/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/list/data = host.initial_data()
 	data["name"] = user.real_name
@@ -55,7 +56,34 @@
 		data["stock_limit"] = limits.stock_limit
 		data["shuttle_limit"] = limits.shuttle_limit
 		data["shuttle_limit_used"] = 0
+	if(menu == 4)
+		var/list/formatted_contracts[0]
+		var/list/contracts = GLOB.contract_database.get_contracts(usr.real_name, CONTRACT_PERSON)
+		for(var/datum/recurring_contract/contract in contracts)
+			if(contract.payee == usr.real_name)
+				formatted_contracts[++formatted_contracts.len] = list("name" = "[contract.name] ([contract.payer])", "ref" = "\ref[contract]")
+			else
+				formatted_contracts[++formatted_contracts.len] = list("name" = "[contract.name] ([contract.payee])", "ref" = "\ref[contract]")
+		data["contracts"] = formatted_contracts
 
+	if(menu == 5)
+		data["contract"] = selected_contract.name
+		data["details"] = selected_contract.details
+		data["contracted"] = selected_contract.payee
+		data["signed"] = selected_contract.payer
+		if(world.time >= last_print)
+			data["can_print"] = 1
+		data["contract_status"] = selected_contract.get_status()
+		data["payment_type"] = selected_contract.get_paytype()
+		data["balance"] = selected_contract.balance
+		data["pay"] = selected_contract.pay_amount
+		data["paytime"] = time2text(selected_contract.last_pay+config.year_skip)
+		data["service"] = selected_contract.func
+		data["complete"] = selected_contract.get_marked(usr.real_name)
+		if(selected_contract.status == CONTRACT_STATUS_OPEN)
+			data["cancelable"] = 1
+		else
+			data["clearable"] = 1
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "personal.tmpl", name, 750, 650, state = state)
@@ -69,6 +97,9 @@
 	. = SSnano.update_uis(src)
 	var/datum/computer_file/report/crew_record/R = Retrieve_Record(usr.real_name)
 	switch(href_list["action"])
+		if("select_contract")
+			selected_contract = locate(href_list["ref"])
+			menu = 5
 		if("change_menu")
 			menu = text2num(href_list["menu_target"])
 		if("select_cryo")
@@ -93,4 +124,67 @@
 		if("upgrade")
 			R.upgrade(usr)
 
-
+		if("mark_complete")
+			if(selected_contract.payee_type == CONTRACT_PERSON && selected_contract.payee == usr.real_name)
+				selected_contract.payee_completed = 1
+			if(selected_contract.payer_type == CONTRACT_PERSON && selected_contract.payer == usr.real_name)
+				selected_contract.payer_completed = 1
+			selected_contract.update_status()
+		if("unmark_complete")
+			if(selected_contract.payee_type == CONTRACT_PERSON && selected_contract.payee == usr.real_name)
+				selected_contract.payee_completed = 0
+			if(selected_contract.payer_type == CONTRACT_PERSON && selected_contract.payer == usr.real_name)
+				selected_contract.payer_completed = 0
+			selected_contract.update_status()
+		if("cancel_contract")
+			if(selected_contract.payee_type == CONTRACT_PERSON && selected_contract.payee == usr.real_name)
+				selected_contract.payee_cancelled = 1
+			if(selected_contract.payer_type == CONTRACT_PERSON && selected_contract.payer == usr.real_name)
+				selected_contract.payer_cancelled = 1
+			selected_contract.update_status()
+		if("clear_contract")
+			var/choice = input(usr,"This will clear the contract from the list and make the record inaccessible permanently.") in list("Confirm", "Cancel")
+			if(choice == "Confirm")
+				if(selected_contract.payee_type == CONTRACT_PERSON && selected_contract.payee == usr.real_name)
+					selected_contract.payee_clear = 1
+				if(selected_contract.payer_type == CONTRACT_PERSON && selected_contract.payer == usr.real_name)
+					selected_contract.payer_clear = 1
+		if("print")
+			if(last_print > world.time)
+				to_chat(usr, "You must wait before printing.")
+				return
+			last_print = world.time + 10 SECONDS
+			playsound(get_turf(program.computer), pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
+			var/obj/item/weapon/paper/contract/contract = new()
+			var/t = {"
+					<font face='Verdana' color=blue>
+						<table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'>
+							<tr>
+								<td>
+									<center><h1>[selected_contract.name](Copy)</h1></center>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<br>[selected_contract.details]<br>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<b>Creating Party:</b>[selected_contract.payee]
+									<b>Signing Party:</b>[selected_contract.payer]
+									<b>Auto Pay:</b>[selected_contract.get_paytype()]
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<h3>Status</h3>[selected_contract.get_status()]<br>
+								</td>
+							</tr>
+						</table>
+					</font>
+			"}
+			contract.info = t
+			contract.name = selected_contract.name
+			contract.approved = 1
+			contract.update_icon()

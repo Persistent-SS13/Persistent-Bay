@@ -100,7 +100,7 @@
 
 		qdel(W)
 		user.visible_message("<span class='danger'>\The [user] feeds \the [W] into \the [src], obliterating it.</span>")
-		return
+		return TRUE
 	else if(W.is_open_container() && W.reagents && W.reagents.get_free_space())
 		reagents.trans_to_obj(W, W.reagents.get_free_space())
 		user.visible_message("[user] empties \the [src] into \the [W].", "You empty \the [src]'s content into \the [W].")

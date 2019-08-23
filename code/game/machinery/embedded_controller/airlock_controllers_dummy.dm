@@ -12,6 +12,7 @@
 /obj/machinery/dummy_airlock_controller/Process()
 	if(master_controller)
 		appearance = master_controller
+	. = ..()
 
 /obj/machinery/dummy_airlock_controller/Initialize()
 	. = ..()

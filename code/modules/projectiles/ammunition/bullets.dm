@@ -167,13 +167,13 @@
 //--------------------------------
 //	Gyrojet Rounds
 //--------------------------------
-/obj/item/ammo_casing/gyrojet
-	desc = "A gyrojet bullet casing."
-	caliber = CALIBER_GYROJET
-	projectile_type = /obj/item/projectile/bullet/gyro
-	icon_state = "gyro-casing"
-	spent_icon = "gyro-casing" //Its a single piece rocket, there's no spent casing
-	matter = list(MATERIAL_STEEL = 520)
+//obj/item/ammo_casing/gyrojet
+//	desc = "A gyrojet bullet casing."
+//	caliber = CALIBER_GYROJET
+//	projectile_type = /obj/item/projectile/bullet/gyro
+//	icon_state = "gyro-casing"
+//	spent_icon = "gyro-casing" //Its a single piece rocket, there's no spent casing
+//	matter = list(MATERIAL_STEEL = 520, /datum/reagent/aluminum = 30)
 
 //--------------------------------
 //	4mm Flechettes Rounds

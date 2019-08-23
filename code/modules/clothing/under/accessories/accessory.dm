@@ -75,8 +75,6 @@
 	has_suit = S
 	forceMove(has_suit)
 	has_suit.overlays += get_inv_overlay()
-	has_suit.update_clothing_icon()
-	has_suit.update_held_icon()
 
 	if(user)
 		to_chat(user, "<span class='notice'>You attach \the [src] to \the [has_suit].</span>")
@@ -84,11 +82,8 @@
 
 /obj/item/clothing/accessory/proc/on_removed(var/mob/user)
 	if(!has_suit)
-		log_warning("Removed [src]\ref[src] from null suit!")
 		return
 	has_suit.overlays -= get_inv_overlay()
-	has_suit.update_clothing_icon()
-	has_suit.update_held_icon()
 	has_suit = null
 	if(user)
 		usr.put_in_hands(src)

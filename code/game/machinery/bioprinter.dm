@@ -1,14 +1,11 @@
-/datum/bioprinter_printing_data
-	var/typename
-	var/cost
-/datum/bioprinter_printing_data/New(var/typename, var/cost)
-	src.typename = typename
-	src.cost	 = cost
-
 // GENERIC PRINTER - DO NOT USE THIS OBJECT.
 // Flesh and robot printers are defined below this object.
+
 /obj/machinery/organ_printer
+	name = "organ printer"
+	desc = "It's a machine that prints organs."
 	icon = 'icons/obj/surgery.dmi'
+	icon_state = "bioprinter"
 	anchored = 1
 	density = 1
 	idle_power_usage = 40
@@ -18,7 +15,7 @@
 	var/print_delay = 10 SECONDS
 	var/printing = null //key of the organ being printed
 	var/time_print_end = 0
-	var/list/datum/bioprinter_printing_data/products = list()
+	var/list/products = list()
 
 /obj/machinery/organ_printer/attackby(var/obj/item/O, var/mob/user)
 	if(default_deconstruction_screwdriver(user, O))
@@ -41,35 +38,27 @@
 	..()
 	ADD_SAVED_VAR(stored_matter)
 	ADD_SAVED_VAR(printing)
+	ADD_SAVED_VAR(time_print_end)
 	ADD_SAVED_VAR(matter_in_use)
 
 	ADD_SKIP_EMPTY(stored_matter)
 	ADD_SKIP_EMPTY(printing)
+	ADD_SKIP_EMPTY(time_print_end)
 
-/obj/machinery/organ_printer/Read(savefile/f)
+/obj/machinery/organ_printer/before_save()
 	. = ..()
-	var/tpe = 0
-	from_file(f["time_print_end"], tpe)
-	if(tpe > 0)
-		time_print_end = world.time + tpe
-	
-/obj/machinery/organ_printer/Write(savefile/f)
+	//Make sure we only save the time difference from the start of the printing process
+	time_print_end -= world.time
+
+/obj/machinery/organ_printer/after_load()
 	. = ..()
-	if(printing)
-		to_file(f["time_print_end"], abs(time_print_end - world.time))
+	//Add the current time to the time difference we just saved
+	time_print_end += world.time
 
 /obj/machinery/organ_printer/Initialize(mapload, d)
 	. = ..()
 	if(!map_storage_loaded)
 		stored_matter = max_stored_matter
-
-/obj/machinery/organ_printer/after_load()
-	. = ..()
-	if(printing)
-		START_PROCESSING(SSmachines, src) //Make sure we process when reloading a printing machine!
-
-/obj/machinery/organ_printer/ShouldInitProcess()
-	return FALSE
 
 /obj/machinery/organ_printer/examine(var/mob/user)
 	. = ..()
@@ -87,27 +76,24 @@
 
 /obj/machinery/organ_printer/proc/printer_status()
 	return 	{"Matter levels: [round(stored_matter,1)]/[max_stored_matter] units<BR>
-Time left: [time_print_end != 0? round((time_print_end - world.time)/10, 1) : "N/A"] second(s)<BR>"}
+Time left: [time_print_end != 0? (time_print_end - world.time)/10 : "N/A"] second(s)<BR>"}
 
 /obj/machinery/organ_printer/interact(mob/user)
 	if(!panel_open)
 		var/list/dat = list()
 		dat += "[src.name]: "
 		dat += printer_status()
-		if(printing)
-			dat += "<SPAN><A HREF='?src=\ref[src];cancel=1'>Cancel</A></SPAN>"
-		else
-			dat += "<SPAN><A HREF='?src=\ref[src];cancel=1'>Cancel</A></SPAN>"
 		dat += "<BR><BR>"
 		
 		dat += "Print options: <br /><div>"
 		for(var/key in products)
-			var/datum/bioprinter_printing_data/P = products[key]
-			if(P)
-				dat += "<div class='item'>[key] - [P.cost]u <a href='?src=\ref[src];print=[key]'>Print</a></div>"
+			var/list/P = products[key]
+			if(P && P.len)
+				dat += "<div class='item'>[key] - [P[2]]u <a href='?src=\ref[src];print=[key]'>Print</a></div>"
 		dat += "</div>"
+		dat += "<SPAN><A HREF='?src=\ref[src];cancel=1'>Cancel</A></SPAN>"
 		user.set_machine(src)
-		var/datum/browser/popup = new(usr, "organ_printer", "[src.name] menu", 372, 480)
+		var/datum/browser/popup = new(usr, "organ_printer", "[src.name] menu")
 		popup.set_content(jointext(dat, null))
 		popup.open()
 
@@ -116,7 +102,6 @@ Time left: [time_print_end != 0? round((time_print_end - world.time)/10, 1) : "N
 	if(href_list["print"] && !printing)
 		var/prod = sanitize(href_list["print"])
 		if(can_print(prod))
-			START_PROCESSING(SSmachines, src)
 			printing = prod
 			time_print_end = world.time + print_delay
 			update_use_power(POWER_USE_ACTIVE)
@@ -126,7 +111,6 @@ Time left: [time_print_end != 0? round((time_print_end - world.time)/10, 1) : "N
 			state("Not enough matter for completing the task!")
 		return TOPIC_HANDLED
 	if(href_list["cancel"] && printing)
-		STOP_PROCESSING(SSmachines, src)
 		printing = null
 		time_print_end = 0
 		update_use_power(POWER_USE_IDLE)
@@ -137,23 +121,24 @@ Time left: [time_print_end != 0? round((time_print_end - world.time)/10, 1) : "N
 /obj/machinery/organ_printer/Process()
 	if(inoperable())
 		return
-	updateUsrDialog()
+
 	if(printing && (world.time >= time_print_end))
 		time_print_end = 0
-		stored_matter -= products[printing].cost
+		stored_matter -= products[printing][2]
 		print_organ(printing)
 		printing = null
 		update_use_power(POWER_USE_IDLE)
 		queue_icon_update()
+	updateUsrDialog()
 
 /obj/machinery/organ_printer/proc/can_print(var/choice)
-	if(stored_matter < products[choice].cost)
-		visible_message("<span class='notice'>\The [src] displays a warning: 'Not enough matter. [stored_matter]u stored and [products[choice].cost]u needed.'</span>")
+	if(stored_matter < products[choice][2])
+		visible_message("<span class='notice'>\The [src] displays a warning: 'Not enough matter. [stored_matter] stored and [products[choice][2]] needed.'</span>")
 		return 0
 	return 1
 
 /obj/machinery/organ_printer/proc/print_organ(var/choice)
-	var/new_organ = products[choice].typename
+	var/new_organ = products[choice][1]
 	var/obj/item/organ/O = new new_organ(get_turf(src))
 	O.status |= ORGAN_CUT_AWAY
 	return O
@@ -166,20 +151,20 @@ Time left: [time_print_end != 0? round((time_print_end - world.time)/10, 1) : "N
 	icon_state = "roboprinter"
 
 	products = list(
-		BP_HEART    = new/datum/bioprinter_printing_data(/obj/item/organ/internal/heart,      25),
-		BP_LUNGS    = new/datum/bioprinter_printing_data(/obj/item/organ/internal/lungs,      25),
-		BP_KIDNEYS  = new/datum/bioprinter_printing_data(/obj/item/organ/internal/kidneys,    20),
-		BP_EYES     = new/datum/bioprinter_printing_data(/obj/item/organ/internal/eyes,       20),
-		BP_LIVER    = new/datum/bioprinter_printing_data(/obj/item/organ/internal/liver,      25),
-		BP_STOMACH  = new/datum/bioprinter_printing_data(/obj/item/organ/internal/stomach,    25),
-		BP_L_ARM    = new/datum/bioprinter_printing_data(/obj/item/organ/external/arm,        65),
-		BP_R_ARM    = new/datum/bioprinter_printing_data(/obj/item/organ/external/arm/right,  65),
-		BP_L_LEG    = new/datum/bioprinter_printing_data(/obj/item/organ/external/leg,        65),
-		BP_R_LEG    = new/datum/bioprinter_printing_data(/obj/item/organ/external/leg/right,  65),
-		BP_L_FOOT   = new/datum/bioprinter_printing_data(/obj/item/organ/external/foot,       40),
-		BP_R_FOOT   = new/datum/bioprinter_printing_data(/obj/item/organ/external/foot/right, 40),
-		BP_L_HAND   = new/datum/bioprinter_printing_data(/obj/item/organ/external/hand,       40),
-		BP_R_HAND   = new/datum/bioprinter_printing_data(/obj/item/organ/external/hand/right, 40)
+		BP_HEART    = list(/obj/item/organ/internal/heart,      25),
+		BP_LUNGS    = list(/obj/item/organ/internal/lungs,      25),
+		BP_KIDNEYS  = list(/obj/item/organ/internal/kidneys,    20),
+		BP_EYES     = list(/obj/item/organ/internal/eyes,       20),
+		BP_LIVER    = list(/obj/item/organ/internal/liver,      25),
+		BP_STOMACH  = list(/obj/item/organ/internal/stomach,    25),
+		BP_L_ARM    = list(/obj/item/organ/external/arm,        65),
+		BP_R_ARM    = list(/obj/item/organ/external/arm/right,  65),
+		BP_L_LEG    = list(/obj/item/organ/external/leg,        65),
+		BP_R_LEG    = list(/obj/item/organ/external/leg/right,  65),
+		BP_L_FOOT   = list(/obj/item/organ/external/foot,       40),
+		BP_R_FOOT   = list(/obj/item/organ/external/foot/right, 40),
+		BP_L_HAND   = list(/obj/item/organ/external/hand,       40),
+		BP_R_HAND   = list(/obj/item/organ/external/hand/right, 40)
 		)
 
 	circuit_type = /obj/item/weapon/circuitboard/roboprinter

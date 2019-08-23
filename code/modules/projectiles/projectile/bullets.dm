@@ -394,23 +394,19 @@
 //---------------------------------------------------
 //	Gyrojet Rocket
 //---------------------------------------------------
-/obj/item/projectile/bullet/gyro
-	force = 25
-	penetrating = 1
-	armor_penetration = 16
-	penetration_modifier = 1.2
-	distance_falloff = 0.5
-	mass = 0.012
+//obj/item/projectile/bullet/gyro
+//	force = 25
+//	penetrating = 1
+//	armor_penetration = 10
+//	penetration_modifier = 1.5
+//	distance_falloff = 0.5
+//	mass = 0.012
 
 //Gyrojet rounds don't explode.. They're meant to deal kinectic damage
-/obj/item/projectile/bullet/gyro/he
-	force = 15
-	armor_penetration = 2
-
-/obj/item/projectile/bullet/gyro/he/on_hit(var/atom/target, var/blocked = 0)
-	if(isturf(target))
-		explosion(target, -1, 0, 2)
-	..()
+//obj/item/projectile/bullet/gyro/on_hit(var/atom/target, var/blocked = 0)
+	// if(isturf(target))
+	// 	explosion(target, -1, 0, 2)
+	//..()
 
 //---------------------------------------------------
 //	Blanks

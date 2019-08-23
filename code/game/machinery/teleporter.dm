@@ -15,6 +15,9 @@
 /obj/machinery/computer/teleporter/New()
 	src.id = "[random_id(/obj/machinery/computer/teleporter, 1000, 9999)]"
 	..()
+	underlays.Cut()
+	underlays += image('icons/obj/machines/telecomms.dmi', icon_state = "telecomp-wires")
+	return
 
 /obj/machinery/computer/teleporter/Initialize()
 	. = ..()
@@ -30,11 +33,6 @@
 	if(istype(hub))
 		hub.com = src
 		hub.set_dir(dir)
-
-/obj/machinery/computer/teleporter/on_update_icon()
-	underlays.Cut()
-	. = ..()
-	underlays += image('icons/obj/machines/telecomms.dmi', icon_state = "telecomp-wires")
 
 /obj/machinery/computer/teleporter/power_change()
 	. = ..()

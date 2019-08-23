@@ -60,12 +60,7 @@
 
 	//** These specify item/icon overrides for _slots_
 
-	var/list/item_state_slots = list(
-		slot_wear_id_str = "id",
-		slot_s_store_str = "blank", //Stop things in pockets from randomly showing
-		slot_l_store_str = "blank", //Stop things in pockets from randomly showing
-		slot_r_store_str = "blank", //Stop things in pockets from randomly showing
-		) //overrides the default item_state for particular slots.
+	var/list/item_state_slots = list(slot_wear_id_str = "id") //overrides the default item_state for particular slots.
 
 	// Used to specify the icon file to be used when the item is worn. If not set the default icon for that slot will be used.
 	// If icon_override or sprite_sheets are set they will take precendence over this, assuming they apply to the slot in question.
@@ -87,9 +82,6 @@
 	// Works similarly to worn sprite_sheets, except the alternate sprites are used when the clothing/refit_for_species() proc is called.
 	var/list/sprite_sheets_obj = list()
 
-/obj/item/device
-	icon = 'icons/obj/device.dmi'
-
 /obj/item/New()
 	..()
 	if((!pixel_x && !pixel_y) && isturf(loc)) //hopefully this will prevent us from messing with mapper-set pixel_x/y
@@ -97,6 +89,9 @@
 
 	ADD_SAVED_VAR(master)
 	ADD_SAVED_VAR(hidden_uplink)
+
+	ADD_SKIP_EMPTY(master)
+	ADD_SKIP_EMPTY(hidden_uplink)
 
 /obj/item/proc/randomize_pixel_offset(var/reset = 0)
 	if(!reset && randpixel)
@@ -123,6 +118,9 @@
 	if(istype(storage))
 		storage.on_item_deletion()
 	return ..()
+
+/obj/item/device
+	icon = 'icons/obj/device.dmi'
 
 //Checks if the item is being held by a mob, and if so, updates the held icons
 /obj/item/proc/update_twohanding()
@@ -318,11 +316,8 @@
 // note this isn't called during the initial dressing of a player
 /obj/item/equipped(var/mob/user, var/slot)
 	hud_layerise()
-	if(user)
-		if(user.client)	user.client.screen |= src
-		if(user.pulling == src) user.stop_pulling()
-	else 
-		log_warning(" obj/item/equipped(): [user] tried to equip [src]\ref[src] to slot [slot]. Caller is [usr]\ref[usr]")
+	if(user.client)	user.client.screen |= src
+	if(user.pulling == src) user.stop_pulling()
 
 	//Update two-handing status
 	var/mob/M = loc

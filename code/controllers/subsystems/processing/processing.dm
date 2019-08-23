@@ -12,7 +12,8 @@ SUBSYSTEM_DEF(processing)
 
 	var/debug_last_thing
 	var/debug_original_process_proc // initial() does not work with procs
-
+	
+	var/datum/last_processed
 /datum/controller/subsystem/processing/stat_entry(msg)
 	..("P:[processing.len][msg]")
 
@@ -27,6 +28,7 @@ SUBSYSTEM_DEF(processing)
 	while(current_run.len)
 		var/datum/thing = current_run[current_run.len]
 		current_run.len--
+		last_processed = thing
 		if(QDELETED(thing) || (call(thing, process_proc)(wait, times_fired, src) == PROCESS_KILL))
 			if(thing)
 				thing.is_processing = null

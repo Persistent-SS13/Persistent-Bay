@@ -33,7 +33,7 @@
 
 /mob/living/simple_animal/cat/Life()
 	. = ..()
-	if(!. || stat == DEAD)
+	if(!.)
 		return FALSE
 	//MICE!
 	if((src.loc) && isturf(src.loc))

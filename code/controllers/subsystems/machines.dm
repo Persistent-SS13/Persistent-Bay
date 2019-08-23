@@ -150,7 +150,6 @@ if(current_step == this_step || (check_resumed && !resumed)) {\
 /datum/controller/subsystem/machines/proc/process_pipenets(resumed = 0)
 	if (!resumed)
 		src.current_run = pipenets.Copy()
-
 	//cache for sanic speed (lists are references anyways)
 	var/list/current_run = src.current_run
 	while(current_run.len)

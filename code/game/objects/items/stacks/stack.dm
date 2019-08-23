@@ -44,9 +44,8 @@
 	if(uses_charge)
 		return 1
 	if (src && usr && usr.machine == src)
-		close_browser(usr, "window=stack")
+		usr << browse(null, "window=stack")
 	synths = null
-	recipes = null
 	return ..()
 
 //Called whenever stacked amount changes
@@ -72,7 +71,7 @@
 	if (!recipes)
 		return
 	if (!src || get_amount() <= 0)
-		close_browser(user, "window=stack")
+		user << browse(null, "window=stack")
 	user.set_machine(src) //for correct work of onclose
 	var/list/recipe_list = recipes
 	if (recipes_sublist && recipe_list[recipes_sublist] && istype(recipe_list[recipes_sublist], /datum/stack_recipe_list))
@@ -127,8 +126,8 @@
 	onclose(user, "stack")
 
 /obj/item/stack/proc/produce_recipe(datum/stack_recipe/recipe, var/quantity, mob/user)
-	var/required = quantity * recipe.req_amount
-	var/produced = min(quantity * recipe.res_amount, recipe.max_res_amount)
+	var/required = quantity*recipe.req_amount
+	var/produced = min(quantity*recipe.res_amount, recipe.max_res_amount)
 	if(!user.skill_check(SKILL_CONSTRUCTION, recipe.difficulty))
 		return
 
@@ -169,12 +168,11 @@
 			recipes_list = srl.recipes
 
 		var/datum/stack_recipe/R = recipes_list[text2num(href_list["make"])]
-		if(istype(R)) //Sometimes we end up with recipe lists in here...
-			var/multiplier = text2num(href_list["multiplier"])
-			if (!multiplier || (multiplier <= 0)) //href exploit protection
-				return
+		var/multiplier = text2num(href_list["multiplier"])
+		if (!multiplier || (multiplier <= 0)) //href exploit protection
+			return
 
-			src.produce_recipe(R, multiplier, usr)
+		src.produce_recipe(R, multiplier, usr)
 	
 	if(href_list["top"])
 		list_recipes(usr) //Otherwise just draw the main screen again
@@ -184,6 +182,11 @@
 			src.interact(usr)
 			return
 	return
+
+//Force load records
+/obj/item/organ/internal/stack/proc/load_records()
+    if(!record)
+        record = Retrieve_Record(owner.real_name)
 
 //Return 1 if an immediate subsequent call to use() would succeed.
 //Ensures that code dealing with stacks uses the same logic

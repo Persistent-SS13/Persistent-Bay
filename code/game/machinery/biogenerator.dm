@@ -46,15 +46,12 @@
 	ADD_SKIP_EMPTY(points)
 	
 /obj/machinery/biogenerator/SetupParts()
-	beaker = new /obj/item/weapon/reagent_containers/glass/bottle(src)
-	. = ..()
-
-/obj/machinery/biogenerator/SetupReagents()
-	. = ..()
 	create_reagents(1000)
+	beaker = new /obj/item/weapon/reagent_containers/glass/bottle(src)
+	..()
 
 /obj/machinery/biogenerator/on_reagent_change()			//When the reagents change, change the icon as well.
-	. = ..()
+	..()
 	queue_icon_update()
 
 /obj/machinery/biogenerator/on_update_icon()

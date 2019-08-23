@@ -304,7 +304,7 @@
 		to_chat(src, "Your character slots are full. Import failed.")
 		return
 	var/mob/living/carbon/human/character = SScharacter_setup.load_import_character(chosen_slot, ckey)
-
+	
 	if(!character)
 		return
 	if(!character.mind)
@@ -345,7 +345,7 @@
 	character.regenerate_icons()
 	character.spawn_type = CHARACTER_SPAWN_TYPE_IMPORT //For first time spawn
 	if(R)
-		R.linked_account.money = DEFAULT_NEW_CHARACTER_MONEY
+		R.linked_account.money = 1000
 		R.email = new()
 		R.email.login = character.real_name
 		R.citizenship = CITIZEN
@@ -354,16 +354,7 @@
 		client.prefs.setup_new_accounts(character) //make accounts before! Outfit setup needs the record set
 
 
-	character.dna.ResetUIFrom()
-	character.dna.ready_dna(character)
-	character.dna.b_type = client.prefs.b_type
-	character.sync_organ_dna()
-	character.spawn_loc = GLOB.using_map.default_faction_uid
-	// Do the initial caching of the player's body icons.
-	character.force_update_limbs()
-	character.update_eyes()
-	character.regenerate_icons()
-	character.spawn_type = CHARACTER_SPAWN_TYPE_IMPORT //For first time spawn
+
 	var/decl/hierarchy/outfit/clothes
 	clothes = outfit_by_type(/decl/hierarchy/outfit/nexus/starter)
 	ASSERT(istype(clothes))
@@ -492,37 +483,44 @@
 	if (!Retrieve_Record(character.real_name))
 		var/datum/computer_file/report/crew_record/new_record = CreateModularRecord(character)
 		GLOB.all_crew_records |= new_record
-	var/turf/spawnTurf = locate(0,0,0) //Instead of null start with 0,0,0 because the unsafe spawn check will kick in and warn the user if there's something wrong
+	var/turf/spawnTurf
+
 	if(character.spawn_type == CHARACTER_SPAWN_TYPE_CRYONET)
-		//var/datum/world_faction/faction = get_faction(character.spawn_loc)
-		for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
-			if(!pod.loc)
-				continue
-			if(pod.req_access_faction == character.spawn_loc)
-				if(pod.network == character.spawn_loc_2)
-					spawnTurf = get_turf(pod)
+		var/datum/world_faction/faction = get_faction(character.spawn_loc)
+		var/assignmentSpawnLocation = faction?.get_assignment(faction?.get_record(character.real_name)?.assignment_uid, character.real_name)?.cryo_net
+		if (assignmentSpawnLocation == "Last Known Cryonet")
+			// The character's assignment is set to spawn in their last cryo location
+			// Do nothing, leave it the way it is.
+		else if (assignmentSpawnLocation)
+			// The character has a special cryo network set to override their normal spawn location
+			character.spawn_loc_2 = assignmentSpawnLocation
+		else
+			// The character doesn't have a spawn_loc_2, so use the one for their assignment or the default
+			character.spawn_loc_2 = " default"
+
+		if(character.spawn_personal)
+			var/turf/T = locate(character.spawn_p_x,character.spawn_p_y,character.spawn_p_z)
+			if(T)
+				for(var/obj/machinery/cryopod/pod in T.contents)
+					spawnTurf = T
 					break
-				else
+		if(!spawnTurf)
+			for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+				if(!pod.loc)
+					qdel(pod)
+					continue
+				if(pod.req_access_faction == character.spawn_loc)
+					if(pod.network == character.spawn_loc_2)
+						spawnTurf = get_turf(pod)
+						break
+					else
+						spawnTurf = get_turf(pod)
+				else if(!spawnTurf)
 					spawnTurf = get_turf(pod)
-			else if(!spawnTurf)
-				spawnTurf = get_turf(pod)
 
 		if(!spawnTurf)
-			log_and_message_admins("WARNING! No cryopods avalible for spawning '[character]'([character.ckey])! Get some spawned and connected to the starting factions uid!")
-			spawnTurf = locate(world.maxx / 2, world.maxy / 2, 1)
-
-	else if(character.spawn_type == CHARACTER_SPAWN_TYPE_PERSONAL)
-		for(var/obj/machinery/cryopod/personal/pod in GLOB.cryopods)
-			if(pod.x == character.spawn_p_x && pod.y == character.spawn_p_y && pod.z == character.spawn_p_z)
-				spawnTurf = get_turf(pod)
-				break
-
-		if(!spawnTurf)
-			if(character.spawn_p_x && character.spawn_p_y && character.spawn_p_z)
-				spawnTurf = locate(character.spawn_p_x, character.spawn_p_y, character.spawn_p_z)
-			else
-				spawnTurf = locate(world.maxx / 2, world.maxy / 2, 1)
-			log_and_message_admins("WARNING! No personal crypod avaialable for spawning [character], ckey: [character.ckey]! Spawning to ([spawnTurf.x], [spawnTurf.x], [spawnTurf.z])!")
+			log_and_message_admins("WARNING! No cryopods avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
+			spawnTurf = locate(102, 98, 1)
 
 	else if(character.spawn_type == CHARACTER_SPAWN_TYPE_FRONTIER_BEACON || character.spawn_type == CHARACTER_SPAWN_TYPE_IMPORT)
 		var/obj/item/weapon/card/id/W = character.GetIdCard()
@@ -567,12 +565,8 @@
 	else if(character.spawn_type == CHARACTER_SPAWN_TYPE_LACE_STORAGE)
 		spawnTurf = GetLaceStorage(character)
 		if(!spawnTurf)
-			log_and_message_admins("[character.ckey]'s [character] can't find a lace storage to spawn at! Make sure there's one on the map! Will spawn in the middle of z-level 1 instead!")
-			spawnTurf = locate(world.maxx / 2, world.maxy / 2, 1)
+			log_and_message_admins("WARNING! Unable To Find Any Spawn Turf!!! Prehaps you didn't include a map?")
 			return
-	else
-		log_error("Invalid spawn type for '[character]', ckey: '[character.ckey]'. Spawning to middle of Z-level 1!")
-		spawnTurf = locate(world.maxx / 2, world.maxy / 2, 1)
 
 	//Close the menu and stop the lobby music once we're sure we're spawning
 	transitionToGame()
@@ -589,12 +583,18 @@
 	character.save_slot = chosen_slot
 
 	//Make sure dna is spread to limbs
-	//character.dna.ready_dna(character)
+	character.dna.ready_dna(character)
 	character.sync_organ_dna()
-
 
 	GLOB.minds |= character.mind
 	character.regenerate_icons()
+	character.update_inv_back()
+	character.update_inv_wear_id()
+	character.update_inv_belt()
+	character.update_inv_pockets()
+	character.update_inv_l_hand()
+	character.update_inv_r_hand()
+	character.update_inv_s_store()
 	character.redraw_inv()
 
 	//Execute post-spawn stuff
@@ -602,16 +602,24 @@
 	return 1
 
 //Runs what happens after the character is loaded. Mainly for cinematics and lore text.
+
+/mob/proc/notify_friends()
+	var/datum/computer_file/report/crew_record/record2 = Retrieve_Record(real_name)
+	if(record2)
+		for(var/friend in record2.all_friends)
+			notify_lace(friend, "Your neural lace lets you know that [real_name] has just come out of cryosleep.")
+		
 /mob/proc/finishLoadCharacter()
-	if(spawn_type == CHARACTER_SPAWN_TYPE_CRYONET || spawn_type == CHARACTER_SPAWN_TYPE_PERSONAL)
+	if(spawn_type == CHARACTER_SPAWN_TYPE_CRYONET)
 		to_chat(src, "You eject from your cryosleep, ready to resume life in the frontier.")
+		notify_friends()
 	else if(spawn_type == CHARACTER_SPAWN_TYPE_FRONTIER_BEACON)
 		GLOB.using_map.on_new_spawn(src) //Moved to overridable map specific code
 	else if(spawn_type == CHARACTER_SPAWN_TYPE_LACE_STORAGE)
 		to_chat(src, "You regain consciousness, still prisoner of your neural lace.")
+		notify_friends()
 	else if(spawn_type == CHARACTER_SPAWN_TYPE_IMPORT)
 		import_spawn()
-
 /mob/proc/import_spawn()
 	var/mob/newchar = src
 	if(!istype(newchar))

@@ -339,29 +339,17 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 /datum/species/proc/create_organs(var/mob/living/carbon/human/H) //Handles creation of mob organs.
 
 	H.mob_size = mob_size
-
 	var/obj/item/organ/internal/stack/lace
 	for(var/obj/item/organ/organ in H.contents)
-		if(organ in H.internal_organs)
-			if(istype(organ, /obj/item/organ/internal/stack))
-				lace = organ
-			else
-				qdel(organ)
-		else if(organ in H.organs)
+		if(!istype(organ, /obj/item/organ/internal/stack) && ((organ in H.organs) || (organ in H.internal_organs)))
 			qdel(organ)
-	if(lace)
-		H.internal_organs -= lace
-		H.internal_organs_by_name[BP_STACK] = null
-
-	LAZYCLEARLIST(H.grasp_limbs)
-	LAZYCLEARLIST(H.stance_limbs)
+		else if(organ in H.internal_organs)
+			lace = organ
 	if(H.organs)                  H.organs.Cut()
 	if(H.internal_organs)         H.internal_organs.Cut()
 	if(H.organs_by_name)          H.organs_by_name.Cut()
 	if(H.internal_organs_by_name) H.internal_organs_by_name.Cut()
 
-	H.grasp_limbs = list()
-	H.stance_limbs = list()
 	H.organs = list()
 	H.internal_organs = list()
 	H.organs_by_name = list()
@@ -386,12 +374,10 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 		if(istype(H))
 			var/obj/item/organ/external/E = H.get_organ(lace.parent_organ)
 			E.internal_organs |= lace
-		lace.owner = H
 	else
 		if(!H.internal_organs_by_name[BP_STACK])
 			lace = new(H)
 		H.internal_organs_by_name[BP_STACK] = lace
-
 	for(var/name in H.organs_by_name)
 		H.organs |= H.organs_by_name[name]
 

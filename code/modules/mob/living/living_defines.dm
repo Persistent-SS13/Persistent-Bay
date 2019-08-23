@@ -56,4 +56,4 @@
 
 	//For skinning mobs
 	var/hide_type = null
-	var/hide_amount = 0
+	var/hide_amount = 0 

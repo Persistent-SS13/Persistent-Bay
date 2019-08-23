@@ -41,8 +41,10 @@
 	update_material()
 
 /turf/simulated/wall/on_update_icon()
+
 	..()
-	if(!istype(material) || QDELETED(src))
+
+	if(!material)
 		return
 	
 	LAZYCLEARLIST(overlays)
@@ -154,8 +156,8 @@
 	other_connections = dirs_to_corner_states(other_dirs)
 
 /turf/simulated/wall/proc/can_join_with(var/turf/simulated/wall/W)
-	if(istype(material) && istype(W.material) && material.icon_base == W.material.icon_base)
-		if((istype(reinf_material) && istype(W.reinf_material)) || (!reinf_material && !W.reinf_material))
+	if(material && W.material && material.icon_base == W.material.icon_base)
+		if((reinf_material && W.reinf_material) || (!reinf_material && !W.reinf_material))
 			return 1
 		return 2
 	for(var/wb_type in blend_turfs)

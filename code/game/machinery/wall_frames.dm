@@ -98,7 +98,7 @@
 	name = "button frame"
 	desc = "Used for building buttons"
 	icon = 'icons/obj/machines/buttons.dmi'
-	icon_state = "launcherbtt"
+	icon_state = "launcherbtt_frame"
 	matter = list(MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
 	build_machine_type = /obj/machinery/button
 

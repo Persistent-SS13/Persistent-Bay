@@ -263,9 +263,6 @@
 	return ..()
 
 /mob/living/carbon/human/can_speak(datum/language/speaking)
-	if(!speaking)
-		log_warning("[src]\ref[src], [ckey], tried to speak a null language!!")
-		return FALSE
 	if(species && (speaking.name in species.assisted_langs))
 		for(var/obj/item/organ/internal/voicebox/I in src.internal_organs)
 			if(I.is_usable() && I.assists_languages[speaking])

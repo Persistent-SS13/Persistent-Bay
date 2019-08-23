@@ -5,7 +5,7 @@
 	item_state = "claymore"
 	slot_flags = SLOT_BELT
 	w_class = ITEM_SIZE_LARGE
-	force_divisor = 0.5 // 30 when wielded with hardnes 60 (steel)
+	force_divisor = 0.25 // 15 when wielded with hardness 60 (steel)
 	thrown_force_divisor = 0.5 // 10 when thrown with weight 20 (steel)
 	sharpness = 1
 	attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
@@ -16,7 +16,7 @@
 	mass = 3.6 
 /obj/item/weapon/material/sword/replica
 	sharpness = 0
-	force_divisor = 0.2
+	force_divisor = 0.15
 	thrown_force_divisor = 0.2
 	damtype = DAM_BLUNT
 	mass = 1
@@ -32,7 +32,7 @@
 
 /obj/item/weapon/material/sword/katana/replica
 	sharpness = 0
-	force_divisor = 0.2
+	force_divisor = 0.15
 	thrown_force_divisor = 0.2
 	damtype = DAM_BLUNT
 	mass = 1

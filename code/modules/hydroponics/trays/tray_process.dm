@@ -48,7 +48,7 @@
 			needs_icon_update |= 1
 
 	//Highly mutable plants have a chance of mutating every tick.
-	/*if(seed.get_trait(TRAIT_IMMUTABLE) == -1)
+	if(seed.get_trait(TRAIT_IMMUTABLE) == -1)
 		var/mut_prob = rand(1,100)
 		if(mut_prob <= 5) mutate(mut_prob == 1 ? 2 : 1)
 
@@ -57,7 +57,7 @@
 		if(prob(min(mutation_level,100)))
 			mutate((rand(100) < 15) ? 2 : 1)
 			mutation_level = 0
-	*/
+	
 	// Maintain tray nutrient and water levels.
 	if(seed.get_trait(TRAIT_REQUIRES_NUTRIENTS) && seed.get_trait(TRAIT_NUTRIENT_CONSUMPTION) > 0 && nutrilevel > 0 && prob(25))
 		nutrilevel -= max(0,seed.get_trait(TRAIT_NUTRIENT_CONSUMPTION) * HYDRO_SPEED_MULTIPLIER)

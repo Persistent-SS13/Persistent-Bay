@@ -25,12 +25,16 @@
 	var/graffiti_style
 
 /obj/item/organ/external/head/proc/get_eye_overlay()
+	if(!owner)
+		return null
 	if(glowing_eyes)
 		var/obj/item/organ/internal/eyes/eyes = owner.internal_organs_by_name[owner.species.vision_organ ? owner.species.vision_organ : BP_EYES]
 		if(eyes)
 			return eyes.get_special_overlay()
 
 /obj/item/organ/external/head/proc/get_eyes()
+	if(!owner)
+		return null
 	var/obj/item/organ/internal/eyes/eyes = owner.internal_organs_by_name[owner.species.vision_organ ? owner.species.vision_organ : BP_EYES]
 	if(eyes)
 		return eyes.get_onhead_icon()
@@ -121,6 +125,8 @@
 
 /obj/item/organ/external/head/proc/get_hair_icon()
 	var/image/res = image(species.icon_template,"")
+	if(!owner)
+		return res
 	if(owner.f_style)
 		var/datum/sprite_accessory/facial_hair_style = GLOB.facial_hair_styles_list[owner.f_style]
 		if(facial_hair_style && facial_hair_style.species_allowed && (species.get_bodytype(owner) in facial_hair_style.species_allowed))

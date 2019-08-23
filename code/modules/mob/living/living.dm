@@ -838,6 +838,7 @@ default behaviour is:
 	if(auras)
 		for(var/a in auras)
 			remove_aura(a)
+	QDEL_NULL_LIST(actions)
 	return ..()
 
 /mob/living/proc/melee_accuracy_mods()

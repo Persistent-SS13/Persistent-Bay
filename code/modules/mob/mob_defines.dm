@@ -112,7 +112,7 @@
 	var/a_intent = I_HELP//Living
 
 	var/decl/move_intent/move_intent = /decl/move_intent/run
-	var/move_intents = list(/decl/move_intent/run, /decl/move_intent/walk)
+	var/list/move_intents = list(/decl/move_intent/run, /decl/move_intent/walk)
 
 	var/obj/buckled = null//Living
 	var/obj/item/l_hand = null//Living

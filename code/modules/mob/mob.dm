@@ -19,6 +19,9 @@
 		QDEL_NULL(skillset)
 	for(var/obj/item/grab/G in grabbed_by)
 		qdel(G)
+	move_intent = null //its a decl, so just null it
+	LAZYCLEARLIST(move_intents)
+	QDEL_NULL(dna)
 	ghostize()
 	. = ..()
 #ifdef TESTING

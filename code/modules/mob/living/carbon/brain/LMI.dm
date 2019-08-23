@@ -40,10 +40,9 @@
 		brainobj = O
 		brainobj.loc = src
 
-		name = "lace-machine interface ([brainmob.real_name])"
-		icon_state = "lmi_full"
+		update_icon()
 
-		locked = 1
+		locked = TRUE
 
 		SSstatistics.add_field("cyborg_mmis_filled",1)
 
@@ -82,19 +81,18 @@
 		brain.lacemob = brainmob//Set the brain to use the brainmob
 		brainmob = null//Set mmi brainmob var to null
 
-		icon_state = "lmi_empty"
-		name = "lace-machine interface"
+		update_icon()
 
 /obj/item/device/lmi/proc/transfer_identity(var/mob/living/carbon/human/H)//Same deal as the regular brain proc. Used for human-->robot people.
-	brainmob = new(src)
+	brainmob = new(brainobj) //The mob lives in the lace
 	brainmob.name = H.real_name
 	brainmob.real_name = H.real_name
-	brainmob.dna = H.dna
-	brainmob.container = src
+	brainmob.container = brainobj //The mob lives in the lace
+	if(istype(H))
+		brainmob.dna = H.dna //Since sometimes we're not transfering from something with a dna
 
-	name = "Lace-Machine Interface: [brainmob.real_name]"
-	icon_state = "lmi_full"
-	locked = 1
+	update_icon()
+	locked = TRUE
 	return
 
 /obj/item/device/lmi/relaymove(var/mob/user, var/direction)
@@ -117,6 +115,17 @@
 	else
 		QDEL_NULL(brainmob)
 	return ..()
+
+/obj/item/device/lmi/on_update_icon()
+	if(brainobj)
+		icon_state = "lmi_full"
+		if(brainobj.dna)
+			SetName("Lace-Machine Interface ([brainobj.dna.real_name])")
+		else
+			SetName("Lace-Machine Interface (Unknown:Invalid DNA)")
+	else
+		icon_state = "lmi_empty"
+		SetName("lace-machine interface")
 
 /obj/item/device/lmi/radio_enabled
 	name = "radio-enabled lace-machine interface"

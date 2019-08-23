@@ -208,6 +208,9 @@
 	LAZYCLEARLIST(grasp_limbs)
 	LAZYCLEARLIST(stance_limbs)
 	LAZYCLEARLIST(cloaking_sources)
+	LAZYCLEARLIST(languages)
+	for(var/key in overlays_standing)
+		overlays_standing[key] = null //Don't ever delete the list, just null out the images. Otherwise things break very badly
 #ifdef TESTING
 	testing("Destroying [src]\ref[src]([x], [y], [z]), in \the '[loc]'\ref[loc]([loc?.x], [loc?.y], [loc?.z])!")
 	testing("Organs still contained:")

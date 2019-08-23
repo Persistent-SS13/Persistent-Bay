@@ -77,6 +77,8 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	ADD_SAVED_VAR(ownerckey)
 	ADD_SAVED_VAR(connected_business)
 	ADD_SAVED_VAR(connected_faction)
+	ADD_SAVED_VAR(save_slot)
+	ADD_SAVED_VAR(duty_status)
 
 /obj/item/organ/internal/stack/Initialize()
 	. = ..()
@@ -96,9 +98,14 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		loc = get_turf(loc)
 		log_and_message_admins("Attempted to destroy an in-use neural lace!")
 		return QDEL_HINT_LETMELIVE
+	LAZYREMOVE(GLOB.neural_laces, src)
 	QDEL_NULL(lacemob)
-	GLOB.neural_laces -= src
-	. = ..()
+	selected_ballot = null
+	record = null
+	faction = null
+	backup = null
+	languages = null
+	return ..()
 
 /obj/item/organ/internal/stack/examine(mob/user) // -- TLE
 	. = ..(user)
@@ -121,14 +128,15 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 	if(!lacemob)
 		lacemob = new(src)
-
-	lacemob.name = H.real_name
-	lacemob.real_name = H.real_name
-	lacemob.dna = H.dna.Clone()
-	lacemob.timeofhostdeath = H.timeofdeath
-	lacemob.teleport_time = H.timeofdeath + DEAD_LACEMOB_STORAGE_TELEPORT_DELAY
-	lacemob.container = src
-	if(owner && isnull(owner.gc_destroyed))
+	if(name == initial(name))
+		name = "[H.real_name]'s neural lace"
+	lacemob.name = 				H.real_name
+	lacemob.real_name = 		H.real_name
+	lacemob.dna = 				H.dna.Clone()
+	lacemob.timeofhostdeath = 	H.timeofdeath
+	lacemob.teleport_time = 	H.timeofdeath + DEAD_LACEMOB_STORAGE_TELEPORT_DELAY
+	lacemob.container = 		src
+	if(owner && !QDELETED(owner))
 		lacemob.container2 = owner
 	lacemob.spawn_loc = H.spawn_loc
 	lacemob.spawn_loc_2 = H.spawn_loc_2

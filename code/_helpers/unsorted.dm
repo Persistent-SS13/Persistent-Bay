@@ -1063,6 +1063,7 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 	if(!destroy_ret)
 		CRASH("Prevented attempt to delete dview mob: [log_info_line(src)]")
 	else
+		log_warning("Deleted dview mob! This should only happen when the server shuts down or restarts!")
 		return ..()
 	return destroy_ret // Prevents destruction
 

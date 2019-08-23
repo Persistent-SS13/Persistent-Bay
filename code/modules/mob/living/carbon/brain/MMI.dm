@@ -66,8 +66,6 @@
 		brainmob.switch_from_dead_to_living_mob_list() //Update dem lists
 
 		brainobj = O
-
-		SetName("[initial(name)]: ([brainmob.real_name])")
 		update_icon()
 
 		locked = 1
@@ -110,19 +108,18 @@
 		brainmob = null//Set mmi brainmob var to null
 
 		update_icon()
-		SetName(initial(name))
 
 /obj/item/device/mmi/proc/transfer_identity(var/mob/living/carbon/human/H)//Same deal as the regular brain proc. Used for human-->robot people.
 	brainmob = new(src)
 	brainmob.SetName(H.real_name)
 	brainmob.real_name = H.real_name
-	brainmob.dna = H.dna
 	brainmob.container = src
+	locked = TRUE
 
-	SetName("[initial(name)]: [brainmob.real_name]")
+	if(istype(H))
+		brainmob.dna = H.dna //Since sometimes we're not transfering from something with a dna
 	update_icon()
-	locked = 1
-	return
+
 
 /obj/item/device/mmi/relaymove(var/mob/user, var/direction)
 	if(user.stat || user.stunned)
@@ -191,4 +188,12 @@
 	..()
 
 /obj/item/device/mmi/on_update_icon()
-	icon_state = brainmob ? "mmi_full" : "mmi_empty"
+	SetName("\improper Man-Machine Interface")
+	if(brainobj)
+		icon_state = "mmi_full"
+		if(brainobj.dna)
+			SetName("[name]: ([brainobj.dna.real_name])")
+		else if(brainmob)
+			SetName("[name]: ([brainmob.real_name])")
+	else 
+		icon_state = "mmi_empty"

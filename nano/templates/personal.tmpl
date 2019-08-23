@@ -1,7 +1,8 @@
 <h2>{{:data.name}} Personal Options</h2><br>
 {{:helper.link("Cryo Notifications", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
 {{:helper.link("Stock Ownership", '', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
-{{:helper.link("Nexus Account Level/Limits", '', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}	
+{{:helper.link("Nexus Account Level/Limits", '', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}
+{{:helper.link("Current Contracts", '', {'action' : 'change_menu', 'menu_target' : '4'}, data.menu == 4 ? 'selected' : null)}}	
 <br><br>
 <b>Current Account Balance:</b> {{:data.account_balance}}
 <hr>
@@ -85,4 +86,97 @@
 		<b>Shuttle Limit:</b>{{:data.shuttle_limit_used}}  / {{:data.shuttle_limit}}<br><br>
 	</div>
 
+{{/if}}
+
+{{if data.menu == 4}}
+	<h4>Current Contracts</h4><br><hr>
+	<br>
+	<div class="statusDisplay" style="overflow: auto;">
+		{{for data.contracts}}
+			{{:helper.link(value.name, '', {'action' : 'select_contract', 'ref' : value.ref})}}<br><br>
+		{{/for}}
+	</div>
+{{/if}}
+
+{{if data.menu == 5}}
+	<h4>{{:data.contract}}</h4>
+	<br>
+	Contracted Organization: {{:data.contracted}}<br>
+	Signing Party: {{:data.signed}}<br>
+	{{:data.details}}
+	<br><hr><br>
+	{{:helper.link('Print Copy', 'print', {'action' : 'print'}), data.can_print ? null : 'disabled'}}
+	<div class="item">
+		<div class="itemLabel">
+			Status: 
+		</div>
+		<div class="itemContent">
+			{{:data.contract_status}}
+		</div>
+	</div>
+	<div class="item">
+		<div class="itemLabel">
+			Auto-Payment Type: 
+		</div>
+		<div class="itemContent">
+			{{:data.payment_type}}
+		</div>
+	</div>
+	{{if data.pay}}
+		<div class="item">
+			<div class="itemLabel">
+				Time of Last Payment: 
+			</div>
+			<div class="itemContent">
+				{{:data.paytime}}
+			</div>
+		</div>
+	{{/if}}
+	{{if data.service == "Loan" }}
+		<div class="item">
+			<div class="itemLabel">
+				Remaining Balance: 
+			</div>
+			<div class="itemContent">
+				{{:data.balance}}
+			</div>
+		</div>
+	{{/if}}
+	<div class="item">
+		<div class="itemLabel">
+			Additional Service: 
+		</div>
+		<div class="itemContent">
+			{{:data.service}}
+		</div>
+	</div>
+	<div class="item">
+		<div class="itemLabel">
+			Mark as Complete: 
+		</div>
+		<div class="itemContent">
+			{{:helper.link('Mark', 'check', {'action' : 'mark_complete'}, data.complete ? 'selected' : null)}}{{:helper.link('Unmark', 'cross', {'action' : 'unmark_complete'}, data.complete ? null : 'selected')}}
+		</div>
+	</div>
+	If both sides mark the contract as complete, it will end amicably and no further auto-payments will be made. If a contract is mutally marked as complete, it will be zero legal liability for both sides.
+	<div class="item">
+		<div class="itemLabel">
+			Cancel Contract: 
+		</div>
+		<div class="itemContent">
+			{{:helper.link('Cancel', 'cross', {'action' : 'cancel_contract'}, data.cancelable ? null : 'disabled')}}
+		</div>
+	</div>
+	Cancelling the contract will stop all auto payments without requriing the consent of the other side and end the contract. This may open the organization up to legal liability. 
+	{{if data.clearable}}
+		<div class="item">
+			<div class="itemLabel">
+				Clear Contract: 
+			</div>
+			<div class="itemContent">
+				{{:helper.link('Clear Contract', '', {'action' : 'clear_contract'})}}
+			</div>
+		</div>
+		Clearing the contract will remove it from this organizations list of contracts permanently. Use this to clean up old contracts that you no longer need digital record of.
+	{{/if}}
 {{/if}}

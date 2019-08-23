@@ -31,6 +31,18 @@
 #define RADIATION_SPEED_COEFFICIENT 0.025
 #define PHORONATION_SPEED_COEFFICIENT 0.0025
 
+var/list/global/hunger_notify_severe = list(
+	"You are starving!",
+	"You have to find something to eat.",
+	"You feel weak from hunger!",
+)
+
+var/list/global/hunger_notify_mild = list(
+	"You are really hungry.",
+	"You want to stop and find something to eat.",
+	"Hunger is starting to slow you down.",
+)
+
 /mob/living/carbon/human
 	var/oxygen_alert = 0
 	var/phoron_alert = 0
@@ -39,7 +51,7 @@
 	var/pressure_alert = 0
 	var/temperature_alert = 0
 	var/heartbeat = 0
-
+	var/hunger_notify = 0 // next time to notify of hunger
 /mob/living/carbon/human/proc/healthAlarm()
 	var/obj/item/organ/internal/stack = get_stack()
 	for(var/datum/world_faction/faction in GLOB.all_world_factions)
@@ -71,24 +83,6 @@
 		wearing_rig = null
 
 	..()
-
-	if(life_tick%30==15)
-		hud_updateflag = 1022
-		var/should_crit_alert = 0
-		if(get_blood_oxygenation() < 60)
-			should_crit_alert = 1
-		if(getOxyLoss() > 35)
-			should_crit_alert = 1
-		if(getToxLoss() > 35)
-			should_crit_alert = 1
-		if(should_crit_alert)
-			var/datum/computer_file/report/crew_record/E = Retrieve_Record(real_name)
-			if(E && E.last_health_alarm < world.time+1HOUR)
-				E.last_health_alarm = world.time
-				healthAlarm()
-
-
-
 	voice = GetVoice()
 
 	//No need to update all of these procs if the guy is dead.
@@ -112,6 +106,13 @@
 
 	if(!handle_some_updates())
 		return											//We go ahead and process them 5 times for HUD images and other stuff though.
+	var/fullness = get_fullness()
+	if(fullness < 150 && world.time > hunger_notify)
+		to_chat(src, SPAN_WARNING(pick(hunger_notify_severe)))
+		hunger_notify = world.time + rand(1 MINUTES, 3 MINUTES)
+	else if(fullness < 250 && world.time > hunger_notify)
+		to_chat(src, SPAN_NOTICE(pick(hunger_notify_mild)))
+		hunger_notify = world.time + rand(5 MINUTES, 15 MINUTES)
 
 	//Update our name based on whether our face is obscured/disfigured
 	SetName(get_visible_name())

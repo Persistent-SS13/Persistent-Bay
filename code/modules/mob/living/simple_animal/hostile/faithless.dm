@@ -26,6 +26,10 @@
 
 	faction = "faithless"
 	supernatural = 1
+	meat_type = /obj/item/weapon/reagent_containers/food/snacks/meat/syntiflesh
+	meat_amount = 2
+	hide_type = /obj/item/stack/animalhide/human
+	hide_amount = 1
 
 /mob/living/simple_animal/hostile/faithless/Allow_Spacemove(var/check_drift = 0)
 	return 1

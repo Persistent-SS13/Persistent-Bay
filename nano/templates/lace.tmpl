@@ -3,8 +3,8 @@
 {{if data.living}}
 	{{:helper.link("General Info", 'wrench', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
 	{{:helper.link("Money Account/Transfers", 'locked', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}
-	{{:helper.link("Nexus Elections System", 'locked', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}
-	
+	{{:helper.link("Nexus Elections System", 'cross', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}
+	{{:helper.link("Friend & Visibility", 'check', {'action' : 'change_menu', 'menu_target' : '4'}, data.menu == 4 ? 'selected' : null)}}
 	{{if data.menu == 1}}
 		<h3>General Info</h3><br>
 		<div class='item'>
@@ -119,7 +119,42 @@
 			Next election is saturday.
 		{{/if}}
 	{{/if}}
-	
+	{{if data.menu == 4}}
+		<h3>Friends & Visibility</h3><br><hr>
+			If your public visibility status is on, you will show up when active to any friends and social organizations you are a part of.
+			When you accept a friend request, you become mutual friends with the person and can see when each other are out of cryosleep and publically visible.
+			<br><br>
+			{{:helper.link('Send Friend Request', '', {'action' : 'add_friend'})}}<br>
+			<div class='item'>
+				<div class='itemLabel'>
+					Visibility Status:
+				</div>
+				<div class='itemContent'>
+					{{:helper.link('Visible', '', {'action' : 'toggle_visible'}, data.visible ? 'selected' : null)}}{{:helper.link('Off', '', {'action' : 'toggle_invisible'}, data.visible ? null : 'selected')}}
+				</div>
+			</div>
+			<br>
+			<b>Friend Requests</b>
+			<div class="statusDisplay" style="overflow: auto;">
+				{{for data.friend_requests}}
+					{{:value.name}}{{:helper.link('ACCEPT', '', {'action' : 'accept_request', 'ref' : value.name})}}{{:helper.link('DENY', '', {'action' : 'deny_request', 'ref' : value.name})}}<br><br>
+				{{/for}}
+			</div>
+			<br>
+			<b>Available Friends</b>
+			<div class="statusDisplay" style="overflow: auto;">
+				{{for data.online_friends}}
+					{{:value.name}}{{:helper.link('X', '', {'action' : 'remove_friend', 'ref' : value.name})}}<br><br>
+				{{/for}}
+			</div>
+			<br>
+			<b>Unavailable Friends</b>
+			<div class="statusDisplay" style="overflow: auto;">
+				{{for data.offline_friends}}
+					{{:value.name}}{{:helper.link('X', '', {'action' : 'remove_friend', 'ref' : value.name})}}<br><br>
+				{{/for}}
+			</div>
+	{{/if}}
 
 {{else}}
 	<h3>Death Controls</h3><br>

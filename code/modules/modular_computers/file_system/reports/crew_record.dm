@@ -82,6 +82,31 @@ FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_synd
 	shuttle_limit = 3
 	cost = 10000
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /datum/computer_file/report/crew_record/proc/get_holdings()
 	var/total = 0
 	for(var/datum/world_faction/business/faction in GLOB.all_world_factions)
@@ -204,12 +229,21 @@ FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_synd
 	var/list/shuttles = list()
 	var/last_health_alarm = 0
 	
+	var/visibility_status = 1 // whether or not to show online to social groups and friends
+	
+	var/list/all_friends = list() // just a list of real_names
+	
+	var/list/pending_friend_request = list() // list of people trying to become friends
+	
 /datum/computer_file/report/crew_record/New()
 	..()
 	for(var/T in subtypesof(/datum/report_field/))
 		new T(src)
 	load_from_mob(null)
 
+	ADD_SAVED_VAR(pending_friend_request)
+	ADD_SAVED_VAR(all_friends)
+	ADD_SAVED_VAR(visibility_status)
 	ADD_SAVED_VAR(photo_front)
 	ADD_SAVED_VAR(photo_side)
 	ADD_SAVED_VAR(linked_account)

@@ -433,6 +433,7 @@ proc/TextPreview(var/string,var/len=40)
 	t = replacetext(t, "\[nfrseal\]",  "<img src = nfrlogo.png>")
 	t = replacetext(t, "\[pdseal\]", "<img src = pdlogo.png>")
 	t = replacetext(t, "\[logo\]", "<img src = nfrlogo.png>")
+	t = replacetext(t, "\[shenlogo\]", "<img src = shenlogo.png>")
 	t = replacetext(t, "\[editorbr\]", "")
 	t = replacetext(t, "\[tab\]", "&nbsp;&nbsp;&nbsp;&nbsp;")
 	return t

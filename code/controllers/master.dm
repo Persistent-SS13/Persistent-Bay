@@ -40,7 +40,7 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	var/initializations_finished_with_no_players_logged_in	//I wonder what this could be?
 
 	// The type of the last subsystem to be process()'d.
-	var/last_type_processed
+	var/datum/controller/subsystem/processing/last_type_processed
 
 	var/datum/controller/subsystem/queue_head //Start of queue linked list
 	var/datum/controller/subsystem/queue_tail //End of queue linked list (used for appending to the list)
@@ -256,7 +256,6 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 		log_game("Failed to recreate MC (Error code: [rtn2]), it's up to the failsafe now")
 		message_admins("Failed to recreate MC (Error code: [rtn2]), it's up to the failsafe now")
 		Failsafe.defcon = 2
-
 // Main loop.
 /datum/controller/master/proc/Loop()
 	. = -1

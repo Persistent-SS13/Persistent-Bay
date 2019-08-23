@@ -43,7 +43,8 @@
 	var/const/fancyfont = "Segoe Script"
 
 	var/scan_file_type = /datum/computer_file/data/text
-
+	
+	var/info_links_fixed
 /obj/item/weapon/paper/New(loc, text, title, list/md = null)
 	..(loc)
 	ADD_SAVED_VAR(info)
@@ -75,8 +76,10 @@
 	..()
 
 /obj/item/weapon/paper/Write(savefile/f)
+	var/proper_links = info_links
 	info_links = replacetext(info_links,"\ref[src]","***MY_REF***")
 	StandardWrite(f)
+	info_links = proper_links
 
 /obj/item/weapon/paper/proc/set_content(text,title)
 	if(title)
@@ -586,18 +589,18 @@
 	info = "Bruises sustained in the holodeck can be healed simply by sleeping."
 
 /obj/item/weapon/paper/workvisa
-	name = "Sol Work Visa"
-	info = "<center><b><large>Work Visa of the Sol Central Government</large></b></center><br><center><img src = sollogo.png><br><br><i><small>Issued on behalf of the Secretary-General.</small></i></center><hr><BR>This paper hereby permits the carrier to travel unhindered through Sol territories, colonies, and space for the purpose of work and labor."
-	desc = "A flimsy piece of laminated cardboard issued by the Sol Central Government."
+	name = "Work Visa"
+	info = "<center><b><large>Work Visa of the <field></large></b></center><br><center><field><br><br><i><small>Issued on behalf of the <field>.</small></i></center><hr><BR>This paper hereby permits the carrier to travel unhindered through <field> for the purpose of work and labor."
+	desc = "A flimsy piece of laminated cardboard issued by the Government."
 
 /obj/item/weapon/paper/workvisa/New()
 	..()
 	icon_state = "workvisa" //Has to be here or it'll assume default paper sprites.
 
 /obj/item/weapon/paper/travelvisa
-	name = "Sol Travel Visa"
-	info = "<center><b><large>Travel Visa of the Sol Central Government</large></b></center><br><center><img src = sollogo.png><br><br><i><small>Issued on behalf of the Secretary-General.</small></i></center><hr><BR>This paper hereby permits the carrier to travel unhindered through Sol territories, colonies, and space for the purpose of pleasure and recreation."
-	desc = "A flimsy piece of laminated cardboard issued by the Sol Central Government."
+	name = "Travel Visa"
+	info = "<center><b><large>Travel Visa of the <field></large></b></center><br><center><field><br><br><i><small>Issued on behalf of the <field>.</small></i></center><hr><BR>This paper hereby permits the carrier to travel unhindered through <field> for the purpose of pleasure and recreation."
+	desc = "A flimsy piece of laminated cardboard issued by the Government."
 
 /obj/item/weapon/paper/travelvisa/New()
 	..()

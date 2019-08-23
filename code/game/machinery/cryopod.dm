@@ -343,24 +343,25 @@
 
 	SScharacter_setup.save_character(saveslot, key, character)
 	SetName(initial(src.name))
-	icon_state = base_icon_state
+	var/mob/occupant_ref = occupant
 	var/mob/new_player/player = new()
 	player.loc = locate(200,200,19)
 	if(occupant.client)
 		occupant.client.eye = player
-	player.key = key
-	player.loc = locate(200,200,19)
-	if(occupant && occupant.client)
-		occupant.client.eye = player
+	player.ckey = occupant.ckey
 	if(istype(occupant, /mob/))
 		var/mob/M = occupant
 		M.stored_ckey = null
 		M.ckey = null
-	QDEL_NULL(occupant)
-	occupant = null
+	occupant.loc = null
+	occupant.stored_ckey = null
+	occupant.ckey = null
+	occupant = null //For some reasons the mob sometimes stay stuck in there if the qdel has some issues.. so we clear it early
 	time_despawn = 0
 	despawning = FALSE
+	qdel(occupant)
 	occupant = null
+	
 /*
  * Cryogenic refrigeration unit. Basically a despawner.
  * Stealing a lot of concepts/code from sleepers due to massive laziness.
@@ -740,10 +741,6 @@
 	var/mob/new_player/player = new()
 	player.loc = locate(200,200,19)
 	if(occupant.client)
-		occupant.client.eye = player
-	player.key = key
-	player.loc = locate(200,200,19)
-	if(occupant && occupant.client)
 		occupant.client.eye = player
 	if(istype(occupant, /mob/))
 		var/mob/M = occupant

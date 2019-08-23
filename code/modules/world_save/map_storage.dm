@@ -65,7 +65,7 @@ var/global/list/debug_data = list()
 
 /turf
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
-	skip_empty = "contents;saved_decals"
+	skip_empty = "contents;saved_decals;req_access;req_access_personal_list;req_one_access;req_one_access_business_list"
 
 /obj
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
@@ -319,19 +319,13 @@ var/global/list/debug_data = list()
 			L.linked_account = L.linked_account.after_load()
 			L.linked_account.money = 1000
 		to_file(f, L.linked_account)
-	//	if(L.linked_account)
-		//	var/key2 = L.linked_account.account_number
-
-		//	fdel("record_saves/[key2].sav")
-		//	var/savefile/fa = new("record_saves/[key2].sav")
-		//	to_file(fa, L)
-		//	to_file(fa, L.linked_account)
+		f = null
 		var/key3 = L.get_fingerprint()
 		fdel("record_saves/[key3].sav")
 		var/savefile/fe = new("record_saves/[key3].sav")
 		to_file(fe, L)
 		to_file(fe, L.linked_account)
-
+		fe = null
 	to_world("<font size=3 color='green'>Saving faction records..</font>")
 	for(var/datum/world_faction/faction in GLOB.all_world_factions)
 		var/list/records = faction.get_records()
@@ -341,7 +335,7 @@ var/global/list/debug_data = list()
 			fdel("record_saves/[faction.uid]/[key].sav")
 			var/savefile/f = new("record_saves/[faction.uid]/[key].sav")
 			to_file(f, L)
-
+			f = null
 /proc/Save_World()
 	to_world("<font size=4 color='green'>The world is saving! Characters are frozen and you won't be able to join at this time.</font>")
 	sleep(20)
@@ -385,9 +379,13 @@ var/global/list/debug_data = list()
 		formatted_areas += holder
 	var/list/zones = list()
 	to_world("<font size=3 color='green'>Saving zones..</font>")
+	
 	for(var/zone/Z in zones_to_save)
-		Z.turf_coords = Z.get_turf_coords()
-		zones |= Z
+		try	
+			Z.turf_coords = Z.get_turf_coords()
+			zones |= Z
+		catch(var/exception/e)
+			message_admins("error [e]")		
 	to_world("<font size=3 color='green'>Saving factions..</font>")
 	to_file(f["factions"],GLOB.all_world_factions)
 	to_world("<font size=3 color='green'>Saving marketplace..</font>")
@@ -404,6 +402,12 @@ var/global/list/debug_data = list()
 	to_world("Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!")
 	to_world("Saving Complete")
 	f = null
+	found_vars = list()
+	all_loaded = list()
+	saved = list()
+	areas_to_save = list()
+	zones_to_save = list()
+	debug_data = list()
 	return 1
 
 
@@ -474,12 +478,21 @@ var/global/list/debug_data = list()
 
 
 /proc/Load_World()
+	set background = TRUE
 	var/starttime = REALTIMEOFDAY
-	var/savefile/f = new("map_saves/extras.sav")
+	var/savefile/f
 	all_loaded = list()
 	found_vars = list()
 	debug_data = list()
 	var/turf/ve = null
+	for(var/z in 1 to SAVED_ZLEVELS)
+		var/starttime2 = REALTIMEOFDAY
+		f = new("map_saves/z[z].sav")
+		while(!f.eof)
+			from_file(f,ve)
+		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
+		f = null
+	f = new("map_saves/extras.sav")	
 	from_file(f["email"],ntnet_global.email_accounts)
 	from_file(f["records"],GLOB.all_crew_records)
 	LAZYINITLIST(GLOB.all_crew_records)
@@ -499,27 +512,20 @@ var/global/list/debug_data = list()
 	var/list/areas
 	from_file(f["areas"],areas)
 	for(var/datum/area_holder/holder in areas)
-		var/area/A = new holder.area_type
-		A.name = holder.name
-		A.shuttle = holder.shuttle
-		var/list/turfs = list()
-		for(var/ind in 1 to holder.turfs.len)
-			var/list/coords = holder.turfs[ind]
-			var/turf/T = locate(text2num(coords[1]),text2num(coords[2]),text2num(coords[3]))
-			if(!T)
-				message_admins("No turf found for area load")
-			turfs |= T
-		A.contents.Add(turfs)
-	f = null
-	for(var/z in 1 to SAVED_ZLEVELS)
-		var/starttime2 = REALTIMEOFDAY
-		f = new("map_saves/z[z].sav")
-		while(!f.eof)
-			from_file(f,ve)
-		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
-
-	f = null
-	f = new("map_saves/extras.sav")
+		try
+			var/area/A = new holder.area_type
+			A.name = holder.name
+			A.shuttle = holder.shuttle
+			var/list/turfs = list()
+			for(var/ind in 1 to holder.turfs.len)
+				var/list/coords = holder.turfs[ind]
+				var/turf/T = locate(text2num(coords[1]),text2num(coords[2]),text2num(coords[3]))
+				if(!T)
+					message_admins("No turf found for area load")
+				turfs |= T
+			A.contents.Add(turfs)
+		catch(var/exception/e)
+			message_admins("error [e]")
 	var/list/zones
 
 	from_file(f["zones"],zones)
@@ -540,11 +546,13 @@ var/global/list/debug_data = list()
 		var/datum/dat = all_loaded[ind]
 		dat.after_load()
 
-	all_loaded = list()
+	all_loaded.Cut()
+	found_vars.Cut()
 	SSmachines.makepowernets()
 
 	for(var/x in debug_data)
 		to_world("Loaded [debug_data[x][1]] [x] in [debug_data[x][2]] seconds!")
+	debug_data.Cut()
 	to_world("Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!")
 	to_world("Loading Complete")
 	return 1

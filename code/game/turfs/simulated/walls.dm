@@ -38,30 +38,60 @@
 	ADD_SAVED_VAR(stripe_color)
 	ADD_SAVED_VAR(state)
 	ADD_SAVED_VAR(integrity)
-	ADD_SAVED_VAR(material)
-	ADD_SAVED_VAR(reinf_material)
-	ADD_SAVED_VAR(girder_material)
-	ADD_SAVED_VAR(girder_reinf_material)
+	// ADD_SAVED_VAR(material)
+	// ADD_SAVED_VAR(reinf_material)
+	// ADD_SAVED_VAR(girder_material)
+	// ADD_SAVED_VAR(girder_reinf_material)
 	ADD_SAVED_VAR(can_open) //For hidden doors
 	ADD_SAVED_VAR(blocks_air) //For hidden doors
 
-	ADD_SKIP_EMPTY(reinf_material)
-	ADD_SKIP_EMPTY(girder_reinf_material)
+
+/turf/simulated/wall/Read(savefile/f)
+	. = ..()
+	from_file(f["material"], material)
+	from_file(f["reinf_material"], reinf_material)
+	from_file(f["girder_material"], girder_material)
+	from_file(f["girder_reinf_material"], girder_reinf_material)
+	
+/turf/simulated/wall/Write(savefile/f)
+	. = ..()
+	if(istype(material))
+		to_file(f["material"], material.name)
+	if(istype(reinf_material))
+		to_file(f["reinf_material"], reinf_material.name)
+	if(istype(girder_material))
+		to_file(f["girder_material"], girder_material.name)
+	if(istype(girder_reinf_material))
+		to_file(f["girder_reinf_material"], girder_reinf_material.name)
 
 /turf/simulated/wall/Initialize(mapload, var/materialtype, var/rmaterialtype, var/girder_mat, var/girder_reinf_mat)
 	//testing("wall/initialize([mapload], [materialtype], [rmaterialtype], [girder_mat], [girder_reinf_mat])")
 	set_extension(src, /datum/extension/penetration, /datum/extension/penetration/proc_call, .proc/CheckPenetration)
 	. = ..()
-	if(!map_storage_loaded)
+	if(!mapload)
+		//only care about parameters if we're not loading the map!
 		if(!materialtype)
 			materialtype = DEFAULT_WALL_MATERIAL
-		material = (istext(materialtype))?  SSmaterials.get_material_by_name(materialtype) : materialtype
+		material = materialtype
 		if(!isnull(rmaterialtype))
-			reinf_material = (istext(rmaterialtype))? SSmaterials.get_material_by_name(rmaterialtype) : rmaterialtype
+			reinf_material = rmaterialtype
 		if(!isnull(girder_mat))
-			girder_material = (istext(girder_mat))? SSmaterials.get_material_by_name(girder_mat) : girder_mat
+			girder_material = girder_mat
 		if(!isnull(girder_reinf_mat))
-			girder_reinf_material = (istext(girder_reinf_mat))? SSmaterials.get_material_by_name(girder_reinf_mat) : girder_reinf_mat
+			girder_reinf_material = girder_reinf_mat
+
+	if(!material)
+		material = DEFAULT_WALL_MATERIAL
+	if(istext(material))
+		material = SSmaterials.get_material_by_name(material)
+	if(istext(reinf_material))
+		reinf_material = SSmaterials.get_material_by_name(reinf_material)
+	if(!girder_mat)
+		girder_mat = DEFAULT_WALL_MATERIAL
+	if(istext(girder_mat))
+		girder_mat = SSmaterials.get_material_by_name(girder_mat)
+	if(istext(girder_reinf_material))
+		girder_reinf_material = SSmaterials.get_material_by_name(girder_reinf_material)
 	return INITIALIZE_HINT_LATELOAD
 
 /turf/simulated/wall/LateInitialize()

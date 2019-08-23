@@ -113,17 +113,6 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 /obj/machinery/docking_beacon/AltClick()
 	rotate()
 
-/obj/machinery/docking_beacon/verb/rotate()
-	set name = "Rotate Clockwise"
-	set category = "Object"
-	set src in oview(1)
-
-	if (src.anchored || usr:stat)
-		to_chat(usr, "It is fastened to the floor!")
-		return 0
-	src.set_dir(turn(src.dir, 270))
-	return 1
-
 /obj/machinery/docking_beacon/attackby(var/obj/item/weapon/tool/W, var/mob/user)
 	if(isWrench(W))
 		if(status)

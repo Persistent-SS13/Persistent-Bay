@@ -61,6 +61,8 @@
 /datum/design/item/consumerfab/consumer/recreation
 	category = "Recreation"
 
+/datum/design/item/consumerfab/consumer/Decoration
+	category = "Decoration"
 ////////////////////////////////////////////////////////////////////
 
 /datum/design/item/consumerfab/consumer/plastic_bag
@@ -682,3 +684,194 @@
 	name = "Beach Ball"
 	materials = list(MATERIAL_PLASTIC = 5 SHEETS)
 	build_path = /obj/item/weapon/beach_ball
+
+	////////////////////////////////////////////////////
+	//////////////////////Decoration//////////////////////
+	////////////////////////////////////////////////////
+
+/datum/design/item/consumerfab/consumer/Decoration
+	category = "Decoration"
+ 
+/datum/design/item/consumerfab/consumer/Decoration/fern
+	name = "Fern"
+	materials = list(MATERIAL_WOOD = 2.5 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/fern
+
+/datum/design/item/consumerfab/consumer/Decoration/overgrown
+	name = "overgrown"
+	materials = list(MATERIAL_WOOD = 5 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/overgrown
+
+
+/datum/design/item/consumerfab/consumer/Decoration/bamboo
+
+	name = "bamboo"
+	materials = list(MATERIAL_WOOD = 5 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/bamboo
+
+
+/datum/design/item/consumerfab/consumer/Decoration/largebush
+	name = "largebush"
+	materials = list(MATERIAL_WOOD = 2.5 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/largebush
+
+
+/datum/design/item/consumerfab/consumer/Decoration/thinbush
+	name = "thinbush"
+	materials = list(MATERIAL_WOOD = 2.5 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/thinbush
+
+
+/datum/design/item/consumerfab/consumer/Decoration/mysterious
+	name = "mysterious"
+	materials = list(MATERIAL_WOOD = 5 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/mysterious
+	research = "unusal_trees"
+
+/datum/design/item/consumerfab/consumer/Decoration/smalltree
+	name = "smalltree"
+	materials = list(MATERIAL_WOOD = 5 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/smalltree
+
+
+/datum/design/item/consumerfab/consumer/Decoration/unusual
+	name = "unusual"
+	materials = list(MATERIAL_WOOD = 5 SHEETS , MATERIAL_PHORON = 0.25)
+	build_path = /obj/structure/flora/pottedplant/unusual
+	research = "unusal_trees"
+
+/datum/design/item/consumerfab/consumer/Decoration/orientaltree
+	name = "orientaltree"
+	materials = list(MATERIAL_WOOD = 5 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/orientaltree
+
+
+/datum/design/item/consumerfab/consumer/Decoration/smallcactus
+	name = "smallcactus"
+	materials = list(MATERIAL_WOOD = 2.5 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/smallcactus
+
+
+/datum/design/item/consumerfab/consumer/Decoration/tall
+	name = "tall"
+	materials = list(MATERIAL_WOOD = 5 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/tall
+
+
+/datum/design/item/consumerfab/consumer/Decoration/sticky
+	name = "sticky"
+	materials = list(MATERIAL_WOOD = 1.5 SHEETS , MATERIAL_PLASTIC = 0.25)
+	build_path = /obj/structure/flora/pottedplant/sticky
+	research = "unusal_trees"
+
+
+/datum/design/item/consumerfab/consumer/Decoration/smelly
+	name = "smelly"
+	materials = list(MATERIAL_WOOD = 2.5 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/smelly
+	research = "unusal_trees"
+
+
+/datum/design/item/consumerfab/consumer/Decoration/small
+	name = "small"
+	materials = list(MATERIAL_WOOD = 2 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/small
+
+/datum/design/item/consumerfab/consumer/Decoration/aquatic
+	name = "aquatic"
+	materials = list(MATERIAL_WOOD = 5 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/aquatic
+	research = "unusal_trees"
+
+
+/datum/design/item/consumerfab/consumer/Decoration/shoot
+	name = "shoot"
+	materials = list(MATERIAL_WOOD = 1 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/shoot
+
+
+/datum/design/item/consumerfab/consumer/Decoration/flower
+	name = "flower"
+	materials = list(MATERIAL_WOOD = 1.5 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/flower
+
+
+/datum/design/item/consumerfab/consumer/Decoration/crystal
+	name = "crystal"
+	materials = list(MATERIAL_WOOD = 2.5 SHEETS , MATERIAL_DIAMOND = 0.25)
+	build_path = /obj/structure/flora/pottedplant/crystal
+	research = "unusal_trees"
+
+
+/datum/design/item/consumerfab/consumer/Decoration/subterranean
+	name = "subterranean"
+	materials = list(MATERIAL_WOOD = 5 SHEETS , MATERIAL_PHORON = 0.25)
+	build_path = /obj/structure/flora/pottedplant/subterranean
+	research = "unusal_trees"
+
+
+/datum/design/item/consumerfab/consumer/Decoration/minitree
+	name = "minitree"
+	materials = list(MATERIAL_WOOD = 5.5 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/minitree
+
+
+/datum/design/item/consumerfab/consumer/Decoration/stoutbush
+	name = "stoutbush"
+	materials = list(MATERIAL_WOOD = 2.5 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/stoutbush
+
+/datum/design/item/consumerfab/consumer/Decoration/drooping
+	name = "drooping"
+	materials = list(MATERIAL_WOOD = 5 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/drooping
+
+
+/datum/design/item/consumerfab/consumer/Decoration/tropical
+	name = "tropical"
+	materials = list(MATERIAL_WOOD = 5 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/tropical
+
+
+/datum/design/item/consumerfab/consumer/Decoration/dead
+	name = "dead"
+	materials = list(MATERIAL_PLASTIC = 1 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/dead
+
+
+/datum/design/item/consumerfab/consumer/Decoration/large
+	name = "large"
+	materials = list(MATERIAL_WOOD = 6 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/large
+
+
+/datum/design/item/consumerfab/consumer/Decoration/decorative
+	name = "decorative apple brush"
+	materials = list(MATERIAL_WOOD = 5 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/decorative
+	research = "unusal_trees"
+
+
+/datum/design/item/consumerfab/consumer/Decoration/deskfern
+	name = "deskfern"
+	materials = list(MATERIAL_WOOD = 1 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/deskfern
+
+
+/datum/design/item/consumerfab/consumer/Decoration/floorleaf
+	name = "floorleaf"
+	materials = list(MATERIAL_WOOD = 3 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/floorleaf
+
+
+/datum/design/item/consumerfab/consumer/Decoration/deskleaf
+	name = "deskleaf"
+	materials = list(MATERIAL_WOOD = 1 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/deskleaf
+
+
+/datum/design/item/consumerfab/consumer/Decoration/deskferntrim
+	name = "deskferntrim"
+	materials = list(MATERIAL_WOOD = 5 SHEETS)
+	build_path = /obj/structure/flora/pottedplant/deskferntrim
+	research = "unusal_trees"

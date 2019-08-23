@@ -151,9 +151,11 @@
 				crew_announcement.faction = connected_faction.name
 				crew_announcement.sector = program.computer.z+(program.computer.z % 2)
 				crew_announcement.Announce(input, zlevels = affected_zlevels)
+				GLOB.discord_api.broadcast("(Announcement by [usr.real_name]) [input]")
 				announcment_cooldown = 1
 				spawn(600)//One minute cooldown
 					announcment_cooldown = 0
+					
 		if("message")
 			. = 1
 			if(href_list["target"] == "emagged")

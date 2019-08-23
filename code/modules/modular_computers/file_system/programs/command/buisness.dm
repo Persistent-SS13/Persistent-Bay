@@ -787,7 +787,7 @@
 				viewing_employee = ""
 				return
 			var/amount = round(input("Edit [viewing_employee] Pay", "Edit pay", employee.pay_rate) as null|num)
-			if(!amount)
+			if(!amount || amount < 0)
 				amount = 0
 			employee.pay_rate = amount
 
@@ -805,7 +805,7 @@
 				viewing_employee = ""
 				return
 			var/amount = round(input("Edit [viewing_employee] expense limit", "Edit expenses", employee.expense_limit) as null|num)
-			if(!amount)
+			if(!amount || amount < 0)
 				amount = 0
 			employee.expense_limit = amount
 
@@ -1073,7 +1073,7 @@
 				return
 
 			var/amount = round(input("Edit CEO ([connected_business.ceo_name]) Hourly Pay", "Edit ceo pay", connected_business.ceo_payrate) as null|num)
-			if(!amount)
+			if(!amount || amount < 0)
 				amount = 0
 			var/choice = input(usr,"This will create a proposal to change the CEO hourly pay to [amount]") in list("Confirm", "Cancel")
 			if(choice == "Confirm")
@@ -1099,7 +1099,7 @@
 				return
 
 			var/amount = round(input("Edit [connected_business.ceo_name] Dividend", "Edit CEO Dividend", connected_business.ceo_dividend) as null|num)
-			if(!amount)
+			if(!amount || amount < 0)
 				amount = 0
 			if(amount > 20)
 				to_chat(user, "20% is the maximum")
@@ -1126,7 +1126,7 @@
 				to_chat(usr, "You can only have one active proposal at a time.")
 				return
 			var/amount = round(input("Edit Stockholders Dividend", "Edit Holder Dividend", connected_business.stock_holders_dividend) as null|num)
-			if(!amount)
+			if(!amount || amount < 0)
 				amount = 0
 			if(amount > 10)
 				to_chat(user, "10% is the maximum")
@@ -1151,7 +1151,7 @@
 				return
 			var/holding = connected_business.get_stocks(user_id_card.registered_name)
 			var/amount = round(input("How many stocks do you want to sell?", "Sell stocks", holding) as null|num)
-			if(!amount)
+			if(!amount || amount < 0)
 				to_chat(user, "Sale cancelled.")
 				return
 			if(amount > holding)

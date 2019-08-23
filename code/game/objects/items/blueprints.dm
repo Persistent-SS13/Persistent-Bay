@@ -19,6 +19,8 @@
 	var/const/ROOM_ERR_SPACE = -1
 	var/const/ROOM_ERR_TOOLARGE = -2
 
+	var/const/MaxArea = 3000 //Max nb of tiles an area may be
+
 /obj/item/blueprints/New()
 	..()
 	desc = "Blueprints of the [station_name()]. There is a \"Classified\" stamp and several coffee stains on it."
@@ -124,7 +126,7 @@
 	var/str = sanitizeSafe(input("New area name:","Blueprint Editing", ""), MAX_NAME_LEN)
 	if(!str || !length(str)) //cancel
 		return
-	if(length(str) > 50)
+	if(length(str) > 128)
 		to_chat(usr, "<span class='warning'>Name too long.</span>")
 		return
 	var/area/A = new
@@ -293,7 +295,7 @@
 	var/list/turf/found = new
 	var/list/turf/pending = list(first)
 	while(pending.len)
-		if (found.len+pending.len > 300)
+		if (found.len+pending.len > MaxArea)
 			return ROOM_ERR_TOOLARGE
 		var/turf/T = pending[1] //why byond havent list::pop()?
 		pending -= T

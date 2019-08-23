@@ -60,7 +60,17 @@
 	//Clear the saved species var to save some memory
 	saved_species = null
 
-/mob/living/carbon/Destroy()
+/mob/living/carbon/Destroy(var/clearlace = FALSE)
+	//Drop the lace
+#ifndef UNIT_TEST
+	if(LAZYLEN(internal_organs_by_name))
+		var/obj/item/organ/internal/stack/lace = internal_organs_by_name[BP_STACK]
+		if(clearlace || !istype(lace))
+			qdel(lace, clearlace, clearlace) //Die stack :D
+		else
+			lace.removed(dolace = !clearlace)
+			lace.dropInto(get_turf(src))
+#endif
 	QDEL_NULL(touching)
 	QDEL_NULL(metabolism_effects)
 	bloodstr = null // We don't qdel(bloodstr) because it's the same as qdel(reagents)
@@ -90,7 +100,7 @@
 	if(!.)
 		return
 
-	if (src.nutrition && src.stat != DEAD && !(src.species.species_flags & SPECIES_FLAG_NO_HUNGER))
+	if (src.nutrition && src.stat != DEAD && src.species && !(src.species.species_flags & SPECIES_FLAG_NO_HUNGER))
 		src.nutrition -= DEFAULT_HUNGER_FACTOR/10
 		if (move_intent.flags & MOVE_INTENT_EXERTIVE)
 			src.nutrition -= DEFAULT_HUNGER_FACTOR/10

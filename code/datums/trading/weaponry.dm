@@ -25,7 +25,6 @@
 								/obj/item/weapon/gun/projectile/shotgun/pump = TRADER_SUBTYPES_ONLY,
 								/obj/item/ammo_magazine                      = TRADER_SUBTYPES_ONLY,
 								/obj/item/ammo_magazine/box/c762/empty       = TRADER_BLACKLIST,
-								/obj/item/ammo_magazine/box/gyrojet/empty    = TRADER_BLACKLIST,
 								/obj/item/ammo_magazine/box/c9mm/empty       = TRADER_BLACKLIST,
 								/obj/item/ammo_magazine/box/wt550/empty      = TRADER_BLACKLIST,
 								/obj/item/ammo_magazine/box/c45/empty        = TRADER_BLACKLIST,

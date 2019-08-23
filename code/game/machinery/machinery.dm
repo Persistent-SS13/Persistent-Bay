@@ -157,6 +157,7 @@ Class Procs:
 
 /obj/machinery/Initialize(mapload, d=0)
 	. = ..()
+	verbs += /obj/proc/rotate
 	if(!map_storage_loaded)
 		SetupParts()
 	REPORT_POWER_CONSUMPTION_CHANGE(0, get_power_usage())
@@ -172,6 +173,9 @@ Class Procs:
 		faction = get_faction(faction_uid)
 
 /obj/machinery/Destroy()
+	verbs -= /obj/proc/rotate
+	if(has_transmitter())
+		delete_transmitter()
 	GLOB.moved_event.unregister(src, src, .proc/update_power_on_move)
 	REPORT_POWER_CONSUMPTION_CHANGE(get_power_usage(), 0)
 	SSmachines.machinery -= src
@@ -261,6 +265,22 @@ Class Procs:
 /obj/machinery/proc/turn_active()
 	update_use_power(POWER_USE_ACTIVE)
 	update_icon()
+
+/obj/machinery/proc/connect_faction(var/datum/world_faction/F, var/mob/user)
+	if(istext(F))
+		F = get_faction(F)
+	if(F && can_connect(F))
+		faction = F
+		faction_uid = F.uid
+		req_access_faction = faction_uid
+		return TRUE
+	return FALSE
+
+/obj/machinery/proc/disconnect_faction(var/mob/user)
+	faction = null
+	faction_uid = null
+	req_access_faction = null
+	return TRUE
 
 /obj/machinery/proc/turn_idle()
 	update_use_power(POWER_USE_IDLE)

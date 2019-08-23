@@ -1,4 +1,10 @@
 //Terribly sorry for the code doubling, but things go derpy otherwise.
+
+/obj/vis_blocker
+	mouse_opacity = 0
+	should_save = 0
+	opacity = 1
+	anchored = 1
 /obj/machinery/door/airlock/multi_tile
 	airlock_type = "double"
 	name = "\improper Airlock"
@@ -22,6 +28,16 @@
 	max_health = 800
 	assembly_type = /obj/structure/door_assembly/multi_tile
 
+	var/obj/vis_blocker/blocker
+	
+	
+/obj/machinery/door/airlock/multi_tile/New()
+	..()
+	SetBounds()
+/obj/machinery/door/airlock/multi_tile/after_load()
+	SetBounds()
+	..()
+
 /obj/machinery/door/airlock/multi_tile/should_save(var/datum/caller)
 	if(caller == loc)
 		return ..()
@@ -29,14 +45,13 @@
 		return 0
 	return ..()
 
-/obj/machinery/door/airlock/multi_tile/Initialize()
+/obj/machinery/door/airlock/multi_tile/Initialize(mapload)
 	. = ..()
+	if(mapload)
+		queue_icon_update()
+	else
+		update_icon()
 	SetBounds()
-
-/obj/machinery/door/airlock/multi_tile/after_load()
-	SetBounds()
-	..()
-
 /obj/machinery/door/airlock/multi_tile/Move()
 	. = ..()
 	SetBounds()
@@ -48,9 +63,14 @@
 	else
 		bound_width = world.icon_size
 		bound_height = width * world.icon_size
-
-
+	if(opacity)
+		for(var/turf/T in locs)
+			if(T != loc)
+				if(blocker)
+					qdel(blocker)
+				blocker = new(T)
 /obj/machinery/door/airlock/multi_tile/on_update_icon(state=0, override=0)
+	..()
 	//Since some of the icons are off-center, we have to align them for now
 	// Would tweak the icons themselves, but dm is currently crashing when trying to edit icons at all!
 	switch(dir)
@@ -68,7 +88,6 @@
 			pixel_x = 0
 	
 	SetBounds() //Lets just be sure
-	..()
 
 /obj/machinery/door/airlock/multi_tile/update_connections(var/propagate = 0)
 	var/dirs = 0

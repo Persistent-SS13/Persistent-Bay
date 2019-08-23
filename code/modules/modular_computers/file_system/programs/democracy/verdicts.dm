@@ -39,6 +39,7 @@
 				data["trials"] = formatted_trials
 	if(menu == 2)
 		if(selected_verdict)
+			data["selected_verdict"] = selected_verdict.name
 			data["verdict_title"] = selected_verdict.name
 			data["defendant_verdict"] = selected_verdict.defendant
 			data["verdict_body"] = selected_verdict.body

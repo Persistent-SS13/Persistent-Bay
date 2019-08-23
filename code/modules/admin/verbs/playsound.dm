@@ -20,6 +20,31 @@ var/list/sounds_cache = list()
 			sound_to(M, uploaded_sound)
 
 	SSstatistics.add_field_details("admin_verb","PGS") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	
+	
+/client/proc/play_zlevel_sound(S as sound)
+	set category = "Fun"
+	set name = "Play Zlevel Sound"
+	if(!check_rights(R_SOUNDS))	return
+
+	var/sound/uploaded_sound = sound(S, repeat = 0, wait = 1, channel = GLOB.admin_sound_channel, volume = 30)
+	uploaded_sound.priority = 250
+
+	sounds_cache += S
+
+	if(alert("Do you ready?\nSong: [S]\nNow you can also play this sound using \"Play Server Sound\".", "Confirmation request" ,"Play", "Cancel") == "Cancel")
+		return
+
+	log_admin("[key_name(src)] played sound [S]")
+	message_admins("[key_name_admin(src)] played ZLEVEL sound [S]", 1)
+	var/turf/T = get_turf(src.mob)
+	if(!T) return
+	for(var/mob/M in GLOB.player_list)
+		if(M.get_preference_value(/datum/client_preference/play_ambiance) == GLOB.PREF_YES && M.z == T.z)
+			sound_to(M, uploaded_sound)
+
+	SSstatistics.add_field_details("admin_verb","PGS") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	
 
 /client/proc/play_local_sound(S as sound)
 	set category = "Fun"

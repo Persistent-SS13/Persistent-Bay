@@ -80,26 +80,30 @@
 	airlock_type = /obj/machinery/door/airlock/multi_tile
 	glass_type = /obj/machinery/door/airlock/multi_tile/glass
 
-	New()
-		if(dir in list(EAST, WEST))
-			bound_width = width * world.icon_size
-			bound_height = world.icon_size
-		else
-			bound_width = world.icon_size
-			bound_height = width * world.icon_size
-		..()
-		ADD_SAVED_VAR(width)
+/obj/structure/door_assembly/multi_tile/New()
+	..()
+	ADD_SAVED_VAR(width)
 
-	Move()
-		. = ..()
-		if(dir in list(EAST, WEST))
-			bound_width = width * world.icon_size
-			bound_height = world.icon_size
-		else
-			bound_width = world.icon_size
-			bound_height = width * world.icon_size
+/obj/structure/door_assembly/multi_tile/Move()
+	. = ..()
+	update_icon()
 
+//Make sure we don't save twice!
+/obj/structure/door_assembly/multi_tile/should_save(var/datum/caller)
+	if(caller == loc)
+		return ..()
+	else
+		return 0
+	return ..()
 
+/obj/structure/door_assembly/multi_tile/on_update_icon()
+	if(dir in list(EAST, WEST))
+		bound_width = world.icon_size
+		bound_height = width * world.icon_size
+	else
+		bound_width = width * world.icon_size
+		bound_height = world.icon_size
+	..()
 
 /obj/structure/door_assembly/attackby(obj/item/W as obj, mob/user as mob)
 	if(istype(W, /obj/item/weapon/pen))
@@ -209,7 +213,7 @@
 
 	else if(istype(W, /obj/item/stack/material) && !glass)
 		var/obj/item/stack/material/S = W
-		var/material_name = S.get_material_name()		
+		var/material_name = S.get_material_name()
 		if (S)
 			if (S.get_amount() >= 1)
 				if(material_name == MATERIAL_GLASS && S.reinf_material)
@@ -246,7 +250,7 @@
 			else
 				path = airlock_type
 
-			new path(src.loc, src)
+			new path(get_turf(src), src)
 			qdel(src)
 	else
 		..()
@@ -275,3 +279,7 @@
 	SetName(final_name)
 	overlays += filling_overlay
 	overlays += panel_overlay
+
+/obj/structure/door_assembly/AltClick(mob/user)
+	. = ..()
+	rotate()

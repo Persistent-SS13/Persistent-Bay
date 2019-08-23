@@ -586,10 +586,14 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	var/recursive = 0
 	material = lowertext(material)
 	var/material/M = SSmaterials.get_material_by_name(material)
+	if(!M)
+		log_error("[src]\ref[src] tried to eject bad material type '[material]'")
+		state("SYSTEM ERROR")
+		return
 	var/stacktype = M.stack_type
-
 	if(!stacktype)
 		log_error("Unable to create stack type for material '[material]'")
+		state("SYSTEM ERROR")
 		return
 
 	var/obj/item/stack/material/S = new stacktype(loc)

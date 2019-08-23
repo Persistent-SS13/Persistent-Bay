@@ -412,6 +412,12 @@ BLIND     // can't see anything
 		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_head_unathi.dmi',
 		)
 	blood_overlay_type = "helmetblood"
+	//Light defaults
+	light_max_bright = 0.9
+	light_inner_range = 2
+	light_outer_range = 10
+	light_falloff_curve = 2
+//	light_color = COLOUR_LTEMP_100W_TUNGSTEN
 
 /obj/item/clothing/head/New()
 	. = ..()
@@ -847,7 +853,7 @@ BLIND     // can't see anything
 		verbs -= /obj/item/clothing/under/verb/rollsuit
 	if(rolled_sleeves == -1)
 		verbs -= /obj/item/clothing/under/verb/rollsleeves
-	
+
 	ADD_SAVED_VAR(sensor_mode)
 	ADD_SAVED_VAR(rolled_down)
 	ADD_SAVED_VAR(rolled_sleeves)

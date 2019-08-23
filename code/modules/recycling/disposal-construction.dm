@@ -104,11 +104,7 @@
 
 
 	// flip and rotate verbs
-	verb/rotate()
-		set category = "Object"
-		set name = "Rotate Pipe"
-		set src in view(1)
-
+	rotate()
 		if(!usr || !Adjacent(usr))
 			return
 

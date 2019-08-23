@@ -334,6 +334,16 @@
 	character.spawn_cit = CITIZEN
 	//DNA should be last
 	var/datum/computer_file/report/crew_record/R = Retrieve_Record(character.real_name)
+	character.dna.ResetUIFrom(character)
+	character.dna.ready_dna(character)
+	character.dna.b_type = client.prefs.b_type
+	character.sync_organ_dna()
+	character.spawn_loc = "nexus"
+	// Do the initial caching of the player's body icons.
+	character.force_update_limbs()
+	character.update_eyes()
+	character.regenerate_icons()
+	character.spawn_type = CHARACTER_SPAWN_TYPE_IMPORT //For first time spawn
 	if(R)
 		R.linked_account.money = 1000
 		R.email = new()
@@ -344,16 +354,7 @@
 		client.prefs.setup_new_accounts(character) //make accounts before! Outfit setup needs the record set
 
 
-	character.dna.ResetUIFrom()
-	character.dna.ready_dna(character)
-	character.dna.b_type = client.prefs.b_type
-	character.sync_organ_dna()
-	character.spawn_loc = "nexus"
-	// Do the initial caching of the player's body icons.
-	character.force_update_limbs()
-	character.update_eyes()
-	character.regenerate_icons()
-	character.spawn_type = CHARACTER_SPAWN_TYPE_IMPORT //For first time spawn
+
 	var/decl/hierarchy/outfit/clothes
 	clothes = outfit_by_type(/decl/hierarchy/outfit/nexus/starter)
 	ASSERT(istype(clothes))
@@ -482,7 +483,7 @@
 	if (!Retrieve_Record(character.real_name))
 		var/datum/computer_file/report/crew_record/new_record = CreateModularRecord(character)
 		GLOB.all_crew_records |= new_record
-	var/turf/spawnTurf = locate(0,0,0) //Instead of null start with 0,0,0 because the unsafe spawn check will kick in and warn the user if there's something wrong
+	var/turf/spawnTurf
 
 	if(character.spawn_type == CHARACTER_SPAWN_TYPE_CRYONET)
 		var/datum/world_faction/faction = get_faction(character.spawn_loc)
@@ -601,13 +602,22 @@
 	return 1
 
 //Runs what happens after the character is loaded. Mainly for cinematics and lore text.
+
+/mob/proc/notify_friends()
+	var/datum/computer_file/report/crew_record/record2 = Retrieve_Record(real_name)
+	if(record2)
+		for(var/friend in record2.all_friends)
+			notify_lace(friend, "Your neural lace lets you know that [real_name] has just come out of cryosleep.")
+		
 /mob/proc/finishLoadCharacter()
 	if(spawn_type == CHARACTER_SPAWN_TYPE_CRYONET)
 		to_chat(src, "You eject from your cryosleep, ready to resume life in the frontier.")
+		notify_friends()
 	else if(spawn_type == CHARACTER_SPAWN_TYPE_FRONTIER_BEACON)
 		GLOB.using_map.on_new_spawn(src) //Moved to overridable map specific code
 	else if(spawn_type == CHARACTER_SPAWN_TYPE_LACE_STORAGE)
 		to_chat(src, "You regain consciousness, still prisoner of your neural lace.")
+		notify_friends()
 	else if(spawn_type == CHARACTER_SPAWN_TYPE_IMPORT)
 		import_spawn()
 /mob/proc/import_spawn()

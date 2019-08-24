@@ -454,25 +454,25 @@
 	slowdown_per_slot[slot_belt] = 1
 
 //obj/item/weapon/storage/belt/security/fed
-	name = "federation combat belt"
-	desc = "Can hold combat gear such as ammo magazines and grenades."
-	icon_state = "basicsecuritybelt"
-	item_state = "basicsecuritybelt"
-	storage_slots = 9
+	//name = "federation combat belt"
+	//desc = "Can hold combat gear such as ammo magazines and grenades."
+	//icon_state = "basicsecuritybelt"
+	//item_state = "basicsecuritybelt"
+	//storage_slots = 9
 
 //obj/item/weapon/storage/belt/security/military
-	name = "parade belt"
-	desc = "A striking red ammo belt, more for style than camouflage."
-	icon_state = "basicsecuritybelt"
-	item_state = "basicsecuritybelt"
-	storage_slots = 9
+	//name = "parade belt"
+	//desc = "A striking red ammo belt, more for style than camouflage."
+	//icon_state = "basicsecuritybelt"
+	//item_state = "basicsecuritybelt"
+	//storage_slots = 9
 
 //obj/item/weapon/storage/belt/security/assault
-	name = "assault belt"
-	desc = "A tactical assault belt."
-	icon_state = "basicsecuritybelt"
-	item_state = "basicsecuritybelt"
-	storage_slots = 6
+	//name = "assault belt"
+	//desc = "A tactical assault belt."
+	//icon_state = "basicsecuritybelt"
+	//item_state = "basicsecuritybelt"
+	//storage_slots = 6
 
 /obj/item/weapon/storage/belt/waistpack
 	name = "waist pack"

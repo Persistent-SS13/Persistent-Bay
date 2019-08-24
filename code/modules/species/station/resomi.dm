@@ -9,28 +9,30 @@
 	husk_icon = 'icons/mob/human_races/species/resomi/husk.dmi'
 	tail = "resomitail"
 	tail_hair = "feathers"
+	limb_blend = ICON_MULTIPLY
+	tail_blend = ICON_MULTIPLY
 	hidden_from_codex = FALSE
 
 	unarmed_types = list(/datum/unarmed_attack/bite/sharp, /datum/unarmed_attack/claws, /datum/unarmed_attack/stomp/weak)
 	darksight_range = 6
 	darksight_tint = DARKTINT_GOOD
 	total_health = 150
-	brute_mod = 1.35
-	burn_mod = 1.35
+	brute_mod = 1.25
+	burn_mod = 1.25
 	flash_mod = 1.5
 	mob_size = MOB_SMALL
 	holder_type = /obj/item/weapon/holder/human
 	gluttonous = GLUT_TINY
-	strength = STR_HIGH //This is only to avoid slowdown from carrying literally any item, including small tools or clothing. Otherwise, carrying anything at all removes their only real strength, speed.
-	slowdown = -0.5
-	blood_volume = 400
+	strength = STR_HIGH
+	slowdown = -0.75
+	blood_volume = 460
 	pass_flags = PASS_FLAG_TABLE
 
 	health_hud_intensity = 3
 	hunger_factor = DEFAULT_HUNGER_FACTOR * 2
 
 	min_age = 12
-	max_age = 45
+	max_age = 52
 
 	description = "A race of feathered raptors who developed on a cold world, almost \
 	outside of the Goldilocks zone. Extremely fragile, they developed hunting skills \
@@ -57,7 +59,7 @@
 	blood_color = "#D514F7"
 	base_color = "#001144"
 
-	move_trail = /obj/effect/decal/cleanable/blood/tracks/paw
+	move_trail = /obj/effect/decal/cleanable/blood/tracks/claw
 
 	heat_discomfort_level = 296
 	heat_discomfort_strings = list(
@@ -70,6 +72,8 @@
   	"Your feathers puff out, insulating you from the cold.",
   	"You shiver for warmth.")
 
+  	minimum_breath_pressure = 14
+
 	inherent_verbs = list(
 		/mob/living/carbon/human/proc/sonar_ping,
 		/mob/living/proc/hide
@@ -77,7 +81,7 @@
 
 	descriptors = list(
 		/datum/mob_descriptor/height = -2,
-		/datum/mob_descriptor/build = -2
+		/datum/mob_descriptor/build = -1
 		)
 
 	override_organ_types = list(

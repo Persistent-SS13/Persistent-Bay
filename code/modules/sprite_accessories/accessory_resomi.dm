@@ -2,12 +2,8 @@
 	name = "Resomi Default"
 	icon = 'icons/mob/human_races/species/resomi/hair.dmi'
 	icon_state = "teshari_default"
-	blend = ICON_ADD
+	blend = ICON_MULTIPLY
 	species_allowed = list(SPECIES_RESOMI)
-
-/datum/sprite_accessory/hair/somi/upright_ears
-  name = "Resomi Perked Ears"
-  icon_state = "teshari"
 
 /datum/sprite_accessory/hair/somi/tight
   name = "Resomi Tight"
@@ -15,7 +11,7 @@
 
 /datum/sprite_accessory/hair/somi/excited
   name = "Resomi Spiky"
-  icon_state = "teshari_spike"
+  icon_state = "teshari_spiky"
 
 /datum/sprite_accessory/hair/somi/spike
   name = "Resomi Spike"
@@ -57,25 +53,44 @@
   name = "Resomi Mushroom"
   icon_state = "teshari_mushroom"
 
+
+////////////////////////////////////////////////////////
+// Facial Hair
+
+/datum/sprite_accessory/facial_hair/somi
+	icon = 'icons/mob/human_races/species/resomi/hair.dmi'
+	blend = ICON_MULTIPLY
+	species_allowed = list(SPECIES_RESOMI)
+
+/datum/sprite_accessory/facial_hair/somi/beard
+	name = "Resomi Beard"
+	icon_state = "teshari_chin"
+	gender = NEUTER
+
+/datum/sprite_accessory/facial_hair/somi/scraggly
+	name = "Resomi Scraggly"
+	icon_state = "teshari_scraggly"
+	gender = NEUTER
+
+/datum/sprite_accessory/facial_hair/somi/chops
+	name = "Resomi Chops"
+	icon_state = "teshari_gap"
+	gender = NEUTER
+
 ////////////////////////////////////////////////////////
 // Body Markings
 
 /datum/sprite_accessory/marking/somi
 	icon = 'icons/mob/human_races/species/resomi/markings.dmi'
 	species_allowed = list(SPECIES_RESOMI)
-	blend = ICON_ADD
+	blend = ICON_MULTIPLY
 
 /datum/sprite_accessory/marking/somi/fluff
 	name = "Resomi Underfluff"
 	icon_state = "teshi_fluff"
 	body_parts = list(BP_L_FOOT,BP_R_FOOT,BP_GROIN,BP_CHEST,BP_HEAD)
 
-datum/sprite_accessory/marking/somi/small_feathers
+/datum/sprite_accessory/marking/somi/small_feathers
 	name = "Resomi Small Feathers"
 	icon_state = "teshi_sf"
 	body_parts = list(BP_L_FOOT,BP_R_FOOT,BP_L_HAND,BP_R_HAND,BP_CHEST)
-
-//datum/sprite_accessory/marking/somi/somi_ear_inner //commented out until I can figure out why it's using teshi_fluff-torso instead of the referenced sprite
-//	name = "Resomi Perked Inner Ear"
-//	icon_state = "tesh_inner"
-//	body_parts = list(BP_HEAD)

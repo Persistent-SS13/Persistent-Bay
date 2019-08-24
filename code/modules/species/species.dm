@@ -35,6 +35,7 @@
 	var/tail_blend = ICON_ADD
 	var/tail_hair
 
+
 	var/list/hair_styles
 	var/list/facial_hair_styles
 
@@ -366,7 +367,7 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 	H.internal_organs = list()
 	H.organs_by_name = list()
 	H.internal_organs_by_name = list()
-	
+
 	for(var/limb_type in has_limbs)
 		var/list/organ_data = has_limbs[limb_type]
 		var/limb_path = organ_data["path"]

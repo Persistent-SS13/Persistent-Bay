@@ -712,7 +712,7 @@ var/global/list/damage_icon_parts = list()
 		var/use_species_tail = species.get_tail_hair(src)
 		if(use_species_tail)
 			var/icon/hair_icon = icon('icons/effects/species.dmi', "[species.get_tail(src)]_[use_species_tail]")
-			hair_icon.Blend(rgb(r_hair, g_hair, b_hair), ICON_ADD)
+			hair_icon.Blend(rgb(r_hair, g_hair, b_hair), ICON_MULTIPLY)											//Changed from ICON_ADD, currently only used by one species, Resomi
 			tail_icon.Blend(hair_icon, ICON_OVERLAY)
 		tail_icon_cache[icon_key] = tail_icon
 

@@ -17,8 +17,8 @@
 	darksight_range = 6
 	darksight_tint = DARKTINT_GOOD
 	total_health = 150
-	brute_mod = 1.25
-	burn_mod = 1.25
+	brute_mod = 1.20
+	burn_mod = 1.20
 	flash_mod = 1.5
 	mob_size = MOB_SMALL
 	holder_type = /obj/item/weapon/holder/human

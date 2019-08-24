@@ -169,10 +169,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 			data["design_description"] = selected_design.desc
 			data["design_materials"] = get_design_resources(selected_design)
 			data["design_buildtime"] = get_design_time(selected_design)
-			if(selected_design.builds)
-				data["design_icon"] = user.browse_rsc_icon(selected_design.builds.icon, selected_design.builds.icon_state)
-			else
-				data["design_icon"] = null
+			data["design_icon"] = user.browse_rsc_icon(selected_design.builds.icon, selected_design.builds.icon_state)
 			if(selected_design.research && selected_design.research != "")
 				var/datum/tech_entry/entry = SSresearch.files.get_tech_entry(selected_design.research)
 				if(entry)
@@ -386,11 +383,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 /obj/machinery/fabricator/proc/remove_from_queue(var/index)
 	if(index == 1)
 		progress = 0
-	if(queue && queue.len)
-		if(index < queue.len)
-			queue.Cut(index, index + 1)
-		else //If at the end of the queue, the next position is 0 apparently...
-			queue.Cut(index, 0)
+	queue.Cut(index, index + 1)
 	update_busy()
 
 /obj/machinery/fabricator/proc/can_build(var/datum/design/D)
@@ -593,10 +586,14 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	var/recursive = 0
 	material = lowertext(material)
 	var/material/M = SSmaterials.get_material_by_name(material)
+	if(!M)
+		log_error("[src]\ref[src] tried to eject bad material type '[material]'")
+		state("SYSTEM ERROR")
+		return
 	var/stacktype = M.stack_type
-
 	if(!stacktype)
 		log_error("Unable to create stack type for material '[material]'")
+		state("SYSTEM ERROR")
 		return
 
 	var/obj/item/stack/material/S = new stacktype(loc)

@@ -69,10 +69,12 @@ SUBSYSTEM_DEF(atoms)
 		return TRUE
 
 	var/start_tick = world.time
+
 	var/result = A.Initialize(arglist(arguments))
 
 	if(start_tick != world.time)
 		BadInitializeCalls[the_type] |= BAD_INIT_SLEPT
+
 	var/qdeleted = FALSE
 
 	if(result != INITIALIZE_HINT_NORMAL)
@@ -92,12 +94,6 @@ SUBSYSTEM_DEF(atoms)
 		qdeleted = TRUE
 	else if(!(A.atom_flags & ATOM_FLAG_INITIALIZED))
 		BadInitializeCalls[the_type] |= BAD_INIT_DIDNT_INIT
-
-#ifdef TESTING
-	var/init_time = world.realtime - start_time
-	if(init_time > 0)
-		log_debug("[A.type]\ref[A] : inited in [init_time/10]s")
-#endif
 
 	return qdeleted || QDELING(A)
 

@@ -30,7 +30,7 @@
 /obj/item/weapon/reagent_containers/food/snacks/meat/beef
 	name = "beef slab"
 	desc = "The classic red meat."
-	starts_with = list(/datum/reagent/nutriment/protein = 10)
+	starts_with = list(/datum/reagent/nutriment/protein = 20)
 
 /obj/item/weapon/reagent_containers/food/snacks/meat/goat
 	name = "chevon slab"
@@ -43,7 +43,6 @@
 /obj/item/weapon/reagent_containers/food/snacks/meat/xenomeat
 	name = "meat"
 	desc = "A slab of green meat. Smells like acid."
-	icon = 'icons/obj/food.dmi'
 	icon_state = "xenomeat"
 	filling_color = "#43de18"
 	center_of_mass = "x=16;y=10"
@@ -53,17 +52,8 @@
 /obj/item/weapon/reagent_containers/food/snacks/meat/bearmeat
 	name = "bear meat"
 	desc = "A very manly slab of meat."
-	icon = 'icons/obj/food.dmi'
 	icon_state = "bearmeat"
 	filling_color = "#db0000"
 	center_of_mass = "x=16;y=10"
 	bitesize = 3
-	starts_with = list(/datum/reagent/nutriment/protein = 12, /datum/reagent/hyperzine = 5)
-
-//replace with new meat type
-/obj/item/weapon/reagent_containers/food/snacks/bearmeat/Initialize()
-	new/obj/item/weapon/reagent_containers/food/snacks/meat/bearmeat(src.loc)
-	return INITIALIZE_HINT_QDEL
-/obj/item/weapon/reagent_containers/food/snacks/xenomeat/Initialize()
-	new/obj/item/weapon/reagent_containers/food/snacks/meat/xenomeat(src.loc)
-	return INITIALIZE_HINT_QDEL
+	starts_with = list(/datum/reagent/nutriment/protein = 12, /datum/reagent/hyperzine = 5) 

@@ -94,7 +94,7 @@
 		target_floor.arrived(src)
 		target_floor = null
 
-		next_process = world.time + 1 SECONDS
+		next_process = world.time + 2 SECONDS
 		busy_state = LIFT_WAITING_A
 		return 1
 

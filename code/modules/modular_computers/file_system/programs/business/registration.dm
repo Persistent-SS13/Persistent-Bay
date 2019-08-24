@@ -104,9 +104,7 @@
 			selected_type = chose_type
 			selected_spec = null
 		if("change_business_spec")
-			if(!istype(selected_type))
-				to_chat(user, SPAN_WARNING("There is no selected type!"))
-				return
+
 			var/chose_type = input(user, "Select a specialization") as null|anything in selected_type.specs
 			if(!chose_type) return
 			if(signed_contracts.len)

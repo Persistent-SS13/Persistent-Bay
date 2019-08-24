@@ -16,10 +16,6 @@
 	anchored = TRUE
 	clicksound = 'sound/machines/buttonbeep.ogg'
 	clickvol = 30
-	circuit_type = /obj/item/weapon/circuitboard/sleeper
-	idle_power_usage = 15
-	active_power_usage = 200 //builtin health analyzer, dialysis machine, injectors.
-
 	var/mob/living/carbon/human/occupant = null
 	var/obj/item/weapon/reagent_containers/glass/beaker = null
 	var/filtering = FALSE
@@ -33,6 +29,10 @@
 	var/initial_bin_rating = 1
 	var/min_treatable_health = 25
 
+	use_power = 1
+	idle_power_usage = 15
+	active_power_usage = 200 //builtin health analyzer, dialysis machine, injectors.
+
 	//For chems handling
 	var/list/cartridges = null
 	var/amount_injected = 5
@@ -41,13 +41,19 @@
 
 /obj/machinery/sleeper/New()
 	..()
-	ADD_SAVED_VAR(occupant)
-	ADD_SAVED_VAR(beaker)
-	ADD_SAVED_VAR(filtering)
-	ADD_SAVED_VAR(pump)
-	ADD_SAVED_VAR(stasis)
-	ADD_SAVED_VAR(pump_speed)
-	ADD_SAVED_VAR(cartridges)
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/sleeper(src)
+
+	// Customizable bin rating, used by the labor camp to stop people filling themselves with chemicals and escaping.
+	var/obj/item/weapon/stock_parts/matter_bin/B = new(src)
+	B.rating = initial_bin_rating
+	component_parts += B
+
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/stack/cable_coil(src, 1)
+	RefreshParts()
 
 /obj/machinery/sleeper/RefreshParts()
 	var/E
@@ -62,9 +68,11 @@
 
 /obj/machinery/sleeper/Initialize()
 	. = ..()
+	if(!map_storage_loaded)
+		beaker = new /obj/item/weapon/reagent_containers/glass/beaker/large(src)
 	if(!cartridges)
 		cartridges = list()
-	queue_icon_update()
+	update_icon()
 
 /obj/machinery/sleeper/Process()
 	if(inoperable())

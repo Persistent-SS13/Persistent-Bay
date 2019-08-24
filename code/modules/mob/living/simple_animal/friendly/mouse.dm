@@ -39,9 +39,10 @@
 	. = ..()
 	if(!.)
 		return FALSE
-	if(prob(speak_chance))
-		for(var/mob/M in view())
-			sound_to(M, 'sound/effects/mousesqueek.ogg')
+	if(!istype(loc, /turf))
+		return . //Don't do anything when stored in something or in nullspace
+	if(!is_dead() && prob(speak_chance))
+		emote("squeak")
 
 	if(!ckey && stat == CONSCIOUS && prob(0.5))
 		set_stat(UNCONSCIOUS)
@@ -87,9 +88,7 @@
 /mob/living/simple_animal/mouse/Crossed(AM as mob|obj)
 	if( ishuman(AM) )
 		if(!stat)
-			var/mob/M = AM
-			to_chat(M, "<span class='warning'>\icon[src] Squeek!</span>")
-			sound_to(M, 'sound/effects/mousesqueek.ogg')
+			emote("squeak")
 	..()
 
 /*

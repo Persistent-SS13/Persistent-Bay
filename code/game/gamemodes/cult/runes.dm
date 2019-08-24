@@ -147,11 +147,10 @@
 	cultname = "teleport"
 	var/destination
 
-/obj/effect/rune/teleport/Initialize()
-	. = ..()
+/obj/effect/rune/teleport/New()
+	..()
 	var/area/A = get_area(src)
-	if(A)
-		destination = A.name
+	destination = A.name
 	GLOB.cult.teleport_runes += src
 
 /obj/effect/rune/teleport/Destroy()

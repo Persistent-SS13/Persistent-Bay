@@ -28,4 +28,4 @@
 	can_pull_mobs = MOB_PULL_NONE
 //	holder_type =/obj/item/weapon/holder/lizard
 	hide_type = /obj/item/stack/animalhide/lizard
-	hide_amount = 1
+	hide_amount = 1 

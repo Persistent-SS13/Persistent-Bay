@@ -19,15 +19,10 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 
 	//Radio
 	id_tag = null
-	frequency = INCINERATOR_FREQ
+	frequency = null
 	radio_filter_in = RADIO_INCINERATOR
 	radio_filter_out = RADIO_INCINERATOR
 	radio_check_id = TRUE
-
-	atom_flags = ATOM_FLAG_CLIMBABLE
-	max_health = 500
-	damthreshold_brute = 25
-	damthreshold_burn = 25
 
 	var/incinerating = FALSE
 	var/locked = FALSE

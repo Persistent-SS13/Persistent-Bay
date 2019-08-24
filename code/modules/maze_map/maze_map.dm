@@ -151,7 +151,6 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	z = 1
 	difficulty = 0
 	N_connect = 4
-	S_connect = 9
 
 /datum/zlevel_data/two
 	z = 2
@@ -190,7 +189,6 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	name = "Ambition's Toll"
 	E_connect = 5
 	W_connect = 7
-	S_connect = 8
 	monster_types = list(/mob/living/simple_animal/hostile/tormented, /mob/living/simple_animal/hostile/creature) // types of monsters that will occur on this map.
 	monster_quantity = 150 // and how many will occur/respawn
 	obj_types = list(/obj/structure/cryo_crate)

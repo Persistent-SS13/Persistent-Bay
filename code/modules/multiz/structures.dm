@@ -2,18 +2,14 @@
 //Contents: Ladders, Stairs.//
 //////////////////////////////
 
-//
-//	Ladders
-//
 /obj/structure/ladder
-	name 		= "ladder"
-	desc 		= "A ladder. You can climb it up and down."
-	icon_state 	= "ladder01"
-	icon 		= 'icons/obj/structures/ladders.dmi'
-	density 	= 0
-	opacity 	= 0
-	anchored 	= TRUE
-	matter 		= list(MATERIAL_STEEL = 5 SHEETS)
+	name = "ladder"
+	desc = "A ladder. You can climb it up and down."
+	icon_state = "ladder01"
+	icon = 'icons/obj/structures/ladders.dmi'
+	density = 0
+	opacity = 0
+	anchored = 1
 
 	var/allowed_directions = DOWN
 	var/obj/structure/ladder/target_up
@@ -23,14 +19,6 @@
 	var/static/list/climbsounds = list('sound/effects/ladder.ogg','sound/effects/ladder2.ogg','sound/effects/ladder3.ogg','sound/effects/ladder4.ogg')
 	var/dnr = 0
 
-/obj/structure/ladder/up
-	allowed_directions = UP
-	icon_state = "ladder10"
-
-/obj/structure/ladder/updown
-	allowed_directions = UP|DOWN
-	icon_state = "ladder11"
-
 /obj/structure/ladder/New()
 	. = ..()
 	ADD_SAVED_VAR(allowed_directions)
@@ -38,7 +26,7 @@
 /obj/structure/ladder/proc/link_ladders()
 	// the upper will connect to the lower
 	for(var/obj/structure/ladder/L in GetBelow(src))
-		log_debug("Tring to link [src]([x],[y],[z]) down with [L]([L.x],[L.y],[L.z])")
+		log_debug("Tring to link [src]([x][y][z]) down with [L]([L.x],[L.y],[L.z])")
 		log_debug("Linked!")
 		target_down = L
 		allowed_directions |= DOWN
@@ -46,42 +34,10 @@
 		L.allowed_directions |= UP
 		return
 
-/obj/structure/ladder/Initialize(mapload)
+/obj/structure/ladder/Initialize()
 	. = ..()
-	if(mapload)
-		link_ladders() //On map load, just do the downward link
-	else
-		update_links()
+	link_ladders()
 	queue_icon_update()
-
-//Meant to be used when building/removing ladders
-/obj/structure/ladder/proc/update_links()
-	var/obj/structure/ladder/LU = locate() in GetAbove(src)
-	var/obj/structure/ladder/LD = locate() in GetBelow(src)
-
-	if(LU)
-		LU.target_down = src
-		target_up = LU
-		LU.allowed_directions |= DOWN
-		allowed_directions |= UP
-		LU.update_icon()
-		log_debug("Linking [src]([x][y][z]) up with [LU]([LU.x],[LU.y],[LU.z])")
-	else
-		target_up = null
-		allowed_directions &= ~UP
-
-	if(LD)
-		LD.target_up = src
-		target_down = LD
-		LD.allowed_directions |= UP
-		allowed_directions |= DOWN
-		LD.update_icon()
-		log_debug("Linking [src]([x][y][z]) down with [LD]([LD.x],[LD.y],[LD.z])")
-	else
-		target_down = null
-		allowed_directions &= ~DOWN
-
-	update_icon()
 
 /obj/structure/ladder/Destroy()
 	if(target_down)
@@ -93,17 +49,10 @@
 	return ..()
 
 /obj/structure/ladder/attackby(obj/item/I, mob/user)
-	if(default_deconstruction_wrench(I, user, 20 SECONDS))
-		return
-	else
-		climb(user, I)
+	climb(user, I)
 
 /obj/structure/ladder/attack_hand(var/mob/M)
 	climb(M)
-/obj/structure/ladder/attack_robot(var/mob/M)
-	climb(M)
-/obj/structure/ladder/attack_ghost(var/mob/M)
-	instant_climb(M)
 
 /obj/structure/ladder/attack_ai(var/mob/M)
 	var/mob/living/silicon/ai/ai = M
@@ -112,6 +61,9 @@
 	var/mob/observer/eye/AIeye = ai.eyeobj
 	if(istype(AIeye))
 		instant_climb(AIeye)
+
+/obj/structure/ladder/attack_robot(var/mob/M)
+	climb(M)
 
 /obj/structure/ladder/proc/instant_climb(var/mob/M)
 	var/atom/target_ladder = getTargetLadder(M)
@@ -145,6 +97,9 @@
 		climbLadder(M, target_ladder, I)
 		for (var/obj/item/grab/G in M)
 			G.adjust_position(force = 1)
+
+/obj/structure/ladder/attack_ghost(var/mob/M)
+	instant_climb(M)
 
 /obj/structure/ladder/proc/getTargetLadder(var/mob/M)
 	if((!target_up && !target_down) || (target_up && !istype(target_up.loc, /turf) || (target_down && !istype(target_down.loc,/turf))))
@@ -217,52 +172,24 @@
 /obj/structure/ladder/on_update_icon()
 	icon_state = "ladder[!!(allowed_directions & UP)][!!(allowed_directions & DOWN)]"
 
+/obj/structure/ladder/up
+	allowed_directions = UP
+	icon_state = "ladder10"
 
-//
-//	Stairs
-//
+/obj/structure/ladder/updown
+	allowed_directions = UP|DOWN
+	icon_state = "ladder11"
+
 /obj/structure/stairs
-	name 		= "stairs"
-	desc 		= "Stairs leading to another deck.  Not too useful if the gravity goes out."
-	icon		= 'icons/obj/stairs.dmi'
-	density 	= FALSE
-	opacity 	= TRUE
-	anchored 	= TRUE
-	plane 		= ABOVE_TURF_PLANE
-	layer 		= RUNE_LAYER
-	matter 		= list(MATERIAL_STEEL = 5 SHEETS)
+	name = "stairs"
+	desc = "Stairs leading to another deck.  Not too useful if the gravity goes out."
+	icon = 'icons/obj/stairs.dmi'
+	density = FALSE
+	opacity = TRUE
+	anchored = TRUE
+	plane = ABOVE_TURF_PLANE
+	layer = RUNE_LAYER
 	var/tmp/was_already_saved = FALSE //In order to fix multi-tiles objects we gotta make sure only the base turf of the object saves it
-
-// type paths to make mapping easier.
-/obj/structure/stairs/north
-	dir = NORTH
-	bound_height = 64
-	bound_width = 32
-	bound_y = -32
-	pixel_y = -32
-
-/obj/structure/stairs/south
-	dir = SOUTH
-	bound_height = 64
-	bound_width = 32
-
-/obj/structure/stairs/east
-	dir = EAST
-	bound_width = 64
-	bound_height = 32
-	bound_x = -32
-	pixel_x = -32
-
-/obj/structure/stairs/west
-	dir = WEST
-	bound_width = 64
-	bound_height = 32
-
-/obj/structure/stairs/attackby(obj/item/O, mob/user)
-	if(default_deconstruction_wrench(O, user, 20 SECONDS))
-		return
-	else
-		return ..()
 
 /obj/structure/stairs/should_save(datum/saver)
 	. = ..()
@@ -312,3 +239,28 @@
 
 /obj/structure/stairs/CanPass(obj/mover, turf/source, height, airflow)
 	return airflow || !density
+
+// type paths to make mapping easier.
+/obj/structure/stairs/north
+	dir = NORTH
+	bound_height = 64
+	bound_width = 32
+	bound_y = -32
+	pixel_y = -32
+
+/obj/structure/stairs/south
+	dir = SOUTH
+	bound_height = 64
+	bound_width = 32
+
+/obj/structure/stairs/east
+	dir = EAST
+	bound_width = 64
+	bound_height = 32
+	bound_x = -32
+	pixel_x = -32
+
+/obj/structure/stairs/west
+	dir = WEST
+	bound_width = 64
+	bound_height = 32

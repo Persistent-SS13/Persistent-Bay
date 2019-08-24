@@ -153,6 +153,8 @@
 
 
 /obj/machinery/computer/pod/Process()
+	if(!..())
+		return
 	if(timing)
 		if(time > 0)
 			time = round(time) - 1

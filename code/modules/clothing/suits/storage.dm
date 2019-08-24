@@ -2,15 +2,9 @@
 	var/obj/item/weapon/storage/internal/pockets/pockets
 	var/slots = 2
 
-/obj/item/clothing/suit/storage/New()
-	. = ..()
-	ADD_SAVED_VAR(pockets)
-
 /obj/item/clothing/suit/storage/Initialize()
 	. = ..()
-	// if(. == INITIALIZE_HINT_QDEL)
-	// 	return .
-	if(!pockets)
+	if(!map_storage_loaded)
 		pockets = new/obj/item/weapon/storage/internal/pockets(src, slots, ITEM_SIZE_SMALL) //fit only pocket sized items
 
 /obj/item/clothing/suit/storage/Destroy()

@@ -111,17 +111,11 @@
 	process_effect(G)
 
 /datum/grab/proc/throw_held(var/obj/item/grab/G)
-	var/mob/living/carbon/human/affecting = G.affecting
-	if(affecting && can_throw)
-		. = affecting
-		var/mob/thrower = G.loc
-		animate(affecting, pixel_x = 0, pixel_y = 0, 4, 1)
-		// check if we're grabbing with our inactive hand
-		G = thrower.get_inactive_hand()
+
 	if(!istype(G))
-		return null
+		return
 	qdel(G)
-	return .
+	return null
 
 /datum/grab/proc/hit_with_grab(var/obj/item/grab/G)
 	if(downgrade_on_action)
@@ -163,7 +157,7 @@
 	var/mob/living/carbon/human/assailant = G.assailant
 	var/adir = get_dir(assailant, affecting)
 	if(!affecting || !assailant )
-		return 0 
+		return 0
 
 	if(same_tile)
 		affecting.forceMove(assailant.loc)

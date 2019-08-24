@@ -31,7 +31,6 @@
 	hide_type = /obj/item/stack/animalhide/xeno
 	hide_amount = 1
 
-
 /mob/living/simple_animal/hostile/alien/drone
 	name = "alien drone"
 	icon_state = "aliend_running"

@@ -16,8 +16,7 @@ var/const/EXTRA_COST_FACTOR = 1
 		autolathe_recipes += recipe
 		autolathe_categories |= recipe.category
 
-		//#TODO: This thing creates a lot of things on startup..
-		var/obj/item/I = new recipe.path(null)
+		var/obj/item/I = new recipe.path
 		if(I.matter && !recipe.resources) //This can be overidden in the datums.
 			recipe.resources = list()
 			for(var/material in I.matter)

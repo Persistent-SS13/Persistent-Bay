@@ -105,13 +105,13 @@
 			switch_from_dead_to_living_mob_list()
 			set_stat(CONSCIOUS)
 			set_density(1)
-		return FALSE
+		return 0
 
 	handle_atmos()
 
 	if(health <= 0)
 		death()
-		return FALSE
+		return
 
 	if(health > maxHealth)
 		health = maxHealth
@@ -435,17 +435,17 @@
 				var/obj/effect/decal/cleanable/blood/splatter/splat = new(get_turf(src))
 				splat.basecolor = bleed_colour
 				splat.update_icon()
-			success = TRUE
+			qdel(src)
+		success = TRUE
 
 	//Get some hide too
 	if(hide_type && hide_amount && (stat == DEAD))
 		for(var/i = 0; i < hide_amount; i++)
 			new hide_type(get_turf(src))
 			success = TRUE
-	
+
 	if(stat == DEAD && success)
 		qdel(src)
-
 
 /mob/living/simple_animal/proc/subtract_meat(var/mob/user)
 	meat_amount--

@@ -79,8 +79,7 @@
 	paralysis = 0
 
 	if(on && !client && !busy)
-		spawn(0)
-			handleAI()
+		handleAI()
 
 /mob/living/bot/updatehealth()
 	if(status_flags & GODMODE)

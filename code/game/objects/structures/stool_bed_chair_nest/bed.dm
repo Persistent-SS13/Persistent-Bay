@@ -189,6 +189,10 @@
 	update_material()
 	update_icon()
 
+/obj/structure/bed/dismantle()
+	refund_matter()
+	return ..()
+
 /obj/structure/bed/psych
 	name = "psychiatrist's couch"
 	desc = "For prime comfort during psychiatric evaluations."

@@ -324,11 +324,7 @@ Buildable meters
 /obj/item/pipe/AltClick()
 	rotate()
 
-/obj/item/pipe/verb/rotate()
-	set category = "Object"
-	set name = "Rotate Pipe"
-	set src in view(1)
-
+/obj/item/pipe/rotate()
 	if (usr.stat || usr.restrained() || !Adjacent(usr) || usr.incapacitated())
 		return
 

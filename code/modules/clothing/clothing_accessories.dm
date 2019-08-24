@@ -61,6 +61,13 @@
 			usr.put_in_l_hand(src)
 	src.add_fingerprint(usr)
 
+/obj/item/clothing/after_load()
+	var/list/real_accessories = list()
+	for(var/obj/item/clothing/accessory/A in accessories)
+		real_accessories |= A
+	accessories = real_accessories
+	..()
+
 /obj/item/clothing/examine(var/mob/user)
 	. = ..(user)
 	for(var/obj/item/clothing/accessory/A in accessories)
@@ -96,7 +103,6 @@
 		src.verbs |= /obj/item/clothing/proc/removetie_verb
 	update_accessory_slowdown()
 	update_clothing_icon()
-	update_held_icon()
 
 /obj/item/clothing/proc/remove_accessory(mob/user, obj/item/clothing/accessory/A)
 	if(!(A in accessories))
@@ -106,7 +112,6 @@
 	accessories -= A
 	update_accessory_slowdown()
 	update_clothing_icon()
-	update_held_icon()
 
 /obj/item/clothing/proc/removetie_verb()
 	set name = "Remove Accessory"

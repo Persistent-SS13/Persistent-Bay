@@ -21,23 +21,18 @@
 		message_admins("ERROR: ability_master's New() was not given an owner argument.  This is a bug.")
 	..()
 
-/obj/screen/movable/ability_master/proc/OnRemove()
-	if(!my_mob)
-		return
-	my_mob.ability_master = null
-	if(my_mob.client && my_mob.client.screen)
-		my_mob.client.screen -= src
-	my_mob = null
-
 /obj/screen/movable/ability_master/Destroy()
+	. = ..()
 	//Get rid of the ability objects.
 	remove_all_abilities()
 	ability_objects.Cut()
 
 	// After that, remove ourselves from the mob seeing us, so we can qdel cleanly.
-	OnRemove()
-	. = ..() //run the base class destroy last
-
+	if(my_mob)
+		my_mob.ability_master = null
+		if(my_mob.client && my_mob.client.screen)
+			my_mob.client.screen -= src
+		my_mob = null
 /obj/screen/movable/ability_master/MouseDrop()
 	if(showing)
 		return
@@ -116,7 +111,6 @@
 	ability_objects.Add(new_button)
 	if(my_mob.client)
 		toggle_open(2) //forces the icons to refresh on screen
-	queue_icon_update()
 
 /obj/screen/movable/ability_master/proc/remove_ability(var/obj/screen/ability/ability)
 	if(!ability)
@@ -129,7 +123,7 @@
 
 	if(ability_objects.len)
 		toggle_open(showing + 1)
-	queue_icon_update()
+	update_icon()
 //	else
 //		qdel(src)
 
@@ -171,10 +165,6 @@
 /mob/Initialize()
 	. = ..()
 	ability_master = new /obj/screen/movable/ability_master(null,src)
-
-/mob/Destroy()
-	. = ..()
-	QDEL_NULL(ability_master)
 
 ///////////ACTUAL ABILITIES////////////
 //This is what you click to do things//

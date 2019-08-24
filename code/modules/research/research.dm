@@ -66,7 +66,7 @@ research holder datum.
 	var/list/consumer_fab = list()
 	var/list/service_fab = list()
 	var/list/storage_fab = list()
-
+	var/list/science_fab = list()
 /datum/research/New()		//Insert techs into possible_tech here. Known_tech automatically updated.
 	for(var/T in typesof(/datum/tech) - /datum/tech)
 		known_tech += new T(src)
@@ -109,6 +109,8 @@ research holder datum.
 						service_fab |= D
 					if(STORAGEFAB)
 						storage_fab |= D
+					if(SCIENCEFAB)
+						science_fab |= D
 		else
 			switch(D.build_type)
 				if(GENERALFAB)
@@ -141,6 +143,8 @@ research holder datum.
 					service_fab |= D
 				if(STORAGEFAB)
 					storage_fab |= D
+				if(SCIENCEFAB)
+					science_fab |= D
 	RefreshResearch()
 
 /datum/research/proc/get_tech_entry(var/uid)
@@ -180,6 +184,8 @@ research holder datum.
 			return service_fab
 		if(STORAGEFAB)
 			return storage_fab
+		if(SCIENCEFAB)
+			return science_fab
 /datum/research/techonly
 
 /datum/research/techonly/New()
@@ -483,6 +489,13 @@ research holder datum.
 	points = 600
 	uid = "figures_4"
 	uses = 1
+
+/datum/tech_entry/consumer/unusal_trees
+	name = "Spacial Garneding"
+	desc = "this allows you to appease them with a unusal shrubbery."
+	tier = 1
+	points = 75
+	uid = "unusal_trees"
 
 //////////////////////////////////////////////////
 //////////////////////////////////////////////////

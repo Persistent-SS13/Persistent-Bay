@@ -695,6 +695,8 @@
 			return global.pai_software_by_key;
 		if("paramslist_cache")
 			return global.paramslist_cache;
+		if("photo_count")
+			return global.photo_count;
 		if("pipe_colors")
 			return global.pipe_colors;
 		if("plant_seed_sprites")
@@ -1688,6 +1690,8 @@
 			global.pai_software_by_key=newval;
 		if("paramslist_cache")
 			global.paramslist_cache=newval;
+		if("photo_count")
+			global.photo_count=newval;
 		if("pipe_colors")
 			global.pipe_colors=newval;
 		if("plant_seed_sprites")
@@ -2333,6 +2337,7 @@
 	"pai_emotions",
 	"pai_software_by_key",
 	"paramslist_cache",
+	"photo_count",
 	"pipe_colors",
 	"plant_seed_sprites",
 	"playable_species",

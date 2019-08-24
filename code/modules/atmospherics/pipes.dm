@@ -48,6 +48,11 @@
 			parent.leaks |= src
 			if(parent.network)
 				parent.network.leaks |= src
+				playsound(src, 'sound/effects/bang.ogg', 45, TRUE, 10, 4)
+				var/turf/T = get_turf(src)
+				if(!T.is_plating() && istype(T,/turf/simulated/floor)) //intact floor, pop the tile
+					var/turf/simulated/floor/F = T
+					F.break_tile()
 	else if (!new_leaking && leaking)
 		update_sound(0)
 		STOP_PROCESSING(SSmachines, src)
@@ -59,7 +64,7 @@
 
 /obj/machinery/atmospherics/pipe/proc/update_sound(var/playing)
 	if(playing && !sound_token)
-		sound_token = GLOB.sound_player.PlayLoopingSound(src, SOUND_ID, "sound/machines/pipeleak.ogg", volume = 35, range = 6, falloff = 1, prefer_mute = TRUE)
+		sound_token = GLOB.sound_player.PlayLoopingSound(src, SOUND_ID, "sound/machines/pipeleak.ogg", volume = 8, range = 3, falloff = 1, prefer_mute = TRUE)
 	else if(!playing && sound_token)
 		QDEL_NULL(sound_token)
 

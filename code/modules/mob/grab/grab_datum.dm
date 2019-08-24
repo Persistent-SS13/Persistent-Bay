@@ -111,7 +111,7 @@
 	process_effect(G)
 
 /datum/grab/proc/throw_held(var/obj/item/grab/G)
-	var/mob/living/carbon/human/affecting = G.affecting
+
 	if(!istype(G))
 		return
 	qdel(G)

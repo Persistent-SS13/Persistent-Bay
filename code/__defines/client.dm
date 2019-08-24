@@ -20,3 +20,6 @@
 #define CONTRACT_SERVICE_LOAN "Loan"
 #define CONTRACT_SERVICE_LEASE "Area Rental"
 
+
+#define CONTRACT_SERVICE_MEMBERSHIP "Membership"
+

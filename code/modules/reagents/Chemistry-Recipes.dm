@@ -1611,6 +1611,53 @@
 	mix_message = "The solution roils as it rapidly ferments into a shifting purple liquid."
 	maximum_temperature = T0C + 60
 
+/datum/chemical_reaction/cream
+	name = "Cream"
+	result = /datum/reagent/drink/milk/cream
+	required_reagents = list(/datum/reagent/drink/milk = 10)
+	catalysts = list(/datum/reagent/sugar = 5)
+	result_amount = 10
+	mix_message = "The solution coaglates into cream."
+	maximum_temperature = 10 CELSIUS
+
+/datum/chemical_reaction/cognac
+	name = "Cognac"
+	result = /datum/reagent/ethanol/cognac
+	required_reagents = list(/datum/reagent/ethanol/wine = 10)
+	catalysts = list(/datum/reagent/sugar = 5)
+	result_amount = 10
+	mix_message = "The wine distills into a fine cognac."
+	minimum_temperature = 40 CELSIUS
+
+/datum/chemical_reaction/gin
+	name = "Gin"
+	result = /datum/reagent/ethanol/gin
+	required_reagents = list(/datum/reagent/ethanol/vodka = 10)
+	catalysts = list(/datum/reagent/sugar = 5)
+	result_amount = 10
+	mix_message = "The wine distills into a fine gin."
+	minimum_temperature = 40 CELSIUS
+
+/datum/chemical_reaction/rum
+	name = "Rum"
+	result = /datum/reagent/ethanol/rum
+	required_reagents = list(/datum/reagent/drink/juice/sugarcane_juice = 10)
+	catalysts = list(/datum/reagent/enzyme = 5)
+	result_amount = 10
+	mix_message = "The solution boils into a delicous rum."
+	minimum_temperature = 40 CELSIUS
+
+/datum/chemical_reaction/tequilla
+	name = "Tequilla"
+	result = /datum/reagent/ethanol/tequilla
+	required_reagents = list(/datum/reagent/drink/juice/agave_sap = 10)
+	catalysts = list(/datum/reagent/enzyme = 5)
+	result_amount = 10
+	mix_message = "The solution boils into a delicous tequilla."
+	minimum_temperature = 40 CELSIUS
+
+
+
 /datum/chemical_reaction/melonliquor
 	name = "Melon Liquor"
 	result = /datum/reagent/ethanol/melonliquor

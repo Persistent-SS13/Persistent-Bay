@@ -34,10 +34,12 @@
 	min_age = 12
 	max_age = 52
 
-	description = "A race of feathered raptors who developed on a cold world, almost \
-	outside of the Goldilocks zone. Extremely fragile, they developed hunting skills \
-	that emphasized taking out their prey without themselves getting hit. They are an \
-	advanced culture with a focus on technology and tight-knit social groups."
+	description = "A race of feathered raptors who developed on an arctic moon orbiting\
+	a gas giant. Small and lithe, their society developed with a strong inclination\
+	towards tightly-knit social units known as packs. Hailing from a far-flung star in\
+	a distant arm of the galaxy, Resomi have only recently made themselves known on the\
+	galactic stage following contact with their exploration frigates."
+
 
 	cold_level_1 = 180 //Default 260 - Lower is better
 	cold_level_2 = 130 //Default 200
@@ -72,7 +74,7 @@
   	"Your feathers puff out, insulating you from the cold.",
   	"You shiver for warmth.")
 
-  	minimum_breath_pressure = 14
+	breath_pressure = 14
 
 	inherent_verbs = list(
 		/mob/living/carbon/human/proc/sonar_ping,

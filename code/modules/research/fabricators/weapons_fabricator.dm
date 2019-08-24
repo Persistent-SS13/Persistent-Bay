@@ -346,11 +346,6 @@
 	build_path = /obj/item/weapon/gun/projectile/pistol/usp
 	research = "pistol_2"
 
-/datum/design/item/weaponfab/weapons/guns/pistol/gyrojet // tier 3, but its not very good
-	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS) //TODO
-	build_path = /obj/item/weapon/gun/projectile/pistol/gyropistol
-	research = "pistol_2"
-
 /datum/design/item/weaponfab/weapons/guns/pistol/magnum_pistol // tier 4
 	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/pistol/magnum_pistol
@@ -1455,12 +1450,6 @@
 	build_path = /obj/item/ammo_casing/c50
 	materials = list(MATERIAL_STEEL = 260)
 
-/datum/design/item/weaponfab/gyrojet
-	name = "gyrojet Round"
-	id = "gyrojet"
-	build_path = /obj/item/ammo_casing/gyrojet
-	materials = list(MATERIAL_STEEL = 320)
-
 /datum/design/item/weaponfab/c22lr
 	name = ".22 Long Rifle Bullet"
 	id = "c22"
@@ -1795,14 +1784,6 @@
 /datum/design/item/weaponfab/magazines/c762
 	name = "Standard 7.62mm, 15 rounds magazine"
 	build_path = /obj/item/ammo_magazine/box/c762
-	materials = list(MATERIAL_STEEL = 1.25 SHEET)
-
-/datum/design/item/weaponfab/magazines/empty/gyrojet
-	name = "Gyrojet 6 rounds magazine (empty)"
-	build_path = /obj/item/ammo_magazine/box/gyrojet/empty
-/datum/design/item/weaponfab/magazines/gyrojet
-	name = "Gyrojet 6 rounds magazine"
-	build_path = /obj/item/ammo_magazine/box/gyrojet
 	materials = list(MATERIAL_STEEL = 1.25 SHEET)
 
 /datum/design/item/weaponfab/magazines/empty/c556

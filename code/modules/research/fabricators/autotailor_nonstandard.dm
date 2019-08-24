@@ -189,6 +189,230 @@
 	id = "mankini"
 	build_path = /obj/item/clothing/under/stripper/mankini
 
+/datum/design/item/autotailor/nonstandard/under/resomi_smock
+	name = "small grey smock"
+	build_path = /obj/item/clothing/under/resomi/smock
+
+/datum/design/item/autotailor/nonstandard/under/resomi_smock_white
+	name = "small white smock"
+	build_path = /obj/item/clothing/under/resomi/smock/white
+
+/datum/design/item/autotailor/nonstandard/under/resomi_smock_red
+	name = "small red smock"
+	build_path = /obj/item/clothing/under/resomi/smock/red
+
+/datum/design/item/autotailor/nonstandard/under/resomi_smock_yellow
+	name = "small yellow smock"
+	build_path = /obj/item/clothing/under/resomi/smock/yellow
+
+/datum/design/item/autotailor/nonstandard/under/resomi_smock_medical
+	name = "small medical uniform"
+	build_path = /obj/item/clothing/under/resomi/smock/medical
+
+/datum/design/item/autotailor/nonstandard/under/resomi_smock_science
+	name = "small science uniform"
+	build_path = /obj/item/clothing/under/resomi/smock/science
+
+/datum/design/item/autotailor/nonstandard/under/resomi_smock_rainbow
+	name = "small rainbow smock"
+	build_path = /obj/item/clothing/under/resomi/smock/rainbow
+
+/datum/design/item/autotailor/nonstandard/under/resomi_smock_black
+	name = "small black smock"
+	build_path = /obj/item/clothing/under/resomi/smock/black
+
+/datum/design/item/autotailor/nonstandard/under/resomi_smock_black_red
+	name = "small black and red smock"
+	build_path = /obj/item/clothing/under/resomi/smock/black_red
+
+/datum/design/item/autotailor/nonstandard/under/resomi_smock_hazard
+	name = "small hazard smock"
+	build_path = /obj/item/clothing/under/resomi/smock/hazard
+
+/datum/design/item/autotailor/nonstandard/under/resomi_smock_white_blue
+	name = "small white and blue smock"
+	build_path = /obj/item/clothing/under/resomi/smock/white_blue
+
+/datum/design/item/autotailor/nonstandard/under/resomi_smock_white_purple
+	name = "small white and purplesmock"
+	build_path = /obj/item/clothing/under/resomi/smock/white_purple
+
+/datum/design/item/autotailor/nonstandard/under/resomi_black_orange
+	name = "black and orange undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/black_orange
+
+/datum/design/item/autotailor/nonstandard/under/resomi_black_grey
+	name = "black and grey undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/black_grey
+
+/datum/design/item/autotailor/nonstandard/under/resomi_black_midgrey
+	name = "black and medium grey undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/black_midgrey
+
+/datum/design/item/autotailor/nonstandard/under/resomi_black_lightgrey
+	name = "black and light grey undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/black_lightgrey
+
+/datum/design/item/autotailor/nonstandard/under/resomi_black_red
+	name = "black and red undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/black_red
+
+/datum/design/item/autotailor/nonstandard/under/resomi_black
+	name = "black undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/black
+
+/datum/design/item/autotailor/nonstandard/under/resomi_black_white
+	name = "black and white cloak"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/black_white
+
+/datum/design/item/autotailor/nonstandard/under/resomi_black_yellow
+	name = "black and yellow undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/black_yellow
+
+/datum/design/item/autotailor/nonstandard/under/resomi_black_green
+	name = "black and green undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/black_green
+
+/datum/design/item/autotailor/nonstandard/under/resomi_black_blue
+	name = "black and blue undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/black_blue
+
+/datum/design/item/autotailor/nonstandard/under/resomi_black_purple
+	name = "black and purple undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/black_purple
+
+/datum/design/item/autotailor/nonstandard/under/resomi_black_pink
+	name = "black and pink undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/black_pink
+
+/datum/design/item/autotailor/nonstandard/under/resomi_black_brown
+	name = "black and brown undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/black_brown
+
+/datum/design/item/autotailor/nonstandard/under/resomi_orange_grey
+	name = "orange and grey undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/orange_grey
+
+/datum/design/item/autotailor/nonstandard/under/resomi_rainbow
+	name = "rainbow undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/rainbow
+
+/datum/design/item/autotailor/nonstandard/under/resomi_lightgrey_grey
+	name = "light grey and grey undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/lightgrey_grey
+
+/datum/design/item/autotailor/nonstandard/under/resomi_white_grey
+	name = "white and grey undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/white_grey
+
+/datum/design/item/autotailor/nonstandard/under/resomi_red_grey
+	name = "red and grey undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/red_grey
+
+/datum/design/item/autotailor/nonstandard/under/resomi_orange
+	name = "orange undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/orange
+
+/datum/design/item/autotailor/nonstandard/under/resomi_yellow_grey
+	name = "yellow and grey undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/yellow_grey
+
+/datum/design/item/autotailor/nonstandard/under/resomi_green_grey
+	name = "green and grey undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/green_grey
+
+/datum/design/item/autotailor/nonstandard/under/resomi_blue_grey
+	name = "blue and grey undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/blue_grey
+
+/datum/design/item/autotailor/nonstandard/under/resomi_purple_grey
+	name = "purple and grey undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/purple_grey
+
+/datum/design/item/autotailor/nonstandard/under/resomi_pink_grey
+	name = "pink and grey undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/pink_grey
+
+/datum/design/item/autotailor/nonstandard/under/resomi_brown_grey
+	name = "brown and grey undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/standard/brown_grey
+
+/datum/design/item/autotailor/nonstandard/under/resomi_cargo
+	name = "cargo undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/jobs/cargo
+
+/datum/design/item/autotailor/nonstandard/under/resomi_mining
+	name = "mining undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/jobs/mining
+
+/datum/design/item/autotailor/nonstandard/under/resomi_command
+	name = "command undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/jobs/command
+
+/datum/design/item/autotailor/nonstandard/under/resomi_command_g
+	name = "gold accented command undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/jobs/command_g
+
+/datum/design/item/autotailor/nonstandard/under/resomi_ce
+	name = "chief engineer undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/jobs/ce
+
+/datum/design/item/autotailor/nonstandard/under/resomi_ce_w
+	name = "white chief engineer undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/jobs/ce_w
+
+/datum/design/item/autotailor/nonstandard/under/resomi_engineer
+	name = "engineering undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/jobs/engineer
+
+/datum/design/item/autotailor/nonstandard/under/resomi_atmos
+	name = "atmospherics undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/jobs/atmos
+
+/datum/design/item/autotailor/nonstandard/under/resomi_cmo
+	name = "chief medical officer undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/jobs/cmo
+
+/datum/design/item/autotailor/nonstandard/under/resomi_medical
+	name = "medical undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/jobs/medical
+
+/datum/design/item/autotailor/nonstandard/under/resomi_chemistry
+	name = "chemistry undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/jobs/chemistry
+
+/datum/design/item/autotailor/nonstandard/under/resomi_viro
+	name = "virologist undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/jobs/viro
+
+/datum/design/item/autotailor/nonstandard/under/resomi_para
+	name = "paramedic undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/jobs/para
+
+/datum/design/item/autotailor/nonstandard/under/resomi_sci
+	name = "science undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/jobs/sci
+
+/datum/design/item/autotailor/nonstandard/under/resomi_robo
+	name = "robotics undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/jobs/robo
+
+/datum/design/item/autotailor/nonstandard/under/resomi_sec
+	name = "security undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/jobs/sec
+
+/datum/design/item/autotailor/nonstandard/under/resomi_qm
+	name = "quartermaster undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/jobs/qm
+
+/datum/design/item/autotailor/nonstandard/under/resomi_service
+	name = "service undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/jobs/service
+
+/datum/design/item/autotailor/nonstandard/under/resomi_iaa
+	name = "internal affairs undercoat"
+	build_path = /obj/item/clothing/under/resomi/undercoat/jobs/iaa
+
 //
 //nonstandard oversuits
 //
@@ -212,6 +436,174 @@
 	id = "pjs_ian"
 	build_path = /obj/item/clothing/suit/ianshirt
 	materials = list(MATERIAL_CLOTH = 5000)
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_black_orange
+	name = "black and orange cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/black_orange
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_black_grey
+	name = "black and grey cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/black_grey
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_black_midgrey
+	name = "black and medium grey cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/black_midgrey
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_black_lightgrey
+	name = "black and light grey cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/black_lightgrey
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_black_white
+	name = "black and white cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/black_white
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_black_red
+	name = "black and red cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/black_red
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_black
+	name = "black cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/black
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_black_yellow
+	name = "black and yellow cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/black_yellow
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_black_green
+	name = "black and green cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/black_green
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_black_blue
+	name = "black and blue cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/black_blue
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_black_purple
+	name = "black and purple cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/black_purple
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_black_pink
+	name = "black and pink cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/black_pink
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_black_brown
+	name = "black and brown cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/black_brown
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_orange_grey
+	name = "orange and grey cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/orange_grey
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_rainbow
+	name = "rainbow cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/rainbow
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_lightgrey_grey
+	name = "light grey and grey cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/lightgrey_grey
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_white_grey
+	name = "white and grey cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/white_grey
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_red_grey
+	name = "red and grey cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/red_grey
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_orange
+	name = "orange cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/orange
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_yellow_grey
+	name = "yellow and grey cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/yellow_grey
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_green_grey
+	name = "green and grey cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/green_grey
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_blue_grey
+	name = "blue and grey cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/blue_grey
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_purple_grey
+	name = "purple and grey cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/purple_grey
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_pink_grey
+	name = "pink and grey cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/pink_grey
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_brown_grey
+	name = "brown and grey cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/standard/brown_grey
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_cargo
+	name = "cargo cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/jobs/cargo
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_mining
+	name = "mining cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/jobs/mining
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_command
+	name = "command cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/jobs/command
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_ce
+	name = "chief engineer cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/jobs/ce
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_engineer
+	name = "engineering cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/jobs/eningeer
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_atmos
+	name = "atmospherics cloac"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/jobs/atmos
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_cmo
+	name = "chief medical officer cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/jobs/cmo
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_medical
+	name = "medical cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/jobs/medical
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_chemistry
+	name = "chemistry cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/jobs/chemistry
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_viro
+	name = "virologist cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/jobs/viro
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_para
+	name = "paramedic cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/jobs/para
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_sci
+	name = "science cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/jobs/sci
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_robo
+	name = "robotics cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/jobs/robo
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_sec
+	name = "security cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/jobs/sec
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_qm
+	name = "quartermaster cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/jobs/qm
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_service
+	name = "service cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/jobs/service
+
+/datum/design/item/autotailor/nonstandard/suit/resomi_iaa
+	name = "internal affairs cloak"
+	build_path = /obj/item/clothing/suit/storage/resomi/cloak/jobs/iaa
 
 //
 //costumes

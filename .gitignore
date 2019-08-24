@@ -30,3 +30,4 @@ saved_vars/
 *.exe.stackdump
 .vscode
 /config/DB
+maps/nexus/nexus_empty.dmm

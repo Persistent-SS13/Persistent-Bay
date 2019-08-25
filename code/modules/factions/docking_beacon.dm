@@ -8,8 +8,8 @@
 #define DOCKING_BEACON_DIMENSIONS_5x8      1
 #define DOCKING_BEACON_DIMENSIONS_7x8      2
 #define DOCKING_BEACON_DIMENSIONS_9x10     3
-#define DOCKING_BEACON_DIMENSIONS_12x12    4
-#define DOCKING_BEACON_DIMENSIONS_20x20    5
+#define DOCKING_BEACON_DIMENSIONS_11x12    4
+#define DOCKING_BEACON_DIMENSIONS_19x20    5
 
 GLOBAL_LIST_EMPTY(all_docking_beacons)
 
@@ -37,7 +37,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	use_power = POWER_USE_OFF
 	var/status = DOCKING_BEACON_STATUS_OFF // 0 = unpowered, 1 = closed 2 = open 3 = contruction mode 4 = occupied 5 = obstructed
 	req_access = list(core_access_shuttle_programs)
-	var/dimensions = DOCKING_BEACON_DIMENSIONS_5x8 // 1 = 5*8, 2 = 7*8, 3 = 9*10, 4 = 12*12, 5 = 20*20
+	var/dimensions = DOCKING_BEACON_DIMENSIONS_5x8 // 1 = 5*8, 2 = 7*8, 3 = 9*10, 4 = 11*12, 5 = 19*20
 	var/highlighted = 0
 	var/id = "docking port"
 	var/visible_mode = 0 // 0 = invisible, 1 = visible, docking auth required, 2 = visible, anyone can dock
@@ -83,6 +83,10 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 					return locate(x, y+9, z)
 				if(DOCKING_BEACON_DIMENSIONS_9x10)
 					return locate(x, y+11, z)
+				if(DOCKING_BEACON_DIMENSIONS_11x12)
+					return locate(x, y+13, z)
+				if(DOCKING_BEACON_DIMENSIONS_19x20)
+					return locate(x, y+21, z)
 		if(WEST)
 			switch(dimensions)
 				if(DOCKING_BEACON_DIMENSIONS_5x8)
@@ -91,6 +95,10 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 					return locate(x-4, y+4, z)
 				if(DOCKING_BEACON_DIMENSIONS_9x10)
 					return locate(x-3, y+5, z)
+				if(DOCKING_BEACON_DIMENSIONS_11x12)
+					return locate(x-2, y+6, z)
+				if(DOCKING_BEACON_DIMENSIONS_19x20)
+					return locate(x-1, y+10, z)
 		if(EAST)
 			switch(dimensions)
 				if(DOCKING_BEACON_DIMENSIONS_5x8)
@@ -99,6 +107,10 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 					return locate(x+4, y+4, z)
 				if(DOCKING_BEACON_DIMENSIONS_9x10)
 					return locate(x+5, y+5, z)
+				if(DOCKING_BEACON_DIMENSIONS_11x12)
+					return locate(x+6, y+6, z)
+				if(DOCKING_BEACON_DIMENSIONS_19x20)
+					return locate(x+10, y+10, z)
 
 /obj/machinery/docking_beacon/after_load()
 	. = ..()
@@ -461,7 +473,9 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 					return_turfs = block(locate(x-3,y-1,z), locate(x+3,y-8,z))
 				if(DOCKING_BEACON_DIMENSIONS_9x10)
 					return_turfs = block(locate(x-4,y-1,z), locate(x+4,y-10,z))
-				if(5)
+				if(DOCKING_BEACON_DIMENSIONS_11x12)
+					return_turfs = block(locate(x-5,y-1,z), locate(x+5,y-12,z))
+				if(DOCKING_BEACON_DIMENSIONS_19x20)
 					return_turfs = block(locate(x-9,y-1,z), locate(x+9,y-20,z))
 				else
 					return_turfs = block(locate(x-2,y-1,z), locate(x+2,y-8,z))
@@ -473,6 +487,10 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 					return_turfs = block(locate(x-3,y+1,z), locate(x+3,y+8,z))
 				if(DOCKING_BEACON_DIMENSIONS_9x10)
 					return_turfs = block(locate(x-4,y+1,z), locate(x+4,y+10,z))
+				if(DOCKING_BEACON_DIMENSIONS_11x12)
+					return_turfs = block(locate(x-5,y+1,z), locate(x+5,y+12,z))
+				if(DOCKING_BEACON_DIMENSIONS_19x20)
+					return_turfs = block(locate(x-9,y+1,z), locate(x+9,y+20,z))
 				else
 					return_turfs = block(locate(x-2,y+1,z), locate(x+2,y+8,z))
 		if(EAST)
@@ -483,6 +501,10 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 					return_turfs = block(locate(x+1,y+3,z), locate(x+7,y-4,z))
 				if(DOCKING_BEACON_DIMENSIONS_9x10)
 					return_turfs = block(locate(x+1,y+4,z), locate(x+9,y-5,z))
+				if(DOCKING_BEACON_DIMENSIONS_11x12)
+					return_turfs = block(locate(x+1,y+5,z), locate(x+11,y-6,z))
+				if(DOCKING_BEACON_DIMENSIONS_19x20)
+					return_turfs = block(locate(x+1,y+9,z), locate(x+19,y-10,z))
 				else
 					return_turfs = block(locate(x+1,y+3,z), locate(x+5,y-4,z))
 		if(WEST)
@@ -493,6 +515,10 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 					return_turfs = block(locate(x-1,y+3,z), locate(x-7,y-4,z))
 				if(DOCKING_BEACON_DIMENSIONS_9x10)
 					return_turfs = block(locate(x-1,y+4,z), locate(x-9,y-5,z))
+				if(DOCKING_BEACON_DIMENSIONS_11x12)
+					return_turfs = block(locate(x-1,y+5,z), locate(x-11,y-6,z))
+				if(DOCKING_BEACON_DIMENSIONS_19x20)
+					return_turfs = block(locate(x-1,y+9,z), locate(x-19,y-10,z))
 				else
 					return_turfs = block(locate(x-1,y+3,z), locate(x-5,y-4,z))
 	return return_turfs
@@ -511,5 +537,5 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 #undef DOCKING_BEACON_DIMENSIONS_5x8
 #undef DOCKING_BEACON_DIMENSIONS_7x8
 #undef DOCKING_BEACON_DIMENSIONS_9x10
-#undef DOCKING_BEACON_DIMENSIONS_12x12
-#undef DOCKING_BEACON_DIMENSIONS_20x20
+#undef DOCKING_BEACON_DIMENSIONS_11x12
+#undef DOCKING_BEACON_DIMENSIONS_19x20

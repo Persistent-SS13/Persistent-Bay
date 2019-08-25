@@ -15,7 +15,7 @@
 	w_class = ITEM_SIZE_SMALL
 	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 	unacidable = 1 //glass doesn't dissolve in acid
-
+	temperature_coefficient = null //Set it to null since we got a formula to calculate here
 
 	var/list/can_be_placed_into = list(
 		/obj/machinery/chem_master/,
@@ -45,6 +45,7 @@
 /obj/item/weapon/reagent_containers/glass/New()
 	..()
 	base_name = name
+	ADD_SAVED_VAR(base_name)
 
 /obj/item/weapon/reagent_containers/glass/Initialize()
 	. = ..()
@@ -52,7 +53,8 @@
 
 /obj/item/weapon/reagent_containers/glass/proc/update_temperature_coefficient()
 	//area for a 50ml beaker as a cylinder is 0.010952 m2.
-	temperature_coefficient = 0.010952 * w_class //Lets try this by default I guess..
+	if(temperature_coefficient <= 0.01)
+		temperature_coefficient = max(0.010952 * w_class, 0.01) //Never let it go down to 0!
 
 /obj/item/weapon/reagent_containers/glass/examine(var/mob/user)
 	if(!..(user, 2))
@@ -123,47 +125,47 @@
 	center_of_mass = "x=15;y=10"
 	matter = list(MATERIAL_GLASS = 500)
 
-	New()
-		..()
-		desc += " It can hold up to [volume] units."
+/obj/item/weapon/reagent_containers/glass/beaker/New()
+	..()
+	desc += " It can hold up to [volume] units."
 
-	on_reagent_change()
-		update_icon()
+/obj/item/weapon/reagent_containers/glass/beaker/on_reagent_change()
+	update_icon()
 
-	pickup(mob/user)
-		..()
-		update_icon()
+/obj/item/weapon/reagent_containers/glass/beaker/pickup(mob/user)
+	..()
+	update_icon()
 
-	dropped(mob/user)
-		..()
-		update_icon()
+/obj/item/weapon/reagent_containers/glass/beaker/dropped(mob/user)
+	..()
+	update_icon()
 
-	attack_hand()
-		..()
-		update_icon()
+/obj/item/weapon/reagent_containers/glass/beaker/attack_hand()
+	..()
+	update_icon()
 
-	on_update_icon()
-		overlays.Cut()
+/obj/item/weapon/reagent_containers/glass/beaker/on_update_icon()
+	overlays.Cut()
 
-		if(reagents.total_volume)
-			var/image/filling = image('icons/obj/reagentfillings.dmi', src, "[icon_state]10")
+	if(reagents && reagents.total_volume)
+		var/image/filling = image('icons/obj/reagentfillings.dmi', src, "[icon_state]10")
 
-			var/percent = round((reagents.total_volume / volume) * 100)
-			switch(percent)
-				if(0 to 9)		filling.icon_state = "[icon_state]-10"
-				if(10 to 24) 	filling.icon_state = "[icon_state]10"
-				if(25 to 49)	filling.icon_state = "[icon_state]25"
-				if(50 to 74)	filling.icon_state = "[icon_state]50"
-				if(75 to 79)	filling.icon_state = "[icon_state]75"
-				if(80 to 90)	filling.icon_state = "[icon_state]80"
-				if(91 to INFINITY)	filling.icon_state = "[icon_state]100"
+		var/percent = round((reagents.total_volume / volume) * 100)
+		switch(percent)
+			if(0 to 9)		filling.icon_state = "[icon_state]-10"
+			if(10 to 24) 	filling.icon_state = "[icon_state]10"
+			if(25 to 49)	filling.icon_state = "[icon_state]25"
+			if(50 to 74)	filling.icon_state = "[icon_state]50"
+			if(75 to 79)	filling.icon_state = "[icon_state]75"
+			if(80 to 90)	filling.icon_state = "[icon_state]80"
+			if(91 to INFINITY)	filling.icon_state = "[icon_state]100"
 
-			filling.color = reagents.get_color()
-			overlays += filling
+		filling.color = reagents.get_color()
+		overlays += filling
 
-		if (!is_open_container())
-			var/image/lid = image(icon, src, "lid_[initial(icon_state)]")
-			overlays += lid
+	if (!is_open_container())
+		var/image/lid = image(icon, src, "lid_[initial(icon_state)]")
+		overlays += lid
 
 /obj/item/weapon/reagent_containers/glass/beaker/large
 	name = "large beaker"
@@ -175,6 +177,7 @@
 	amount_per_transfer_from_this = 10
 	possible_transfer_amounts = "5;10;15;25;30;60;120"
 	atom_flags = ATOM_FLAG_OPEN_CONTAINER
+	temperature_coefficient = 0.25 //Force it
 
 /obj/item/weapon/reagent_containers/glass/beaker/bowl
 	name = "mixing bowl"
@@ -188,6 +191,7 @@
 	possible_transfer_amounts = "5;10;15;25;30;60;180"
 	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 	unacidable = 0
+	temperature_coefficient = 0.25 //Force it
 
 /obj/item/weapon/reagent_containers/glass/beaker/noreact
 	name = "cryostasis beaker"
@@ -198,6 +202,7 @@
 	volume = 60
 	amount_per_transfer_from_this = 10
 	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_OPEN_CONTAINER | ATOM_FLAG_NO_REACT
+	temperature_coefficient = 0
 
 /obj/item/weapon/reagent_containers/glass/beaker/bluespace
 	name = "bluespace beaker"
@@ -209,6 +214,7 @@
 	amount_per_transfer_from_this = 10
 	possible_transfer_amounts = "5;10;15;25;30;60;120;150;200;250;300"
 	atom_flags = ATOM_FLAG_OPEN_CONTAINER
+	temperature_coefficient = 0.01
 
 /obj/item/weapon/reagent_containers/glass/beaker/vial
 	name = "vial"
@@ -221,6 +227,7 @@
 	amount_per_transfer_from_this = 10
 	possible_transfer_amounts = "5;10;15;30"
 	atom_flags = ATOM_FLAG_OPEN_CONTAINER
+	temperature_coefficient = 0.7
 
 /obj/item/weapon/reagent_containers/glass/beaker/insulated
 	name = "insulated beaker"
@@ -259,6 +266,7 @@
 	volume = 180
 	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 	unacidable = 0
+	temperature_coefficient = 0.25
 
 /obj/item/weapon/reagent_containers/glass/bucket/attackby(var/obj/D, mob/user as mob)
 

@@ -1,5 +1,5 @@
 /obj/item/clothing/proc/describe_armor(var/armor_type, var/descriptive_attack_type)
-	if(armor[armor_type])
+	if(armor && armor.len && armor[armor_type])
 		switch(armor[armor_type])
 			if(1 to 20)
 				return "It barely protects against [descriptive_attack_type]."
@@ -26,30 +26,30 @@
 	. = list()
 	. += description_info + "\
 		<br>"
-
-	if(armor[DAM_BLUNT])
-		. += "[describe_armor(DAM_BLUNT,"blunt force")] \n"
-	if(armor[DAM_CUT])
-		. += "[describe_armor(DAM_CUT,"sharp objects")] \n"
-	if(armor[DAM_PIERCE])
-		. += "[describe_armor(DAM_PIERCE,"piercing damage")] \n"
-	if(armor[DAM_BULLET])
-		. += "[describe_armor(DAM_BULLET,"ballistics")] \n"
-	if(armor[DAM_LASER])
-		. += "[describe_armor(DAM_LASER,"lasers")] \n"
-	if(armor[DAM_ENERGY])
-		. += "[describe_armor(DAM_ENERGY,"energy")] \n"
-	if(armor[DAM_EMP])
-		. += "[describe_armor(DAM_EMP,"emps")] \n"
-	if(armor[DAM_BURN])
-		. += "[describe_armor(DAM_BURN,"burns")] \n"
-	if(armor[DAM_BOMB])
-		. += "[describe_armor(DAM_BOMB,"explosions")] \n"
-	if(armor[DAM_BIO])
-		. += "[describe_armor(DAM_BIO,"biohazards")] \n"
-	if(armor[DAM_RADS])
-		. += "[describe_armor(DAM_RADS,"radiation")] \n"
-	. += "\n"
+	if(armor && armor.len)
+		if(armor[DAM_BLUNT])
+			. += "[describe_armor(DAM_BLUNT,"blunt force")] \n"
+		if(armor[DAM_CUT])
+			. += "[describe_armor(DAM_CUT,"sharp objects")] \n"
+		if(armor[DAM_PIERCE])
+			. += "[describe_armor(DAM_PIERCE,"piercing damage")] \n"
+		if(armor[DAM_BULLET])
+			. += "[describe_armor(DAM_BULLET,"ballistics")] \n"
+		if(armor[DAM_LASER])
+			. += "[describe_armor(DAM_LASER,"lasers")] \n"
+		if(armor[DAM_ENERGY])
+			. += "[describe_armor(DAM_ENERGY,"energy")] \n"
+		if(armor[DAM_EMP])
+			. += "[describe_armor(DAM_EMP,"emps")] \n"
+		if(armor[DAM_BURN])
+			. += "[describe_armor(DAM_BURN,"burns")] \n"
+		if(armor[DAM_BOMB])
+			. += "[describe_armor(DAM_BOMB,"explosions")] \n"
+		if(armor[DAM_BIO])
+			. += "[describe_armor(DAM_BIO,"biohazards")] \n"
+		if(armor[DAM_RADS])
+			. += "[describe_armor(DAM_RADS,"radiation")] \n"
+		. += "\n"
 
 	if(item_flags & ITEM_FLAG_AIRTIGHT)
 		. += "It is airtight. \n"

@@ -51,7 +51,8 @@ Some standard magazines, speedloaders and clips
 	mass = 10 GRAMS
 /obj/item/ammo_magazine/speedloader/Initialize()
 	. = ..()
-	SetName("speed loader ([caliber])")
+	if(!map_storage_loaded)
+		SetName("speed loader ([caliber])")
 
 //----------------------------------
 //	Caps Speedloader

@@ -274,7 +274,7 @@
 
 /datum/design/item/engifab/engitools/adv/light_replacer
 	name = "Light replacer"
-	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_COPPPER = 0.5 SHEETS, MATERIAL_GLASS = 1 SHEETS)
+	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_COPPER = 0.5 SHEETS, MATERIAL_GLASS = 1 SHEETS)
 	build_path = /obj/item/device/lightreplacer
 	research = "lightreplacer"
 

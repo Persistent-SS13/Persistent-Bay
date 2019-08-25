@@ -1272,14 +1272,14 @@ var/PriorityQueue/all_feeds
 
 /datum/world_faction/democratic/proc/vote_yes(var/datum/council_vote/vote, var/mob/user)
 	vote.yes_votes |= user.real_name
-	if(vote.yes_votes.len >= 5)
+	if(vote.yes_votes.len >= 3)
 		pass_vote(vote)
-	else if(vote.yes_votes.len >= 3 && vote.signer != "")
+	else if(vote.yes_votes.len >= 2 && vote.signer != "")
 		pass_vote(vote)
 
 /datum/world_faction/democratic/proc/vote_no(var/datum/council_vote/vote, var/mob/user)
 	vote.no_votes |= user.real_name
-	if(vote.no_votes.len >= 3)
+	if(vote.no_votes.len >= 2)
 		defeat_vote(vote)
 
 /datum/world_faction/democratic/proc/repeal_policy(var/datum/council_vote/vote)
@@ -2572,23 +2572,41 @@ var/PriorityQueue/all_feeds
 	return INITIALIZE_HINT_QDEL
 
 
-
-
-
 /datum/personal_objective
 	var/name = "Objective name"
 	var/payout = 0 // how much to pay upon completion
-	var/research_payout = 0 // ho many research points to award
-
+	
 	var/filled = 0 // how much has been provided of whatever is required
 	var/required = 10 // How much of whatever is required to fill the objective
 
 	var/completed = 0 // is the objective completed
 
+	var/required_type // make this a typepath
+
 	var/list/unique_characters = list() // a list of unique characters for objective tracking
 	var/list/unique_factions = list() // a list of unique factions for objective tracking
 
 	var/datum/computer_file/report/crew_record/parent
+
+
+/datum/personal_objective/delicous_food
+
+/datum/personal_objective/fancy_drink
+
+/datum/personal_objective/visit_beacon
+
+/datum/personal_objective/chat_friends
+
+/datum/personal_objective/chat_many
+
+/datum/personal_objective/chat_group
+
+/datum/personal_objective/view_article
+
+
+
+
+
 
 
 
@@ -2962,7 +2980,7 @@ var/PriorityQueue/all_feeds
 	limit_drills = 5
 	limit_botany = 10
 	limit_shuttles = 10
-	limit_area = 200000 //size of the nexus at most 3z levels of 255x255
+	limit_area = 2000000 //size of the nexus at most 3z levels of 255x255
 	limit_tcomms = 5
 	limit_tech_general = 4
 	limit_tech_engi = 4

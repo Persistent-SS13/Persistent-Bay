@@ -135,7 +135,7 @@
 		if("deselect_vote")
 			selected_vote = null
 		if("sign_bill")
-			if(selected_vote.yes_votes.len < 3)
+			if(selected_vote.yes_votes.len < 2)
 				return .
 			selected_vote.signer = usr.real_name
 			connected_faction.pass_vote(selected_vote)

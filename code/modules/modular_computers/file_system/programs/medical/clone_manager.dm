@@ -5,7 +5,7 @@
 	program_icon_state = "crew"
 	program_menu_icon = "heart"
 	extended_desc = "This program connects to nearby cloning pods, and uses dna scanning hardware to collect DNA and transmit it to the pods."
-	required_access = core_access_medical_programs
+	//required_access = core_access_medical_programs
 	requires_ntnet = FALSE
 	network_destination = "cloner management"
 	size = 20
@@ -103,6 +103,15 @@
 			playsound(get_turf(computer), pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
 	return 1
 
+//Handle clone pods being disconnected while running
+/datum/computer_file/program/clone_manager/event_clonepod_removed(var/obj/machinery/clonepod/pod)
+	var/obj/item/weapon/computer_hardware/scanner/medical/mdscan = computer.scanner
+	if(mdscan && mdscan.connected_pods)
+		mdscan.connected_pods -= pod
+	if(src.pod == pod )
+		src.pod = null
+
+//MODULE
 /datum/nano_module/program/clone_manager
 	name = "Cloning Pod Management"
 	var/menu = 1

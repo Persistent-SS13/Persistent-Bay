@@ -919,8 +919,8 @@
 	materials = list(MATERIAL_WOOD = 0.1 SHEET) // 10 papers per sheet
 
 /datum/design/item/genfab/communication/paper/sticky
-	name = "sticky note"
-	build_path = /obj/item/weapon/paper/sticky
+	name = "sticky notepad"
+	build_path = /obj/item/sticky_pad/random
 	materials = list(MATERIAL_WOOD = 0.1 SHEET) // 10 papers per sheet
 
 /datum/design/item/genfab/communication/hand_labeler

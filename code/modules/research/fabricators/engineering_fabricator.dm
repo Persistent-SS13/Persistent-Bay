@@ -274,7 +274,7 @@
 
 /datum/design/item/engifab/engitools/adv/light_replacer
 	name = "Light replacer"
-	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_COPPPER = 0.5 SHEETS, MATERIAL_GLASS = 1 SHEETS)
+	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_COPPER = 0.5 SHEETS, MATERIAL_GLASS = 1 SHEETS)
 	build_path = /obj/item/device/lightreplacer
 	research = "lightreplacer"
 
@@ -942,3 +942,84 @@
 	name = "gas sensor"
 	build_path = /obj/machinery/air_sensor
 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 1)
+
+
+
+
+
+
+/datum/design/item/engifab/signs
+	category = "Machines"
+	time = 2 SECONDS
+	materials = list(MATERIAL_ALUMINIUM = 1500)
+
+#define SIGN_FRAME(NAME, TYPE) /datum/design/item/engifab/signs/##NAME{\
+	name = "sign ##NAME";\
+	build_path = ##TYPE;\
+	}
+SIGN_FRAME(airlock,	    /obj/item/sign/warning/airlock)
+SIGN_FRAME(bombrange,   /obj/item/sign/warning/bomb_range)
+SIGN_FRAME(disposals,   /obj/item/sign/warning/deathsposal)
+SIGN_FRAME(docks,       /obj/item/sign/warning/docking_area)
+SIGN_FRAME(engineering, /obj/item/sign/warning/engineering_access)
+SIGN_FRAME(gas,	        /obj/item/sign/warning/compressed_gas)
+SIGN_FRAME(caution,     /obj/item/sign/warning/caution)
+SIGN_FRAME(fall,        /obj/item/sign/warning/fall)
+SIGN_FRAME(fire,        /obj/item/sign/warning/fire)
+SIGN_FRAME(highvoltage, /obj/item/sign/warning/high_voltage)
+SIGN_FRAME(radioactive, /obj/item/sign/warning/radioactive)
+SIGN_FRAME(biohazard,   /obj/item/sign/warning/biohazard)
+SIGN_FRAME(exhaust,     /obj/item/sign/warning/hot_exhaust)
+SIGN_FRAME(internals,   /obj/item/sign/warning/internals_required)
+SIGN_FRAME(turrets,	    /obj/item/sign/warning/lethal_turrets)
+SIGN_FRAME(mail,        /obj/item/sign/warning/mail_delivery)
+SIGN_FRAME(movingparts, /obj/item/sign/warning/moving_parts)
+SIGN_FRAME(smoking1,    /obj/item/sign/warning/nosmoking_1)
+SIGN_FRAME(smoking2,    /obj/item/sign/warning/nosmoking_2)
+SIGN_FRAME(escapepods,  /obj/item/sign/warning/pods)
+SIGN_FRAME(secure,      /obj/item/sign/warning/secure_area)
+SIGN_FRAME(armory,      /obj/item/sign/warning/secure_area/armory)
+SIGN_FRAME(servers,     /obj/item/sign/warning/server_room)
+SIGN_FRAME(siphon,      /obj/item/sign/warning/siphon_valve)
+SIGN_FRAME(vacuum,      /obj/item/sign/warning/vacuum)
+SIGN_FRAME(ventport,    /obj/item/sign/warning/vent_port)
+SIGN_FRAME(redcross,    /obj/item/sign/redcross)
+SIGN_FRAME(greencross,  /obj/item/sign/greencross)
+SIGN_FRAME(bluecross1,  /obj/item/sign/bluecross_1)
+SIGN_FRAME(bluecross2,  /obj/item/sign/bluecross_2)
+SIGN_FRAME(goldenplaque, /obj/item/sign/goldenplaque)
+SIGN_FRAME(secgoldenplaque,	/obj/item/sign/goldenplaque/security)
+SIGN_FRAME(medgoldenplaque, /obj/item/sign/goldenplaque/medical)
+SIGN_FRAME(kiddieplaque,    /obj/item/sign/kiddieplaque)
+SIGN_FRAME(atmosplaque,     /obj/item/sign/atmosplaque)
+SIGN_FRAME(floorplaque,     /obj/item/sign/floorplaque)
+SIGN_FRAME(science,         /obj/item/sign/warning/science)
+SIGN_FRAME(anomalous,       /obj/item/sign/warning/science/anomalous_materials)
+SIGN_FRAME(spectrometry,    /obj/item/sign/warning/science/mass_spectrometry)
+SIGN_FRAME(research,        /obj/item/sign/science_1)
+SIGN_FRAME(research2,       /obj/item/sign/science_2)
+SIGN_FRAME(xenobio1,        /obj/item/sign/xenobio_1)
+SIGN_FRAME(xenobio2,        /obj/item/sign/xenobio_2)
+SIGN_FRAME(xenobio3,        /obj/item/sign/xenobio_3)
+SIGN_FRAME(xenobio4,        /obj/item/sign/xenobio_4)
+SIGN_FRAME(xenoarch,        /obj/item/sign/xenoarch)
+SIGN_FRAME(chemistry,       /obj/item/sign/chemistry)
+SIGN_FRAME(xenoflora,       /obj/item/sign/xenoflora)
+SIGN_FRAME(botany,          /obj/item/sign/botany)
+SIGN_FRAME(hydro,           /obj/item/sign/hydro)
+SIGN_FRAME(hydrostorage,    /obj/item/sign/hydrostorage)
+SIGN_FRAME(toscience,       /obj/item/sign/directions/science)
+SIGN_FRAME(toengineering,   /obj/item/sign/directions/engineering)
+SIGN_FRAME(tosecurity,      /obj/item/sign/directions/security)
+SIGN_FRAME(tomedical,       /obj/item/sign/directions/medical)
+SIGN_FRAME(toevac,          /obj/item/sign/directions/evac)
+SIGN_FRAME(tobridge,        /obj/item/sign/directions/bridge)
+SIGN_FRAME(tosupply,        /obj/item/sign/directions/supply)
+SIGN_FRAME(toinfirmary,     /obj/item/sign/directions/infirmary)
+SIGN_FRAME(toexamroom,      /obj/item/sign/directions/examroom)
+SIGN_FRAME(bridgedeck,      /obj/item/sign/deck/bridge)
+SIGN_FRAME(firstdeck,       /obj/item/sign/deck/first)
+SIGN_FRAME(seconddeck,      /obj/item/sign/deck/second)
+SIGN_FRAME(thirddeck,       /obj/item/sign/deck/third)
+SIGN_FRAME(fourthdeck,      /obj/item/sign/deck/fourth)
+#undef SIGN_FRAME

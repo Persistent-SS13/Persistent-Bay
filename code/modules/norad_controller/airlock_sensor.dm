@@ -26,7 +26,7 @@
 	after_load()
 
 /obj/machinery/airlock_sensor_norad/Initialize()
-	..()
+	. = ..()
 	after_load()
 
 /obj/machinery/airlock_sensor_norad/after_load()

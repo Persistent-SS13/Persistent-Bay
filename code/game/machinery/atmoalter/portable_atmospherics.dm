@@ -48,7 +48,7 @@
 		//Allow for reactions
 		air_contents.react()
 	else
-		update_icon()
+		queue_icon_update()
 
 /obj/machinery/portable_atmospherics/proc/StandardAirMix()
 	return list(

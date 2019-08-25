@@ -622,11 +622,6 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	to_chat(owner, "<span class='notice'>Consciousness slowly creeps over you as your new body awakens.</span>")
 	return 1
 
-//Force load records
-/obj/item/organ/internal/stack/proc/load_records()
-	if(!record)
-		record = Retrieve_Record(owner.real_name)
-
 /obj/item/organ/internal/stack/vat
 	action_button_name = "Access Vatchip UI"
 	name = "vatgrown chip"

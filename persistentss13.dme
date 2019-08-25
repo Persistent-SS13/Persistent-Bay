@@ -2614,6 +2614,7 @@
 #include "code\modules\projectiles\guns\projectile\pistols\silenced.dm"
 #include "code\modules\projectiles\guns\projectile\pistols\usp45.dm"
 #include "code\modules\projectiles\guns\projectile\pistols\zipgun.dm"
+#include "code\modules\projectiles\guns\projectile\revolvers\autorevolver.dm"
 #include "code\modules\projectiles\guns\projectile\revolvers\capgun.dm"
 #include "code\modules\projectiles\guns\projectile\revolvers\deckard.dm"
 #include "code\modules\projectiles\guns\projectile\revolvers\detective.dm"

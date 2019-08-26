@@ -1,6 +1,6 @@
 /obj/item/weapon/gun/projectile/revolver/medium
 	name = "\improper LA \"Solid\" .38 revolver"
-	desc = "The Lumoco Arms' Solid is a rugged revolver for people who don't keep their guns well-maintained."
+	desc = "The Lumoco Arms' Solid is a rugged .38 revolver for people who don't keep their guns well-maintained."
 	icon_state = "medium"
 	safety_icon = "medium_safety"
 	caliber = CALIBER_38

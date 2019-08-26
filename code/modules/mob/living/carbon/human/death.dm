@@ -1,4 +1,10 @@
 /mob/living/carbon/human/gib()
+	//Drop the lace out
+	var/obj/item/organ/internal/stack/ST = get_stack()
+	if(ST)
+		ST.removed(usr)
+		ST.dropInto(get_turf(src))
+
 	for(var/obj/item/organ/I in internal_organs)
 		I.removed()
 		if(istype(loc,/turf))
@@ -10,6 +16,12 @@
 	sleep(1)
 
 	for(var/obj/item/I in src)
+		if(istype(I, /obj/item/organ/external/stump))
+			var/obj/item/organ/external/stump/S = I
+			S.removed()
+			S.loc = null
+			qdel(S) //Don't drop stumps!
+			continue
 		drop_from_inventory(I)
 		I.throw_at(get_edge_target_turf(src,pick(GLOB.alldirs)), rand(1,3), round(30/I.w_class))
 
@@ -17,6 +29,12 @@
 	gibs(loc, dna, null, species.get_flesh_colour(src), species.get_blood_colour(src))
 
 /mob/living/carbon/human/dust()
+	//Drop the lace out
+	var/obj/item/organ/internal/stack/ST = get_stack()
+	if(ST)
+		ST.removed(usr)
+		ST.dropInto(get_turf(src))
+
 	if(species)
 		..(species.dusted_anim, species.remains_type)
 	else
@@ -73,6 +91,7 @@
 	handle_hud_list()
 	if(s)
 		s.transfer_identity(src)
+
 /mob/living/carbon/human/proc/ChangeToHusk()
 	if(MUTATION_HUSK in mutations)	return
 

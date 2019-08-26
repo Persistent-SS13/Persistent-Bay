@@ -25,6 +25,8 @@ PROCESSING_SUBSYSTEM_DEF(icon_update)
 		var/atom/A = curr[curr.len]
 		var/list/argv = curr[A]
 		curr.len--
+		if(QDELETED(A))
+			continue //Just in case
 
 		if (islist(argv))
 			A.update_icon(arglist(argv))

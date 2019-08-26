@@ -290,11 +290,11 @@
 	//required = /obj/item/slime_extract/oil
 	//mix_message = "The slime extract begins to vibrate violently!"
 
-/datum/chemical_reaction/slime/explosion/on_reaction(var/datum/reagents/holder)
-	set waitfor = 0
-	..()
-	sleep(50)
-	explosion(get_turf(holder.my_atom), 1, 3, 6)
+//datum/chemical_reaction/slime/explosion/on_reaction(var/datum/reagents/holder)
+	//set waitfor = 0
+	//..()
+	//sleep(50)
+	//explosion(get_turf(holder.my_atom), 1, 3, 6)
 
 //Light Pink
 /datum/chemical_reaction/slime/potion2

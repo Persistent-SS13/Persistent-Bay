@@ -515,6 +515,10 @@
 			return global.href_logfile;
 		if("human_icon_cache")
 			return global.human_icon_cache;
+		if("hunger_notify_mild")
+			return global.hunger_notify_mild;
+		if("hunger_notify_severe")
+			return global.hunger_notify_severe;
 		if("id_card_states")
 			return global.id_card_states;
 		if("image_repository")
@@ -1510,6 +1514,10 @@
 			global.href_logfile=newval;
 		if("human_icon_cache")
 			global.human_icon_cache=newval;
+		if("hunger_notify_mild")
+			global.hunger_notify_mild=newval;
+		if("hunger_notify_severe")
+			global.hunger_notify_severe=newval;
 		if("id_card_states")
 			global.id_card_states=newval;
 		if("image_repository")
@@ -2247,6 +2255,8 @@
 	"host",
 	"href_logfile",
 	"human_icon_cache",
+	"hunger_notify_mild",
+	"hunger_notify_severe",
 	"id_card_states",
 	"image_repository",
 	"inactive_keys",

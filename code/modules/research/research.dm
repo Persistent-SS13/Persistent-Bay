@@ -350,9 +350,8 @@ research holder datum.
 	tier = 4
 	points = 1400
 	uid = "welding_experimental"
-	prereqs = list("welding_industrial", "welding_huge")
-	uses = 3
-
+	prereqs = list("welding_industrial", "welding_huge") // making things in line to fix the issue of not being able to research it
+ 
 /datum/tech_entry/engi/airlock_brace
 	name = "Airlock Bracing"
 	desc = "The airlock brace can restrict areas and it can only be effectively removed using a brace jack. Unlocks airlock brace & brace jack designs for the appropriate fabricators."

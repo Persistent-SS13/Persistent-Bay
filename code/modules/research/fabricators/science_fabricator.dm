@@ -201,3 +201,21 @@
 
 /datum/design/item/sciencefab/robotics/chest/grayson 
 	build_path = /obj/item/robot_parts/chest/grayson
+
+/datum/design/item/sciencefab/robotics
+	category = "Tools"
+	time = 15
+
+/datum/design/item/sciencefab/robotics/nanopaste
+	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 5 SHEETS)
+	build_path = /obj/item/stack/nanopaste
+	research = "nanopaste"
+
+/datum/design/item/sciencefab/robotics/flash
+	build_path = /obj/item/device/flash
+	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_COPPER = 2 SHEET, MATERIAL_GOLD = 0.5 SHEET)
+
+/datum/design/item/sciencefab/robotics/coolingunit
+	name = "personal cooling unit"
+	build_path = /obj/item/device/suit_cooling_unit
+	materials = list(MATERIAL_ALUMINIUM = 3, MATERIAL_GLASS = 2)

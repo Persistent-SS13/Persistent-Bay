@@ -12,6 +12,10 @@
 	title = "donut box"
 	result_type = /obj/item/weapon/storage/box/donut/empty
 
+/datum/stack_recipe/box/crackers
+	title = "cracker box"
+	result_type = /obj/item/weapon/storage/fancy/crackers/empty
+
 /datum/stack_recipe/box/egg
 	title = "egg box"
 	result_type = /obj/item/weapon/storage/fancy/egg_box/empty
@@ -144,3 +148,21 @@ COLORED_FOLDER(yellow)
 	one_per_turf = 1
 	on_floor = 1
 	difficulty = 0
+
+//
+//	Reagent storage
+//
+/datum/stack_recipe/storage/reagents
+	req_amount = 10
+	time = 80
+	one_per_turf = 1
+	on_floor = 1
+	difficulty = 2
+
+/datum/stack_recipe/storage/reagents/watertank
+	title = "Water tank"
+	result_type = /obj/structure/reagent_dispensers/watertank/empty
+
+/datum/stack_recipe/storage/reagents/fueltank
+	title = "Fuel tank"
+	result_type = /obj/structure/reagent_dispensers/fueltank/empty

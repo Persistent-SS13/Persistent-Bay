@@ -346,11 +346,6 @@
 	build_path = /obj/item/weapon/gun/projectile/pistol/usp
 	research = "pistol_2"
 
-/datum/design/item/weaponfab/weapons/guns/pistol/gyrojet // tier 3, but its not very good
-	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS) //TODO
-	build_path = /obj/item/weapon/gun/projectile/pistol/gyropistol
-	research = "pistol_2"
-
 /datum/design/item/weaponfab/weapons/guns/pistol/magnum_pistol // tier 4
 	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/pistol/magnum_pistol
@@ -373,6 +368,11 @@
 /datum/design/item/weaponfab/weapons/guns/revolver/c357 // tier 2
 	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GOLD = 3 SHEETS, MATERIAL_COPPER = 2.5 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/revolver
+	research = "pistol_2"
+
+/datum/design/item/weaponfab/weapons/guns/revolver/auto // tier 2
+	materials = list(MATERIAL_STEEL = 2500, MATERIAL_ALUMINIUM = 1200, MATERIAL_SILVER = 250) //TODO
+	build_path = /obj/item/weapon/gun/projectile/revolver/medium/auto
 	research = "pistol_2"
 
 /datum/design/item/weaponfab/weapons/guns/revolver/c44 // tier 3
@@ -440,11 +440,13 @@
 	research = "autos_3"
 
 //	Sniper
-/**
+
 /datum/design/item/weaponfab/weapons/guns/automatic/heavysniper/replica // tier 0, Knock-off 9mm replica, basically an expensive pipe rifle
+	name = "heavy sniper replica"
 	materials = list(MATERIAL_PLASTEEL = 5 SHEETS)
 	build_path = /obj/item/weapon/gun/projectile/boltaction/heavysniper/ant
 
+/**
 /datum/design/item/weaponfab/weapons/guns/automatic/heavysniper // tier 4
 	materials = list(MATERIAL_PLASTEEL = 10 SHEETS, MATERIAL_GOLD = 8 SHEETS, MATERIAL_DIAMOND = 3 SHEETS, MATERIAL_PHORON = 11 SHEETS)
 	build_path = /obj/item/weapon/gun/projectile/boltaction/heavysniper
@@ -1455,12 +1457,6 @@
 	build_path = /obj/item/ammo_casing/c50
 	materials = list(MATERIAL_STEEL = 260)
 
-/datum/design/item/weaponfab/gyrojet
-	name = "gyrojet Round"
-	id = "gyrojet"
-	build_path = /obj/item/ammo_casing/gyrojet
-	materials = list(MATERIAL_STEEL = 320)
-
 /datum/design/item/weaponfab/c22lr
 	name = ".22 Long Rifle Bullet"
 	id = "c22"
@@ -1781,13 +1777,14 @@
 	build_path = /obj/item/ammo_magazine/box/c44
 	materials = list(MATERIAL_STEEL = 1.25 SHEET)
 
-/datum/design/item/weaponfab/magazines/empty/c50
-	name = ".50 Magazine (empty)"
-	build_path = /obj/item/ammo_magazine/box/c50/empty
-/datum/design/item/weaponfab/magazines/c50
-	name = ".50 Magazine"
-	build_path = /obj/item/ammo_magazine/box/c50
-	materials = list(MATERIAL_STEEL = 1.25 SHEET)
+//For now apparently the gun using this disapeared...
+// /datum/design/item/weaponfab/magazines/empty/c50
+// 	name = ".50 Magazine (empty)"
+// 	build_path = /obj/item/ammo_magazine/box/c50/empty
+// /datum/design/item/weaponfab/magazines/c50
+// 	name = ".50 Magazine"
+// 	build_path = /obj/item/ammo_magazine/box/c50
+// 	materials = list(MATERIAL_STEEL = 1.25 SHEET)
 
 /datum/design/item/weaponfab/magazines/empty/c762
 	name = "Standard 7.62mm, 15 rounds magazine (empty)"
@@ -1795,14 +1792,6 @@
 /datum/design/item/weaponfab/magazines/c762
 	name = "Standard 7.62mm, 15 rounds magazine"
 	build_path = /obj/item/ammo_magazine/box/c762
-	materials = list(MATERIAL_STEEL = 1.25 SHEET)
-
-/datum/design/item/weaponfab/magazines/empty/gyrojet
-	name = "Gyrojet 6 rounds magazine (empty)"
-	build_path = /obj/item/ammo_magazine/box/gyrojet/empty
-/datum/design/item/weaponfab/magazines/gyrojet
-	name = "Gyrojet 6 rounds magazine"
-	build_path = /obj/item/ammo_magazine/box/gyrojet
 	materials = list(MATERIAL_STEEL = 1.25 SHEET)
 
 /datum/design/item/weaponfab/magazines/empty/c556

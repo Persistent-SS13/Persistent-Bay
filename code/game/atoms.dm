@@ -285,6 +285,8 @@ its easier to just keep the beam vertical.
 		icon_state = new_icon_state
 
 /atom/proc/update_icon()
+	if(QDELETED(src)) //Handy little thing
+		return
 	on_update_icon(arglist(args))
 
 /atom/proc/on_update_icon()

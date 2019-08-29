@@ -384,17 +384,17 @@ var/global/list/datum/dna/gene/dna_genes[0]
 	else
 		if(length(uni_identity) != 3*DNA_UI_LENGTH)
 			uni_identity = "00600200A00E0110148FC01300B0095BD7FD3F4"
-			log_debug("[character] has its dna's uni identity set to default [uni_identity]!!!")
+			log_warning("[character] has its dna's uni identity set to default [uni_identity]!!!")
 		if(length(struc_enzymes)!= 3*DNA_SE_LENGTH)
 			struc_enzymes = "43359156756131E13763334D1C369012032164D4FE4CD61544B6C03F251B6C60A42821D26BA3B0FD6"
-			log_debug("[character] has its dna's struct enzymes set to default [struc_enzymes]!!!")
+			log_warning("[character] has its dna's struct enzymes set to default [struc_enzymes]!!!")
 
 // BACK-COMPAT!
 //  Initial DNA setup.  I'm kind of wondering why the hell this doesn't just call the above.
 /datum/dna/proc/ready_dna(mob/living/carbon/human/character)
 	ResetUIFrom(character)
-
 	ResetSE()
 	real_name = character.real_name
 	unique_enzymes = md5(character.real_name)
+	b_type = character.b_type
 	GLOB.reg_dna[unique_enzymes] = character.real_name

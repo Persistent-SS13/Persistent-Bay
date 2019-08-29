@@ -317,7 +317,7 @@ var/global/list/debug_data = list()
 			L.linked_account = create_account(L.get_name(), 0, null)
 			L.linked_account.remote_access_pin = rand(1111,9999)
 			L.linked_account = L.linked_account.after_load()
-			L.linked_account.money = 1000
+			L.linked_account.money = DEFAULT_NEW_CHARACTER_MONEY
 		to_file(f, L.linked_account)
 		f = null
 		var/key3 = L.get_fingerprint()

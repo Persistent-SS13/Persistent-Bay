@@ -325,7 +325,7 @@ datum/unit_test/mob_damage/resomi
 	name = "MOB: Resomi damage check template"
 	mob_type = /mob/living/carbon/human/resomi
 
-datum/unit_test/mob_damage/resomi/blunt
+datum/unit_test/mob_damage/resomi/brute
 	name = "MOB: Resomi Brute Damage Check"
 	damagetype = DAM_BLUNT
 	expected_vulnerability = EXTRA_VULNERABLE

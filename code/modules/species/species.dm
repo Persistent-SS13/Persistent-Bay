@@ -35,7 +35,6 @@
 	var/tail_blend = ICON_ADD
 	var/tail_hair
 
-
 	var/list/hair_styles
 	var/list/facial_hair_styles
 

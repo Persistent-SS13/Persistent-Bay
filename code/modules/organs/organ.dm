@@ -7,7 +7,7 @@ var/list/organ_cache = list()
 	obj_flags = OBJ_FLAG_DAMAGEABLE
 	w_class = ITEM_SIZE_TINY
 	default_action_type = /datum/action/item_action/organ
-	matter = list("pinkgoo" = 100)
+	matter = list(MATERIAL_PINK_GOO = 100)
 	damthreshold_brute = 0
 	damthreshold_burn  = 0
 
@@ -48,11 +48,6 @@ var/list/organ_cache = list()
 	// Bioprinter stats
 	var/can_be_printed = TRUE
 	var/print_cost
-
-/obj/item/organ/Destroy()
-	owner = null
-	dna = null
-	return ..()
 
 /obj/item/organ/proc/refresh_action_button()
 	return action
@@ -112,6 +107,15 @@ var/list/organ_cache = list()
 	ADD_SAVED_VAR(death_time)
 	ADD_SAVED_VAR(organ_tag)
 
+/obj/item/organ/Destroy()
+#ifdef TESTING
+	testing("Destroying [src]\ref[src]([x], [y], [z]), in \the '[loc]'\ref[loc]([loc?.x], [loc?.y], [loc?.z]), with owner: [owner? owner : "null"]\ref[owner]([owner?.x], [owner?.y], [owner?.z])!")
+#endif
+	owner = null
+	dna = null
+	species = null
+	return ..()
+
 /obj/item/organ/after_load()
 	. = ..()
 	if(istype(owner))
@@ -125,12 +129,6 @@ var/list/organ_cache = list()
 
 	if(BP_IS_ROBOTIC(src))
 		robotize()
-
-/obj/item/organ/Destroy()
-	owner = null
-	dna = null
-	species = null
-	return ..()
 
 /obj/item/organ/proc/heal_damage(var/amount)
 	add_health(round(amount, 0.1))
@@ -329,7 +327,9 @@ var/list/organ_cache = list()
  */
 /obj/item/organ/proc/removed(var/mob/living/user, var/drop_organ=1)
 
-	if(!istype(owner))
+	if(!istype(owner) || QDELETED(owner))
+		rejecting = null
+		owner = null
 		return
 	GLOB.dismembered_event.raise_event(owner, src)
 

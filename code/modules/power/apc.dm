@@ -1529,7 +1529,7 @@ obj/machinery/power/apc/proc/autoset(var/cur_state, var/on)
 	if (alarm_threat_warning && world.time >= alarm_threat_warning_timebuffer + alarm_threat_warning_timeout)
 		AlarmCheckForThreats()
 	if (alarm_alert)
-		audible_message("** BEEP ** BEEP **** BEEP ** BEEP **", "..b...e..", 4)
+		audible_message("** BEEP ** BEEP **** BEEP ** BEEP **", "..b...e..", hearing_distance = 8)
 
 /obj/machinery/power/apc/proc/update_sound(var/playing)
 	if(playing && !snd_alarm)

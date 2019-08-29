@@ -106,8 +106,9 @@
 
 	message_admins("[usr] manually reloaded admins")
 	load_admins()
+	load_alienwhitelist()
 	SSstatistics.add_field_details("admin_verb","RLDA") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-
+	
 /client/proc/reload_mentors()
 	set name = "Reload Mentors"
 	set category = "Debug"

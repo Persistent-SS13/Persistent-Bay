@@ -6,8 +6,8 @@
 	result = /datum/reagent/ethanol/whiskey
 	required_reagents = list(/datum/reagent/nutriment/flour = 5, /datum/reagent/nutriment/cornoil = 5, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/woodpulp = 5)
-	minimum_temperature = T0C + 100
-	maximum_temperature = T0C + 150
+	minimum_temperature = T0C + 80
+	maximum_temperature = T0C + 90
 	result_amount = 15
 	mix_message = "The solution roils as it rapidly ferments. Then you distil it into a red-brown liquid."
 
@@ -16,17 +16,17 @@
 	result = /datum/reagent/ethanol/specialwhiskey
 	required_reagents = list(/datum/chemical_reaction/whiskey = 20, /datum/reagent/enzyme = 20, /datum/reagent/hydrazine = 5)
 	catalysts = list(/datum/reagent/woodpulp = 10)
-	minimum_temperature = T0C + 100
-	maximum_temperature = T0C + 150
+	minimum_temperature = T0C + 60
+	maximum_temperature = T0C + 90
 	result_amount = 40
 	mix_message = "The solution roils as it rapidly ferments and thickens. Then you distil it into an intensely reddish-brown liquid."
 
 /datum/chemical_reaction/rum
 	name = "Rum"
 	result = /datum/reagent/ethanol/rum
-	required_reagents = list(/datum/reagent/drink/juice/sugarcane_juice = 5, /datum/reagent/water = 5, /datum/reagent/enzyme = 5)
-	minimum_temperature = T0C + 100
-	maximum_temperature = T0C + 150
+	required_reagents = list(/datum/reagent/drink/juice/sugarcane_juice = 5, /datum/reagent/enzyme = 5)
+	minimum_temperature = T0C + 60
+	maximum_temperature = T0C + 90
 	result_amount = 15
 	mix_message = "The solution roils as it rapidly ferments. Then you distil it into a brown-ish liquid."
 
@@ -42,17 +42,17 @@
 	name = "Vermouth"
 	result = /datum/reagent/ethanol/vermouth
 	required_reagents = list(/datum/reagent/ethanol/wine = 5, /datum/reagent/blackpepper = 5)
-	minimum_temperature = T0C + 100
-	maximum_temperature = T0C + 150
+	minimum_temperature = T0C + 60
+	maximum_temperature = T0C + 90
 	result_amount = 10
 	mix_message = "The solution roils as it rapidly ferments into a clear spice scented liquid."
 
 /datum/chemical_reaction/tequila
 	name = "Tequila"
 	result = /datum/reagent/ethanol/tequilla
-	required_reagents = list(/datum/reagent/drink/juice/agave_sap = 5, /datum/reagent/water = 5, /datum/reagent/enzyme = 5)
-	minimum_temperature = T0C + 100
-	maximum_temperature = T0C + 150
+	required_reagents = list(/datum/reagent/drink/juice/agave_sap = 5, /datum/reagent/enzyme = 5)
+	minimum_temperature = T0C + 80
+	maximum_temperature = T0C + 90
 	result_amount = 15
 	mix_message = "The solution roils as it rapidly ferments. Then you distil it into a clear liquid."
 
@@ -61,16 +61,16 @@
 	result = /datum/reagent/drink/nothing
 	required_reagents = list(/datum/reagent/ethanol = 5, /datum/reagent/hydrogen_peroxide = 5)
 	minimum_temperature = T0C + 80
-	maximum_temperature = T0C + 100
+	maximum_temperature = T0C + 90
 	result_amount = 10
 	mix_message = "The solution boils off leaving behind a feeling of emptyness."
 
 /datum/chemical_reaction/absinthe
 	name = "absinthe"
 	result = /datum/reagent/ethanol/absinthe
-	required_reagents = list(/datum/reagent/nutriment/oil/aniseoil = 5, /datum/reagent/water = 5, /datum/reagent/enzyme = 5)
+	required_reagents = list(/datum/reagent/nutriment/oil/aniseoil = 5, /datum/reagent/enzyme = 5)
 	minimum_temperature = T0C + 80
-	maximum_temperature = T0C + 100
+	maximum_temperature = T0C + 90
 	result_amount = 15
 	mix_message = "The solution roils as it rapidly ferments. Then you distil it into a strongly scented green liquid."
 
@@ -79,8 +79,8 @@
 	result = /datum/reagent/ethanol/cognac
 	required_reagents = list(/datum/reagent/ethanol/wine/premium = 5, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/copper = 5)
-	minimum_temperature = T0C + 100
-	maximum_temperature = T0C + 150
+	minimum_temperature = T0C + 80
+	maximum_temperature = T0C + 90
 	result_amount = 15
 	mix_message = "The solution roils as it rapidly ferments. Then you distil it into a smooth, amber liquid."
 

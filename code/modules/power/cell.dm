@@ -141,7 +141,7 @@
 
 /obj/item/weapon/cell/device/standard
 	name = "standard device power cell"
-	maxcharge = 25
+	maxcharge = 100
 
 /obj/item/weapon/cell/device/standard/empty/New()
 	..()
@@ -151,8 +151,15 @@
 	name = "advanced device power cell"
 	desc = "A small power cell designed to power more energy-demanding devices."
 	icon_state = "hdevice"
-	maxcharge = 100
+	maxcharge = 200
 	matter = list(MATERIAL_STEEL = 70, MATERIAL_GLASS = 6)
+	
+/obj/item/weapon/cell/device/super
+	name = "super device power cell"
+	desc = "A small power cell using advanced materials and techniques for even more power. Generally used in guns."
+	icon_state = "sdevice"
+	maxcharge = 300
+	matter = list(MATERIAL_STEEL = 80, MATERIAL_GLASS = 10)
 
 /obj/item/weapon/cell/crap
 	name = "old power cell"

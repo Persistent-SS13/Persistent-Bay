@@ -31,7 +31,7 @@
 	slot_flags = SLOT_BELT|SLOT_HOLSTER
 	one_hand_penalty = 0
 	charge_cost = 20
-	max_shots = 8
+	max_shots = 10
 	projectile_type = /obj/item/projectile/ion/small
 
 /obj/item/weapon/gun/energy/decloner

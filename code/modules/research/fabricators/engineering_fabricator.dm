@@ -248,6 +248,7 @@
 	build_path = /obj/item/weapon/tool/weldingtool/hugetank/empty
 	req_tech = list(TECH_ENGINEERING = 3)
 	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GLASS = 3 SHEETS)
+	research = "welding_huge"
 	
 /datum/design/item/engifab/engitools/adv/experimental_welder
 	name = "Experimental welding tool"

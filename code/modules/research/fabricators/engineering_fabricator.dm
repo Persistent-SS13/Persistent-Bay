@@ -643,14 +643,21 @@
 	research = "cell_super"
 /datum/design/item/engifab/parts/powercell/device/standard
 	name = "Standard capacity device power cell"
-	materials = list(MATERIAL_STEEL = 70, MATERIAL_GLASS = 5)
+	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_GLASS = 0.25 SHEETS)
 	build_path = /obj/item/weapon/cell/device/standard
 
 /datum/design/item/engifab/parts/powercell/device/high
 	name = "High capacity device power cell"
-	materials = list(MATERIAL_STEEL = 70, MATERIAL_GLASS = 6,MATERIAL_PHORON = 100)
+	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_GLASS = 0.5 SHEETS,MATERIAL_PHORON = 1 SHEETS)
 	build_path = /obj/item/weapon/cell/device/high
 	research = "cell_high"
+	
+/datum/design/item/engifab/parts/powercell/device/super
+	name = "Super capacity device power cell
+	materials = list(MATERIAL_STEEL = 1.5 SHEETS, MATERIAL_GLASS = 1 SHEETS,MATERIAL_PHORON = 1.5 SHEETS,MATERIAL_URANIUM = 1.5 SHEETS)
+	build_path = /obj/item/weapon/cell/device/super
+	research = "cell_super"	
+	
 /datum/design/item/engifab/parts/adv/subspace_ansible
 	name = "Subspace ansible"
 	materials = list(MATERIAL_STEEL = 80, MATERIAL_SILVER = 20)

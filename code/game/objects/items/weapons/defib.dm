@@ -14,11 +14,11 @@
 	w_class = ITEM_SIZE_LARGE
 	origin_tech = list(TECH_BIO = 4, TECH_POWER = 2)
 	action_button_name = "Remove/Replace Paddles"
-
+	var/bcell = null
 	var/obj/item/weapon/shockpaddles/linked/paddles
 	var/obj/item/weapon/cell/bcell = null
 
-	/obj/weapon/cell/New(var/newloc, var/model)
+/obj/item/weapon/defibrillator/New()
 	ADD_SAVED_VAR(bcell)
 
 /obj/item/weapon/defibrillator/Initialize() //starts without a cell for rnd

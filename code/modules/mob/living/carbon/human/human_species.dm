@@ -73,3 +73,7 @@
 
 /mob/living/carbon/human/adherent/New(var/new_loc)
 	..(new_loc, SPECIES_ADHERENT)
+
+/mob/living/carbon/human/resomi/New(var/new_loc)
+	h_style = "Resomi Plumage"
+	..(new_loc, SPECIES_RESOMI)

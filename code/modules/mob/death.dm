@@ -35,6 +35,8 @@
 	animation.icon_state = "blank"
 	animation.icon = 'icons/mob/mob.dmi'
 	animation.master = src
+	animation.layer = MOB_LAYER //Make sure the anim plays on the right layer
+	animation.plane = MOB_PLANE
 
 	flick(anim, animation)
 	new remains(loc)

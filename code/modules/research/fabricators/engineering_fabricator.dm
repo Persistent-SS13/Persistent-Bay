@@ -653,7 +653,7 @@
 	research = "cell_high"
 	
 /datum/design/item/engifab/parts/powercell/device/super
-	name = "Super capacity device power cell
+	name = "Super capacity device power cell"
 	materials = list(MATERIAL_STEEL = 1.5 SHEETS, MATERIAL_GLASS = 1 SHEETS,MATERIAL_PHORON = 1.5 SHEETS,MATERIAL_URANIUM = 1.5 SHEETS)
 	build_path = /obj/item/weapon/cell/device/super
 	research = "cell_super"	

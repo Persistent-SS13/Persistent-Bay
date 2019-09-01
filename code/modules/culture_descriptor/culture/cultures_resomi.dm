@@ -1,7 +1,7 @@
 /decl/cultural_info/culture/resomi
 	name = CULTURE_RESOMI
 	name_language = LANGUAGE_RESOMI
-  language = LANGAUGE_RESOMI
+	language = LANGUAGE_RESOMI
 	economic_power = 1
 	description = "A proud, excitable species descended from pack hunters, Resomi carry their tight-knit traditions ever forward. With \
   an ever growing population crisis due to the fast growth of their species and the relatively small size of the moon they call home, \

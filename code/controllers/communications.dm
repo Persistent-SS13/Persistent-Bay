@@ -105,6 +105,7 @@ var/const/PUBLIC_LOW_FREQ	= 1441
 var/const/PUBLIC_HIGH_FREQ	= 1489
 var/const/RADIO_HIGH_FREQ	= 1600
 var/const/RADIO_CUSTOM_FREQ = 1700
+var/const/RADIO_CUSTOM_FREQ_MAX = 1800
 
 //Machines
 var/const/MAGNET_FREQ			= 1311

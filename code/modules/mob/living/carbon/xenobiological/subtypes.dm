@@ -12,18 +12,18 @@
 		if("dark blue")
 			return list("purple", "cerulean", "blue", "grey")
 		if("yellow")
-			return list("green", "orange", "grey")
+			return list("orange", "grey")
 		if("silver")
 			return list("gold", "pyrite", "blue", "grey")
 		//Tier 4
 		if("pink")
 			return list("pink", "light pink", "grey")
 		if("red")
-			return list("red", "oil", "orange", "grey")
+			return list("red", "orange", "grey")
 		if("gold")
 			return list("gold", "silver", "grey")
-		if("green")
-			return list("green", "grey")
+		//if("green")
+			//return list("green", "grey")
 		// Tier 5
 		else
 			return list("grey")
@@ -58,8 +58,8 @@
 			return /obj/item/slime_extract/red
 		if("gold")
 			return /obj/item/slime_extract/gold
-		if("green")
-			return /obj/item/slime_extract/green
+		//if("green")
+			//return /obj/item/slime_extract/green
 		if("sepia")
 			return /obj/item/slime_extract/sepia
 		if("bluespace")
@@ -71,10 +71,10 @@
 		//Tier 5
 		if("light pink")
 			return /obj/item/slime_extract/lightpink
-		if("oil")
-			return /obj/item/slime_extract/oil
+		//if("oil")
+			//return /obj/item/slime_extract/oil
 		if("adamantine")
 			return /obj/item/slime_extract/adamantine
-		if("black")
-			return /obj/item/slime_extract/black
+		//if("black")
+			//return /obj/item/slime_extract/black
 	return /obj/item/slime_extract/grey

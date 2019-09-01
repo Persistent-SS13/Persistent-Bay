@@ -169,7 +169,8 @@ var/PriorityQueue/all_feeds
 
 				GLOB.contract_database.add_contract(new_contract)
 				signed = 1
-
+				approved = 1
+				update_icon()
 				info = replacetext(info, "*Unsigned*", "[usr.real_name]")
 				signed_by = usr.real_name
 			else
@@ -779,6 +780,20 @@ var/PriorityQueue/all_feeds
 	connected_laces.Cut()
 	status = 0
 
+/datum/world_faction/proc/get_members()
+	var/list/members = list()
+	var/list/contracts = GLOB.contract_database.get_contracts(src.uid, CONTRACT_BUSINESS)
+	for(var/datum/recurring_contract/contract in contracts)
+		if(contract.payee_cancelled || contract.payee_completed|| contract.payer_cancelled || contract.payer_completed)
+			continue
+		if(contract.func == CONTRACT_SERVICE_MEMBERSHIP)
+			members |= contract
+	return members
+
+
+
+
+
 /datum/world_faction/proc/open_business()
 	status = 1
 
@@ -1257,14 +1272,14 @@ var/PriorityQueue/all_feeds
 
 /datum/world_faction/democratic/proc/vote_yes(var/datum/council_vote/vote, var/mob/user)
 	vote.yes_votes |= user.real_name
-	if(vote.yes_votes.len >= 5)
+	if(vote.yes_votes.len >= 3)
 		pass_vote(vote)
-	else if(vote.yes_votes.len >= 3 && vote.signer != "")
+	else if(vote.yes_votes.len >= 2 && vote.signer != "")
 		pass_vote(vote)
 
 /datum/world_faction/democratic/proc/vote_no(var/datum/council_vote/vote, var/mob/user)
 	vote.no_votes |= user.real_name
-	if(vote.no_votes.len >= 3)
+	if(vote.no_votes.len >= 2)
 		defeat_vote(vote)
 
 /datum/world_faction/democratic/proc/repeal_policy(var/datum/council_vote/vote)
@@ -1544,7 +1559,7 @@ var/PriorityQueue/all_feeds
 
 	limits.limit_shuttles = module.spec.limits.limit_shuttles + current_level.limit_shuttles
 
-	limits.limit_area = module.spec.limits.limit_area + current_level.limit_area
+	limits.limit_area = module.spec.limits.limit_area + current_level.limit_area + 200
 
 	limits.limit_tcomms = module.spec.limits.limit_tcomms + current_level.limit_tcomms
 
@@ -2557,6 +2572,44 @@ var/PriorityQueue/all_feeds
 	return INITIALIZE_HINT_QDEL
 
 
+/datum/personal_objective
+	var/name = "Objective name"
+	var/payout = 0 // how much to pay upon completion
+	
+	var/filled = 0 // how much has been provided of whatever is required
+	var/required = 10 // How much of whatever is required to fill the objective
+
+	var/completed = 0 // is the objective completed
+
+	var/required_type // make this a typepath
+
+	var/list/unique_characters = list() // a list of unique characters for objective tracking
+	var/list/unique_factions = list() // a list of unique factions for objective tracking
+
+	var/datum/computer_file/report/crew_record/parent
+
+
+/datum/personal_objective/delicous_food
+
+/datum/personal_objective/fancy_drink
+
+/datum/personal_objective/visit_beacon
+
+/datum/personal_objective/chat_friends
+
+/datum/personal_objective/chat_many
+
+/datum/personal_objective/chat_group
+
+/datum/personal_objective/view_article
+
+
+
+
+
+
+
+
 
 /datum/module_objective
 	var/name = "Objective name"
@@ -2927,7 +2980,7 @@ var/PriorityQueue/all_feeds
 	limit_drills = 5
 	limit_botany = 10
 	limit_shuttles = 10
-	limit_area = 200000 //size of the nexus at most 3z levels of 255x255
+	limit_area = 2000000 //size of the nexus at most 3z levels of 255x255
 	limit_tcomms = 5
 	limit_tech_general = 4
 	limit_tech_engi = 4
@@ -3308,6 +3361,129 @@ var/PriorityQueue/all_feeds
 // END MEDIA LIMITS
 
 
+
+
+
+
+
+// SCIENCE LIMITS
+
+/datum/machine_limits/science/spec/practical
+	limit_engfab = 1
+	limit_area = 200
+/datum/machine_limits/science/spec/theory
+	limit_voidfab = 1
+	limit_shuttles = 1
+/datum/machine_limits/science/one
+	limit_tech_consumer = 2
+	limit_tech_general = 2
+	limit_tech_combat = 2
+	limit_tech_medical = 2
+	limit_tech_engi = 2
+	limit_area = 200
+	limit_genfab = 2
+	limit_medicalfab = 1
+	limit_servicefab = 1
+	limit_botany = 2
+
+/datum/machine_limits/science/two
+	cost = 1250
+	limit_tech_consumer = 3
+	limit_tech_general = 3
+	limit_tech_combat = 3
+	limit_tech_medical = 3
+	limit_area = 300
+	limit_genfab = 2
+	limit_servicefab = 2
+	limit_medicalfab = 2
+	limit_botany = 3
+	desc = "Increase area size, tech levels, fabricator limits and get an extra botany tray."
+/datum/machine_limits/science/three
+	cost = 2500
+	limit_tech_consumer = 4
+	limit_tech_general = 4
+	limit_tech_combat = 4
+	limit_tech_medical = 4
+	limit_area = 400
+	limit_genfab = 3
+	limit_servicefab = 3
+	limit_botany = 3
+	limit_voidfab = 1
+	limit_medicalfab = 2
+	limit_shuttles = 1
+	desc = "Increase area size, tech levels, fabricator limits and get an EVA fabricator and shuttle limit."
+/datum/machine_limits/science/four
+	cost = 5000
+	limit_tech_consumer = 5
+	limit_tech_general = 5
+	limit_tech_combat = 5
+	limit_tech_medical = 5
+	limit_area = 500
+	limit_genfab = 3
+	limit_servicefab = 3
+	limit_botany = 4
+	limit_voidfab = 2
+	limit_shuttles = 2
+	limit_engfab = 1
+	limit_medicalfab = 2
+	desc = "Gain final tech levels, area limit, extra fabricators including a medical and engineering fabricator, botany trays, plus an extra shuttle."
+// END SCIENCE LIMITS
+
+
+
+
+
+
+// SOCIAL LIMITS
+
+/datum/machine_limits/social/spec/religion
+	limit_engfab = 1
+	limit_servicefab = 1
+	limit_atnonstandard = 1
+
+/datum/machine_limits/social/spec/club
+	limit_voidfab = 1
+	limit_shuttles = 1
+	limit_ataccessories = 1
+
+/datum/machine_limits/social/one
+	limit_tech_consumer = 1
+	limit_tech_general = 1
+	limit_area = 200
+	limit_genfab = 2
+	limit_consumerfab = 1
+
+/datum/machine_limits/social/two
+	cost = 750
+	limit_tech_consumer = 2
+	limit_tech_general = 2
+	limit_area = 300
+	limit_genfab = 3
+	limit_consumerfab = 2
+	desc = "Increase area size, tech levels and fabricator limits."
+/datum/machine_limits/social/three
+	cost = 1600
+	limit_tech_consumer = 3
+	limit_tech_general = 3
+	limit_area = 400
+	limit_genfab = 3
+	limit_consumerfab = 2
+	desc = "Increase area size, tech levels and fabricator limits."
+/datum/machine_limits/social/four
+	cost = 3200
+	limit_tech_consumer = 4
+	limit_tech_general = 4
+	limit_area = 500
+	limit_genfab = 3
+	limit_consumerfab = 2
+	limit_shuttles = 1
+	desc = "Gain final tech levels, area limit, fabricators and a shuttle."
+// END SOCIAL LIMITS
+
+
+
+
+
 /datum/business_spec
 	var/name = ""
 	var/desc = ""
@@ -3445,9 +3621,9 @@ var/PriorityQueue/all_feeds
 	desc = "Mining companies send teams out into the hostile outer-space armed with picks, drills and a variety of other EVA equipment plus weapons and armor to defend themselves. The ores they recover can be processed and then sold on the Material Marketplace to other organizations for massive profits."
 	levels = list(/datum/machine_limits/mining/one, /datum/machine_limits/mining/two, /datum/machine_limits/mining/three, /datum/machine_limits/mining/four)
 	specs = list(/datum/business_spec/mining/massdrill, /datum/business_spec/mining/monsterhunter)
-	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/travel, /datum/module_objective/hourly/cost)
-	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/travel, /datum/module_objective/daily/cost)
-	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/travel, /datum/module_objective/weekly/cost)
+	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/sales)
+	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/sales)
+	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/sales)
 	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/weapon/pickaxe = 2, /obj/item/clothing/head/helmet/space/mining = 2, /obj/item/clothing/suit/space/mining = 2)
 
 
@@ -3494,6 +3670,58 @@ var/PriorityQueue/all_feeds
 	hourly_objectives = list(/datum/module_objective/hourly/publish_book)
 	daily_objectives = list(/datum/module_objective/daily/publish_book)
 	weekly_objectives = list(/datum/module_objective/weekly/publish_book)
+
+
+
+/datum/business_module/science
+	cost = 1200
+	name = "Science"
+	desc = "Science businesses produce unique products through xenobiology, xenobotany, robotics and learn the mysteries of the frontier through archeology and anomaly research."
+	levels = list(/datum/machine_limits/science/one, /datum/machine_limits/science/two, /datum/machine_limits/science/three, /datum/machine_limits/science/four)
+	specs = list(/datum/business_spec/science/practical, /datum/business_spec/science/theory)
+	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/sales)
+	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/sales)
+	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/sales)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/slime_extract/grey = 2)
+
+
+/datum/business_spec/science/practical
+	name = "Practical Application"
+	desc = "Specializing in the practical application of science gives fabricators for medical, robotics and service allowing for all sorts of practical science production. Lacking a shuttle, you may be reliant on other businesses to get around the frontier."
+	limits = /datum/machine_limits/science/spec/practical
+
+
+/datum/business_spec/science/theory
+	name = "Theory & Research"
+	desc = "The theory specialization has a unique mandate to learn about the artifacts and anomolies found in the frontier. With limited manufacturing capabilities, your business will use its extra shuttle and basic fabricators to explore the frontier."
+	limits = /datum/machine_limits/science/spec/theory
+
+
+/datum/business_module/social
+	cost = 1100
+	name = "Social"
+	desc = "Social companies have simple production and tech capacities but exclusive access to programs and objectives that track voluntary membership, so that mass-emails can be sent and events can be planned for the members."
+	levels = list(/datum/machine_limits/social/one, /datum/machine_limits/social/two, /datum/machine_limits/social/three, /datum/machine_limits/social/four)
+	specs = list(/datum/business_spec/social/religion, /datum/business_spec/social/club)
+	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/sales)
+	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/sales)
+	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/sales)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/device/camera = 2, /obj/item/weapon/paper_bin = 1, /obj/item/weapon/pen = 2)
+
+
+/datum/business_spec/social/religion
+	name = "Religion"
+	desc = "The Religion specialization presumes this organization will represent a religion. You can hold plan and hold events using the mass-email and scheduling systems for your congregation. You have access to the costume fabricator to make religious clothing."
+	limits = /datum/machine_limits/social/spec/religion
+
+/datum/business_spec/social/club
+	name = "Club"
+	desc = "The club specialization is for organizations like political parties, artists guilds or other social groups. Use the unique programs to plan and hold events. You have access to an accessory fabricator to make unique accoutrements for your members."
+	limits = /datum/machine_limits/social/spec/club
+
+
+
+
 
 
 

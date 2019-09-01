@@ -18,6 +18,7 @@
 	var/max_keys = 2
 	var/list/custom_radio_keys = list() // Associative list of key : ch_name e.g. :en : engineering
 	var/list/starter_keys = list()
+	sprite_sheets = list(SPECIES_RESOMI = 'icons/mob/species/resomi/ears.dmi')
 
 /obj/item/device/radio/headset/New()
 	..()

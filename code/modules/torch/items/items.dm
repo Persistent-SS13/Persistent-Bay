@@ -109,6 +109,9 @@ Unique items
 //			/obj/item/weapon/paper/liason_note
 	)
 
+/obj/item/weapon/storage/fakebook/empty
+	startswith = null
+
 /******
 Weapons
 ******/

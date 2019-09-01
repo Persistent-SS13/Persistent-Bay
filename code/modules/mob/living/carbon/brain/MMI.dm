@@ -1,33 +1,3 @@
-//This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:32
-
-/obj/item/device/mmi/digital/New()
-	src.brainmob = new(src)
-	src.brainmob.set_stat(CONSCIOUS)
-	src.brainmob.add_language("Robot Talk")
-	src.brainmob.add_language("Encoded Audio Language")
-
-	src.brainmob.container = src
-	src.brainmob.silent = 0
-	PickName()
-	..()
-
-/obj/item/device/mmi/digital/proc/PickName()
-	return
-
-/obj/item/device/mmi/digital/attackby()
-	return
-
-/obj/item/device/mmi/digital/attack_self()
-	return
-
-/obj/item/device/mmi/digital/transfer_identity(var/mob/living/carbon/H)
-	brainmob.dna = H.dna
-	brainmob.timeofhostdeath = H.timeofdeath
-	brainmob.set_stat(CONSCIOUS)
-	if(H.mind)
-		H.mind.transfer_to(brainmob)
-	return
-
 /obj/item/device/mmi
 	name = "\improper Man-Machine Interface"
 	desc = "A complex life support shell that interfaces between a brain and electronic devices."
@@ -43,6 +13,12 @@
 	var/mob/living/carbon/brain/brainmob = null//The current occupant.
 	var/obj/item/organ/internal/brain/brainobj = null	//The current brain organ.
 	var/obj/mecha = null//This does not appear to be used outside of reference in mecha.dm.
+
+/obj/item/device/mmi/New()
+	. = ..()
+	ADD_SAVED_VAR(locked)
+	ADD_SAVED_VAR(brainmob)
+	ADD_SAVED_VAR(brainobj)
 
 /obj/item/device/mmi/attackby(var/obj/item/O as obj, var/mob/user as mob)
 	if(istype(O,/obj/item/organ/internal/brain) && !brainmob) //Time to stick a brain in it --NEO
@@ -192,3 +168,33 @@
 
 /obj/item/device/mmi/on_update_icon()
 	icon_state = brainmob ? "mmi_full" : "mmi_empty"
+
+//This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:32
+
+/obj/item/device/mmi/digital/New()
+	src.brainmob = new(src)
+	src.brainmob.set_stat(CONSCIOUS)
+	src.brainmob.add_language("Robot Talk")
+	src.brainmob.add_language("Encoded Audio Language")
+
+	src.brainmob.container = src
+	src.brainmob.silent = 0
+	PickName()
+	..()
+
+/obj/item/device/mmi/digital/proc/PickName()
+	return
+
+/obj/item/device/mmi/digital/attackby()
+	return
+
+/obj/item/device/mmi/digital/attack_self()
+	return
+
+/obj/item/device/mmi/digital/transfer_identity(var/mob/living/carbon/H)
+	brainmob.dna = H.dna
+	brainmob.timeofhostdeath = H.timeofdeath
+	brainmob.set_stat(CONSCIOUS)
+	if(H.mind)
+		H.mind.transfer_to(brainmob)
+	return

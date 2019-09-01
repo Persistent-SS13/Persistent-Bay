@@ -25,6 +25,7 @@
 #define IS_SLIME   6
 #define IS_NABBER  7
 #define IS_PHOROSIAN 8
+#define IS_RESOMI  9
 
 #define CE_STABLE        "stable"       // Inaprovaline
 #define CE_ANTIBIOTIC    "antibiotic"   // Spaceacilin

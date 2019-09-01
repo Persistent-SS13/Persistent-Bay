@@ -14,5 +14,3 @@
 			"ci", "ri", "mi", "si", "ni", "ti", "li", "shi", "schi", "i", "i"
 		)
 	shorthand = "SCH"
-/datum/language/resomi/get_random_name(gender)
-return ..(gender, 1, 4, 1.5)

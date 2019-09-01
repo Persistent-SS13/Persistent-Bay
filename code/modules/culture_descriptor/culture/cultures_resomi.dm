@@ -7,5 +7,5 @@
   an ever growing population crisis due to the fast growth of their species and the relatively small size of the moon they call home, \
   the Empire that rules over Schei Ys saw fit to place untold resources toward a stellar exploration program. This decision sent \
   millions of Resomi young and old into space aboard advanced exploration frigates to map the stars. Several such frigates, after \
-  much time and many generations adrift, eventually found their way to other stellar civilizations and began to exchange knowledge and 
+  much time and many generations adrift, eventually found their way to other stellar civilizations and began to exchange knowledge and \
   culture."

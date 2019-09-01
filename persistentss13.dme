@@ -1952,6 +1952,7 @@
 #include "code\modules\mob\language\alien\gas.dm"
 #include "code\modules\mob\language\alien\lizard.dm"
 #include "code\modules\mob\language\alien\monkey.dm"
+#include "code\modules\mob\language\alien\raptor.dm"
 #include "code\modules\mob\language\alien\skrell.dm"
 #include "code\modules\mob\language\human\arabic.dm"
 #include "code\modules\mob\language\human\chinese.dm"

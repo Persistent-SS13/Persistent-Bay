@@ -335,6 +335,10 @@ var/const/NO_EMAG_ACT = -50
 	item_state = "card-id"
 	slot_flags = SLOT_ID
 
+	sprite_sheets = list(
+	SPECIES_RESOMI = 'icons/mob/species/resomi/id.dmi'
+	)
+
 	var/access = list()
 	var/registered_name = "Unknown" // The name registered_name on the card
 	var/list/associated_email_login = list("login" = "", "password" = "")

@@ -29,7 +29,7 @@
 
 /obj/machinery/airlock_sensor/Initialize()
 	. = ..()
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/airlock_sensor/update_icon()
 	switch(dir)
@@ -58,10 +58,7 @@
 	flick("airlock_sensor_cycle", src)
 
 /obj/machinery/airlock_sensor/Process()
-	if(inoperable())
-		return
-	. = ..()
-	if(isoff())
+	if(inoperable() || isoff())
 		return
 	var/datum/gas_mixture/air_sample = return_air()
 	if(!air_sample)

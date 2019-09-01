@@ -27,10 +27,12 @@
 	sprite_sheets = list(
 		SPECIES_UNATHI = 'icons/mob/species/unathi/onmob_head_helmet_unathi.dmi',
 		SPECIES_SKRELL = 'icons/mob/species/skrell/onmob_head_skrell.dmi',
+		SPECIES_RESOMI = 'icons/mob/species/resomi/head.dmi' //Drax is lazy and they were already all packed in here. Yell at him if this is unacceptable
 		)
 	sprite_sheets_obj = list(
 		SPECIES_UNATHI = 'icons/obj/clothing/species/unathi/obj_head_unathi.dmi',
 		SPECIES_SKRELL = 'icons/obj/clothing/species/skrell/obj_head_skrell.dmi',
+		SPECIES_RESOMI = 'icons/obj/clothing/species/resomi/hats.dmi'
 		)
 
 	light_overlay = "helmet_light"
@@ -64,8 +66,10 @@
 	sprite_sheets = list(
 		SPECIES_UNATHI = 'icons/mob/species/unathi/onmob_suit_unathi.dmi',
 		SPECIES_SKRELL = 'icons/mob/species/skrell/onmob_suit_skrell.dmi',
+		SPECIES_RESOMI = 'icons/mob/species/resomi/suit.dmi' //Drax is lazy and they were already all packed in here. Yell at him if this is unacceptable
 		)
 	sprite_sheets_obj = list(
+		SPECIES_RESOMI = 'icons/obj/clothing/species/resomi/suits.dmi',
 		SPECIES_UNATHI = 'icons/obj/clothing/species/unathi/obj_suit_unathi.dmi',
 		SPECIES_SKRELL = 'icons/obj/clothing/species/skrell/obj_suit_skrell.dmi',
 		)

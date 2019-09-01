@@ -240,6 +240,14 @@
 		return
 
 	//Override for somatoray projectiles.
+	if(istype(Proj ,/obj/item/projectile/energy/floramut)&& prob(20))
+		if(istype(Proj, /obj/item/projectile/energy/floramut/gene))
+			var/obj/item/projectile/energy/floramut/gene/G = Proj
+			if(seed)
+				seed = seed.diverge_mutate_gene(G.gene, get_turf(loc))	//get_turf just in case it's not in a turf.
+		else
+			mutate(1)
+			return
 	else if(istype(Proj ,/obj/item/projectile/energy/florayield) && prob(20))
 		yield_mod = min(10,yield_mod+rand(1,2))
 		return
@@ -388,9 +396,6 @@
 	return
 
 /obj/machinery/portable_atmospherics/hydroponics/proc/mutate(var/severity)
-	severity = 0
-	return
-	/*
 	// No seed, no mutations.
 	if(!seed)
 		return
@@ -408,7 +413,7 @@
 	seed.mutate(severity,get_turf(src))
 
 	return
-	*/
+
 /obj/machinery/portable_atmospherics/hydroponics/verb/remove_label()
 
 	set name = "Remove Label"
@@ -456,8 +461,6 @@
 	toxins =         max(0,min(toxins,10))
 
 /obj/machinery/portable_atmospherics/hydroponics/proc/mutate_species()
-	return
-	/*
 	var/previous_plant = seed.display_name
 	var/newseed = seed.get_mutant_variant()
 	if(newseed in SSplants.seeds)
@@ -477,7 +480,6 @@
 	visible_message("<span class='danger'>The </span><span class='notice'>[previous_plant]</span><span class='danger'> has suddenly mutated into </span><span class='notice'>[seed.display_name]!</span>")
 
 	return
-	*/
 
 /obj/machinery/portable_atmospherics/hydroponics/attackby(var/obj/item/O as obj, var/mob/user as mob)
 
@@ -511,10 +513,7 @@
 		Process()
 
 		return
-
-
-
-
+	
 	else if(istype(O, /obj/item/weapon/card/id) && mechanical)
 		var/obj/item/weapon/card/id/id = O
 		if(!req_access_faction || req_access_faction == "")

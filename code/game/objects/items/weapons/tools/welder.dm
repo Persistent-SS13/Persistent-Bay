@@ -127,7 +127,7 @@
 			return 0
 
 		if(user.unEquip(W))
-		//user.drop_from_inventory(W, src)
+			W.forceMove(src)
 			tank = W
 			user.visible_message("[user] slots \a [W] into \the [src].", "You slot \a [W] into \the [src].")
 			update_icon()

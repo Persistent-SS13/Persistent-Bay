@@ -197,4 +197,4 @@
 	icon_state = "resomi_labcoat_open"
 	icon_open = "resomi_labcoat_open"
 	icon_closed = "labcoat_labcoat_closed"
-	species_restricted = SPECIES_RESOMI
+	species_restricted = list(SPECIES_RESOMI)

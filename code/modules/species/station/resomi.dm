@@ -89,7 +89,7 @@
 	available_cultural_info = list(
 		TAG_CULTURE = list(
 			CULTURE_RESOMI
-		)
+		),
 		TAG_AMBITION = list(
 			AMBITION_FREEDOM,
 			AMBITION_OPPORTUNITY,

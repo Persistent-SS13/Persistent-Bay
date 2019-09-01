@@ -161,7 +161,6 @@
 	ADD_SAVED_VAR(has_electronics)
 	ADD_SAVED_VAR(autoflag)
 	//Don'st save the connected faction!! Otherwise it'll create duplicate factions on load
-	ADD_SKIP_EMPTY(cell)
 
 /obj/machinery/power/apc/Initialize(mapload, var/ndir, var/building=0)
 	wires = new(src)

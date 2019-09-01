@@ -44,8 +44,6 @@
 	..()
 	ADD_SAVED_VAR(tank)
 
-	ADD_SKIP_EMPTY(tank)
-
 /obj/item/weapon/tool/weldingtool/Initialize()
 	set_extension(src, /datum/extension/base_icon_state, /datum/extension/base_icon_state, icon_state)
 	. = ..()

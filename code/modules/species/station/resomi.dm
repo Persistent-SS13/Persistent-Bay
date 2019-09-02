@@ -85,6 +85,17 @@
 		/datum/mob_descriptor/height = -2,
 		/datum/mob_descriptor/build = -1
 		)
+		
+	available_cultural_info = list(
+		TAG_CULTURE = list(
+			CULTURE_RESOMI
+		),
+		TAG_AMBITION = list(
+			AMBITION_FREEDOM,
+			AMBITION_OPPORTUNITY,
+			AMBITION_KNOWLEDGE
+		)
+	)
 
 	override_organ_types = list(
 		BP_R_HAND = /obj/item/organ/external/hand/right/resomi,

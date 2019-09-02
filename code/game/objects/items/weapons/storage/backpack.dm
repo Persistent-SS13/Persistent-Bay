@@ -12,6 +12,7 @@
 		)
 	icon = 'icons/obj/items/storage/backpacks.dmi'
 	icon_state = "backpack"
+	sprite_sheets = list(SPECIES_RESOMI = 'icons/mob/species/resomi/back.dmi')
 	item_state = null
 	//most backpacks use the default backpack state for inhand overlays
 	item_state_slots = list(

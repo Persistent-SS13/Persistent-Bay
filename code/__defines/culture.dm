@@ -203,6 +203,3 @@
 
 //	Phorosian culture
 #define CULTURE_PHOROSIAN "Phorosian"
-
-// Resomi culture
-#define CULTURE_RESOMI "Resomi"

@@ -98,7 +98,7 @@
 		MATERIAL_ICES_WATER,
 		)
 
-/obj/item/weapon/New()
+/obj/item/weapon/pickaxe/New()
 	. = ..()
 	ADD_SAVED_VAR(build_from_parts)
 	ADD_SAVED_VAR(hardware_color)

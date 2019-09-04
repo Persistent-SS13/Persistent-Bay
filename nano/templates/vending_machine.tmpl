@@ -6,6 +6,7 @@
 {{if data.mode == 0}} <!-- Listing -->
 {{if !data.locked}}
 	<div class='item'>Linked business: {{:data.faction_name}} &#40;UID:&quot;{{:data.faction_UID}}&quot;&#41;</div>
+	<div class='item'><span class='bad'>Maintenance mode active! Swipe your card again to lock!</span></div>
 {{/if}}
 <h3>Machine operated by: {{:data.faction_name}}</h3>
 <h2>Items available</h2>
@@ -23,7 +24,7 @@
 		{{if value.color}}<span style='color:{{:value.color}}'>{{:value.name}}</span>
 		{{else}}{{:value.name}}
 		{{/if}}
-			 ({{:value.amount ? value.amount : "NONE LEFT"}}{{if !data.locked}}&#47;{{:data.max_single}}{{/if}}){{if !data.locked}}{{:helper.link('Price', 'tag', { "set_price" : value.key })}} {{:helper.link('Name', 'pencil', { "set_name" : value.key })}} {{:helper.link('Eject', 'trash', { "flush_product" : value.key })}}{{/if}}
+			 ({{:value.amount ? value.amount : "NONE LEFT"}}{{if !data.locked}}&#47;{{:data.max_single}}{{/if}}){{if !data.locked}}{{:helper.link('Price', 'tag', { "set_price" : value.key })}} {{:helper.link('Name', 'pencil', { "set_name" : value.key })}} {{:helper.link('Clear/Eject', 'trash', { "flush_product" : value.key })}}{{/if}}
 		</div>
 	</div>
 	{{empty}}

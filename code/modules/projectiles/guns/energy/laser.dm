@@ -90,7 +90,7 @@ obj/item/weapon/gun/energy/retro
 	one_hand_penalty = 6 //large and heavy
 	w_class = ITEM_SIZE_HUGE
 	projectile_type = /obj/item/projectile/beam/heavylaser
-	charge_cost = 40
+	charge_cost = 33 //odd number, but allows it a progression of 3, 6, 9 shots with the new cell balance
 	max_shots = 6
 	accuracy = 2
 	fire_delay = 20
@@ -118,7 +118,6 @@ obj/item/weapon/gun/energy/retro
 	projectile_type = /obj/item/projectile/beam/xray/midlaser
 	one_hand_penalty = 2
 	w_class = ITEM_SIZE_LARGE
-	charge_cost = 15
 	max_shots = 10
 	wielded_item_state = "gun_wielded"
 	combustion = 0
@@ -147,7 +146,7 @@ obj/item/weapon/gun/energy/retro
 	projectile_type = /obj/item/projectile/beam/sniper
 	one_hand_penalty = 5 // The weapon itself is heavy, and the long barrel makes it hard to hold steady with just one hand.
 	slot_flags = SLOT_BACK
-	charge_cost = 40
+	charge_cost = 50
 	max_shots = 4
 	fire_delay = 35
 	force = 10

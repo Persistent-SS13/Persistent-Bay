@@ -317,6 +317,60 @@ datum/unit_test/mob_damage/unathi/halloss
 	name = "MOB: Unathi Halloss Damage Check"
 	damagetype = DAM_PAIN
 
+//=================================================================
+// Resomi
+//=================================================================
+
+datum/unit_test/mob_damage/resomi
+	name = "MOB: Resomi damage check template"
+	mob_type = /mob/living/carbon/human/resomi
+
+datum/unit_test/mob_damage/resomi/brute
+	name = "MOB: Resomi Brute Damage Check"
+	damagetype = DAM_BLUNT
+	expected_vulnerability = EXTRA_VULNERABLE
+
+datum/unit_test/mob_damage/resomi/cut
+	name = "MOB: Skrell Cut damage check"
+	damagetype = DAM_CUT
+	expected_vulnerability = EXTRA_VULNERABLE
+
+datum/unit_test/mob_damage/resomi/pierce
+	name = "MOB: Skrell Pierce damage check"
+	damagetype = DAM_PIERCE
+	expected_vulnerability = EXTRA_VULNERABLE
+
+datum/unit_test/mob_damage/resomi/fire
+	name = "MOB: Resomi Fire Damage Check"
+	damagetype = DAM_BURN
+	expected_vulnerability = EXTRA_VULNERABLE
+
+datum/unit_test/mob_damage/resomi/laser
+	name = "MOB: Resomi Laser damage check"
+	damagetype = DAM_LASER
+	expected_vulnerability = EXTRA_VULNERABLE
+
+datum/unit_test/mob_damage/resomi/energy
+	name = "MOB: Resomi Energy damage check"
+	damagetype = DAM_ENERGY
+	expected_vulnerability = EXTRA_VULNERABLE
+
+datum/unit_test/mob_damage/resomi/tox
+	name = "MOB: Resomi Toxin damage check"
+	damagetype = DAM_BIO
+
+datum/unit_test/mob_damage/resomi/oxy
+	name = "MOB: Resomi Oxygen damage check"
+	damagetype = DAM_OXY
+
+datum/unit_test/mob_damage/resomi/clone
+	name = "MOB: REsomi Clone damage check"
+	damagetype = DAM_CLONE
+
+datum/unit_test/mob_damage/resomi/halloss
+	name = "MOB: Resomi Halloss damage check"
+	damagetype = DAM_PAIN
+
 // =================================================================
 // Skrell
 // =================================================================

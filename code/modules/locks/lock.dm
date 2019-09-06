@@ -13,10 +13,13 @@
 		lock_data = complexity
 	else
 		lock_data = generateRandomString(complexity)
+	ADD_SAVED_VAR(status)
+	ADD_SAVED_VAR(lock_data)
+	ADD_SAVED_VAR(holder)
 
 /datum/lock/Destroy()
 	holder = null
-	..()
+	return ..()
 
 /datum/lock/proc/unlock(var/key = "", var/mob/user)
 	if(status ^ LOCK_LOCKED)

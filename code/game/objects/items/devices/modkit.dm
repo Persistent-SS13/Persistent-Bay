@@ -10,6 +10,10 @@
 	name = "hardsuit modification kit (vox)"
 	target_species = SPECIES_VOX
 
+/obj/item/device/modkit/resomi
+	name = "hardsuit modification kit (resomi)"
+	target_species = SPECIES_RESOMI
+
 
 
 /obj/item/device/modkit

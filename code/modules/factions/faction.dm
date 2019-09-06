@@ -1987,7 +1987,7 @@ var/PriorityQueue/all_feeds
 	if(ceo_tax)
 		ceo_amount = round((amount/100)*ceo_tax)
 	if(stockholder_tax)
-		stock_amount = round((amount/100)*ceo_tax)
+		stock_amount = round((amount/100)*stockholder_tax)
 	if(ceo_amount)
 		var/datum/money_account/target_account = get_account_record(leader_name)
 		if(target_account)
@@ -2575,7 +2575,7 @@ var/PriorityQueue/all_feeds
 /datum/personal_objective
 	var/name = "Objective name"
 	var/payout = 0 // how much to pay upon completion
-	
+
 	var/filled = 0 // how much has been provided of whatever is required
 	var/required = 10 // How much of whatever is required to fill the objective
 

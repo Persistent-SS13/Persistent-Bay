@@ -302,6 +302,7 @@
 #define SPECIES_PHOROSIAN   "Phorosian"
 #define SPECIES_BOGANI      "Bogani"
 #define SPECIES_EGYNO       "Egyno"
+#define SPECIES_RESOMI		"Resomi"
 
 //Primitives
 #define SPECIES_MONKEY      "Monkey"
@@ -309,7 +310,7 @@
 #define SPECIES_NEAERA      "Neaera"
 #define SPECIES_STOK        "Stok"
 
-#define STATION_SPECIES list(SPECIES_HUMAN, SPECIES_DIONA, SPECIES_IPC, SPECIES_UNATHI, SPECIES_SKRELL, SPECIES_TRITONIAN, SPECIES_SPACER, SPECIES_VATGROWN, SPECIES_GRAVWORLDER)
+#define STATION_SPECIES list(SPECIES_HUMAN, SPECIES_DIONA, SPECIES_IPC, SPECIES_UNATHI, SPECIES_SKRELL, SPECIES_TRITONIAN, SPECIES_SPACER, SPECIES_VATGROWN, SPECIES_GRAVWORLDER, SPECIES_RESOMI)
 #define RESTRICTED_SPECIES list(SPECIES_VOX, SPECIES_XENO, SPECIES_ALIEN, SPECIES_GOLEM)
 
 #define SURGERY_CLOSED 0
@@ -351,4 +352,6 @@
 #define CHARACTER_SPAWN_TYPE_CRYONET         1 //Will spawn at a cryopod of the last network and faction stored in the character
 #define CHARACTER_SPAWN_TYPE_FRONTIER_BEACON 2 //Will spawn at a frontier beacon of the same faction as the character's default faction
 #define CHARACTER_SPAWN_TYPE_LACE_STORAGE    3 //Will spawn at the lace storage
-#define CHARACTER_SPAWN_TYPE_IMPORT    4 //frontier beacon
+#define CHARACTER_SPAWN_TYPE_IMPORT          4 //frontier beacon
+#define CHARACTER_SPAWN_TYPE_PERSONAL        5 //Same as cryonet, but for personal cryonets
+

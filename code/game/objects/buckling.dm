@@ -17,6 +17,10 @@
 	if(can_buckle && istype(M))
 		user_buckle_mob(M, user)
 
+/obj/New()
+	. = ..()
+	ADD_SAVED_VAR(buckled_mob)
+	
 /obj/Destroy()
 	unbuckle_mob()
 	return ..()

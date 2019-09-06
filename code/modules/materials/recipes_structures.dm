@@ -244,7 +244,7 @@ datum/stack_recipe/button/toggle/lever/double
 
 /datum/stack_recipe/furniture/iv_drip
 	title = "IV drip"
-	result_type = /obj/machinery/iv_drip
+	result_type = /obj/structure/iv_drip
 	req_amount = 3
 	time = 5 SECONDS
 	on_floor = 1 

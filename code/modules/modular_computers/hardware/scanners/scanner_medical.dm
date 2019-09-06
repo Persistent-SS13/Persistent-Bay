@@ -45,6 +45,7 @@
 		var/datum/reagent/blood/cnt = S.reagents.get_master_reagent()
 		if(!istype(cnt) || !islist(cnt.get_data()))
 			return
-		stored_dna = cnt.get_data()["blood_DNA"]
+		var/list/data = cnt.get_data()
+		stored_dna = data["blood_DNA"]
 		return 1
 	return ..()

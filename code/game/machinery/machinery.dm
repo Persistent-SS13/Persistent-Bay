@@ -140,15 +140,11 @@ Class Procs:
 	ADD_SAVED_VAR(malf_upgraded)
 	ADD_SAVED_VAR(emagged)
 	ADD_SAVED_VAR(stat)
-	ADD_SAVED_VAR(faction)
-	ADD_SKIP_EMPTY(faction_uid)
+	ADD_SAVED_VAR(faction_uid)
 	ADD_SAVED_VAR(id_tag)
 
 	ADD_SKIP_EMPTY(extensions)
 	ADD_SKIP_EMPTY(component_parts)
-	ADD_SKIP_EMPTY(faction)
-	ADD_SKIP_EMPTY(faction_uid)
-	ADD_SKIP_EMPTY(id_tag)
 
 /obj/machinery/after_load()
 	..()
@@ -166,11 +162,12 @@ Class Procs:
 	init_transmitter()
 	if(d)
 		set_dir(d)
-	START_PROCESSING(SSmachines, src) // It's safe to remove machines from here.
+	if(ShouldInitProcess())
+		START_PROCESSING(SSmachines, src) // It's safe to remove machines from here.
 	SSmachines.machinery += src // All machines should remain in this list, always.
 
 	if(faction_uid && !faction)
-		faction = get_faction(faction_uid)
+		connect_faction(get_faction(faction_uid))
 
 /obj/machinery/Destroy()
 	verbs -= /obj/proc/rotate
@@ -186,9 +183,7 @@ Class Procs:
 				qdel(A)
 			else // Otherwise we assume they were dropped to the ground during deconstruction, and were not removed from the component_parts list by deconstruction code.
 				component_parts -= A
-	if(has_transmitter())
-		delete_transmitter()
-	faction = null
+	disconnect_faction()
 	. = ..()
 
 //Installs parts when creating a machine for the first time
@@ -207,6 +202,7 @@ Class Procs:
 /obj/machinery/proc/RefreshParts() //Placeholder proc for machines that are built using frames.
 	return
 
+//Returns content that's not the components inside the machine
 /obj/machinery/InsertedContents()
 	return (contents - component_parts)
 
@@ -214,11 +210,18 @@ Class Procs:
 	uid = gl_uid
 	gl_uid++
 
+//This is checked by the machine init to see if it should make the machine start processing or not
+/obj/machinery/proc/ShouldInitProcess()
+	return TRUE
+
+//Main processing proc
 /obj/machinery/Process()
-	if(time_emped && world.realtime >= time_emped)
-		time_emped = 0
-		set_emped(FALSE)
-		emp_end()
+	return PROCESS_KILL
+///obj/machinery/Process()
+	// if(time_emped && world.realtime >= time_emped)
+	// 	time_emped = 0
+	// 	set_emped(FALSE)
+	// 	emp_end()
 
 	// if(!(use_power || idle_power_usage || active_power_usage) && !interact_offline)
 	// 	return PROCESS_KILL
@@ -247,6 +250,10 @@ Class Procs:
 	src.stat = state? (src.stat | MAINT) : (stat & ~MAINT)
 	queue_icon_update()
 
+/obj/machinery/set_anchored(var/new_anchored)
+	. = ..()
+	power_change()
+
 /obj/machinery/proc/ison()
 	return !isoff()
 
@@ -265,22 +272,6 @@ Class Procs:
 /obj/machinery/proc/turn_active()
 	update_use_power(POWER_USE_ACTIVE)
 	update_icon()
-
-/obj/machinery/proc/connect_faction(var/datum/world_faction/F, var/mob/user)
-	if(istext(F))
-		F = get_faction(F)
-	if(F && can_connect(F))
-		faction = F
-		faction_uid = F.uid
-		req_access_faction = faction_uid
-		return TRUE
-	return FALSE
-
-/obj/machinery/proc/disconnect_faction(var/mob/user)
-	faction = null
-	faction_uid = null
-	req_access_faction = null
-	return TRUE
 
 /obj/machinery/proc/turn_idle()
 	update_use_power(POWER_USE_IDLE)
@@ -328,6 +319,22 @@ Class Procs:
 /obj/machinery/proc/can_connect(var/datum/world_faction/trying)
 	return 1
 
+/obj/machinery/proc/connect_faction(var/datum/world_faction/F, var/mob/user)
+	if(istext(F))
+		F = get_faction(F)
+	if(F && can_connect(F))
+		faction = F
+		faction_uid = F.uid
+		req_access_faction = faction_uid
+		return TRUE
+	return FALSE
+
+/obj/machinery/proc/disconnect_faction(var/mob/user)
+	faction = null
+	faction_uid = null
+	req_access_faction = null
+	return TRUE
+
 /obj/machinery/proc/can_disconnect(var/datum/world_faction/trying, var/mob/M)
 	return 1
 
@@ -359,10 +366,10 @@ Class Procs:
 /obj/machinery/attack_hand(mob/user as mob)
 	if(inoperable(MAINT))
 		return TRUE
-	if(user.lying || user.stat)
+	if(user && (user.lying || user.stat))
 		return TRUE
-	if (!(istype(usr, /mob/living/carbon/human) || istype(usr, /mob/living/silicon)))
-		to_chat(usr, SPAN_WARNING("You don't have the dexterity to do this!"))
+	if (!(istype(user, /mob/living/carbon/human) || istype(user, /mob/living/silicon)))
+		to_chat(user, SPAN_WARNING("You don't have the dexterity to do this!"))
 		return TRUE
 
 	if (ishuman(user))
@@ -466,6 +473,30 @@ Class Procs:
 //----------------------------------
 //	Default Interaction Procs
 //----------------------------------
+
+/obj/machinery/attackby(obj/item/O, mob/user)
+	if(standard_machine_procs(O, user))
+		return TRUE //No resolve attack
+	else
+		return ..()
+
+//Implements the deconstruction, anchoring, and part replacement interactions
+/obj/machinery/proc/standard_machine_procs(obj/item/O, mob/user)
+	. = FALSE
+	var/allowed = allowed(user)
+	if(allowed && default_deconstruction_screwdriver(user, O))
+		. =  TRUE
+	else if(default_deconstruction_crowbar(user, O))
+		. = TRUE
+	else if(LAZYLEN(component_parts) && default_part_replacement(user, O))
+		. =  TRUE
+	else if(obj_flags & OBJ_FLAG_ANCHORABLE && allowed && default_wrench_floor_bolts(user, O))
+		. =  TRUE
+	if(.)
+		updateUsrDialog()
+		if(obj_flags & OBJ_FLAG_ANCHORABLE && use_power) 
+			power_change()
+
 /obj/machinery/proc/default_deconstruction_crowbar(var/mob/user, var/obj/item/weapon/tool/crowbar/C)
 	if(!istype(C))
 		return 0
@@ -537,9 +568,7 @@ Class Procs:
 	//log_debug("Created radio transmitter for [src] \ref[src]. id: '[id]', frequency: [frequency], filter: [filter], range: [range? range : "null"], filterout: [filterout? filterout : filter]")
 
 /obj/machinery/proc/delete_transmitter()
-	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
-	if(T)
-		qdel(T)
+	remove_extension(src, RADIO_TRANSMITTER_TYPE)
 
 /obj/machinery/proc/set_radio_frequency(var/freq as num)
 	src.frequency = freq

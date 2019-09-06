@@ -985,12 +985,12 @@
 		new /obj/item/weapon/reagent_containers/food/snacks/monkeycube(get_turf(holder.my_atom))
 
 //Green
-/datum/chemical_reaction/slime/mutate
-	name = "Mutation Toxin"
-	result = /datum/reagent/slimetoxin
-	required_reagents = list(/datum/reagent/toxin/phoron = 1)
-	result_amount = 1
-	required = /obj/item/slime_extract/green
+//datum/chemical_reaction/slime/mutate
+	//name = "Mutation Toxin"
+	//result = /datum/reagent/slimetoxin
+	//required_reagents = list(/datum/reagent/toxin/phoron = 1)
+	//result_amount = 1
+	//required = /obj/item/slime_extract/green
 
 //Metal
 /datum/chemical_reaction/slime/metal
@@ -1185,27 +1185,27 @@
 	new /obj/item/weapon/slimepotion(get_turf(holder.my_atom))
 
 //Black
-/datum/chemical_reaction/slime/mutate2
-	name = "Advanced Mutation Toxin"
-	result = /datum/reagent/aslimetoxin
-	required_reagents = list(/datum/reagent/toxin/phoron = 1)
-	result_amount = 1
-	required = /obj/item/slime_extract/black
+//datum/chemical_reaction/slime/mutate2
+	//name = "Advanced Mutation Toxin"
+	//result = /datum/reagent/aslimetoxin
+	//required_reagents = list(/datum/reagent/toxin/phoron = 1)
+	//result_amount = 1
+	//required = /obj/item/slime_extract/black
 
 //Oil
-/datum/chemical_reaction/slime/explosion
-	name = "Slime Explosion"
-	result = null
-	required_reagents = list(/datum/reagent/toxin/phoron = 1)
-	result_amount = 1
-	required = /obj/item/slime_extract/oil
-	mix_message = "The slime extract begins to vibrate violently!"
+//datum/chemical_reaction/slime/explosion
+	//name = "Slime Explosion"
+	//result = null
+	//required_reagents = list(/datum/reagent/toxin/phoron = 1)
+	//result_amount = 1
+	//required = /obj/item/slime_extract/oil
+	//mix_message = "The slime extract begins to vibrate violently!"
 
-/datum/chemical_reaction/slime/explosion/on_reaction(var/datum/reagents/holder)
-	set waitfor = 0
-	..()
-	sleep(50)
-	explosion(get_turf(holder.my_atom), 1, 3, 6)
+//datum/chemical_reaction/slime/explosion/on_reaction(var/datum/reagents/holder)
+	//set waitfor = 0
+	//..()
+	//sleep(50)
+	//explosion(get_turf(holder.my_atom), 1, 3, 6)
 
 //Light Pink
 /datum/chemical_reaction/slime/potion2
@@ -1610,6 +1610,53 @@
 	result_amount = 10
 	mix_message = "The solution roils as it rapidly ferments into a shifting purple liquid."
 	maximum_temperature = T0C + 60
+
+/datum/chemical_reaction/cream
+	name = "Cream"
+	result = /datum/reagent/drink/milk/cream
+	required_reagents = list(/datum/reagent/drink/milk = 10)
+	catalysts = list(/datum/reagent/sugar = 5)
+	result_amount = 10
+	mix_message = "The solution coaglates into cream."
+	maximum_temperature = 10 CELSIUS
+
+/datum/chemical_reaction/cognac
+	name = "Cognac"
+	result = /datum/reagent/ethanol/cognac
+	required_reagents = list(/datum/reagent/ethanol/wine = 10)
+	catalysts = list(/datum/reagent/sugar = 5)
+	result_amount = 10
+	mix_message = "The wine distills into a fine cognac."
+	minimum_temperature = 40 CELSIUS
+
+/datum/chemical_reaction/gin
+	name = "Gin"
+	result = /datum/reagent/ethanol/gin
+	required_reagents = list(/datum/reagent/ethanol/vodka = 10)
+	catalysts = list(/datum/reagent/sugar = 5)
+	result_amount = 10
+	mix_message = "The wine distills into a fine gin."
+	minimum_temperature = 40 CELSIUS
+
+/datum/chemical_reaction/rum
+	name = "Rum"
+	result = /datum/reagent/ethanol/rum
+	required_reagents = list(/datum/reagent/drink/juice/sugarcane_juice = 10)
+	catalysts = list(/datum/reagent/enzyme = 5)
+	result_amount = 10
+	mix_message = "The solution boils into a delicous rum."
+	minimum_temperature = 40 CELSIUS
+
+/datum/chemical_reaction/tequilla
+	name = "Tequilla"
+	result = /datum/reagent/ethanol/tequilla
+	required_reagents = list(/datum/reagent/drink/juice/agave_sap = 10)
+	catalysts = list(/datum/reagent/enzyme = 5)
+	result_amount = 10
+	mix_message = "The solution boils into a delicous tequilla."
+	minimum_temperature = 40 CELSIUS
+
+
 
 /datum/chemical_reaction/melonliquor
 	name = "Melon Liquor"

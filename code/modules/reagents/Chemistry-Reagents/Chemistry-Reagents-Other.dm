@@ -49,6 +49,10 @@
 	overdose = REAGENTS_OVERDOSE * 0.5
 	color_weight = 20
 
+/datum/reagent/paint/New(datum/reagents/holder)
+	. = ..()
+	ADD_SAVED_VAR(color)
+
 /datum/reagent/paint/touch_turf(var/turf/T)
 	if(istype(T) && !istype(T, /turf/space))
 		T.color = color

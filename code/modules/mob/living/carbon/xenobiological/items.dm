@@ -80,22 +80,22 @@
 	name = "pink slime extract"
 	icon_state = "pink slime extract"
 	export_value = 80
-/obj/item/slime_extract/green
-	name = "green slime extract"
-	icon_state = "green slime extract"
-	export_value = 80
+//obj/item/slime_extract/green
+	//name = "green slime extract"
+	//icon_state = "green slime extract"
+	//export_value = 80
 /obj/item/slime_extract/lightpink
 	name = "light pink slime extract"
 	icon_state = "light pink slime extract"
 	export_value = 100
-/obj/item/slime_extract/black
-	name = "black slime extract"
-	icon_state = "black slime extract"
-	export_value = 100
-/obj/item/slime_extract/oil
-	name = "oil slime extract"
-	icon_state = "oil slime extract"
-	export_value = 100
+//obj/item/slime_extract/black
+	//name = "black slime extract"
+	//icon_state = "black slime extract"
+	//export_value = 100
+//obj/item/slime_extract/oil
+	//name = "oil slime extract"
+	//icon_state = "oil slime extract"
+	//export_value = 100
 /obj/item/slime_extract/adamantine
 	name = "adamantine slime extract"
 	icon_state = "adamantine slime extract"

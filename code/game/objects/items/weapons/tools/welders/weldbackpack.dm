@@ -48,6 +48,7 @@
 				to_chat(user, "<span class='danger'>That was close!</span>")
 			if(!T.tank)
 				to_chat(user, "\The [T] has no tank attached!")
+				return
 			src.reagents.trans_to_obj(T.tank, T.tank.get_tank_volume())
 			to_chat(user, "<span class='notice'>You refuel \the [W].</span>")
 			playsound(src.loc, 'sound/effects/refill.ogg', 50, 1, -6)

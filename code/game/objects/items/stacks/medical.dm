@@ -12,6 +12,7 @@
 	var/heal_burn = 0
 	var/animal_heal = 3
 	var/apply_sounds
+	var/damage_amount
 
 /obj/item/stack/medical/proc/check_limb_state(var/mob/user, var/obj/item/organ/external/limb)
 	. = FALSE

@@ -83,7 +83,7 @@
 
 	descriptors = list(
 		/datum/mob_descriptor/height = -2,
-		/datum/mob_descriptor/build = -1
+		/datum/mob_descriptor/build = -2
 		)
 		
 	available_cultural_info = list(
@@ -106,3 +106,8 @@
 		BP_KIDNEYS = /obj/item/organ/internal/kidneys/resomi,
 		BP_EYES = /obj/item/organ/internal/eyes/resomi
 		)
+		
+/datum/species/unathi/equip_survival_gear(var/mob/living/carbon/human/H)
+	..()
+	H.equip_to_slot_or_del(new /obj/item/clothing/shoes/sandal(H),slot_shoes)
+	H.equip_to_slot_or_del(new /obj/item/clothing/under/resomi/smock(H),slot_w_uniform)

@@ -7,6 +7,8 @@
 	if(!istype(holder, expected_type) && !isnull(holder)) //Let null extensions be built, otherwise we get runtime spam on save load!!
 		CRASH("Invalid holder type. Expected [expected_type], was [isnull(holder)? "null" : holder.type]")
 	src.holder = holder
+	ADD_SAVED_VAR(holder)
+	ADD_SAVED_VAR(flags)
 
 /datum/extension/Destroy()
 	holder = null

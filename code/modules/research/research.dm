@@ -66,7 +66,7 @@ research holder datum.
 	var/list/consumer_fab = list()
 	var/list/service_fab = list()
 	var/list/storage_fab = list()
-
+	var/list/science_fab = list()
 /datum/research/New()		//Insert techs into possible_tech here. Known_tech automatically updated.
 	for(var/T in typesof(/datum/tech) - /datum/tech)
 		known_tech += new T(src)
@@ -109,6 +109,8 @@ research holder datum.
 						service_fab |= D
 					if(STORAGEFAB)
 						storage_fab |= D
+					if(SCIENCEFAB)
+						science_fab |= D
 		else
 			switch(D.build_type)
 				if(GENERALFAB)
@@ -141,6 +143,8 @@ research holder datum.
 					service_fab |= D
 				if(STORAGEFAB)
 					storage_fab |= D
+				if(SCIENCEFAB)
+					science_fab |= D
 	RefreshResearch()
 
 /datum/research/proc/get_tech_entry(var/uid)
@@ -180,6 +184,8 @@ research holder datum.
 			return service_fab
 		if(STORAGEFAB)
 			return storage_fab
+		if(SCIENCEFAB)
+			return science_fab
 /datum/research/techonly
 
 /datum/research/techonly/New()
@@ -1099,7 +1105,7 @@ research holder datum.
 
 /datum/tech_entry/general/powercell/super
 	name = "Super-capacity power cells"
-	desc = "Uranium can be used throughout the design of a cell to greatly improve its potential capacity. Unlocks super-capacity power cell designs for the appropriate fabricators."
+	desc = "Uranium can be used throughout the design of a cell to greatly improve its potential capacity. Unlocks super-capacity power cell & super-capacity device cell designs for the appropriate fabricators."
 	tier = 2
 	points = 400
 	uid = "cell_super"

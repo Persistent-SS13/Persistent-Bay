@@ -230,6 +230,15 @@
 	var/wrapper_color
 	var/label
 
+/obj/item/weapon/storage/pill_bottle/New()
+	. = ..()
+	ADD_SAVED_VAR(wrapper_color)
+	ADD_SAVED_VAR(label)
+
+/obj/item/weapon/storage/pill_bottle/Initialize()
+	. = ..()
+	update_icon() //don't queue it, because it does weirdness in the autolathe recipe datum
+
 /obj/item/weapon/storage/pill_bottle/afterattack(mob/living/target, mob/living/user, proximity_flag)
 	if(!proximity_flag || !istype(target) || target != user)
 		return 1
@@ -246,10 +255,6 @@
 			remove_from_storage(P)
 			P.attack(target,user)
 			return 1
-	
-/obj/item/weapon/storage/pill_bottle/Initialize()
-	. = ..()
-	update_icon()
 
 /obj/item/weapon/storage/pill_bottle/on_update_icon()
 	overlays.Cut()

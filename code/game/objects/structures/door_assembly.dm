@@ -28,11 +28,16 @@
 /obj/structure/door_assembly/New()
 	..()
 	update_state()
+	ADD_SAVED_VAR(base_name)
+	ADD_SAVED_VAR(glass)
+	ADD_SAVED_VAR(created_name)
 	ADD_SAVED_VAR(state)
 	ADD_SAVED_VAR(electronics)
 	ADD_SAVED_VAR(glass)
 	ADD_SAVED_VAR(created_name)
-
+	ADD_SAVED_VAR(door_color)
+	ADD_SAVED_VAR(stripe_color)
+	ADD_SAVED_VAR(symbol_color)
 
 /obj/structure/door_assembly/door_assembly_keyp
  	base_name = "Keypad Airlock"
@@ -213,7 +218,7 @@
 
 	else if(istype(W, /obj/item/stack/material) && !glass)
 		var/obj/item/stack/material/S = W
-		var/material_name = S.get_material_name()		
+		var/material_name = S.get_material_name()
 		if (S)
 			if (S.get_amount() >= 1)
 				if(material_name == MATERIAL_GLASS && S.reinf_material)

@@ -274,24 +274,25 @@
 		if(T)
 			forceMove(T)
 
-/mob/simple_animal/hostile/touch_map_edge()
+//Did nothing for century, because it ommited /living in its typepath. Commented it out because I don't trust it to work
+// /mob/living/simple_animal/hostile/touch_map_edge()
 
-	var/new_x = x
-	var/new_y = y
-	var/new_z = z
-	if(new_z)
-		if(x <= TRANSITIONEDGE-1) 						// West
-			new_x = TRANSITIONEDGE + 1
-		else if (x >= (world.maxx + 1 - TRANSITIONEDGE))	// East
-			new_x = world.maxx - TRANSITIONEDGE - 1
+// 	var/new_x = x
+// 	var/new_y = y
+// 	var/new_z = z
+// 	if(new_z)
+// 		if(x <= TRANSITIONEDGE-1) 						// West
+// 			new_x = TRANSITIONEDGE + 1
+// 		else if (x >= (world.maxx + 1 - TRANSITIONEDGE))	// East
+// 			new_x = world.maxx - TRANSITIONEDGE - 1
 
-		else if (y <= TRANSITIONEDGE-1) 					// South
-			new_y = TRANSITIONEDGE + 1
-		else if (y >= (world.maxy + 1 - TRANSITIONEDGE))	// North
-			new_y = world.maxy - TRANSITIONEDGE - 1
-		var/turf/T = locate(new_x, new_y, new_z)
-		if(T)
-			forceMove(T)
+// 		else if (y <= TRANSITIONEDGE-1) 					// South
+// 			new_y = TRANSITIONEDGE + 1
+// 		else if (y >= (world.maxy + 1 - TRANSITIONEDGE))	// North
+// 			new_y = world.maxy - TRANSITIONEDGE - 1
+// 		var/turf/T = locate(new_x, new_y, new_z)
+// 		if(T)
+// 			forceMove(T)
 
 
 /**

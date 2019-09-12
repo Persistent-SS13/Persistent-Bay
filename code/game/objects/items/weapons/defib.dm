@@ -19,6 +19,7 @@
 	var/obj/item/weapon/cell/bcell = null
 
 /obj/item/weapon/defibrillator/New()
+	..()
 	ADD_SAVED_VAR(bcell)
 
 /obj/item/weapon/defibrillator/Initialize() //starts without a cell for rnd

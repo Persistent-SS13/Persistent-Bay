@@ -24,7 +24,10 @@
 	. = ..()
 	if(!map_storage_loaded)
 		if(model_info && model)
-			model_info = model
+			if(model_info == 1)
+				model_info = model
+			else
+				model = model_info
 			var/datum/robolimb/R = all_robolimbs[model]
 			if(R)
 				SetName("[R.company] [initial(name)]")
@@ -48,6 +51,44 @@
 	model_info = 1
 	bp_tag = BP_L_ARM
 
+
+
+/obj/item/robot_parts/l_arm/nanotrasen
+	name = "nanotrasen L arm"
+	model_info = "NanoTrasen"
+
+/obj/item/robot_parts/l_arm/morpheus
+	model_info = "Morpheus"
+	name = "Morpheus L arm"
+
+/obj/item/robot_parts/l_arm/bishop
+	model_info = "Bishop"
+	name = "Bishop L arm"
+
+/obj/item/robot_parts/l_arm/hephaestus
+	model_info = "Hephaestus Industries"
+	name = "hephaestus L arm"
+	
+/obj/item/robot_parts/l_arm/zenghu
+	model_info = "Zeng-Hu"
+	name = "zeng-hu L arm"
+	
+/obj/item/robot_parts/l_arm/xion
+	model_info = "Xion"
+	name = "xion L arm"
+	  // it was a dupe
+/obj/item/robot_parts/l_arm/wardtakahshi
+	model_info = "Ward-Takashi"
+	name = "wardtakahshi L arm"
+	
+/obj/item/robot_parts/l_arm/veymed
+	model_info = "Vey-Med"
+	name = "vey-med L arm"
+	
+/obj/item/robot_parts/l_arm/grayson
+	model_info = "Grayson"
+	name = "Grayson L arm"
+	
 /obj/item/robot_parts/r_arm
 	name = "right arm"
 	desc = "A skeletal limb wrapped in pseudomuscles, with a low-conductivity case."
@@ -55,6 +96,43 @@
 	part = list(BP_R_ARM, BP_R_HAND)
 	model_info = 1
 	bp_tag = BP_R_ARM
+
+/obj/item/robot_parts/r_arm/nanotrasen
+	model_info = "NanoTrasen"
+	name = "nanotrasen R arm"
+	
+/obj/item/robot_parts/r_arm/morpheus
+	model_info = "Morpheus"
+	name = "morpheus R arm"
+	
+/obj/item/robot_parts/r_arm/bishop
+	model_info = "Bishop"
+	name = "bishop R arm"
+		
+/obj/item/robot_parts/r_arm/hephaestus
+	model_info = "Hephaestus Industries"
+	name = "hephaestus R arm"
+	
+/obj/item/robot_parts/r_arm/zenghu
+	model_info = "Zeng-Hu"
+	name = "zenghu R arm"
+	
+/obj/item/robot_parts/r_arm/xion
+	model_info = "Xion"
+	name = "xion R arm"
+	
+/obj/item/robot_parts/r_arm/wardtakahshi
+	model_info = "Ward-Takashi"
+	name = "wardtakahshi R arm"
+	
+/obj/item/robot_parts/r_arm/veymed
+	model_info = "Vey-Med"
+	name = "vey-med R arm"
+	
+/obj/item/robot_parts/r_arm/grayson
+	model_info = "Grayson"
+	name = "grayson R arm"
+	
 
 /obj/item/robot_parts/l_leg
 	name = "left leg"
@@ -64,6 +142,42 @@
 	model_info = 1
 	bp_tag = BP_L_LEG
 
+/obj/item/robot_parts/l_leg/nanotrasen
+	model_info = "NanoTrasen"
+	name = "NanoTrasen L leg"
+	
+/obj/item/robot_parts/l_leg/morpheus
+	model_info = "Morpheus"
+	name = "morpheus L leg"
+	
+/obj/item/robot_parts/l_leg/bishop
+	model_info = "Bishop"
+	name = "bishop L leg"
+	
+/obj/item/robot_parts/l_leg/hephaestus
+	model_info = "Hephaestus Industries"
+	name = "hephaestus L leg"
+	
+/obj/item/robot_parts/l_leg/zenghu
+	model_info = "Zeng-Hu"
+	name = "zeng-hu L leg"
+	
+/obj/item/robot_parts/l_leg/xion
+	model_info = "Xion"
+	name = "Xion L leg"
+
+/obj/item/robot_parts/l_leg/wardtakahshi
+	model_info = "Ward-Takashi"
+	name = "Ward-Takashi L leg"
+	
+/obj/item/robot_parts/l_leg/veymed
+	model_info = "Vey-Med"
+	name = "Vey-Med L leg" 
+	
+/obj/item/robot_parts/l_leg/grayson
+	model_info = "Grayson"
+	name = "Grayson L leg"
+	
 /obj/item/robot_parts/r_leg
 	name = "right leg"
 	desc = "A skeletal limb wrapped in pseudomuscles, with a low-conductivity case."
@@ -72,6 +186,42 @@
 	model_info = 1
 	bp_tag = BP_R_LEG
 
+/obj/item/robot_parts/r_leg/nanotrasen
+	model_info = "NanoTrasen"
+	name = "NanoTrasen R leg"
+	
+/obj/item/robot_parts/r_leg/morpheus
+	model_info = "Morpheus"
+	name = "Morpheus R leg"
+	
+/obj/item/robot_parts/r_leg/bishop
+	model_info = "Bishop"
+	name = "Bishop R leg"
+		
+/obj/item/robot_parts/r_leg/hephaestus
+	model_info = "Hephaestus Industries"
+	name = "hephaestus R leg"
+	
+/obj/item/robot_parts/r_leg/zenghu
+	model_info = "Zeng-Hu"
+	name = "Zeng-Hu R leg"
+	
+/obj/item/robot_parts/r_leg/xion
+	model_info = "Xion"
+	name = "Xion R leg"
+	
+/obj/item/robot_parts/r_leg/wardtakahshi
+	model_info = "Ward-Takashi"
+	name = "Ward-Takashi R leg"
+	
+/obj/item/robot_parts/r_leg/veymed
+	model_info = "Vey-Med"
+	name = "Vey-Med R leg"
+	
+/obj/item/robot_parts/r_leg/grayson
+	model_info = "Grayson"
+	name = "Grayson R leg"
+	
 /obj/item/robot_parts/head
 	name = "head"
 	desc = "A standard reinforced braincase, with spine-plugged neural socket and sensor gimbals."
@@ -82,6 +232,43 @@
 	var/obj/item/device/flash/flash1 = null
 	var/obj/item/device/flash/flash2 = null
 
+
+/obj/item/robot_parts/head/nanotrasen
+	model_info = "NanoTrasen"
+	name = "NanoTrasen Head"
+	
+/obj/item/robot_parts/head/morpheus
+	model_info = "Morpheus"
+	name = "Morpheus Head"
+	
+/obj/item/robot_parts/head/bishop
+	model_info = "Bishop"
+	name = "Bishop Head"
+	
+/obj/item/robot_parts/head/hephaestus
+	model_info = "Hephaestus Industries"
+	name = "hephaestus Head"
+	
+/obj/item/robot_parts/head/zenghu
+	model_info = "Zeng-Hu"
+	name = "Zeng-Hu Head"
+	
+/obj/item/robot_parts/head/xion
+	model_info = "Xion"
+	name = "Xion Head"
+	
+/obj/item/robot_parts/head/wardtakahshi
+	model_info = "Ward-Takashi"
+	name = "Ward-Takashi Head"
+	
+/obj/item/robot_parts/head/veymed
+	model_info = "Vey-Med"
+	name = "Vey-Med Head"
+	
+/obj/item/robot_parts/head/grayson
+	model_info = "Grayson"
+	name = "Grayson Head"
+	
 /obj/item/robot_parts/head/New(newloc, model)
 	. = ..()
 	ADD_SAVED_VAR(flash1)
@@ -103,6 +290,42 @@
 	bp_tag = BP_CHEST
 	var/wires = 0.0
 	var/obj/item/weapon/cell/cell = null
+	
+/obj/item/robot_parts/chest/nanotrasen
+	model_info = "NanoTrasen"
+	name = "NanoTrasen Chest"
+	
+/obj/item/robot_parts/chest/morpheus
+	model_info = "Morpheus"
+	name = "Morpheus Chest"
+	
+/obj/item/robot_parts/chest/bishop
+	model_info = "Bishop"
+	name = "Bishop Chest"
+	
+/obj/item/robot_parts/chest/hephaestus
+	model_info = "Hephaestus Industries"
+	name = "hephaestus Chest"
+	
+/obj/item/robot_parts/chest/zenghu
+	model_info = "Zeng-Hu"
+	name = "Zeng-Hu Chest"
+	
+/obj/item/robot_parts/chest/xion
+	model_info = "Xion"
+	name = "Xion Chest"
+
+/obj/item/robot_parts/chest/wardtakahshi
+	model_info = "Ward-Takashi"
+	name = "Ward-Takashi Chest"
+	
+/obj/item/robot_parts/chest/veymed
+	model_info = "Vey-Med"
+	name = "Vey-Med Chest"
+	
+/obj/item/robot_parts/chest/grayson
+	model_info = "Grayson"	
+	name = "Grayson Chest"
 	
 /obj/item/robot_parts/chest/New(newloc, model)
 	. = ..()

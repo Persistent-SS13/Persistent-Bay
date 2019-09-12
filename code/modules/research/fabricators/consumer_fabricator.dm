@@ -176,7 +176,10 @@
 /datum/design/item/consumerfab/consumer/glowstick/yellow
 	build_path = /obj/item/device/flashlight/flare/glowstick/yellow
 
-
+/datum/design/item/consumerfab/consumer/hollowbook
+	name = "hollowed out book"
+	build_path = /obj/item/weapon/storage/fakebook/empty
+	materials = list(MATERIAL_PLASTIC = 1 SHEET, MATERIAL_WOOD = 1 SHEET)
 
 
 /datum/design/item/consumerfab/consumer/labeler

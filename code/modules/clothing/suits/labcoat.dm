@@ -189,3 +189,12 @@
 	icon_state = "labcoat_rd_zeng_open"
 	icon_open = "labcoat_rd_zeng_open"
 	icon_closed = "labcoat_rd_zeng"
+
+/obj/item/clothing/suit/storage/toggle/labcoat/resomi
+	name = "resomi laboat"
+	desc = "A sleeveless labcoat worn by the diminutive Resomi. The sleeveless design comfortably accommodates their wings."
+	icon = 'icons/mob/species/resomi/suit.dmi'
+	icon_state = "resomi_labcoat_open"
+	icon_open = "resomi_labcoat_open"
+	icon_closed = "labcoat_labcoat_closed"
+	species_restricted = list(SPECIES_RESOMI)

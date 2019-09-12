@@ -77,7 +77,7 @@
 		var/datum/nano_module/appearance_changer/AC = ui_users[user]
 		qdel(AC)
 	ui_users.Cut()
-	..()
+	return ..()
 
 //Makes scissors cut hair, special thanks to Miauw and Xerux -Nien
 /obj/item/weapon/tool/scissors/barber/attack(mob/living/carbon/M as mob, mob/user as mob)

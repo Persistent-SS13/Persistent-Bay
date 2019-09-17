@@ -343,7 +343,6 @@
 
 	SScharacter_setup.save_character(saveslot, key, character)
 	SetName(initial(src.name))
-	var/mob/occupant_ref = occupant
 	var/mob/new_player/player = new()
 	player.loc = locate(200,200,19)
 	if(occupant.client)
@@ -361,7 +360,7 @@
 	despawning = FALSE
 	qdel(occupant)
 	occupant = null
-	
+
 /*
  * Cryogenic refrigeration unit. Basically a despawner.
  * Stealing a lot of concepts/code from sleepers due to massive laziness.

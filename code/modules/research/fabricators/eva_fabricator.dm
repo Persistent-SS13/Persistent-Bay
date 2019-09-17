@@ -428,6 +428,9 @@
 /datum/design/item/genfab/eva/modkit/phorosian
 	build_path = /obj/item/device/phorosiansuit_changer
 
+/datum/design/item/genfab/eva/modkit/resomi
+	build_path = /obj/item/device/modkit/resomi
+
 
 /**
 /datum/design/item/genfab/eva/adv/net_launcher

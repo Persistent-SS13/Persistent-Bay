@@ -143,14 +143,14 @@
 	required_reagents = list(/datum/reagent/water = 1, /datum/reagent/silicon = 1, /datum/reagent/acetone = 1)
 	result_amount = 4
 	mix_message = "The solution becomes thick and slimy."
-
-datum/chemical_reaction/carpotoxin
+/**
+/datum/chemical_reaction/carpotoxin
     name = "Carpotoxin"
     result = /datum/reagent/toxin/carpotoxin
     required_reagents = list(/datum/reagent/denatured = 2,  /datum/reagent/protein = 1)
     result_amount = 1
     mix_message = "The denaturalized toxin starts to have an acid smell."
-
+**/
 /datum/chemical_reaction/pacid
 	name = "Polytrinic acid"
 	result = /datum/reagent/acid/polyacid

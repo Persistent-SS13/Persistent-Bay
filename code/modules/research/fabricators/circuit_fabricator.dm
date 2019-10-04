@@ -990,6 +990,13 @@
 	req_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2)
 	build_path = /obj/item/weapon/circuitboard/radiocarbon_spectrometer
 
+/datum/design/circuit/mass_driver
+	name = "mass driver"
+	id = "mass_driver"
+	req_tech = list(TECH_MAGNET = 1, TECH_ENGINEERING = 2)
+	build_path = /obj/item/weapon/circuitboard/mass_driver
+	build_type = ENGIFAB
+
 /**
 
 /datum/design/aimodule

@@ -8,11 +8,19 @@ obj/structure/firedoor_assembly
 	density = 1
 	var/wired = 0
 
+obj/structure/firedoor_assembly/New()
+	. = ..()
+	ADD_SAVED_VAR(wired)
+
 obj/structure/firedoor_assembly/on_update_icon()
 	if(anchored)
 		icon_state = "door_anchored"
 	else
 		icon_state = "construction"
+
+obj/structure/firedoor_assembly/AltClick(mob/user)
+	. = ..()
+	set_dir(turn(dir, 90))
 
 obj/structure/firedoor_assembly/attackby(var/obj/item/C, var/mob/user)
 	if(isCoil(C) && !wired && anchored)

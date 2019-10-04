@@ -210,6 +210,17 @@
 /datum/design/item/voidfab/softsuit/helmet
 	materials = list(MATERIAL_CLOTH = 20000, MATERIAL_GLASS = 20000)
 
+
+/datum/design/item/voidfab/softsuit/suit/assistant
+	name = "Phorosian spacesuit"
+	id = "Phoron_suit"
+	build_path = /obj/item/clothing/suit/space/phorosian/assistant
+
+/datum/design/item/voidfab/softsuit/helmet/assistant
+	name = "Phorosian helmet"
+	id = "Phoron_suitthelmet"
+	build_path = /obj/item/clothing/head/helmet/space/phorosian/assistant
+
 /datum/design/item/voidfab/softsuit/suit/engineeringsuit
 	name = "Engineering softsuit"
 	id = "eng_softsuit"
@@ -414,6 +425,12 @@
 /datum/design/item/genfab/eva/modkit/unathi
 	build_path = /obj/item/device/modkit/unathi
 
+/datum/design/item/genfab/eva/modkit/phorosian
+	build_path = /obj/item/device/phorosiansuit_changer
+
+/datum/design/item/genfab/eva/modkit/resomi
+	build_path = /obj/item/device/modkit/resomi
+
 /datum/design/item/genfab/eva/adv/net_launcher
 	materials = list(MATERIAL_STEEL = 6 SHEET, MATERIAL_COPPER = 3 SHEETS)
 	build_path = /obj/item/weapon/gun/launcher/net
@@ -421,9 +438,6 @@
 /datum/design/item/genfab/eva/adv/net_shell
 	materials = list(MATERIAL_STEEL = 2 SHEET, MATERIAL_CLOTH = 3 SHEETS)
 	build_path = /obj/item/weapon/net_shell
-
-
-
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

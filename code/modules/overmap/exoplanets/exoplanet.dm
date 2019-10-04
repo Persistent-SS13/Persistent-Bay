@@ -39,6 +39,8 @@
 	var/list/possible_features = list()
 	var/list/spawned_features
 
+	var/plant_amount  = 60
+
 /obj/effect/overmap/sector/exoplanet/New(nloc, max_x, max_y)
 	if(!GLOB.using_map.use_overmap)
 		return
@@ -48,9 +50,9 @@
 	planetary_area = new planetary_area()
 
 	name = "[generate_planet_name()], \a [name]"
-
-	world.maxz++
-	forceMove(locate(1,1,world.maxz))
+	if(!nloc)
+		world.maxz++
+		forceMove(locate(1,1,world.maxz))
 
 	if(LAZYLEN(possible_themes))
 		var/datum/exoplanet_theme/T = pick(possible_themes)
@@ -177,6 +179,9 @@
 			GLOB.death_event.register(A, src, /obj/effect/overmap/sector/exoplanet/proc/remove_animal)
 			GLOB.destroyed_event.register(A, src, /obj/effect/overmap/sector/exoplanet/proc/remove_animal)
 	max_animal_count = animals.len
+	for(var/ind in 1 to plant_amount)
+		var/turf/simulated/T = pick_area_turf(planetary_area, list(/proc/not_turf_contains_dense_objects))
+		new /obj/machinery/portable_atmospherics/hydroponics/soil/invisible(T,pick(seeds), 1)
 
 /obj/effect/overmap/sector/exoplanet/proc/update_biome()
 	for(var/datum/seed/S in seeds)

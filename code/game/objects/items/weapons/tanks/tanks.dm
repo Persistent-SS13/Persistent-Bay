@@ -3,6 +3,9 @@ var/list/global/tank_gauge_cache = list()
 /obj/item/weapon/tank
 	name = "tank"
 	icon = 'icons/obj/tank.dmi'
+	sprite_sheets = list(
+	SPECIES_RESOMI = 'icons/mob/species/resomi/back.dmi'
+	)
 
 	var/gauge_icon = "indicator_tank"
 	var/gauge_cap = 6
@@ -56,7 +59,7 @@ var/list/global/tank_gauge_cache = list()
 	ADD_SAVED_VAR(proxyassembly)
 	ADD_SAVED_VAR(leaking)
 	ADD_SAVED_VAR(wired)
-	
+
 	ADD_SKIP_EMPTY(air_contents)
 	ADD_SKIP_EMPTY(proxyassembly)
 

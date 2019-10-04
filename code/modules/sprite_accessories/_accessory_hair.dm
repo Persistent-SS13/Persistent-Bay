@@ -719,7 +719,7 @@
 	name = "Gentle 2"
 	icon_state = "hair_gentle2"
 	flags = HAIR_TIEABLE
-	
+
 /datum/sprite_accessory/hair/gentle2long
 	name = "Gentle 2 Long"
 	icon_state = "hair_gentle2long"

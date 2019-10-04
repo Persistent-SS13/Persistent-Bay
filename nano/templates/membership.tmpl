@@ -1,0 +1,41 @@
+<h2>Religion/Club Management</h2><br>
+{{:helper.link("Membership", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
+{{:helper.link("Send Mass Email", '', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
+<br><br>
+<hr>
+{{if data.menu == 1}}
+	<h4>Membership</h4>
+	{{:helper.link('New Member Contract', '', {'action' : 'new_member'})}}
+	<br><br>
+	<b>Available Members</b>
+	<div class="statusDisplay" style="overflow: auto;">
+		{{for data.online_members}}
+			{{:value.name}}{{:helper.link('X', '', {'action' : 'remove_member', 'ref' : value.ref})}}<br><br>
+		{{/for}}
+	</div>
+	<b>Unavailable Members</b>
+	<div class="statusDisplay" style="overflow: auto;">
+		{{for data.offline_members}}
+			{{:value.name}}{{:helper.link('X', '', {'action' : 'remove_member', 'ref' : value.ref})}}<br><br>
+		{{/for}}
+	</div>
+{{/if}}
+{{if data.menu == 2}}
+	<h4>Mass Email</h4>
+	This will be an email sent to all members of the organization.
+	<div class='item'>
+		<div class='itemLabel'>
+			{{:helper.link('Edit Title', '', {'action' : 'edit_title'})}}
+		</div>
+		<div class='itemContent'>
+			{{:data.title}}
+		</div>
+	</div>
+	<br><br>
+	{{:helper.link('Edit Body', '', {'action' : 'edit_body'})}}
+	<br><br>
+	<div class="statusDisplay"style="overflow: auto;">
+		{{:data.body}}
+	</div>
+	{{:helper.link('Send', '', {'action' : 'send'})}}
+{{/if}}

@@ -187,8 +187,8 @@
 
 //Force load records
 /obj/item/organ/internal/stack/proc/load_records()
-    if(!record)
-        record = Retrieve_Record(owner.real_name)
+	if(!record)
+		record = Retrieve_Record(owner.real_name)
 
 //Return 1 if an immediate subsequent call to use() would succeed.
 //Ensures that code dealing with stacks uses the same logic

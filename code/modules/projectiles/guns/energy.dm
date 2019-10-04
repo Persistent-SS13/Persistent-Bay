@@ -31,7 +31,8 @@ GLOBAL_LIST_INIT(registered_cyborg_weapons, list())
 	var/accepted_cell_types = list(
 		/obj/item/weapon/cell/device/variable,
 		/obj/item/weapon/cell/device/standard,
-		/obj/item/weapon/cell/device/high
+		/obj/item/weapon/cell/device/high,
+		/obj/item/weapon/cell/device/super
 		) //Cells typepaths that are accepted by this weapon
 
 /obj/item/weapon/gun/energy/New()

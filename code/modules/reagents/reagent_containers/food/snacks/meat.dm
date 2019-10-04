@@ -30,6 +30,7 @@
 /obj/item/weapon/reagent_containers/food/snacks/meat/beef
 	name = "beef slab"
 	desc = "The classic red meat."
+	starts_with = list(/datum/reagent/nutriment/protein = 20)
 
 /obj/item/weapon/reagent_containers/food/snacks/meat/goat
 	name = "chevon slab"
@@ -38,3 +39,21 @@
 /obj/item/weapon/reagent_containers/food/snacks/meat/chicken
 	name = "chicken piece"
 	desc = "It tastes like you'd expect."
+
+/obj/item/weapon/reagent_containers/food/snacks/meat/xenomeat
+	name = "meat"
+	desc = "A slab of green meat. Smells like acid."
+	icon_state = "xenomeat"
+	filling_color = "#43de18"
+	center_of_mass = "x=16;y=10"
+	bitesize = 6
+	starts_with = list(/datum/reagent/nutriment/protein = 6, /datum/reagent/acid/polyacid = 6)
+
+/obj/item/weapon/reagent_containers/food/snacks/meat/bearmeat
+	name = "bear meat"
+	desc = "A very manly slab of meat."
+	icon_state = "bearmeat"
+	filling_color = "#db0000"
+	center_of_mass = "x=16;y=10"
+	bitesize = 3
+	starts_with = list(/datum/reagent/nutriment/protein = 12, /datum/reagent/hyperzine = 5) 

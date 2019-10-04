@@ -60,19 +60,28 @@
 	maximum_temperature = T0C + 50
 
 /datum/chemical_reaction/hydrazine
-	name = "welding fuel"
-	result = /datum/reagent/fuel
+	name = "hydrazine"
+	result = /datum/reagent/hydrazine
 	result_amount = 20
 	required_reagents = list(/datum/reagent/hydrogen_peroxide = 10, /datum/reagent/acid/acetic = 5, /datum/reagent/ammonia = 5)
+	minimum_temperature = T0C + 20
+	maximum_temperature = T0C + 50
+
+/datum/chemical_reaction/hydrogen_peroxide
+	name = "hydrazine"
+	result = /datum/reagent/hydrazine
+	result_amount = 2
+	required_reagents = list(/datum/reagent/water = 1, /datum/reagent/oxygen = 1) //well H2O2.. not perfect. should work tho
 	minimum_temperature = T0C + 20
 	maximum_temperature = T0C + 50
 
 /datum/chemical_reaction/acetic_acid
 	name = "acetic acid"
 	result = /datum/reagent/acid/acetic
-	required_reagents = list(/datum/reagent/methanol = 10, /datum/reagent/carbon_monoxide = 10)
-	catalysts = list(/datum/reagent/carbon = 5)
-	result_amount = 20
+	result_amount = 10
+	required_reagents = list(/datum/reagent/nutriment/vinegar = 10)
+	minimum_temperature = T0C + 100 // fAARRRRR far far from ideal but.. well its better than just plain vinegar 
+	maximum_temperature = T0C + 120
 
 /datum/chemical_reaction/methanol
 	name = "methanol"
@@ -87,3 +96,10 @@
 	result_amount = 3
 	result = /datum/reagent/toxin/methyl_bromide
 	mix_message = "The solution begins to bubble, emitting a dark vapor."
+
+/datum/chemical_reaction/hydrogen_peroxide
+	name = "Hydrogen peroxyde"
+	required_reagents = list(/datum/reagent/ammonia = 1, /datum/reagent/hydrogen = 1, /datum/reagent/oxygen = 1, /datum/reagent/acid = 1)
+	result_amount = 4
+	result = /datum/reagent/hydrogen_peroxide
+	mix_message = "The solution begins to bubble, emitting little vapor."

@@ -14,7 +14,8 @@
 	turns_per_move = 5
 	see_in_dark = 6
 	meat_amount = 5
-	meat_type = /obj/item/weapon/reagent_containers/food/snacks/bearmeat
+	meat_type = /obj/item/weapon/reagent_containers/food/snacks/meat/bearmeat
+	hide_type = /obj/item/stack/animalhide/bear
 	response_help  = "pets"
 	response_disarm = "gently pushes aside"
 	response_harm   = "pokes"

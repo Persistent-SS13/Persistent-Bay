@@ -984,6 +984,11 @@
 	build_path = /obj/item/weapon/circuitboard/oxyregenerator
 	build_type = ENGIFAB
 
+/datum/design/circuit/igniter
+	name = "gas igniter"
+	id = "machineigniter"
+	build_path = /obj/item/weapon/circuitboard/igniter
+
 /datum/design/circuit/radiocarbon_spectrometer
 	name = "radiocarbon spectrometer"
 	id = "radiocarbon_spectrometer"

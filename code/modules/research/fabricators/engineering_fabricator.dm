@@ -951,9 +951,10 @@
 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 1)
 
 
-
-
-
+/datum/design/item/engifab/machines/sparker
+	name = "sparker frame"
+	build_path = /obj/item/frame/sparker
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 1 SHEETS)
 
 /datum/design/item/engifab/signs
 	category = "Machines"
@@ -1030,3 +1031,4 @@ SIGN_FRAME(seconddeck,      /obj/item/sign/deck/second)
 SIGN_FRAME(thirddeck,       /obj/item/sign/deck/third)
 SIGN_FRAME(fourthdeck,      /obj/item/sign/deck/fourth)
 #undef SIGN_FRAME
+

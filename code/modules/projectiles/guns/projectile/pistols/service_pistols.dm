@@ -9,6 +9,8 @@
 	safety_icon = "safety"
 	origin_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 2)
 	fire_delay = 4
+	accuracy_power = 8
+	accuracy = 1
 
 /obj/item/weapon/gun/projectile/pistol/military/alt
 	name = "\improper HT Optimus pistol"
@@ -18,3 +20,5 @@
 	safety_icon = "safety"
 	origin_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 2, TECH_ILLEGAL = 8)
 	fire_delay = 5
+	accuracy = 1
+	accuracy_power = 12

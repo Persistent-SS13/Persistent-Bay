@@ -682,15 +682,28 @@ Class Procs:
 //----------------------------------
 // Damage procs
 //----------------------------------
-/obj/machinery/update_health(var/damagetype)
-	..()
-	//Determine if we're broken or not
-	if(health <= (max_health * broken_threshold))
-		broken(damagetype)
+/obj/machinery/update_health(var/damagetype, var/user = null)
+	if(!isdamageable())
+		return //Assume we don't care about damages
+	if(health <= min_health)
+		if(ISDAMTYPE(damagetype, DAM_BURN))
+			melt(user)
+		else
+			destroyed(damagetype,user)
+	else //Handle broken state
+		if(health <= (broken_threshold * get_max_health()))
+			broken(damagetype, user)
+		else if(stat & BROKEN)
+			unbroken()
+	update_icon()
 
 //Called when the machine is broken
 /obj/machinery/broken(var/damagetype)
 	set_broken(TRUE)
+	update_icon()
+
+/obj/machinery/unbroken()
+	set_broken(FALSE)
 	update_icon()
 
 /obj/machinery/emp_act(severity)

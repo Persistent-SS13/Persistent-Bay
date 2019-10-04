@@ -4,8 +4,9 @@
 	icon = 'icons/obj/weapons/guns/revolvers.dmi'
 	icon_state = "mateba"
 	caliber = CALIBER_50
-	fire_delay = 12
-	accuracy = 1
+	fire_delay = 10
+	accuracy = -1
+	accuracy_power = 1
 	bulk = 2
 	one_hand_penalty = 2
 	origin_tech = list(TECH_COMBAT = 2, TECH_MATERIAL = 2)

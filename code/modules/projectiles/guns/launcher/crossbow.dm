@@ -10,7 +10,7 @@
 	w_class = ITEM_SIZE_NORMAL
 	sharpness = 1
 	lock_picking_level = 3
-	mass = 0.150
+	mass = 150 GRAMS
 	damtype = DAM_PIERCE
 
 /obj/item/weapon/arrow/proc/removed() //Helper for metal rods falling apart.
@@ -22,7 +22,7 @@
 	sharpness = 1
 	throwforce = 5
 	w_class = ITEM_SIZE_SMALL
-	mass = 0.750
+	mass = 750 GRAMS
 	damtype = DAM_PIERCE
 	icon = 'icons/obj/weapons.dmi'
 	icon_state = "metal-rod"
@@ -35,14 +35,14 @@
 	icon_state = "quill"
 	item_state = "quill"
 	throwforce = 5
-	mass = 0.050
+	mass = 50 GRAMS
 
 /obj/item/weapon/arrow/rod
 	name = "metal rod"
 	desc = "Don't cry for me, Orithena."
 	icon = 'icons/obj/weapons.dmi'
 	icon_state = "metal-rod"
-	mass = 0.200
+	mass = 200 GRAMS
 
 /obj/item/weapon/arrow/rod/removed(mob/user)
 	if(throwforce == 15) // The rod has been superheated - we don't want it to be useable when removed from the bow.
@@ -62,7 +62,7 @@
 	fire_delay = 25
 	slot_flags = SLOT_BACK
 	has_safety = FALSE
-	mass = 2.26
+	mass = 2.26 KILOGRAMS
 
 	var/obj/item/bolt
 	var/tension = 0                         // Current draw on the bow.
@@ -76,9 +76,6 @@
 	..()
 	ADD_SAVED_VAR(bolt)
 	ADD_SAVED_VAR(cell)
-
-	ADD_SKIP_EMPTY(bolt)
-	ADD_SKIP_EMPTY(cell)
 
 /obj/item/weapon/gun/launcher/crossbow/toggle_safety(var/mob/user)
 	to_chat(user, "<span class='warning'>There's no safety on \the [src]!</span>")
@@ -220,9 +217,12 @@
 	icon = 'icons/obj/weapons/guns/crossbow.dmi'
 	icon_state = "crossbowframe0"
 	item_state = "crossbow-solid"
-	mass = 2
-
+	mass = 2 KILOGRAMS
 	var/buildstate = 0
+
+/obj/item/weapon/crossbowframe/New()
+	. = ..()
+	ADD_SAVED_VAR(buildstate)
 
 /obj/item/weapon/crossbowframe/on_update_icon()
 	icon_state = "crossbowframe[buildstate]"
@@ -312,6 +312,10 @@
 	var/stored_matter = 0
 	var/max_stored_matter = 120
 	var/boltcost = 30
+
+/obj/item/weapon/gun/launcher/crossbow/rapidcrossbowdevice/New()
+	. = ..()
+	ADD_SAVED_VAR(stored_matter)
 
 /obj/item/weapon/gun/launcher/crossbow/rapidcrossbowdevice/proc/generate_bolt(var/mob/user)
 	if(stored_matter >= boltcost && !bolt)

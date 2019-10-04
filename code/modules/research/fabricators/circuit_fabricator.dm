@@ -883,7 +883,7 @@
 	req_tech = list(TECH_MAGNET = 3, TECH_POWER = 4)
 	build_path = /obj/item/weapon/circuitboard/shield_diffuser
 	build_type = ENGIFAB
-	
+
 /**
 /datum/design/circuit/ntnet_relay
 	name = "NTNet Quantum Relay"
@@ -983,6 +983,17 @@
 	req_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2)
 	build_path = /obj/item/weapon/circuitboard/oxyregenerator
 	build_type = ENGIFAB
+
+/datum/design/circuit/igniter
+	name = "gas igniter"
+	id = "machineigniter"
+	build_path = /obj/item/weapon/circuitboard/igniter
+
+/datum/design/circuit/radiocarbon_spectrometer
+	name = "radiocarbon spectrometer"
+	id = "radiocarbon_spectrometer"
+	req_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2)
+	build_path = /obj/item/weapon/circuitboard/radiocarbon_spectrometer
 
 /datum/design/circuit/mass_driver
 	name = "mass driver"

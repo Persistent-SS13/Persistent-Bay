@@ -61,6 +61,13 @@
 			owner.regenerate_icons()
 			owner.visible_message(SPAN_NOTICE("\The [owner] changes their eye color."),SPAN_NOTICE("You change your eye color."),)
 
+/obj/item/organ/internal/eyes/removed(mob/living/user, drop_organ, detach)
+	. = ..()
+	//reset eye stuff, so after a transplant we don't stay blind..
+	if(user)
+		user.eye_blind = 0
+		user.eye_blurry = 0
+
 /obj/item/organ/internal/eyes/replaced(var/mob/living/carbon/human/target)
 
 	// Apply our eye colour to the target.
@@ -70,6 +77,8 @@
 		target.b_eyes = eye_colour[3]
 		target.update_eyes()
 	..()
+	//run process once so eye damage is updated
+	Process()
 
 /obj/item/organ/internal/eyes/proc/update_colour()
 	if(!owner)

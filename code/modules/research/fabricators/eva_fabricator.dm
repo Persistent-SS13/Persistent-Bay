@@ -431,8 +431,6 @@
 /datum/design/item/genfab/eva/modkit/resomi
 	build_path = /obj/item/device/modkit/resomi
 
-
-/**
 /datum/design/item/genfab/eva/adv/net_launcher
 	materials = list(MATERIAL_STEEL = 6 SHEET, MATERIAL_COPPER = 3 SHEETS)
 	build_path = /obj/item/weapon/gun/launcher/net
@@ -440,9 +438,6 @@
 /datum/design/item/genfab/eva/adv/net_shell
 	materials = list(MATERIAL_STEEL = 2 SHEET, MATERIAL_CLOTH = 3 SHEETS)
 	build_path = /obj/item/weapon/net_shell
-**/
-
-
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -545,42 +540,67 @@
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS,MATERIAL_GLASS = 0.5 SHEETS)
 	build_path = /obj/item/device/depth_scanner
 
-/**
+
 /datum/design/item/genfab/miningtools/adv/arch/brush
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_CLOTH = 0.5 SHEETS)
-	build_path = /obj/item/weapon/pickaxe/brush
+	build_path = /obj/item/weapon/pickaxe/xeno/brush
 
 /datum/design/item/genfab/miningtools/adv/arch/one_pick
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_CLOTH = 0.5 SHEETS)
-	build_path = /obj/item/weapon/pickaxe/one_pick
+	build_path = /obj/item/weapon/pickaxe/xeno/one_pick
 
 /datum/design/item/genfab/miningtools/adv/arch/two_pick
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_CLOTH = 0.5 SHEETS)
-	build_path = /obj/item/weapon/pickaxe/two_pick
+	build_path = /obj/item/weapon/pickaxe/xeno/two_pick
 
 /datum/design/item/genfab/miningtools/adv/arch/three_pick
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_CLOTH = 0.5 SHEETS)
-	build_path = /obj/item/weapon/pickaxe/one_pick
+	build_path = /obj/item/weapon/pickaxe/xeno/one_pick
 
 /datum/design/item/genfab/miningtools/adv/arch/three_pick
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_CLOTH = 0.5 SHEETS)
-	build_path = /obj/item/weapon/pickaxe/three_pick
+	build_path = /obj/item/weapon/pickaxe/xeno/three_pick
 
 /datum/design/item/genfab/miningtools/adv/arch/four_pick
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_CLOTH = 0.5 SHEETS)
-	build_path = /obj/item/weapon/pickaxe/four_pick
+	build_path = /obj/item/weapon/pickaxe/xeno/four_pick
 
 /datum/design/item/genfab/miningtools/adv/arch/five_pick
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_CLOTH = 0.5 SHEETS)
-	build_path = /obj/item/weapon/pickaxe/five_pick
+	build_path = /obj/item/weapon/pickaxe/xeno/five_pick
 
 /datum/design/item/genfab/miningtools/adv/arch/six_pick
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_CLOTH = 0.5 SHEETS)
-	build_path = /obj/item/weapon/pickaxe/six_pick
+	build_path = /obj/item/weapon/pickaxe/xeno/six_pick
 
 /datum/design/item/genfab/miningtools/adv/arch/hand
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_CLOTH = 0.5 SHEETS)
 	build_path = /obj/item/weapon/pickaxe/xeno/hand
-**/
 
+/datum/design/item/genfab/miningtools/adv/arch/sampler
+	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_COPPER = 1 SHEETS)
+	build_path = /obj/item/device/core_sampler
 
+/datum/design/item/genfab/miningtools/adv/arch/measuring_tape
+	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_COPPER = 1 SHEETS)
+	build_path = /obj/item/device/measuring_tape
+
+/datum/design/item/genfab/miningtools/adv/arch/suspension_gen
+	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_COPPER = 2 SHEETS, MATERIAL_QUARTZ = 5 SHEETS)
+	build_path = /obj/machinery/suspension_gen
+
+/datum/design/item/genfab/miningtools/adv/arch/anodevice
+	materials = list(MATERIAL_TITANIUM = 2 SHEETS, MATERIAL_COPPER = 2 SHEETS)
+	build_path = /obj/item/weapon/anodevice
+
+/datum/design/item/genfab/miningtools/adv/arch/anobattery
+	materials = list(MATERIAL_TITANIUM = 2 SHEETS, MATERIAL_COPPER = 2 SHEETS)
+	build_path = /obj/item/weapon/anobattery
+
+/datum/design/item/genfab/miningtools/adv/arch/ano_scanner
+	materials = list(MATERIAL_TITANIUM = 2 SHEETS, MATERIAL_COPPER = 2 SHEETS)
+	build_path = /obj/item/device/ano_scanner
+
+/datum/design/item/genfab/miningtools/adv/arch/fossil_bag
+	materials = list(MATERIAL_CLOTH = 1 SHEETS)
+	build_path = /obj/item/weapon/storage/bag/fossils

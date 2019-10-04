@@ -52,7 +52,7 @@
 	name = "x-ray beam"
 	icon_state = "xray"
 	fire_sound = 'sound/weapons/laser3.ogg'
-	force = 13
+	force = 18
 	armor_penetration = 30
 	penetration_modifier = 0.8
 	damtype = DAM_ENERGY
@@ -103,7 +103,7 @@
 	force = 30
 	
 /obj/item/projectile/beam/pulse/skrell/single
-	force = 50
+	force = 40
 
 /obj/item/projectile/beam/emitter
 	name = "emitter beam"

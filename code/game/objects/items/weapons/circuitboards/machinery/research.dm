@@ -73,3 +73,14 @@ obj/item/weapon/circuitboard/rdserver
 							/obj/item/weapon/stock_parts/console_screen = 1,
 							/obj/item/weapon/stock_parts/subspace/ansible = 1,
 							)
+
+/obj/item/weapon/circuitboard/radiocarbon_spectrometer
+	name = T_BOARD("radiocarbon spectrometer")
+	build_path = /obj/machinery/radiocarbon_spectrometer
+	board_type = "machine"
+	origin_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 2)
+	req_components = list(
+							/obj/item/weapon/stock_parts/scanning_module = 2,
+							/obj/item/weapon/stock_parts/console_screen = 2,
+							/obj/item/weapon/stock_parts/matter_bin = 2,
+							)

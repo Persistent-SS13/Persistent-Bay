@@ -91,15 +91,19 @@
 		/obj/item/weapon/stamp/denied,
 		/obj/item/device/destTagger,
 		/obj/item/weapon/tool/crowbar,
-		/obj/item/stack/package_wrap/cyborg
+		/obj/item/weapon/tool/wrench,
+		/obj/item/weapon/tool/screwdriver,
+		/obj/item/stack/package_wrap/cyborg,
+		/obj/item/modular_computer/laptop/preset/custom_loadout/standard,
+		/obj/item/weapon/matter_decompiler,
 	)
 	emag = /obj/item/weapon/stamp/chameleon
 	synths = list(
-		/datum/matter_synth/package_wrap
+		/datum/matter_synth/package_wrap,
 	)
 
 /obj/item/weapon/robot_module/clerical/general/finalize_synths()
 	. = ..()
-	var/datum/matter_synth/package_wrap/wrap = locate() in synths
+	var/datum/matter_synth/rechargeable/package_wrap/wrap = locate() in synths
 	var/obj/item/stack/package_wrap/cyborg/wrap_item = locate() in equipment
 	wrap_item.synths = list(wrap)

@@ -10,6 +10,7 @@
 	var/channels = list()
 	var/networks = list()
 	var/languages = list(
+		LANGUAGE_GALCOM = 1,
 		LANGUAGE_HUMAN_EURO = 1,
 		LANGUAGE_UNATHI = 0,
 		LANGUAGE_SIIK_MAAS = 0,
@@ -41,10 +42,24 @@
 	var/list/equipment = list()
 	var/list/synths = list()
 
-/obj/item/weapon/robot_module/Initialize()
-
+/obj/item/weapon/robot_module/New()
 	. = ..()
+	ADD_SAVED_VAR(hide_on_manifest)
+	ADD_SAVED_VAR(channels)
+	ADD_SAVED_VAR(networks)
+	ADD_SAVED_VAR(languages)
+	ADD_SAVED_VAR(jetpack)
+	ADD_SAVED_VAR(subsystems)
+	ADD_SAVED_VAR(supported_upgrades)
+	ADD_SAVED_VAR(display_name)
+	ADD_SAVED_VAR(original_languages)
+	ADD_SAVED_VAR(added_networks)
+	ADD_SAVED_VAR(emag)
+	ADD_SAVED_VAR(equipment)
+	ADD_SAVED_VAR(synths)
 
+/obj/item/weapon/robot_module/Initialize()
+	. = ..()
 	var/mob/living/silicon/robot/R = loc
 	if(!istype(R))
 		return INITIALIZE_HINT_QDEL
@@ -69,6 +84,16 @@
 
 	R.set_module_sprites(sprites)
 	R.choose_icon(R.module_sprites.len + 1, R.module_sprites)
+
+/obj/item/weapon/robot_module/Destroy()
+	QDEL_NULL_LIST(equipment)
+	QDEL_NULL_LIST(synths)
+	QDEL_NULL(emag)
+	QDEL_NULL(jetpack)
+	var/mob/living/silicon/robot/R = loc
+	if(istype(R) && R.module == src)
+		R.module = null
+	. = ..()
 
 /obj/item/weapon/robot_module/proc/build_equipment()
 	var/list/created_equipment = list()
@@ -124,16 +149,6 @@
 	if(R.silicon_radio)
 		R.silicon_radio.recalculateChannels()
 	R.choose_icon(0, R.set_module_sprites(list("Default" = "robot")))
-
-/obj/item/weapon/robot_module/Destroy()
-	QDEL_NULL_LIST(equipment)
-	QDEL_NULL_LIST(synths)
-	QDEL_NULL(emag)
-	QDEL_NULL(jetpack)
-	var/mob/living/silicon/robot/R = loc
-	if(istype(R) && R.module == src)
-		R.module = null
-	. = ..()
 
 /obj/item/weapon/robot_module/emp_act(severity)
 	if(equipment)

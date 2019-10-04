@@ -3,15 +3,25 @@
 		"Security" = TRUE
 	)
 	networks = list(
-		NETWORK_SECURITY
+		NETWORK_SECURITY,
+		NETWORK_NEXUS,
+		NETWORK_NEXUS_SECURITY,
 	)
 	subsystems = list(
 		/datum/nano_module/crew_monitor, 
-		/datum/nano_module/digitalwarrant
+		/datum/nano_module/digitalwarrant,
+		/datum/nano_module/program/judge,
+		/datum/nano_module/program/verdicts,
+		/datum/nano_module/program/civil_laws,
+		/datum/nano_module/program/criminal_laws,
+		/datum/nano_module/program/tax_laws,
 	)
 	can_be_pushed = FALSE
 	supported_upgrades = list(
-		/obj/item/borg/upgrade/weaponcooler
+		/obj/item/borg/upgrade/weaponcooler,
+		/obj/item/borg/upgrade/floodlight,
+		/obj/item/borg/upgrade/jetpack,
+		/obj/item/borg/upgrade/vtec,
 	)
 
 /obj/item/weapon/robot_module/security/respawn_consumable(var/mob/living/silicon/robot/R, var/amount)
@@ -43,12 +53,15 @@
 		/obj/item/borg/sight/hud/sec,
 		/obj/item/weapon/handcuffs/cyborg,
 		/obj/item/weapon/melee/baton/robot,
+		/obj/item/weapon/gun/energy/taser/mounted/cyborg,
 		/obj/item/weapon/gun/energy/gun/secure/mounted,
-		/obj/item/taperoll/police,
+		/obj/item/taperoll/police/cyborg,
 		/obj/item/device/megaphone,
 		/obj/item/device/holowarrant,
 		/obj/item/weapon/tool/crowbar,
-		/obj/item/device/hailer
+		/obj/item/device/hailer,
+		/obj/item/robot_rack/body_bag,
+		/obj/item/weapon/tray/robotray,
 	)
 	emag = /obj/item/weapon/gun/energy/laser/mounted
 
@@ -62,11 +75,16 @@
 	)
 	equipment = list(
 		/obj/item/device/flash,
+		/obj/item/borg/sight/hud/sec,
+		/obj/item/weapon/handcuffs/cyborg,
 		/obj/item/borg/sight/thermal,
+		/obj/item/weapon/melee/baton/robot,
+		/obj/item/weapon/gun/energy/taser/mounted/cyborg,
 		/obj/item/weapon/gun/energy/laser/mounted,
 		/obj/item/weapon/gun/energy/plasmacutter,
 		/obj/item/borg/combat/shield,
 		/obj/item/borg/combat/mobility,
-		/obj/item/weapon/tool/crowbar
+		/obj/item/weapon/tool/crowbar,
+		/obj/item/device/megaphone,
 	)
 	emag = /obj/item/weapon/gun/energy/lasercannon/mounted

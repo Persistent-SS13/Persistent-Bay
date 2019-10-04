@@ -6,7 +6,7 @@
 		NETWORK_ENGINEERING
 	)
 	equipment = list(
-		/obj/item/weapon/tool/weldingtool,
+		/obj/item/weapon/tool/weldingtool/electric,
 		/obj/item/weapon/tool/screwdriver,
 		/obj/item/weapon/tool/wrench,
 		/obj/item/weapon/tool/crowbar,
@@ -37,11 +37,12 @@
 		/obj/item/stack/material/cyborg/plastic
 	)
 	synths = list(
-		/datum/matter_synth/metal =   25000,
-		/datum/matter_synth/glass =   25000,
-		/datum/matter_synth/wood =    2000,
-		/datum/matter_synth/plastic = 1000,
-		/datum/matter_synth/wire =    30
+		/datum/matter_synth/rechargeable/steel =   25000,
+		/datum/matter_synth/rechargeable/glass =   25000,
+		/datum/matter_synth/rechargeable/rglass =   25000,
+		/datum/matter_synth/rechargeable/wood =    2000,
+		/datum/matter_synth/rechargeable/plastic = 1000,
+		/datum/matter_synth/rechargeable/wire =    30
 	)
 	emag = /obj/item/weapon/gun/energy/plasmacutter
 
@@ -56,17 +57,20 @@
 
 /obj/item/weapon/robot_module/drone/finalize_synths()
 	. = ..()
-	var/datum/matter_synth/metal/metal =     locate() in synths
-	var/datum/matter_synth/glass/glass =     locate() in synths
-	var/datum/matter_synth/wood/wood =       locate() in synths
-	var/datum/matter_synth/plastic/plastic = locate() in synths
-	var/datum/matter_synth/wire/wire =       locate() in synths
+	var/datum/matter_synth/rechargeable/steel/metal =     locate() in synths
+	var/datum/matter_synth/rechargeable/glass/glass =     locate() in synths
+	var/datum/matter_synth/rechargeable/glass/rglass =     locate() in synths
+	var/datum/matter_synth/rechargeable/wood/wood =       locate() in synths
+	var/datum/matter_synth/rechargeable/plastic/plastic = locate() in synths
+	var/datum/matter_synth/rechargeable/wire/wire =       locate() in synths
 
 	var/obj/item/weapon/matter_decompiler/MD = locate() in equipment
-	MD.metal = metal
-	MD.glass = glass
-	MD.wood = wood
-	MD.plastic = plastic
+	MD.connect_matter_synth(MATERIAL_STEEL, metal)
+	MD.connect_matter_synth(MATERIAL_GLASS, glass)
+	MD.connect_matter_synth(MATERIAL_REINFORCED_GLASS, rglass)
+	MD.connect_matter_synth(MATERIAL_WOOD, wood)
+	MD.connect_matter_synth(MATERIAL_PLASTIC, plastic)
+	MD.connect_matter_synth(MATERIAL_COPPER, wire)
 
 	for(var/thing in list(
 		 /obj/item/stack/material/cyborg/steel,
@@ -79,10 +83,15 @@
 
 	for(var/thing in list(
 		 /obj/item/stack/material/cyborg/glass,
-		 /obj/item/stack/material/cyborg/glass/reinforced
 		))
 		var/obj/item/stack/stack = locate(thing) in equipment
 		LAZYDISTINCTADD(stack.synths, glass)
+
+	for(var/thing in list(
+		 /obj/item/stack/material/cyborg/glass/reinforced
+		))
+		var/obj/item/stack/stack = locate(thing) in equipment
+		LAZYDISTINCTADD(stack.synths, rglass)
 
 	for(var/thing in list(
 		 /obj/item/stack/tile/wood/cyborg,

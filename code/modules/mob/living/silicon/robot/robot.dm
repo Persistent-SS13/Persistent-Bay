@@ -73,9 +73,9 @@
 	var/has_power = 1
 	var/spawn_module = null
 
-	var/spawn_sound = 'sound/voice/liveagain.ogg'
+	var/spawn_sound //= 'sound/voice/liveagain.ogg'
 	var/pitch_toggle = 1
-	var/list/req_access = list(core_access_science_programs)
+	var/list/req_access = list()
 	var/ident = 0
 	var/viewalerts = 0
 	var/modtype = "Default"
@@ -113,49 +113,112 @@
 			var/datum/action/lace/laceaction = new(lmi.brainobj)
 			laceaction.Grant(src)
 
-/mob/living/silicon/robot/Initialize()
+/mob/living/silicon/robot/New()
+	..()
+	ADD_SAVED_VAR(custom_name)
+	ADD_SAVED_VAR(custom_sprite)
+	ADD_SAVED_VAR(icontype)
+	ADD_SAVED_VAR(icon_selected)
+	ADD_SAVED_VAR(module)
+	ADD_SAVED_VAR(module_active)
+	ADD_SAVED_VAR(module_state_1)
+	ADD_SAVED_VAR(module_state_2)
+	ADD_SAVED_VAR(module_state_3)
+	ADD_SAVED_VAR(cell)
+	ADD_SAVED_VAR(components)
+	ADD_SAVED_VAR(camera)
+	ADD_SAVED_VAR(mmi)
+	ADD_SAVED_VAR(lmi)
+	ADD_SAVED_VAR(storage)
+	ADD_SAVED_VAR(opened)
+	ADD_SAVED_VAR(emagged)
+	ADD_SAVED_VAR(wiresexposed)
+	ADD_SAVED_VAR(locked)
+	ADD_SAVED_VAR(has_power)
+	ADD_SAVED_VAR(pitch_toggle)
+	ADD_SAVED_VAR(req_access)
+	ADD_SAVED_VAR(ident)
+	ADD_SAVED_VAR(viewalerts)
+	ADD_SAVED_VAR(modtype)
+	ADD_SAVED_VAR(lower_mod)
+	ADD_SAVED_VAR(jetpack)
+	ADD_SAVED_VAR(jeton)
+	ADD_SAVED_VAR(killswitch)
+	ADD_SAVED_VAR(killswitch_time)
+	ADD_SAVED_VAR(weapon_lock)
+	ADD_SAVED_VAR(weaponlock_time)
+	ADD_SAVED_VAR(lawupdate)
+	ADD_SAVED_VAR(lockcharge)
+	ADD_SAVED_VAR(speed)
+	ADD_SAVED_VAR(scrambledcodes)
+	ADD_SAVED_VAR(braintype)
+	ADD_SAVED_VAR(intenselight)
+	ADD_SAVED_VAR(installed_module)
+	ADD_SAVED_VAR(chassis_mod)
+	ADD_SAVED_VAR(chassis_mod_toggled)
+
+	ADD_SKIP_EMPTY(components)
+	ident = random_id(/mob/living/silicon/robot, 1, 999)
+
+/mob/living/silicon/robot/Initialize(mapload)
 	. = ..()
 	spark_system = new /datum/effect/effect/system/spark_spread()
 	spark_system.set_up(5, 0, src)
 	spark_system.attach(src)
-
-	add_language("Robot Talk", 1)
-	add_language(LANGUAGE_EAL, 1)
-
 	wires = new(src)
 
-	robot_modules_background = new()
-	robot_modules_background.icon_state = "block"
-	ident = random_id(/mob/living/silicon/robot, 1, 999)
 	module_sprites["Basic"] = "robot"
 	icontype = "Basic"
 	updatename(modtype)
-	queue_icon_update()
-
+	
 	if(!scrambledcodes && !camera)
 		camera = new /obj/machinery/camera(src)
 		camera.c_tag = real_name
-		camera.replace_networks(list(NETWORK_NEXUS,NETWORK_ROBOTS))
+		camera.replace_networks(list(NETWORK_NEXUS,NETWORK_ROBOTS)) //#TODO: get faction camera network
 		if(wires.IsIndexCut(BORG_WIRE_CAMERA))
 			camera.status = 0
 	init()
-	initialize_components()
+	SetupUISprites()
+	if(!map_storage_loaded)
+		add_language("Robot Talk", 1)
+		add_language(LANGUAGE_EAL, 1)
+		initialize_components() //Create default components
 
-	for(var/V in components) if(V != "power cell")
-		var/datum/robot_component/C = components[V]
-		C.installed = 1
-		C.wrapped = new C.external_type
-
+	//Setup Cell
+	for(var/V in components) 
+		if(V != "power cell")
+			var/datum/robot_component/C = components[V]
+			C.installed = 1
+			C.wrapped = new C.external_type
 	if(ispath(cell))
 		cell = new cell(src)
-
 	if(cell)
 		var/datum/robot_component/cell_component = components["power cell"]
 		cell_component.wrapped = cell
 		cell_component.installed = 1
 
 	add_robot_verbs()
+	verbs -= /mob/living/silicon/robot/verb/Namepick
+	AddMovementHandler(/datum/movement_handler/robot/use_power, /datum/movement_handler/mob/space)
+	queue_icon_update()
 
+/mob/living/silicon/robot/proc/init()
+	if(ispath(module))
+		new module(src)
+	if(lawupdate)
+		var/new_ai = select_active_ai_with_fewest_borgs((get_turf(src))?.z)
+		if(new_ai)
+			lawupdate = 1
+			connect_to_ai(new_ai)
+		else
+			lawupdate = 0
+
+	if(spawn_sound)
+		playsound(loc, spawn_sound, 50, pitch_toggle)
+
+/mob/living/silicon/robot/proc/SetupUISprites()
+	robot_modules_background = new()
+	robot_modules_background.icon_state = "block"
 	hud_list[HEALTH_HUD]      = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
 	hud_list[STATUS_HUD]      = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudhealth100")
 	hud_list[LIFE_HUD]        = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudhealth100")
@@ -165,17 +228,24 @@
 	hud_list[IMPCHEM_HUD]     = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
 	hud_list[IMPTRACK_HUD]    = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
 	hud_list[SPECIALROLE_HUD] = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
-	verbs -= /mob/living/silicon/robot/verb/Namepick
-	AddMovementHandler(/datum/movement_handler/robot/use_power, /datum/movement_handler/mob/space)
 
 /mob/living/silicon/robot/after_load()
+	..()
 	if(lmi)
 		add_lace_action()
+	
+	//Make sure all components have the correct owner on load
+	for(var/key in components)
+		var/datum/robot_component/C = components[key]
+		if(C)
+			C.after_load_setup(src) //Make sure sub-components get to properly setup their references
 		
 /mob/living/silicon/robot/get_stack()
 	if(lmi)
 		return lmi.brainobj
-		
+
+/mob/living/silicon/robot/GetIdCard()
+	return idcard
 		
 /mob/living/silicon/robot/verb/ModuleDisable()
 	set category = "Robot Commands"
@@ -262,19 +332,6 @@
 		mult += storage.rating
 	for(var/datum/matter_synth/M in module.synths)
 		M.set_multiplier(mult)
-
-/mob/living/silicon/robot/proc/init()
-	if(ispath(module))
-		new module(src)
-	if(lawupdate)
-		var/new_ai = select_active_ai_with_fewest_borgs((get_turf(src))?.z)
-		if(new_ai)
-			lawupdate = 1
-			connect_to_ai(new_ai)
-		else
-			lawupdate = 0
-
-	playsound(loc, spawn_sound, 75, pitch_toggle)
 
 /mob/living/silicon/robot/fully_replace_character_name(pickedName as text)
 	custom_name = pickedName
@@ -1056,9 +1113,7 @@
 /mob/living/silicon/robot/proc/radio_menu()
 	silicon_radio.interact(src)//Just use the radio's Topic() instead of bullshit special-snowflake code
 
-
 /mob/living/silicon/robot/Move(a, b, flag)
-
 	. = ..()
 
 	if(module)

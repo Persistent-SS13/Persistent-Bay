@@ -236,7 +236,7 @@ var/const/NO_EMAG_ACT = -50
 		var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid, record.get_name())
 		if(!assignment)
 			return 0
-		var/datum/accesses/copy = assignment.accesses[record.rank]
+		var/datum/accesses/copy = assignment.accesses? assignment.accesses[record.rank] : null
 		if(!copy)
 			return 0
 		var/available = copy.expense_limit - record.expenses
@@ -518,6 +518,34 @@ var/const/NO_EMAG_ACT = -50
 		id_card.fingerprint_hash= md5(dna.uni_identity)
 	id_card.update_name()
 
+/mob/living/silicon/robot/set_id_info(var/obj/item/weapon/card/id/id_card)
+	. = ..()
+	if(lmi || mmi)
+		var/datum/dna/D = lmi? lmi.brainobj.dna : mmi? mmi.brainobj.dna : null
+		if(D)
+			id_card.blood_type		= D.b_type
+			id_card.dna_hash		= D.unique_enzymes
+			id_card.fingerprint_hash= md5(D.uni_identity)
+		else
+			log_warning("robot.set_id_info(): [lmi? "LMI" : "MMI"] user [src]\ref[src] ([ckey]) has no dna stored in their brainobj!")
+
+	//Set details for money account and loaded records
+	if(mind)
+		var/datum/money_account/M = get_account_record(real_name)
+		if(istype(M))
+			id_card.associated_account_number = M.account_number
+		else
+			log_warning("robot.set_id_info(): there is no bank account for [ckey], [src]\ref[src]. Skipping adding it to the id card!")
+	else
+		log_warning("robot.set_id_info(): there is no mind for [src]\ref[src]. Skipping adding bank account to the id card!")
+
+	var/datum/computer_file/report/crew_record/record = get_crewmember_record(real_name)
+	if(record)
+		id_card.sync_from_record(record)
+	else
+		log_warning("robot.set_id_info(): there is no existing record for [src]\ref[src]. Skipping syncyng to record!")
+
+
 /mob/living/carbon/human/set_id_info(var/obj/item/weapon/card/id/id_card)
 	..()
 	id_card.age = age
@@ -636,8 +664,8 @@ var/const/NO_EMAG_ACT = -50
 				final_access |= text2num(x)
 			if(faction.allow_id_access) final_access |= access
 			var/datum/assignment/assignment = faction.get_assignment(record.try_duty(), registered_name)
-			if(assignment)
-				for(var/i=1; i<=record.rank; i++)
+			if(assignment && assignment.accesses)
+				for(var/i=1; i<=record.rank && i <= assignment.accesses.len; i++)
 					var/datum/accesses/copy = assignment.accesses[i]
 					if(copy)
 						for(var/x in copy.accesses)

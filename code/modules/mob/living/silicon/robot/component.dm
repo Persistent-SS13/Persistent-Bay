@@ -19,6 +19,20 @@
 	var/obj/item/wrapped = null
 
 /datum/robot_component/New(mob/living/silicon/robot/R)
+	..()
+	src.owner = R
+	ADD_SAVED_VAR(name)
+	ADD_SAVED_VAR(installed)
+	ADD_SAVED_VAR(powered)
+	ADD_SAVED_VAR(toggled)
+	ADD_SAVED_VAR(brute_damage)
+	ADD_SAVED_VAR(electronics_damage)
+	ADD_SAVED_VAR(max_damage)
+	ADD_SAVED_VAR(external_type)
+	ADD_SAVED_VAR(wrapped)
+
+//Handles component specific setup to be done after the borg was loaded from a save
+/datum/robot_component/proc/after_load_setup(var/mob/living/silicon/robot/R)
 	src.owner = R
 
 /datum/robot_component/proc/install()
@@ -78,7 +92,7 @@
 /datum/robot_component/armour
 	name = "armour plating"
 	external_type = /obj/item/robot_parts/robot_component/armour
-	max_damage = 150
+	max_damage = 180
 
 // ACTUATOR
 // Enables movement.
@@ -88,7 +102,7 @@
 	idle_usage = 0
 	active_usage = 200
 	external_type = /obj/item/robot_parts/robot_component/actuator
-	max_damage = 50
+	max_damage = 60
 
 
 //A fixed and much cleaner implementation of /tg/'s special snowflake code.
@@ -101,7 +115,7 @@
 // No power usage
 /datum/robot_component/cell
 	name = "power cell"
-	max_damage = 50
+	max_damage = 60
 	var/obj/item/weapon/cell/stored_cell = null
 
 /datum/robot_component/cell/destroy()
@@ -121,7 +135,7 @@
 	external_type = /obj/item/robot_parts/robot_component/radio
 	idle_usage = 15		//it's not actually possible to tell when we receive a message over our radio, so just use 10W every tick for passive listening
 	active_usage = 75	//transmit power
-	max_damage = 40
+	max_damage = 80
 
 
 // BINARY RADIO
@@ -132,7 +146,7 @@
 	external_type = /obj/item/robot_parts/robot_component/binary_communication_device
 	idle_usage = 5
 	active_usage = 25
-	max_damage = 30
+	max_damage = 90
 
 
 // CAMERA
@@ -142,8 +156,12 @@
 	name = "camera"
 	external_type = /obj/item/robot_parts/robot_component/camera
 	idle_usage = 10
-	max_damage = 40
+	max_damage = 60
 	var/obj/machinery/camera/camera
+
+/datum/robot_component/camera/after_load_setup(var/mob/living/silicon/robot/R)
+	..()
+	camera = R.camera
 
 /datum/robot_component/camera/New(mob/living/silicon/robot/R)
 	..()
@@ -173,7 +191,7 @@
 	name = "self-diagnosis unit"
 	active_usage = 1000
 	external_type = /obj/item/robot_parts/robot_component/diagnosis_unit
-	max_damage = 30
+	max_damage = 190
 
 
 
@@ -216,6 +234,11 @@
 	var/brute = 0
 	var/burn = 0
 	var/icon_state_broken = "broken"
+
+/obj/item/robot_parts/robot_component/New(newloc, model)
+	. = ..()
+	ADD_SAVED_VAR(brute)
+	ADD_SAVED_VAR(burn)
 
 /obj/item/robot_parts/robot_component/binary_communication_device
 	name = "binary communication device"

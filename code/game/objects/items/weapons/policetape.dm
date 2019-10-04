@@ -66,6 +66,9 @@ var/list/tape_roll_applications = list()
 	tape_type = /obj/item/tape/police
 	color = COLOR_RED
 
+/obj/item/taperoll/police/cyborg
+	//Here so any future change to make those spend charges don't break cyborgs
+
 /obj/item/tape/police
 	name = "police tape"
 	desc = "A length of police tape.  Do not cross."

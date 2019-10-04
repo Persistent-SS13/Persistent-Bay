@@ -25,7 +25,7 @@
 		/obj/item/device/flash,
 		/obj/item/borg/sight/meson,
 		/obj/item/weapon/extinguisher,
-		/obj/item/weapon/tool/weldingtool/largetank,
+		/obj/item/weapon/tool/weldingtool/electric,
 		/obj/item/weapon/tool/screwdriver,
 		/obj/item/weapon/tool/wrench,
 		/obj/item/weapon/tool/crowbar,
@@ -43,7 +43,6 @@
 		/obj/item/device/floor_painter,
 		/obj/item/weapon/inflatable_dispenser/robot,
 		/obj/item/inducer/borg,
-		/obj/item/device/plunger/robot,
 		/obj/item/weapon/matter_decompiler,
 		/obj/item/stack/material/cyborg/steel,
 		/obj/item/stack/material/cyborg/aluminium,
@@ -55,40 +54,56 @@
 		/obj/item/stack/material/cyborg/plasteel
 	)
 	synths = list(
-		/datum/matter_synth/metal =    60000,
-		/datum/matter_synth/glass =    40000,
-		/datum/matter_synth/plasteel = 20000,
-		/datum/matter_synth/wire
+		/datum/matter_synth/rechargeable/steel =    60000,
+		/datum/matter_synth/rechargeable/aluminium = 60000,
+		/datum/matter_synth/rechargeable/glass =    40000,
+		/datum/matter_synth/rechargeable/rglass =   40000,
+		/datum/matter_synth/rechargeable/plasteel = 20000,
+		/datum/matter_synth/rechargeable/wire,
 	)
 	emag = /obj/item/weapon/melee/baton/robot/electrified_arm
 
 /obj/item/weapon/robot_module/engineering/finalize_synths()
 
-	var/datum/matter_synth/metal/metal =       locate() in synths
-	var/datum/matter_synth/glass/glass =       locate() in synths
-	var/datum/matter_synth/plasteel/plasteel = locate() in synths
-	var/datum/matter_synth/wire/wire =         locate() in synths
+	var/datum/matter_synth/rechargeable/steel/metal =       locate() in synths
+	var/datum/matter_synth/rechargeable/aluminium/aluminium =       locate() in synths
+	var/datum/matter_synth/rechargeable/glass/glass =       locate() in synths
+	var/datum/matter_synth/rechargeable/rglass/rglass =     locate() in synths
+	var/datum/matter_synth/rechargeable/plasteel/plasteel = locate() in synths
+	var/datum/matter_synth/rechargeable/wire/wire =         locate() in synths
 
 	var/obj/item/weapon/matter_decompiler/MD = locate() in equipment
-	MD.metal = metal
-	MD.glass = glass
+	MD.connect_matter_synth(MATERIAL_STEEL, metal)
+	MD.connect_matter_synth(MATERIAL_ALUMINIUM, aluminium)
+	MD.connect_matter_synth(MATERIAL_GLASS, glass)
+	MD.connect_matter_synth(MATERIAL_REINFORCED_GLASS, rglass)
+	MD.connect_matter_synth(MATERIAL_COPPER, wire)
 
 	for(var/thing in list(
 		 /obj/item/stack/material/cyborg/steel,
-		 /obj/item/stack/material/cyborg/aluminium,
 		 /obj/item/stack/material/rods/cyborg,
 		 /obj/item/stack/tile/floor/cyborg,
-		 /obj/item/stack/material/cyborg/glass/reinforced
 		))
 		var/obj/item/stack/stack = locate(thing) in equipment
 		LAZYDISTINCTADD(stack.synths, metal)
 
 	for(var/thing in list(
-		 /obj/item/stack/material/cyborg/glass/reinforced,
+		 /obj/item/stack/material/cyborg/aluminium,
+		))
+		var/obj/item/stack/stack = locate(thing) in equipment
+		LAZYDISTINCTADD(stack.synths, aluminium)
+
+	for(var/thing in list(
 		 /obj/item/stack/material/cyborg/glass
 		))
 		var/obj/item/stack/stack = locate(thing) in equipment
 		LAZYDISTINCTADD(stack.synths, glass)
+
+	for(var/thing in list(
+		 /obj/item/stack/material/cyborg/glass/reinforced,
+		))
+		var/obj/item/stack/stack = locate(thing) in equipment
+		LAZYDISTINCTADD(stack.synths, rglass)
 
 	var/obj/item/stack/cable_coil/cyborg/C = locate() in equipment
 	C.synths = list(wire)

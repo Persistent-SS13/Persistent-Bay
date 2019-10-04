@@ -17,19 +17,60 @@
 		/obj/item/weapon/tracker_electronics,
 		/obj/item/weapon/module/power_control,
 		/obj/item/weapon/stock_parts,
-		/obj/item/frame,
-		/obj/item/weapon/camera_assembly,
-		/obj/item/weapon/tank,
 		/obj/item/weapon/circuitboard,
 		/obj/item/weapon/smes_coil,
 		/obj/item/weapon/computer_hardware,
+		/obj/item/usedcryobag,
+		/obj/item/ammo_magazine,
+		/obj/item/auto_cpr,
+		/obj/item/bee_pack,
+		/obj/item/bee_smoker,
+		/obj/item/conveyor_construct,
+		/obj/item/conveyor_switch_construct,
+		/obj/item/disk,
+		/obj/item/documents,
+		/obj/item/mecha_parts,
+		/obj/item/modular_computer,
+		/obj/item/organ,
+		/obj/item/paper,
+		/obj/item/pipe,
+		/obj/item/pizzabox,
+		/obj/item/rig_module,
+		/obj/item/robot_parts,
+		/obj/item/roller,
+		/obj/item/slime_extract,
+		/obj/item/smallDelivery,
+		/obj/item/sticky_pad,
+		/obj/item/taperoll,
+		/obj/item/toy,
+		/obj/item/trash,
+		/obj/item/underwear,
+		/obj/item/voice_changer,
+		/obj/item/weed_extract,
+		/obj/item/weedkiller,
+		/obj/item/seeds,
+
+		/obj/item/weapon/towel,
+		/obj/item/weapon/toy,
+		/obj/item/weapon/tray,
+		/obj/item/weapon/vending_refill,
+		/obj/item/weapon/virusdish,
+
+		/obj/item/frame,
+		/obj/item/weapon/camera_assembly,
+		/obj/item/weapon/tank,
+
 		/obj/item/weapon/fuel_assembly,
-		/obj/item/stack/material/deuterium,
-		/obj/item/stack/material/tritium,
-		/obj/item/stack/tile
+
+		/obj/item/stack/material,
+		/obj/item/stack/tile,
 		)
 
 	var/obj/item/wrapped = null // Item currently being held.
+
+/obj/item/weapon/gripper/New()
+	. = ..()
+	ADD_SAVED_VAR(wrapped)
 
 // VEEEEERY limited version for mining borgs. Basically only for swapping cells and upgrading the drills.
 /obj/item/weapon/gripper/miner
@@ -41,7 +82,8 @@
 	can_hold = list(
 	/obj/item/weapon/cell,
 	/obj/item/weapon/stock_parts,
-	/obj/item/weapon/circuitboard/miningdrill
+	/obj/item/weapon/circuitboard/miningdrill,
+	/obj/item/stack/ore,
 	)
 
 /obj/item/weapon/gripper/clerical
@@ -52,10 +94,16 @@
 		/obj/item/weapon/material/clipboard,
 		/obj/item/weapon/paper,
 		/obj/item/weapon/paper_bundle,
+		/obj/item/weapon/card,
 		/obj/item/weapon/card/id,
 		/obj/item/weapon/book,
 		/obj/item/weapon/newspaper,
-		/obj/item/smallDelivery
+		/obj/item/smallDelivery,
+		/obj/item/weapon/pen,
+		/obj/item/weapon/disk,
+		/obj/item/weapon/reagent_containers,
+		/obj/item/weapon/shreddedp,
+
 		)
 
 /obj/item/weapon/gripper/chemistry
@@ -67,6 +115,9 @@
 		/obj/item/weapon/reagent_containers/pill,
 		/obj/item/weapon/reagent_containers/ivbag,
 		/obj/item/weapon/storage/pill_bottle,
+		/obj/item/weapon/storage/plants,
+		/obj/item/weapon/storage/fancy/vials,
+		/obj/item/weapon/storage/box,
 		)
 
 /obj/item/weapon/gripper/research //A general usage gripper, used for toxins/robotics/xenobio/etc
@@ -77,17 +128,20 @@
 	can_hold = list(
 		/obj/item/weapon/cell,
 		/obj/item/weapon/stock_parts,
+		/obj/item/device/lmi,
 		/obj/item/device/mmi,
 		/obj/item/robot_parts,
 		/obj/item/borg/upgrade,
 		/obj/item/device/flash,
 		/obj/item/organ/internal/brain,
 		/obj/item/organ/internal/posibrain,
+		/obj/item/organ/internal/stack,
 		/obj/item/stack/cable_coil,
 		/obj/item/weapon/circuitboard,
 		/obj/item/slime_extract,
 		/obj/item/weapon/reagent_containers/glass,
 		/obj/item/weapon/reagent_containers/food/snacks/monkeycube,
+		/obj/item/weapon/reagent_containers/food/snacks,
 		/obj/item/mecha_parts,
 		/obj/item/weapon/computer_hardware,
 		/obj/item/device/transfer_valve,
@@ -95,7 +149,7 @@
 		/obj/item/device/assembly/timer,
 		/obj/item/device/assembly/igniter,
 		/obj/item/device/assembly/infra,
-		/obj/item/weapon/tank
+		/obj/item/weapon/tank,
 		)
 
 /obj/item/weapon/gripper/cultivator
@@ -107,7 +161,10 @@
 		/obj/item/seeds,
 		/obj/item/weapon/grown,
 		/obj/item/slime_extract,
-		/obj/item/weapon/disk/botany
+		/obj/item/weapon/disk,
+		/obj/item/weapon/tray,
+		/obj/item/weapon/shovel,
+		/obj/item/weapon/plantspray,
 	)
 
 /obj/item/weapon/gripper/service //Used to handle food, drinks, and seeds.
@@ -288,129 +345,185 @@
 	icon_state = "decompiler"
 
 	//Metal, glass, wood, plastic.
-	var/datum/matter_synth/metal = null
-	var/datum/matter_synth/glass = null
-	var/datum/matter_synth/wood = null
-	var/datum/matter_synth/plastic = null
+	// var/datum/matter_synth/metal = null
+	// var/datum/matter_synth/glass = null
+	// var/datum/matter_synth/wood = null
+	// var/datum/matter_synth/plastic = null
+
+	//Links to the actual matter synths the materials are sent to
+	var/list/synths = list(
+		MATERIAL_STEEL = null, 
+		MATERIAL_GLASS = null, 
+		MATERIAL_REINFORCED_GLASS = null, 
+		MATERIAL_WOOD = null,
+		MATERIAL_PLASTIC = null,
+		)
+
+/obj/item/weapon/matter_decompiler/proc/connect_matter_synth(var/material_name, var/datum/matter_synth/M)
+	synths[material_name] = M
+
+/obj/item/weapon/matter_decompiler/proc/disconnect_matter_synth(var/material_name)
+	synths[material_name] = null
+
+/obj/item/weapon/matter_decompiler/proc/get_matter_synth(var/material_name)
+	return synths[material_name]
 
 /obj/item/weapon/matter_decompiler/attack(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
 	return
 
 /obj/item/weapon/matter_decompiler/afterattack(atom/target as mob|obj|turf|area, mob/living/user as mob|obj, proximity, params)
-
 	if(!proximity) return //Not adjacent.
+	var/processed_something = FALSE
+	if(isturf(target))
+		var/turf/T = target	
+		for(var/obj/W in T)
+			var/ate_object = FALSE
+			for(var/k in W.matter)
+				if(synths[k])
+					synths[k].add_charge(W.matter[k])
+					ate_object = TRUE
+					processed_something = TRUE
+			if(ate_object)
+				qdel(target)
 
-	//We only want to deal with using this on turfs. Specific items aren't important.
-	var/turf/T = get_turf(target)
-	if(!istype(T))
-		return
 
-	//Used to give the right message.
-	var/grabbed_something = 0
-
-	for(var/mob/M in T)
-		if(istype(M,/mob/living/simple_animal/lizard) || istype(M,/mob/living/simple_animal/mouse))
-			src.loc.visible_message("<span class='danger'>[src.loc] sucks [M] into its decompiler. There's a horrible crunching noise.</span>","<span class='danger'>It's a bit of a struggle, but you manage to suck [M] into your decompiler. It makes a series of visceral crunching noises.</span>")
-			new/obj/effect/decal/cleanable/blood/splatter(get_turf(src))
-			qdel(M)
-			if(wood)
-				wood.add_charge(2000)
-			if(plastic)
-				plastic.add_charge(2000)
-			return
-
-		else if(istype(M,/mob/living/silicon/robot/drone) && !M.client)
-
-			var/mob/living/silicon/robot/D = src.loc
-
-			if(!istype(D))
-				return
-
-			to_chat(D, "<span class='danger'>You begin decompiling [M].</span>")
-
-			if(!do_after(D,50,M))
-				to_chat(D, "<span class='danger'>You need to remain still while decompiling such a large object.</span>")
-				return
-
-			if(!M || !D) return
-
-			to_chat(D, "<span class='danger'>You carefully and thoroughly decompile [M], storing as much of its resources as you can within yourself.</span>")
-			qdel(M)
-			new/obj/effect/decal/cleanable/blood/oil(get_turf(src))
-
-			if(metal)
-				metal.add_charge(15000)
-			if(glass)
-				glass.add_charge(15000)
-			if(wood)
-				wood.add_charge(2000)
-			if(plastic)
-				plastic.add_charge(1000)
-			return
+		if(processed_something)
+			to_chat(user, SPAN_NOTICE("You deploy your decompiler and clear out the contents of \the [T]"))
 		else
-			continue
+			to_chat(user, SPAN_DANGER("Nothing on \the [T] is useful to you."))
 
-	for(var/obj/W in T)
-		//Different classes of items give different commodities.
-		if(istype(W,/obj/item/trash/cigbutt))
-			if(plastic)
-				plastic.add_charge(500)
-		else if(istype(W,/obj/effect/spider/spiderling))
-			if(wood)
-				wood.add_charge(2000)
-			if(plastic)
-				plastic.add_charge(2000)
-		else if(istype(W,/obj/item/weapon/light))
-			var/obj/item/weapon/light/L = W
-			if(L.status >= 2) //In before someone changes the inexplicably local defines. ~ Z
-				if(metal)
-					metal.add_charge(250)
-				if(glass)
-					glass.add_charge(250)
-			else
-				continue
-		else if(istype(W,/obj/item/remains/robot))
-			if(metal)
-				metal.add_charge(2000)
-			if(plastic)
-				plastic.add_charge(2000)
-			if(glass)
-				glass.add_charge(1000)
-		else if(istype(W,/obj/item/trash))
-			if(metal)
-				metal.add_charge(1000)
-			if(plastic)
-				plastic.add_charge(3000)
-		else if(istype(W,/obj/effect/decal/cleanable/blood/gibs/robot))
-			if(metal)
-				metal.add_charge(2000)
-			if(glass)
-				glass.add_charge(2000)
-		else if(istype(W,/obj/item/ammo_casing))
-			if(metal)
-				metal.add_charge(1000)
-		else if(istype(W,/obj/item/weapon/material/shard/shrapnel))
-			if(metal)
-				metal.add_charge(1000)
-		else if(istype(W,/obj/item/weapon/material/shard))
-			if(glass)
-				glass.add_charge(1000)
-		else if(istype(W,/obj/item/weapon/reagent_containers/food/snacks/grown))
-			if(wood)
-				wood.add_charge(4000)
-		else if(istype(W,/obj/item/pipe))
-			// This allows drones and engiborgs to clear pipe assemblies from floors.
+	else if(isobj(target))
+		var/obj/O = target
+		var/ate_object = FALSE
+		for(var/k in O.matter)
+			if(synths[k])
+				synths[k].add_charge(O.matter[k])
+				ate_object = TRUE
+				processed_something = TRUE
+		if(ate_object)
+			qdel(target)
+
+		if(processed_something)
+			to_chat(user, SPAN_NOTICE("You deploy your decompiler and decompile \the [O]"))
 		else
-			continue
+			to_chat(user, SPAN_DANGER("\The [O] is not useful to you."))
 
-		qdel(W)
-		grabbed_something = 1
 
-	if(grabbed_something)
-		to_chat(user, "<span class='notice'>You deploy your decompiler and clear out the contents of \the [T].</span>")
-	else
-		to_chat(user, "<span class='danger'>Nothing on \the [T] is useful to you.</span>")
-	return
+// /obj/item/weapon/matter_decompiler/afterattack(atom/target as mob|obj|turf|area, mob/living/user as mob|obj, proximity, params)
+
+// 	if(!proximity) return //Not adjacent.
+
+// 	//We only want to deal with using this on turfs. Specific items aren't important.
+// 	var/turf/T = get_turf(target)
+// 	if(!istype(T))
+// 		return
+
+// 	//Used to give the right message.
+// 	var/grabbed_something = 0
+
+// 	for(var/mob/M in T)
+// 		if(istype(M,/mob/living/simple_animal/lizard) || istype(M,/mob/living/simple_animal/mouse))
+// 			src.loc.visible_message("<span class='danger'>[src.loc] sucks [M] into its decompiler. There's a horrible crunching noise.</span>","<span class='danger'>It's a bit of a struggle, but you manage to suck [M] into your decompiler. It makes a series of visceral crunching noises.</span>")
+// 			new/obj/effect/decal/cleanable/blood/splatter(get_turf(src))
+// 			qdel(M)
+// 			if(wood)
+// 				wood.add_charge(2000)
+// 			if(plastic)
+// 				plastic.add_charge(2000)
+// 			return
+
+// 		else if(istype(M,/mob/living/silicon/robot/drone) && !M.client)
+
+// 			var/mob/living/silicon/robot/D = src.loc
+
+// 			if(!istype(D))
+// 				return
+
+// 			to_chat(D, "<span class='danger'>You begin decompiling [M].</span>")
+
+// 			if(!do_after(D,50,M))
+// 				to_chat(D, "<span class='danger'>You need to remain still while decompiling such a large object.</span>")
+// 				return
+
+// 			if(!M || !D) return
+
+// 			to_chat(D, "<span class='danger'>You carefully and thoroughly decompile [M], storing as much of its resources as you can within yourself.</span>")
+// 			qdel(M)
+// 			new/obj/effect/decal/cleanable/blood/oil(get_turf(src))
+
+// 			if(metal)
+// 				metal.add_charge(15000)
+// 			if(glass)
+// 				glass.add_charge(15000)
+// 			if(wood)
+// 				wood.add_charge(2000)
+// 			if(plastic)
+// 				plastic.add_charge(1000)
+// 			return
+// 		else
+// 			continue
+
+// 	for(var/obj/W in T)
+// 		//Different classes of items give different commodities.
+// 		if(istype(W,/obj/item/trash/cigbutt))
+// 			if(plastic)
+// 				plastic.add_charge(500)
+// 		else if(istype(W,/obj/effect/spider/spiderling))
+// 			if(wood)
+// 				wood.add_charge(2000)
+// 			if(plastic)
+// 				plastic.add_charge(2000)
+// 		else if(istype(W,/obj/item/weapon/light))
+// 			var/obj/item/weapon/light/L = W
+// 			if(L.status >= 2) //In before someone changes the inexplicably local defines. ~ Z
+// 				if(metal)
+// 					metal.add_charge(250)
+// 				if(glass)
+// 					glass.add_charge(250)
+// 			else
+// 				continue
+// 		else if(istype(W,/obj/item/remains/robot))
+// 			if(metal)
+// 				metal.add_charge(2000)
+// 			if(plastic)
+// 				plastic.add_charge(2000)
+// 			if(glass)
+// 				glass.add_charge(1000)
+// 		else if(istype(W,/obj/item/trash))
+// 			if(metal)
+// 				metal.add_charge(1000)
+// 			if(plastic)
+// 				plastic.add_charge(3000)
+// 		else if(istype(W,/obj/effect/decal/cleanable/blood/gibs/robot))
+// 			if(metal)
+// 				metal.add_charge(2000)
+// 			if(glass)
+// 				glass.add_charge(2000)
+// 		else if(istype(W,/obj/item/ammo_casing))
+// 			if(metal)
+// 				metal.add_charge(1000)
+// 		else if(istype(W,/obj/item/weapon/material/shard/shrapnel))
+// 			if(metal)
+// 				metal.add_charge(1000)
+// 		else if(istype(W,/obj/item/weapon/material/shard))
+// 			if(glass)
+// 				glass.add_charge(1000)
+// 		else if(istype(W,/obj/item/weapon/reagent_containers/food/snacks/grown))
+// 			if(wood)
+// 				wood.add_charge(4000)
+// 		else if(istype(W,/obj/item/pipe))
+// 			// This allows drones and engiborgs to clear pipe assemblies from floors.
+// 		else
+// 			continue
+
+// 		qdel(W)
+// 		grabbed_something = 1
+
+// 	if(grabbed_something)
+// 		to_chat(user, "<span class='notice'>You deploy your decompiler and clear out the contents of \the [T].</span>")
+// 	else
+// 		to_chat(user, "<span class='danger'>Nothing on \the [T] is useful to you.</span>")
+// 	return
 
 //PRETTIER TOOL LIST.
 /mob/living/silicon/robot/drone/installed_modules()

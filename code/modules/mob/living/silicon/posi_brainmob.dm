@@ -12,12 +12,22 @@
 		/datum/nano_module/law_manager
 	)
 
-/mob/living/silicon/sil_brainmob/New()
-	reagents = new/datum/reagents(1000, src)
+/mob/living/silicon/sil_brainmob/New(loc)
+	..()
+	ADD_SAVED_VAR(emp_damage)
+	ADD_SAVED_VAR(owner_channels)
+	ADD_SAVED_VAR(law_channels)
+
+/mob/living/silicon/sil_brainmob/Initialize()
+	. = ..()
 	if(istype(loc, /obj/item/organ/internal/posibrain))
 		container = loc
-	add_language("Robot Talk")
-	..()
+	if(!map_storage_loaded)
+		add_language("Robot Talk")
+
+/mob/living/silicon/sil_brainmob/SetupReagents()
+	. = ..()
+	reagents = new/datum/reagents(1000, src)
 
 /mob/living/silicon/sil_brainmob/Destroy()
 	if(key)				//If there is a mob connected to this thing. Have to check key twice to avoid false death reporting.

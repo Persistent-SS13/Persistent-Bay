@@ -984,6 +984,11 @@
 	build_path = /obj/item/weapon/circuitboard/oxyregenerator
 	build_type = ENGIFAB
 
+/datum/design/circuit/cryopod_robot
+	name = "robotic storage unit circuit"
+	id = "cryopod_robot"
+	build_path = /obj/item/weapon/circuitboard/cryopod/robot
+
 /**
 
 /datum/design/aimodule

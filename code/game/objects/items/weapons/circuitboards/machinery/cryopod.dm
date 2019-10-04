@@ -21,3 +21,13 @@
 							/obj/item/weapon/stock_parts/matter_bin = 1,
 							/obj/item/weapon/stock_parts/scanning_module = 1,
 							/obj/item/weapon/stock_parts/console_screen = 1)
+
+/obj/item/weapon/circuitboard/cryopod/robot
+	name = T_BOARD("Robotic Storage Unit")
+	build_path = /obj/machinery/cryopod/robot
+	board_type = "machine"
+	origin_tech = list(TECH_ENGINEERING = 2)
+	req_components = list(
+							/obj/item/weapon/stock_parts/matter_bin = 1,
+							/obj/item/weapon/stock_parts/scanning_module = 1,
+							/obj/item/weapon/stock_parts/console_screen = 1)

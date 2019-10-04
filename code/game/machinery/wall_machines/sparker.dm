@@ -6,39 +6,35 @@
 	desc = "A wall-mounted ignition device."
 	icon = 'icons/obj/machines/igniters.dmi'
 	icon_state = "migniter"
-	var/id = null
-	var/disable = 0
-	var/last_spark = 0
-	var/base_state = "migniter"
 	anchored = TRUE
 	use_power = POWER_USE_IDLE
 	idle_power_usage = 2
 	active_power_usage = 4
-	var/_wifi_id
-	var/datum/wifi/receiver/button/sparker/wifi_receiver
 	matter = list(MATERIAL_STEEL = 4000)
 	frame_type = /obj/item/frame/sparker
 
+	//Radio
+	id_tag 				= null
+	frequency 			= MISC_MACHINE_FREQ
+	radio_filter_in 	= RADIO_IGNITER
+	radio_filter_out 	= RADIO_IGNITER
+	radio_check_id 		= TRUE
+
+	var/disable = 0
+	var/last_spark = 0
+
 /obj/machinery/sparker/Initialize()
 	. = ..()
-	if(_wifi_id)
-		wifi_receiver = new(_wifi_id, src)
-
-/obj/machinery/sparker/Destroy()
-	qdel(wifi_receiver)
-	wifi_receiver = null
-	return ..()
+	if(!map_storage_loaded)
+		get_or_create_extension(src, /datum/extension/base_icon_state, /datum/extension/base_icon_state, icon_state)
 
 /obj/machinery/sparker/update_icon()
-	..()
 	if(disable)
 		icon_state = "migniter-d"
 	else if(powered())
 		icon_state = "migniter"
-//		src.sd_SetLuminosity(2)
 	else
 		icon_state = "migniter-p"
-//		src.sd_SetLuminosity(0)
 
 /obj/machinery/sparker/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(default_deconstruction_screwdriver(W))
@@ -48,16 +44,17 @@
 	return ..()
 
 /obj/machinery/sparker/attack_ai()
-	if (anchored)
-		return spark()
+	interact(usr)
+
+/obj/machinery/sparker/interact(mob/user)
+	if(anchored)
+		spark()
 
 /obj/machinery/sparker/proc/spark()
-	if (!powered())
+	if(inoperable())
 		return
-
-	if (disable || (last_spark && world.time < last_spark + 50))
+	if(disable || (last_spark && world.time < last_spark + 50))
 		return
-
 
 	flick("migniter-spark", src)
 	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
@@ -70,7 +67,7 @@
 		location.hotspot_expose(1000,500,1)
 	return 1
 
-/obj/machinery/sparker/emp_act(severity)
-	if(!isbroken() && ispowered())
+/obj/machinery/sparker/OnSignal(datum/signal/signal)
+	. = ..()
+	if(signal.data["activate"])
 		spark()
-	..(severity)

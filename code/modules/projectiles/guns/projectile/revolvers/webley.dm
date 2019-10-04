@@ -8,7 +8,7 @@
 	origin_tech = list(TECH_COMBAT = 2, TECH_MATERIAL = 2)
 	accuracy = 1
 	bulk = 1
-	fire_delay = 10
+	fire_delay = 7
 	one_hand_penalty = 1
 	matter = list(MATERIAL_STEEL = 3000)
 	mass = 1.2 KILOGRAMS

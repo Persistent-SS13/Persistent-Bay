@@ -155,13 +155,13 @@
 	fire_sound = 'sound/weapons/gunshot/gunshot_strong.ogg'
 
 //---------------------------------------------------
-//	9mm Bullet
+//	9mm Bullet (481 J)
 //---------------------------------------------------
 /obj/item/projectile/bullet/pistol/c9mm
-	force = 8 //9mm, .38, etc
+	force = 17 //9mm, .38, etc
 	armor_penetration = 13.5
 	penetration_modifier = 0.8
-	distance_falloff = 3
+	distance_falloff = 2
 /obj/item/projectile/bullet/rubber/c9mm
 	distance_falloff = 4
 
@@ -172,22 +172,22 @@
 	distance_falloff = 4
 
 //---------------------------------------------------
-//	.22lr Bullet
+//	.22lr Bullet (178 J)
 //---------------------------------------------------
 /obj/item/projectile/bullet/pistol/c22lr
-	force = 8 //9mm, .38, etc
-	armor_penetration = 2
-	penetration_modifier = 0.5
+	force = 9
+	armor_penetration = 3
+	penetration_modifier = 0.7
 	distance_falloff = 5
 
 //---------------------------------------------------
-//	.45 Bullet
+//	.45 Bullet (483 J)
 //---------------------------------------------------
 /obj/item/projectile/bullet/pistol/c45
-	force = 12 //.45
+	force = 18 //.45
 	armor_penetration = 14.5
 	penetration_modifier = 1.2
-	distance_falloff = 4
+	distance_falloff = 3
 /obj/item/projectile/bullet/rubber/c45
 	distance_falloff = 6
 
@@ -198,51 +198,56 @@
 	distance_falloff = 4
 
 //---------------------------------------------------
-//	.357 Bullet
+//	.357 Bullet (790 J)
 //---------------------------------------------------
 /obj/item/projectile/bullet/pistol/c357
 	fire_sound = 'sound/weapons/gunshot/gunshot_strong.ogg'
-	force = 16 
-	penetration_modifier = 0.8
+	force = 24 
+	penetration_modifier = 1.3
 	armor_penetration = 16
+	mass = 8 GRAMS
 
 //---------------------------------------------------
-//	.38 Bullet
+//	.38 Bullet (358 J)
 //---------------------------------------------------
 /obj/item/projectile/bullet/pistol/c38
-	force = 12 
+	force = 12
 	penetration_modifier = 0.8
 	armor_penetration = 12
 	distance_falloff = 3
+	mass = 9.5 GRAMS
 
 //---------------------------------------------------
-//	.44 Bullet
+//	.44 Bullet (1,005 J)
 //---------------------------------------------------
 /obj/item/projectile/bullet/pistol/c44
 	fire_sound = 'sound/weapons/gunshot/gunshot_strong.ogg'
-	force = 18 //.44 magnum or something
+	force = 28 //.44 magnum or something
 	armor_penetration = 25
-	penetration_modifier = 1.0
+	penetration_modifier = 1.7
 	distance_falloff = 2.5
+	mass = 16 GRAMS
 
 //---------------------------------------------------
-//	.50 Bullet
+//	.50 Bullet (2,200 J)
 //---------------------------------------------------
 /obj/item/projectile/bullet/pistol/c50 
 	fire_sound = 'sound/weapons/gunshot/gunshot_strong.ogg'
-	force = 25 //.50AE
+	force = 35 //.50AE
 	armor_penetration = 30
-	penetration_modifier = 1.8
+	penetration_modifier = 2.1
 	distance_falloff = 2.5
+	mass = 19 GRAMS
 
 //---------------------------------------------------
 //	.50 Bullet Revolver
 //---------------------------------------------------
 /obj/item/projectile/bullet/revolver/c50 //revolvers
-	force = 28 //Revolvers get snowflake bullets, to keep them relevant
+	force = 40 //Revolvers get snowflake bullets, to keep them relevant
 	armor_penetration = 30
 	penetration_modifier = 1.8
 	distance_falloff = 2.5
+	mass = 19 GRAMS
 
 //---------------------------------------------------
 //	4mm Flechette
@@ -260,17 +265,17 @@
 
 /* shotgun projectiles */
 //---------------------------------------------------
-//	12 Gauge Slug
+//	12 Gauge Slug (2,135J)
 //---------------------------------------------------
 /obj/item/projectile/bullet/shotgun
 	name = "slug"
 	fire_sound = 'sound/weapons/gunshot/shotgun.ogg'
-	force = 20
+	force = 32
 	penetrating = 1
 	armor_penetration = 20
 	penetration_modifier = 1.5
 	distance_falloff = 4
-	mass = 0.008
+	mass = 24 GRAMS
 
 //---------------------------------------------------
 //	12 Gauge BeanBag
@@ -285,24 +290,24 @@
 	armor_penetration = 0
 	distance_falloff = 6
 	sharpness = 0
-	mass = 0.008
+	mass = 40 GRAMS
 
 //---------------------------------------------------
-//	12 Gauge Pellets
+//	12 Gauge Pellets (2,135J)
 //---------------------------------------------------
 //Should do about 80 damage at 1 tile distance (adjacent), and 50 damage at 3 tiles distance.
 //Overall less damage than slugs in exchange for more damage at very close range and more embedding
 /obj/item/projectile/bullet/pellet/shotgun
-	name = "shrapnel"
+	name = "pellet"
 	fire_sound = 'sound/weapons/gunshot/shotgun.ogg'
-	force = 3
+	force = 5
 	pellets = 6
 	range_step = 1
 	spread_step = 10
 	damtype = DAM_BULLET
 	distance_falloff = 4
 	penetration_modifier = 0.4
-	mass = 0.004
+	mass = 3 GRAMS //a pellet
 
 //---------------------------------------------------
 //	12 Gauge Rubber Balls
@@ -310,8 +315,8 @@
 /obj/item/projectile/bullet/pellet/shotgun/rubber
 	name = "rubber ball"
 	damtype = DAM_BLUNT
-	force = 1
-	agony = 10
+	force = 5
+	agony = 15
 	embed = 0
 	sharpness = 0
 	range_step = 1
@@ -319,7 +324,7 @@
 	base_spread = 80
 	distance_falloff = 6
 	penetration_modifier = 0.1
-	mass = 0.008
+	mass = 14 GRAMS
 
 /* "Rifle" rounds */
 //---------------------------------------------------
@@ -332,58 +337,58 @@
 	penetration_modifier = 1.5
 	penetrating = 1
 	distance_falloff = 1.5
+	mass = 4 GRAMS
 
 //---------------------------------------------------
-//	5.56mm Rifle Bullet
+//	5.56mm Rifle Bullet (1,755 J)
 //---------------------------------------------------
 /obj/item/projectile/bullet/rifle/c556
 	fire_sound = 'sound/weapons/gunshot/gunshot3.ogg'
-	force = 15
-	armor_penetration = 25
+	force = 30
+	armor_penetration = 15
 	penetration_modifier = 1.5
 	penetrating = 1
 	distance_falloff = 1.5
-	mass = 0.004
+	mass = 4 GRAMS
 /obj/item/projectile/bullet/rifle/c556/practice
 	force = 3
 
 //---------------------------------------------------
-//	7.62mm Rifle Bullet
+//	7.62mm Rifle Bullet (3,470 J)
 //---------------------------------------------------
 /obj/item/projectile/bullet/rifle/c762
 	fire_sound = 'sound/weapons/gunshot/gunshot2.ogg'
-	force = 26
-	armor_penetration = 30
+	force = 42
+	armor_penetration = 25
 	penetration_modifier = 1.8
 	distance_falloff = 2
-	mass = 0.009
+	mass = 10 GRAMS
 /obj/item/projectile/bullet/rifle/c762/practice
 	force = 3
 
 //---------------------------------------------------
-//	14.5mm Rifle Bullet
+//	14.5mm Rifle Bullet (32,200 J)
 //---------------------------------------------------
 /obj/item/projectile/bullet/rifle/c145
 	fire_sound = 'sound/weapons/gunshot/sniper.ogg'
-	force = 30
+	force = 52
 	weaken = 2
 	penetrating = 5
 	armor_penetration = 80
-	hitscan = 1 //so the PTR isn't useless as a sniper weapon
-	penetration_modifier = 2.1
+	//hitscan = 1 //so the PTR isn't useless as a sniper weapon
+	penetration_modifier = 3.1
 	distance_falloff = 0.5
-	mass = 0.0665
+	mass = 64 GRAMS
 
 //---------------------------------------------------
 //	14.5mm Rifle Armor Piercing Discarding Sabot
 //---------------------------------------------------
 /obj/item/projectile/bullet/rifle/c145/apds
-	force = 35
+	force = 32
 	penetrating = 6
 	armor_penetration = 95
 	penetration_modifier = 1.6 //Internal damage, nothing to do with penetration..
 	distance_falloff = 0.25
-	mass = 0.0665
 
 /* Miscellaneous */
 //---------------------------------------------------

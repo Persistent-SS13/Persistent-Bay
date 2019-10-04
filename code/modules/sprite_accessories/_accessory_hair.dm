@@ -14,7 +14,7 @@
 	name = "Bald"
 	icon_state = "bald"
 	gender = MALE
-	species_allowed = list(SPECIES_HUMAN,SPECIES_UNATHI,SPECIES_VOX,SPECIES_RESOMI)
+	species_allowed = list(SPECIES_HUMAN,SPECIES_UNATHI,SPECIES_VOX)
 	flags = VERY_SHORT
 
 /datum/sprite_accessory/hair/short

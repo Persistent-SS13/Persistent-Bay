@@ -8,7 +8,7 @@
 	dir = WEST
 	req_access = core_access_command_programs
 	circuit_type = /obj/item/weapon/circuitboard/cryopod
-	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE
 
 	var/base_icon_state = "cryopod_open"
 	var/occupied_icon_state = "cryopod_closed"

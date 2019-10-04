@@ -73,14 +73,14 @@
 	switch(href_list["action"])
 		if("change_menu")
 			menu = text2num(href_list["menu_target"])
-			
-		if("remove_member')
-			var/obj/item/weapon/paper/contract/recurring/contract = locate(href_list["ref"])
+
+		if("remove_member")
+			var/datum/recurring_contract/contract = locate(href_list["ref"])
 			var/choice = input(usr,"This will remove the member from the voluntary member list. Are you sure?") in list("Confirm", "Cancel")
 			if(choice == "Confirm")
 				contract.payee_cancelled = 1
-				
-			
+
+
 		if("new_member")
 			var/obj/item/weapon/paper/contract/recurring/contract = new()
 			contract.sign_type = CONTRACT_PERSON

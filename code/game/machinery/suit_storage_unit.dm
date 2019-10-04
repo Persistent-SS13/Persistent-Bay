@@ -763,7 +763,7 @@
 	//Departments that the cycler can paint suits to look like.
 	var/list/departments = list("Engineering","Mining","Medical","Security","Atmos","Science","Pilot")
 	//Species that the suits can be configured to fit.
-	var/list/species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI)
+	var/list/species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI,SPECIES_RESOMI)
 
 	var/target_department
 	var/target_species
@@ -807,42 +807,42 @@
 	model_text = "Engineering"
 	req_access = list(core_access_engineering_programs)
 	departments = list("Engineering","Atmos")
-	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI) //Add Unathi when sprites exist for their suits.
+	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI,SPECIES_RESOMI) //Add Unathi when sprites exist for their suits.
 
 /obj/machinery/suit_cycler/mining
 	name = "Mining suit cycler"
 	model_text = "Mining"
 	req_access = list(core_access_order_approval) //closest thing to mining access
 	departments = list("Mining")
-	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI)
+	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI,SPECIES_RESOMI)
 
 /obj/machinery/suit_cycler/science
 	name = "Excavation suit cycler"
 	model_text = "Excavation"
 	req_access = list(core_access_science_programs)
 	departments = list("Science")
-	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI)
+	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI,SPECIES_RESOMI)
 
 /obj/machinery/suit_cycler/security
 	name = "Security suit cycler"
 	model_text = "Security"
 	req_access = list(core_access_security_programs)
 	departments = list("Security")
-	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI)
+	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI,SPECIES_RESOMI)
 
 /obj/machinery/suit_cycler/medical
 	name = "Medical suit cycler"
 	model_text = "Medical"
 	req_access = list(core_access_medical_programs)
 	departments = list("Medical")
-	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI)
+	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI,SPECIES_RESOMI)
 
 /obj/machinery/suit_cycler/syndicate
 	name = "Nonstandard suit cycler"
 	model_text = "Nonstandard"
 	req_access = list(core_access_security_programs) //security are the closest thing we have to antags
 	departments = list("Mercenary")
-	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI)
+	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI,SPECIES_RESOMI)
 	can_repair = 1
 
 /obj/machinery/suit_cycler/pilot
@@ -850,14 +850,14 @@
 	model_text = "Pilot"
 	req_access = list()	//Pilot suit in its current state is pretty much a civilian voidsuit
 	departments = list("Pilot")
-	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI)
+	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI,SPECIES_RESOMI)
 
 /obj/machinery/suit_cycler/eva
 	name = "EVA suit cycler"
 	model_text = "Explorer"
 	req_access = list() //none of the current core accesses fit a general EVA cycler
 	departments = list("EVA")
-	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI)
+	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI,SPECIES_RESOMI)
 
 /obj/machinery/suit_cycler/attack_ai(mob/user as mob)
 	return src.attack_hand(user)

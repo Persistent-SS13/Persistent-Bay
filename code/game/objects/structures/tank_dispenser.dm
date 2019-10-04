@@ -4,7 +4,8 @@
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "dispenser"
 	density = 1
-	anchored = 1.0
+	anchored = TRUE
+	atom_flags = ATOM_FLAG_CLIMBABLE
 	w_class = ITEM_SIZE_NO_CONTAINER
 	mass = 50
 	max_health = 150
@@ -22,7 +23,7 @@
 		DAM_STUN 	= MaxArmorValue,
 		DAM_PAIN	= MaxArmorValue,
 		DAM_CLONE   = MaxArmorValue)
-	damthreshold_brute 	= 5
+	damthreshold_brute 	= 12
 	damthreshold_burn	= 5
 	var/oxygentanks = 10
 	var/phorontanks = 10

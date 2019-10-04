@@ -96,3 +96,10 @@
 	result_amount = 3
 	result = /datum/reagent/toxin/methyl_bromide
 	mix_message = "The solution begins to bubble, emitting a dark vapor."
+
+/datum/chemical_reaction/hydrogen_peroxide
+	name = "Hydrogen peroxyde"
+	required_reagents = list(/datum/reagent/ammonia = 1, /datum/reagent/hydrogen = 1, /datum/reagent/oxygen = 1, /datum/reagent/acid = 1)
+	result_amount = 4
+	result = /datum/reagent/hydrogen_peroxide
+	mix_message = "The solution begins to bubble, emitting little vapor."

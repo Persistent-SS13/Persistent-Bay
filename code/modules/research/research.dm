@@ -1105,7 +1105,7 @@ research holder datum.
 
 /datum/tech_entry/general/powercell/super
 	name = "Super-capacity power cells"
-	desc = "Uranium can be used throughout the design of a cell to greatly improve its potential capacity. Unlocks super-capacity power cell designs for the appropriate fabricators."
+	desc = "Uranium can be used throughout the design of a cell to greatly improve its potential capacity. Unlocks super-capacity power cell & super-capacity device cell designs for the appropriate fabricators."
 	tier = 2
 	points = 400
 	uid = "cell_super"

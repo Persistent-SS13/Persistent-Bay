@@ -46,3 +46,17 @@
 				use(1)
 				user.visible_message("<span class='notice'>\The [user] applies some nanite paste on [user != M ? "[M]'s [S.name]" : "[S]"] with [src].</span>",\
 				"<span class='notice'>You apply some nanite paste on [user == M ? "your" : "[M]'s"] [S.name].</span>")
+		if(S && BP_IS_ROBOTIC(S) && S.hatch_state == HATCH_CLOSED)
+		//	if(damage_amount >= 15)
+		//		to_chat(user, "<span class='danger'>The damage is far too severe to patch over externally.</span>")
+		//		return 0
+			if(!S.get_damage())
+				to_chat(user, "<span class='notice'>Nothing to fix here.</span>")
+			else if(can_use(1))
+				user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
+				S.heal_damage(15, 15, robo_repair = 1)
+				H.updatehealth()
+				use(1)
+				user.visible_message("<span class='notice'>\The [user] applies some nanite paste on [user != M ? "[M]'s [S.name]" : "[S]"] with [src].</span>",\
+				"<span class='notice'>You apply some nanite paste on [user == M ? "your" : "[M]'s"] [S.name].</span>")
+

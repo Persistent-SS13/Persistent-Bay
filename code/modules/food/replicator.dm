@@ -8,7 +8,7 @@
 	idle_power_usage = 40
 	obj_flags = OBJ_FLAG_ANCHORABLE
 	circuit_type =  /obj/item/weapon/circuitboard/replicator
-	var/biomass = 100
+	var/biomass = 0
 	var/biomass_max = 100
 	var/biomass_per = 10
 	var/deconstruct_eff = 0.5

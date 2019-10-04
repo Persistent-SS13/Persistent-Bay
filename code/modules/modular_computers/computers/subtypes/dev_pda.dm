@@ -12,6 +12,7 @@
 	stores_pen = TRUE
 	stored_pen = /obj/item/weapon/pen
 	receives_updates = FALSE
+	sprite_sheets = list(SPECIES_RESOMI = 'icons/mob/species/resomi/id.dmi')
 
 /obj/item/modular_computer/pda/Initialize()
 	. = ..()

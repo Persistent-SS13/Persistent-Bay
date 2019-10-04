@@ -37,10 +37,28 @@
 	var/datum/radio_frequency/radio_connection
 	var/list/datum/radio_frequency/secure_radio_connections = new
 
+/obj/item/device/radio/New()
+	. = ..()
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(frequency)
+	ADD_SAVED_VAR(traitor_frequency)
+	ADD_SAVED_VAR(canhear_range)
+	ADD_SAVED_VAR(b_stat)
+	ADD_SAVED_VAR(broadcasting)
+	ADD_SAVED_VAR(listening)
+	ADD_SAVED_VAR(channels)
+	ADD_SAVED_VAR(custom_channels)
+	ADD_SAVED_VAR(subspace_transmission)
+	ADD_SAVED_VAR(syndie)
+	ADD_SAVED_VAR(intercept)
+	ADD_SAVED_VAR(faction_uid)
+	ADD_SAVED_VAR(public_mode)
+	ADD_SAVED_VAR(cell)
+
 /obj/item/device/radio/proc/set_frequency(new_frequency)
-		radio_controller.remove_object(src, frequency)
-		frequency = new_frequency
-		radio_connection = radio_controller.add_object(src, frequency, RADIO_CHAT)
+	radio_controller.remove_object(src, frequency)
+	frequency = new_frequency
+	radio_connection = radio_controller.add_object(src, frequency, RADIO_CHAT)
 
 /obj/item/device/radio/proc/getfaction(var/mob/user)
 	faction_uid = user.GetFaction()
@@ -64,7 +82,6 @@
 		secure_radio_connections[ch_name] = radio_controller.add_object(src, custom_channels[ch_name], RADIO_CHAT)
 
 /obj/item/device/radio/Destroy()
-	QDEL_NULL(wires)
 	GLOB.listening_objects -= src
 	if(radio_controller)
 		radio_controller.remove_object(src, frequency)
@@ -72,6 +89,9 @@
 			radio_controller.remove_object(src, radiochannels[ch_name])
 		for (var/ch_name in custom_channels)
 			radio_controller.remove_object(src, custom_channels[ch_name])
+	if(istype(cell))
+		QDEL_NULL(cell)
+	QDEL_NULL(wires)
 	return ..()
 
 /obj/item/device/radio/attack_self(mob/user as mob)
@@ -554,7 +574,7 @@
 			return -1
 	if(faction && faction != "" && faction != faction_uid)
 		return -1
-	if (wires.IsIndexCut(WIRE_RECEIVE))
+	if (wires && wires.IsIndexCut(WIRE_RECEIVE))
 		return -1
 	if(!listening)
 		return -1

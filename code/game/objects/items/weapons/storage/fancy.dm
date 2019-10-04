@@ -71,6 +71,9 @@
 	can_hold = list(/obj/item/weapon/reagent_containers/food/snacks/cracker)
 	startswith = list(/obj/item/weapon/reagent_containers/food/snacks/cracker = 6)
 
+/obj/item/weapon/storage/fancy/crackers/empty
+	startswith = null
+
 /*
  * Candle Box
  */

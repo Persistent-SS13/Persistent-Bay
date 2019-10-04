@@ -49,9 +49,10 @@
 	name = "Circuit board (Storage Fabricator)"
 	build_path = /obj/machinery/fabricator/storage_fabricator
 
+
 /datum/design/circuit/vending
 	name = "vending machine"
-	id = "consumerfab"
+	id = "vending machine"
 	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/vending_machine
 

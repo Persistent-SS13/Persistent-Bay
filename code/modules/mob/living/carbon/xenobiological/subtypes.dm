@@ -1,29 +1,29 @@
 /mob/living/carbon/slime/proc/GetMutations()
 	switch(src.colour)
 		if("grey")
-			return list("orange", "blue", "purple")
+			return list("orange", "blue", "purple", "grey")
 		if("purple")
-			return list("dark blue", "silver", "grey")
+			return list("dark blue", "silver", "purple")
 		if("orange")
-			return list("yellow", "red", "sepia", "grey")
+			return list("yellow", "red", "sepia", "orange")
 		if("blue")
-			return list("dark blue", "silver", "pink", "grey")
+			return list("dark blue", "silver", "pink", "blue")
 		//Tier 3
 		if("dark blue")
-			return list("purple", "cerulean", "blue", "grey")
+			return list("purple", "cerulean", "blue", "dark blue")
 		if("yellow")
-			return list("green", "orange", "grey")
+			return list("orange", "yellow")
 		if("silver")
-			return list("gold", "pyrite", "blue", "grey")
+			return list("gold", "pyrite", "blue", "silver")
 		//Tier 4
 		if("pink")
-			return list("pink", "light pink", "grey")
+			return list("pink", "light pink")
 		if("red")
-			return list("red", "oil", "orange", "grey")
+			return list("red", "orange")
 		if("gold")
-			return list("gold", "silver", "grey")
-		if("green")
-			return list("green", "grey")
+			return list("gold", "silver")
+		//if("green")
+			//return list("green", "grey")
 		// Tier 5
 		else
 			return list("grey")
@@ -58,8 +58,8 @@
 			return /obj/item/slime_extract/red
 		if("gold")
 			return /obj/item/slime_extract/gold
-		if("green")
-			return /obj/item/slime_extract/green
+		//if("green")
+			//return /obj/item/slime_extract/green
 		if("sepia")
 			return /obj/item/slime_extract/sepia
 		if("bluespace")
@@ -71,10 +71,10 @@
 		//Tier 5
 		if("light pink")
 			return /obj/item/slime_extract/lightpink
-		if("oil")
-			return /obj/item/slime_extract/oil
+		//if("oil")
+			//return /obj/item/slime_extract/oil
 		if("adamantine")
 			return /obj/item/slime_extract/adamantine
-		if("black")
-			return /obj/item/slime_extract/black
+		//if("black")
+			//return /obj/item/slime_extract/black
 	return /obj/item/slime_extract/grey

@@ -30,7 +30,7 @@
 	force = 5
 	slot_flags = SLOT_BELT|SLOT_HOLSTER
 	one_hand_penalty = 0
-	charge_cost = 20
+	charge_cost = 25
 	max_shots = 8
 	projectile_type = /obj/item/projectile/ion/small
 

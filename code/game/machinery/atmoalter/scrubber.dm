@@ -36,6 +36,21 @@
 			if(g != GAS_OXYGEN && g != GAS_NITROGEN)
 				scrubbing_gas += g
 
+/obj/machinery/portable_atmospherics/powered/scrubber/turn_on()
+	. = ..()
+	START_PROCESSING(SSmachines, src)
+
+/obj/machinery/portable_atmospherics/powered/scrubber/turn_off()
+	. = ..()
+	STOP_PROCESSING(SSmachines, src)
+
+/obj/machinery/portable_atmospherics/powered/scrubber/proc/toggle()
+	on = !on
+	if(on)
+		START_PROCESSING(SSmachines, src)
+	else
+		STOP_PROCESSING(SSmachines, src)
+	update_icon()
 
 /obj/machinery/portable_atmospherics/powered/scrubber/emp_act(severity)
 	if(inoperable())
@@ -43,8 +58,7 @@
 		return
 
 	if(prob(50/severity))
-		on = !on
-		update_icon()
+		toggle()
 
 	..(severity)
 
@@ -65,6 +79,9 @@
 	return
 
 /obj/machinery/portable_atmospherics/powered/scrubber/Process()
+	//No point in running in nullspace!
+	if(isnull(loc) || QDELETED(src))
+		return PROCESS_KILL
 	..()
 
 	var/power_draw = -1
@@ -140,7 +157,7 @@
 
 /obj/machinery/portable_atmospherics/powered/scrubber/OnTopic(user, href_list)
 	if(href_list["power"])
-		on = !on
+		toggle()
 		. = TOPIC_REFRESH
 	if (href_list["remove_tank"])
 		if(holding)
@@ -202,6 +219,8 @@
 		queue_icon_update()
 
 /obj/machinery/portable_atmospherics/powered/scrubber/huge/Process()
+	if(isnull(loc) || QDELETED(src))
+		return PROCESS_KILL
 	if(!ison() || inoperable())
 		update_use_power(POWER_USE_OFF)
 		last_flow_rate = 0

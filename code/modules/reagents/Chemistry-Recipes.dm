@@ -143,7 +143,14 @@
 	required_reagents = list(/datum/reagent/water = 1, /datum/reagent/silicon = 1, /datum/reagent/acetone = 1)
 	result_amount = 4
 	mix_message = "The solution becomes thick and slimy."
-
+/**
+/datum/chemical_reaction/carpotoxin
+    name = "Carpotoxin"
+    result = /datum/reagent/toxin/carpotoxin
+    required_reagents = list(/datum/reagent/denatured = 2,  /datum/reagent/protein = 1)
+    result_amount = 1
+    mix_message = "The denaturalized toxin starts to have an acid smell."
+**/
 /datum/chemical_reaction/pacid
 	name = "Polytrinic acid"
 	result = /datum/reagent/acid/polyacid
@@ -985,12 +992,12 @@
 		new /obj/item/weapon/reagent_containers/food/snacks/monkeycube(get_turf(holder.my_atom))
 
 //Green
-/datum/chemical_reaction/slime/mutate
-	name = "Mutation Toxin"
-	result = /datum/reagent/slimetoxin
-	required_reagents = list(/datum/reagent/toxin/phoron = 1)
-	result_amount = 1
-	required = /obj/item/slime_extract/green
+//datum/chemical_reaction/slime/mutate
+	//name = "Mutation Toxin"
+	//result = /datum/reagent/slimetoxin
+	//required_reagents = list(/datum/reagent/toxin/phoron = 1)
+	//result_amount = 1
+	//required = /obj/item/slime_extract/green
 
 //Metal
 /datum/chemical_reaction/slime/metal
@@ -1185,27 +1192,27 @@
 	new /obj/item/weapon/slimepotion(get_turf(holder.my_atom))
 
 //Black
-/datum/chemical_reaction/slime/mutate2
-	name = "Advanced Mutation Toxin"
-	result = /datum/reagent/aslimetoxin
-	required_reagents = list(/datum/reagent/toxin/phoron = 1)
-	result_amount = 1
-	required = /obj/item/slime_extract/black
+//datum/chemical_reaction/slime/mutate2
+	//name = "Advanced Mutation Toxin"
+	//result = /datum/reagent/aslimetoxin
+	//required_reagents = list(/datum/reagent/toxin/phoron = 1)
+	//result_amount = 1
+	//required = /obj/item/slime_extract/black
 
 //Oil
-/datum/chemical_reaction/slime/explosion
-	name = "Slime Explosion"
-	result = null
-	required_reagents = list(/datum/reagent/toxin/phoron = 1)
-	result_amount = 1
-	required = /obj/item/slime_extract/oil
-	mix_message = "The slime extract begins to vibrate violently!"
+//datum/chemical_reaction/slime/explosion
+	//name = "Slime Explosion"
+	//result = null
+	//required_reagents = list(/datum/reagent/toxin/phoron = 1)
+	//result_amount = 1
+	//required = /obj/item/slime_extract/oil
+	//mix_message = "The slime extract begins to vibrate violently!"
 
-/datum/chemical_reaction/slime/explosion/on_reaction(var/datum/reagents/holder)
-	set waitfor = 0
-	..()
-	sleep(50)
-	explosion(get_turf(holder.my_atom), 1, 3, 6)
+//datum/chemical_reaction/slime/explosion/on_reaction(var/datum/reagents/holder)
+	//set waitfor = 0
+	//..()
+	//sleep(50)
+	//explosion(get_turf(holder.my_atom), 1, 3, 6)
 
 //Light Pink
 /datum/chemical_reaction/slime/potion2
@@ -2009,7 +2016,7 @@
 	required_reagents = list(/datum/reagent/nutriment/honey = 2)
 	minimum_temperature = 100 CELSIUS
 	result_amount = 1
-	
+
 /datum/chemical_reaction/iced_beer
 	name = "Iced Beer"
 	result = /datum/reagent/ethanol/iced_beer
@@ -2172,7 +2179,7 @@
 	required_reagents = list(/datum/reagent/drink/space_up = 1, /datum/reagent/ethanol/bluecuracao = 1, /datum/reagent/ethanol/melonliquor = 1)
 	result_amount = 3
 
-//Moved 
+//Moved
 // /datum/chemical_reaction/rum
 // 	name = "Rum"
 // 	result = /datum/reagent/ethanol/rum
@@ -2298,22 +2305,13 @@
 /datum/chemical_reaction/three_eye
 	name = "Three Eye"
 	result = /datum/reagent/three_eye
+	required_reagents = list(/datum/reagent/mindbreaker = 2, /datum/reagent/toxin/phoron=1, /datum/reagent/blood=1)
+	catalysts = list(/datum/reagent/toxin/carpotoxin = 1, /datum/reagent/enzyme = 1)
 	result_amount = 2
 	mix_message = "The surface of the oily, iridescent liquid twitches like a living thing."
-	minimum_temperature = 100 CELSIUS
 	reaction_sound = 'sound/effects/psi/power_used.ogg'
 	hidden_from_codex = TRUE
 
-	catalysts = list(
-		/datum/reagent/toxin/carpotoxin = 1,
-		/datum/reagent/enzyme = 1
-	)
-
-	required_reagents = list(
-		/datum/reagent/mindbreaker = 2,
-		/datum/reagent/toxin/phoron = 1,
-		/datum/reagent/blood = 1
-	)
 
 // tea expansion pack content - black tea drinks
 /datum/chemical_reaction/icetea
@@ -2394,4 +2392,3 @@
 	minimum_temperature = 150 CELSIUS
 	maximum_temperature = 200 CELSIUS
 	result_amount = 3
-

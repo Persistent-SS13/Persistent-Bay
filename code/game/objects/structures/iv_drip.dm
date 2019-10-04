@@ -1,8 +1,32 @@
+//Backward compatibility code
+// So people don't lose their items
+/obj/machinery/iv_drip	
+	name = "ERROR"
+	var/obj/item/weapon/reagent_containers/beaker
+/obj/machinery/iv_drip/New()
+	. = ..()
+	ADD_SAVED_VAR(beaker)
+/obj/machinery/iv_drip/Destroy()
+	beaker = null
+	return ..()
+/obj/machinery/iv_drip/after_load()
+	var/obj/structure/iv_drip/newdrip = new(src.loc)
+	newdrip.beaker = src.beaker
+	src.beaker.forceMove(newdrip)
+	src.beaker = null
+	for(var/obj/item/I in src.contents)
+		I.forceMove(src.loc)
+/obj/machinery/iv_drip/Initialize()
+	return INITIALIZE_HINT_QDEL
+// End compatibility (Was made on august 17 2019, should be safe to remove a while after that once things got converted)
+
 /obj/structure/iv_drip
 	name = "\improper IV drip"
 	icon = 'icons/obj/iv_drip.dmi'
 	anchored = 0
 	density = 0
+	health = 50
+	damthreshold_brute = 10
 	var/mob/living/carbon/human/attached
 	var/mode = 1 // 1 is injecting, 0 is taking blood.
 	var/obj/item/weapon/reagent_containers/beaker
@@ -86,8 +110,7 @@
 /obj/structure/iv_drip/Destroy()
 	STOP_PROCESSING(SSobj,src)
 	attached = null
-	qdel(beaker)
-	beaker = null
+	QDEL_NULL(beaker)
 	. = ..()
 
 /obj/structure/iv_drip/Process()
@@ -114,7 +137,8 @@
 		amount = min(amount, 4)
 		
 		if(amount == 0) // If the beaker is full, ping
-			if(prob(5)) visible_message("\The [src] pings.")
+			if(prob(5)) 
+				audible_message("\The [src] pings.")
 			return
 
 		if(!attached.should_have_organ(BP_HEART))
@@ -122,7 +146,7 @@
 
 		// If the human is losing too much blood, beep.
 		if(attached.get_blood_volume() < BLOOD_VOLUME_SAFE * 1.05)
-			visible_message("\The [src] beeps loudly.")
+			audible_message("\The [src] beeps loudly.")
 
 		if(attached.take_blood(beaker,amount))
 			queue_icon_update()

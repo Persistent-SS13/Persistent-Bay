@@ -36,9 +36,10 @@ var/const/HOLOPAD_MODE = RANGE_BASED
 	desc = "It's a floor-mounted device for projecting holographic images."
 	icon = 'icons/obj/machines/holopads.dmi'
 	icon_state = "holopad-B0"
-
+	density = 0
 	plane = ABOVE_TURF_PLANE
 	layer = FLOOR_MACHINE_LAYER
+	circuit_type = /obj/item/weapon/circuitboard/holopad
 
 	var/power_per_hologram = 500 //per usage per hologram
 	idle_power_usage = 5
@@ -60,25 +61,16 @@ var/const/HOLOPAD_MODE = RANGE_BASED
 
 	var/allow_ai = TRUE
 
-/obj/machinery/hologram/holopad/New()
-	..()
-	//Adds parts to the holopad
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/holopad(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
-	RefreshParts()
+/obj/machinery/hologram/holopad/examine(mob/user)
+	. = ..()
+	to_chat(user, SPAN_INFO("Its ID is '[get_area(src)]'"))
 
-	if(loc)
-		desc = "It's a floor-mounted device for projecting holographic images. Its ID is '[loc.loc]'"
-/obj/machinery/hologram/holopad/after_load()
-	if(loc)
-		desc = "It's a floor-mounted device for projecting holographic images. Its ID is '[loc.loc]'"
 /obj/machinery/hologram/holopad/attackby(var/obj/item/O as obj, var/mob/living/carbon/human/user)
 	if(default_deconstruction_screwdriver(user, O))
 		return
 	if(default_deconstruction_crowbar(user, O))
 		return
+
 /obj/machinery/hologram/holopad/attack_hand(var/mob/living/carbon/human/user) //Carn: Hologram requests.
 	if(!istype(user))
 		return
@@ -381,6 +373,7 @@ For the other part of the code, check silicon say.dm. Particularly robot talk.*/
 	use_power = POWER_USE_IDLE
 	idle_power_usage = 5
 	active_power_usage = 100
+	should_save = FALSE
 
 /obj/machinery/hologram/holopad/Destroy()
 	for (var/mob/living/master in masters)
@@ -418,21 +411,7 @@ Holographic project of everything else.
 	power_per_hologram = 1000 //per usage per hologram
 	holopadType = HOLOPAD_LONG_RANGE
 	base_icon = "holopad-Y"
-
-/obj/machinery/hologram/holopad/longrange/New()
-	..()
-	//Adds parts to the holopad
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/holopad_longrange(src)
-	component_parts += new /obj/item/weapon/stock_parts/subspace/ansible(src)
-	component_parts += new /obj/item/weapon/stock_parts/subspace/filter(src)
-	component_parts += new /obj/item/weapon/stock_parts/subspace/crystal(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
-	RefreshParts()
-
-	if(loc)
-		desc = "It's a floor-mounted device for projecting holographic images. This one utilizes a bluespace transmitter to communicate with far away locations. Its ID is '[loc.loc]'"
+	circuit_type = /obj/item/weapon/circuitboard/holopad_longrange
 
 // Used for overmap capable ships that should have communications, but not be AI accessible
 /obj/machinery/hologram/holopad/longrange/remoteship

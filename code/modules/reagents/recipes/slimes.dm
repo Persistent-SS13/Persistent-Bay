@@ -46,12 +46,12 @@
 	..()
 
 //Green
-/datum/chemical_reaction/slime/mutate
-	name = "Mutation Toxin"
-	result = /datum/reagent/slimetoxin
-	required_reagents = list(/datum/reagent/toxin/phoron = 1)
-	result_amount = 1
-	required = /obj/item/slime_extract/green
+//datum/chemical_reaction/slime/mutate
+	//name = "Mutation Toxin"
+	//result = /datum/reagent/slimetoxin
+	//required_reagents = list(/datum/reagent/toxin/phoron = 1)
+	//result_amount = 1
+	//required = /obj/item/slime_extract/green
 
 //Metal
 /datum/chemical_reaction/slime/metal
@@ -274,27 +274,27 @@
 	P.loc = get_turf(holder.my_atom)
 
 //Black
-/datum/chemical_reaction/slime/mutate2
-	name = "Advanced Mutation Toxin"
-	result = /datum/reagent/aslimetoxin
-	required_reagents = list(/datum/reagent/toxin/phoron = 1)
-	result_amount = 1
-	required = /obj/item/slime_extract/black
+//datum/chemical_reaction/slime/mutate2
+	//name = "Advanced Mutation Toxin"
+	//result = /datum/reagent/aslimetoxin
+	//required_reagents = list(/datum/reagent/toxin/phoron = 1)
+	//result_amount = 1
+	//required = /obj/item/slime_extract/black
 
 //Oil
-/datum/chemical_reaction/slime/explosion
-	name = "Slime Explosion"
-	result = null
-	required_reagents = list(/datum/reagent/toxin/phoron = 1)
-	result_amount = 1
-	required = /obj/item/slime_extract/oil
-	mix_message = "The slime extract begins to vibrate violently!"
+//datum/chemical_reaction/slime/explosion
+	//name = "Slime Explosion"
+	//result = null
+	//required_reagents = list(/datum/reagent/toxin/phoron = 1)
+	//result_amount = 1
+	//required = /obj/item/slime_extract/oil
+	//mix_message = "The slime extract begins to vibrate violently!"
 
-/datum/chemical_reaction/slime/explosion/on_reaction(var/datum/reagents/holder)
-	set waitfor = 0
-	..()
-	sleep(50)
-	explosion(get_turf(holder.my_atom), 1, 3, 6)
+//datum/chemical_reaction/slime/explosion/on_reaction(var/datum/reagents/holder)
+	//set waitfor = 0
+	//..()
+	//sleep(50)
+	//explosion(get_turf(holder.my_atom), 1, 3, 6)
 
 //Light Pink
 /datum/chemical_reaction/slime/potion2

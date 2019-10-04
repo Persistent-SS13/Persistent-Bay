@@ -1557,15 +1557,15 @@
 	id = "sec_combat"
 	build_path = /obj/item/weapon/storage/belt/security/fed
 
-/datum/design/item/autotailor/accessories/waist/sec_combat_alt
-	name = "Security combat belt - alt"
-	id = "sec_combat_alt"
-	build_path = /obj/item/weapon/storage/belt/security/assault
+// /datum/design/item/autotailor/accessories/waist/sec_combat_alt
+// 	name = "Security combat belt - alt"
+// 	id = "sec_combat_alt"
+// 	build_path = /obj/item/weapon/storage/belt/security/assault
 
-/datum/design/item/autotailor/accessories/waist/sec_parade
-	name = "Security parade belt"
-	id = "sec_parade"
-	build_path = /obj/item/weapon/storage/belt/security/military
+// /datum/design/item/autotailor/accessories/waist/sec_parade
+// 	name = "Security parade belt"
+// 	id = "sec_parade"
+// 	build_path = /obj/item/weapon/storage/belt/security/military
 
 /datum/design/item/autotailor/accessories/waist/waistpack_white	//can use custom colors
 	name = "White waistpack"

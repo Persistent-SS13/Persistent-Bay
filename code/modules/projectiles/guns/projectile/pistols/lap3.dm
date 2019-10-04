@@ -8,7 +8,9 @@
 	slot_flags = SLOT_BELT | SLOT_HOLSTER | SLOT_POCKET
 	caliber = CALIBER_9MM
 	silenced = FALSE
-	fire_delay = 4
+	fire_delay = 2
+	accuracy_power = 10
+	accuracy = 1
 	origin_tech = list(TECH_COMBAT = 2, TECH_MATERIAL = 2, TECH_ILLEGAL = 2)
 	magazine_type = /obj/item/ammo_magazine/box/lap3
 	allowed_magazines = /obj/item/ammo_magazine/box/lap3

@@ -1,5 +1,5 @@
 //----------------------------------
-//
+// MK58
 //----------------------------------
 /obj/item/weapon/gun/projectile/pistol/sec
 	name = "\improper MK58 .45 pistol"
@@ -11,7 +11,8 @@
 	magazine_type = /obj/item/ammo_magazine/box/c45/empty
 	allowed_magazines = /obj/item/ammo_magazine/box/c45
 	accuracy = -1
-	fire_delay = 6
+	accuracy_power = 6
+	fire_delay = 4
 	origin_tech = list(TECH_COMBAT = 2, TECH_MATERIAL = 2)
 
 // /obj/item/weapon/gun/projectile/pistol/sec/wood

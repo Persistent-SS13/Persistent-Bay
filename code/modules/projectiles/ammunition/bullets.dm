@@ -5,7 +5,7 @@
 	desc = "A .50AE bullet casing."
 	caliber = CALIBER_50
 	projectile_type = /obj/item/projectile/bullet/pistol/c50
-	matter = list(MATERIAL_STEEL = 260, /datum/reagent/aluminum = 15)
+	matter = list(MATERIAL_STEEL = 260)
 
 //--------------------------------
 //	.22 LR Rounds
@@ -16,7 +16,7 @@
 	icon_state = "smallcasing"
 	spent_icon = "smallcasing-spent"
 	projectile_type = /obj/item/projectile/bullet/pistol/c22lr
-	matter = list(MATERIAL_STEEL = 40, /datum/reagent/aluminum = 3)
+	matter = list(MATERIAL_STEEL = 40)
 
 //--------------------------------
 //	.357 Rounds
@@ -27,7 +27,7 @@
 	icon_state = "magnumcasing"
 	spent_icon = "magnumcasing-spent"
 	projectile_type = /obj/item/projectile/bullet/pistol/c357
-	matter = list(MATERIAL_STEEL = 210, /datum/reagent/aluminum = 5)
+	matter = list(MATERIAL_STEEL = 210)
 
 //--------------------------------
 //	.38 Rounds
@@ -38,21 +38,21 @@
 	icon_state = "smallcasing"
 	spent_icon = "smallcasing-spent"
 	projectile_type = /obj/item/projectile/bullet/pistol/c38
-	matter = list(MATERIAL_STEEL = 60, /datum/reagent/aluminum = 4)
+	matter = list(MATERIAL_STEEL = 60)
 
 /obj/item/ammo_casing/c38/rubber
 	desc = "A .38 rubber bullet casing."
 	projectile_type = /obj/item/projectile/bullet/rubber
 	icon_state = "r-casing"
 	spent_icon = "r-casing-spent"
-	matter = list(MATERIAL_PLASTIC = 60, /datum/reagent/aluminum = 4)
+	matter = list(MATERIAL_PLASTIC = 60)
 
 /obj/item/ammo_casing/c38/emp
 	name = ".38 haywire round"
 	desc = "A .38 bullet casing fitted with a single-use ion pulse generator."
 	icon_state = "empcasing"
 	projectile_type = /obj/item/projectile/ion/small
-	matter = list(MATERIAL_STEEL = 130, MATERIAL_URANIUM = 100, /datum/reagent/aluminum = 3)
+	matter = list(MATERIAL_STEEL = 130, MATERIAL_URANIUM = 100)
 
 //--------------------------------
 //	9mm Rounds
@@ -63,24 +63,24 @@
 	icon_state = "smallcasing"
 	spent_icon = "smallcasing-spent"
 	projectile_type = /obj/item/projectile/bullet/pistol/c9mm
-	matter = list(MATERIAL_STEEL = 60, /datum/reagent/aluminum = 2)
+	matter = list(MATERIAL_STEEL = 60)
 
 /obj/item/ammo_casing/c9mm/flash
 	desc = "A 9mm flash shell casing."
 	projectile_type = /obj/item/projectile/energy/flash
-	matter = list(MATERIAL_STEEL = 50, /datum/reagent/aluminum = 1)
+	matter = list(MATERIAL_STEEL = 50)
 
 /obj/item/ammo_casing/c9mm/rubber
 	desc = "A 9mm rubber bullet casing."
 	projectile_type = /obj/item/projectile/bullet/rubber
 	icon_state = "r-casing"
 	spent_icon = "r-casing-spent"
-	matter = list(MATERIAL_STEEL = 60, /datum/reagent/aluminum = 1)
+	matter = list(MATERIAL_STEEL = 60)
 
 /obj/item/ammo_casing/c9mm/practice
 	desc = "A 9mm practice bullet casing."
 	projectile_type = /obj/item/projectile/bullet/pistol/practice
-	matter = list(MATERIAL_STEEL = 50, /datum/reagent/aluminum = 1)
+	matter = list(MATERIAL_STEEL = 50)
 
 /obj/item/ammo_casing/c9mm/emp
 	name = "9mm haywire round"
@@ -95,28 +95,28 @@
 	desc = "A .44 magnum bullet casing."
 	caliber = CALIBER_44
 	projectile_type = /obj/item/projectile/bullet/pistol/c44
-	matter = list(MATERIAL_STEEL = 75, /datum/reagent/aluminum = 4)
+	matter = list(MATERIAL_STEEL = 75)
 
 /obj/item/ammo_casing/c44/rubber
 	desc = "A .44 magnum rubber bullet casing."
 	projectile_type = /obj/item/projectile/bullet/rubber
 	icon_state = "r-casing"
 	spent_icon = "r-casing-spent"
-	matter = list(MATERIAL_PLASTIC = 75, /datum/reagent/aluminum = 4)
+	matter = list(MATERIAL_PLASTIC = 75)
 
 /obj/item/ammo_casing/c44/emp
 	name = ".44 haywire round"
 	desc = "A .44 magnum rubber bullet casing."
 	icon_state = "empcasing"
 	projectile_type = /obj/item/projectile/ion/small
-	matter = list(MATERIAL_STEEL = 130, MATERIAL_URANIUM = 100, /datum/reagent/aluminum = 3)
+	matter = list(MATERIAL_STEEL = 130, MATERIAL_URANIUM = 100)
 
 /obj/item/ammo_casing/c44/nullglass
 	name = ".44 haywire round"
 	desc = "A .44 magnum casing with a nullglass coating"
 	icon_state = "empcasing"
 	projectile_type = /obj/item/projectile/bullet/nullglass
-	matter = list(MATERIAL_STEEL = 130, MATERIAL_NULLGLASS = 100, /datum/reagent/aluminum = 3)
+	matter = list(MATERIAL_STEEL = 130, MATERIAL_NULLGLASS = 100)
 /obj/item/ammo_casing/c44/nullglass/disrupts_psionics()
 	return src
 
@@ -129,31 +129,31 @@
 	icon_state = "pistolcasing"
 	spent_icon = "pistolcasing-spent"
 	projectile_type = /obj/item/projectile/bullet/pistol/c45
-	matter = list(MATERIAL_STEEL = 75, /datum/reagent/aluminum = 3)
+	matter = list(MATERIAL_STEEL = 75)
 
 /obj/item/ammo_casing/c45/practice
 	desc = "A .45 practice bullet casing."
 	projectile_type = /obj/item/projectile/bullet/pistol/practice
 	icon_state = "pistolcasing_p"
-	matter = list(MATERIAL_STEEL = 60, /datum/reagent/aluminum = 2)
+	matter = list(MATERIAL_STEEL = 60)
 
 /obj/item/ammo_casing/c45/rubber
 	desc = "A .45 rubber bullet casing."
 	projectile_type = /obj/item/projectile/bullet/rubber
 	icon_state = "pistolcasing_r"
-	matter = list(MATERIAL_PLASTIC = 75, /datum/reagent/aluminum = 2)
+	matter = list(MATERIAL_PLASTIC = 75)
 
 /obj/item/ammo_casing/c45/flash
 	desc = "A .45 flash shell casing."
 	projectile_type = /obj/item/projectile/energy/flash
-	matter = list(MATERIAL_STEEL = 60, /datum/reagent/aluminum = 1)
+	matter = list(MATERIAL_STEEL = 60)
 
 /obj/item/ammo_casing/c45/emp
 	name = ".45 haywire round"
 	desc = "A .45 bullet casing fitted with a single-use ion pulse generator."
 	projectile_type = /obj/item/projectile/ion/small
 	icon_state = "pistolcasing_h"
-	matter = list(MATERIAL_STEEL = 130, MATERIAL_URANIUM = 100, /datum/reagent/aluminum = 4)
+	matter = list(MATERIAL_STEEL = 130, MATERIAL_URANIUM = 100)
 
 //--------------------------------
 //	"10mm" Rounds (10mm is the same size as .45...)
@@ -162,7 +162,7 @@
 	desc = "A 10mm bullet casing."
 	caliber = CALIBER_10MM
 	projectile_type = /obj/item/projectile/bullet/smg/c45
-	matter = list(MATERIAL_STEEL = 75, /datum/reagent/aluminum = 1)
+	matter = list(MATERIAL_STEEL = 75)
 
 //--------------------------------
 //	Gyrojet Rounds
@@ -195,7 +195,7 @@
 	spent_icon = "slshell-spent"
 	caliber = CALIBER_SHOTGUN
 	projectile_type = /obj/item/projectile/bullet/shotgun
-	matter = list(MATERIAL_STEEL = 360, /datum/reagent/aluminum = 3)
+	matter = list(MATERIAL_STEEL = 360)
 	fall_sounds = list('sound/weapons/guns/shotgun_fall.ogg')
 
 /obj/item/ammo_casing/shotgun/pellet
@@ -204,7 +204,7 @@
 	icon_state = "gshell"
 	spent_icon = "gshell-spent"
 	projectile_type = /obj/item/projectile/bullet/pellet/shotgun
-	matter = list(MATERIAL_STEEL = 360, /datum/reagent/aluminum = 3)
+	matter = list(MATERIAL_STEEL = 360)
 
 /obj/item/ammo_casing/shotgun/blank
 	name = "shotgun shell"
@@ -212,7 +212,7 @@
 	icon_state = "blshell"
 	spent_icon = "blshell-spent"
 	projectile_type = /obj/item/projectile/bullet/blank
-	matter = list(MATERIAL_STEEL = 90, /datum/reagent/aluminum = 1)
+	matter = list(MATERIAL_STEEL = 90)
 
 /obj/item/ammo_casing/shotgun/practice
 	name = "shotgun shell"
@@ -220,7 +220,7 @@
 	icon_state = "pshell"
 	spent_icon = "pshell-spent"
 	projectile_type = /obj/item/projectile/bullet/shotgun/practice
-	matter = list(MATERIAL_STEEL = 90, /datum/reagent/aluminum = 1)
+	matter = list(MATERIAL_STEEL = 90)
 
 /obj/item/ammo_casing/shotgun/beanbag
 	name = "beanbag shell"
@@ -228,7 +228,7 @@
 	icon_state = "bshell"
 	spent_icon = "bshell-spent"
 	projectile_type = /obj/item/projectile/bullet/shotgun/beanbag
-	matter = list(MATERIAL_STEEL = 180, /datum/reagent/aluminum = 1)
+	matter = list(MATERIAL_STEEL = 180)
 
 /obj/item/ammo_casing/shotgun/rubber
 	name = "rubber shell"
@@ -236,7 +236,7 @@
 	icon_state = "bshell"
 	spent_icon = "bshell-spent"
 	projectile_type = /obj/item/projectile/bullet/pellet/shotgun/rubber
-	matter = list(MATERIAL_STEEL = 180, /datum/reagent/aluminum = 1)
+	matter = list(MATERIAL_STEEL = 180)
 
 //Can stun in one hit if aimed at the head, but
 //is blocked by clothing that stops tasers and is vulnerable to EMP
@@ -247,7 +247,7 @@
 	spent_icon = "stunshell-spent"
 	projectile_type = /obj/item/projectile/energy/electrode/stunshot
 	leaves_residue = 0
-	matter = list(MATERIAL_STEEL = 360, MATERIAL_GLASS = 720, /datum/reagent/aluminum = 2)
+	matter = list(MATERIAL_STEEL = 360, MATERIAL_GLASS = 720)
 
 /obj/item/ammo_casing/shotgun/stunshell/emp_act(severity)
 	if(prob(100/severity)) BB = null
@@ -260,7 +260,7 @@
 	icon_state = "fshell"
 	spent_icon = "fshell-spent"
 	projectile_type = /obj/item/projectile/energy/flash/flare
-	matter = list(MATERIAL_STEEL = 90, MATERIAL_GLASS = 90, /datum/reagent/aluminum = 2)
+	matter = list(MATERIAL_STEEL = 90, MATERIAL_GLASS = 90)
 
 /obj/item/ammo_casing/shotgun/emp
 	name = "haywire slug"
@@ -268,7 +268,7 @@
 	icon_state = "empshell"
 	spent_icon = "empshell-spent"
 	projectile_type  = /obj/item/projectile/ion
-	matter = list(MATERIAL_STEEL = 260, MATERIAL_URANIUM = 200, /datum/reagent/aluminum = 5)
+	matter = list(MATERIAL_STEEL = 260, MATERIAL_URANIUM = 200)
 
 //--------------------------------
 //	5.56mm Rounds
@@ -279,13 +279,13 @@
 	projectile_type = /obj/item/projectile/bullet/rifle/c556
 	icon_state = "riflecasing"
 	spent_icon = "riflecasing-spent"
-	matter = list(MATERIAL_STEEL = 90, /datum/reagent/aluminum = 2)
+	matter = list(MATERIAL_STEEL = 90)
 
 /obj/item/ammo_casing/c556/practice
 	desc = "A 5.56mm practice bullet casing."
 	projectile_type = /obj/item/projectile/bullet/rifle/c556/practice
 	icon_state = "rifle_mil_p"
-	matter = list(MATERIAL_STEEL = 90, /datum/reagent/aluminum = 1)
+	matter = list(MATERIAL_STEEL = 90)
 
 //--------------------------------
 //	14.5mm Rounds
@@ -297,13 +297,13 @@
 	spent_icon = "lcasing-spent"
 	caliber = CALIBER_145MM
 	projectile_type = /obj/item/projectile/bullet/rifle/c145
-	matter = list(MATERIAL_STEEL = 2500, /datum/reagent/aluminum = 10)
+	matter = list(MATERIAL_STEEL = 2500)
 
 /obj/item/ammo_casing/c145/apds
 	name = "APDS shell casing"
 	desc = "A 14.5mm Armour Piercing Discarding Sabot shell."
 	projectile_type = /obj/item/projectile/bullet/rifle/c145/apds
-	matter = list(MATERIAL_STEEL = 2250, /datum/reagent/aluminum = 20)
+	matter = list(MATERIAL_STEEL = 2250)
 
 //--------------------------------
 //	7.62mm Rounds (.308)
@@ -314,13 +314,13 @@
 	projectile_type = /obj/item/projectile/bullet/rifle/c762
 	icon_state = "rifle_mil"
 	spent_icon = "rifle_mil-spent"
-	matter = list(MATERIAL_STEEL = 90, /datum/reagent/aluminum = 2)
+	matter = list(MATERIAL_STEEL = 90)
 
 /obj/item/ammo_casing/c762/practice
 	desc = "A 7.62mm practice bullet casing."
 	projectile_type = /obj/item/projectile/bullet/rifle/c762/practice
 	icon_state = "rifle_mil_p"
-	matter = list(MATERIAL_STEEL = 90, /datum/reagent/aluminum = 1)
+	matter = list(MATERIAL_STEEL = 90)
 
 //--------------------------------
 //	40mm Rocket Rounds

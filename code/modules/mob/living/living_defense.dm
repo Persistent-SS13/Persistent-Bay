@@ -375,12 +375,7 @@
 //Directly sets health, without updating object state
 /mob/living/proc/set_health(var/newhealth)
 	health = between(minHealth, round(newhealth, 0.1), get_max_health()) //round(max(0, min(newhealth, max_health)), 0.1)
-	update_health()
-
-
-
-/mob/living/proc/update_health()
-	return
+	updatehealth()
 
 /mob/living/proc/get_health()
 	return health

@@ -14,11 +14,19 @@
 	w_class = ITEM_SIZE_LARGE
 	origin_tech = list(TECH_BIO = 4, TECH_POWER = 2)
 	action_button_name = "Remove/Replace Paddles"
+	mass = 1.5 KILOGRAMS
 
 	var/obj/item/weapon/shockpaddles/linked/paddles
 	var/obj/item/weapon/cell/bcell = null
 
-/obj/item/weapon/defibrillator/Initialize() //starts without a cell for rnd
+/obj/item/weapon/defibrillator/loaded //starts with regular power cell for R&D to replace later in the round.
+	bcell = /obj/item/weapon/cell/apc
+
+/obj/item/weapon/defibrillator/New()
+	..()
+	ADD_SAVED_VAR(bcell)
+
+/obj/item/weapon/defibrillator/Initialize(mapload) //starts without a cell for rnd
 	. = ..()
 	if(ispath(paddles))
 		paddles = new paddles(src, src)
@@ -27,15 +35,20 @@
 
 	if(ispath(bcell))
 		bcell = new bcell(src)
-	update_icon()
+	
+	if(!mapload)
+		update_icon()
+	else
+		queue_icon_update()
 
 /obj/item/weapon/defibrillator/Destroy()
-	. = ..()
-	QDEL_NULL(paddles)
-	QDEL_NULL(bcell)
-
-/obj/item/weapon/defibrillator/loaded //starts with regular power cell for R&D to replace later in the round.
-	bcell = /obj/item/weapon/cell/apc
+	if(paddles && !ispath(paddles))
+		qdel(paddles)
+	if(bcell && !ispath(bcell))
+		qdel(bcell)
+	paddles = null
+	bcell = null
+	return 	..()
 
 /obj/item/weapon/defibrillator/on_update_icon()
 	var/list/new_overlays = list()
@@ -72,7 +85,7 @@
 	if(loc == user)
 		toggle_paddles()
 	else
-		..()
+		return ..()
 
 /obj/item/weapon/defibrillator/MouseDrop()
 	if(ismob(src.loc))
@@ -113,6 +126,11 @@
 	if(paddles)
 		return paddles.emag_act(uses, user, src)
 	return NO_EMAG_ACT
+
+/obj/item/weapon/defibrillator/get_cell()
+	if(!ispath(bcell))
+		return bcell
+	return null
 
 //Paddle stuff
 

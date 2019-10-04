@@ -11,6 +11,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		if(!employee) continue
 		if(employee.real_name == real_name)
 			to_chat(employee, note)
+
 /mob/living/carbon/human/proc/create_stack(var/faction_uid, var/silent = FALSE)
 	set waitfor=0
 	if(internal_organs_by_name && internal_organs_by_name[BP_STACK])
@@ -21,6 +22,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	var/obj/item/organ/internal/stack/stack = new species.stack_type(src, faction_uid = faction_uid)
 	if(faction_uid && stack)
 		stack.try_connect()
+		stack.status &= ~ORGAN_CUT_AWAY
 	internal_organs_by_name[BP_STACK] = stack
 	update_action_buttons()
 	if(!silent)
@@ -29,6 +31,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 /obj/item/organ/internal/stack
 	name = "neural lace"
 	parent_organ = BP_HEAD
+	icon = 'icons/obj/surgery.dmi'
 	icon_state = "cortical-stack"
 	organ_tag = BP_STACK
 	status = ORGAN_ROBOTIC
@@ -68,36 +71,43 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 /obj/item/organ/internal/stack/New(var/loc, var/faction_uid)
 	..()
-	GLOB.neural_laces |= src
-	do_backup()
-	robotize()
+	LAZYDISTINCTADD(GLOB.neural_laces, src)
 	if(faction_uid)
 		connected_faction = faction_uid
-
 	ADD_SAVED_VAR(ownerckey)
 	ADD_SAVED_VAR(connected_business)
 	ADD_SAVED_VAR(connected_faction)
 
 /obj/item/organ/internal/stack/Initialize()
+	do_backup()
+	robotize()
 	. = ..()
 	if(owner)
+		var/obj/item/organ/internal/stack/oldlace = owner.internal_organs_by_name[BP_STACK]
+		if(istype(oldlace))
+			log_error(" obj/item/organ/internal/stack/Initialize(): [src]\ref[src] overwrote directly the active lace [oldlace]\ref[oldlace] in [owner]\ref[owner]! Bad things will happen!")
 		owner.internal_organs_by_name[BP_STACK] = src
 		owner.update_action_buttons()
+	try_connect()
 
 /obj/item/organ/internal/stack/after_load()
 	..()
-	try_connect()
 	if(duty_status)
 		try_duty()
-	GLOB.neural_laces |= src
+	LAZYDISTINCTADD(GLOB.neural_laces, src)
 
-/obj/item/organ/internal/stack/Destroy()
-	if(lacemob && ((lacemob.key && lacemob.key != "") || (lacemob.key && lacemob.key != "")))
+/obj/item/organ/internal/stack/Destroy(var/clearlace = FALSE)
+	if(!clearlace && lacemob && ((lacemob.key && lacemob.key != "") || (lacemob.key && lacemob.key != "")))
 		loc = get_turf(loc)
 		log_and_message_admins("Attempted to destroy an in-use neural lace!")
 		return QDEL_HINT_LETMELIVE
 	QDEL_NULL(lacemob)
-	GLOB.neural_laces -= src
+	selected_ballot = null
+	record = null
+	faction = null
+	backup = null
+	languages = null
+	LAZYREMOVE(GLOB.neural_laces, src)
 	. = ..()
 
 /obj/item/organ/internal/stack/examine(mob/user) // -- TLE
@@ -105,10 +115,10 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	if(istype(src, /obj/item/organ/internal/stack/vat))
 		to_chat(user, "These are the remnants of a small implant used to quickly train vatgrown and connect them to bluespace networks. Vatgrown can never be cloned.")
 		return 0
-	if(lacemob?.key)	// Ff thar be a brain inside... the brain.
+	if(lacemob && lacemob.key)	// Ff thar be a brain inside... the brain.
 		to_chat(user, "This one looks occupied and ready for cloning, the conciousness clearly present and active.")
 
-	else if(lacemob?.stored_ckey)
+	else if(lacemob && lacemob.stored_ckey)
 		to_chat(user, "This one appears inactive, the conciousness is resting and the transfer cannot complete until it 'wakes'.")
 
 	else
@@ -121,22 +131,21 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 	if(!lacemob)
 		lacemob = new(src)
-
-	lacemob.name = H.real_name
-	lacemob.real_name = H.real_name
-	lacemob.dna = H.dna.Clone()
-	lacemob.timeofhostdeath = H.timeofdeath
-	lacemob.teleport_time = H.timeofdeath + DEAD_LACEMOB_STORAGE_TELEPORT_DELAY
-	lacemob.container = src
-	if(owner && isnull(owner.gc_destroyed))
+	lacemob.name = 				H.real_name
+	lacemob.real_name = 		H.real_name
+	lacemob.dna = 				H.dna.Clone()
+	lacemob.timeofhostdeath = 	H.timeofdeath
+	lacemob.teleport_time = 	H.timeofdeath + DEAD_LACEMOB_STORAGE_TELEPORT_DELAY
+	lacemob.container = 		src
+	if(owner && !QDELETED(owner))
 		lacemob.container2 = owner
-	lacemob.spawn_loc = H.spawn_loc
-	lacemob.spawn_loc_2 = H.spawn_loc_2
+	lacemob.spawn_loc = 		H.spawn_loc
+	lacemob.spawn_loc_2 = 		H.spawn_loc_2
 
 	if(H.mind)
 		H.mind.transfer_to(lacemob)
 
-	to_chat(lacemob, "<span class='notice'>You feel slightly disoriented. Your conciousness suddenly shifts into a neural lace.</span>")
+	to_chat(lacemob, SPAN_NOTICE("You feel slightly disoriented. Your conciousness suddenly shifts into a neural lace."))
 
 /obj/item/organ/internal/stack/proc/get_owner_name()
 	var/mob/M = get_owner()
@@ -246,7 +255,45 @@ GLOBAL_LIST_EMPTY(neural_laces)
 						record2.linked_account.do_transaction(T2)
 						notify_lace(chosename, "Your neural lace buzzes letting you know you've recieved a new money transfer.")
 
-
+		if("add_friend")
+			var/chosename = input(usr, "Enter the full name of the person you want to add as a friend", "Add a friend") as null|text
+			if(chosename)
+				var/datum/computer_file/report/crew_record/record = Retrieve_Record(chosename)
+				if(!record)
+					to_chat(usr, "An account by that name cannot be found.")
+					return
+				record.pending_friend_request |= owner.real_name
+				to_chat(owner, "Friend request sent.")
+		if("toggle_visible")
+			var/datum/computer_file/report/crew_record/record = Retrieve_Record(owner.real_name)
+			record.visibility_status = 1
+		if("toggle_invisible")
+			var/datum/computer_file/report/crew_record/record = Retrieve_Record(owner.real_name)
+			record.visibility_status = 0
+		if("accept_request")
+			var/target = href_list["ref"]
+			var/datum/computer_file/report/crew_record/record = Retrieve_Record(target)
+			if(!record)
+				to_chat(usr, "An account by that name cannot be found.")
+				return
+			record.all_friends |= owner.real_name
+			var/datum/computer_file/report/crew_record/record2 = Retrieve_Record(owner.real_name)
+			record2.all_friends |= target
+		if("deny_request")
+			var/target = href_list["ref"]
+			var/datum/computer_file/report/crew_record/record2 = Retrieve_Record(owner.real_name)
+			record2.pending_friend_request -= target
+		if("remove_friend")
+			var/target = href_list["ref"]
+			var/choice = input(usr,"This will remove you both from each others friends list. Are you sure?") in list("Confirm", "Cancel")
+			if(choice == "Confirm")
+				var/datum/computer_file/report/crew_record/record = Retrieve_Record(target)
+				if(!record)
+					to_chat(usr, "An account by that name cannot be found.")
+					return
+				record.all_friends -= owner.real_name
+				var/datum/computer_file/report/crew_record/record2 = Retrieve_Record(owner.real_name)
+				record2.all_friends -= target
 	if(href_list["page_up"])
 		curr_page++
 		return 1
@@ -261,10 +308,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	if(!lacemob && owner)
 		data["living"] = 1
 		if(menu == 1)
-			if(!record)
-				record = Retrieve_Record(owner.real_name)
-
-
+			load_records()
 			if(record)
 				var/citizenshipp
 				switch(record.citizenship)
@@ -302,46 +346,78 @@ GLOBAL_LIST_EMPTY(neural_laces)
 			data["potential"] = formatted
 
 		if(menu == 2)
-			if(!record)
-				record = Retrieve_Record(owner.real_name)
+			load_records()
 			if(!record || !record.linked_account)
 				to_chat(owner, "Cannot retrieve account info! Contact Administrator.")
-			data["account_balance"] = record.linked_account.money
-			var/list/transactions = record.linked_account.transaction_log
-			var/pages = transactions.len/10
-			if(pages < 1)
-				pages = 1
-			var/list/formatted_transactions[0]
-			if(transactions.len)
-				for(var/i=0; i<10; i++)
-					var/minus = i+(10*(curr_page-1))
-					if(minus >= transactions.len) break
-					var/datum/transaction/T = transactions[transactions.len-minus]
-					formatted_transactions[++formatted_transactions.len] = list("date" = T.date, "time" = T.time, "target_name" = T.target_name, "purpose" = T.purpose, "amount" = T.amount ? T.amount : 0)
-			data["transactions"] = formatted_transactions
-			data["page"] = curr_page
-			data["page_up"] = curr_page < pages
-			data["page_down"] = curr_page > 1
-		if(menu == 3)
-			var/datum/world_faction/democratic/nexus = get_faction("nexus")
+			else
+				data["account_balance"] = record.linked_account.money
+				var/list/transactions = record.linked_account.transaction_log
+				var/pages = transactions.len/10
+				if(pages < 1)
+					pages = 1
+				var/list/formatted_transactions[0]
+				if(transactions.len)
+					for(var/i=0; i<10; i++)
+						var/minus = i+(10*(curr_page-1))
+						if(minus >= transactions.len) break
+						var/datum/transaction/T = transactions[transactions.len-minus]
+						formatted_transactions[++formatted_transactions.len] = list("date" = T.date, "time" = T.time, "target_name" = T.target_name, "purpose" = T.purpose, "amount" = T.amount ? T.amount : 0)
+				data["transactions"] = formatted_transactions
+				data["page"] = curr_page
+				data["page_up"] = curr_page < pages
+				data["page_down"] = curr_page > 1
 
-			if(nexus.current_election)
-				data["current_election"] = 1
-				data["election_name"] = nexus.current_election.name
-				if(selected_ballot)
-					if(owner.ckey in selected_ballot.voted_ckeys)
-						data["voted"] = 1
-					data["ballot_name"] = selected_ballot.title
-					var/list/formatted_candidates[0]
-					for(var/datum/candidate/candidate in selected_ballot.candidates)
-						formatted_candidates[++formatted_candidates.len] = list("name" = candidate.real_name,"pitch" = candidate.desc, "ref" = "\ref[candidate]")
-					data["candidates"] = formatted_candidates
-					data["selected_ballot"] = selected_ballot.title
-				else
-					var/list/formatted_ballots[0]
-					for(var/datum/democracy/ballot in nexus.current_election.ballots)
-						formatted_ballots[++formatted_ballots.len] = list("name" = ballot.title, "ref" = "\ref[ballot]")
-					data["ballots"] = formatted_ballots
+		if(menu == 3)
+			var/datum/world_faction/democratic/F = get_faction(GLOB.using_map.default_faction_uid)
+			if(istype(F))
+				if(F.current_election)
+					data["current_election"] = 1
+					data["election_name"] = F.current_election.name
+					if(selected_ballot)
+						if(owner.ckey in selected_ballot.voted_ckeys)
+							data["voted"] = 1
+						data["ballot_name"] = selected_ballot.title
+						var/list/formatted_candidates[0]
+						for(var/datum/candidate/candidate in selected_ballot.candidates)
+							formatted_candidates[++formatted_candidates.len] = list("name" = candidate.real_name,"pitch" = candidate.desc, "ref" = "\ref[candidate]")
+						data["candidates"] = formatted_candidates
+						data["selected_ballot"] = selected_ballot.title
+					else
+						var/list/formatted_ballots[0]
+						for(var/datum/democracy/ballot in F.current_election.ballots)
+							formatted_ballots[++formatted_ballots.len] = list("name" = ballot.title, "ref" = "\ref[ballot]")
+						data["ballots"] = formatted_ballots
+
+		if(menu == 4)
+			if(!record)
+				record = Retrieve_Record(owner.real_name)
+			if(!record)
+				menu = 1
+				return
+
+			data["visible"] = record.visibility_status
+			var/list/friends = record.all_friends
+			var/list/online_friends = list()
+			var/list/offline_friends = list()
+			var/list/friend_requests = record.pending_friend_request
+			for(var/friend in friends)
+				offline_friends |= friend
+				for(var/client/C in GLOB.clients)
+					if(C.mob && C.mob.real_name == friend)
+						online_friends |= friend
+						offline_friends -= friend
+			var/list/formatted_online_friends[0]
+			for(var/friend in online_friends)
+				formatted_online_friends[++formatted_online_friends.len] = list("name" = friend)
+			data["online_friends"] = formatted_online_friends
+			var/list/formatted_offline_friends[0]
+			for(var/friend in offline_friends)
+				formatted_offline_friends[++formatted_offline_friends.len] = list("name" = friend)
+
+			var/list/formatted_friend_requests[0]
+			for(var/friend in friend_requests)
+				formatted_friend_requests[++formatted_friend_requests.len] = list("name" = friend)
+			data["friend_requests"] = formatted_friend_requests
 		data["menu"] = menu
 
 
@@ -353,7 +429,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 			else
 				data["time_teleport"] = round((lacemob.teleport_time - world.time)/(1 MINUTE))
 		else
-			message_admins("lace UI without owner or lacemob [src] [src.loc]")
+			message_admins("lace UI without owner or lacemob [src] [src.loc] ([x], [y], [z])")
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
@@ -393,8 +469,8 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 	if((!owner || !faction) && !robot)
 		return
-	if(!(owner && faction && owner.real_name == faction.get_leadername()))
-		var/datum/computer_file/report/crew_record/records
+	if(owner.real_name != faction.get_leadername())
+		var/datum/computer_file/report/crew_record/records //There's a member var called records too...
 		if(!robot)
 			records = faction.get_record(owner.real_name)
 		else
@@ -416,19 +492,22 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		else
 			return "No paying assignment."
 	else
-		var/datum/assignment/assignment = faction.get_assignment(null, owner.real_name)
+		var/datum/assignment/assignment = faction.get_assignment(null, owner.real_name) //This will never return not null except if the faction is a business and the person is a CEO
 		var/title
 		if(assignment && assignment.duty_able)
-			title = assignment.get_title(1)
-			return "Working as [title] for [faction.name].<br>Making [assignment.get_pay(record.rank)]$$ for every thirty minutes clocked in."
+			title = assignment.get_title()
+			return "Working as [title] for [faction.name].<br>Making [assignment.get_pay()]$$ for every thirty minutes clocked in."
 		else
 			return "No paying assignment."
 
 
 /obj/item/organ/internal/stack/proc/try_connect()
-	if(!owner) return 0
+	if(!owner) 
+		return FALSE
 	faction = get_faction(connected_faction)
-	if(!faction || !faction.status) return 0
+	if(!faction || !faction.status) 
+		return FALSE
+	
 	var/datum/computer_file/report/crew_record/record = faction.get_record(owner.real_name)
 	if(!record)
 		if(faction.get_leadername() == owner.real_name)
@@ -500,19 +579,24 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 	return 1
 
-/obj/item/organ/internal/stack/removed(var/mob/living/user, var/drop_organ=1, var/detach=1)
-	do_backup()
-	if(!istype(owner))
-		message_admins("Removed Failed")
-		return ..(user, drop_organ, detach)
-
-	if(name == initial(name))
-		name = "\the [owner.real_name]'s [initial(name)]"
-
-	transfer_identity(owner)
-
-
+//set dolace to false when you don't want the lace stuff to trigger and make a mess when you're deleting things
+/obj/item/organ/internal/stack/removed(var/mob/living/user, var/drop_organ=1, var/detach=1, var/dolace=TRUE)
+	if(dolace) //Dont do this when we're being deleted
+		do_backup()
+		if(!istype(owner))
+			message_admins("Removed Failed")
+			return ..(user, drop_organ, detach)
+		if(name == initial(name))
+			name = "\the [owner.real_name]'s [initial(name)]"
+		transfer_identity(owner)
 	..(user, drop_organ, detach)
+
+//Whether the lace should still display its action button on the button bar
+// Meant to be used to clear deleted laces from the UI of people still stuck with them after it was hastily replaced and etc..
+/obj/item/organ/internal/stack/proc/can_delete_stack_action()
+	if( (owner == null && lacemob == null) || loc == null || QDELETED(src))
+		return TRUE
+	return FALSE
 
 /obj/item/organ/internal/stack/vox/removed()
 	var/obj/item/organ/external/head = owner.get_organ(parent_organ)

@@ -96,6 +96,7 @@
 	burst()
 
 /obj/machinery/atmospherics/pipe/simple/proc/burst()
+	log_warning("[src] at [x],[y],[z] bursted open!")
 	ASSERT(parent)
 	parent.temporarily_store_air()
 	src.visible_message("<span class='danger'>\The [src] bursts!</span>");
@@ -103,7 +104,6 @@
 	var/datum/effect/effect/system/smoke_spread/smoke = new
 	smoke.set_up(1,0, src.loc, 0)
 	smoke.start()
-	log_debug("[src] at [x],[y],[z] bursted open!")
 	qdel(src)
 
 /obj/machinery/atmospherics/pipe/simple/proc/normalize_dir()

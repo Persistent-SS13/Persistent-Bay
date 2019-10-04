@@ -9,6 +9,8 @@
 	use_power 			= POWER_USE_IDLE
 	idle_power_usage 	= 2
 	active_power_usage 	= 50
+	circuit_type 		= /obj/item/weapon/circuitboard/mass_driver
+
 	//Radio
 	id_tag 				= null
 	frequency 			= null

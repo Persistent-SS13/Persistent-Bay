@@ -6,15 +6,34 @@
 	icon_state = "lmi_empty"
 	w_class = ITEM_SIZE_NORMAL
 	origin_tech = list(TECH_BIO = 3)
-
 	req_access = list()
-
+	max_health = 150
 	//Revised. Brainmob is now contained directly within object of transfer. MMI in this case.
 
 	var/locked = 0
 	var/mob/living/carbon/lace/brainmob = null//The current occupant.
 	var/obj/item/organ/internal/stack/brainobj = null	//The current brain organ.
 	var/obj/mecha = null//This does not appear to be used outside of reference in mecha.dm.
+
+/obj/item/device/lmi/New()
+	. = ..()
+	ADD_SAVED_VAR(locked)
+	ADD_SAVED_VAR(brainmob)
+	ADD_SAVED_VAR(brainobj)
+
+/obj/item/device/lmi/Destroy()
+	if(isrobot(loc))
+		var/mob/living/silicon/robot/borg = loc
+		borg.mmi = null
+	if(brainmob)
+		brainmob.loc = brainobj
+	if(brainobj)
+		brainobj.loc = get_turf(src)
+		brainobj = null
+		brainmob.container = brainobj
+	else
+		QDEL_NULL(brainmob)
+	return ..()
 
 /obj/item/device/lmi/attackby(var/obj/item/O as obj, var/mob/user as mob)
 	if(istype(O,/obj/item/organ/internal/stack) && !brainmob) //Time to stick a brain in it --NEO
@@ -59,7 +78,7 @@
 	if(brainmob)
 		O.attack(brainmob, user)//Oh noooeeeee
 		return
-	..()
+	return ..()
 
 	//TODO: ORGAN REMOVAL UPDATE. Make the brain remain in the MMI so it doesn't lose organ data.
 /obj/item/device/lmi/attack_self(mob/user as mob)
@@ -104,19 +123,7 @@
 	if(rig)
 		rig.forced_move(direction, user)
 
-/obj/item/device/lmi/Destroy()
-	if(isrobot(loc))
-		var/mob/living/silicon/robot/borg = loc
-		borg.mmi = null
-	if(brainmob)
-		brainmob.loc = brainobj
-	if(brainobj)
-		brainobj.loc = get_turf(src)
-		brainobj = null
-		brainmob.container = brainobj
-	else
-		QDEL_NULL(brainmob)
-	return ..()
+
 
 /obj/item/device/lmi/radio_enabled
 	name = "radio-enabled lace-machine interface"

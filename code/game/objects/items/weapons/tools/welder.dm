@@ -44,8 +44,6 @@
 	..()
 	ADD_SAVED_VAR(tank)
 
-	ADD_SKIP_EMPTY(tank)
-
 /obj/item/weapon/tool/weldingtool/Initialize()
 	set_extension(src, /datum/extension/base_icon_state, /datum/extension/base_icon_state, icon_state)
 	. = ..()
@@ -129,7 +127,7 @@
 			return 0
 
 		if(user.unEquip(W))
-		//user.drop_from_inventory(W, src)
+			W.forceMove(src)
 			tank = W
 			user.visible_message("[user] slots \a [W] into \the [src].", "You slot \a [W] into \the [src].")
 			update_icon()

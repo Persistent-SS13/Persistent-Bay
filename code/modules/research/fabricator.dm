@@ -169,7 +169,10 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 			data["design_description"] = selected_design.desc
 			data["design_materials"] = get_design_resources(selected_design)
 			data["design_buildtime"] = get_design_time(selected_design)
-			data["design_icon"] = user.browse_rsc_icon(selected_design.builds.icon, selected_design.builds.icon_state)
+			if(selected_design.builds)
+				data["design_icon"] = user.browse_rsc_icon(selected_design.builds.icon, selected_design.builds.icon_state)
+			else
+				data["design_icon"] = null
 			if(selected_design.research && selected_design.research != "")
 				var/datum/tech_entry/entry = SSresearch.files.get_tech_entry(selected_design.research)
 				if(entry)
@@ -383,7 +386,11 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 /obj/machinery/fabricator/proc/remove_from_queue(var/index)
 	if(index == 1)
 		progress = 0
-	queue.Cut(index, index + 1)
+	if(queue && queue.len)
+		if(index < queue.len)
+			queue.Cut(index, index + 1)
+		else //If at the end of the queue, the next position is 0 apparently...
+			queue.Cut(index, 0)
 	update_busy()
 
 /obj/machinery/fabricator/proc/can_build(var/datum/design/D)

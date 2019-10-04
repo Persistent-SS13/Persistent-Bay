@@ -4,8 +4,8 @@
 	icon = 'icons/obj/xenoarchaeology.dmi'
 	icon_state = "suspension2"
 	density = 1
-	req_access = list(core_access_science_programs)
-	var/obj/item/weapon/cell/cell
+	//req_access = list(core_access_science_programs)
+	var/obj/item/weapon/cell/cell = /obj/item/weapon/cell/high
 	var/obj/item/weapon/card/id/auth_card
 	var/locked = 1
 	var/power_use = 5 KILOWATTS
@@ -13,7 +13,11 @@
 
 /obj/machinery/suspension_gen/New()
 	..()
-	src.cell = new /obj/item/weapon/cell/high(src)
+	if(ispath(cell))
+		cell = new cell(src)
+	ADD_SAVED_VAR(cell)
+	ADD_SAVED_VAR(auth_card)
+	ADD_SAVED_VAR(locked)
 
 /obj/machinery/suspension_gen/Process()
 	set background = 1

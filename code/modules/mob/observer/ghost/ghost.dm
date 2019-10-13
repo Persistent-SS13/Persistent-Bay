@@ -143,7 +143,7 @@ Works together with spawning an observer, noted above.
 	if(teleop && istype(teleop, /mob/observer/ghost))
 		var/mob/observer/ghost/G = teleop
 		if(G.admin_ghosted)
-			return
+			return G
 	if(key)
 		hide_fullscreens()
 		if(check_rights(R_ADMIN, 0, src) && shouldGhost)

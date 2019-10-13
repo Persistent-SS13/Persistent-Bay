@@ -354,4 +354,3 @@
 #define CHARACTER_SPAWN_TYPE_LACE_STORAGE    3 //Will spawn at the lace storage
 #define CHARACTER_SPAWN_TYPE_IMPORT          4 //frontier beacon
 #define CHARACTER_SPAWN_TYPE_PERSONAL        5 //Same as cryonet, but for personal cryonets
-

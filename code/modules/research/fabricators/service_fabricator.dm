@@ -115,9 +115,9 @@
 	build_path = /obj/item/honey_frame
 	materials = list(MATERIAL_WOOD = 1 SHEET)
 
-// /datum/design/item/servicefab/botanytools/disks
-// 	build_path = /obj/item/weapon/disk/botany
-// 	materials = list(MATERIAL_PLASTIC = 0.05 SHEET, MATERIAL_ALUMINIUM = 0.05 SHEET, MATERIAL_COPPER 0.05 SHEET)
+/datum/design/item/servicefab/botanytools/disks
+	build_path = /obj/item/weapon/disk/botany
+	materials = list(MATERIAL_PLASTIC = 0.05 SHEET, MATERIAL_ALUMINIUM = 0.05 SHEET, MATERIAL_COPPER = 0.05 SHEET)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

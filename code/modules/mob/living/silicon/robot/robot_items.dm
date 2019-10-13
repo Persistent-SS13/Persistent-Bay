@@ -382,6 +382,12 @@
 	var/max_doors = 2
 	var/mode = 0 // 0 - Walls   1 - Doors
 
+/obj/item/weapon/inflatable_dispenser/New()
+	. = ..()
+	ADD_SAVED_VAR(stored_walls)
+	ADD_SAVED_VAR(stored_doors)
+	ADD_SAVED_VAR(mode)
+
 /obj/item/weapon/inflatable_dispenser/robot
 	w_class = ITEM_SIZE_HUGE
 	stored_walls = 10
@@ -482,14 +488,22 @@
 	var/capacity = 1                   //How many objects can be held.
 	var/list/obj/item/held = list()    //What is being held.
 
-/obj/item/robot_rack/examine(mob/user)
+/obj/item/robot_rack/New(var/loc, var/starting_objects = 0)
 	. = ..()
-	to_chat(user, "It can hold up to [capacity] item[capacity == 1 ? "" : "s"].")
+	ADD_SAVED_VAR(held)
+	ADD_SAVED_VAR(capacity)
+	ADD_SAVED_VAR(object_type)
+	ADD_SAVED_VAR(interact_type)
+	ADD_SKIP_EMPTY(held)
 
 /obj/item/robot_rack/Initialize(mapload, starting_objects = 0)
 	. = ..()
 	for(var/i = 1, i <= min(starting_objects, capacity), i++)
 		held += new object_type(src)
+
+/obj/item/robot_rack/examine(mob/user)
+	. = ..()
+	to_chat(user, "It can hold up to [capacity] item[capacity == 1 ? "" : "s"].")
 
 /obj/item/robot_rack/attack_self(mob/user)
 	if(!length(held))
@@ -526,8 +540,17 @@
 	var/max_fuel_items = 5
 	var/list/fuel_types = list(
 		/obj/item/weapon/reagent_containers/food/snacks/meat = 2,
-		/obj/item/weapon/reagent_containers/food/snacks/fish = 1.5
+		/obj/item/weapon/reagent_containers/food/snacks/fish = 1.5,
 	)
+
+/obj/item/bioreactor/Initialize()
+	. = ..()
+	if(. != INITIALIZE_HINT_QDEL)
+		START_PROCESSING(SSobj, src)
+
+/obj/item/bioreactor/Destroy()
+	STOP_PROCESSING(SSobj, src)
+	. = ..()
 
 /obj/item/bioreactor/attack_self(var/mob/user)
 	if(contents.len >= 1)
@@ -553,14 +576,6 @@
 		return
 	target.forceMove(src)
 	to_chat(user, SPAN_NOTICE("You load \the [target] into \the [src]."))
-
-/obj/item/bioreactor/Initialize()
-	. = ..()
-	START_PROCESSING(SSobj, src)
-
-/obj/item/bioreactor/Destroy()
-	STOP_PROCESSING(SSobj, src)
-	. = ..()
 
 /obj/item/bioreactor/Process()
 	var/mob/living/silicon/robot/R = loc

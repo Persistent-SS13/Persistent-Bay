@@ -51,10 +51,12 @@
 		set_max_health(species.total_health)
 	else
 		set_max_health(200)
+	ADD_SAVED_VAR(oxygen_reserve)
 
-	spawn(5)
-		if(brainmob && brainmob.client)
-			brainmob.client.screen.len = null //clear the hud
+/obj/item/organ/internal/brain/Initialize()
+	. = ..()
+	if(brainmob && brainmob.client)
+		brainmob.client.screen.len = null //clear the hud
 
 /obj/item/organ/internal/brain/set_max_health(var/nhealth)
 	..()

@@ -10,8 +10,12 @@
 		/obj/item/device/flash,
 		/obj/item/weapon/melee/baton/loaded,
 		/obj/item/weapon/extinguisher,
+		/obj/item/weapon/tool/wirecutters,
+		/obj/item/weapon/tool/screwdriver,
 		/obj/item/weapon/tool/wrench,
 		/obj/item/weapon/tool/crowbar,
-		/obj/item/device/scanner/health
+		/obj/item/device/multitool,
+		/obj/item/device/scanner/health,
+		/obj/item/weapon/tray/robotray,
 	)
 	emag = /obj/item/weapon/melee/energy/sword

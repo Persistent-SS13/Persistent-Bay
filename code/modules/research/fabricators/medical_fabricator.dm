@@ -397,3 +397,13 @@
 /datum/design/item/medicalfab/meditools/autocpr
 	build_path = /obj/item/auto_cpr
 	materials = list(MATERIAL_ALUMINIUM = 3 SHEET, MATERIAL_GLASS = 0.5 SHEETS, MATERIAL_COPPER = 1 SHEETS)
+
+/datum/design/item/medicalfab/robotics/posibrain
+	build_path = /obj/item/organ/internal/posibrain
+	materials = list(MATERIAL_TITANIUM = 3 SHEET, MATERIAL_COPPER = 1 SHEETS, MATERIAL_DIAMOND = 5 SHEETS, MATERIAL_BSPACE_CRYSTAL = 1 SHEET)
+/datum/design/item/medicalfab/robotics/mmi
+	build_path = /obj/item/device/mmi
+	materials = list(MATERIAL_ALUMINIUM = 3 SHEET, MATERIAL_COPPER = 2 SHEETS)
+/datum/design/item/medicalfab/robotics/mmi_holder
+	build_path = /obj/item/organ/internal/mmi_holder
+	materials = list(MATERIAL_ALUMINIUM = 3 SHEET, MATERIAL_COPPER = 2 SHEETS)

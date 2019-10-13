@@ -4,10 +4,15 @@
 
 /mob/living/silicon/New()
 	..()
+	ADD_SAVED_VAR(laws)
+	ADD_SAVED_VAR(additional_law_channels)
 	if(!laws)
 		laws = GLOB.using_map.default_law_type
 	if(ispath(laws))
 		laws = new laws()
+
+/mob/living/silicon/Initialize()
+	. = ..()
 	laws_sanity_check()
 
 /mob/living/silicon/proc/laws_sanity_check()

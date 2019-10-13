@@ -30,6 +30,14 @@
 	#define SEC_HUD 1 //Security HUD mode
 	#define MED_HUD 2 //Medical HUD mode
 
+/mob/living/silicon/New()
+	. = ..()
+	ADD_SAVED_VAR(silicon_radio)
+	ADD_SAVED_VAR(silicon_camera)
+	ADD_SAVED_VAR(idcard)
+	ADD_SAVED_VAR(sensor_mode)
+	ADD_SAVED_VAR(local_transmit)
+
 /mob/living/silicon/Initialize()
 	GLOB.silicon_mob_list += src
 	. = ..()
@@ -39,8 +47,9 @@
 	if(ispath(silicon_camera))
 		silicon_camera = new silicon_camera(src)
 
-	add_language(LANGUAGE_GALCOM)
-	default_language = all_languages[LANGUAGE_GALCOM]
+	if(!map_storage_loaded)
+		add_language(LANGUAGE_GALCOM)
+		default_language = all_languages[LANGUAGE_GALCOM]
 	init_id()
 	init_subsystems()
 

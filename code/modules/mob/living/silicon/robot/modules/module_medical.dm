@@ -7,7 +7,8 @@
 		NETWORK_MEDICAL
 	)
 	subsystems = list(
-		/datum/nano_module/crew_monitor
+		/datum/nano_module/crew_monitor,
+		/datum/nano_module/program/clone_manager,
 	)
 	can_be_pushed = 0
 
@@ -28,6 +29,7 @@
 		/obj/item/device/flash,
 		/obj/item/borg/sight/hud/med,
 		/obj/item/device/scanner/health,
+		/obj/item/device/scanner/reagent/adv,
 		/obj/item/weapon/reagent_containers/borghypo/surgeon,
 		/obj/item/weapon/scalpel/manager,
 		/obj/item/weapon/hemostat,
@@ -99,14 +101,14 @@
 		/obj/item/weapon/reagent_containers/borghypo/crisis,
 		/obj/item/weapon/shockpaddles/robot,
 		/obj/item/weapon/reagent_containers/dropper/industrial,
-		/obj/item/weapon/reagent_containers/syringe,
+		/obj/item/weapon/reagent_containers/syringe/bluespace,
 		/obj/item/weapon/gripper/chemistry,
 		/obj/item/weapon/extinguisher/mini,
 		/obj/item/taperoll/medical,
 		/obj/item/weapon/inflatable_dispenser/robot,
 		/obj/item/stack/medical/ointment,
 		/obj/item/stack/medical/bruise_pack,
-		/obj/item/stack/medical/splint
+		/obj/item/stack/medical/splint,
 	)
 	synths = list(
 		/datum/matter_synth/medicine = 15000

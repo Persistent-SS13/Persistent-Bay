@@ -535,6 +535,7 @@
 	allow_occupant_types = list(/mob/living/silicon/robot)
 	disallow_occupant_types = list(/mob/living/silicon/robot/drone)
 	applies_stasis = 0
+	circuit_type = /obj/item/weapon/circuitboard/cryopod/robot
 
 /obj/machinery/cryopod/lifepod
 	name = "life pod"

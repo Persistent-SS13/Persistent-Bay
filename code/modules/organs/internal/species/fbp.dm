@@ -19,7 +19,8 @@
 	ADD_SAVED_VAR(open)
 	ADD_SAVED_VAR(cell)
 
-	ADD_SKIP_EMPTY(cell)
+/obj/item/organ/internal/cell/get_cell()
+	return cell
 
 /obj/item/organ/internal/cell/proc/percent()
 	if(!cell)
@@ -121,13 +122,12 @@
 	..(new_owner, internal)
 	if(!stored_mmi)
 		stored_mmi = new(src)
-	sleep(-1)
 	update_from_mmi()
 	persistantMind = owner.mind
 	ownerckey = owner.ckey
 
 	ADD_SAVED_VAR(stored_mmi)
-	ADD_SKIP_EMPTY(stored_mmi)
+	ADD_SAVED_VAR(ownerckey)
 
 /obj/item/organ/internal/mmi_holder/after_load()
 	. = ..()

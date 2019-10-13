@@ -166,10 +166,12 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	name = "Due North"
 	S_connect = 1
 	N_connect = 5
-	monster_types = list(/mob/living/simple_animal/hostile/tormented) // types of monsters that will occur on this map.
-	monster_quantity = 100 // and how many will occur/respawn
+	monster_types = list(
+		/mob/living/simple_animal/hostile/carp,
+		) // types of monsters that will occur on this map.
+	monster_quantity = 25 // and how many will occur/respawn
 	obj_quantity = 0
-	difficulty = 3
+	difficulty = 2
 
 /datum/zlevel_data/five
 	z = 5
@@ -177,10 +179,15 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	name = "Julian's Corner"
 	S_connect = 4
 	W_connect = 6
-	monster_types = list(/mob/living/simple_animal/hostile/tormented) // types of monsters that will occur on this map.
-	monster_quantity = 150 // and how many will occur/respawn
+	monster_types = list(
+		/mob/living/simple_animal/hostile/carp, 
+		/mob/living/simple_animal/hostile/carp/pike, 
+		/mob/living/simple_animal/hostile/scarybat,
+		/mob/living/simple_animal/hostile/bear,
+		) // types of monsters that will occur on this map.
+	monster_quantity = 75 // and how many will occur/respawn
 	obj_types = list(/obj/structure/cryo_crate)
-	obj_quantity = 3
+	obj_quantity = 1
 	difficulty = 4
 
 /datum/zlevel_data/six
@@ -189,7 +196,15 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	name = "Ambition's Toll"
 	E_connect = 5
 	W_connect = 7
-	monster_types = list(/mob/living/simple_animal/hostile/tormented, /mob/living/simple_animal/hostile/creature) // types of monsters that will occur on this map.
+	monster_types = list(
+		/mob/living/simple_animal/hostile/tormented, 
+		/mob/living/simple_animal/hostile/voxslug, 
+		/mob/living/simple_animal/hostile/scarybat, 
+		/mob/living/simple_animal/hostile/creature,
+		/mob/living/simple_animal/hostile/carp/pike, 
+		/mob/living/simple_animal/hostile/vagrant,
+		/mob/living/simple_animal/hostile/bear,
+		) // types of monsters that will occur on this map.
 	monster_quantity = 150 // and how many will occur/respawn
 	obj_types = list(/obj/structure/cryo_crate)
 	obj_quantity = 10
@@ -200,7 +215,16 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	coord = "(-2,2)"
 	name = "Shadowlands"
 	E_connect = 6
-	monster_types = list(/mob/living/simple_animal/hostile/tormented, /mob/living/simple_animal/hostile/creature, /mob/living/simple_animal/hostile/faithless) // types of monsters that will occur on this map.
+	monster_types = list(
+		/mob/living/simple_animal/hostile/tormented, 
+		/mob/living/simple_animal/hostile/creature, 
+		/mob/living/simple_animal/hostile/faithless,
+		/mob/living/simple_animal/hostile/voxslug,
+		/mob/living/simple_animal/hostile/scarybat,
+		/mob/living/simple_animal/hostile/carp/pike, 
+		/mob/living/simple_animal/hostile/bear,
+		/mob/living/simple_animal/hostile/pirate/ranged,
+		) // types of monsters that will occur on this map.
 	monster_quantity = 150 // and how many will occur/respawn
 	obj_types = list(/obj/structure/cryo_crate)
 	obj_quantity = 10
@@ -210,7 +234,16 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	z = 17
 	coord = "Unknown"
 	name = "Crash Site"
-	monster_types = list(/mob/living/simple_animal/hostile/tormented, /mob/living/simple_animal/hostile/creature, /mob/living/simple_animal/hostile/faithless) // types of monsters that will occur on this map.
+	monster_types = list(
+		/mob/living/simple_animal/hostile/tormented, 
+		/mob/living/simple_animal/hostile/creature, 
+		/mob/living/simple_animal/hostile/faithless,
+		/mob/living/simple_animal/hostile/voxslug,
+		/mob/living/simple_animal/hostile/scarybat,
+		/mob/living/simple_animal/hostile/carp/pike, 
+		/mob/living/simple_animal/hostile/hivebot,
+		/mob/living/simple_animal/hostile/viscerator,
+		) // types of monsters that will occur on this map.
 	monster_quantity = 150 // and how many will occur/respawn
 	obj_types = list(/obj/structure/cryo_crate)
 	obj_quantity = 0

@@ -123,6 +123,8 @@
 	if(!stored_mmi)
 		stored_mmi = new(src)
 	update_from_mmi()
+	if(!owner) return
+
 	persistantMind = owner.mind
 	ownerckey = owner.ckey
 

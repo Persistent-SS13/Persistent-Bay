@@ -56,9 +56,9 @@
 	swap_flags = MONKEY|SLIME|SIMPLE_ANIMAL
 	push_flags = MONKEY|SLIME|SIMPLE_ANIMAL|ALIEN
 
-	flesh_color = "#5F7BB0"
+	flesh_color = "#5f7bb0"
 	reagent_tag = IS_RESOMI
-	blood_color = "#D514F7"
+	blood_color = "#d514f7"
 	base_color = "#001144"
 
 	move_trail = /obj/effect/decal/cleanable/blood/tracks/claw

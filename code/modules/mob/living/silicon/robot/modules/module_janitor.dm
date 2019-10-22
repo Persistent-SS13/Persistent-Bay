@@ -11,7 +11,6 @@
 	)
 	equipment = list(
 		/obj/item/borg/sight/hud/jani,
-
 		/obj/item/device/flash,
 		/obj/item/weapon/soap/deluxe,
 		/obj/item/weapon/storage/bag/trash,
@@ -22,7 +21,6 @@
 		/obj/item/weapon/gripper/clerical,
 		/obj/item/robot_rack/body_bag,
 		/obj/item/weapon/reagent_containers/spray/cleaner/drone,
-
 		/obj/item/weapon/tool/crowbar,
 		/obj/item/weapon/tool/wrench,
 		/obj/item/weapon/tool/screwdriver,

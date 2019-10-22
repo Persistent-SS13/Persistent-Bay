@@ -58,7 +58,9 @@
 // Facial Hair
 
 /datum/sprite_accessory/facial_hair/somi
+	name = "Resomi Shaved"
 	icon = 'icons/mob/human_races/species/resomi/hair.dmi'
+	icon_state = "teshari_shaved"
 	blend = ICON_MULTIPLY
 	species_allowed = list(SPECIES_RESOMI)
 

@@ -18,7 +18,6 @@
 		/obj/item/weapon/tool/weldingtool/electric,
 		/obj/item/weapon/card/emag,
 		/obj/item/modular_computer/laptop/preset/custom_loadout/advanced,
-
 		/obj/item/weapon/tank/jetpack/carbondioxide
 	)
 	var/id

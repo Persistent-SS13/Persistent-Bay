@@ -136,6 +136,8 @@
 
 /obj/item/organ/internal/mmi_holder/proc/update_from_mmi()
 
+	if(!owner) return
+
 	if(!stored_mmi.brainmob)
 		stored_mmi.brainmob = new(stored_mmi)
 		stored_mmi.brainobj = new(stored_mmi)
@@ -143,8 +145,6 @@
 		stored_mmi.brainmob.real_name = owner.real_name
 		stored_mmi.brainmob.SetName(stored_mmi.brainmob.real_name)
 		stored_mmi.SetName("[initial(stored_mmi.name)] ([owner.real_name])")
-
-	if(!owner) return
 
 	name = stored_mmi.name
 	desc = stored_mmi.desc

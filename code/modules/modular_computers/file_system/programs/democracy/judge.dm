@@ -1,6 +1,6 @@
 /datum/computer_file/program/judge
 	filename = "judge"
-	filedesc = "Nexus City Judge Controls"
+	filedesc = "Sycorax Station Judge Controls"
 	program_icon_state = "comm"
 	program_menu_icon = "flag"
 	nanomodule_path = /datum/nano_module/program/judge
@@ -12,7 +12,7 @@
 	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP | PROGRAM_TELESCREEN | PROGRAM_TABLET
 
 /datum/nano_module/program/judge
-	name = "Nexus City Judge Controls"
+	name = "Sycorax Station Judge Controls"
 	available_to_ai = TRUE
 
 	var/menu = 1

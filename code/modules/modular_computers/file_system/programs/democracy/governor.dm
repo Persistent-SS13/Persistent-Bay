@@ -1,6 +1,6 @@
 /datum/computer_file/program/governor
 	filename = "governor"
-	filedesc = "Nexus City Governor Control"
+	filedesc = "Sycorax Station Governor Control"
 	program_icon_state = "comm"
 	program_menu_icon = "flag"
 	nanomodule_path = /datum/nano_module/program/governor
@@ -12,7 +12,7 @@
 	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP | PROGRAM_TELESCREEN
 
 /datum/nano_module/program/governor
-	name = "Nexus City Governor Control"
+	name = "Sycorax Station Governor Control"
 	available_to_ai = TRUE
 	var/datum/council_vote/selected_vote
 	var/datum/council_vote/selected_policy
@@ -127,7 +127,7 @@
 	if(href_list["page_down"])
 		curr_page--
 		return 1
-	
+
 	switch(href_list["action"])
 		if("change_menu")
 			menu = text2num(href_list["menu_target"])

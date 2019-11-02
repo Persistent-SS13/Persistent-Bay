@@ -1,10 +1,10 @@
 /datum/computer_file/program/citycouncil
 	filename = "citycouncil"
-	filedesc = "Nexus City Council Control"
+	filedesc = "Sycorax Station Commission Control"
 	program_icon_state = "comm"
 	program_menu_icon = "flag"
 	nanomodule_path = /datum/nano_module/program/citycouncil
-	extended_desc = "Used by members of city council to propose and vote on new laws, including tax policy."
+	extended_desc = "Used by members of Station Commission to propose and vote on new laws, including tax policy."
 	requires_ntnet = TRUE
 	size = 12
 	democratic = 1
@@ -12,7 +12,7 @@
 	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP | PROGRAM_TELESCREEN
 
 /datum/nano_module/program/citycouncil
-	name = "Nexus City Council Control"
+	name = "Sycorax Station Commission Control"
 	available_to_ai = TRUE
 	var/datum/council_vote/selected_vote
 	var/law_type = 1 // 1 = criminal 2 = civil

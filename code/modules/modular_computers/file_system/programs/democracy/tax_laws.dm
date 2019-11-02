@@ -1,6 +1,6 @@
 /datum/computer_file/program/tax_laws
 	filename = "tax_laws"
-	filedesc = "Nexus City Tax Code"
+	filedesc = "Sycorax Station Tax Code"
 	program_icon_state = "comm"
 	program_menu_icon = "note"
 	nanomodule_path = /datum/nano_module/program/tax_laws
@@ -12,7 +12,7 @@
 	usage_flags = PROGRAM_ALL
 
 /datum/nano_module/program/tax_laws
-	name = "Nexus City Tax Code"
+	name = "Sycorax Station Tax Code"
 	available_to_ai = TRUE
 	var/taxee = 1 // 1 = personal, 2 = business
 

@@ -325,7 +325,7 @@ research holder datum.
 	points = 650
 	uid = "combitool"
 	prereqs = list("nano_mani")
-
+/* EVENT RESEARCH
 /datum/tech_entry/engi/rcd
 	name = "Phoron-based rapid construction"
 	desc = "Putting together a variety of advanced technologies, a method for rapidly constructing walls could be developed. Unlocks rapid construction device & rcd ammo designs for the appropriate fabricators."
@@ -334,7 +334,7 @@ research holder datum.
 	uid = "rcd"
 	prereqs = list("super_matter_bin", "cell_super", "ultra_micro_laser")
 	uses = 2
-
+*/
 /datum/tech_entry/engi/welder_industrial
 	name = "Industrial Fuel Storage"
 	desc = "Larger welding fuel tanks make engineering work more efficent. Unlocks industrial welder designs for the appropriate fabricators."
@@ -349,7 +349,7 @@ research holder datum.
 	points = 300
 	uid = "welding_huge"
 	prereqs = list("welding_industrial")
-
+/* EVENT RESEARCH
 /datum/tech_entry/engi/welder_experimental
 	name = "Experimental Fuel Generation"
 	desc = "The experimental welding tool uses phoron to create a tool that continually refills with fuel. Unlocks experimental welder designs for the appropriate fabricators."
@@ -358,7 +358,7 @@ research holder datum.
 	uid = "welding_experimental"
 	prereqs = list("welding_industrial", "welding_huge")
 	uses = 3
-
+*/
 /datum/tech_entry/engi/airlock_brace
 	name = "Airlock Bracing"
 	desc = "The airlock brace can restrict areas and it can only be effectively removed using a brace jack. Unlocks airlock brace & brace jack designs for the appropriate fabricators."
@@ -372,7 +372,7 @@ research holder datum.
 	tier = 1
 	points = 150
 	uid = "lightreplacer"
-
+/* EVENT RESEARCH
 /datum/tech_entry/engi/rped
 	name = "Phoron-based Part-Swapping"
 	desc = "Phoron applied with other conductors can create a device thats capable of swapping out parts without deconstructing the machine in question. Unlocks rapid part exchange device designs for the appropriate fabricators."
@@ -380,7 +380,7 @@ research holder datum.
 	points = 400
 	uid = "rped"
 	prereqs = list("lightreplacer")
-
+*/
 
 /datum/tech_entry/engi/mesons
 	name = "Meson Optical Scanners"
@@ -540,7 +540,7 @@ research holder datum.
 	tier = 1
 	points = 200
 	uid = "grenade_chem"
-
+/* EVENT RESEARCH
 /datum/tech_entry/combat/grenades/anti_photon
 	name = "Anti-Photon Experimental Nodules"
 	desc = "Develop experimental grenades that suck in light to create dark areas. Unlocks anti-photon grenade designs for the appropriate fabricators."
@@ -549,7 +549,7 @@ research holder datum.
 	uid = "grenade_photon"
 	prereqs = list("grenade_emp")
 	uses = -10
-
+*/
 
 
 // MINING Equipment
@@ -579,7 +579,7 @@ research holder datum.
 	uid = "mining_3"
 	uses = -10
 	prereqs = list("mining_2")
-
+/* EVENT RESEARCH
 /datum/tech_entry/combat/mining/diamond_drill
 	name = "Diamond Drilling"
 	desc = "The hand-held diamond drill is the final word in personal drilling. Unlocks diamond drill designs for the appropriate fabricators."
@@ -588,7 +588,7 @@ research holder datum.
 	uid = "mining_4"
 	uses = -10
 	prereqs = list("mining_3")
-
+*/
 /datum/tech_entry/combat/mining/plasma_cutter
 	name = "Plasma Cutter"
 	desc = "The plasma cutter is a weapon designed for use in EVA, and a tool for mining.. Unlocks plasma cutter designs for the appropriate fabricators."
@@ -684,8 +684,8 @@ research holder datum.
 	points = 1400
 	uid = "pistol_2"
 	prereqs = list("pistol_1", "shotgun_2")
-	
-	
+
+/* EVENT RESEARCH
 /datum/tech_entry/combat/proj/automatic/rifle
 	name = "The Assault Rifle"
 	desc = "It's an incredibly effective and supremely cool assault rifle. This is what you've been waiting for. Unlocks assault rifle designs for the appropriate fabricators."
@@ -694,6 +694,7 @@ research holder datum.
 	uid = "autos_3"
 	prereqs = list("autos_2")
 	uses = 1
+
 /datum/tech_entry/combat/proj/sniper
 	name = "Anti-Material Rifles"
 	desc = "The application of phoron heavily throughout the design of a rifle gives it a powerful structural penetration capability. Unlocks anti-material sniper designs for the appropriate fabricators."
@@ -702,7 +703,7 @@ research holder datum.
 	uid = "antimaterial"
 	prereqs = list("pistol_2", "shotgun_3")
 	uses = 1
-
+*/
 // END BALLISTIC WEAPONS
 
 
@@ -715,7 +716,7 @@ research holder datum.
 	points = 400
 	uid = "energy_1"
 	prereqs = list("shotgun_1", "adv_capacitor")
-
+/* EVENT RESEARCH
 /datum/tech_entry/combat/energy/xray
 	name = "Xray Laser Weapons"
 	desc = "Xray based weapons can penetrate armors that are otherwise effective against energy weapons. Unlocks xray laser pistol & xray laser carbine gun designs for the appropriate fabricators."
@@ -723,7 +724,7 @@ research holder datum.
 	points = 2000
 	uid = "xray_1"
 	prereqs = list("energy_1", "high_micro_laser")
-
+*/
 /datum/tech_entry/combat/energy/carbine
 	name = "Advanced Energy Rifle"
 	desc = "Phoron can enrich an energy weapons to be more efficent and deadly. Unlocks laser carbine designs for the appropriate fabricators."
@@ -739,7 +740,7 @@ research holder datum.
 	points = 2500
 	uid = "ion_1"
 	prereqs = list("energy_1", "phasic_sensor")
-
+/* EVENT RESEARCH
 /datum/tech_entry/combat/energy/ion/adv
 	name = "Ion Detonation"
 	desc = "Larger ion projectiles with additional enrichment could detonate to cause an EMP in a small area. Unlocks ion rifle designs for the appropriate fabricators."
@@ -748,6 +749,7 @@ research holder datum.
 	uid = "ion_2"
 	prereqs = list("ion_1", "energy_2")
 	uses = 1
+
 /datum/tech_entry/combat/energy/heavy
 	name = "Masterful Energy Weapons"
 	desc = "Putting together all the prior applications of beam and laser weapons, a heavy sniper and assault-cannon can be developed. Unlocks ion rifle designs for the appropriate fabricators."
@@ -765,7 +767,7 @@ research holder datum.
 	uid = "pulse_1"
 	prereqs = list("energy_2", "super_capacitor")
 	uses = 1
-
+*/
 // END ENERGY WEAPONS
 
 // MELEE WEAPONS
@@ -793,6 +795,7 @@ research holder datum.
 	uid = "melee_3"
 	prereqs = list("melee_2")
 	uses = -10
+/* EVENT RESEARCH
 /datum/tech_entry/combat/melee/energy
 	name = "Energy Blades"
 	desc = "By enriching the point of contact with uranium reactant with phoron a variety of melee energy wepaons can be developed. Unlocks energy melee weapon designs for the appropriate fabricators."
@@ -800,11 +803,11 @@ research holder datum.
 	points = 3000
 	uid = "melee_4"
 	prereqs = list("melee_3", "energy_2")
-
+*/
 // END MELEE WEAPONS
 
 // ILLEGAL DEVICES
-
+/* EVENT RESEARCH
 /datum/tech_entry/combat/illegal/kidnapping
 	name = "(RESTRICTED) Kidnapping Tools"
 	desc = "Tools to keep hostages in line and block suit senors could be developed, but they are both considered unethical. Unlocks suit sensor jammers & electropack designs for the appropriate fabricators."
@@ -821,7 +824,7 @@ research holder datum.
 	uid = "illegal_2"
 	prereqs = list("illegal_1", "pico_mani")
 	uses = 3
-
+*/
 // END ILLEGAL DEVICES
 
 
@@ -925,7 +928,7 @@ research holder datum.
 	points = 400
 	uid = "scalpel_2"
 	prereqs = list("scalpel_1")
-
+/* EVENT RESEARCH
 /datum/tech_entry/medical/scalpel/laser3
 	name = "Mastered Laser Suturing"
 	desc = "Diamond can be introduced in the focal lense to make the laser scalpel perfectly precise. Unlocks advanced laser scalpel designs for the appropriate fabricators."
@@ -951,7 +954,7 @@ research holder datum.
 	uid = "hypospray"
 	prereqs = list("ultra_micro_laser", "nano_mani")
 	uses = 2
-
+*/
 
 /datum/tech_entry/medical/defib
 	name = "Electro-Resuscitation"
@@ -1042,7 +1045,7 @@ research holder datum.
 	tier = 1
 	points = 150
 	uid = "nano_mani"
-
+/* EVENT RESEARCH
 /datum/tech_entry/general/manipulator/pico_mani
 	name = "Pico-miniaturized manipulators"
 	desc = "Application of phoron allows for an even smaller set of manipulator designs. Unlocks pico manipulator designs for the appropriate fabricators."
@@ -1050,14 +1053,14 @@ research holder datum.
 	points = 400
 	uid = "pico_mani"
 	prereqs = list("nano_mani")
-
+*/
 /datum/tech_entry/general/bin/adv_matter_bin
 	name = "Advanced matter bins"
 	desc = "The matter bins need to store a variety of distinct materials as efficently as possible while still having them equally accessible by its machine. Unlocks advanced matter bin designs for the appropriate fabricators."
 	tier = 1
 	points = 150
 	uid = "adv_matter_bin"
-
+/* EVENT RESEARCH
 /datum/tech_entry/general/bin/super_matter_bin
 	name = "Super dense matter storage"
 	desc = "A device enriched with phoron could store materials in a super dense state. Unlocks super matter bin designs for the appropriate fabricators."
@@ -1065,7 +1068,7 @@ research holder datum.
 	points = 400
 	uid = "super_matter_bin"
 	prereqs = list("adv_matter_bin")
-
+*/
 /datum/tech_entry/general/micro_laser/high_micro_laser
 	name = "High intensity micro lasers"
 	desc = "Micro lasers project beams capable of slicing materials and a higher intensity model could work faster. Unlocks high intensity micro laser designs for the appropriate fabricators."
@@ -1110,7 +1113,7 @@ research holder datum.
 	points = 400
 	uid = "cell_super"
 	prereqs = list("cell_high")
-
+/* EVENT RESEARCH
 /datum/tech_entry/general/powercell/hyper
 	name = "Hyper-capacity power cells"
 	desc = "Phoron and uranium can be applied together to create a cell of maximum possible capacity. Unlocks hyper-capacity power cell designs for the appropriate fabricators."
@@ -1118,7 +1121,7 @@ research holder datum.
 	points = 1000
 	uid = "cell_hyper"
 	prereqs = list("cell_high", "cell_super")
-
+*/
 /datum/tech_entry/general/computer/adv_parts
 	name = "Advanced Computer Components"
 	desc = "Better computer components let you run more programs at once, and store more on a hard drive. Unlocks improved computer component designs for the appropriate fabricators."
@@ -1133,7 +1136,7 @@ research holder datum.
 	points = 300
 	uid = "computer_2"
 	prereqs = list("computer_1")
-
+/* EVENT RESEARCH
 /datum/tech_entry/general/computer/ultra_parts
 	name = "Mastered Computer Components"
 	desc = "The absolute best computer components outclass the others completely. Unlocks the final computer component designs for the appropriate fabricators."
@@ -1141,7 +1144,7 @@ research holder datum.
 	points = 600
 	uid = "computer_3"
 	prereqs = list("computer_2")
-
+*/
 /datum/tech_entry/general/communication/color_communication
 	name = "Multi-Color Communication"
 	desc = "A variety of crayons and a multi-color pen can be developed. Unlocks crayons and multi-color pen designs for the appropriate fabricators."

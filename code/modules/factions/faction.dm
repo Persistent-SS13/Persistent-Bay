@@ -913,14 +913,13 @@ var/PriorityQueue/all_feeds
 		if(stack.owner)
 			to_chat(stack.owner, "Your neural lace buzzes letting you know that [M.real_name] is in critical health status.")
 
-
 /proc/spawn_nexus_gov()
 	var/datum/world_faction/democratic/nexus = new()
-	nexus.name = "Nexus City Government"
-	nexus.abbreviation = "NEXUS"
-	nexus.short_tag = "NEX"
-	nexus.purpose = "To represent the citizenship of Nexus and keep the station operating."
-	nexus.uid = "nexus"
+	nexus.name = "Sycorax Administration"
+	nexus.abbreviation = "Sycorax"
+	nexus.short_tag = "Sycorax"
+	nexus.purpose = "To represent the citizenship of Sycorax and keep the station operating."
+	nexus.uid = "sycorax"
 	nexus.gov = new()
 	var/datum/election/gov/gov_elect = new()
 	gov_elect.ballots |= nexus.gov
@@ -929,34 +928,34 @@ var/PriorityQueue/all_feeds
 
 	var/datum/election/council_elect = new()
 	var/datum/democracy/councillor/councillor1 = new()
-	councillor1.title = "Councillor of Justice and Criminal Matters"
+	councillor1.title = "Commissioner for Justice"
 	nexus.city_council |= councillor1
 	council_elect.ballots |= councillor1
 
 	var/datum/democracy/councillor/councillor2 = new()
-	councillor2.title = "Councillor of Budget and Tax Measures"
+	councillor2.title = "Commissioner for Finance"
 	nexus.city_council |= councillor2
 	council_elect.ballots |= councillor2
 
 	var/datum/democracy/councillor/councillor3 = new()
-	councillor3.title = "Councillor of Commerce and Business Relations"
+	councillor3.title = "Commissioner for Operations"
 	nexus.city_council |= councillor3
 	council_elect.ballots |= councillor3
 
 	var/datum/democracy/councillor/councillor4 = new()
-	councillor4.title = "Councillor for Culture and Ethical Oversight"
+	councillor4.title = "Commissioner-Chairperson"
 	nexus.city_council |= councillor4
 	council_elect.ballots |= councillor4
 
 	var/datum/democracy/councillor/councillor5 = new()
-	councillor5.title = "Councillor for the Domestic Affairs"
+	councillor5.title = "Commissioner for Domestic Affairs"
 	nexus.city_council |= councillor5
 	council_elect.ballots |= councillor5
 
 	nexus.waiting_elections |= council_elect
 
-	nexus.network.name = "NEXUSGOV-NET"
-	nexus.network.net_uid = "nexus"
+	nexus.network.name = "SYCORAX-NET"
+	nexus.network.net_uid = "sx_net"
 	nexus.network.password = ""
 	nexus.network.invisible = 0
 
@@ -966,15 +965,15 @@ var/PriorityQueue/all_feeds
 /datum/world_faction/democratic/New()
 	..()
 
-	councillor_assignment = new("Councillor", 30)
+	councillor_assignment = new("Commisioner", 30)
 	judge_assignment = new("Judge", 30)
-	governor_assignment = new("Governor", 45)
-	councillor_assignment.name = "Councillor"
+	governor_assignment = new("Commodore", 45)
+	councillor_assignment.name = "Commissioner"
 	judge_assignment.name = "Judge"
-	governor_assignment.name = "Governor"
-	governor_assignment.uid = "governor"
+	governor_assignment.name = "Commodore"
+	governor_assignment.uid = "commodore"
 	judge_assignment.uid = "judge"
-	councillor_assignment.uid = "councillor"
+	councillor_assignment.uid = "commissioner"
 	special_category = new()
 
 	councillor_assignment.parent = special_category
@@ -990,11 +989,11 @@ var/PriorityQueue/all_feeds
 	special_category.command_faction = 1
 	limits = new /datum/machine_limits/democracy()
 
-	name = "Nexus City Government"
-	abbreviation = "NEXUS"
-	short_tag = "NEX"
-	purpose = "To represent the citizenship of Nexus and keep the station operating."
-	uid = "nexus"
+	name = "Sycorax Administration"
+	abbreviation = "Sycorax"
+	short_tag = "Sycorax"
+	purpose = "To represent the citizenship of Sycorax and keep the station operating."
+	uid = "sycorax"
 	gov = new()
 	var/datum/election/gov/gov_elect = new()
 	gov_elect.ballots |= gov
@@ -1003,34 +1002,34 @@ var/PriorityQueue/all_feeds
 
 	var/datum/election/council_elect = new()
 	var/datum/democracy/councillor/councillor1 = new()
-	councillor1.title = "Councillor of Justice and Criminal Matters"
+	councillor1.title = "Commissioner for Justice"
 	city_council |= councillor1
 	council_elect.ballots |= councillor1
 
 	var/datum/democracy/councillor/councillor2 = new()
-	councillor2.title = "Councillor of Budget and Tax Measures"
+	councillor2.title = "Commissioner for Finance"
 	city_council |= councillor2
 	council_elect.ballots |= councillor2
 
 	var/datum/democracy/councillor/councillor3 = new()
-	councillor3.title = "Councillor of Commerce and Business Relations"
+	councillor3.title = "Commissioner for Operations"
 	city_council |= councillor3
 	council_elect.ballots |= councillor3
 
 	var/datum/democracy/councillor/councillor4 = new()
-	councillor4.title = "Councillor for Culture and Ethical Oversight"
+	councillor4.title = "Commissioner-Chairperson"
 	city_council |= councillor4
 	council_elect.ballots |= councillor4
 
 	var/datum/democracy/councillor/councillor5 = new()
-	councillor5.title = "Councillor for the Domestic Affairs"
+	councillor5.title = "Commissioner for Domestic Affairs"
 	city_council |= councillor5
 	council_elect.ballots |= councillor5
 
 	waiting_elections |= council_elect
 
-	network.name = "NEXUSGOV-NET"
-	network.net_uid = "nexus"
+	network.name = "SYCORAX-NET"
+	network.net_uid = "sx_net"
 	network.password = ""
 	network.invisible = 0
 
@@ -1120,9 +1119,9 @@ var/PriorityQueue/all_feeds
 			tax_amount = amount * (tax_pflat_rate/100)
 	tax_amount = round(tax_amount)
 	if(tax_amount)
-		var/datum/transaction/T = new("[src.name]", "Tax", -tax_amount, "Nexus Economy Network")
+		var/datum/transaction/T = new("[src.name]", "Tax", -tax_amount, "Sycorax Economic Network")
 		account.do_transaction(T)
-		var/datum/transaction/Te = new("[account.owner_name]", "Tax", tax_amount, "Nexus Economy Network")
+		var/datum/transaction/Te = new("[account.owner_name]", "Tax", tax_amount, "Sycorax Economic Network")
 		central_account.do_transaction(Te)
 
 
@@ -1262,8 +1261,8 @@ var/PriorityQueue/all_feeds
 
 /datum/world_faction/democratic/proc/notify_council(var/subject, var/body)
 	for(var/datum/democracy/councillor in city_council)
-		Send_Email(councillor.real_name, "Nexus City Government", subject, body)
-	Send_Email(gov.real_name, "Nexus City Government", subject, body)
+		Send_Email(councillor.real_name, "Sycorax Administration", subject, body)
+	Send_Email(gov.real_name, "Sycorax Administration", subject, body)
 
 /datum/world_faction/democratic/proc/has_vote(var/real_name)
 	for(var/datum/council_vote/vote in votes)
@@ -1284,12 +1283,12 @@ var/PriorityQueue/all_feeds
 
 /datum/world_faction/democratic/proc/repeal_policy(var/datum/council_vote/vote)
 	policy -= vote
-	command_announcement.Announce("Governor [gov.real_name] has repealed an executive policy! [vote.name].","Governor Action")
-	GLOB.discord_api.broadcast("Governor [gov.real_name] has repealed an executive policy! [vote.name].")
+	command_announcement.Announce("Commodore [gov.real_name] has repealed an executive policy! [vote.name].","Commodore Action")
+	GLOB.discord_api.broadcast("Commodore [gov.real_name] has repealed an executive policy! [vote.name].")
 /datum/world_faction/democratic/proc/pass_policy(var/datum/council_vote/vote)
 	policy |= vote
-	command_announcement.Announce("Governor [vote.signer] has passed an executive policy! [vote.name].","Governor Action")
-	GLOB.discord_api.broadcast("Governor [vote.signer] has passed an executive policy! [vote.name].")
+	command_announcement.Announce("Commodore [vote.signer] has passed an executive policy! [vote.name].","Commodore Action")
+	GLOB.discord_api.broadcast("Commodore [vote.signer] has passed an executive policy! [vote.name].")
 
 /datum/world_faction/democratic/proc/pass_nomination_judge(var/datum/democracy/judge)
 	judges |= judge
@@ -1409,7 +1408,7 @@ var/PriorityQueue/all_feeds
 
 	var/datum/council_vote/repealing
 /datum/election
-	var/name = "Station Council Election"
+	var/name = "Station Commission Election"
 	var/list/ballots = list() // populate this with the /datum/democracy for every participant of the election
 
 	var/start_hour = 10 // time of day (in 24 hour) when the election should start by
@@ -1422,7 +1421,7 @@ var/PriorityQueue/all_feeds
 	var/num_type = 0
 
 /datum/election/gov
-	name = "Governor Election"
+	name = "Commodore Election"
 	typed = 1
 	num_type = 1
 
@@ -1431,8 +1430,8 @@ var/PriorityQueue/all_feeds
 /datum/democracy
 	var/real_name // real_name of elected
 	var/term_start // real time
-	var/title = "Councillor"
-	var/description = "Vote on laws civil and criminal, the tax code and confirming judges nominated by the governor."
+	var/title = "Commissioner"
+	var/description = "Manage the colonial activities of the Sycorax Administration."
 	var/consecutive_terms = 0
 
 	var/election_desc = ""
@@ -1442,8 +1441,8 @@ var/PriorityQueue/all_feeds
 	var/list/voted_ckeys = list() // to prevent double voting
 
 /datum/democracy/governor
-	title = "Governor"
-	description = "Manage the executive government by creating assignments, ranks and accesses while publishing executive policy documents. Nominate Judges."
+	title = "Commodore"
+	description = "Upkeep the attached vessel and ensure continued colonial activities within the quadrant."
 
 /datum/democracy/councillor
 
@@ -2632,7 +2631,7 @@ var/PriorityQueue/all_feeds
 	if(filled >= required)
 		completed = 1
 		if(parent)
-			var/datum/transaction/Te = new("Completed Objective", "Nexus Economic Stimulus", payout, "Nexus Economic Module")
+			var/datum/transaction/Te = new("Completed Objective", "Sycoax Economic Stimulus", payout, "Sycorax Economic Module")
 			parent.central_account.do_transaction(Te)
 			parent.research.points += research_payout
 		return 1
@@ -2683,10 +2682,6 @@ var/PriorityQueue/all_feeds
 /datum/module_objective/hourly/monsters
 	name = "Have clocked in employees kill 5 wilderness creatures."
 	required = 5
-
-/datum/module_objective/hourly/travel
-	name = "Have clocked in employees travel to 2 different wilderness sectors and remain long enough to be counted."
-	required = 2
 
 /datum/module_objective/hourly/travel/check_completion()
 	if(parent)
@@ -2752,10 +2747,6 @@ var/PriorityQueue/all_feeds
 /datum/module_objective/daily/monsters
 	name = "Have 25 wilderness creatures die in proximity to a clocked in employee."
 	required = 25
-
-/datum/module_objective/daily/travel
-	name = "Have clocked in employees travel to 4 different wilderness sectors and remain long enough to be counted."
-	required = 4
 
 
 /datum/module_objective/daily/travel/check_completion()
@@ -2824,10 +2815,6 @@ var/PriorityQueue/all_feeds
 /datum/module_objective/weekly/monsters
 	name = "Have 100 wilderness creatures die in proximity to a clocked in employee."
 	required = 100
-
-/datum/module_objective/weekly/travel
-	name = "Have clocked in employees travel to 8 different wilderness sectors and remain long enough to be counted."
-	required = 8
 
 /datum/module_objective/weekly/travel/check_completion()
 	if(parent && istype(parent))
@@ -2994,51 +2981,41 @@ var/PriorityQueue/all_feeds
 // ENGINEERING LIMITS
 
 /datum/machine_limits/eng/spec/tcomms
-	limit_tcomms = 3
+	limit_tcomms = 10
 	limit_shuttles = 2
 	limit_voidfab = 1
-
 /datum/machine_limits/eng/spec/realestate
 	cost = 0
-	limit_tech_consumer = 2
-	limit_area = 400
-	limit_consumerfab = 1
+	limit_area = 1000
 
 /datum/machine_limits/eng/one
 	limit_tech_engi = 2
 	limit_tech_general = 1
 	limit_shuttles = 1
-	limit_area = 300
-	limit_genfab = 2
-	limit_engfab = 2
-	limit_tcomms = 1
+	limit_area = 500
+	limit_genfab = 1
+	limit_engfab = 1
 	limit_voidfab = 1
-
-
 /datum/machine_limits/eng/two
 	cost = 1000
 	limit_tech_engi = 3
 	limit_tech_general = 2
 	limit_shuttles = 1
-	limit_area = 400
-	limit_genfab = 3
-	limit_engfab = 3
+	limit_area = 700
+	limit_genfab = 1
+	limit_engfab = 2
 	limit_voidfab = 1
-	limit_tcomms = 1
-	desc = "Increase area size, tech levels and add an extra to engineering and general fabricator limit."
-
+	desc = "Increase area size, tech levels and fabricator limits"
 /datum/machine_limits/eng/three
 	cost = 3000
 	limit_tech_engi = 4
 	limit_tech_general = 3
 	limit_shuttles = 2
-	limit_area = 500
-	limit_genfab = 4
-	limit_engfab = 4
+	limit_area = 1000
+	limit_genfab = 2
+	limit_engfab = 2
 	limit_voidfab = 2
-	limit_tcomms = 2
-	desc = "Increase area size, tech levels and adds an extra shuttle, telecomms machine and extra fabricators."
-
+	desc = "Increase area size, tech levels and fabricator limits. Allows an additional shuttle."
 /datum/machine_limits/eng/four
 	cost = 7500
 	limit_tech_engi = 4
@@ -3046,86 +3023,65 @@ var/PriorityQueue/all_feeds
 	limit_tech_medical = 1
 	limit_tech_consumer = 1
 	limit_shuttles = 3
-	limit_area = 600
-	limit_genfab = 5
-	limit_engfab = 5
+	limit_area = 1500
+	limit_genfab = 3
+	limit_engfab = 3
 	limit_voidfab = 3
-	limit_tcomms = 3
-	limit_consumerfab = 1
-	limit_medicalfab = 1
-	desc = "Gain final tech levels, area limit, extra fabricators plus gain an extra shuttle and a medical fabricator."
+	desc = "Increase area size, tech levels and fabricator limits. Allows an additional shuttle."
 // END ENGINEERING LIMITS
 
 // RETAIL LIMITS
 
-/datum/machine_limits/retail/spec/combat
+/datum/machine_limits/retail/spec/clothing
 	limit_tech_combat = 2
 	limit_ammofab = 1
 	limit_shuttles = 1
+	limit_ataccessories = 1
+	limit_atstandard = 1
+	limit_atnonstandard = 1
 /datum/machine_limits/retail/spec/bigstore
 	limit_tech_engi = 2
 	limit_engfab = 1
 	limit_voidfab = 1
-	limit_area = 200
+	limit_area = 500
 
 /datum/machine_limits/retail/one
 	limit_tech_consumer = 2
 	limit_tech_general = 1
-	limit_area = 200
-	limit_genfab = 2
-	limit_consumerfab = 2
-	limit_ataccessories = 1
-	limit_atstandard = 1
-	limit_atnonstandard = 1
-
-
+	limit_area = 400
+	limit_genfab = 1
+	limit_consumerfab = 1
 /datum/machine_limits/retail/two
 	cost = 1000
 	limit_tech_consumer = 3
 	limit_tech_general = 2
-	limit_area = 300
-	limit_genfab = 3
-	limit_consumerfab = 3
-	limit_ataccessories = 2
-	limit_atstandard = 2
-	limit_atnonstandard = 2
-	desc = "Increase area size, tech levels and add an extra to many fabricator limits."
-
-
-
+	limit_area = 600
+	limit_genfab = 1
+	limit_consumerfab = 2
+	desc = "Increase area size, tech levels and fabricator limits"
 /datum/machine_limits/retail/three
 	cost = 3000
 	limit_tech_consumer = 4
 	limit_tech_general = 3
 	limit_tech_combat = 1
 	limit_tech_engi = 1
-	limit_area = 400
-	limit_genfab = 3
-	limit_consumerfab = 3
-	limit_ataccessories = 2
-	limit_atstandard = 2
-	limit_atnonstandard = 2
-	limit_voidfab = 1
+	limit_area = 800
+	limit_genfab = 2
+	limit_consumerfab = 2
 	limit_shuttles = 1
-	desc = "Increase area size, tech levels, fabricator limits but most importantly adds a shuttle and EVA fabricator."
-
+	desc = "Increase area size, tech levels and fabricator limits. Allows an additional shuttle."
 /datum/machine_limits/retail/four
 	cost = 7500
 	limit_tech_consumer = 4
 	limit_tech_general = 4
 	limit_tech_combat = 2
 	limit_tech_engi = 2
-	limit_area = 500
+	limit_area = 1000
 	limit_genfab = 3
 	limit_consumerfab = 3
-	limit_ataccessories = 3
-	limit_atstandard = 3
-	limit_atnonstandard = 3
-	limit_voidfab = 2
+	limit_voidfab = 1
 	limit_shuttles = 2
-	limit_ammofab = 1
-	limit_engfab = 1
-	desc = "Gain final tech levels, area limit, extra fabricators including an engineering and combat fabricator, plus an extra shuttle."
+	desc = "Increase area size, tech levels and fabricator limits. Allows an additional shuttle."
 
 // END RETAIL LIMITS
 
@@ -3134,111 +3090,93 @@ var/PriorityQueue/all_feeds
 /datum/machine_limits/medical/spec/paramedic
 	limit_voidfab = 1
 	limit_shuttles = 2
-
 /datum/machine_limits/medical/spec/pharma
 	limit_servicefab = 1
-	limit_botany = 2
-	limit_area = 200
+	limit_botany = 4
+	limit_area = 400
 
 /datum/machine_limits/medical/one
 	limit_tech_medical = 2
 	limit_tech_general = 1
-	limit_area = 300
-	limit_genfab = 2
-	limit_medicalfab = 2
-
-
+	limit_area = 400
+	limit_genfab = 1
+	limit_medicalfab = 1
 /datum/machine_limits/medical/two
 	cost = 1000
 	limit_tech_medical = 3
 	limit_tech_general = 2
-	limit_area = 400
-	limit_genfab = 3
-	limit_medicalfab = 3
-	limit_voidfab = 1
-	desc = "Increase area size, tech levels, fabricator limits and gain an EVA equipment fabricator."
-
+	limit_area = 600
+	limit_genfab = 1
+	limit_medicalfab = 2
+	desc = "Increase area size, tech levels and fabricator limits"
 /datum/machine_limits/medical/three
 	cost = 3000
 	limit_tech_medical = 4
 	limit_tech_general = 3
-	limit_area = 500
-	limit_genfab = 3
-	limit_medicalfab = 3
-	limit_voidfab = 2
+	limit_area = 800
+	limit_genfab = 2
+	limit_medicalfab = 2
 	limit_shuttles = 1
-	limit_botany = 1
-	limit_servicefab = 1
-	desc = "Increase area size, tech levels, fabricator limits, botany tray, service fabricator, and a shuttle limit."
+	desc = "Increase area size, tech levels and fabricator limits. Allows an additional shuttle."
 /datum/machine_limits/medical/four
 	cost = 7500
 	limit_tech_medical = 4
 	limit_tech_general = 4
-	limit_area = 600
-	limit_genfab = 4
-	limit_medicalfab = 4
-	limit_voidfab = 3
+	limit_area = 1000
+	limit_genfab = 3
+	limit_medicalfab = 3
 	limit_shuttles = 2
-	limit_botany = 3
-	limit_servicefab = 1
-	desc = "Gain final tech levels, area limit, extra fabricators, botany trays, plus an extra shuttle."
+	desc = "Increase area size, tech levels and fabricator limits. Allows an additional shuttle."
 // END MEDICAL LIMITS
 
 // SERVICE LIMITS
 
 /datum/machine_limits/service/spec/culinary
 	limit_tech_engi = 1
-	limit_engfab = 1
-	limit_area = 200
-
+	limit_area = 400
+	limit_servicefab = 1
+	limit_botany = 1
 /datum/machine_limits/service/spec/farmer
 	limit_botany = 4
-	limit_atstandard = 1
-	limit_ataccessories = 1
 
 /datum/machine_limits/service/one
 	limit_tech_consumer = 2
 	limit_tech_general = 1
-	limit_area = 200
-	limit_genfab = 2
-	limit_servicefab = 2
-	limit_botany = 2
-
+	limit_area = 400
+	limit_genfab = 1
+	limit_servicefab = 1
+	limit_botany = 1
 /datum/machine_limits/service/two
 	cost = 1250
 	limit_tech_consumer = 3
 	limit_tech_general = 2
-	limit_area = 300
-	limit_genfab = 3
-	limit_servicefab = 3
-	limit_botany = 3
-	desc = "Increase area size, tech levels, fabricator limits and get an extra botany tray."
+	limit_area = 800
+	limit_genfab = 1
+	limit_servicefab = 2
+	limit_botany = 1
+	desc = "Increase area size, tech levels and fabricator limits"
 /datum/machine_limits/service/three
 	cost = 2500
 	limit_tech_consumer = 4
 	limit_tech_general = 3
-	limit_area = 400
-	limit_genfab = 3
-	limit_servicefab = 3
-	limit_botany = 3
-	limit_voidfab = 1
+	limit_area = 1000
+	limit_genfab = 2
+	limit_servicefab = 2
+	limit_botany = 1
 	limit_shuttles = 1
-	desc = "Increase area size, tech levels, fabricator limits and get an EVA fabricator and shuttle limit."
+	desc = "Increase area size, tech levels and fabricator limits. Allows an additional shuttle."
 /datum/machine_limits/service/four
 	cost = 5000
 	limit_tech_consumer = 4
 	limit_tech_general = 4
 	limit_tech_medical = 1
 	limit_tech_engi = 1
-	limit_area = 500
+	limit_area = 1500
 	limit_genfab = 3
 	limit_servicefab = 3
-	limit_botany = 4
-	limit_voidfab = 2
+	limit_botany = 2
 	limit_shuttles = 2
-	limit_engfab = 1
-	limit_medicalfab = 1
-	desc = "Gain final tech levels, area limit, extra fabricators including a medical and engineering fabricator, botany trays, plus an extra shuttle."
+	desc = "Increase area size, tech levels and fabricator limits. Allows an additional shuttle."
 // END SERVICE LIMITS
 
 // MINING LIMITS
@@ -3246,66 +3184,52 @@ var/PriorityQueue/all_feeds
 /datum/machine_limits/mining/spec/monsterhunter
 	limit_tech_medical = 2
 	limit_medicalfab = 1
-	limit_area = 200
-	limit_botany = 2
-
+	limit_area = 400
+	limit_shuttles = 1
 /datum/machine_limits/mining/spec/massdrill
 	limit_tech_engi = 1
 	limit_engfab = 1
 	limit_drills = 2
-	limit_shuttles = 1
 
 /datum/machine_limits/mining/one
 	limit_tech_combat = 2
 	limit_tech_general = 1
-	limit_area = 200
-	limit_genfab = 2
-	limit_ammofab = 2
-	limit_drills = 1
+	limit_area = 400
+	limit_genfab = 1
 	limit_voidfab = 1
-	limit_shuttles = 1
-
 /datum/machine_limits/mining/two
 	cost = 1000
 	limit_tech_combat = 3
 	limit_tech_general = 2
-	limit_area = 300
-	limit_genfab = 3
-	limit_ammofab = 3
-	limit_drills = 2
+	limit_area = 600
+	limit_genfab = 1
+	limit_drills = 1
 	limit_voidfab = 2
 	limit_shuttles = 1
-	desc = "Increase area size, tech levels, fabricator limits and an extra drill."
-
+	desc = "Increase area size, tech levels and fabricator limits. Allows an additional shuttle."
 /datum/machine_limits/mining/three
 	cost = 3000
 	limit_tech_combat = 4
 	limit_tech_general = 3
-	limit_area = 400
-	limit_genfab = 3
-	limit_ammofab = 3
-	limit_drills = 3
-	limit_voidfab = 3
-	limit_shuttles = 2
-	limit_botany = 1
-	desc = "Increase area size, tech levels, fabricators, drills, and adds a botany tray plus an extra shuttle."
-
+	limit_area = 800
+	limit_genfab = 2
+	limit_drills = 2
+	limit_voidfab = 2
+	limit_shuttles = 1
+	desc = "Increase area size, tech levels and fabricator limits"
 /datum/machine_limits/mining/four
 	cost = 7500
 	limit_tech_combat = 4
 	limit_tech_general = 4
 	limit_tech_engi = 1
 	limit_tech_medical = 1
-	limit_area = 500
+	limit_area = 1000
 	limit_genfab = 3
 	limit_ammofab = 3
-	limit_drills = 4
+	limit_drills = 3
 	limit_voidfab = 3
-	limit_shuttles = 3
-	limit_botany = 2
-	limit_engfab = 1
-	limit_medicalfab = 1
-	desc = "Gain final tech levels, area limit, extra fabricators including a medical and engineering fabricator, botany trays, drills plus an extra shuttle."
+	limit_shuttles = 2
+	desc = "Increase area size, tech levels and fabricator limits. Allows an additional shuttle."
 
 
 // END MINING LIMITS
@@ -3314,48 +3238,45 @@ var/PriorityQueue/all_feeds
 // MEDIA LIMITS
 
 /datum/machine_limits/media/spec/journalism
-	limit_voidfab = 1
 	limit_shuttles = 1
 	limit_tech_medical = 1
-	limit_medicalfab = 1
-
 /datum/machine_limits/media/spec/bookpublishing
 	limit_tech_engi = 1
 	limit_engfab = 1
-	limit_area = 200
+	limit_area = 400
 
 /datum/machine_limits/media/one
 	limit_tech_consumer = 1
 	limit_tech_general = 1
-	limit_area = 200
-	limit_genfab = 2
+	limit_area = 400
+	limit_genfab = 1
 	limit_consumerfab = 1
-
 /datum/machine_limits/media/two
 	cost = 750
 	limit_tech_consumer = 2
 	limit_tech_general = 2
-	limit_area = 300
-	limit_genfab = 3
-	limit_consumerfab = 2
+	limit_area = 600
+	limit_genfab = 1
+	limit_consumerfab = 1
 	desc = "Increase area size, tech levels and fabricator limits."
 /datum/machine_limits/media/three
 	cost = 1600
 	limit_tech_consumer = 3
 	limit_tech_general = 3
-	limit_area = 400
-	limit_genfab = 3
-	limit_consumerfab = 2
-	desc = "Increase area size, tech levels and fabricator limits."
+	limit_area = 800
+	limit_genfab = 2
+	limit_consumerfab = 1
+	limit_shuttles = 1
+	desc = "Increase area size, tech levels and fabricator limits. Allows an additional shuttle."
 /datum/machine_limits/media/four
 	cost = 3200
 	limit_tech_consumer = 4
 	limit_tech_general = 4
-	limit_area = 500
-	limit_genfab = 3
+	limit_area = 1000
+	limit_genfab = 2
 	limit_consumerfab = 2
-	limit_shuttles = 1
-	desc = "Gain final tech levels, area limit, fabricators and a shuttle."
+	limit_shuttles = 2
+	desc = "Increase area size, tech levels and fabricator limits. Allows an additional shuttle."
 
 
 // END MEDIA LIMITS
@@ -3370,63 +3291,60 @@ var/PriorityQueue/all_feeds
 
 /datum/machine_limits/science/spec/practical
 	limit_engfab = 1
-	limit_area = 200
+	limit_area = 400
 /datum/machine_limits/science/spec/theory
 	limit_voidfab = 1
 	limit_shuttles = 1
+
 /datum/machine_limits/science/one
 	limit_tech_consumer = 2
 	limit_tech_general = 2
 	limit_tech_combat = 2
 	limit_tech_medical = 2
 	limit_tech_engi = 2
-	limit_area = 200
-	limit_genfab = 2
-	limit_medicalfab = 1
+	limit_area = 400
+	limit_genfab = 1
 	limit_servicefab = 1
-	limit_botany = 2
-
+	limit_botany = 1
 /datum/machine_limits/science/two
 	cost = 1250
 	limit_tech_consumer = 3
 	limit_tech_general = 3
 	limit_tech_combat = 3
 	limit_tech_medical = 3
-	limit_area = 300
+	limit_area = 600
 	limit_genfab = 2
-	limit_servicefab = 2
-	limit_medicalfab = 2
-	limit_botany = 3
-	desc = "Increase area size, tech levels, fabricator limits and get an extra botany tray."
+	limit_servicefab = 1
+	limit_medicalfab = 1
+	limit_botany = 1
+	desc = "Increase area size, tech levels, fabricator limits"
 /datum/machine_limits/science/three
 	cost = 2500
 	limit_tech_consumer = 4
 	limit_tech_general = 4
 	limit_tech_combat = 4
 	limit_tech_medical = 4
-	limit_area = 400
-	limit_genfab = 3
-	limit_servicefab = 3
-	limit_botany = 3
-	limit_voidfab = 1
-	limit_medicalfab = 2
+	limit_area = 800
+	limit_genfab = 2
+	limit_servicefab = 2
+	limit_botany = 2
+	limit_medicalfab = 1
 	limit_shuttles = 1
-	desc = "Increase area size, tech levels, fabricator limits and get an EVA fabricator and shuttle limit."
+	desc = "Increase area size, tech levels and fabricator limits. Allows an additional shuttle."
 /datum/machine_limits/science/four
 	cost = 5000
 	limit_tech_consumer = 5
 	limit_tech_general = 5
 	limit_tech_combat = 5
 	limit_tech_medical = 5
-	limit_area = 500
+	limit_area = 1000
 	limit_genfab = 3
-	limit_servicefab = 3
-	limit_botany = 4
+	limit_servicefab = 2
+	limit_botany = 2
 	limit_voidfab = 2
 	limit_shuttles = 2
-	limit_engfab = 1
 	limit_medicalfab = 2
-	desc = "Gain final tech levels, area limit, extra fabricators including a medical and engineering fabricator, botany trays, plus an extra shuttle."
+	desc = "Increase area size, tech levels and fabricator limits. Allows an additional shuttle."
 // END SCIENCE LIMITS
 
 
@@ -3440,7 +3358,6 @@ var/PriorityQueue/all_feeds
 	limit_engfab = 1
 	limit_servicefab = 1
 	limit_atnonstandard = 1
-
 /datum/machine_limits/social/spec/club
 	limit_voidfab = 1
 	limit_shuttles = 1
@@ -3449,15 +3366,14 @@ var/PriorityQueue/all_feeds
 /datum/machine_limits/social/one
 	limit_tech_consumer = 1
 	limit_tech_general = 1
-	limit_area = 200
+	limit_area = 400
 	limit_genfab = 2
 	limit_consumerfab = 1
-
 /datum/machine_limits/social/two
 	cost = 750
 	limit_tech_consumer = 2
 	limit_tech_general = 2
-	limit_area = 300
+	limit_area = 800
 	limit_genfab = 3
 	limit_consumerfab = 2
 	desc = "Increase area size, tech levels and fabricator limits."
@@ -3465,7 +3381,7 @@ var/PriorityQueue/all_feeds
 	cost = 1600
 	limit_tech_consumer = 3
 	limit_tech_general = 3
-	limit_area = 400
+	limit_area = 1000
 	limit_genfab = 3
 	limit_consumerfab = 2
 	desc = "Increase area size, tech levels and fabricator limits."
@@ -3473,16 +3389,54 @@ var/PriorityQueue/all_feeds
 	cost = 3200
 	limit_tech_consumer = 4
 	limit_tech_general = 4
-	limit_area = 500
+	limit_area = 1200
 	limit_genfab = 3
 	limit_consumerfab = 2
 	limit_shuttles = 1
-	desc = "Gain final tech levels, area limit, fabricators and a shuttle."
+	desc = "Increase area size, tech levels and fabricator limits. Allows an additional shuttle."
 // END SOCIAL LIMITS
 
+// PROFESSIONAL LIMITS
 
+/datum/machine_limits/professional/spec/office
+	limit_consumerfab = 1
+	limit_tech_consumer = 1
+/datum/machine_limits/professional/spec/design
+	limit_engfab = 1
+	limit_tech_engi = 1
 
+/datum/machine_limits/professional/one
+	limit_tech_consumer = 1
+	limit_tech_general = 1
+	limit_area = 400
+	limit_genfab = 1
+	limit_shuttles = 1
+/datum/machine_limits/professional/two
+	cost = 750
+	limit_tech_consumer = 2
+	limit_tech_general = 2
+	limit_area = 800
+	limit_genfab = 1
+	limit_shuttles = 2
+	desc = "Increase area size. Allows an additional shuttle."
+/datum/machine_limits/professional/three
+	cost = 1600
+	limit_tech_consumer = 3
+	limit_tech_general = 3
+	limit_area = 1000
+	limit_genfab = 1
+	limit_shuttles = 3
+	desc = "Increase area size. Allows an additional shuttle."
+/datum/machine_limits/professional/four
+	cost = 3200
+	limit_tech_consumer = 4
+	limit_tech_general = 4
+	limit_area = 1200
+	limit_genfab = 1
+	limit_shuttles = 4
+	desc = "Increase area size. Allows an additional shuttle."
 
+//END PROFESSIONAL LIMITS
 
 /datum/business_spec
 	var/name = ""
@@ -3532,12 +3486,12 @@ var/PriorityQueue/all_feeds
 
 /datum/business_spec/eng/realestate
 	name = "Real-Estate"
-	desc = "With this specialization the engineering business gains another 200 tiles of area limit plus a consumer fabricator limit and two levels of consumer tech limit so that you can better furnish interiors."
+	desc = "With this specialization the engineering business gains another 1000 tiles of area limit."
 	limits = /datum/machine_limits/eng/spec/realestate
 
 /datum/business_spec/eng/tcomms
 	name = "Communication & Travel"
-	desc = "This specialization grants operation of three extra telecomms machines that can operate three frequencies each. It also allows for two shuttles and an extra EVA fabricator."
+	desc = "This specialization grants operation of ten extra telecomms machines that can operate three frequencies each. It also allows for one shuttle.."
 	limits = /datum/machine_limits/eng/spec/realestate
 
 
@@ -3562,7 +3516,7 @@ var/PriorityQueue/all_feeds
 
 /datum/business_spec/medical/pharma
 	name = "Pharmacy"
-	desc = "This specialization gives the business capacity for a service fabricator and two botany trays that can produce reagents that can be further refined into valuable and effective medicines. It also grants 200 extra tiles to the area limit so you can have larger medical facilities."
+	desc = "This specialization gives the business capacity for a service fabricator and four botany trays that can produce reagents that can be further refined into valuable and effective medicines. It also grants 400 extra tiles to the area limit so you can have larger medical facilities."
 	limits = /datum/machine_limits/medical/spec/pharma
 
 
@@ -3571,20 +3525,20 @@ var/PriorityQueue/all_feeds
 	name = "Retail"
 	desc = "A retail business has exclusive production capacity so that they can sell clothing and furniture to individuals and organizations. With additional specialization they can branch out into combat equipment or engineering supplies, but they are reliant on the material market to supply their production."
 	levels = list(/datum/machine_limits/retail/one, /datum/machine_limits/retail/two, /datum/machine_limits/retail/three, /datum/machine_limits/retail/four)
-	specs = list(/datum/business_spec/retail/combat, /datum/business_spec/retail/bigstore)
+	specs = list(/datum/business_spec/retail/clothing, /datum/business_spec/retail/bigstore)
 	hourly_objectives = list(/datum/module_objective/hourly/visitors, /datum/module_objective/hourly/employees, /datum/module_objective/hourly/cost, /datum/module_objective/hourly/sales, /datum/module_objective/hourly/fabricate, /datum/module_objective/hourly/revenue)
 	daily_objectives = list(/datum/module_objective/daily/visitors, /datum/module_objective/daily/employees, /datum/module_objective/daily/cost, /datum/module_objective/daily/sales, /datum/module_objective/daily/fabricate, /datum/module_objective/daily/revenue)
 	weekly_objectives = list(/datum/module_objective/weekly/visitors, /datum/module_objective/weekly/employees, /datum/module_objective/weekly/cost, /datum/module_objective/weekly/sales, /datum/module_objective/weekly/fabricate, /datum/module_objective/weekly/revenue)
 	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 4, /obj/item/stack/material/glass/ten = 4)
 
-/datum/business_spec/retail/combat
+/datum/business_spec/retail/clothing
 	name = "Combat"
-	desc = "The Combat specialization gives limits for a combat fabricator and an early combat tech limit which will increase as the business network expands. You can also maintain a shuttle, but you'll need to purchase the EVA equipment elsewhere."
-	limits = /datum/machine_limits/retail/spec/combat
+	desc = "The clothing specialization gives limits for clothing fabricators. You can also maintain a shuttle, but you'll need to purchase the EVA equipment elsewhere."
+	limits = /datum/machine_limits/retail/spec/clothing
 
 /datum/business_spec/retail/bigstore
 	name = "Grand Emporium"
-	desc = "This specialization gives the business capacity for an engineering fabricator, an EVA fabricator, an engineering tech limit, plus 200 extra tiles for the area limit so that you can produce a grand emporium that sells all manner of things."
+	desc = "This specialization gives the business capacity for an engineering fabricator, an engineering tech limit, plus 500 extra tiles for the area limit so that you can produce a grand emporium that sells all manner of things."
 	limits = /datum/machine_limits/retail/spec/bigstore
 
 
@@ -3602,7 +3556,7 @@ var/PriorityQueue/all_feeds
 
 /datum/business_spec/service/culinary
 	name = "Culinary"
-	desc = "This specialization gives 200 extra tiles to the area limit, plus an engineering fabricator and tech level so that you can put together the perfect space for your customers."
+	desc = "This specialization gives 400 extra tiles to the area limit, plus a botany tray and extra service fabricator so that you can put together the perfect space for your customers."
 	limits = /datum/machine_limits/service/spec/culinary
 	hourly_objectives = list(/datum/module_objective/hourly/visitors)
 	daily_objectives = list(/datum/module_objective/daily/visitors)
@@ -3611,14 +3565,14 @@ var/PriorityQueue/all_feeds
 
 /datum/business_spec/service/farmer
 	name = "Farming"
-	desc = "Farming gives four additional botany trays and limits for two of the exclusive auto-tailor types, so you can process cloth into a finished product for selling. The extra botany trays can produce plants or reagents to be sold to all sorts of other businesses."
+	desc = "Farming gives four additional botany trays. The extra botany trays can produce plants or reagents to be sold to all sorts of other businesses."
 	limits = /datum/machine_limits/service/spec/farmer
 
 
 /datum/business_module/mining
 	cost = 1400
 	name = "Mining"
-	desc = "Mining companies send teams out into the hostile outer-space armed with picks, drills and a variety of other EVA equipment plus weapons and armor to defend themselves. The ores they recover can be processed and then sold on the Material Marketplace to other organizations for massive profits."
+	desc = "Mining companies send teams out into the hostile outer-space armed with picks, drills and a variety of other EVA equipment. The ores they recover can be processed and then sold on the Material Marketplace to other organizations for massive profits."
 	levels = list(/datum/machine_limits/mining/one, /datum/machine_limits/mining/two, /datum/machine_limits/mining/three, /datum/machine_limits/mining/four)
 	specs = list(/datum/business_spec/mining/massdrill, /datum/business_spec/mining/monsterhunter)
 	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/sales)
@@ -3630,12 +3584,12 @@ var/PriorityQueue/all_feeds
 
 /datum/business_spec/mining/massdrill
 	name = "Mass Production"
-	desc = "The Mass Production specialization allows operation of two extra drills, an extra shuttle, plus an engineering fabricator and a engineering tech limit. Take multiple teams to harvest materials from the managable sectors of outer-space."
+	desc = "The Mass Production specialization allows operation of two extra drills plus an engineering fabricator and a engineering tech limit. Take multiple teams to harvest materials from the managable sectors of outer-space."
 	limits = /datum/machine_limits/mining/spec/massdrill
 
 /datum/business_spec/mining/monsterhunter
 	name = "Monster Hunter"
-	desc = "This specialization gives the business capacity for a medical fabricator and tech that can produce machines and equipment to keep employees alive while fighting the top tier of monsters. Travel to the outer reaches and dig for riches, let the monsters come to you."
+	desc = "This specialization gives the business capacity for a medical fabricator and shuttle. Travel to the outer reaches and dig for riches, let the monsters come to you."
 	limits = /datum/machine_limits/mining/spec/monsterhunter
 	hourly_objectives = list(/datum/module_objective/hourly/monsters)
 	daily_objectives = list(/datum/module_objective/daily/monsters)
@@ -3655,7 +3609,7 @@ var/PriorityQueue/all_feeds
 
 /datum/business_spec/media/journalism
 	name = "Journalism"
-	desc = "Specializing in Journalism gives capacity for an EVA fabricator and shuttle, plus a medical fabricator with basic medical tech limitation. Explore every corner of Nexus-space, but best to carry basic medical supplies."
+	desc = "Specializing in Journalism gives capacity for an medical fabricator and shuttle. Explore every corner of Nexus-space, but best to carry basic medical supplies."
 	limits = /datum/machine_limits/media/spec/journalism
 	hourly_objectives = list(/datum/module_objective/hourly/publish_article)
 	daily_objectives = list(/datum/module_objective/daily/article_viewers)
@@ -3665,7 +3619,7 @@ var/PriorityQueue/all_feeds
 
 /datum/business_spec/media/bookpublishing
 	name = "Publishing"
-	desc = "The Publishing specialization grants 200 extra tiles to the area limit and an engineering fabricator and tech limit. You can build a proper library and publishing house, or perhaps some other artistic facility."
+	desc = "The Publishing specialization grants 400 extra tiles to the area limit and an engineering fabricator and tech limit. You can build a proper library and publishing house, or perhaps some other artistic facility."
 	limits = /datum/machine_limits/media/spec/bookpublishing
 	hourly_objectives = list(/datum/module_objective/hourly/publish_book)
 	daily_objectives = list(/datum/module_objective/daily/publish_book)
@@ -3687,13 +3641,13 @@ var/PriorityQueue/all_feeds
 
 /datum/business_spec/science/practical
 	name = "Practical Application"
-	desc = "Specializing in the practical application of science gives fabricators for medical, robotics and service allowing for all sorts of practical science production. Lacking a shuttle, you may be reliant on other businesses to get around the frontier."
+	desc = "Specializing in the practical application of science gives fabricators for engineering."
 	limits = /datum/machine_limits/science/spec/practical
 
 
 /datum/business_spec/science/theory
 	name = "Theory & Research"
-	desc = "The theory specialization has a unique mandate to learn about the artifacts and anomolies found in the frontier. With limited manufacturing capabilities, your business will use its extra shuttle and basic fabricators to explore the frontier."
+	desc = "The theory specialization has a unique mandate to learn about the artifacts and anomolies found in the frontier. You will have a voidsuit fabricator and shuttle limit."
 	limits = /datum/machine_limits/science/spec/theory
 
 
@@ -3719,9 +3673,24 @@ var/PriorityQueue/all_feeds
 	desc = "The club specialization is for organizations like political parties, artists guilds or other social groups. Use the unique programs to plan and hold events. You have access to an accessory fabricator to make unique accoutrements for your members."
 	limits = /datum/machine_limits/social/spec/club
 
+/datum/business_module/professional
+	cost = 700
+	name = "Professional"
+	desc = "Professional companies lack production machines, but are cheap to make and have access to shuttles."
+	levels = list(/datum/machine_limits/professional/one, /datum/machine_limits/professional/two, /datum/machine_limits/professional/three, /datum/machine_limits/professional/four)
+	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/sales)
+	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/sales)
+	starting_items = list(/obj/item/weapon/storage/toolbox/mechanical/filled = 1, /obj/item/stack/cable_coil/thirty = 1, /obj/item/weapon/stock_parts/matter_bin = 3, /obj/item/weapon/stock_parts/micro_laser = 4, /obj/item/weapon/stock_parts/console_screen = 1, /obj/item/modular_computer/pda = 1, /obj/item/weapon/circuitboard/fabricator/genfab = 1, /obj/item/weapon/circuitboard/telepad = 1, /obj/item/stack/material/steel/ten = 2, /obj/item/stack/material/glass/ten = 2, /obj/item/device/camera = 2, /obj/item/weapon/paper_bin = 1, /obj/item/weapon/pen = 2)
 
+/datum/business_spec/professional/design
+	name = "Design"
+	desc = "The design specialization gives you access to an engineering fabricator."
+	limits = /datum/machine_limits/professional/spec/design
 
-
+/datum/business_spec/professional/office
+	name = "Office"
+	desc = "The office specialization gives you access to a consumer fabricator."
+	limits = /datum/machine_limits/professional/spec/office
 
 
 

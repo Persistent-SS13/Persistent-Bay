@@ -1,6 +1,6 @@
 /datum/computer_file/program/criminal_laws
 	filename = "criminal_laws"
-	filedesc = "Nexus City Criminal Laws"
+	filedesc = "Sycorax Station Criminal Laws"
 	program_icon_state = "comm"
 	program_menu_icon = "note"
 	nanomodule_path = /datum/nano_module/program/criminal_laws
@@ -12,10 +12,10 @@
 	usage_flags = PROGRAM_ALL
 
 /datum/nano_module/program/criminal_laws
-	name = "Nexus City Criminal Laws"
+	name = "Sycorax Station Criminal Laws"
 	available_to_ai = TRUE
 	var/datum/council_vote/selected_vote
-	
+
 /datum/nano_module/program/criminal_laws/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/datum/world_faction/democratic/connected_faction
 	if(program.computer.network_card && program.computer.network_card.connected_network)
@@ -29,11 +29,11 @@
 	else
 		var/list/formatted_votes[0]
 		for(var/datum/council_vote/vote in reverselist(connected_faction.criminal_laws.Copy()))
-			formatted_votes[++formatted_votes.len] = list("name" = vote.name, "ref" = "\ref[vote]") 
+			formatted_votes[++formatted_votes.len] = list("name" = vote.name, "ref" = "\ref[vote]")
 		if(formatted_votes.len)
 			data["votes"] = formatted_votes
-		
-		
+
+
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "criminal_laws.tmpl", name, 600, 500, state = state)
@@ -51,7 +51,7 @@
 			selected_vote = null
 		if("select_vote")
 			selected_vote = locate(href_list["ref"])
-		
+
 		if("print")
 			if(!selected_vote) return
 			if(program.computer && program.computer.nano_printer) //This option should never be called if there is no printer

@@ -6,7 +6,7 @@ SUBSYSTEM_DEF(mazemap)
 
 	var/list/map_data = list()
 	var/list/activity_checklist
-	
+
 /datum/controller/subsystem/mazemap/stat_entry()
 	..("Maze Map Running")
 
@@ -15,9 +15,6 @@ SUBSYSTEM_DEF(mazemap)
 	map_data["2"] = new /datum/zlevel_data/two()
 	map_data["3"] = new /datum/zlevel_data/three()
 	map_data["4"] = new /datum/zlevel_data/four()
-	map_data["5"] = new /datum/zlevel_data/five()
-	map_data["6"] = new /datum/zlevel_data/six()
-	map_data["7"] = new /datum/zlevel_data/seven()
 	for(var/x in map_data)
 		var/datum/zlevel_data/data = map_data[x]
 		var/op_z = data.z
@@ -62,12 +59,12 @@ SUBSYSTEM_DEF(mazemap)
 				barrier.alpha = 50
 		transition_dir = 0
 	return ..()
-	
+
 
 /datum/controller/subsystem/mazemap/fire()
 	check_activity()
 	update_levels()
-	
+
 /datum/controller/subsystem/mazemap/proc/check_activity()
 	activity_checklist = list()
 	for (var/client/C in GLOB.clients)

@@ -168,7 +168,6 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	z = 4
 	name = "Due South"
 	S_connect = 1
-	N_connect = 5
 	monster_types = list(
 			/mob/living/simple_animal/hostile/carp,
 		/mob/living/simple_animal/hostile/carp/pike,

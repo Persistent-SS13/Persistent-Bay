@@ -1,4 +1,4 @@
-/datum/map/nexus
+/datum/map/sycorax
 	// Networks that will show up as options in the camera monitor program
 	station_networks = list(
 		NETWORK_PUBLIC,
@@ -17,6 +17,5 @@
 /obj/machinery/camera/network/refugee
 	network = list(NETWORK_REFUGEE)
 
-/obj/effect/landmark/map_data/nexus
-	height = 3
-
+/obj/effect/landmark/map_data/sycorax
+	height = 1

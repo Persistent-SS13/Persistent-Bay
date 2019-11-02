@@ -23,7 +23,7 @@
 "aaw" = (/turf/simulated/wall,/area/sycorax/atmos)
 "aax" = (/obj/structure/cable{icon_state = "4-8"},/obj/machinery/cryopod{dir = 2; faction = "nexus"; faction_uid = "nexus"; icon_state = "body_scanner_0"; req_access_faction = "nexus"},/turf/simulated/floor/wood,/area/sycorax/cryo)
 "aay" = (/obj/effect/floor_decal/industrial/warning/fulltile,/obj/faction_spawner/democratic/Nexus,/obj/structure/frontier_beacon/citizen,/turf/simulated/floor/plating,/area/sycorax/cryo)
-"aaz" = (/obj/structure/cable{icon_state = "1-2"},/obj/effect/landmark/map_data/nexus,/turf/simulated/floor/plating,/area/sycorax/cryo)
+"aaz" = (/obj/structure/cable{icon_state = "1-2"},/obj/effect/landmark/map_data/sycorax,/turf/simulated/floor/plating,/area/sycorax/cryo)
 "aaA" = (/turf/simulated/wall,/area/sycorax/security)
 "aaB" = (/turf/simulated/floor/tiled/old_tile,/area/sycorax/security)
 "aaC" = (/obj/machinery/light/small{icon_state = "bulb1"; dir = 1},/turf/simulated/floor/tiled/old_tile,/area/sycorax/security)

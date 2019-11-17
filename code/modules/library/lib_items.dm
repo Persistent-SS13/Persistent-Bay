@@ -265,13 +265,13 @@
 		<br>\
 		The government of Sycorax Station is governed by the Sycorax Station Charter, which is included in the final chapter.<br>\
 		<br>\
-		The city government is democratic and representative in nature and function, with an elected Station Commission and Governor. Judges of the city are appointed by the Governor with approval of the Station Commission.<br>\
+		The city government is democratic and representative in nature and function, with an elected Quadrant Commission and Governor. Judges of the city are appointed by the Governor with approval of the Quadrant Commission.<br>\
 		<br>\
-		Station Commissionors and the Governor serve two week terms, and are elected on alternating Saturdays between 10:00AM and 10:00PM. There is a fee of 500$$ for entering elections.<br>\
+		Quadrant Commissionors and the Governor serve two week terms, and are elected on alternating Saturdays between 10:00AM and 10:00PM. There is a fee of 500$$ for entering elections.<br>\
 		<br>\
-		The Station Commission is responsible for the creation of all new laws, including tax law, civil law and criminal law. The Governor is responsible for enforcing the laws of the city and appointing judges. Judges of the city are responsible for presiding over trials and managing the citizenship policy of the city.<br>\
+		The Quadrant Commission is responsible for the creation of all new laws, including tax law, civil law and criminal law. The Governor is responsible for enforcing the laws of the city and appointing judges. Judges of the city are responsible for presiding over trials and managing the citizenship policy of the city.<br>\
 		<br>\
-		The city government is divided into such units that are created by the Station Commission and Governor, the Sycorax Station Police are the primary law enforcement and defense force of the city. The Sycorax Station Police are headed by a Chief of Police.<br>\
+		The city government is divided into such units that are created by the Quadrant Commission and Governor, the Sycorax Station Police are the primary law enforcement and defense force of the city. The Sycorax Station Police are headed by a Chief of Police.<br>\
 		<br>\
 		The city has a tiered citizenship structure. Citizens have full political and voting rights under the city government, but pay full income taxes. Residents of the city cannot vote but pay only half of the income tax a citizen does. Judges are responsible for managing citizenship.<br>\
 		<br>\
@@ -300,28 +300,28 @@
 
 /obj/item/weapon/paper/guidetonexusfive
 	info = "<h2>Chapter 4 - Government In-Depth</h2><br>\
-		Read this chapter if you would like to further understand the operations of the Sycorax Administration, including the Governorship, the Station Commission, the Judges, Elections and Citizenship.<br>\
+		Read this chapter if you would like to further understand the operations of the Sycorax Administration, including the Governorship, the Quadrant Commission, the Judges, Elections and Citizenship.<br>\
 		<h3>The Governor</h3><br>\
-		The Governor has multiple specific powers. These powers are the vetoing of Station Commission laws, the creation of Executive Policy, the general management of the City Government and the appointment of judges.<br>\
+		The Governor has multiple specific powers. These powers are the vetoing of Quadrant Commission laws, the creation of Executive Policy, the general management of the City Government and the appointment of judges.<br>\
 		<br>\
 		The Governor can use the Sycorax Station Governor Control program to perform all of his actions.<br>\
 		<br>\
-		The program allows the Governor to veto proposals in the Station Commission, to create executive policy, to view and repeal executive policy and to nominate judges.<br>\
+		The program allows the Governor to veto proposals in the Quadrant Commission, to create executive policy, to view and repeal executive policy and to nominate judges.<br>\
 		<br>\
-		To veto a law that has passed the Station Commission, simply open the Governors Desk tab of the program.<br>\
+		To veto a law that has passed the Quadrant Commission, simply open the Governors Desk tab of the program.<br>\
 		<br>\
 		To issue an executive policy, enter the New Executive Policy tab and have a physical paper prepared with the policy on it for the program to scan. To repeal an existing executive policy, simply enter the View/Repeal Executive Policies tab.<br>\
 		<br>\
 		To nominate a new judge, simply enter the Nominate Judge tab.<br>\
 		<br>\
-		<h3>The Station Commission</h3><br>\
-		The Station Commission has multiple specific powers. These powers are the creation of law in the areas of tax law, civil law and criminal law and the approval of judges appointed by the Governor.<br>\
+		<h3>The Quadrant Commission</h3><br>\
+		The Quadrant Commission has multiple specific powers. These powers are the creation of law in the areas of tax law, civil law and criminal law and the approval of judges appointed by the Governor.<br>\
 		<br>\
-		There are five positions on the council, each position on the council has a unique title that does not inherently reflect their authority. The authority of the councilors are, legally, identical. The five positions within the Station Commission are: the Councillor of Justice and Criminal Matters, the Councillor of Budget and Tax Measures, the Councillor of Commerce and Business Relations, the Councillor for Culture and Ethical Oversight and the Councillor for Domestic Affairs.<br>\
+		There are five positions on the council, each position on the council has a unique title that does not inherently reflect their authority. The authority of the councilors are, legally, identical. The five positions within the Quadrant Commission are: the Councillor of Justice and Criminal Matters, the Councillor of Budget and Tax Measures, the Councillor of Commerce and Business Relations, the Councillor for Culture and Ethical Oversight and the Councillor for Domestic Affairs.<br>\
 		<br>\
 		Each individual councillor is encouraged to pay special attention to the areas that their title concerns, however it is not mandatory. All councillors have equal voting powers on all measures pending the Council.<br>\
 		<br>\
-		As a councillor, you can present laws to be voted on by the council. All laws require a sponsor to be presented, and are presented through the Sycorax Station Commission Control program. To prepare a law to be presented, print it out or write it on a piece of paper, the program requires a physical paper to be scanned. The exception to this is tax laws, which are designed in the program itself.<br>\
+		As a councillor, you can present laws to be voted on by the council. All laws require a sponsor to be presented, and are presented through the Sycorax Quadrant Commission Control program. To prepare a law to be presented, print it out or write it on a piece of paper, the program requires a physical paper to be scanned. The exception to this is tax laws, which are designed in the program itself.<br>\
 		<br>\
 		<h3>The Judiciary</h3><br>\
 		The judges of Sycorax Station have multiple specific powers. These powers are the scheduling of trials, the rendering of verdicts and the management of citizenship status.<br>\
@@ -335,7 +335,7 @@
 		To render a verdict, the same system as executive policy and laws are used. A physical paper must be prepared and scanned by the program.<br>\
 		<br>\
 		<h3>Elections</h3><br>\
-		Elections happen once a week on Saturdays between 10:00AM and 10:00PM. Elections for Governor and Station Commission are staggered, such that the election for Governor and Station Commissionor are not during the same week. All councillors are elected at the same time.<br>\
+		Elections happen once a week on Saturdays between 10:00AM and 10:00PM. Elections for Governor and Quadrant Commission are staggered, such that the election for Governor and Quadrant Commissionor are not during the same week. All councillors are elected at the same time.<br>\
 		<br>\
 		To view the candidates for office, open the Sycorax Station Election and Nominations program. The program will tell you the time of the upcoming elections, and will list the six elected offices. You can click on each office to see the individual candidates.<br>\
 		<br>\

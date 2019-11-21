@@ -9,23 +9,23 @@ SUBSYSTEM_DEF(elections)
 
 
 /datum/controller/subsystem/elections/fire()
-	var/datum/world_faction/democratic/nexus = get_faction("nexus")
+	var/datum/world_faction/democratic/sycorax = get_faction("sycorax")
 	var/time = world.realtime
 	var/weekday = time2text(time, "Day")
 	var/hour = text2num(time2text(time, "hh"))
 	var/month = time2text(time, "Month")
-	if(!nexus)
-		log_warning("SSElection couldn't find the 'nexus' faction. Skipping this update..")
+	if(!sycorax)
+		log_warning("SSElection couldn't find the 'sycorax' faction. Skipping this update..")
 		next_fire = 5 MINUTES
-		return 
-	if(nexus.current_election)
-		if(hour > nexus.current_election.end_hour && weekday == nexus.current_election.end_day)
-			nexus.end_election()	
-	else	
-		for(var/datum/election/election in nexus.waiting_elections)
-			if(election.start_day == weekday && election.start_hour >= hour && election.cut_off > hour && (!election.typed || election.num_type == nexus.election_toggle))
-				nexus.start_election(election)
+		return
+	if(sycorax.current_election)
+		if(hour > sycorax.current_election.end_hour && weekday == sycorax.current_election.end_day)
+			sycorax.end_election()
+	else
+		for(var/datum/election/election in sycorax.waiting_elections)
+			if(election.start_day == weekday && election.start_hour >= hour && election.cut_off > hour && (!election.typed || election.num_type == sycorax.election_toggle))
+				sycorax.start_election(election)
 				break
-		for(var/datum/judge_trial/trial in nexus.scheduled_trials)
+		for(var/datum/judge_trial/trial in sycorax.scheduled_trials)
 			if(trial.day == weekday && trial.month == month && trial.hour == hour)
-				nexus.start_trial(trial)
+				sycorax.start_trial(trial)

@@ -1,14 +1,14 @@
-/obj/machinery/power/apc/nexus
-	req_access_faction = NEXUS_FACTION_CITIZEN
+/obj/machinery/power/apc/sycorax
+	req_access_faction = SYCORAX_FACTION_CITIZEN
 
-/obj/machinery/power/apc/nexus/high
+/obj/machinery/power/apc/sycorax/high
 	cell_type = /obj/item/weapon/cell/high
 
-/obj/machinery/power/apc/nexus/super
+/obj/machinery/power/apc/sycorax/super
 	cell_type = /obj/item/weapon/cell/super
 
-/obj/machinery/power/apc/nexus/hyper
+/obj/machinery/power/apc/sycorax/hyper
 	cell_type = /obj/item/weapon/cell/hyper
 
-/obj/machinery/power/apc/nexus/super/critical
+/obj/machinery/power/apc/sycorax/super/critical
 	is_critical = 1

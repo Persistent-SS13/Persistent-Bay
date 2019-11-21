@@ -11,7 +11,7 @@
 	var/timeofhostdeath = 0
 	var/emp_damage = 0//Handles a type of MMI damage
 	var/alert = null
-	var/teleport_time = 0 // time when you can teleport back to nexus
+	var/teleport_time = 0 // time when you can teleport back to sycorax
 	var/datum/action/lace_storage/tmp_storage_action
 	var/datum/action/lace/laceaction //Need to keep the reference, otherwise removing it is really a pain in the ass
 

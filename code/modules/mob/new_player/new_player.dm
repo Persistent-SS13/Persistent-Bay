@@ -366,7 +366,7 @@
 	character.spawn_type = CHARACTER_SPAWN_TYPE_IMPORT //For first time spawn
 
 	var/decl/hierarchy/outfit/clothes
-	clothes = outfit_by_type(/decl/hierarchy/outfit/nexus/starter)
+	clothes = outfit_by_type(/decl/hierarchy/outfit/sycorax/starter)
 	ASSERT(istype(clothes))
 	dressup_human(character, clothes)
 	var/obj/item/weapon/card/id/W = new (character)
@@ -535,7 +535,7 @@
 	else if(character.spawn_type == CHARACTER_SPAWN_TYPE_FRONTIER_BEACON || character.spawn_type == CHARACTER_SPAWN_TYPE_IMPORT)
 		var/obj/item/weapon/card/id/W = character.GetIdCard()
 		if(W)
-			W.selected_faction = "nexus"
+			W.selected_faction = "sycorax"
 		var/list/obj/structure/frontier_beacon/possibles = list()
 		var/list/obj/structure/frontier_beacon/possibles_unsafe = list()
 		for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
@@ -641,7 +641,7 @@
 		return
 	var/obj/screen/cinematic
 	cinematic = new
-	cinematic.icon = 'maps/nexus/icons/intro.dmi'
+	cinematic.icon = 'maps/sycorax/icons/intro.dmi'
 	cinematic.icon_state = "blank"
 	cinematic.plane = HUD_PLANE
 	cinematic.layer = HUD_ABOVE_ITEM_LAYER
@@ -667,8 +667,8 @@
 	to_chat(newchar, "<span class='danger'>Aboard the cruiser ecaping from the Alpha Quadrant, the journey through the bluespace barrier shreds the hull as it passes the threshold.</span>")
 	to_chat(newchar, "<span class='danger'>With the barrier weakened, the station inside the Beta Quadrant is able to yank the failing vessels cryo-storage over to the frontier beacons..</span>")
 	to_chat(newchar, "But it must have prioritized saving life-signs rather than the item storage. You wake up in an unfamilar uniform with a basic backpack. Maybe some of your lightest belongings are in there.")
-	to_chat(newchar, "You find a book at your feet. 'Guide to Nexus City'.")
-	to_chat(newchar, "You've been in this situation before, but on a different station. What new stories does the Nexus City hold for you?")
+	to_chat(newchar, "You find a book at your feet. 'Guide to Sycorax City'.")
+	to_chat(newchar, "You've been in this situation before, but on a different station. What new stories does the Sycorax City hold for you?")
 	to_chat(newchar, "((Thanks for returning to persistence. So many staff and contributors have come together to make the lastest chapter, and I'm really glad to have you back. -- Brawler.))")
 
 /mob/new_player/proc/deleteCharacter()

@@ -8,7 +8,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 
 /obj/structure/transition_barrier
 	name = "bluespace barrier"
-	desc = "These barriers split the regions of the nexus quadrant into a maze."
+	desc = "These barriers split the regions of the sycorax quadrant into a maze."
 	icon = 'icons/effects/effects.dmi'
 	icon_state = "shieldwall"
 	density = 0
@@ -38,7 +38,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	var/list/despawning = list()
 
 	var/coord = "(0,0)"
-	var/name = "Nexus"
+	var/name = "Sycorax"
 	var/last_occupied = 0
 
 /datum/zlevel_data/proc/update()

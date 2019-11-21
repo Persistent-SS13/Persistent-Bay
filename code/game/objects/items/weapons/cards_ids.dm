@@ -448,7 +448,7 @@ var/const/NO_EMAG_ACT = -50
 
 /obj/item/weapon/card/id/after_load()
 	if(!selected_faction)
-		selected_faction = "nexus"
+		selected_faction = "sycorax"
 
 /obj/item/weapon/card/id/proc/devalidate()
 	rank = "Devalidated"

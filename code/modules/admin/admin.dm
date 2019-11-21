@@ -1668,11 +1668,11 @@ datum/admins/var/obj/item/weapon/paper/admin/faxreply // var to hold fax replies
 
 // /datum/admins/proc/generate_beacon()
 // 	set category = "Debug"
-// 	set desc = "Spawn the Nexus Gov + a beacon at (100,100,1)"
+// 	set desc = "Spawn the Sycorax Gov + a beacon at (100,100,1)"
 // 	set name = "Generate Faction Beacon"
-// 	spawn_nexus_gov()
+// 	spawn_sycorax_gov()
 // 	var/obj/structure/frontier_beacon/beacon
 // 	beacon = new /obj/structure/frontier_beacon(locate(100,100,1)) //
-// 	beacon.req_access_faction = "nexus"
-// 	to_chat(usr, "<b>Frontier Beacon and Nexus.)</b>")
+// 	beacon.req_access_faction = "sycorax"
+// 	to_chat(usr, "<b>Frontier Beacon and Sycorax.)</b>")
 // 	return

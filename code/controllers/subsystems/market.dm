@@ -424,7 +424,7 @@ SUBSYSTEM_DEF(market)
 	var/moving = min(buyorder.get_remaining_volume(), sellorder.get_remaining_volume())
 	var/cost = moving*sellorder.price
 	if(buyorder.admin_order)
-		buyer_name = "Nexus Economic Module"
+		buyer_name = "Sycorax Economic Module"
 	else
 		buyerfaction = get_faction(buyorder.faction_uid)
 		if(!buyerfaction || !buyerfaction.cargo_telepads.len)
@@ -432,7 +432,7 @@ SUBSYSTEM_DEF(market)
 			return 0
 		buyer_name = buyerfaction.name
 	if(sellorder.admin_order)
-		seller_name = "Nexus Economic Module"
+		seller_name = "Sycorax Economic Module"
 	else
 		sellerfaction = get_faction(sellorder.faction_uid)
 		if(!sellerfaction)

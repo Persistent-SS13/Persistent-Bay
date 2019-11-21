@@ -323,7 +323,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 				to_chat(usr, "No record exists for [select_name]")
 				return
 			if(record.get_shuttle_limit() <= record.shuttles.len)
-				to_chat(usr, "[select_name] does not have sufficent nexus account level to own this shuttle.")
+				to_chat(usr, "[select_name] does not have sufficent sycorax account level to own this shuttle.")
 				return
 			shuttle_owner = select_name
 	if(href_list["individual"])

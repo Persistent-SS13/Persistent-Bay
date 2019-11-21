@@ -34,7 +34,7 @@
 	light_overlay = "helmet_light_dual"
 	icon = 'code/modules/torch/icons/obj/obj_head_solgov.dmi'
 	item_icons = list(slot_head_str = 'code/modules/torch/icons/mob/onmob_head_solgov.dmi')
-	camera = /obj/machinery/camera/network/nexus
+	camera = /obj/machinery/camera/network/sycorax
 	species_restricted = list(SPECIES_HUMAN,SPECIES_IPC) //no available icons for aliens
 
 /obj/item/clothing/suit/space/rig/command
@@ -181,7 +181,7 @@
 	helm_type = /obj/item/clothing/head/helmet/space/rig/command/security
 
 	allowed = list(/obj/item/weapon/gun,
-	 			  /obj/item/ammo_magazine, 
+	 			  /obj/item/ammo_magazine,
 	  			  /obj/item/weapon/handcuffs,
 	   			  /obj/item/device/flashlight,
 	    		  /obj/item/weapon/tank,

@@ -31,13 +31,13 @@
 /obj/machinery/camera/network/refugee
 	network = list(NETWORK_REFUGEE)
 
-/obj/machinery/camera/network/nexus
-	network = list(NETWORK_NEXUS)
+/obj/machinery/camera/network/sycorax
+	network = list(NETWORK_SYCORAX)
 
-/obj/machinery/camera/network/nexus_security
+/obj/machinery/camera/network/sycorax_security
 	icon_state = "xraycam" // Thanks to Krutchen for the icons.
-	network = list(NETWORK_NEXUS_SECURITY)
-/obj/machinery/camera/network/nexus_security/Initialize()
+	network = list(NETWORK_SYCORAX_SECURITY)
+/obj/machinery/camera/network/sycorax_security/Initialize()
 	. = ..()
 	upgradeXRay()
 

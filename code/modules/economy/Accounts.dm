@@ -31,10 +31,10 @@
 	return src
 
 /datum/money_account/proc/do_transaction(var/datum/transaction/T)
-	var/datum/money_account/nexus_account
-	var/datum/world_faction/democratic/nexus = get_faction("nexus")
-	if(nexus)
-		nexus_account = nexus.central_account
+	var/datum/money_account/sycorax_account
+	var/datum/world_faction/democratic/sycorax = get_faction("sycorax")
+	if(sycorax)
+		sycorax_account = sycorax.central_account
 	money = money + T.amount
 	if(transaction_log.len > 50)
 		transaction_log.Cut(1,2)
@@ -46,8 +46,8 @@
 	else
 		if(istype(connected_business))
 			connected_business.cost_objectives(-T.amount)
-	if(T.amount > 0 && nexus_account && nexus_account != src)
-		nexus.pay_tax(src, T.amount)
+	if(T.amount > 0 && sycorax_account && sycorax_account != src)
+		sycorax.pay_tax(src, T.amount)
 
 /datum/money_account/proc/get_balance()
 	. = 0

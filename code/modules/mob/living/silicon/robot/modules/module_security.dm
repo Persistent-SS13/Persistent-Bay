@@ -4,8 +4,8 @@
 	)
 	networks = list(
 		NETWORK_SECURITY,
-		NETWORK_NEXUS,
-		NETWORK_NEXUS_SECURITY,
+		NETWORK_SYCORAX,
+		NETWORK_SYCORAX_SECURITY,
 	)
 	subsystems = list(
 		/datum/nano_module/crew_monitor, 

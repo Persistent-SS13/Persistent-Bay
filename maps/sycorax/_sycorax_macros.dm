@@ -1,2 +1,2 @@
-#define NEXUS_FACTION_CITIZEN "nexus"
-#define NEXUS_FACTION_RESIDENT "resident"
+#define SYCORAX_FACTION_CITIZEN "sycorax"
+#define SYCORAX_FACTION_RESIDENT "resident"

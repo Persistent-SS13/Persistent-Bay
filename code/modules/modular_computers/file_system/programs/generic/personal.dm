@@ -4,7 +4,7 @@
 	program_icon_state = "comm"
 	program_menu_icon = "key"
 	nanomodule_path = /datum/nano_module/program/personal
-	extended_desc = "Used by individuals to control things about their Nexus Account and personal holdings."
+	extended_desc = "Used by individuals to control things about their Sycorax Account and personal holdings."
 	requires_ntnet = 1
 	size = 2
 	usage_flags = PROGRAM_ALL

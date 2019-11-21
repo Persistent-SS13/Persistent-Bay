@@ -231,7 +231,7 @@
 		user.setClickCooldown(DEFAULT_QUICK_COOLDOWN) //to prevent spam
 
 
-/obj/item/weapon/paper/guidetonexusone
+/obj/item/weapon/paper/guidetosycoraxone
 	info = "<br>\
 		<center>\
 			<img src = nfrlogo.png>\
@@ -248,7 +248,7 @@
 		</center><br>\
 		<br>"
 
-/obj/item/weapon/paper/guidetonexustwo
+/obj/item/weapon/paper/guidetosycoraxtwo
 	info = "<h2>Chapter 1 - Introduction</h2><br>\
 		<br>\
 		Thank you for your interest in the structure, culture, economy and government of Sycorax Station. Your decision to read this guidebook shows your commitment to starting your life anew!<br>\
@@ -260,7 +260,7 @@
 		It is recommended you read the entire guidebook, however the government and business and economy chapters are split into a summary and in-depth chapters to allow for easier reading.<br>\
 		<br>"
 
-/obj/item/weapon/paper/guidetonexusthree
+/obj/item/weapon/paper/guidetosycoraxthree
 	info = "<h2>Chapter 2 - Government</h2><br>\
 		<br>\
 		The government of Sycorax Station is governed by the Sycorax Station Charter, which is included in the final chapter.<br>\
@@ -278,7 +278,7 @@
 		The city itself is split into three districts, the Government District, the Citizen District and the Resident District. The government is responsible for creating laws regarding the districts. Citizens and residents have their cryopods in their respective areas.<br>\
 		<br>"
 
-/obj/item/weapon/paper/guidetonexusfour
+/obj/item/weapon/paper/guidetosycoraxfour
 	info = "<h2>Chapter 3 - Business and Economy</h2><br>\
 		<br>\
 		The primary economics actors in Sycorax Station are businesses.<br>\
@@ -298,7 +298,7 @@
 		Businesses have different costs to create depending on business type.<br>\
 		<br>"
 
-/obj/item/weapon/paper/guidetonexusfive
+/obj/item/weapon/paper/guidetosycoraxfive
 	info = "<h2>Chapter 4 - Government In-Depth</h2><br>\
 		Read this chapter if you would like to further understand the operations of the Sycorax Administration, including the Governorship, the Quadrant Commission, the Judges, Elections and Citizenship.<br>\
 		<h3>The Governor</h3><br>\
@@ -349,7 +349,7 @@
 		Law determines the difference between citizens, residents and prisoners other than the fact that citizens can vote and pay full income tax, and residents do neither.<br>\
 		<br>"
 
-/obj/item/weapon/paper/guidetonexussix
+/obj/item/weapon/paper/guidetosycoraxsix
 	info = "<h2>Chapter 5 - Business and Economy In-Depth</h2><br>\
 		Read this chapter if you wish to further understand the operations of businesses within Sycorax Station.<br>\
 		<h3>Business Creation</h3><br>\
@@ -378,11 +378,11 @@
 		The program also allows you to see the current inventory your business has for sale, and to see or cancel all orders your business has made.<br>\
 		<br>"
 
-/obj/item/weapon/paper/guidetonexusseven
+/obj/item/weapon/paper/guidetosycoraxseven
 	info = "<h2>Chapter 6 - The City Charter</h2><br>\
 		<br>\
 		<center>\
-			<h1>THE SOVEREIGN NEXUS CITY</h1>\
+			<h1>THE SOVEREIGN SYCORAX CITY</h1>\
 		</center><br>\
 		<center>\
 			<i>Charter and Amendments</i>\
@@ -393,7 +393,7 @@
 		<center>\
 			<b><span class='large-text'>PREAMBLE</span></b>\
 		</center><br>\
-		The People of Nexus, self-determined and endowed by the Artificial Intelligence, have sought to establish a common charter to connect the Nexus people. Inspired by the virtues of the principles set forth in a free, democratically elected government to expand the common welfare, defense, tranquility, and justice. Conscious of their responsibility to the Nexus people and the Artificial Intelligence, this agreement shall link the bond between the electoral process as well as the legal bindings of the Republic. As such, this charter is to be recognized by all people of Nexus regardless of creed or level.<br>\
+		The People of Sycorax, self-determined and endowed by the Artificial Intelligence, have sought to establish a common charter to connect the Sycorax people. Inspired by the virtues of the principles set forth in a free, democratically elected government to expand the common welfare, defense, tranquility, and justice. Conscious of their responsibility to the Sycorax people and the Artificial Intelligence, this agreement shall link the bond between the electoral process as well as the legal bindings of the Republic. As such, this charter is to be recognized by all people of Sycorax regardless of creed or level.<br>\
 		<br>\
 		<b></b>\
 		<center>\
@@ -509,8 +509,8 @@
 	return book
 /datum/book_constructor/starterbook
 	title = "Guide to Sycorax Station"
-	author = "NEX"
-	pages = list(/obj/item/weapon/paper/guidetonexusone, /obj/item/weapon/paper/guidetonexustwo, /obj/item/weapon/paper/guidetonexusthree, /obj/item/weapon/paper/guidetonexusfour, /obj/item/weapon/paper/guidetonexusfive, /obj/item/weapon/paper/guidetonexussix, /obj/item/weapon/paper/guidetonexusseven)
+	author = "Sycorax Administration"
+	pages = list(/obj/item/weapon/paper/guidetosycoraxone, /obj/item/weapon/paper/guidetosycoraxtwo, /obj/item/weapon/paper/guidetosycoraxthree, /obj/item/weapon/paper/guidetosycoraxfour, /obj/item/weapon/paper/guidetosycoraxfive, /obj/item/weapon/paper/guidetosycoraxsix, /obj/item/weapon/paper/guidetosycoraxseven)
 
 /obj/item/weapon/book/multipage
 	var/list/pages = list()

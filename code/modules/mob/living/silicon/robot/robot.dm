@@ -174,7 +174,7 @@
 	if(!scrambledcodes && !camera)
 		camera = new /obj/machinery/camera(src)
 		camera.c_tag = real_name
-		camera.replace_networks(list(NETWORK_NEXUS,NETWORK_ROBOTS)) //#TODO: get faction camera network
+		camera.replace_networks(list(NETWORK_SYCORAX,NETWORK_ROBOTS)) //#TODO: get faction camera network
 		if(wires.IsIndexCut(BORG_WIRE_CAMERA))
 			camera.status = 0
 	init()
@@ -185,7 +185,7 @@
 		initialize_components() //Create default components
 
 	//Setup Cell
-	for(var/V in components) 
+	for(var/V in components)
 		if(V != "power cell")
 			var/datum/robot_component/C = components[V]
 			C.installed = 1

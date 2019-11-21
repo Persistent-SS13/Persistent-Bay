@@ -29,7 +29,7 @@ proc/GetNbSavedZLevels()
 	boss_short    = "Sycorax Admin"
 	company_name  = "Sycorax"
 	company_short = "SX"
-	default_faction_uid = NEXUS_FACTION_CITIZEN
+	default_faction_uid = SYCORAX_FACTION_CITIZEN
 
 	use_overmap = TRUE		//If overmap should be used (including overmap space travel override)
 	overmap_size = 20		//Dimensions of overmap zlevel if overmap is used.
@@ -92,7 +92,7 @@ proc/GetNbSavedZLevels()
 	to_chat(newchar, "((Persistence is a very unique codebase! If you need help you can *always* ask staff by pressing F1. Go out and meet other characters, you dont need to find work right away but making friends is invaluable.))")
 
 //Example for adding map specific starter uniforms
-// /datum/map/nexus/populate_uniforms(var/client/C)
+// /datum/map/sycorax/populate_uniforms(var/client/C)
 // 	. = ..()
 // 	switch(C.prefs.cultural_info[TAG_CULTURE])
 // 		if(CULTURE_HUMAN_SPACER)

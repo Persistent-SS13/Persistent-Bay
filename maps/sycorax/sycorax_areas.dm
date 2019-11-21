@@ -1,5 +1,5 @@
 /area/sycorax
-	req_faction = NEXUS_FACTION_CITIZEN
+	req_faction = SYCORAX_FACTION_CITIZEN
 
 //gov areas
 /area/sycorax/xerxes/ahall

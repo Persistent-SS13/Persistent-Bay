@@ -1,21 +1,21 @@
-/obj/item/weapon/book/multipage/nexus_guide
+/obj/item/weapon/book/multipage/sycorax_guide
 	title = "Guide to Sycorax Station"
 	name = "Guide to Sycorax Station"
-	author = "NEX"
+	author = "Sycorax Administration"
 	author_real = "premade"
 	icon_state = "anomaly"
 
-/obj/item/weapon/book/multipage/nexus_guide/New()
+/obj/item/weapon/book/multipage/sycorax_guide/New()
 	. = ..()
-	pages = list(new /obj/item/weapon/paper/guidetonexusone(src),
-		new/obj/item/weapon/paper/guidetonexustwo(src),
-		new/obj/item/weapon/paper/guidetonexusthree(src),
-		new/obj/item/weapon/paper/guidetonexusfour(src),
-		new/obj/item/weapon/paper/guidetonexusfive(src),
-		new/obj/item/weapon/paper/guidetonexussix(src),
-		new/obj/item/weapon/paper/guidetonexusseven(src))
+	pages = list(new /obj/item/weapon/paper/guidetosycoraxone(src),
+		new/obj/item/weapon/paper/guidetosycoraxtwo(src),
+		new/obj/item/weapon/paper/guidetosycoraxthree(src),
+		new/obj/item/weapon/paper/guidetosycoraxfour(src),
+		new/obj/item/weapon/paper/guidetosycoraxfive(src),
+		new/obj/item/weapon/paper/guidetosycoraxsix(src),
+		new/obj/item/weapon/paper/guidetosycoraxseven(src))
 
-/obj/item/weapon/book/multipage/nexus_guide/Destroy()
+/obj/item/weapon/book/multipage/sycorax_guide/Destroy()
 	if(LAZYLEN(pages))
 		while(pages.len)
 			qdel(pages[pages.len])

@@ -72,11 +72,11 @@
  */
 /obj/item/clothing/accessory/badge/holo
 	name = "holobadge"
-	desc = "This glowing blue badge marks the holder as a member of the Nexus Police."
+	desc = "This glowing blue badge marks the holder as a member of the Sycorax Police."
 	color = COLOR_PALE_BLUE_GRAY
 	icon_state = "holobadge"
 	item_state = "holobadge"
-	badge_string = "Nexus Police"
+	badge_string = "Sycorax Police"
 	var/badge_access = access_security
 	var/badge_number
 	var/emagged //emag_act removes access requirements
@@ -183,11 +183,11 @@
 
 /obj/item/clothing/accessory/badge/ocieagent
 	name = "\improper Council appointee's badge"
-	desc = "A leather-backed gold badge displaying the crest of the Nexus Council."
+	desc = "A leather-backed gold badge displaying the crest of the Sycorax Council."
 	icon_state = "agentbadge"
 	slot_flags = SLOT_BELT | SLOT_TIE
 	slot = ACCESSORY_SLOT_INSIGNIA
-	badge_string = "Nexus Council"
+	badge_string = "Sycorax Council"
 
 /obj/item/clothing/accessory/badge/tracker
 	name = "\improper City appointee's badge"

@@ -873,7 +873,7 @@ var/PriorityQueue/all_feeds
 	var/default_telepad_x
 	var/default_telepad_y
 	var/default_telepad_z
-	var/decl/hierarchy/outfit/starter_outfit = /decl/hierarchy/outfit/nexus/starter //Outfit members of this faction spawn with by default
+	var/decl/hierarchy/outfit/starter_outfit = /decl/hierarchy/outfit/sycorax/starter //Outfit members of this faction spawn with by default
 
 	var/list/service_medical_business = list() // list of all organizations linked into the medical service for this business
 
@@ -913,53 +913,53 @@ var/PriorityQueue/all_feeds
 		if(stack.owner)
 			to_chat(stack.owner, "Your neural lace buzzes letting you know that [M.real_name] is in critical health status.")
 
-/proc/spawn_nexus_gov()
-	var/datum/world_faction/democratic/nexus = new()
-	nexus.name = "Sycorax Administration"
-	nexus.abbreviation = "Sycorax"
-	nexus.short_tag = "Sycorax"
-	nexus.purpose = "To represent the citizenship of Sycorax and keep the station operating."
-	nexus.uid = "sycorax"
-	nexus.gov = new()
+/proc/spawn_sycorax_gov()
+	var/datum/world_faction/democratic/sycorax = new()
+	sycorax.name = "Sycorax Administration"
+	sycorax.abbreviation = "Syco"
+	sycorax.short_tag = "SX"
+	sycorax.purpose = "To represent the citizenship of Sycorax and keep the station operating."
+	sycorax.uid = "sycorax"
+	sycorax.gov = new()
 	var/datum/election/gov/gov_elect = new()
-	gov_elect.ballots |= nexus.gov
+	gov_elect.ballots |= sycorax.gov
 
-	nexus.waiting_elections |= gov_elect
+	sycorax.waiting_elections |= gov_elect
 
 	var/datum/election/council_elect = new()
 	var/datum/democracy/councillor/councillor1 = new()
 	councillor1.title = "Commissioner for Justice"
-	nexus.city_council |= councillor1
+	sycorax.city_council |= councillor1
 	council_elect.ballots |= councillor1
 
 	var/datum/democracy/councillor/councillor2 = new()
 	councillor2.title = "Commissioner for Finance"
-	nexus.city_council |= councillor2
+	sycorax.city_council |= councillor2
 	council_elect.ballots |= councillor2
 
 	var/datum/democracy/councillor/councillor3 = new()
 	councillor3.title = "Commissioner for Operations"
-	nexus.city_council |= councillor3
+	sycorax.city_council |= councillor3
 	council_elect.ballots |= councillor3
 
 	var/datum/democracy/councillor/councillor4 = new()
 	councillor4.title = "Commissioner-Chairperson"
-	nexus.city_council |= councillor4
+	sycorax.city_council |= councillor4
 	council_elect.ballots |= councillor4
 
 	var/datum/democracy/councillor/councillor5 = new()
 	councillor5.title = "Commissioner for Domestic Affairs"
-	nexus.city_council |= councillor5
+	sycorax.city_council |= councillor5
 	council_elect.ballots |= councillor5
 
-	nexus.waiting_elections |= council_elect
+	sycorax.waiting_elections |= council_elect
 
-	nexus.network.name = "SYCORAX-NET"
-	nexus.network.net_uid = "sx_net"
-	nexus.network.password = ""
-	nexus.network.invisible = 0
+	sycorax.network.name = "SYCORAX-NET"
+	sycorax.network.net_uid = "sycorax"
+	sycorax.network.password = ""
+	sycorax.network.invisible = 0
 
-	LAZYDISTINCTADD(GLOB.all_world_factions, nexus)
+	LAZYDISTINCTADD(GLOB.all_world_factions, sycorax)
 
 
 /datum/world_faction/democratic/New()
@@ -990,8 +990,8 @@ var/PriorityQueue/all_feeds
 	limits = new /datum/machine_limits/democracy()
 
 	name = "Sycorax Administration"
-	abbreviation = "Sycorax"
-	short_tag = "Sycorax"
+	abbreviation = "Syco"
+	short_tag = "SX"
 	purpose = "To represent the citizenship of Sycorax and keep the station operating."
 	uid = "sycorax"
 	gov = new()
@@ -1029,7 +1029,7 @@ var/PriorityQueue/all_feeds
 	waiting_elections |= council_elect
 
 	network.name = "SYCORAX-NET"
-	network.net_uid = "sx_net"
+	network.net_uid = "sycorax"
 	network.password = ""
 	network.invisible = 0
 
@@ -1990,9 +1990,9 @@ var/PriorityQueue/all_feeds
 	if(ceo_amount)
 		var/datum/money_account/target_account = get_account_record(leader_name)
 		if(target_account)
-			var/datum/transaction/T = new(leader_name, "CEO Revenue Share", -ceo_amount, "Nexus Economy Network")
+			var/datum/transaction/T = new(leader_name, "CEO Revenue Share", -ceo_amount, "Sycorax Economy Network")
 			account.do_transaction(T)
-			var/datum/transaction/Te = new("[account.owner_name]", "CEO Revenue Share", ceo_amount, "Nexus Economy Network")
+			var/datum/transaction/Te = new("[account.owner_name]", "CEO Revenue Share", ceo_amount, "Sycorax Economy Network")
 			target_account.do_transaction(Te)
 	if(stock_amount)
 		var/amount_taken = 0
@@ -2002,11 +2002,11 @@ var/PriorityQueue/all_feeds
 			if(holder_amount)
 				var/datum/money_account/target_account = get_account_record(holder.real_name)
 				if(target_account)
-					var/datum/transaction/Te = new("[account.owner_name]", "Stockholder Revenue Share", holder_amount, "Nexus Economy Network")
+					var/datum/transaction/Te = new("[account.owner_name]", "Stockholder Revenue Share", holder_amount, "Sycorax Economy Network")
 					target_account.do_transaction(Te)
 					amount_taken += holder_amount
 			if(amount_taken)
-				var/datum/transaction/T = new("Shareholders", "Shareholder Revenue Share", -amount_taken, "Nexus Economy Network")
+				var/datum/transaction/T = new("Shareholders", "Shareholder Revenue Share", -amount_taken, "Sycorax Economy Network")
 				account.do_transaction(T)
 
 /datum/world_faction/business/proc/get_ceo_wage()
@@ -2058,11 +2058,11 @@ var/PriorityQueue/all_feeds
 		if(holder_amount)
 			var/datum/money_account/target_account = get_account_record(holder.real_name)
 			if(target_account)
-				var/datum/transaction/Te = new("[central_account.owner_name]", "Instant Dividend", holder_amount, "Nexus Economy Network")
+				var/datum/transaction/Te = new("[central_account.owner_name]", "Instant Dividend", holder_amount, "Sycorax Economy Network")
 				target_account.do_transaction(Te)
 				amount_taken += holder_amount
 	if(amount_taken)
-		var/datum/transaction/T = new("Shareholders", "Instant Dividend", -amount_taken, "Nexus Economy Network")
+		var/datum/transaction/T = new("Shareholders", "Instant Dividend", -amount_taken, "Sycorax Economy Network")
 		central_account.do_transaction(T)
 
 
@@ -2967,7 +2967,7 @@ var/PriorityQueue/all_feeds
 	limit_drills = 5
 	limit_botany = 10
 	limit_shuttles = 10
-	limit_area = 2000000 //size of the nexus at most 3z levels of 255x255
+	limit_area = 2000000 //size of the sycorax at most 3z levels of 255x255
 	limit_tcomms = 5
 	limit_tech_general = 4
 	limit_tech_engi = 4
@@ -3508,7 +3508,7 @@ var/PriorityQueue/all_feeds
 
 /datum/business_spec/medical/paramedic
 	name = "Paramedic"
-	desc = "The Paramedic specialization allows the business to operate a voidsuit fabricator and two shuttles to retrieve clients from the dangerous sectors of the Nexus outer-space."
+	desc = "The Paramedic specialization allows the business to operate a voidsuit fabricator and two shuttles to retrieve clients from the dangerous sectors of the Sycorax outer-space."
 	limits = /datum/machine_limits/medical/spec/paramedic
 	hourly_objectives = list(/datum/module_objective/hourly/travel)
 	daily_objectives = list(/datum/module_objective/daily/travel)
@@ -3609,7 +3609,7 @@ var/PriorityQueue/all_feeds
 
 /datum/business_spec/media/journalism
 	name = "Journalism"
-	desc = "Specializing in Journalism gives capacity for an medical fabricator and shuttle. Explore every corner of Nexus-space, but best to carry basic medical supplies."
+	desc = "Specializing in Journalism gives capacity for an medical fabricator and shuttle. Explore every corner of Sycorax-space, but best to carry basic medical supplies."
 	limits = /datum/machine_limits/media/spec/journalism
 	hourly_objectives = list(/datum/module_objective/hourly/publish_article)
 	daily_objectives = list(/datum/module_objective/daily/article_viewers)

@@ -3,7 +3,7 @@ proc/GetNbSavedZLevels()
 
 /datum/map/sycorax
 	name = "Sycorax"
-	full_name = "Sycorax Station"
+	full_name = "Sycorax Quadrant"
 	path = "sycorax"
 	flags = MAP_HAS_RANK
 
@@ -79,14 +79,14 @@ proc/GetNbSavedZLevels()
 	spawn()
 		new /obj/effect/portal(get_turf(newchar), null, 5 SECONDS, 0)
 		shake_camera(newchar, 3, 1)
-	GLOB.global_announcer.autosay("[newchar.real_name] has just arrived at Sycorax Station. Welcome [newchar.real_name]!", "Arrival Announcer")
+	GLOB.global_announcer.autosay("[newchar.real_name] has just arrived at Sycorax Quadrant. Welcome [newchar.real_name]!", "Arrival Announcer")
 	newchar.druggy = 3
 	newchar.Weaken(3)
-	to_chat(newchar, "<span class='danger'>You are carried through the swirling amber portal to your new home, Sycorax Station.</span>")
+	to_chat(newchar, "<span class='danger'>You are carried through the swirling amber portal to your new home, Sycorax Quadrant.</span>")
 	sleep(100)
 	to_chat(newchar, "The neural lace that you recently had implanted burns at the back of your skull.")
 	sleep(100)
-	to_chat(newchar, "You wake up on a beacon with a book at your feet titled 'Guide to Sycorax Station'.")
+	to_chat(newchar, "You wake up on a beacon with a book at your feet titled 'Guide to Sycorax Quadrant'.")
 	sleep(100)
 	to_chat(newchar, "You've come here to make a new life in a far-away space station. Better read the book to find out how this station works.")
 	to_chat(newchar, "((Persistence is a very unique codebase! If you need help you can *always* ask staff by pressing F1. Go out and meet other characters, you dont need to find work right away but making friends is invaluable.))")

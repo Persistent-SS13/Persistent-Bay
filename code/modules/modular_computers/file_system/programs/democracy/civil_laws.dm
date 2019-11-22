@@ -1,6 +1,6 @@
 /datum/computer_file/program/civil_laws
 	filename = "civil_laws"
-	filedesc = "Sycorax Station Civil Laws"
+	filedesc = "Sycorax Quadrant Civil Laws"
 	program_icon_state = "comm"
 	program_menu_icon = "note"
 	nanomodule_path = /datum/nano_module/program/civil_laws
@@ -12,7 +12,7 @@
 	usage_flags = PROGRAM_ALL
 
 /datum/nano_module/program/civil_laws
-	name = "Sycorax Station Civil Laws"
+	name = "Sycorax Quadrant Civil Laws"
 	available_to_ai = TRUE
 	var/datum/council_vote/selected_vote
 

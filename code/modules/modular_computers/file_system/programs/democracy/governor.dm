@@ -1,6 +1,6 @@
 /datum/computer_file/program/governor
 	filename = "governor"
-	filedesc = "Sycorax Station Governor Control"
+	filedesc = "Sycorax Quadrant Governor Control"
 	program_icon_state = "comm"
 	program_menu_icon = "flag"
 	nanomodule_path = /datum/nano_module/program/governor
@@ -12,7 +12,7 @@
 	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP | PROGRAM_TELESCREEN
 
 /datum/nano_module/program/governor
-	name = "Sycorax Station Governor Control"
+	name = "Sycorax Quadrant Governor Control"
 	available_to_ai = TRUE
 	var/datum/council_vote/selected_vote
 	var/datum/council_vote/selected_policy

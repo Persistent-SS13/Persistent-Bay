@@ -1,6 +1,6 @@
 /datum/computer_file/program/election
 	filename = "Elections"
-	filedesc = "Sycorax Station Elections and Nominations"
+	filedesc = "Sycorax Quadrant Elections and Nominations"
 	program_icon_state = "comm"
 	program_menu_icon = "person"
 	nanomodule_path = /datum/nano_module/program/election
@@ -12,7 +12,7 @@
 	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP | PROGRAM_TELESCREEN
 
 /datum/nano_module/program/election
-	name = "Sycorax Station Elections and Nominations"
+	name = "Sycorax Quadrant Elections and Nominations"
 	available_to_ai = TRUE
 
 	var/menu = 1

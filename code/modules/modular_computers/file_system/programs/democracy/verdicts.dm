@@ -1,6 +1,6 @@
 /datum/computer_file/program/verdicts
 	filename = "verdicts"
-	filedesc = "Sycorax Station Trials & Verdicts"
+	filedesc = "Sycorax Quadrant Trials & Verdicts"
 	program_icon_state = "comm"
 	program_menu_icon = "note"
 	nanomodule_path = /datum/nano_module/program/verdicts
@@ -12,7 +12,7 @@
 	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP | PROGRAM_TELESCREEN | PROGRAM_TABLET
 
 /datum/nano_module/program/verdicts
-	name = "Sycorax Station Trials & Verdicts"
+	name = "Sycorax Quadrant Trials & Verdicts"
 	available_to_ai = TRUE
 	var/menu = 1
 	var/datum/judge_trial/selected_trial

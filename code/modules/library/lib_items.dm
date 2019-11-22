@@ -236,8 +236,8 @@
 		<center>\
 			<img src = nfrlogo.png>\
 			<br>\
-			<h1>Understanding Sycorax Station</h1><br>\
-			<span class='small-text'>A guide to the government and economy of Sycorax Station.</span><br>\
+			<h1>Understanding Sycorax Quadrant</h1><br>\
+			<span class='small-text'>A guide to the government and economy of Sycorax Quadrant.</span><br>\
 			<br>\
 			<span class='large-text'>Chapter 1: Introduction<br>\
 			Chapter 2: Government<br>\
@@ -251,9 +251,9 @@
 /obj/item/weapon/paper/guidetosycoraxtwo
 	info = "<h2>Chapter 1 - Introduction</h2><br>\
 		<br>\
-		Thank you for your interest in the structure, culture, economy and government of Sycorax Station. Your decision to read this guidebook shows your commitment to starting your life anew!<br>\
+		Thank you for your interest in the structure, culture, economy and government of Sycorax Quadrant. Your decision to read this guidebook shows your commitment to starting your life anew!<br>\
 		<br>\
-		If you are reading this, you are now a resident or citizen of Sycorax Station. You have been provided with an allowance of 1000$$, $$ being the symbol for our local currency the Centera. Utilizing this guide, the 1000$$ will go a long ways in starting your life in the city.<br>\
+		If you are reading this, you are now a resident or citizen of Sycorax Quadrant. You have been provided with an allowance of 1000$$, $$ being the symbol for our local currency the Centera. Utilizing this guide, the 1000$$ will go a long ways in starting your life in the city.<br>\
 		<br>\
 		The priority of new residents of the city should be finding employment in a corporation or the government of the city. There are many opportunities available, including business ownership, politics, government service and employment.<br>\
 		<br>\
@@ -263,7 +263,7 @@
 /obj/item/weapon/paper/guidetosycoraxthree
 	info = "<h2>Chapter 2 - Government</h2><br>\
 		<br>\
-		The government of Sycorax Station is governed by the Sycorax Station Charter, which is included in the final chapter.<br>\
+		The government of Sycorax Quadrant is governed by the Sycorax Quadrant Charter, which is included in the final chapter.<br>\
 		<br>\
 		The city government is democratic and representative in nature and function, with an elected Quadrant Commission and Governor. Judges of the city are appointed by the Governor with approval of the Quadrant Commission.<br>\
 		<br>\
@@ -271,7 +271,7 @@
 		<br>\
 		The Quadrant Commission is responsible for the creation of all new laws, including tax law, civil law and criminal law. The Governor is responsible for enforcing the laws of the city and appointing judges. Judges of the city are responsible for presiding over trials and managing the citizenship policy of the city.<br>\
 		<br>\
-		The city government is divided into such units that are created by the Quadrant Commission and Governor, the Sycorax Station Police are the primary law enforcement and defense force of the city. The Sycorax Station Police are headed by a Chief of Police.<br>\
+		The city government is divided into such units that are created by the Quadrant Commission and Governor, the Sycorax Quadrant Police are the primary law enforcement and defense force of the city. The Sycorax Quadrant Police are headed by a Chief of Police.<br>\
 		<br>\
 		The city has a tiered citizenship structure. Citizens have full political and voting rights under the city government, but pay full income taxes. Residents of the city cannot vote but pay only half of the income tax a citizen does. Judges are responsible for managing citizenship.<br>\
 		<br>\
@@ -281,7 +281,7 @@
 /obj/item/weapon/paper/guidetosycoraxfour
 	info = "<h2>Chapter 3 - Business and Economy</h2><br>\
 		<br>\
-		The primary economics actors in Sycorax Station are businesses.<br>\
+		The primary economics actors in Sycorax Quadrant are businesses.<br>\
 		<br>\
 		Businesses in the city are controlled by their stockholders, a single stock in a business represents 1% ownership in the business, meaning each business is composed of 100 stocks divided into a maximum of 100 owners.<br>\
 		<br>\
@@ -289,7 +289,7 @@
 		<br>\
 		Business categories and specializations, while somewhat limiting, do not prevent businesses from doing things outside of the standard definition of their category. For example, there is no defined security category or specialization, so a security corporation could operate under any category.<br>\
 		<br>\
-		The total amount of stocks held by a person is restricted by Sycorax Station Account level. Sycorax Station Account level represents economic privileges held by a resident or citizen. A base level Sycorax Station Account can own a total of 125 shares. The amount of personal shuttles owned by a person is also limited by Sycorax Station Account level, and starts at 0.<br>\
+		The total amount of stocks held by a person is restricted by Sycorax Quadrant Account level. Sycorax Quadrant Account level represents economic privileges held by a resident or citizen. A base level Sycorax Quadrant Account can own a total of 125 shares. The amount of personal shuttles owned by a person is also limited by Sycorax Quadrant Account level, and starts at 0.<br>\
 		<br>\
 		The primary means of material trade between corporations is the material market. The material market allows businesses to easily list materials to purchase or sell. The options of the material market allow a corporation to list buy and sell orders, to quickly purchase a material or to quickly sell materials based on average market value.<br>\
 		<br>\
@@ -304,7 +304,7 @@
 		<h3>The Governor</h3><br>\
 		The Governor has multiple specific powers. These powers are the vetoing of Quadrant Commission laws, the creation of Executive Policy, the general management of the City Government and the appointment of judges.<br>\
 		<br>\
-		The Governor can use the Sycorax Station Governor Control program to perform all of his actions.<br>\
+		The Governor can use the Sycorax Quadrant Governor Control program to perform all of his actions.<br>\
 		<br>\
 		The program allows the Governor to veto proposals in the Quadrant Commission, to create executive policy, to view and repeal executive policy and to nominate judges.<br>\
 		<br>\
@@ -324,9 +324,9 @@
 		As a councillor, you can present laws to be voted on by the council. All laws require a sponsor to be presented, and are presented through the Sycorax Quadrant Commission Control program. To prepare a law to be presented, print it out or write it on a piece of paper, the program requires a physical paper to be scanned. The exception to this is tax laws, which are designed in the program itself.<br>\
 		<br>\
 		<h3>The Judiciary</h3><br>\
-		The judges of Sycorax Station have multiple specific powers. These powers are the scheduling of trials, the rendering of verdicts and the management of citizenship status.<br>\
+		The judges of Sycorax Quadrant have multiple specific powers. These powers are the scheduling of trials, the rendering of verdicts and the management of citizenship status.<br>\
 		<br>\
-		To perform any action as a judge, use the Sycorax Station Judge Controls program.<br>\
+		To perform any action as a judge, use the Sycorax Quadrant Judge Controls program.<br>\
 		<br>\
 		To schedule a trial as a judge, use the program to set the trial title, plaintiff, defendant and month, day and hour.<br>\
 		<br>\
@@ -337,12 +337,12 @@
 		<h3>Elections</h3><br>\
 		Elections happen once a week on Saturdays between 10:00AM and 10:00PM. Elections for Governor and Quadrant Commission are staggered, such that the election for Governor and Quadrant Commissionor are not during the same week. All councillors are elected at the same time.<br>\
 		<br>\
-		To view the candidates for office, open the Sycorax Station Election and Nominations program. The program will tell you the time of the upcoming elections, and will list the six elected offices. You can click on each office to see the individual candidates.<br>\
+		To view the candidates for office, open the Sycorax Quadrant Election and Nominations program. The program will tell you the time of the upcoming elections, and will list the six elected offices. You can click on each office to see the individual candidates.<br>\
 		<br>\
 		When entering an election to gain political office, there is a fee of 500$$. After paying the 500$$ fee, you are able to enter a description of your candidacy which can be a maximum of 300 characters. After finalizing your candidacy, you will be a candidate for your selected office. You may only run for a single office at a time.<br>\
 		<br>\
 		<h3>Citizenship</h3><br>\
-		Citizenship is managed by the various judges of Sycorax Station. Judges can adjust citizenship through the rendering of a verdict, regardless of an existing trial. The lawfulness of a judge adjusting citizenship is dependent on law.<br>\
+		Citizenship is managed by the various judges of Sycorax Quadrant. Judges can adjust citizenship through the rendering of a verdict, regardless of an existing trial. The lawfulness of a judge adjusting citizenship is dependent on law.<br>\
 		<br>\
 		The citizenship structure allows for three 'types' of citizens. Citizens, residents and prisoners. Citizens represent people with full political rights under the city, residents represent people with reduced political rights under the city, and prisoners are either incarcerated or otherwise punished by the city.<br>\
 		<br>\
@@ -351,7 +351,7 @@
 
 /obj/item/weapon/paper/guidetosycoraxsix
 	info = "<h2>Chapter 5 - Business and Economy In-Depth</h2><br>\
-		Read this chapter if you wish to further understand the operations of businesses within Sycorax Station.<br>\
+		Read this chapter if you wish to further understand the operations of businesses within Sycorax Quadrant.<br>\
 		<h3>Business Creation</h3><br>\
 		Any person is eligible to create a business. Business registration can either be done by a single person, or by multiple people.<br>\
 		<br>\
@@ -401,7 +401,7 @@
 		</center><br>\
 		<ul>\
 			<li style='list-style: none'><br></li>\
-			<li>Sycorax Station is incorporated as a sovereign and independent State. The Government is unitary, republican and democratic.<br>\
+			<li>Sycorax Quadrant is incorporated as a sovereign and independent State. The Government is unitary, republican and democratic.<br>\
 			<br></li>\
 			<li>The sovereignty and public power of the City is vested in the Government, which shall exercise its authorities pursuant to this Charter and the publicly elected officials.<br>\
 			<br></li>\
@@ -508,7 +508,7 @@
 		book.pages |= P
 	return book
 /datum/book_constructor/starterbook
-	title = "Guide to Sycorax Station"
+	title = "Guide to Sycorax Quadrant"
 	author = "Sycorax Administration"
 	pages = list(/obj/item/weapon/paper/guidetosycoraxone, /obj/item/weapon/paper/guidetosycoraxtwo, /obj/item/weapon/paper/guidetosycoraxthree, /obj/item/weapon/paper/guidetosycoraxfour, /obj/item/weapon/paper/guidetosycoraxfive, /obj/item/weapon/paper/guidetosycoraxsix, /obj/item/weapon/paper/guidetosycoraxseven)
 

@@ -3,26 +3,38 @@
 
 //gov areas
 /area/sycorax/xerxes/ahall
-	name = "Xerxes Central Hall"
-	icon_state = "mhall"
+	name = "Xerxes Central Hall - Upper"
+	icon_state = "hallC1"
 /area/sycorax/xerxes/bhall
-	name = "Xerxes Auxiliary Hall"
-	icon_state = "maintcentral"
-/area/sycorax/xerxes/engine
-	name = "Xerxes Engine"
-	icon_state = "engine"
+	name = "Xerxes Central Hall - Lower"
+	icon_state = "hallC2"
+/area/sycorax/xerxes/pmaint
+	name = "Xerxes Port Maintenance"
+	icon_state = "pmaint"
+/area/sycorax/xerxes/stbmaint
+	name = "Xerxes Starboard Maintenance"
+	icon_state = "smaint"
+/area/sycorax/xerxes/atmosperhics
+	name = "Xerxes Atmospherics"
+	icon_state = "atmos"
 /area/sycorax/xerxes/engineering
 	name = "Xerxes Engineering"
 	icon_state = "engineering"
 /area/sycorax/xerxes/security
 	name = "Xerxes Security"
 	icon_state = "security"
+/area/sycorax/xerxes/brig
+	name = "Xerxes Brig"
+	icon_state = "brig"
 /area/sycorax/xerxes/bridge
 	name = "Xerxes Bridge"
 	icon_state = "bridge"
-/area/sycorax/xerxes/capquarters
-	name = "Xerxes Captain Quarters"
+/area/sycorax/xerxes/captain
+	name = "Xerxes Captain's Office"
 	icon_state = "captain"
+/area/sycorax/xerxes/conference
+	name = "Xerxes Conference Room"
+	icon_state = "conference"
 /area/sycorax/xerxes/fabrication
 	name = "Xerxes Fabrication"
 	icon_state = "quart"
@@ -36,11 +48,21 @@
 	name = "Xerxes Medbay"
 	icon_state = "medbay"
 /area/sycorax/xerxes/empty1
-	name = "Vacant Room 1"
-	icon_state = "Orange"
+	name = "Xerxes Vacant Room 1"
+	icon_state = "purple"
 /area/sycorax/xerxes/empty2
-	name = "Vacant Room 2"
-	icon_state = "Purple"
+	name = "Xerxes Vacant Room 2"
+	icon_state = "green"
+/area/sycorax/xerxes/empty3
+	name = "Xerxes Vacant Room 3"
+	icon_state = "blue-red"
+/area/sycorax/xerxes/empty4
+	name = "Xerxes Vacant Room 4"
+	icon_state = "party"
+/area/sycorax/xerxes/empty5
+	name = "Xerxes Vacant Room 5"
+	icon_state = "yellow"
+
 
 /area/sycorax/phobetor/porthall
 	name = "Phobetor Port Hallway"
@@ -48,9 +70,9 @@
 /area/sycorax/phobetor/starhall
 	name = "Phobetor Starboard Hallway"
 	icon_state = "hallS"
-/area/sycorax/phobetor/bridge
+/area/sycorax/phobetor/conference
 	name = "Phobetor Bridge"
-	icon_state = "bridge"
+	icon_state = "conference"
 /area/sycorax/phobetor/executiveoffice
 	name = "Phobetor Secondary Office"
 	icon_state = "quartoffice"
@@ -60,6 +82,9 @@
 /area/sycorax/phobetor/captoffice
 	name = "Phobetor Captain Office"
 	icon_state = "captain"
+/area/sycorax/phobetor/courtroom
+	name = "Phobetor Courtroom"
+	icon_state = "courtroom"
 /area/sycorax/phobetor/security
 	name = "Phobetor Security"
 	icon_state = "security"
@@ -69,6 +94,9 @@
 /area/sycorax/phobetor/engineering
 	name = "Phobetor Engineering"
 	icon_state = "engineering"
+/area/sycorax/phobetor/tcom
+	name = "Phobetor Telecommunications"
+	icon_state = "tcomsatcham"
 /area/sycorax/phobetor/atmos
 	name = "Phobetor Atmospherics"
 	icon_state = "atmos"
@@ -102,12 +130,6 @@
 /area/sycorax/phobetor/showers
 	name = "Phobetor Showers"
 	icon_state = "locker"
-/area/sycorax/phobetor/maintempty1
-	name = "Phobetor Vacant Room 4"
-	icon_state = "construction"
-/area/sycorax/phobetor/maintempty2
-	name = "Phobetor Vacant Room 5"
-	icon_state = "construction"
 /area/sycorax/phobetor/maintairlock
 	name = "Phobetor Public Airlock"
 	icon_state = "engine_eva"

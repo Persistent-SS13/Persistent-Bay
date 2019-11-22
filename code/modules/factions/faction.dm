@@ -967,11 +967,11 @@ var/PriorityQueue/all_feeds
 
 	councillor_assignment = new("Commisioner", 30)
 	judge_assignment = new("Judge", 30)
-	governor_assignment = new("Resident Magistrate", 45)
+	governor_assignment = new("Governor", 45)
 	councillor_assignment.name = "Commissioner"
 	judge_assignment.name = "Judge"
-	governor_assignment.name = "Resident Magistrate"
-	governor_assignment.uid = "Resident Magistrate"
+	governor_assignment.name = "Governor"
+	governor_assignment.uid = "Governor"
 	judge_assignment.uid = "judge"
 	councillor_assignment.uid = "commissioner"
 	special_category = new()
@@ -1283,12 +1283,12 @@ var/PriorityQueue/all_feeds
 
 /datum/world_faction/democratic/proc/repeal_policy(var/datum/council_vote/vote)
 	policy -= vote
-	command_announcement.Announce("Resident Magistrate [gov.real_name] has repealed an executive policy! [vote.name].","Resident Magistrate Action")
-	GLOB.discord_api.broadcast("Resident Magistrate [gov.real_name] has repealed an executive policy! [vote.name].")
+	command_announcement.Announce("Governor [gov.real_name] has repealed an executive policy! [vote.name].","Governor Action")
+	GLOB.discord_api.broadcast("Governor [gov.real_name] has repealed an executive policy! [vote.name].")
 /datum/world_faction/democratic/proc/pass_policy(var/datum/council_vote/vote)
 	policy |= vote
-	command_announcement.Announce("Resident Magistrate [vote.signer] has passed an executive policy! [vote.name].","Resident Magistrate Action")
-	GLOB.discord_api.broadcast("Resident Magistrate [vote.signer] has passed an executive policy! [vote.name].")
+	command_announcement.Announce("Governor [vote.signer] has passed an executive policy! [vote.name].","Governor Action")
+	GLOB.discord_api.broadcast("Governor [vote.signer] has passed an executive policy! [vote.name].")
 
 /datum/world_faction/democratic/proc/pass_nomination_judge(var/datum/democracy/judge)
 	judges |= judge
@@ -1421,7 +1421,7 @@ var/PriorityQueue/all_feeds
 	var/num_type = 0
 
 /datum/election/gov
-	name = "Resident Magistrate Election"
+	name = "Governor Election"
 	typed = 1
 	num_type = 1
 
@@ -1441,7 +1441,7 @@ var/PriorityQueue/all_feeds
 	var/list/voted_ckeys = list() // to prevent double voting
 
 /datum/democracy/governor
-	title = "Resident Magistrate"
+	title = "Governor"
 	description = "Upkeep the attached vessel and ensure continued colonial activities within the quadrant."
 
 /datum/democracy/councillor

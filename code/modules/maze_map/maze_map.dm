@@ -150,24 +150,27 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 /datum/zlevel_data/one //station z
 	z = 1
 	difficulty = 0
-	E_connect = 2
-	N_connect = 3
-	S_connect = 4
+	E_connect = 3
+	name = "Phobetor's Rest"
 
 /datum/zlevel_data/two //empty player z
 	z = 2
 	difficulty = 0
-	W_connect = 1
+	N_connect = 3
+	name = "Xerxes' Summit"
 
 /datum/zlevel_data/three //event z
 	z = 3
 	difficulty = 0
-	S_connect = 1
+	N_connect = 4
+	E_connect = 1
+	S_connect = 2
+	name = "Abandoned"
 
 /datum/zlevel_data/four //mining z
 	z = 4
-	name = "Due South"
-	S_connect = 1
+	name = "Mining"
+	S_connect = 3
 	monster_types = list(
 			/mob/living/simple_animal/hostile/carp,
 		/mob/living/simple_animal/hostile/carp/pike,

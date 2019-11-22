@@ -1,6 +1,6 @@
 /obj/item/weapon/book/multipage/sycorax_guide
-	title = "Guide to Sycorax Station"
-	name = "Guide to Sycorax Station"
+	title = "Guide to Sycorax Quadrant"
+	name = "Guide to Sycorax Quadrant"
 	author = "Sycorax Administration"
 	author_real = "premade"
 	icon_state = "anomaly"

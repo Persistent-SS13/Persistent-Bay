@@ -183,11 +183,11 @@
 
 /obj/item/clothing/accessory/badge/ocieagent
 	name = "\improper Council appointee's badge"
-	desc = "A leather-backed gold badge displaying the crest of the Sycorax Council."
+	desc = "A leather-backed gold badge displaying the crest of the Sycorax Commission."
 	icon_state = "agentbadge"
 	slot_flags = SLOT_BELT | SLOT_TIE
 	slot = ACCESSORY_SLOT_INSIGNIA
-	badge_string = "Sycorax Council"
+	badge_string = "Sycorax Commission"
 
 /obj/item/clothing/accessory/badge/tracker
 	name = "\improper City appointee's badge"

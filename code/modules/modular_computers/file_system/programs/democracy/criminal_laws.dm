@@ -1,6 +1,6 @@
 /datum/computer_file/program/criminal_laws
 	filename = "criminal_laws"
-	filedesc = "Sycorax Station Criminal Laws"
+	filedesc = "Sycorax Quadrant Criminal Laws"
 	program_icon_state = "comm"
 	program_menu_icon = "note"
 	nanomodule_path = /datum/nano_module/program/criminal_laws
@@ -12,7 +12,7 @@
 	usage_flags = PROGRAM_ALL
 
 /datum/nano_module/program/criminal_laws
-	name = "Sycorax Station Criminal Laws"
+	name = "Sycorax Quadrant Criminal Laws"
 	available_to_ai = TRUE
 	var/datum/council_vote/selected_vote
 

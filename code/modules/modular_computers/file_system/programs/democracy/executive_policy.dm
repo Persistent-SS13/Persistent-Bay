@@ -1,6 +1,6 @@
 /datum/computer_file/program/executive_policy
 	filename = "executive_policy"
-	filedesc = "Sycorax Station Executive Policy"
+	filedesc = "Sycorax Quadrant Executive Policy"
 	program_icon_state = "comm"
 	program_menu_icon = "note"
 	nanomodule_path = /datum/nano_module/program/executive_policy
@@ -12,7 +12,7 @@
 	usage_flags = PROGRAM_ALL
 
 /datum/nano_module/program/executive_policy
-	name = "Sycorax Station Executive Policy"
+	name = "Sycorax Quadrant Executive Policy"
 	available_to_ai = TRUE
 	var/datum/council_vote/selected_vote
 

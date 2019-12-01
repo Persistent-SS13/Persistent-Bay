@@ -7,18 +7,18 @@
 /decl/hierarchy/outfit/sycorax/starter
 	name = "Resident Gear"
 	uniform = /obj/item/clothing/under/color/grey
-	l_ear = /obj/item/device/radio/headset/sycorax/starter
 	shoes = /obj/item/clothing/shoes/black
 	id_slot = slot_wear_id
+	r_pocket = /obj/item/device/radio
 	id_type = /obj/item/weapon/card/id/civilian/residents
 	pda_type = null
 
 /decl/hierarchy/outfit/sycorax/citizen
 	name = "Citizen Gear"
 	uniform = /obj/item/clothing/under/color/grey
-	l_ear = /obj/item/device/radio/headset/sycorax/citizen
 	shoes = /obj/item/clothing/shoes/black
 	id_slot = slot_wear_id
+	r_pocket = /obj/item/device/radio
 	id_type = /obj/item/weapon/card/id/civilian/citizens
 	pda_type = null
 

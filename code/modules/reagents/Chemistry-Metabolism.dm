@@ -57,7 +57,7 @@
 	var/datum/reagent/addict_reagent = (ref_reagent.parent_substance ? new ref_reagent.parent_substance : ref_reagent)
 
 	if(!is_type_in_list(addict_reagent, addiction_levels))
-		var/add_addiction_prob = 100 * (1 - (Root(0.5, ref_reagent.addiction_median_dose/removed)))
+		var/add_addiction_prob = GLOB.addiction_probs_[ref_reagent.type]
 		if(prob(add_addiction_prob))
 			addiction_levels.Add(addict_reagent)
 			addiction_levels[addict_reagent] = 10

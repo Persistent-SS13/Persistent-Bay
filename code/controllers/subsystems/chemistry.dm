@@ -35,6 +35,18 @@ SUBSYSTEM_DEF(chemistry)
 			if(!chemical_reactions_by_id[reagent_id])
 				chemical_reactions_by_id[reagent_id] = list()
 			chemical_reactions_by_id[reagent_id] += D
+
+	// Init addiction probabilities
+	// The calcualation for the value fed into prob every tick that an addictive chemical is
+	// metabolized is quite complex, but it is based off values that are constant post-start up.
+	// We'll initialize those values into a global list here.
+	for(var/path in subtypesof(/datum/reagent))
+		var/datum/reagent/R = new path()
+		if(!R.addictiveness)
+			continue
+		GLOB.addiction_probs_ += R.type
+		GLOB.addiction_probs_[R.type] = 100 * (1 - (Root(R.addiction_median_dose/R.metabolism, 0.5 )))
+
 	return ..()
 
 /datum/controller/subsystem/chemistry/fire(resumed = FALSE)

@@ -1,3 +1,5 @@
+GLOBAL_LIST_EMPTY(addiction_probs_)
+
 /datum/reagent
 	var/name = "Reagent"
 	var/description = "A non-descript chemical."
